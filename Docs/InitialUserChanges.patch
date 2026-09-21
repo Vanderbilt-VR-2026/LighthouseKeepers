@@ -1,0 +1,333 @@
+diff --git a/Assets/Editor.meta b/Assets/Editor.meta
+deleted file mode 100644
+index 8a1a326..0000000
+--- a/Assets/Editor.meta
++++ /dev/null
+@@ -1,8 +0,0 @@
+-fileFormatVersion: 2
+-guid: 0ec12e72d2bae4645aebb32fe27cdbb5
+-folderAsset: yes
+-DefaultImporter:
+-  externalObjects: {}
+-  userData: 
+-  assetBundleName: 
+-  assetBundleVariant: 
+diff --git a/Assets/Editor/HubForceResolve.cs b/Assets/Editor/HubForceResolve.cs
+deleted file mode 100644
+index c71b9fa..0000000
+--- a/Assets/Editor/HubForceResolve.cs
++++ /dev/null
+@@ -1,76 +0,0 @@
+-
+-      using System.IO;
+-      using UnityEditor;
+-      using UnityEditor.PackageManager;
+-
+-      [InitializeOnLoad]
+-      public static class HubForceResolve
+-      {
+-          private const string k_ScriptPath = "Assets/Editor/HubForceResolve.cs";
+-          private const string k_EditorFolderPath = "Assets/Editor";
+-          private const string k_StateKey = "Hub.ForceResolve.State";
+-
+-          static HubForceResolve()
+-          {
+-              EditorApplication.delayCall += Tick;
+-          }
+-
+-          static void Tick()
+-          {
+-              // Wait until the Editor is idle so the resolve/self-delete don't fight the import.
+-              if (EditorApplication.isCompiling || EditorApplication.isUpdating)
+-              {
+-                  EditorApplication.delayCall += Tick;
+-                  return;
+-              }
+-
+-              if (SessionState.GetString(k_StateKey, "") == "")
+-              {
+-                  // First idle pass: resolve. May reload, after which Tick runs again.
+-                  SessionState.SetString(k_StateKey, "resolved");
+-                  Client.Resolve();
+-                  EditorApplication.delayCall += Tick;
+-                  return;
+-              }
+-
+-              // Resolved and idle again → remove the script.
+-              Cleanup();
+-          }
+-
+-          static void Cleanup()
+-          {
+-              AssetDatabase.DeleteAsset(k_ScriptPath);
+-              CleanupEmptyEditorFolder();
+-          }
+-
+-          static void CleanupEmptyEditorFolder()
+-          {
+-              string absolutePath = Path.GetFullPath(k_EditorFolderPath);
+-
+-              if (!Directory.Exists(absolutePath)) return;
+-
+-              string[] files = Directory.GetFiles(absolutePath);
+-              string[] dirs = Directory.GetDirectories(absolutePath);
+-
+-              bool isEmpty = true;
+-
+-              if (dirs.Length > 0)
+-              {
+-                  isEmpty = false;
+-              }
+-
+-              foreach (string file in files)
+-              {
+-                  if (!file.EndsWith(".DS_Store"))
+-                  {
+-                      isEmpty = false;
+-                      break;
+-                  }
+-              }
+-
+-              if (isEmpty)
+-              {
+-                  AssetDatabase.DeleteAsset(k_EditorFolderPath);
+-              }
+-          }
+-      }
+\ No newline at end of file
+diff --git a/Assets/Editor/HubForceResolve.cs.meta b/Assets/Editor/HubForceResolve.cs.meta
+deleted file mode 100644
+index 6df0cea..0000000
+--- a/Assets/Editor/HubForceResolve.cs.meta
++++ /dev/null
+@@ -1,2 +0,0 @@
+-fileFormatVersion: 2
+-guid: a50fdd1c082de46709ed3d6d821d64b3
+\ No newline at end of file
+diff --git a/Assets/Settings/Mobile_RPAsset.asset b/Assets/Settings/Mobile_RPAsset.asset
+index 7ceffe7..e9178db 100644
+--- a/Assets/Settings/Mobile_RPAsset.asset
++++ b/Assets/Settings/Mobile_RPAsset.asset
+@@ -12,8 +12,8 @@ MonoBehaviour:
+   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
+   m_Name: Mobile_RPAsset
+   m_EditorClassIdentifier: 
+-  k_AssetVersion: 12
+-  k_AssetPreviousVersion: 12
++  k_AssetVersion: 13
++  k_AssetPreviousVersion: 13
+   m_RendererType: 1
+   m_RendererData: {fileID: 0}
+   m_RendererDataList:
+@@ -53,6 +53,7 @@ MonoBehaviour:
+   m_AdditionalLightsShadowResolutionTierHigh: 1024
+   m_ReflectionProbeBlending: 1
+   m_ReflectionProbeBoxProjection: 1
++  m_ReflectionProbeAtlas: 1
+   m_ShadowDistance: 50
+   m_ShadowCascadeCount: 1
+   m_Cascade2Split: 0.25
+@@ -73,16 +74,15 @@ MonoBehaviour:
+   m_MixedLightingSupported: 1
+   m_SupportsLightCookies: 1
+   m_SupportsLightLayers: 1
+-  m_DebugLevel: 0
+   m_StoreActionsOptimization: 0
+   m_UseAdaptivePerformance: 1
+   m_ColorGradingMode: 0
+   m_ColorGradingLutSize: 32
++  m_AllowPostProcessAlphaOutput: 0
+   m_UseFastSRGBLinearConversion: 1
+   m_SupportDataDrivenLensFlare: 1
+   m_SupportScreenSpaceLensFlare: 1
+   m_GPUResidentDrawerMode: 0
+-  m_UseLegacyLightmaps: 0
+   m_SmallMeshScreenPercentage: 0
+   m_GPUResidentDrawerEnableOcclusionCullingInCameras: 0
+   m_ShadowType: 1
+@@ -109,6 +109,7 @@ MonoBehaviour:
+   m_PrefilterDebugKeywords: 1
+   m_PrefilterWriteRenderingLayers: 1
+   m_PrefilterHDROutput: 1
++  m_PrefilterAlphaOutput: 0
+   m_PrefilterSSAODepthNormals: 1
+   m_PrefilterSSAOSourceDepthLow: 1
+   m_PrefilterSSAOSourceDepthMedium: 0
+@@ -126,8 +127,15 @@ MonoBehaviour:
+   m_PrefilterSoftShadowsQualityHigh: 1
+   m_PrefilterSoftShadows: 0
+   m_PrefilterScreenCoord: 1
++  m_PrefilterScreenSpaceIrradiance: 0
+   m_PrefilterNativeRenderPass: 1
+   m_PrefilterUseLegacyLightmaps: 0
++  m_PrefilterBicubicLightmapSampling: 0
++  m_PrefilterReflectionProbeRotation: 0
++  m_PrefilterReflectionProbeBlending: 0
++  m_PrefilterReflectionProbeBoxProjection: 0
++  m_PrefilterReflectionProbeAtlas: 0
++  m_PrefilterPointSamplingUpsampling: 0
+   m_ShaderVariantLogLevel: 0
+   m_ShadowCascades: 0
+   m_Textures:
+diff --git a/Assets/Settings/PC_RPAsset.asset b/Assets/Settings/PC_RPAsset.asset
+index 8b30a06..9fb5b0d 100644
+--- a/Assets/Settings/PC_RPAsset.asset
++++ b/Assets/Settings/PC_RPAsset.asset
+@@ -12,8 +12,8 @@ MonoBehaviour:
+   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
+   m_Name: PC_RPAsset
+   m_EditorClassIdentifier: 
+-  k_AssetVersion: 12
+-  k_AssetPreviousVersion: 12
++  k_AssetVersion: 13
++  k_AssetPreviousVersion: 13
+   m_RendererType: 1
+   m_RendererData: {fileID: 0}
+   m_RendererDataList:
+@@ -53,6 +53,7 @@ MonoBehaviour:
+   m_AdditionalLightsShadowResolutionTierHigh: 1024
+   m_ReflectionProbeBlending: 1
+   m_ReflectionProbeBoxProjection: 1
++  m_ReflectionProbeAtlas: 1
+   m_ShadowDistance: 50
+   m_ShadowCascadeCount: 4
+   m_Cascade2Split: 0.25
+@@ -73,16 +74,15 @@ MonoBehaviour:
+   m_MixedLightingSupported: 1
+   m_SupportsLightCookies: 1
+   m_SupportsLightLayers: 1
+-  m_DebugLevel: 0
+   m_StoreActionsOptimization: 0
+   m_UseAdaptivePerformance: 1
+   m_ColorGradingMode: 0
+   m_ColorGradingLutSize: 32
++  m_AllowPostProcessAlphaOutput: 0
+   m_UseFastSRGBLinearConversion: 0
+   m_SupportDataDrivenLensFlare: 1
+   m_SupportScreenSpaceLensFlare: 1
+   m_GPUResidentDrawerMode: 0
+-  m_UseLegacyLightmaps: 0
+   m_SmallMeshScreenPercentage: 0
+   m_GPUResidentDrawerEnableOcclusionCullingInCameras: 0
+   m_ShadowType: 1
+@@ -109,6 +109,7 @@ MonoBehaviour:
+   m_PrefilterDebugKeywords: 1
+   m_PrefilterWriteRenderingLayers: 0
+   m_PrefilterHDROutput: 1
++  m_PrefilterAlphaOutput: 0
+   m_PrefilterSSAODepthNormals: 0
+   m_PrefilterSSAOSourceDepthLow: 1
+   m_PrefilterSSAOSourceDepthMedium: 1
+@@ -126,8 +127,15 @@ MonoBehaviour:
+   m_PrefilterSoftShadowsQualityHigh: 0
+   m_PrefilterSoftShadows: 0
+   m_PrefilterScreenCoord: 1
++  m_PrefilterScreenSpaceIrradiance: 0
+   m_PrefilterNativeRenderPass: 1
+   m_PrefilterUseLegacyLightmaps: 0
++  m_PrefilterBicubicLightmapSampling: 0
++  m_PrefilterReflectionProbeRotation: 0
++  m_PrefilterReflectionProbeBlending: 0
++  m_PrefilterReflectionProbeBoxProjection: 0
++  m_PrefilterReflectionProbeAtlas: 0
++  m_PrefilterPointSamplingUpsampling: 0
+   m_ShaderVariantLogLevel: 0
+   m_ShadowCascades: 0
+   m_Textures:
+diff --git a/ProjectSettings/PackageManagerSettings.asset b/ProjectSettings/PackageManagerSettings.asset
+index be4a797..ebe637b 100644
+--- a/ProjectSettings/PackageManagerSettings.asset
++++ b/ProjectSettings/PackageManagerSettings.asset
+@@ -12,32 +12,33 @@ MonoBehaviour:
+   m_Script: {fileID: 13964, guid: 0000000000000000e000000000000000, type: 0}
+   m_Name: 
+   m_EditorClassIdentifier: 
+-  m_EnablePreviewPackages: 0
+-  m_EnablePackageDependencies: 0
++  m_EnablePreReleasePackages: 0
+   m_AdvancedSettingsExpanded: 1
+   m_ScopedRegistriesSettingsExpanded: 1
++  m_SeeAllPackageVersions: 0
++  m_DismissPreviewPackagesInUse: 0
+   oneTimeWarningShown: 0
+-  m_Registries:
+-  - m_Id: main
++  oneTimePackageErrorsPopUpShown: 0
++  m_MainRegistry:
++    m_Id: main
+     m_Name: 
+     m_Url: https://packages.unity.com
+     m_Scopes: []
+     m_IsDefault: 1
++    m_IsUnityRegistry: 1
+     m_Capabilities: 7
++    m_ConfigSource: 0
++    m_Compliance:
++      m_Status: 0
++      m_Violations: []
++  m_ScopedRegistries: []
+   m_UserSelectedRegistryName: 
+   m_UserAddingNewScopedRegistry: 0
+   m_RegistryInfoDraft:
+-    m_ErrorMessage: 
+-    m_Original:
+-      m_Id: 
+-      m_Name: 
+-      m_Url: 
+-      m_Scopes: []
+-      m_IsDefault: 0
+-      m_Capabilities: 0
+     m_Modified: 0
+-    m_Name: 
+-    m_Url: 
+-    m_Scopes:
+-    - 
+-    m_SelectedScopeIndex: 0
++    m_ErrorMessage: 
++    m_UserModificationsEntityId:
++      m_rawData: 568105589213756488
++    m_OriginalEntityId:
++      m_rawData: 568105589213756486
++  m_LoadAssets: 0
+diff --git a/ProjectSettings/ProjectSettings.asset b/ProjectSettings/ProjectSettings.asset
+index d8ef9c2..19e89e8 100644
+--- a/ProjectSettings/ProjectSettings.asset
++++ b/ProjectSettings/ProjectSettings.asset
+@@ -930,11 +930,11 @@ PlayerSettings:
+   activeInputHandler: 1
+   windowsGamepadBackendHint: 0
+   enableDirectStorage: 0
+-  cloudProjectId: 
++  cloudProjectId: 54e384f0-bb1f-47ed-9db0-9601b6af56f2
+   framebufferDepthMemorylessMode: 0
+   qualitySettingsNames: []
+-  projectName: 
+-  organizationId: 
++  projectName: Lighthouse Keepers
++  organizationId: avasamreddy
+   cloudEnabled: 0
+   legacyClampBlendShapeWeights: 0
+   hmiLoadingImage: {fileID: 0}
+diff --git a/ProjectSettings/ShaderGraphSettings.asset b/ProjectSettings/ShaderGraphSettings.asset
+index e66042a..ce8c243 100644
+--- a/ProjectSettings/ShaderGraphSettings.asset
++++ b/ProjectSettings/ShaderGraphSettings.asset
+@@ -13,6 +13,7 @@ MonoBehaviour:
+   m_Name: 
+   m_EditorClassIdentifier: 
+   shaderVariantLimit: 128
++  overrideShaderVariantLimit: 0
+   customInterpolatorErrorThreshold: 32
+   customInterpolatorWarningThreshold: 16
+   customHeatmapValues: {fileID: 0}
+diff --git a/ProjectSettings/URPProjectSettings.asset b/ProjectSettings/URPProjectSettings.asset
+index 08faf03..6ad5631 100644
+--- a/ProjectSettings/URPProjectSettings.asset
++++ b/ProjectSettings/URPProjectSettings.asset
+@@ -12,4 +12,5 @@ MonoBehaviour:
+   m_Script: {fileID: 11500000, guid: 247994e1f5a72c2419c26a37e9334c01, type: 3}
+   m_Name: 
+   m_EditorClassIdentifier: 
+-  m_LastMaterialVersion: 9
++  m_LastMaterialVersion: 10
++  m_ProjectSettingFolderPath: URPDefaultResources
