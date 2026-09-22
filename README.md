@@ -1,6 +1,6 @@
 # Lighthouse Keepers — Sprint 1
 
-A standalone Quest 3 lighthouse environment foundation. Open with **Unity 6000.5.10f1** and install **Android Build Support, SDK/NDK Tools and OpenJDK** through Unity Hub.
+A standalone Quest 3 lighthouse environment foundation. Open with **Unity 6000.3.23f1 (Unity 6.3 LTS)** and install **Android Build Support, SDK/NDK Tools and OpenJDK** through Unity Hub.
 
 Open `Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity` and press Play. It loads six content scenes additively. Do not also load a second player rig. For isolated tests open `Assets/_LighthouseKeepers/Scenes/Development/LK_DevGym.unity`.
 
@@ -26,3 +26,5 @@ Audio clips prefixed `Placeholder_` are original procedural placeholders. They d
 Common failures: wrong Unity version; missing Android modules; another Editor holding the project lock; USB debugging not authorized; starting a content scene without Bootstrap; stale package import after switching platform. Allow package resolution and compilation to complete. Do not install Unity AI Assistant to fix game setup. Keep asset/meta pairs together and never commit Library or Builds.
 
 Exact automated results and remaining checks are in Docs/Verification and Docs/Sprint1Handoff.md.
+
+The team-compatible editor version is now **6000.3.23f1**. Do not accept an automatic upgrade to 6000.5 when opening this branch. See Docs/Unity63Migration.md for compatibility changes and verification. Historical Sprint 1 test records describe their original editor versions.

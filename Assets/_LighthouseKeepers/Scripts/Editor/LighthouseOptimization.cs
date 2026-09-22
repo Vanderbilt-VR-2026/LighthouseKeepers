@@ -15,7 +15,7 @@ public static class LighthouseOptimization {
    var scene=EditorSceneManager.OpenScene(LighthouseScenes.ScenePath(name));
    if(GameObject.Find("Static render batches"))continue;
    var root=new GameObject("Static render batches");
-   var candidates=UnityEngine.Object.FindObjectsByType<MeshRenderer>().Where(r=>r.enabled&&r.gameObject.isStatic&&!r.GetComponentInParent<Rigidbody>()&&!r.GetComponentInParent<LighthouseKeepers.Environment.BeaconRotation>()&&!r.GetComponent<LighthouseKeepers.Flood.FloodSurface>()&&!r.GetComponentInParent<LODGroup>()&&r.GetComponent<MeshFilter>()&&r.sharedMaterials.Length==1).ToArray();
+   var candidates=UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None).Where(r=>r.enabled&&r.gameObject.isStatic&&!r.GetComponentInParent<Rigidbody>()&&!r.GetComponentInParent<LighthouseKeepers.Environment.BeaconRotation>()&&!r.GetComponent<LighthouseKeepers.Flood.FloodSurface>()&&!r.GetComponentInParent<LODGroup>()&&r.GetComponent<MeshFilter>()&&r.sharedMaterials.Length==1).ToArray();
    foreach(var group in candidates.GroupBy(r=>r.sharedMaterial)){
     var mesh=new Mesh{name=name+"_"+group.Key.name,indexFormat=IndexFormat.UInt32};var combine=group.Select(r=>new CombineInstance{mesh=r.GetComponent<MeshFilter>().sharedMesh,transform=r.transform.localToWorldMatrix}).ToArray();mesh.CombineMeshes(combine,true,true);Unwrapping.GenerateSecondaryUVSet(mesh);mesh=SaveMesh(mesh,mesh.name);
     var batch=new GameObject(group.Key.name,typeof(MeshFilter),typeof(MeshRenderer));batch.transform.SetParent(root.transform);batch.GetComponent<MeshFilter>().sharedMesh=mesh;batch.GetComponent<MeshRenderer>().sharedMaterial=group.Key;batch.isStatic=true;

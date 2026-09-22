@@ -1,6 +1,6 @@
 # XR / Quest setup
 
-Unity 6000.5.10f1; URP 17.5.0, Input System 1.20.0, XR Interaction Toolkit 3.6.0, XR Management 4.7.0, OpenXR 1.18.0, Core Utils 2.6.0. The official XRI Starter Assets are imported from the installed registry package, not copied from Spear Throw VR. UGUI 2.5.0 provides TMP; TMP essentials were imported. Unity Test Framework 1.7.0 was already present. No XR Hands dependency was added.
+Unity 6000.3.23f1; URP 17.3.0, Input System 1.20.0, XR Interaction Toolkit 3.6.0, XR Management 4.7.0, OpenXR 1.18.0, Core Utils 2.6.0. The official XRI Starter Assets are imported from the installed registry package, not copied from Spear Throw VR. UGUI 2.0.0 provides TMP; TMP essentials were imported. Unity Test Framework 1.6.0 matches the team’s editor baseline. No XR Hands dependency was added.
 
 Android: ARM64, IL2CPP, minimum API32, automatic target API, linear colour, Vulkan then GLES3, landscape, Input System only. OpenXR initializes on startup with MetaQuestFeature, Touch Plus and Oculus Touch profiles; deprecated OculusQuestFeature is disabled. Single-pass instanced stereo. Quest URP uses 4× MSAA, render scale1, HDR off, 20m shadow distance, one shadowed directional light and unshadowed practical lights. Two per-pixel additional lights are allowed per object because sparse architecture vertices made vertex-lit practical lighting unreadable. This is a documented departure from the reference mobile renderer.
 

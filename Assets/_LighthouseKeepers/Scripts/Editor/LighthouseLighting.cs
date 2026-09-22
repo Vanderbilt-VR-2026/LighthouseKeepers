@@ -24,7 +24,7 @@ public static class LighthouseLighting {
   }
   SceneManager.SetActiveScene(SceneManager.GetSceneByName("LK_Exterior"));
   bool baked=Lightmapping.Bake();for(int i=0;i<SceneManager.sceneCount;i++)EditorSceneManager.SaveScene(SceneManager.GetSceneAt(i));
-  File.WriteAllText("Docs/Verification/Lighting.txt","CPU bake result="+baked+"; lightmaps="+LightmapSettings.lightmaps.Length+"; resolution=5 texels/m; maximum atlas=512.\n");
+  File.WriteAllText("Docs/Verification/Lighting.txt","Unity editor="+Application.unityVersion+"; CPU bake result="+baked+"; lightmaps="+LightmapSettings.lightmaps.Length+"; resolution=5 texels/m; maximum atlas=512.\n");
   string quest=root+"/Settings/RenderPipeline/QuestPipeline.asset",preview=root+"/Settings/RenderPipeline/EditorPreviewPipeline.asset";
   if(!File.Exists(preview))AssetDatabase.CopyAsset(quest,preview);var rp=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(preview);rp.shadowDistance=40;rp.mainLightShadowmapResolution=2048;EditorUtility.SetDirty(rp);
   QualitySettings.SetQualityLevel(0);QualitySettings.renderPipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(quest);QualitySettings.SetQualityLevel(1);QualitySettings.renderPipeline=rp;

@@ -25,3 +25,7 @@ The initial foundation is published on `aneesh/lighthouse-sprint1-foundation`. T
 For this checkout, subsequent committed work is pushed with `git push team aneesh/lighthouse-sprint1-foundation`. Stage named assets and their metadata together; inspect `git diff --staged` before committing. Do not use `git add .` to scoop up duplicate sync files or unrelated local edits. The newer uncommitted XR/material/settings edits present at publication were deliberately left local because they were not part of the verified build.
 
 Open a pull request to `main`, assign a teammate to review, and describe tests and headset limitations. Do not merge directly into main or force-push shared branches. After the foundation is reviewed and merged, start each task from updated main on a branch such as `aneesh/fix-stair-collision`. Keep subsequent PRs focused by scene or system.
+
+### Current editor version
+
+The subsequent compatibility migration targets **Unity 6000.3.23f1** to match the team. The original 6000.5 build is historical; do not upgrade the migrated branch back to 6000.5. See Unity63Migration.md for validation evidence and the preserved pre-migration checkpoint.

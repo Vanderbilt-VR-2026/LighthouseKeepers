@@ -1786,7 +1786,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 912612692}
   m_Enabled: 1
-  serializedVersion: 13
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
@@ -1838,7 +1838,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShapeRadius: 0.025
+  m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -11071,7 +11071,7 @@ CharacterController:
   m_SlopeLimit: 45
   m_StepOffset: 0.18
   m_SkinWidth: 0.03
-  m_MinMoveDistance: 0.001
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.875, z: 0}
 --- !u!1 &7392218822297361733
 GameObject:

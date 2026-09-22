@@ -1,5 +1,7 @@
 # Sprint 1 handoff
 
+Current team editor: **6000.3.23f1**. The migration passed static validation, Play Mode, four Edit Mode tests and an Android development build (zero errors, one warning). See [Unity63Migration.md](Unity63Migration.md). Earlier device records concern the 6000.5 build; the migrated APK requires headset acceptance.
+
 This repository contains an authored environment foundation, not a finished survival game. The first Quest test revealed red/pink lighting, non-working controls and block-shaped hands. These were acceptance failures; successful compilation/build alone did not mean the sprint was complete. See Verification/DeviceVerification.md for the replacement build's actual acceptance status.
 
 ## Completed and verified by automated/editor checks
@@ -49,7 +51,7 @@ Open Scenes/Bootstrap/LK_Bootstrap under Assets/_LighthouseKeepers. Press Play; 
 
 The read-only Spear Throw VR project was not changed. Deliberate differences are the game identity/content root, additive architecture, slower 1.6m/s walking, comfort/body presence, 20m shadows, two unshadowed per-pixel practical lights per object, baked navigation fills, flat cold ambient lighting with environment reflections disabled, and no AI Assistant/inference dependency. See ReferenceProjectAudit.
 
-Baseline commit: 8bc7ccc. No remote, push or history rewrite was performed. Unrelated duplicate ProjectSettings files were preserved rather than deleted; see the final Git record.
+Historical implementation baseline: 8bc7ccc. The foundation was subsequently published to the team feature branch; main remains unchanged. Unrelated duplicate ProjectSettings files were preserved rather than deleted; see the final Git record.
 
 The implementation checkpoint is titled `Build Lighthouse Sprint 1 foundation and repair Quest lighting and controls`. Eight unrelated duplicate ProjectSettings files (PackageManagerSettings 2, ProjectAuditorSettings 2/3/4, ShaderGraphSettings 2/3/4, URPProjectSettings 2) remain untracked and untouched. The working tree is therefore not globally clean. No generated Unity cache/build folders are tracked. Full package additions/removals, including transitive packages, are listed in Verification/PackageChanges.md.
 
