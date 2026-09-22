@@ -20,7 +20,7 @@ Static batches retain source renderers disabled. Editing source geometry require
 
 Repository: https://github.com/Vanderbilt-VR-2026/LighthouseKeepers
 
-The initial foundation is published on `aneesh/lighthouse-sprint1-foundation`. The local `team` remote points to the class repository; `origin` retains Aneesh’s existing personal remote. The branch connects both initial histories without rewriting either. Review against team `main`, which initially used Unity 6000.3.23f1; this foundation requires 6000.5.10f1. Agree on the editor version before merging.
+The initial foundation is published on `aneesh/lighthouse-sprint1-foundation`. The local `team` remote points to the class repository; `origin` retains Aneesh’s existing personal remote. The branch connects both initial histories without rewriting either. Review against team `main`, which initially used Unity 6000.3.23f1; this foundation requires 6000.3.23f1, matching team `main`. The editor version is now agreed.
 
 For this checkout, subsequent committed work is pushed with `git push team aneesh/lighthouse-sprint1-foundation`. Stage named assets and their metadata together; inspect `git diff --staged` before committing. Do not use `git add .` to scoop up duplicate sync files or unrelated local edits. The newer uncommitted XR/material/settings edits present at publication were deliberately left local because they were not part of the verified build.
 

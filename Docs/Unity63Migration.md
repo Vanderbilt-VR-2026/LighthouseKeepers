@@ -58,3 +58,5 @@ No networking, voice, full puzzle logic, final audio or device-performance claim
 ## Android build result
 
 Unity 6000.3.23f1 produced a development ARM64 APK successfully: zero errors, one BuildReport warning (Android diagnostics requested separate debug symbols for crash stack traces), elapsed 7m52s; APK approximately 66 MiB. BuildReport totalSize includes build outputs and is not APK size. The log also includes package shader-stripping messages for unused terrain/spatial-mapping shaders and native/TMP compilation advisories. These do not establish a device rendering failure. No new headset test was performed.
+
+Publication check found that the team had independently merged the earlier foundation and version-label update into main (`8eb92af`). Those commits were merged into this feature branch, retaining the tested compatible package versions. Main was not modified by this migration. The old local Library and duplicate OpenXR asset pair were preserved under ignored Builds/BeforeUnity63Downgrade before reopening the normal project.
