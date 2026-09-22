@@ -1,6 +1,6 @@
 # Lighthouse Keepers — Sprint 1
 
-A standalone Quest 3 lighthouse environment foundation. Open with **Unity 6000.5.10f1** and install **Android Build Support, SDK/NDK Tools and OpenJDK** through Unity Hub.
+A standalone Quest 3 lighthouse environment foundation. Open with **Unity 6000.3.23f1** and install **Android Build Support, SDK/NDK Tools and OpenJDK** through Unity Hub.
 
 Open `Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity` and press Play. It loads six content scenes additively. Do not also load a second player rig. For isolated tests open `Assets/_LighthouseKeepers/Scenes/Development/LK_DevGym.unity`.
 

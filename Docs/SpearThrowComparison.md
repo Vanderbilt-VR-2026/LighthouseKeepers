@@ -4,7 +4,7 @@ Reference: `../First VR Build/Spear Throw VR`, located by searching inside the i
 
 | Area | Observed reference | Lighthouse decision |
 |---|---|---|
-| Editor | 6000.5.10f1 (3bd4f66ad299) | Match |
+| Editor | 6000.3.23f1 (09d2ecc7fb28) | Match |
 | URP | 17.5.0; Forward mobile renderer | Match version/path; create game-owned pipeline assets |
 | Input System | 1.20.0; activeInputHandler 1 | Match |
 | XRI | 3.6.0; Starter Assets imported | Install same package; import its own official Starter Assets |
