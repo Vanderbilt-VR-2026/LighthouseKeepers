@@ -21,7 +21,7 @@ Reference: `../First VR Build/Spear Throw VR`, located by searching inside the i
 | Locomotion | Left smooth move 1.8 m/s; right 45-degree snap | Start more conservatively indoors; add configurable smooth turning and comfort |
 | Inputs | XRI Head, Left/Right interaction and locomotion, UI action maps | Use package-owned Starter Assets action maps |
 | Organization | Assets/Scripts, Editor, Scenes, Settings, Samples, XR, XRI | Game content under Assets/_LighthouseKeepers, with familiar Scripts/Editor/Scenes/Settings conventions |
-| Scenes | Single CastleRange entry with legacy fallback | New Bootstrap + eight additive content scenes; no reference scene copies |
+| Scenes | Single CastleRange entry with legacy fallback | LK_Bootstrap + six additive content scenes and standalone LK_DevGym; no reference scene copies |
 | Identity | com.Vanderbilt.SpearThrowVR | Independent Lighthouse Keepers product and Android identifier; preserve current cloud identity |
 | AI Assistant | Present in reference and initial Lighthouse manifest | Exclude from Lighthouse as explicitly required |
 | Networking | Not needed for this sprint | Install no networking or voice framework |

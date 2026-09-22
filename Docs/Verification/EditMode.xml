@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.1367737">
+  <test-suite type="TestSuite" id="1000" name="Lighthouse Keepers" fullname="Lighthouse Keepers" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.136774" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1006" name="LighthouseKeepers.Tests.dll" fullname="/Users/aneeshvasamreddy/Desktop/Virtual Reality Design/Lighthouse Keepers/Library/ScriptAssemblies/LighthouseKeepers.Tests.dll" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.132695" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="93589" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1007" name="LighthouseKeepers" fullname="LighthouseKeepers" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.132460" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1008" name="Tests" fullname="LighthouseKeepers.Tests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.132307" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="FoundationTests" fullname="LighthouseKeepers.Tests.FoundationTests" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.131684" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1005" name="BuildIncludesBootstrapFirstAndAllEightScenes" fullname="LighthouseKeepers.Tests.FoundationTests.BuildIncludesBootstrapFirstAndAllEightScenes" methodname="BuildIncludesBootstrapFirstAndAllEightScenes" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="390342211" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.038034" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="DaysBecomeMeasurablyMoreIntense" fullname="LighthouseKeepers.Tests.FoundationTests.DaysBecomeMeasurablyMoreIntense" methodname="DaysBecomeMeasurablyMoreIntense" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="1236293977" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.067637" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="FloodClampsAndResetPauses" fullname="LighthouseKeepers.Tests.FoundationTests.FloodClampsAndResetPauses" methodname="FloodClampsAndResetPauses" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="1183447894" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.005212" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="ThresholdFiresOnlyOnCrossingAndSupportsReset" fullname="LighthouseKeepers.Tests.FoundationTests.ThresholdFiresOnlyOnCrossingAndSupportsReset" methodname="ThresholdFiresOnlyOnCrossingAndSupportsReset" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="1533600421" result="Passed" start-time="2026-09-22 03:01:07Z" end-time="2026-09-22 03:01:07Z" duration="0.001487" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/aneeshvasamreddy/Library/Application Support/Lighthouse Keepers Team/Lighthouse Keepers/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

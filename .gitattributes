@@ -15,3 +15,6 @@
 *.wav binary
 *.ogg binary
 *.fbx binary
+
+# Unity writes baked LightingData as a binary asset even with Force Text.
+**/LightingData.asset binary
