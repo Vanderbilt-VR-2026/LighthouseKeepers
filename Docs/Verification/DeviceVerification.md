@@ -16,3 +16,5 @@ Sanitized game telemetry is in QuestRuntimeExcerpt.txt. Exact log capture: `adb 
 APK SHA-256: `5087da3dea87e6528338d51ee25e714b7d8c0a40b41abdb721809a2018bad2d5`.
 
 Still required: user confirmation of cold colours, left walking, right turning and glove visibility; full-route collision, grabbing, both-eye vignette, seated reach, audio acceptance, and a ten-minute thermal/frame-time test.
+
+Follow-up at22:07 local: head tracking became true; both controller tracking flags remained false, and both sampled stick values remained zero. Move/turn providers and action maps stayed enabled. The user was prompted to wake both controllers. This narrows the pending hardware check but does not establish successful locomotion.
