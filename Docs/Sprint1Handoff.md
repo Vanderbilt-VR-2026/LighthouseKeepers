@@ -51,4 +51,6 @@ The read-only Spear Throw VR project was not changed. Deliberate differences are
 
 Baseline commit: 8bc7ccc. No remote, push or history rewrite was performed. Unrelated duplicate ProjectSettings files were preserved rather than deleted; see the final Git record.
 
-The implementation checkpoint is titled `Build Lighthouse Sprint 1 foundation and repair Quest lighting and controls`. Six unrelated duplicate ProjectSettings files (PackageManagerSettings 2, ProjectAuditorSettings 2/3, ShaderGraphSettings 2/3, URPProjectSettings 2) remain untracked and untouched. The working tree is therefore not globally clean. No generated Unity cache/build folders are tracked. Full package additions/removals, including transitive packages, are listed in Verification/PackageChanges.md.
+The implementation checkpoint is titled `Build Lighthouse Sprint 1 foundation and repair Quest lighting and controls`. Eight unrelated duplicate ProjectSettings files (PackageManagerSettings 2, ProjectAuditorSettings 2/3/4, ShaderGraphSettings 2/3/4, URPProjectSettings 2) remain untracked and untouched. The working tree is therefore not globally clean. No generated Unity cache/build folders are tracked. Full package additions/removals, including transitive packages, are listed in Verification/PackageChanges.md.
+
+Afterward, 44 malformed untracked lighting copies appeared. They were preserved outside Assets in ignored Builds/RecoveredDuplicateLighting-20260922; canonical assets were unchanged and repository validation passed again. See Verification/DuplicateLightingRecovery.md.
