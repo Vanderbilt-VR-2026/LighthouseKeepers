@@ -1,6 +1,6 @@
 # Validation record — September 21, 2026
 
-All commands ran from `/Users/aneeshvasamreddy/Desktop/Virtual Reality Design/Lighthouse Keepers`. Unity executable: `/Applications/Unity/Hub/Editor/6000.5.10f1/Unity.app/Contents/MacOS/Unity`. ADB executable: `/Applications/Unity/Hub/Editor/6000.5.10f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb`. Run only one Unity instance per project.
+All commands ran from `/Users/aneeshvasamreddy/Desktop/Virtual Reality Design/Lighthouse Keepers`. Unity executable: `/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity`. ADB executable: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb`. Run only one Unity instance per project.
 
 ## Commands and evidence
 
