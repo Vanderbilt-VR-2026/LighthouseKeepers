@@ -28,3 +28,9 @@ Common failures: wrong Unity version; missing Android modules; another Editor ho
 Exact automated results and remaining checks are in Docs/Verification and Docs/Sprint1Handoff.md.
 
 The team-compatible editor version is now **6000.3.23f1**. Do not accept an automatic upgrade to 6000.5 when opening this branch. See Docs/Unity63Migration.md for compatibility changes and verification. Historical Sprint 1 test records describe their original editor versions.
+
+## Inspect the September 23 environment integration
+
+Use **Lighthouse Keepers → Integration → Open complete environment** to load the seven authored scenes in the editor. Press Play, click Game view, then use WASD/Q/E for the desktop preview. Play starts from LK_Bootstrap to keep one persistent rig and audio hierarchy.
+
+Selected Asset Store props, offshore fog and the streamed horror ambience are now included; the supplied water shader has an editor comparison material and a Quest-safe runtime fallback. See [integration changes](Docs/AssetIntegrationStatus.md), [asset provenance](Docs/ThirdPartyAssets.md) and [verification](Docs/Verification/AssetIntegrationValidation.md). Final sound balance, both-eye effects and sustained Quest performance still need headset testing.

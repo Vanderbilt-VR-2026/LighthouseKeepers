@@ -1,0 +1,178 @@
+ M Assets/_LighthouseKeepers/Art/Models/LK_Core_LK_Interior.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Core_LK_Iron.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Core_LK_Masonry.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Core_LK_Rust.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Core_LK_Wood.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_LK_Brass.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_LK_Iron.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_LK_Rust.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_LK_Brass.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_LK_Iron.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_LK_Rust.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_LK_Iron.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_LK_Wood.asset
+ M Assets/_LighthouseKeepers/Art/Models/LK_Level04_Lantern_LK_Iron.asset
+ M Assets/_LighthouseKeepers/Audio/Mixer/LK_Atmosphere.mixer
+ M Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Core.unity
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior.unity
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/LightingData.asset
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-0_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-0_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-1_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-1_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-2_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-2_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-3_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-3_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-4_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-4_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-5_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-5_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-6_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-6_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-7_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-7_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-8_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-8_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-9_comp_dir.png
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/Lightmap-9_comp_light.exr
+ M Assets/_LighthouseKeepers/Scenes/Environment/LK_Exterior/ReflectionProbe-0.exr
+ M Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity
+ M Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity
+ M Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity
+ M Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity
+ M Assets/_LighthouseKeepers/Scripts/Editor/LighthousePlayVerification.cs
+ M Assets/_LighthouseKeepers/Scripts/Runtime/Environment/WeatherVolume.cs
+ M Assets/_LighthouseKeepers/Scripts/Runtime/Player/DesktopPreview.cs
+ M Docs/AudioArchitecture.md
+ M Docs/EnvironmentArchitecture.md
+ M Docs/ManualVerification.md
+ M Docs/Sprint1Handoff.md
+ M Docs/ThirdPartyAssets.md
+ M Docs/Verification/AndroidBuild.txt
+ M Docs/Verification/EditMode.xml
+ M Docs/Verification/PlayMode.txt
+ M Docs/Verification/Previews/Entrance.png
+ M Docs/Verification/Previews/Exterior.png
+ M Docs/Verification/Previews/Generator.png
+ M Docs/Verification/Previews/Lantern.png
+ M Docs/Verification/Previews/Plumbing.png
+ M ProjectSettings/PackageManagerSettings.asset
+ M ProjectSettings/ProjectSettings.asset
+ M README.md
+?? Assets/Abandoned_Asylum.meta
+?? Assets/Abandoned_Asylum/
+?? Assets/Dnk_Dev.meta
+?? Assets/Dnk_Dev/
+?? "Assets/Fog Particles.meta"
+?? "Assets/Fog Particles/"
+?? "Assets/Procedural Water Shader.meta"
+?? "Assets/Procedural Water Shader/"
+?? Assets/Resources.meta
+?? Assets/TirgamesAssets.meta
+?? Assets/TirgamesAssets/
+?? Assets/_LighthouseKeepers/Art/Models/LK_Core_FireExtinguisher01_0c30d0ac.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Core_FireExtinguisher01_0c30d0ac.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Core_MetalCabinet01_1bf209d5.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Core_MetalCabinet01_1bf209d5.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Core_TableOffice_94395755.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Core_TableOffice_94395755.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_Crane01_03aebcae.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_Crane01_03aebcae.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_LK_Water.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_LK_Water.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_Mat_Lamp_6a26c29b.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_Mat_Lamp_6a26c29b.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_Pipe_a505a97b.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_Pipe_a505a97b.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_SmallMetalicCase_6c40d96e.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level01_Plumbing_SmallMetalicCase_6c40d96e.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_Barrels01_aebf964b.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_Barrels01_aebf964b.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_Crane01_03aebcae.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_Crane01_03aebcae.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_FireExtinguisher01_0c30d0ac.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_FireExtinguisher01_0c30d0ac.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_Mat_Lamp_6a26c29b.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_Mat_Lamp_6a26c29b.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_MetalCabinet01_1bf209d5.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level02_Generator_MetalCabinet01_1bf209d5.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_ChairSchool_1ddc5ea3.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_ChairSchool_1ddc5ea3.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_Mat_Lamp_6a26c29b.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_Mat_Lamp_6a26c29b.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_SmallMetalicCase_6c40d96e.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_SmallMetalicCase_6c40d96e.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_TableOffice_94395755.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level03_Communications_TableOffice_94395755.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level04_Lantern_Crane01_03aebcae.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level04_Lantern_Crane01_03aebcae.asset.meta
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level04_Lantern_Mat_Lamp_6a26c29b.asset
+?? Assets/_LighthouseKeepers/Art/Models/LK_Level04_Lantern_Mat_Lamp_6a26c29b.asset.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseAssetIntegration.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseAssetIntegration.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseAssetStoreAccess.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseAssetStoreAccess.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseCirculationWeather.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseCirculationWeather.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseDesktopWeatherCheck.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseDesktopWeatherCheck.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseDynamicBatchRepair.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseDynamicBatchRepair.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseEditorTask.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseEditorTask.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseIntegratedValidation.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseIntegratedValidation.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseIntegrationAudit.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseIntegrationAudit.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseVendorImport.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseVendorImport.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseVendorVariants.cs
+?? Assets/_LighthouseKeepers/Scripts/Editor/LighthouseVendorVariants.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Runtime/Audio/AmbienceMusic.cs
+?? Assets/_LighthouseKeepers/Scripts/Runtime/Audio/AmbienceMusic.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Runtime/Environment/CoastalFog.cs
+?? Assets/_LighthouseKeepers/Scripts/Runtime/Environment/CoastalFog.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Tests/IntegratedAssetTests.cs
+?? Assets/_LighthouseKeepers/Scripts/Tests/IntegratedAssetTests.cs.meta
+?? Assets/_LighthouseKeepers/Scripts/Tests/WeatherCoverageTests.cs
+?? Assets/_LighthouseKeepers/Scripts/Tests/WeatherCoverageTests.cs.meta
+?? Assets/_LighthouseKeepers/ThirdPartyVariants.meta
+?? Assets/_LighthouseKeepers/ThirdPartyVariants/
+?? "Assets/free horror ambience 2.meta"
+?? "Assets/free horror ambience 2/"
+?? Docs/AssetIntegrationStatus.md
+?? Docs/Verification/AssetIntegrationValidation.md
+?? "Docs/Verification/CirculationPlayMode 2.txt"
+?? Docs/Verification/CirculationPlayMode.txt
+?? Docs/Verification/CirculationWeather.txt
+?? Docs/Verification/DesktopWeatherPlayMode.txt
+?? Docs/Verification/DuplicateLightingIntegration.txt
+?? Docs/Verification/IntegratedAssetPaths.txt
+?? Docs/Verification/IntegratedAssets.txt
+?? Docs/Verification/IntegrationBefore.txt
+?? Docs/Verification/IntegrationChangedFiles.txt
+?? Docs/Verification/IntegrationDiffStat.txt
+?? Docs/Verification/IntegrationGitStatus.txt
+?? "Docs/Verification/PlayMode 2.txt"
+?? Docs/Verification/Previews/BalconyOcean.png
+?? "Docs/Verification/Previews/Entrance 2.png"
+?? Docs/Verification/Previews/EntranceOcean.png
+?? "Docs/Verification/Previews/Exterior 2.png"
+?? "Docs/Verification/Previews/Generator 2.png"
+?? "Docs/Verification/Previews/Lantern 2.png"
+?? "Docs/Verification/Previews/Plumbing 2.png"
+?? Docs/Verification/VendorPrefabInventory.txt
+?? Docs/Verification/VendorPreviews/
+?? "ProjectSettings/PackageManagerSettings 2.asset"
+?? "ProjectSettings/PackageManagerSettings 3.asset"
+?? "ProjectSettings/ProjectAuditorSettings 2.asset"
+?? "ProjectSettings/ProjectAuditorSettings 3.asset"
+?? "ProjectSettings/ProjectAuditorSettings 4.asset"
+?? "ProjectSettings/ProjectAuditorSettings 5.asset"
+?? "ProjectSettings/ProjectAuditorSettings 6.asset"
+?? "ProjectSettings/ShaderGraphSettings 2.asset"
+?? "ProjectSettings/ShaderGraphSettings 3.asset"
+?? "ProjectSettings/ShaderGraphSettings 4.asset"
+?? "ProjectSettings/URPProjectSettings 2.asset"

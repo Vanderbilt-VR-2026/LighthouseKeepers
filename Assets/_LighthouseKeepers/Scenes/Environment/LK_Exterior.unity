@@ -919,7 +919,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Environment.WeatherVolume
   followOutsidePlayer: 1
-  baselineEmission: 65
+  baselineEmission: 360
+  excludeShelteredParticles: 1
+  balconyRing: 1
 --- !u!199 &220885311
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -1083,7 +1085,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.35
+      scalar: 0.4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1631,15 +1633,15 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 5
+    type: 10
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0.18656719
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
-    m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 12, y: 0.1, z: 12}
+    m_Rotation: {x: 90, y: 0, z: 0}
+    m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -1718,7 +1720,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 1
+      value: 6.7
       mode: 0
       spread: 0
       speed:
@@ -2462,7 +2464,7 @@ ParticleSystem:
     x:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -1.8
+      scalar: -0.25
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -2515,7 +2517,7 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -8
+      scalar: -10
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -2568,7 +2570,7 @@ ParticleSystem:
     z:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.3
+      scalar: 0.05
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -5732,7 +5734,7 @@ Transform:
   m_GameObject: {fileID: 220885309}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 14, z: 0}
+  m_LocalPosition: {x: 0, y: 13.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6656,6 +6658,152 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1001 &438993929
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_Name
+      value: LK Offshore fog 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080514, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_MaxParticleSize
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080514, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e26540d60e864843881e79d13c82280, type: 2}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startSize.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 438993931}
+  m_SourcePrefab: {fileID: 100100000, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+--- !u!1 &438993930 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+  m_PrefabInstance: {fileID: 438993929}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &438993931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438993930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca3cff1c7d9904f5ab3fdfaee4e822bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Environment.CoastalFog
+  maximumEmission: 0.35
 --- !u!1 &460614412
 GameObject:
   m_ObjectHideFlags: 0
@@ -6689,6 +6837,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Environment.WeatherVolume
   followOutsidePlayer: 0
   baselineEmission: 65
+  excludeShelteredParticles: 1
+  balconyRing: 0
 --- !u!199 &460614414
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -12308,6 +12458,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Environment.WeatherVolume
   followOutsidePlayer: 0
   baselineEmission: 65
+  excludeShelteredParticles: 1
+  balconyRing: 0
 --- !u!199 &529841616
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -17611,6 +17763,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Environment.WeatherVolume
   followOutsidePlayer: 0
   baselineEmission: 65
+  excludeShelteredParticles: 1
+  balconyRing: 0
 --- !u!199 &589543100
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -22719,6 +22873,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Environment.WeatherVolume
   followOutsidePlayer: 0
   baselineEmission: 65
+  excludeShelteredParticles: 1
+  balconyRing: 0
 --- !u!199 &654350653
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -27806,7 +27962,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 311001fe610a543ab99b8e9a4cae77c4, type: 2}
+  - {fileID: 2100000, guid: f4632ff33aebd46ed961ac26e4c8e0da, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -27837,7 +27993,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 728336058}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: acdff5b7f0385414a92ea28c8d5fea9b, type: 2}
 --- !u!4 &728336061
 Transform:
   m_ObjectHideFlags: 0
@@ -27848,7 +28004,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.3, z: 0}
-  m_LocalScale: {x: 400, y: 0.1, z: 400}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -28451,6 +28607,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Environment.WeatherVolume
   followOutsidePlayer: 0
   baselineEmission: 65
+  excludeShelteredParticles: 1
+  balconyRing: 0
 --- !u!199 &818138265
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -34335,6 +34493,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Environment.WeatherVolume
   followOutsidePlayer: 0
   baselineEmission: 65
+  excludeShelteredParticles: 1
+  balconyRing: 0
 --- !u!199 &1013307705
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -40068,6 +40228,152 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1233788133
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_Name
+      value: LK Offshore fog 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080514, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_MaxParticleSize
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080514, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e26540d60e864843881e79d13c82280, type: 2}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startSize.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1233788135}
+  m_SourcePrefab: {fileID: 100100000, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+--- !u!1 &1233788134 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+  m_PrefabInstance: {fileID: 1233788133}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1233788135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233788134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca3cff1c7d9904f5ab3fdfaee4e822bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Environment.CoastalFog
+  maximumEmission: 0.35
 --- !u!1 &1247166876
 GameObject:
   m_ObjectHideFlags: 0
@@ -41311,6 +41617,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1551063838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1551063839}
+  m_Layer: 0
+  m_Name: LK Asset Integration Revision 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1551063839
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551063838}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1560152435
 GameObject:
   m_ObjectHideFlags: 0
@@ -42162,6 +42499,152 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1760514401
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_Name
+      value: LK Offshore fog 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080514, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_MaxParticleSize
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080514, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e26540d60e864843881e79d13c82280, type: 2}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -22
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080515, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: ShapeModule.m_Scale.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 9025435444988080573, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      propertyPath: InitialModule.startSize.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1760514403}
+  m_SourcePrefab: {fileID: 100100000, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+--- !u!1 &1760514402 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
+  m_PrefabInstance: {fileID: 1760514401}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1760514403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760514402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca3cff1c7d9904f5ab3fdfaee4e822bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Environment.CoastalFog
+  maximumEmission: 0.35
 --- !u!1 &1777952580
 GameObject:
   m_ObjectHideFlags: 0
@@ -43680,3 +44163,7 @@ SceneRoots:
   - {fileID: 1580147510}
   - {fileID: 617965500}
   - {fileID: 1076962042}
+  - {fileID: 1760514401}
+  - {fileID: 438993929}
+  - {fileID: 1233788133}
+  - {fileID: 1551063839}

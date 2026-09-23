@@ -29,6 +29,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 49eaac34562aa4f6c8ba0a0a88689ba3
   m_FloatValues:
+    9646d8c0b4f1045e3a64159f7b2b4dbb: -20
     e8716233ee85c42aca865389150f4db5: -5
     64fe63d3a4d9a46a7bbf85b235a933ee: -6
     ca86bef3281fe4ee090e137d4e1aea8b: -6
@@ -61,6 +62,25 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
+--- !u!243 &-5369638382118742452
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ambience Music
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 5dc780c645824423a81a72604764c611
+  m_Children: []
+  m_Volume: 9646d8c0b4f1045e3a64159f7b2b4dbb
+  m_Pitch: 6b3ee4a51ef2d4d38ba6f449b0c2504c
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -5141798183687987351}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!245 &-5338012059387216888
 AudioMixerSnapshotController:
   m_ObjectHideFlags: 0
@@ -71,6 +91,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: e4f0d09e324b74d46992a80cf0457d89
   m_FloatValues:
+    9646d8c0b4f1045e3a64159f7b2b4dbb: -20
     e8716233ee85c42aca865389150f4db5: -5
     64fe63d3a4d9a46a7bbf85b235a933ee: -6
     ca86bef3281fe4ee090e137d4e1aea8b: -6
@@ -84,6 +105,20 @@ AudioMixerSnapshotController:
     59a69b8d3c597433480683ebd8358189: -6
     f5924c7f1270749f8b92b2f241de8038: -6
   m_TransitionOverrides: {}
+--- !u!244 &-5141798183687987351
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: fc5045cd23c2a49f9905a427528835c2
+  m_EffectName: Attenuation
+  m_MixLevel: 23deeab3b1743491690c56499240c16e
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!243 &-4809172076860483746
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -207,6 +242,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: a124a169dc21e4609a6b3ff9fa0cbea0
   m_FloatValues:
+    9646d8c0b4f1045e3a64159f7b2b4dbb: -20
     e8716233ee85c42aca865389150f4db5: -5
     64fe63d3a4d9a46a7bbf85b235a933ee: -6
     ca86bef3281fe4ee090e137d4e1aea8b: -6
@@ -274,7 +310,9 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: 9646d8c0b4f1045e3a64159f7b2b4dbb
+    name: AmbienceMusicVolume
   m_AudioMixerGroupViews: []
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 1779709644816860699}
@@ -299,6 +337,7 @@ AudioMixerGroupController:
   - {fileID: -6220639913396840173}
   - {fileID: 2200431994893062751}
   - {fileID: -8066021152834411029}
+  - {fileID: -5369638382118742452}
   m_Volume: 386c2b9b830a644e38703028f4732d87
   m_Pitch: ae6b169f054f04c07b7bb551ee19ca15
   m_Send: 00000000000000000000000000000000
@@ -332,6 +371,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 263d221806722478f8075f7ad2612e68
   m_FloatValues:
+    9646d8c0b4f1045e3a64159f7b2b4dbb: -20
     e8716233ee85c42aca865389150f4db5: -22
     64fe63d3a4d9a46a7bbf85b235a933ee: -6
     ca86bef3281fe4ee090e137d4e1aea8b: -6
@@ -374,6 +414,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 763a0be74883543f18bb7795e15a1c7f
   m_FloatValues:
+    9646d8c0b4f1045e3a64159f7b2b4dbb: -20
     e8716233ee85c42aca865389150f4db5: -5
     64fe63d3a4d9a46a7bbf85b235a933ee: -6
     ca86bef3281fe4ee090e137d4e1aea8b: -6
@@ -397,6 +438,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: e7a1c76d425664df4bec39fb1de3befd
   m_FloatValues:
+    9646d8c0b4f1045e3a64159f7b2b4dbb: -20
     e8716233ee85c42aca865389150f4db5: -22
     64fe63d3a4d9a46a7bbf85b235a933ee: -6
     ca86bef3281fe4ee090e137d4e1aea8b: -6
@@ -566,6 +608,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 9d0850015021b4819b06d76735f2f5f1
   m_FloatValues:
+    9646d8c0b4f1045e3a64159f7b2b4dbb: -20
     e8716233ee85c42aca865389150f4db5: -5
     64fe63d3a4d9a46a7bbf85b235a933ee: -6
     ca86bef3281fe4ee090e137d4e1aea8b: -6

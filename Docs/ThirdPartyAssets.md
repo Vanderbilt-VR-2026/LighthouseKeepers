@@ -1,6 +1,6 @@
 # Assets and provenance
 
-No external art, audio, fonts or models were downloaded from third-party websites. Geometry, wear textures, shaders and Placeholder_* WAVs were authored for this project. The concept image was not available in the session, so no source image was imported or copied.
+The original foundation used no third-party art/audio downloads. The September 23 integration below adds licensed Unity Asset Store content. Geometry, wear textures, shaders and Placeholder_* WAVs were authored for this project. The concept image was not available in the session, so no source image was imported or copied.
 
 | Asset | Creator / source | License / attribution | Accessed | Imported path / changes |
 |---|---|---|---|---|
@@ -8,3 +8,24 @@ No external art, audio, fonts or models were downloaded from third-party website
 | TMP Essential Resources | Unity Technologies; installed com.unity.ugui 2.0.0 Package Resources/TMP Essential Resources.unitypackage | Unity package and included font notices; retained | 2026-09-22 | Assets/TextMesh Pro; stock essentials |
 
 Registry dependencies are recorded in Packages/manifest.json and packages-lock.json. No paid service, ripped asset, external installer or multiplayer/voice framework was added. Replace procedural audio with licensed recordings only after recording creator, URL, license, paths, modifications and attribution here.
+
+## Asset Store integration — 2026-09-23
+
+All six packs were downloaded through the signed-in Unity Package Manager account. Selection and URP adaptation were performed in an isolated Unity 6000.3.23f1 checkout. Vendor demo scenes, player controllers and scripts were excluded. Source asset/meta pairs and GUIDs are retained; game-owned variants are under `Assets/_LighthouseKeepers/ThirdPartyVariants/`.
+
+All six store listings use the **Standard Unity Asset Store EULA** (https://unity.com/legal/as-terms). These are not CC0 assets. Retain the purchased package's license conditions when sharing project source; the project does not grant a separate license to redistribute the packs as asset libraries. No separate attribution requirement was identified in the supplied notices; retain the notices below. Account credentials and download archives are not committed.
+
+| Pack / creator / version | Store source | Selected source paths and notices | Adaptation |
+|---|---|---|---|
+| Abandoned Factory (Lite), TIRGAMES ASSETS, 1.6 | https://assetstore.unity.com/packages/3d/props/industrial/abandoned-factory-lite-62597 | `Assets/TirgamesAssets/Factory/Prefabs/`: `Crane01_Motor`, `FanBig01Motor01`, `MetalCabinet01_1`, `Barrel01a`, `FireExtinguisher01_1`; `PowerBox02_1` inspected but not placed. Notice: `Assets/TirgamesAssets/Factory/AbandonedFactoryLite.pdf` | Nested source prefabs in LK wrappers; plain box colliders; shared URP materials; copied textures capped at 1024, Android ASTC 6x6. Motor assemblies are environmental representations, not a finished functional generator. |
+| Abandoned Asylum, Lukas Bobor, 1.4 | https://assetstore.unity.com/packages/3d/environments/urban/abandoned-asylum-49137 | `Assets/Abandoned_Asylum/Prefabs/`: `TableOffice`, `ChairSchool`, `Pipe`, `SmallMetalicCase`; `TableKitchen` inspected but not placed. Notice: `Assets/Abandoned_Asylum/Read_me.txt` | Generic weathered furnishings only; normalized pivots, uniform placement scale, same URP/texture/collider treatment. No asylum signage or horror props. |
+| PBR - Hospital Horror Pack Free, DNK_DEV, requested 1.2 / Unity 6 edition | https://assetstore.unity.com/packages/3d/environments/pbr-hospital-horror-pack-free-80117 | `Assets/Dnk_Dev/HospitalHorrorPack/Prefab/P_Lamp.prefab`, model `Models/SM_Lamp.obj`, material/texture dependencies. No separate license/notice file found in the supplied archive. | Plain overhead fixture only, no medical cabinet/signage, no vendor lights/scripts. Game-owned baked practical fills supply illumination. |
+| Fog Particles, Game Seed Assets, 1.0.0 | https://assetstore.unity.com/packages/vfx/particles/fog-particles-351840 | `Assets/Fog Particles/Prefabs/Bluish Fog.prefab`; `Texture/Smoke Sprite Sheet.png`; notice `Fog Particles - Documentation.pdf` | URP particle material, three offshore volumes, 8 particles each, no collision/trails/noise, day/storm-scaled emission. |
+| Procedural Water Shader, Pedro Verpha, 1.1.0 | https://assetstore.unity.com/packages/vfx/shaders/procedural-water-shader-353486 | `Assets/Procedural Water Shader/Shaders/ProceduralWater.shader`; notice `How to Use.TXT`; supplied URP package used instead of Built-in shader | `LK_VendorOcean_EditorComparison.mat` retained for comparison. Vendor screen-depth/opaque-texture sampling and absent stereo macros led to a documented Quest fallback: original project-owned two-wave opaque shader, 4225-vertex grid, no screen reads/reflections/tessellation. Vendor shader is not claimed device-verified. |
+| Free Horror Ambience 2, N91MUSIC, 1.0 | https://assetstore.unity.com/packages/audio/music/free-horror-ambience-2-215651 | **`Assets/free horror ambience 2/ha-pressure-nofx.wav`**. No separate notice/license file found in supplied archive. | `ThirdPartyVariants/Audio/LK_Pressure_SeamlessLoop.wav`: converted to 16-bit PCM and given a 5-second end/start crossfade, about 110.64 seconds. Unity streams Vorbis at quality 0.5. One looping Bootstrap source, dedicated Ambience Music mixer group, -20 dB exposed gain, 5-second startup fade and thunder ducking. Human audition still required. |
+
+Access/download date for every row: 2026-09-23. Version labels are the requested/store labels; not every archive embeds its version. The hospital archive identifies itself as **PBR - Hospital Horror Pack Free**, rather than a separately named paid pack.
+
+`Docs/Verification/IntegratedAssetPaths.txt` records the precise imported dependency paths (models, materials, textures, shader and prefabs). `VendorPrefabInventory.txt` records measured bounds, triangle counts and source shaders. `VendorPreviews/` contains the inspected URP prop renders. Not every inspected candidate is placed.
+
+No registry packages were added or changed in the main project. The factory inspection import automatically added Post Processing 3.5.4 in the isolated checkout; it is unnecessary, was removed from that checkout’s manifest, and was never imported into the main project. Original procedural weather, ocean surf, machinery, radio and thunder clips remain placeholders. New licensed ambience does not replace their routing.
