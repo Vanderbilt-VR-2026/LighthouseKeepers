@@ -1,0 +1,64 @@
+ .../Art/Models/LK_Core_LK_Interior.asset           |    4 +-
+ .../Art/Models/LK_Core_LK_Iron.asset               |   12 +-
+ .../Art/Models/LK_Core_LK_Masonry.asset            |    4 +-
+ .../Art/Models/LK_Core_LK_Rust.asset               |    2 +-
+ .../Art/Models/LK_Core_LK_Wood.asset               |   12 +-
+ .../Art/Models/LK_Level01_Plumbing_LK_Brass.asset  |    2 +-
+ .../Art/Models/LK_Level01_Plumbing_LK_Iron.asset   |   20 +-
+ .../Art/Models/LK_Level01_Plumbing_LK_Rust.asset   |   20 +-
+ .../Art/Models/LK_Level02_Generator_LK_Brass.asset |   22 +-
+ .../Art/Models/LK_Level02_Generator_LK_Iron.asset  |   22 +-
+ .../Art/Models/LK_Level02_Generator_LK_Rust.asset  |   20 +-
+ .../Models/LK_Level03_Communications_LK_Iron.asset |   20 +-
+ .../Models/LK_Level03_Communications_LK_Wood.asset |   20 +-
+ .../Art/Models/LK_Level04_Lantern_LK_Iron.asset    |    4 +-
+ .../Audio/Mixer/LK_Atmosphere.mixer                |   45 +-
+ .../Scenes/Bootstrap/LK_Bootstrap.unity            |  149 +-
+ .../Scenes/Environment/LK_Core.unity               | 1823 ++++++++++++------
+ .../Scenes/Environment/LK_Exterior.unity           |  515 +++++-
+ .../Environment/LK_Exterior/LightingData.asset     |  Bin 39837 -> 41869 bytes
+ .../LK_Exterior/Lightmap-0_comp_dir.png            |  Bin 13079 -> 13820 bytes
+ .../LK_Exterior/Lightmap-0_comp_light.exr          |  Bin 162513 -> 162726 bytes
+ .../LK_Exterior/Lightmap-1_comp_dir.png            |  Bin 2081 -> 2881 bytes
+ .../LK_Exterior/Lightmap-1_comp_light.exr          |  Bin 10059 -> 12961 bytes
+ .../LK_Exterior/Lightmap-2_comp_dir.png            |  Bin 2274 -> 2477 bytes
+ .../LK_Exterior/Lightmap-2_comp_light.exr          |  Bin 11645 -> 11612 bytes
+ .../LK_Exterior/Lightmap-3_comp_dir.png            |  Bin 1656 -> 10879 bytes
+ .../LK_Exterior/Lightmap-3_comp_light.exr          |  Bin 9396 -> 84204 bytes
+ .../LK_Exterior/Lightmap-4_comp_dir.png            |  Bin 10344 -> 98946 bytes
+ .../LK_Exterior/Lightmap-4_comp_light.exr          |  Bin 83818 -> 616681 bytes
+ .../LK_Exterior/Lightmap-5_comp_dir.png            |  Bin 92488 -> 11500 bytes
+ .../LK_Exterior/Lightmap-5_comp_light.exr          |  Bin 578763 -> 76962 bytes
+ .../LK_Exterior/Lightmap-6_comp_dir.png            |  Bin 14762 -> 2768 bytes
+ .../LK_Exterior/Lightmap-6_comp_light.exr          |  Bin 114990 -> 12173 bytes
+ .../LK_Exterior/Lightmap-7_comp_dir.png            |  Bin 6052 -> 456 bytes
+ .../LK_Exterior/Lightmap-7_comp_light.exr          |  Bin 38031 -> 2158 bytes
+ .../LK_Exterior/Lightmap-8_comp_dir.png            |  Bin 2192 -> 2499 bytes
+ .../LK_Exterior/Lightmap-8_comp_light.exr          |  Bin 10403 -> 12702 bytes
+ .../LK_Exterior/Lightmap-9_comp_dir.png            |  Bin 527 -> 897 bytes
+ .../LK_Exterior/Lightmap-9_comp_light.exr          |  Bin 3424 -> 3576 bytes
+ .../Environment/LK_Exterior/ReflectionProbe-0.exr  |  Bin 248041 -> 248039 bytes
+ .../Scenes/Levels/LK_Level01_Plumbing.unity        | 1928 +++++++++++++++-----
+ .../Scenes/Levels/LK_Level02_Generator.unity       | 1860 +++++++++++++++----
+ .../Scenes/Levels/LK_Level03_Communications.unity  | 1890 +++++++++++++------
+ .../Scenes/Levels/LK_Level04_Lantern.unity         |  638 +++++--
+ .../Scripts/Editor/LighthousePlayVerification.cs   |   18 +-
+ .../Scripts/Runtime/Environment/WeatherVolume.cs   |   22 +-
+ .../Scripts/Runtime/Player/DesktopPreview.cs       |   33 +-
+ Docs/AudioArchitecture.md                          |    6 +
+ Docs/EnvironmentArchitecture.md                    |    4 +
+ Docs/ManualVerification.md                         |   14 +
+ Docs/Sprint1Handoff.md                             |   18 +
+ Docs/ThirdPartyAssets.md                           |   23 +-
+ Docs/Verification/AndroidBuild.txt                 |    4 +-
+ Docs/Verification/EditMode.xml                     |   58 +-
+ Docs/Verification/PlayMode.txt                     |    2 +-
+ Docs/Verification/Previews/Entrance.png            |  Bin 770439 -> 903290 bytes
+ Docs/Verification/Previews/Exterior.png            |  Bin 448748 -> 326472 bytes
+ Docs/Verification/Previews/Generator.png           |  Bin 637122 -> 1126441 bytes
+ Docs/Verification/Previews/Lantern.png             |  Bin 484417 -> 561757 bytes
+ Docs/Verification/Previews/Plumbing.png            |  Bin 577125 -> 906212 bytes
+ ProjectSettings/PackageManagerSettings.asset       |   12 +-
+ ProjectSettings/ProjectSettings.asset              |    3 +-
+ README.md                                          |    6 +
+ 63 files changed, 6998 insertions(+), 2257 deletions(-)

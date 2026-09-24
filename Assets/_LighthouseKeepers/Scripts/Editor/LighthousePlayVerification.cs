@@ -19,12 +19,13 @@ public static class LighthousePlayVerification {
  static int movementStage;static double movementStart;static Vector3 savedPosition;static Quaternion savedRotation;static ContinuousMoveProvider testedMove;static SnapTurnProvider testedTurn;static XRInputValueReader<Vector2> savedMove,savedTurn;
  static double start;static bool running;static int shot=-1,shotFrame;static Camera preview;static RenderTexture targetTexture;static List<string> errors=new();
  static LighthousePlayVerification(){EditorApplication.playModeStateChanged+=State;}
- public static void Run(){SessionState.SetBool("LKVerification",true);EditorSceneManager.OpenScene(LighthouseScenes.ScenePath("LK_Bootstrap"));EditorApplication.EnterPlaymode();}
- static void State(PlayModeStateChange state){if(!SessionState.GetBool("LKVerification",false))return;if(state==PlayModeStateChange.EnteredPlayMode){EditorApplication.LockReloadAssemblies();running=true;start=EditorApplication.timeSinceStartup;Application.logMessageReceived+=Log;EditorApplication.update+=Tick;}}
+ public static void Run(){SessionState.SetBool("LKVerification",true);EditorSceneManager.OpenScene(LighthouseScenes.ScenePath("LK_Bootstrap"));// Allow Unity 6.3's startup search-index callback to create its database before Play Mode.
+ EditorApplication.delayCall+=EditorApplication.EnterPlaymode;}
+ static void State(PlayModeStateChange state){if(!SessionState.GetBool("LKVerification",false))return;if(state==PlayModeStateChange.EnteredPlayMode){EditorApplication.LockReloadAssemblies();running=true;Application.targetFrameRate=72;start=EditorApplication.timeSinceStartup;Application.logMessageReceived+=Log;EditorApplication.update+=Tick;}}
  static void Log(string message,string trace,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors.Add(message+"\n"+trace);}
- static readonly string[] shotNames={"Entrance","Plumbing","Generator","Lantern","Exterior"};
- static readonly Vector3[] positions={new(-9.5f,1.7f,0),new(1.8f,1.65f,-2.25f),new(1.6f,4.85f,-2.2f),new(3.5f,11.25f,1.5f),new(-19,10,-22)};
- static readonly Vector3[] targets={new(-3,1.6f,0),new(-.7f,1.1f,-3.7f),new(-.4f,4.1f,-3.6f),new(0,11.2f,0),new(-1,5,0)};
+ static readonly string[] shotNames={"Entrance","Plumbing","Generator","Lantern","Exterior","BalconyOcean","EntranceOcean"};
+ static readonly Vector3[] positions={new(-9.5f,1.7f,0),new(1.8f,1.65f,-2.25f),new(1.6f,4.85f,-2.2f),new(3.5f,11.25f,1.5f),new(-19,10,-22),new(6,11.25f,0),new(-8,1.7f,1.5f)};
+ static readonly Vector3[] targets={new(-3,1.6f,0),new(-.7f,1.1f,-3.7f),new(-.4f,4.1f,-3.6f),new(0,11.2f,0),new(-1,5,0),new(35,-2,10),new(-18,-2,20)};
  static void Tick(){
  if(!running||EditorApplication.timeSinceStartup-start<15)return;
  if(movementStage<3){
@@ -47,6 +48,7 @@ public static class LighthousePlayVerification {
  testedTurn.rightHandTurnInput=savedTurn;var cc=rig.GetComponent<CharacterController>();cc.enabled=false;rig.transform.SetPositionAndRotation(savedPosition,savedRotation);cc.enabled=true;movementStage=3;
  }catch(Exception e){errors.Add(e.ToString());Finish();return;}
  }
+ try{if(!LighthouseDesktopWeatherCheck.Tick())return;}catch(Exception e){errors.Add(e.ToString());Finish();return;}
  if(shot>=0){if(Time.frameCount-shotFrame<30)return;RenderTexture.active=targetTexture;var image=new Texture2D(1280,720,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,1280,720),0,0);image.Apply();File.WriteAllBytes("Docs/Verification/Previews/"+shotNames[shot]+".png",image.EncodeToPNG());UnityEngine.Object.DestroyImmediate(image);RenderTexture.active=null;shot++;
  if(shot<shotNames.Length){preview.transform.position=positions[shot];preview.transform.LookAt(targets[shot]);shotFrame=Time.frameCount;return;}
  UnityEngine.Object.DestroyImmediate(preview.gameObject);UnityEngine.Object.DestroyImmediate(targetTexture);Finish();return;}
@@ -54,10 +56,17 @@ public static class LighthousePlayVerification {
  try{
   var bootstrap=UnityEngine.Object.FindAnyObjectByType<EnvironmentBootstrap>();if(!bootstrap||!bootstrap.Ready)throw new Exception("Additive bootstrap not ready");
   if(SceneManager.sceneCount!=7)throw new Exception("Expected seven loaded scenes, got "+SceneManager.sceneCount);
-  if(UnityEngine.Object.FindObjectsByType<XROrigin>().Length!=1)throw new Exception("Duplicate XR Origins");
+  if(UnityEngine.Object.FindObjectsByType<XROrigin>(FindObjectsSortMode.None).Length!=1)throw new Exception("Duplicate XR Origins");
   var origin=UnityEngine.Object.FindAnyObjectByType<XROrigin>();if(origin.transform.position.y < -.1f || origin.transform.position.y > .5f)throw new Exception("Spawn left safe floor: "+origin.transform.position);
-  var flood=UnityEngine.Object.FindAnyObjectByType<FloodController>();flood.SetHeight(7);var thresholds=UnityEngine.Object.FindObjectsByType<FloodThreshold>();if(thresholds.Count(t=>t.Submerged)!=3)throw new Exception("Flood threshold propagation failed");flood.ResetFlood();if(thresholds.Any(t=>t.Submerged))throw new Exception("Flood threshold reset failed");
+  var flood=UnityEngine.Object.FindAnyObjectByType<FloodController>();flood.SetHeight(7);var surface=UnityEngine.Object.FindAnyObjectByType<FloodSurface>();if(!surface.GetComponent<Renderer>().enabled||Mathf.Abs(surface.GetComponent<Renderer>().bounds.center.y-7)>.05f)throw new Exception("Visible flood surface did not rise");
+  var beacon=UnityEngine.Object.FindAnyObjectByType<LighthouseKeepers.Environment.BeaconRotation>();if(beacon.GetComponentsInChildren<Renderer>().Any(r=>!r.enabled)||Quaternion.Angle(beacon.transform.rotation,Quaternion.identity)<1)throw new Exception("Visible beacon did not rotate");
+  var thresholds=UnityEngine.Object.FindObjectsByType<FloodThreshold>(FindObjectsSortMode.None);if(thresholds.Count(t=>t.Submerged)!=3)throw new Exception("Flood threshold propagation failed");flood.ResetFlood();if(thresholds.Any(t=>t.Submerged))throw new Exception("Flood threshold reset failed");
   var days=UnityEngine.Object.FindAnyObjectByType<DayDirector>();days.ApplyDay(5);if(Mathf.Abs(flood.RiseSpeed-days.Current.FloodRiseRate)>.00001f)throw new Exception("Day flood application failed");days.ApplyDay(1);
+  var music=UnityEngine.Object.FindObjectsByType<LighthouseKeepers.Audio.AmbienceMusic>(FindObjectsSortMode.None);
+  if(music.Length!=1||!music[0].GetComponent<AudioSource>().isPlaying||music[0].GetComponent<AudioSource>().volume<.2f)throw new Exception("Persistent soundtrack did not start/fade in");
+  LighthouseCirculationWeather.ValidateLoaded();
+  // Exclude the local player from third-person diagnostic images only.
+  foreach(var renderer in origin.GetComponentsInChildren<Renderer>(true))renderer.forceRenderingOff=true;
   Directory.CreateDirectory("Docs/Verification/Previews");
   UnityEngine.Rendering.Universal.UniversalRenderPipelineDebugDisplaySettings.Instance.Reset();
   preview=new GameObject("Warmed verification camera").AddComponent<Camera>();preview.fieldOfView=75;preview.nearClipPlane=.05f;preview.farClipPlane=250;preview.clearFlags=CameraClearFlags.Skybox;targetTexture=new RenderTexture(1280,720,24);preview.targetTexture=targetTexture;shot=0;shotFrame=Time.frameCount;preview.transform.position=positions[0];preview.transform.LookAt(targets[0]);
@@ -65,7 +74,7 @@ public static class LighthousePlayVerification {
  }catch(Exception e){errors.Add(e.ToString());Finish();}
  }
  static void Finish(){running=false;
- File.WriteAllText("Docs/Verification/PlayMode.txt",errors.Count==0?"PASS: seven additive scenes loaded; one XR Origin; enabled stick actions and injected-input continuous movement/snap turn; flood thresholds and reset; Day 5/Day 1 application; five rendered previews. No runtime errors observed during 15 seconds. Headset comfort and 72Hz require device checks.\n":string.Join("\n",errors));
+ File.WriteAllText("Docs/Verification/PlayMode.txt",errors.Count==0?"Unity editor="+Application.unityVersion+"\nPASS: seven additive scenes loaded; one XR Origin; enabled stick actions and injected-input continuous movement/snap turn; visible flood rise/reset and rotating lens; flood thresholds and reset; Day 5/Day 1 application; seven rendered previews; one playing soundtrack with startup fade. No runtime errors observed during 15 seconds. Headset comfort and 72Hz require device checks.\n":string.Join("\n",errors));
  SessionState.SetBool("LKVerification",false);Application.logMessageReceived-=Log;EditorApplication.update-=Tick;EditorApplication.UnlockReloadAssemblies();EditorApplication.Exit(errors.Count==0?0:1);
  }
  static void Capture(string name,Vector3 position,Vector3 target){var go=new GameObject("Verification camera");var camera=go.AddComponent<Camera>();camera.enabled=false;camera.transform.position=position;camera.transform.LookAt(target);camera.fieldOfView=75;camera.nearClipPlane=.05f;camera.farClipPlane=250;camera.backgroundColor=RenderSettings.fogColor;camera.clearFlags=CameraClearFlags.Skybox;var rt=new RenderTexture(1280,720,24);camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;var image=new Texture2D(1280,720,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,1280,720),0,0);image.Apply();File.WriteAllBytes("Docs/Verification/Previews/"+name+".png",image.EncodeToPNG());RenderTexture.active=null;camera.targetTexture=null;UnityEngine.Object.DestroyImmediate(image);UnityEngine.Object.DestroyImmediate(rt);UnityEngine.Object.DestroyImmediate(go);}
