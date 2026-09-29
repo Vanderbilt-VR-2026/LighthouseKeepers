@@ -1,4 +1,4 @@
-# Sprint 2 integration
+# Sprint 1 integration and repair
 
 ## Baseline and ownership
 
@@ -24,10 +24,32 @@
 
 [VERIFIED] Flood-authority search: `rg -n 'SetHeight\(|height\s*\+=' Assets/_LighthouseKeepers/Scripts/Runtime` finds height storage/advancement only in Flood/FloodController.cs, plus DevelopmentDiagnostics calling its public SetHeight API. FloodSurface moves presentation geometry, not authoritative state. Volume conversion is still PROPOSED, not implemented.
 
-[UNRESOLVED] Android build and device acceptance are pending. Quest is disconnected by the project lead's confirmation. Automated results cannot establish headset comfort, navigation, grabbing, sound balance or performance.
+[VERIFIED] Explicit-Android diagnostic build succeeded with 0 errors and 1 warning (diagnostics enabled without full crash-report debug symbols). APK: Builds/LighthouseKeepers-Sprint2-Integration.apk, 85,546,562 bytes; SHA256 1fb994d9ed5ae72dd3365a1e678d6a16c9a3a3f9f313f65661f0eae32b555910.
+
+[UNRESOLVED] Device acceptance is pending. Quest is disconnected by the project lead's confirmation. Automated results cannot establish headset comfort, navigation, grabbing, sound balance or performance.
 
 [VERIFIED] Artifacts (ignored by Git): artifacts/tests/editmode-baseline.xml, editmode-integration.xml, playmode-integration.xml; corresponding logs under artifacts/logs/. Recovery rename completed via Sprint2Integration.PreserveRecovery; GUID 8790e0acdc4c38148b27e8188cfc3b3a is unchanged.
 
 [PROPOSED] Device checklist once connected: launch the integration APK; look for missing/pink surfaces; walk from the entrance to each floor and balcony; identify each blocked stair approach and unreadable area; check both controllers track; listen for duplicated audio; record observed defects without treating this baseline as the upcoming hands/cleanup implementation. Capture to artifacts/captures/<date>-integration.mp4. Obtain project-lead acceptance before Priority 1.
 
 [PROPOSED] Minimum circulation fixes may precede the integration device gate, as approved by the project lead. Gameplay priority 1 remains gated on priority 0 device acceptance.
+
+[VERIFIED] Project lead clarified this work is still Sprint 1. The existing integrate/sprint-2 branch, checkout directory and tooling identifiers are historical names, not a claim that Sprint 2 has begun.
+
+## Reproduction commands
+
+[VERIFIED] Commands run from the integration checkout, using Unity 6000.3.23f1 at the path below. XML and logs stay in ignored artifacts; they are not committed.
+
+```bash
+UNITY="/Users/aneeshvasamreddy/UnityEditors/6000.3.23f1/Unity.app/Contents/MacOS/Unity"
+"$UNITY" -batchmode -nographics -projectPath . -runTests -testPlatform EditMode -testResults artifacts/tests/editmode-integration.xml -logFile artifacts/logs/editmode-integration.log
+"$UNITY" -batchmode -nographics -quit -projectPath . -executeMethod LighthouseKeepers.Editor.Sprint2Integration.PreserveRecovery -logFile artifacts/logs/recovery.log
+"$UNITY" -batchmode -nographics -projectPath . -runTests -testPlatform PlayMode -testResults artifacts/tests/playmode-integration.xml -logFile artifacts/logs/playmode-integration.log
+"$UNITY" -batchmode -quit -buildTarget Android -projectPath . -executeMethod LighthouseKeepers.Editor.Sprint2Integration.BuildDiagnosticAndroid -logFile artifacts/logs/android-integration-android-target.log
+```
+
+[VERIFIED] The first diagnostic build omitted `-buildTarget Android`. OpenXR MetaQuestFeature validation accessed the selected editor target and logged a NullReferenceException. Unity reported Succeeded with Errors=1; that is not accepted as a clean result. The explicit-Android rerun is required. No package upgrade or vendor-code edit was used.
+
+[UNRESOLVED] This is an integration diagnostic APK, not a shipping-quality acceptance build. Primitive cleanup, navigation and luminance validators, volume conversion, rigged hands, and later mechanic gates have not been implemented in this integration commit. No sustained Quest performance or visual/interaction claims are made.
+
+[VERIFIED] Build-generated URP prefilter cache changes and a Standalone batching entry were reviewed, backed up under artifacts/verification/build-generated, and removed from the source diff. Authored project settings remain at the team main baseline. No teammate edits were discarded.

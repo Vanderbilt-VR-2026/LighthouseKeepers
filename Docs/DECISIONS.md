@@ -1,4 +1,4 @@
-# Sprint 2 decisions
+# Sprint 1 integration and repair decisions
 
 - [VERIFIED] 2026-09-29: Start from latest team/main 41c9819; project lead explicitly superseded the instruction to merge local Phase 1.
 - [PROPOSED] Evolve Eli's flood implementation into volume authority; preserve his presentation features and test intent instead of importing local prototypes.
@@ -7,3 +7,5 @@
 - [VERIFIED] Project lead permits essential navigation fixes before integration acceptance, development solo override for the repair gate, one realtime light per lantern, and relative rendered luminance checks rather than uncalibrated cd/m² claims.
 - [PROPOSED] Keep strict primitive cleanup as a shipping-environment gate; do not claim a baseline diagnostic APK satisfies the new cleanliness contract.
 - [UNRESOLVED] Networking transport, voice solution, player-count tuning, persistence, final art realism, permanent vendor-prop selection and future lantern cost remain open.
+
+[VERIFIED] Project lead clarified this work is still Sprint 1. The existing integrate/sprint-2 branch, checkout directory and tooling identifiers are historical names, not a claim that Sprint 2 has begun.
