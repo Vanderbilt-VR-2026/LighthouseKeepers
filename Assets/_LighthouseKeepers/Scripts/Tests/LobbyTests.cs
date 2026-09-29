@@ -3,7 +3,7 @@ using UnityEngine;
 using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.Tests {
 public sealed class LobbyTests {
- static (GameObject,LobbyManager,LocalLobbyTransport) Setup(){var go=new GameObject();var transport=go.AddComponent<LocalLobbyTransport>();var manager=go.AddComponent<LobbyManager>();return (go,manager,transport);}
+ static (GameObject,LobbyManager,LocalLobbyTransport) Setup(){var go=new GameObject();var transport=go.AddComponent<LocalLobbyTransport>();var manager=go.AddComponent<LobbyManager>();TestLifecycle.Invoke(transport, "Awake");TestLifecycle.Invoke(manager, "Awake");return (go,manager,transport);}
  [Test] public void HostCreatesSingleHostRoster(){var (go,manager,_) = Setup();try{Assert.IsTrue(manager.Host());Assert.IsTrue(manager.IsOnline);Assert.IsTrue(manager.IsHost);Assert.AreEqual(1,manager.Players.Count);Assert.IsTrue(manager.Players[0].IsHost);}finally{Object.DestroyImmediate(go);}}
  [Test] public void SecondHostOrJoinWhileOnlineFails(){var (go,manager,_) = Setup();try{manager.Host();Assert.IsFalse(manager.Host());Assert.IsFalse(manager.Join("anywhere"));}finally{Object.DestroyImmediate(go);}}
  [Test] public void JoinLeaveFiresConnectionEvents(){var (go,manager,_) = Setup();try{int connects=0;manager.OnConnectionChanged.AddListener(_=>connects++);manager.Join("local");Assert.IsTrue(manager.IsOnline);Assert.IsFalse(manager.IsHost);manager.Leave();Assert.IsFalse(manager.IsOnline);Assert.AreEqual(0,manager.Players.Count);Assert.AreEqual(2,connects);}finally{Object.DestroyImmediate(go);}}

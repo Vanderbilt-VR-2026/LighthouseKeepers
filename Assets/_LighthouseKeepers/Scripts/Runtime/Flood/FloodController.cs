@@ -19,9 +19,10 @@ public sealed class FloodController:MonoBehaviour {
  public float EffectiveRiseSpeed=>riseSpeed*(1+surgePerMetre*Mathf.Max(0,height-MinimumHeight));
  void Awake(){if(profile){riseSpeed=profile.RiseSpeed;surgePerMetre=profile.SurgePerMetre;}}
  void Start(){SetHeight(height);}
- void Update(){if(!paused)SetHeight(height+EffectiveRiseSpeed*Time.deltaTime);}
+ void Update(){if(!paused&&riseSpeed>0&&height<MaximumHeight)SetHeight(height+EffectiveRiseSpeed*Time.deltaTime);}
  public void SetHeight(float value){height=Mathf.Clamp(value,MinimumHeight,MaximumHeight);HeightChanged?.Invoke(height);onHeightChanged.Invoke(height);}
- public float TimeToHeight(float target){target=Mathf.Clamp(target,MinimumHeight,MaximumHeight);if(target<=height)return 0;if(paused||riseSpeed<=0)return float.PositiveInfinity;if(surgePerMetre<=0)return (target-height)/riseSpeed;float gained=1+surgePerMetre*(height-MinimumHeight),wanted=1+surgePerMetre*(target-MinimumHeight);return Mathf.Log(wanted/gained)/(riseSpeed*surgePerMetre);}
+ /// <summary>Seconds until a stationary world-space target is reached; unreachable targets have no ETA.</summary>
+ public float TimeToHeight(float target){if(target<=height)return 0;if(target>MaximumHeight||paused||riseSpeed<=0)return float.PositiveInfinity;if(surgePerMetre<=0)return (target-height)/riseSpeed;float gained=1+surgePerMetre*(height-MinimumHeight),wanted=1+surgePerMetre*(target-MinimumHeight);return Mathf.Log(wanted/gained)/(riseSpeed*surgePerMetre);}
  [ContextMenu("Reset flood safely")] public void ResetFlood(){paused=true;SetHeight(MinimumHeight);}
  [ContextMenu("Resume rising")] public void ResumeFlood()=>paused=false;
  void OnValidate(){if(Application.isPlaying)SetHeight(height);}

@@ -8,6 +8,10 @@ Editor preview without a headset: WASD walks; Q/E snap-turn. This preview uses c
 
 Quest controls: left stick walks relative to the headset, right stick snap-turns, grip grabs nearby interactables. Use the Quest system recenter gesture; a RecenterPlayer inspector action is also provided. No jumping, climbing, voice or networking is implemented.
 
+## Lobby and flood iteration
+
+Choose **Lighthouse Keepers → Play lobby preview** for the crew briefing screen. Open local practice, mark yourself ready, then enter the environment. Guest preview is a simulation; multiplayer is not connected. See [the iteration guide](Docs/LobbyAndFloodIteration.md) for visual concepts, implementation notes and the Quest 3 test checklist.
+
 ## Android build and USB test
 1. Open File → Build Profiles, select Android and Switch Platform.
 2. Confirm `LK_Bootstrap` is first in the scene list. All eight scenes are registered; the automated APK uses the seven environment scenes.
