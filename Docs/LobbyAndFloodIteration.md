@@ -1,60 +1,53 @@
-# Lobby and flood iteration — September 29, 2026
+# Keeper watch room and flood iteration
 
-Started from `main` at `41c9819`, including Eli's merged PR #20, on `codex/flood-lobby-polish`.
+Base: `main` at `41c9819`, including Eli's PR #20. Work continues on PR #24, `codex/flood-lobby-polish`, with Unity **6000.3.23f1**.
 
-## Repository map
+## Spatial lobby design
 
-- `Scripts/Runtime/Flood`: bounded rising water, accelerating rise rate, head-clearance danger stages, surface darkening and room threshold events.
-- `Scripts/Runtime/Lobby`: crew state, transport interface, local simulation, ready rules and runtime UI.
-- `Scripts/Runtime/Core/EnvironmentBootstrap`: loads the six content scenes around the single persistent player and systems scene.
-- `Scenes/Levels/LK_Level01_Plumbing`: flood surface, plumbing and repair anchors. Floors rise in 3.2 metre increments.
-- `Scripts/Tests`: EditMode regression tests. `Scripts/Editor`: authoring, launch and verification tools.
+The lobby is an authored keeper room, using the same worn timber, slate, brass, vendor furniture, cold ocean material and warm practical lighting as the environment. A physical, framed watch board holds a paper crew ledger. Sea and rain ambience come from the window. The scene has a clear floor area in front of the board and solid window boundaries.
 
-All paths above are under `Assets/_LighthouseKeepers/`. Unity version is **6000.3.23f1** as recorded in ProjectSettings, rather than the shorthand version in PR #20's description.
+Both desktop and XR render the **same world-space board**. There is no screen-space overlay or panel that follows head rotation. Leaning or walking gives real parallax between the controls, frame, fittings and room. The starting distance is about 2.8m; the player can approach. The board is 2.56m wide and 1.92m tall. Main controls are at least 70cm wide and 16cm high, positioned near 1m above the floor. TextMesh Pro's existing distance-field font keeps lettering legible as viewing distance changes.
 
-## Try the lobby
+The large default controls are **Take your post → Signal ready → Begin watch**. Status uses words and a colored watch indicator. Button hover/press changes color, the label depresses slightly within a fixed hit target, selection plays a quiet spatial click, and tracked-pointer events request short haptic impulses from that controller. Hardware sensation remains to be verified.
 
-Choose **Lighthouse Keepers → Play lobby preview**. It opens `LK_LobbyPreview`, a separate development scene with the existing Quest rig. The tool creates that scene only if missing. The environment launch menu still opens Bootstrap. No shared content scenes or player prefabs are regenerated.
+**Lower board** moves the whole physical frame and canvas down 25cm for seated use; **Raise board** restores its authored position. It never moves the camera or XR origin. **Crew options** contains optional name entry and the explicitly labeled guest simulation, keeping setup fields out of the default view. Local practice requires no keyboard.
 
-1. Optionally edit the keeper name; choose **Open practice**.
-2. Read the crew status and disabled-entry explanation. Select **I'm ready**, then **Enter lighthouse**.
-3. Entry loads the existing Bootstrap and its additive environment. Flooding remains paused according to existing game behavior.
-4. **Unready** revokes entry. **Leave crew** resets the session. **Preview guest** explicitly shows simulated guest state; it does not connect to another headset. Leave the guest preview and open practice to enter the environment.
+## Try it
 
-Desktop uses mouse UI and the input system's event module. In XR the board uses world-space Canvas, tracked-device raycasting and the current main camera. It is placed once, 2.2 metres ahead, rather than attached to the head. The existing rig has UI-enabled interactors. Default keeper name allows button-only local practice without typing on Quest; headset keyboard entry is not yet verified.
+Choose **Lighthouse Keepers → Play lobby preview**. The menu opens `LK_LobbyPreview`; it only creates the scene if absent. Existing shared environments and the player prefab are untouched.
 
-The normal build list is unchanged. To test the preview on Quest, use a temporary Build Profile scene list with `LK_LobbyPreview` first and retain all seven environment scenes so entry can load Bootstrap. Do not replace the team's main build list just for this test.
+1. Point a controller at **Take your post** and select with the trigger, or click with the desktop mouse.
+2. Select **Signal ready**, then **Begin watch** to load Bootstrap and its six content scenes.
+3. **Stand down** revokes readiness. **Leave watch** resets the crew. **Crew options → Simulate a guest** is an offline roster preview, not a connection to another headset.
+4. Try **Lower board** from both standing and seated positions; check legibility and controller reach.
 
-## Corrections in this pass
+The default build list is unchanged. For Quest, use a temporary Build Profile with `LK_LobbyPreview` first and retain all seven environment scenes. The normal **Play environment** menu still opens Bootstrap.
 
-- Use Unity's supported built-in legacy font, initialize UI input when absent, initialize the name field, and fit eight crew rows in a fixed layout.
-- Make local simulation explicit; show ready/unready state, current crew count, start requirements and failed connection/scene-load feedback.
-- Prefer an explicitly assigned transport and unsubscribe its events when the manager is destroyed. Clamp minimum required crew to capacity.
-- Typing in a desktop input field no longer drives WASD movement or Q/E snap turns.
-- Report infinite time to a target above maximum flood height. Previously a safe head position above 10.5m incorrectly counted down to maximum water height.
-- Stop emitting height events every frame after the flood reaches its cap or has a zero rise rate.
-- Initialize lifecycle dependencies explicitly in EditMode tests; those tests do not receive Play Mode's Awake/OnEnable calls.
+## Runtime ownership
 
-## Visual direction
+- `Scripts/Runtime/Lobby`: roster rules, local transport, world-space board and pointer feedback.
+- `Scripts/Editor/LighthouseLobbyPreview`: authors only the isolated preview scene. The explicit batch entry `RebuildWatchRoom` replaces that preview, so do not run it on an editor containing unsaved work. Normal Play does not regenerate existing scenes.
+- `Scripts/Editor/LighthouseLobbyVerification`: captures the actual spatial UI and checks mouse-style raycasts, pointer events, board height, ready/guest flow and scene transition.
+- `Scripts/Runtime/Core/EnvironmentBootstrap`: one rig and systems scene, with six additive content scenes.
+- `Scripts/Runtime/Flood`: one bounded global water height, accelerating rise rate, surface tone, room thresholds and head-clearance danger API. It is not sealed-room fluid simulation.
 
-`DesignReferences/FloodLobby/keeper-briefing-and-flood-concepts.png` is generated concept art, **not an in-game capture**. It proposes a physical crew board, a depth ruler near the pump, amber early warnings, and readable high-ground signage with restrained red emergency lighting. Detailed props, water reflections, environmental depth markers and the physical brass frame shown there are not implemented by this pass. The runtime lobby adopts the navy, cream and amber palette and briefing hierarchy.
+## Retained flood and usability fixes
 
-The merged `FloodDangerMonitor` is not attached to an authored scene yet. Its stage and countdown API is tested, but wiring it to visible player warnings is a next integration step. For manual stage inspection, add it to the flood systems object in Play Mode.
+Time to a target above the maximum flood height is infinite. Reaching the cap or using a zero rise rate no longer publishes redundant height events every frame. Minimum crew requirements cannot exceed capacity; assigned transports take precedence and subscriptions are cleaned up. Desktop typing in either legacy or TMP input fields suppresses WASD/QE movement.
 
-A real network transport and synchronized scene launch remain separate future work. The existing transport interface models roster operations but does not yet broadcast a shared start request.
+`FloodDangerMonitor` is not attached to an environment scene yet. Connecting its stages to visible warnings remains the next flood integration step. A real network transport and synchronized launch also remain future work.
 
-## Quest 3 test pass
+## Visual references and evidence
 
-- Confirm the board appears at a comfortable distance, remains stationary while looking around, and is readable in both eyes.
-- Test each controller ray: hover, select, Ready, Unready, Leave and Enter. Confirm one rig and listener remain after entry.
-- Repeat seated and standing; check that system recentering leaves the board reachable.
-- Check default-name practice before trying text entry; note any virtual keyboard limitations.
-- In the environment, use flood controls to inspect dry, watch, warning, critical and submerged stages; repeat while moving up stairs and crouching.
-- Verify that a head above 10.5m has no submersion countdown, and resetting the flood pauses and lowers it.
-- Check water rendering in both eyes, warning readability, comfort, audio changes and frame timing on the headset. Desktop captures do not establish any of these results.
+`DesignReferences/FloodLobby/keeper-briefing-and-flood-concepts.png` is the earlier generated concept board, not a screenshot. This revision implements the physical room/board direction using repository assets; the concept's environmental depth rulers, flood signage and reflective water remain proposals. Current in-engine captures and results are in [Verification/Lobby](Verification/Lobby/README.md).
 
-## Repeatable verification
+## Quest 3 checklist
 
-EditMode: run all project tests in Unity Test Runner. Rendered integration: invoke `LighthouseKeepers.Editor.LighthouseLobbyVerification.RunBatch` from a **separate batch-mode Unity process with graphics enabled** and this project closed in other editors. It writes four rendered lobby states and a result to `Docs/Verification/Lobby`, exercises the buttons and verifies Bootstrap loads seven scenes, then exits Unity. Do not invoke that batch entry point inside an editor holding unsaved work.
-
-Latest recorded result: **25/25 EditMode tests passed** and the rendered lobby-to-environment check passed with **zero runtime errors**. See [verification results and actual captures](Verification/Lobby/README.md). Quest checks remain unverified.
+- Verify both-eye text and water rendering, pointer hover/trigger selection with each controller, and short haptic feedback.
+- Approach and lean around the board; ensure it stays anchored and room boundaries prevent leaving the standing area.
+- Test the full sequence seated and standing. Lower/raise must move the entire frame by 25cm without moving the view.
+- Confirm the main controls are readable and reachable; check system recentering and near-surface clipping.
+- Check selection/sea/rain audio balance, default-name practice and optional virtual keyboard behavior.
+- Enter the lighthouse and confirm one rig/listener. Flooding should retain its existing paused default.
+- Inspect head-clearance stages with a monitor added in Play Mode, repeat on stairs/crouching, and check reset and safe heights above 10.5m.
+- Profile frame timing on the device. The preview uses two unshadowed point lights, the existing ocean shader and no post-processing or planar reflections; desktop results do not establish Quest performance.

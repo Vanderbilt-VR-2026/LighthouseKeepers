@@ -6,6 +6,8 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using TMPro;
 using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 
@@ -55,13 +57,24 @@ namespace LighthouseKeepers.Editor
         }
         static void Click(string name)
         {
-            var button = screen.GetComponentsInChildren<Button>().Single(b => b.name == name);
+            var button = screen.GetComponentsInChildren<Button>(true).Single(b => b.name == name);
             if (!button.interactable) throw new Exception(name + " is unexpectedly disabled.");
-            button.onClick.Invoke();
+            if (!button.gameObject.activeInHierarchy) throw new Exception(name + " is hidden.");
+            Canvas.ForceUpdateCanvases();
+            camera.Render(); // Newly revealed controls must have registered CanvasRenderer depths before raycasting.
+            var pointer = new PointerEventData(EventSystem.current) { position = camera.WorldToScreenPoint(button.transform.position), button = PointerEventData.InputButton.Left };
+            var hits = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            if (hits.Count == 0 || hits[0].gameObject != button.gameObject) throw new Exception("UI raycast did not reach " + name + " as its first hit.");
+            ExecuteEvents.Execute(button.gameObject, pointer, ExecuteEvents.pointerEnterHandler);
+            ExecuteEvents.Execute(button.gameObject, pointer, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(button.gameObject, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(button.gameObject, pointer, ExecuteEvents.pointerClickHandler);
+            if (button) ExecuteEvents.Execute(button.gameObject, pointer, ExecuteEvents.pointerExitHandler);
         }
         static void Tick()
         {
-            if (EditorApplication.timeSinceStartup - began > 90) { Finish(false, "Timed out."); return; }
+            if (EditorApplication.timeSinceStartup - began > 180) { Finish(false, "Timed out."); return; }
             if (Time.frameCount - frame < 30) return;
             frame = Time.frameCount;
             try
@@ -72,17 +85,22 @@ namespace LighthouseKeepers.Editor
                     manager = UnityEngine.Object.FindAnyObjectByType<LobbyManager>();
                     camera = Camera.main;
                     if (!screen || !manager || !camera) throw new Exception("Missing lobby objects.");
-                    if (!screen.GetComponentsInChildren<Text>().Single(t => t.name == "Mode").text.StartsWith("LOCAL PRACTICE"))
+                    if (!screen.GetComponentsInChildren<TMP_Text>().Single(t => t.name == "Mode").text.StartsWith("LOCAL PRACTICE"))
                         throw new Exception("Initial UI does not reflect the local transport.");
-                    foreach (var button in screen.GetComponentsInChildren<Button>())
-                        if (string.IsNullOrWhiteSpace(button.GetComponentInChildren<Text>().text))
+                    foreach (var button in screen.GetComponentsInChildren<Button>(true))
+                        if (string.IsNullOrWhiteSpace(button.GetComponentInChildren<TMP_Text>().text))
                             throw new Exception("Missing label on " + button.name);
-                    target = new RenderTexture(1280, 860, 24);
+                    target = new RenderTexture(1600, 1000, 24);
                     camera.targetTexture = target;
                     var canvas = screen.GetComponentInChildren<Canvas>();
-                    canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                    canvas.worldCamera = camera;
-                    canvas.planeDistance = 1;
+                    if (canvas.renderMode != RenderMode.WorldSpace) throw new Exception("Lobby must stay in world space, including desktop preview.");
+                    if (canvas.worldCamera != camera) throw new Exception("Lobby camera is not bound.");
+                    var position = canvas.transform.position;
+                    var rotation = canvas.transform.rotation;
+                    var headRotation = camera.transform.rotation;
+                    camera.transform.Rotate(0, 20, 0, Space.World);
+                    if (canvas.transform.position != position || canvas.transform.rotation != rotation) throw new Exception("Board followed the head.");
+                    camera.transform.rotation = headRotation;
                     Canvas.ForceUpdateCanvases();
                     phase++;
                 }
@@ -106,6 +124,8 @@ namespace LighthouseKeepers.Editor
                     Click("Ready");
                     if (manager.CanStart) throw new Exception("Unready toggle did not revoke start.");
                     Click("Leave");
+                    Click("CrewOptions");
+                    Capture("07-crew-options");
                     Click("JoinCrew");
                     if (!manager.IsOnline || manager.IsHost || manager.CanStart) throw new Exception("Guest preview rules failed.");
                     phase++;
@@ -113,6 +133,54 @@ namespace LighthouseKeepers.Editor
                 else if (phase == 4)
                 {
                     Capture("04-guest-preview");
+                    Click("Leave");
+                    Click("OpenPractice");
+                    Click("Ready");
+                    phase++;
+                }
+                else if (phase == 5)
+                {
+                    var headPosition = camera.transform.position;
+                    var boardPosition = screen.transform.position;
+                    Click("BoardHeight");
+                    if (!screen.IsLowered || Vector3.Distance(screen.transform.position, boardPosition + Vector3.down * .25f) > .001f)
+                        throw new Exception("Seated height did not move the board by 25 cm.");
+                    if (camera.transform.position != headPosition) throw new Exception("Board adjustment moved the head.");
+                    camera.transform.position = new Vector3(headPosition.x, 1.2f, headPosition.z);
+                    Capture("05-seated");
+                    Click("BoardHeight");
+                    if (screen.IsLowered || Vector3.Distance(screen.transform.position, boardPosition) > .001f)
+                        throw new Exception("Board did not return to standing height.");
+                    // Keep the capture in front of the body proxy while widening the room view.
+                    camera.transform.position = new Vector3(.7f, 1.85f, -1.25f);
+                    var oldRotation = camera.transform.rotation;
+                    var oldFieldOfView = camera.fieldOfView;
+                    camera.fieldOfView = 80;
+                    camera.transform.LookAt(new Vector3(-.15f,1.5f,1.5f));
+                    Capture("06-watch-room");
+                    camera.fieldOfView = oldFieldOfView;
+                    camera.transform.SetPositionAndRotation(headPosition,oldRotation);
+                    Click("Leave");
+                    var fullCrew = ScriptableObject.CreateInstance<LobbyConfig>();
+                    var configData = new SerializedObject(fullCrew);
+                    configData.FindProperty("maxPlayers").intValue = 8;
+                    configData.ApplyModifiedPropertiesWithoutUndo();
+                    var managerData = new SerializedObject(manager);
+                    managerData.FindProperty("config").objectReferenceValue = fullCrew;
+                    managerData.ApplyModifiedPropertiesWithoutUndo();
+                    Click("OpenPractice");
+                    var local = (LocalLobbyTransport)manager.Transport;
+                    for (int i = 2; i <= 8; i++) local.AddSimulatedPlayer("Keeper " + i);
+                    screen.Refresh();
+                    phase++;
+                }
+                else if (phase == 6)
+                {
+                    Capture("08-full-crew");
+                    if (screen.GetComponentsInChildren<TMP_Text>().Count(t => t.name.StartsWith("CrewSlot")) != 8)
+                        throw new Exception("Full crew rows are missing.");
+                    foreach (var label in screen.GetComponentsInChildren<TMP_Text>())
+                        if (label.isActiveAndEnabled && label.isTextTruncated) throw new Exception("Clipped label: " + label.name);
                     Click("Leave");
                     Click("OpenPractice");
                     Click("Ready");
@@ -128,7 +196,7 @@ namespace LighthouseKeepers.Editor
                     if (!bootstrap || !bootstrap.Ready) return;
                     if (SceneManager.sceneCount != 7) throw new Exception("Expected seven environment scenes.");
                     if (UnityEngine.Object.FindAnyObjectByType<LobbyScreen>()) throw new Exception("Lobby leaked into environment.");
-                    Finish(errors == 0, "Rendered four lobby states; exercised host, ready/unready, leave, guest preview and start; environment ready with seven scenes. Runtime errors: " + errors);
+                    Finish(errors == 0, "Rendered eight spatial lobby views including full crew; world-space canvas and seated height checked; UI raycasts and pointer events exercised host, ready/unready, leave, guest preview, board height and start; environment ready with seven scenes. Runtime errors: " + errors);
                 }
             }
             catch (Exception e) { Finish(false, e.ToString()); }
@@ -136,9 +204,8 @@ namespace LighthouseKeepers.Editor
         static void Capture(string name)
         {
             Directory.CreateDirectory(Output);
-            // Rebuild text at the capture canvas scale, rather than reusing geometry
-            // cached for the initial editor Game view size before the camera was assigned.
-            foreach (var text in screen.GetComponentsInChildren<Text>()) text.SetAllDirty();
+            // Render the actual room-anchored canvas through the player camera, with no overlay substitution.
+            foreach (var text in screen.GetComponentsInChildren<TMP_Text>()) text.ForceMeshUpdate();
             Canvas.ForceUpdateCanvases();
             camera.Render();
             var previous = RenderTexture.active;

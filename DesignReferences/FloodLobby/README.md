@@ -1,6 +1,6 @@
 # Keeper briefing and flood concepts
 
-Generated with the built-in imagegen tool on September 29, 2026. This is visual exploration, not a screenshot or a claim about implemented rendering. The runtime screen uses the briefing hierarchy and palette; the environmental art remains proposed.
+Generated with the built-in imagegen tool on September 29, 2026. This is visual exploration, not a screenshot or a claim about implemented rendering. The current lobby implements the physical watch-room and briefing-board direction using existing repository assets. The flood depth rulers, signage and reflective water shown here remain proposals. Actual Unity renders are in [the verification gallery](../../Docs/Verification/Lobby/README.md).
 
 ![Keeper briefing and flood concepts](keeper-briefing-and-flood-concepts.png)
 

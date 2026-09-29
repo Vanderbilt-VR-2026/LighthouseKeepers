@@ -10,7 +10,7 @@ Quest controls: left stick walks relative to the headset, right stick snap-turns
 
 ## Lobby and flood iteration
 
-Choose **Lighthouse Keepers → Play lobby preview** for the crew briefing screen. Open local practice, mark yourself ready, then enter the environment. Guest preview is a simulation; multiplayer is not connected. See [the iteration guide](Docs/LobbyAndFloodIteration.md) for visual concepts, implementation notes and the Quest 3 test checklist.
+Choose **Lighthouse Keepers → Play lobby preview** to enter the keeper watch room. Use **Take your post → Signal ready → Begin watch** on the physical board. **Lower board** adjusts its height for seated use. Crew options include an offline guest simulation; multiplayer is not connected. See [the iteration guide](Docs/LobbyAndFloodIteration.md) for visual concepts, implementation notes and the Quest 3 test checklist.
 
 ## Android build and USB test
 1. Open File → Build Profiles, select Android and Switch Platform.
