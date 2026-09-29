@@ -12,6 +12,8 @@ Unity **6000.3.23f1**, macOS Editor. Base: `main` at `41c9819` (PR #20).
 
 Play Mode entry is deferred to the next editor callback to avoid Unity's startup search-index exception. Newly revealed UI is rendered before checking raycast depth. The final records and images correspond to the corrected source.
 
+The captures were refreshed after removing decorative and explanatory subtext. The rendered interaction check passed again with the simplified layout.
+
 ## Captures
 
 1. [Offline / take your post](01-offline.png)

@@ -14,7 +14,7 @@ namespace LighthouseKeepers.Lobby
         [SerializeField] AudioClip selectSound;
         [SerializeField] Transform boardMount;
         Canvas canvas;
-        TMP_Text statusText, hintText, modeText, crewCount, readyCaption;
+        TMP_Text errorText, modeText, crewCount, readyCaption;
         readonly TMP_Text[] rosterRows = new TMP_Text[8];
         TMP_InputField nameField, addressField;
         Button hostButton, joinButton, readyButton, startButton, leaveButton, heightButton;
@@ -93,8 +93,7 @@ namespace LighthouseKeepers.Lobby
         {
             if (!manager || !modeText) return;
             bool local = manager.IsLocalPreview;
-            modeText.text = local ? "LOCAL PRACTICE" : "CREW SESSION";
-            statusText.text = manager.IsOnline ? (manager.IsHost ? "Your name is in the ledger." : "Guest preview · simulated crew") : "A storm is coming. Take your post.";
+            modeText.text = local ? (manager.IsOnline && !manager.IsHost ? "SIMULATED GUEST" : "LOCAL PRACTICE") : "CREW SESSION";
             crewCount.text = $"{manager.Players.Count:00} / {manager.MaxPlayers:00} KEEPERS";
             for (int i = 0; i < rosterRows.Length; i++)
             {
@@ -110,11 +109,10 @@ namespace LighthouseKeepers.Lobby
                 row.color = player.IsReady ? new Color(.12f,.35f,.22f) : Ink;
             }
             bool ready = manager.LocalPlayer()?.IsReady == true;
-            readyCaption.text = ready ? "WATCH STATUS / READY" : "WATCH STATUS / STANDBY";
+            readyCaption.text = ready ? "READY" : "STANDBY";
             watchLamp.color = ready ? Ready : Brass;
-            hintText.text = !string.IsNullOrEmpty(manager.LastError) ? manager.LastError : !manager.IsOnline
-                ? "Sign the ledger, then signal that you are ready."
-                : manager.CanStart ? "All set. The lighthouse is yours to keep." : manager.StartHint;
+            errorText.text = manager.LastError;
+            errorText.gameObject.SetActive(!string.IsNullOrEmpty(manager.LastError));
             SetButtonLabel(readyButton, ready ? "STAND DOWN" : "SIGNAL READY");
             hostButton.transform.parent.gameObject.SetActive(!manager.IsOnline);
             leaveButton.transform.parent.gameObject.SetActive(manager.IsOnline);
@@ -139,12 +137,10 @@ namespace LighthouseKeepers.Lobby
             var scaler = root.gameObject.AddComponent<CanvasScaler>();
             scaler.dynamicPixelsPerUnit = 2;
             // The slate backing and brass frame are real scene geometry behind this transparent canvas.
-            Label(root, "Station", new(-575, 422), new(720, 28), 19, Brass, "N O R T H   A T L A N T I C     /     K E E P E R   S T A T I O N");
             modeText = Label(root, "Mode", new(310, 422), new(265, 28), 19, Muted, "LOCAL PRACTICE");
             LighthouseMark(root, new Vector2(-541, 326));
-            var title = Label(root, "Title", new(-447, 351), new(1010, 90), 53, Chalk, "LIGHTHOUSE KEEPERS");
+            var title = Label(root, "Title", new(-447, 326), new(1010, 90), 53, Chalk, "LIGHTHOUSE KEEPERS");
             title.characterSpacing = 3;
-            Label(root, "Motto", new(-445, 280), new(1000, 44), 25, Muted, "Take your place. Keep the light.");
             Rule(root, new(0, 240), new(1150, 2), Brass);
             roster = Rect("CrewLedger", root, new(-291, -11), new(570, 432)).gameObject;
             var sheet = roster.AddComponent<Image>(); sheet.color = Paper; sheet.raycastTarget = false;
@@ -158,24 +154,19 @@ namespace LighthouseKeepers.Lobby
                 rosterRows[i] = Label(roster.transform, "CrewSlot" + i, new(0, 84-i*40), new(502, 40), 25, Ink, "");
                 rosterRows[i].rectTransform.pivot = new(.5f,.5f);
             }
-            Label(root, "Briefing", new(55, 175), new(490, 35), 22, Brass, "BEFORE THE STORM");
-            BriefingLine(root, 111, "01", "Keep the beacon burning.", "The coast is counting on you.");
-            BriefingLine(root, 19, "02", "Watch the waterline.", "As the water rises, move upstairs.");
-            Label(root, "Controls", new(55, -98), new(510, 70), 23, Chalk, "Point either controller at a control.\nPress the trigger to select.");
-            heightButton = MakeButton(root, "BoardHeight", "LOWER BOARD", new(310,-180), new(510,66), false);
+            heightButton = MakeButton(root, "BoardHeight", "LOWER BOARD", new(310,-65), new(510,82), false);
             heightButton.onClick.AddListener(() => SetLowered(!lowered));
-            var details = MakeButton(root, "CrewOptions", "CREW OPTIONS", new(-291,-270), new(570,60), false);
+            var details = MakeButton(root, "CrewOptions", "CREW OPTIONS", new(310,55), new(510,82), false);
             details.onClick.AddListener(() => { bool show = !options.activeSelf; options.SetActive(show); roster.SetActive(!show); });
-            statusText = Label(root, "Status", new(55,-270), new(510,55), 23, Muted, "");
             Rule(root, new(0,-315), new(1150,2), Brass);
             hostButton = MakeButton(root, "OpenPractice", "TAKE YOUR POST", new(-386,-372), new(378,82), false);
             leaveButton = MakeButton(root, "Leave", "LEAVE WATCH", new(-386,-372), new(378,82), false);
             readyButton = MakeButton(root, "Ready", "SIGNAL READY", new(0,-372), new(350,82), false);
             startButton = MakeButton(root, "Start", "BEGIN WATCH  →", new(386,-372), new(378,82), true);
-            hintText = Label(root, "StartHint", new(-575,-434), new(1150,42), 21, Muted, "");
-            watchLamp = Rect("WatchLamp", root, new(75,204), new(12,12)).gameObject.AddComponent<Image>();
+            errorText = Label(root, "Error", new(-575,-434), new(1150,42), 21, Muted, "");
+            watchLamp = Rect("WatchLamp", root, new(75,175), new(12,12)).gameObject.AddComponent<Image>();
             watchLamp.raycastTarget = false;
-            readyCaption = Label(root, "WatchStatus", new(95,203), new(470,26), 17, Brass, "WATCH STATUS / STANDBY");
+            readyCaption = Label(root, "WatchStatus", new(105,175), new(450,38), 26, Brass, "STANDBY");
             BuildOptions(root);
         }
         void BuildOptions(Transform root)
@@ -187,16 +178,8 @@ namespace LighthouseKeepers.Lobby
             nameField.text = manager.PlayerName; nameField.characterLimit = 24;
             addressField = Input(options.transform, "HostAddress", new(0,18), "Host address");
             addressField.characterLimit = 128; addressGroup = addressField.gameObject;
-            Label(options.transform, "SimulationNote", new(-250,-58), new(500,94), 23, Muted,
-                "Local practice works without typing.\nGuest simulation is for preview only;\nit does not connect another headset.");
             joinButton = MakeButton(options.transform, "JoinCrew", "SIMULATE A GUEST", new(0,-159), new(500,70), false);
             options.SetActive(false);
-        }
-        void BriefingLine(Transform root, float y, string number, string title, string detail)
-        {
-            Label(root, "Step"+number, new(55,y), new(65,35), 27, Brass, number);
-            Label(root, "Task"+number, new(120,y), new(455,38), 26, Chalk, title);
-            Label(root, "Detail"+number, new(120,y-38), new(455,36), 20, Muted, detail);
         }
         static void Rule(Transform parent, Vector2 position, Vector2 size, Color color)
         {
