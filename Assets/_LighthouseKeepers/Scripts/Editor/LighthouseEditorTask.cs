@@ -10,7 +10,10 @@ namespace LighthouseKeepers.Editor
  [InitializeOnLoad] public static class LighthouseEditorTask
  {
   [Serializable] sealed class Request { public string action;public string path; }
-  static LighthouseEditorTask(){EditorApplication.update+=Poll;
+  static LighthouseEditorTask(){
+    Directory.CreateDirectory("Builds");
+    Directory.CreateDirectory("Builds/SelectedAssetPackages");
+    EditorApplication.update+=Poll;
    AssetDatabase.importPackageCompleted+=name=>{File.WriteAllText("Builds/EditorTaskResult.txt","IMPORT COMPLETED: "+name);if(SessionState.GetBool("LKImportBatch",false)){SessionState.SetBool("LKImportBatch",false);EditorApplication.delayCall+=()=>EditorApplication.Exit(0);}};
    AssetDatabase.importPackageFailed+=(name,error)=>File.WriteAllText("Builds/EditorTaskResult.txt","FAILED: "+name+": "+error);
   }
