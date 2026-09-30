@@ -38,3 +38,5 @@
 [VERIFIED] A final fetch found Tapan's PR #25 merged into main (`2a3d996`) and Eli's corresponding merge (`e865546`). Both are included. The follow-up merge changed commit ancestry only: the project tree was identical before and after, so the executed tests/build still cover the published source and assets. No teammate files were discarded.
 
 [VERIFIED] Only machine-local Package Manager UI serialization remains uncommitted; it is excluded from publication. No package manifest or lockfile changed. The PR retains team review control; it is not merged into main by this publication.
+
+[VERIFIED] Branch cleanup completed: removed the fully merged `aneesh/lighthouse-sprint1-foundation` remote branch; retained its local checkout under `archive/sprint1-foundation` without a stale upstream. Current published branch is `integrate/sprint1-team-work`; teammate branches, migration worktree, backups and unmerged Phase 1 work are preserved. PR #23 is ready for review, not merged into main.
