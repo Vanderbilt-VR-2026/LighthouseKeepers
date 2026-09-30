@@ -23,7 +23,7 @@ public static class LighthouseAssets {
   Material("Lamp",new Color(1,.64f,.24f),0,.4f,new Color(1,.5f,.15f)*2);
   Material("Warning",new Color(.7f,.13f,.025f),0,.4f,new Color(.8f,.08f,.01f));
   Material("Hands",new Color(.46f,.56f,.52f),0,.4f,new Color(.035f,.055f,.045f));
-  foreach(string kind in new[]{"RainExterior","RainInterior","Ocean","Generator","Radio","Drip","Creak","Thunder"}) Audio(kind);
+  foreach(string kind in new[]{"RainExterior","RainInterior","Ocean","Generator","Radio","Drip","Creak","Thunder","WaveCrash"}) Audio(kind);
  }
  static void Material(string name,Color color,float metal,float smooth,Color emission=default){
   string path=Root+"/Art/Materials/LK_"+name+".mat";
@@ -72,13 +72,14 @@ public static class LighthouseAssets {
  public static AudioClip Clip(string name)=>AssetDatabase.LoadAssetAtPath<AudioClip>(Root+"/Audio/Ambience/Placeholder_"+name+".wav");
  static void Audio(string kind){
   string path=Root+"/Audio/Ambience/Placeholder_"+kind+".wav";if(File.Exists(path))return;
-  int rate=22050,count=rate*(kind=="Thunder"?7:kind=="Creak"?3:4);var random=new System.Random(313+kind.Length);float low=0,slow=0;
+  int rate=22050,count=rate*(kind=="Thunder"?7:kind=="Creak"?3:kind=="WaveCrash"?3:4);var random=new System.Random(313+kind.Length);float low=0,slow=0;
   using(var w=new BinaryWriter(File.Create(path))){w.Write(System.Text.Encoding.ASCII.GetBytes("RIFF"));w.Write(36+count*2);w.Write(System.Text.Encoding.ASCII.GetBytes("WAVEfmt "));w.Write(16);w.Write((short)1);w.Write((short)1);w.Write(rate);w.Write(rate*2);w.Write((short)2);w.Write((short)16);w.Write(System.Text.Encoding.ASCII.GetBytes("data"));w.Write(count*2);
    for(int i=0;i<count;i++){float t=(float)i/rate,n=(float)random.NextDouble()*2-1;low+=.06f*(n-low);slow+=.004f*(n-slow);float f=kind switch {
     "RainExterior"=>n*.20f+low*.5f,"RainInterior"=>low*.8f+Mathf.Sin(t*93)*.015f,
     "Ocean"=>slow*3*(.6f+.3f*Mathf.Sin(t*1.57f)),"Generator"=>Mathf.Sin(t*2*Mathf.PI*55)*.09f+Mathf.Sin(t*2*Mathf.PI*110)*.03f+low*.08f,
     "Radio"=>n*.06f+Mathf.Sin(t*2100)*.01f,"Drip"=>Mathf.Sin(t*3500)*Mathf.Exp(-(t%1.3f)*45)*.2f,
     "Creak"=>Mathf.Sin(t*(180+30*Mathf.Sin(t*4)))*.12f*Mathf.Sin(Mathf.PI*i/count)+low*.08f,
+    "WaveCrash"=>n*Mathf.Exp(-t*1.1f)*(.6f+.4f*Mathf.Sin(t*5))+low*.5f*Mathf.Exp(-t*.7f),
     _=>slow*7*Mathf.Exp(-t*.5f)+low*.4f*Mathf.Exp(-t*.8f)};
     float edge=Mathf.Min(1,Mathf.Min(i,count-i-1)/220f);w.Write((short)(Mathf.Clamp(f*edge,-.95f,.95f)*32767));}
   }AssetDatabase.ImportAsset(path);var importer=(AudioImporter)AssetImporter.GetAtPath(path);var settings=importer.defaultSampleSettings;settings.loadType=AudioClipLoadType.CompressedInMemory;settings.compressionFormat=AudioCompressionFormat.Vorbis;settings.quality=.5f;importer.defaultSampleSettings=settings;importer.forceToMono=true;importer.SaveAndReimport();
