@@ -9,7 +9,7 @@ public sealed class LobbyConfig:ScriptableObject {
  [SerializeField,Tooltip("When true every roster member must be ready before the host can start.")] bool requireAllReady=true;
  [SerializeField,Tooltip("Scene loaded for everyone when the host starts the game.")] string startSceneName="LK_Bootstrap";
  public int MaxPlayers=>Mathf.Clamp(maxPlayers,2,8);
- public int MinPlayersToStart=>Mathf.Max(1,minPlayersToStart);
+ public int MinPlayersToStart=>Mathf.Clamp(minPlayersToStart,1,MaxPlayers);
  public string DefaultPlayerName=>string.IsNullOrWhiteSpace(defaultPlayerName)?"Keeper":defaultPlayerName;
  public string LobbyTitle=>string.IsNullOrWhiteSpace(lobbyTitle)?"Lighthouse Keepers":lobbyTitle;
  public bool RequireAllReady=>requireAllReady;

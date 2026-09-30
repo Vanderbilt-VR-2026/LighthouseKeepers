@@ -1,6 +1,10 @@
 {
   "name": "LK.Lobby",
   "rootNamespace": "LighthouseKeepers.Lobby",
-  "references": ["UnityEngine.UI"],
+  "references": [
+    "UnityEngine.UI",
+    "Unity.TextMeshPro",
+    "Unity.XR.Interaction.Toolkit"
+  ],
   "autoReferenced": true
 }
