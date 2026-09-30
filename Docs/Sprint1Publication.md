@@ -25,10 +25,16 @@
 
 ## Validation and limits
 
-[UNRESOLVED] Combined-branch test/build results will be appended after execution. The prior environment-only revision passed 27 Edit Mode and 1 Play Mode tests and built for Android with zero errors. Latest Quest inspection, stereo comfort, audio balance and sustained 72 FPS remain pending. The user's positive editor review is not device acceptance.
+[VERIFIED] Combined-branch validation results follow below. The prior environment-only revision passed 27 Edit Mode and 1 Play Mode tests and built for Android with zero errors. Latest Quest inspection, stereo comfort, audio balance and sustained 72 FPS remain pending. The user's positive editor review is not device acceptance.
 
 ## Branch policy
 
 [VERIFIED] `aneesh/lighthouse-sprint1-foundation` is an ancestor of team `main`; its remote branch is redundant. Keep current integration and all teammate branches/PRs. Preserve unmerged Phase 1 experiments and backup worktrees. Publication does not merge PR #23 into main; the team retains review control.
 
 [VERIFIED] Combined branch: **31/31 Edit Mode**, **1/1 Play Mode**, and full asset/configuration validation passed. Asset checks cover missing scripts/materials/prefabs, six station identities, 16 sockets, four thresholds, five profiles, one rig/listener and 285 stair support/head-clearance samples. Curated reports: `Docs/Verification/Sprint1Publication/`. No Unity/URP/XR/package or Android architecture changes.
+
+[VERIFIED] Final Android development build succeeded: **0 errors, 1 warning** (Diagnostics Data lacks full crash-report debug symbols). Artifact and checksum: `Docs/Verification/Sprint1Publication/AndroidBuild.txt`. No Quest installation was attempted because the user deferred device testing.
+
+[VERIFIED] A final fetch found Tapan's PR #25 merged into main (`2a3d996`) and Eli's corresponding merge (`e865546`). Both are included. The follow-up merge changed commit ancestry only: the project tree was identical before and after, so the executed tests/build still cover the published source and assets. No teammate files were discarded.
+
+[VERIFIED] Only machine-local Package Manager UI serialization remains uncommitted; it is excluded from publication. No package manifest or lockfile changed. The PR retains team review control; it is not merged into main by this publication.
