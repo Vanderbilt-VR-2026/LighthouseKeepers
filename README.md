@@ -1,4 +1,14 @@
-# Lighthouse Keepers — Sprint 1
+# Lighthouse Keepers — Sprint 1 (October 1)
+
+**Current integration branch: `integrate/sprint1-team-work`. Unity: `6000.3.23f1`.**
+
+Open this checkout, then use **Lighthouse Keepers → Play environment**. The entry scene is `Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity`; it loads the six content scenes. Click Game and use WASD/Q/E for desktop exploration. Do not open an older Desktop checkout expecting this branch's changes.
+
+This Sprint 1 version contains the repaired lighthouse environment, floor/stair circulation, compact grounded pipework, ceiling fixtures and team code integration. The second and third floors are reserved for further furnishing; existing third-floor items and puzzle anchors remain. It is an environment foundation, not a completed puzzle/survival game. See [Sprint 1 publication](Docs/Sprint1Publication.md) for contributor commits, validation, branch guidance and pending Quest checks.
+
+The local working folder is now `/Users/aneeshvasamreddy/LighthouseKeepers-Sprint1`. Teammates can clone anywhere; that path is not a project dependency. Android output: `Builds/LighthouseKeepers-Sprint1-Environment.apk`.
+
+## Original setup guide — Sprint 1
 
 A standalone Quest 3 lighthouse environment foundation. Open with **Unity 6000.3.23f1 (Unity 6.3 LTS)** and install **Android Build Support, SDK/NDK Tools and OpenJDK** through Unity Hub.
 

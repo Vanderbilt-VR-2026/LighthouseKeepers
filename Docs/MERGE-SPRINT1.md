@@ -1,8 +1,10 @@
 # Sprint 1 integration and repair
 
+[VERIFIED] This is the historical initial merge record. Current contributor integration, test counts and APK status are in [Sprint1Publication.md](Sprint1Publication.md). Reproduction commands use the renamed Sprint 1 tooling; original logs retain their historical identifiers.
+
 ## Baseline and ownership
 
-[VERIFIED] Integration starts from team/main 41c9819, including Eli's c2b9760 through PR #20. The clean checkout is LighthouseKeepers-Sprint2, branch integrate/sprint-2. The separate local Phase 1 checkout has not been merged or copied into this branch.
+[VERIFIED] Integration starts from team/main 41c9819, including Eli's c2b9760 through PR #20. The clean checkout is LighthouseKeepers-Sprint1, branch integrate/sprint1-team-work. The separate local Phase 1 checkout has not been merged or copied into this branch.
 
 [VERIFIED] William's 2887c83 was merged with a merge commit, preserving his authorship and VS Code configuration.
 
@@ -24,17 +26,17 @@
 
 [VERIFIED] Flood-authority search: `rg -n 'SetHeight\(|height\s*\+=' Assets/_LighthouseKeepers/Scripts/Runtime` finds height storage/advancement only in Flood/FloodController.cs, plus DevelopmentDiagnostics calling its public SetHeight API. FloodSurface moves presentation geometry, not authoritative state. Volume conversion is still PROPOSED, not implemented.
 
-[VERIFIED] Explicit-Android diagnostic build succeeded with 0 errors and 1 warning (diagnostics enabled without full crash-report debug symbols). APK: Builds/LighthouseKeepers-Sprint2-Integration.apk, 85,546,562 bytes; SHA256 1fb994d9ed5ae72dd3365a1e678d6a16c9a3a3f9f313f65661f0eae32b555910.
+[VERIFIED] Explicit-Android diagnostic build succeeded with 0 errors and 1 warning (diagnostics enabled without full crash-report debug symbols). APK: Builds/LighthouseKeepers-Sprint1-Environment.apk, 85,546,562 bytes; SHA256 1fb994d9ed5ae72dd3365a1e678d6a16c9a3a3f9f313f65661f0eae32b555910.
 
 [UNRESOLVED] Device acceptance is pending. Quest is disconnected by the project lead's confirmation. Automated results cannot establish headset comfort, navigation, grabbing, sound balance or performance.
 
-[VERIFIED] Artifacts (ignored by Git): artifacts/tests/editmode-baseline.xml, editmode-integration.xml, playmode-integration.xml; corresponding logs under artifacts/logs/. Recovery rename completed via Sprint2Integration.PreserveRecovery; GUID 8790e0acdc4c38148b27e8188cfc3b3a is unchanged.
+[VERIFIED] Artifacts (ignored by Git): artifacts/tests/editmode-baseline.xml, editmode-integration.xml, playmode-integration.xml; corresponding logs under artifacts/logs/. Recovery rename completed via Sprint1Integration.PreserveRecovery; GUID 8790e0acdc4c38148b27e8188cfc3b3a is unchanged.
 
 [PROPOSED] Device checklist once connected: launch the integration APK; look for missing/pink surfaces; walk from the entrance to each floor and balcony; identify each blocked stair approach and unreadable area; check both controllers track; listen for duplicated audio; record observed defects without treating this baseline as the upcoming hands/cleanup implementation. Capture to artifacts/captures/<date>-integration.mp4. Obtain project-lead acceptance before Priority 1.
 
 [PROPOSED] Minimum circulation fixes may precede the integration device gate, as approved by the project lead. Gameplay priority 1 remains gated on priority 0 device acceptance.
 
-[VERIFIED] Project lead clarified this work is still Sprint 1. The existing integrate/sprint-2 branch, checkout directory and tooling identifiers are historical names, not a claim that Sprint 2 has begun.
+[VERIFIED] Project lead clarified this work is still Sprint 1. Current branch, checkout, build tooling and APK names now consistently identify Sprint 1.
 
 ## Reproduction commands
 
@@ -43,9 +45,9 @@
 ```bash
 UNITY="/Users/aneeshvasamreddy/UnityEditors/6000.3.23f1/Unity.app/Contents/MacOS/Unity"
 "$UNITY" -batchmode -nographics -projectPath . -runTests -testPlatform EditMode -testResults artifacts/tests/editmode-integration.xml -logFile artifacts/logs/editmode-integration.log
-"$UNITY" -batchmode -nographics -quit -projectPath . -executeMethod LighthouseKeepers.Editor.Sprint2Integration.PreserveRecovery -logFile artifacts/logs/recovery.log
+"$UNITY" -batchmode -nographics -quit -projectPath . -executeMethod LighthouseKeepers.Editor.Sprint1Integration.PreserveRecovery -logFile artifacts/logs/recovery.log
 "$UNITY" -batchmode -nographics -projectPath . -runTests -testPlatform PlayMode -testResults artifacts/tests/playmode-integration.xml -logFile artifacts/logs/playmode-integration.log
-"$UNITY" -batchmode -quit -buildTarget Android -projectPath . -executeMethod LighthouseKeepers.Editor.Sprint2Integration.BuildDiagnosticAndroid -logFile artifacts/logs/android-integration-android-target.log
+"$UNITY" -batchmode -quit -buildTarget Android -projectPath . -executeMethod LighthouseKeepers.Editor.Sprint1Integration.BuildDiagnosticAndroid -logFile artifacts/logs/android-integration-android-target.log
 ```
 
 [VERIFIED] The first diagnostic build omitted `-buildTarget Android`. OpenXR MetaQuestFeature validation accessed the selected editor target and logged a NullReferenceException. Unity reported Succeeded with Errors=1; that is not accepted as a clean result. The explicit-Android rerun is required. No package upgrade or vendor-code edit was used.

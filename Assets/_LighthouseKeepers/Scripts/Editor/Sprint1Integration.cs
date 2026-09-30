@@ -6,9 +6,10 @@ using UnityEditor.Build.Reporting;
 
 namespace LighthouseKeepers.Editor
 {
-    public static class Sprint2Integration
+    public static class Sprint1Integration
     {
         // Diagnostic integration build only; no authoring/reset helpers run here.
+        [MenuItem("Lighthouse Keepers/Sprint 1/Build Android environment")]
         public static void BuildDiagnosticAndroid()
         {
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled && !s.path.Contains("/Development/"))
@@ -20,7 +21,7 @@ namespace LighthouseKeepers.Editor
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = scenes,
-                locationPathName = "Builds/LighthouseKeepers-Sprint2-Integration.apk",
+                locationPathName = "Builds/LighthouseKeepers-Sprint1-Environment.apk",
                 target = BuildTarget.Android,
                 options = BuildOptions.Development
             });
@@ -30,7 +31,7 @@ namespace LighthouseKeepers.Editor
                 throw new InvalidOperationException("Integration APK failed. Inspect build log.");
         }
 
-        [MenuItem("Lighthouse Keepers/Sprint 2/Preserve recovery scene")]
+        [MenuItem("Lighthouse Keepers/Sprint 1/Preserve recovery scene")]
         public static void PreserveRecovery()
         {
             const string source = "Assets/_Recovery/0.unity";

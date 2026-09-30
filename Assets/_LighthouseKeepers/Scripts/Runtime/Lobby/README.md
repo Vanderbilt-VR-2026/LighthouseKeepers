@@ -1,7 +1,7 @@
-# Offline lobby prototype
+# Sprint 1 local lobby preview
 
-[VERIFIED] Eli's six lobby components are preserved in LK.Lobby. LocalLobbyTransport simulates a roster in one process; it does not connect devices. No playable scene wires this prototype into the VR flow.
+[VERIFIED] Eli's lobby code through commit `4292781` is preserved in `LK.Lobby`, including the spatial keeper watch-room screen, feedback and local roster rules. Open `Assets/_LighthouseKeepers/Scenes/Development/LK_LobbyPreview.unity` to inspect that separate development preview. It is not the environment APK's entry scene.
 
-[UNRESOLVED] The team has not selected a networking transport. INetworkTransport is a proposed adapter boundary, not evidence of multiplayer support. The screen-space overlay has not passed headset acceptance and should not be added to Bootstrap as Quest UI.
+[VERIFIED] `LocalLobbyTransport` simulates a roster in one process; it does not connect headsets. The environment still starts from `LK_Bootstrap`. LK.Lobby explicitly references UI, TextMeshPro and XRI for Eli's updated screen and feedback, without depending on the environment runtime assembly.
 
-[PROPOSED] Keep this prototype and its eight tests for the future lobby integration. Do not delete it as unused code or infer permission to install networking packages.
+[UNRESOLVED] Networking transport and headset acceptance of the lobby remain open. Do not infer multiplayer support or permission to install networking packages. Keep the original lobby tests and newer polish tests as regression coverage.

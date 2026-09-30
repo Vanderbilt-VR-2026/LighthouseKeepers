@@ -1,3 +1,11 @@
+# Current Sprint 1 handoff — September 30
+
+[VERIFIED] Current combined environment: `integrate/sprint1-team-work`, Unity 6000.3.23f1. The project lead approved the updated editor environment. See [Sprint1Publication.md](Sprint1Publication.md) for current contributor commits, validation and branch instructions. Second- and third-floor furnishing will continue later; preserve their anchors and circulation.
+
+[UNRESOLVED] Latest APK headset inspection, stereo/audio comfort and sustained performance remain pending. The historical records below are not evidence of completed gameplay or networked co-op.
+
+---
+
 # Sprint 1 handoff
 
 Current team editor: **6000.3.23f1**. The migration passed static validation, Play Mode, four Edit Mode tests and an Android development build (zero errors, one warning). See [Unity63Migration.md](Unity63Migration.md). Earlier device records concern the 6000.5 build; the migrated APK requires headset acceptance.
@@ -84,4 +92,4 @@ Use **Lighthouse Keepers → Integration → Open complete environment** to insp
 
 [BUILT-UNVERIFIED] Additional headset-requested refinements: pipe manifold reduced 25% and turned toward the aisle, closed valve-ring meshes and exposed controls, 180 mm floor/landing thickness, seated stair posts, and ceiling suspension hardware. Stair finish preserved. See `Docs/WalkthroughRepairs.md`; these changes require another device inspection.
 
-[VERIFIED] September 30: refinement Edit Mode 27/27 and Play Mode 1/1 passed; Android development APK built with 0 errors / 1 diagnostic-symbol warning. [UNRESOLVED] Installation, recording and headset acceptance deferred by user; Quest disconnected. APK remains `Builds/LighthouseKeepers-Sprint2-Integration.apk` (legacy filename).
+[VERIFIED] September 30: refinement Edit Mode 27/27 and Play Mode 1/1 passed; Android development APK built with 0 errors / 1 diagnostic-symbol warning. [UNRESOLVED] Installation, recording and headset acceptance deferred by user; Quest disconnected. APK remains `Builds/LighthouseKeepers-Sprint1-Environment.apk` .

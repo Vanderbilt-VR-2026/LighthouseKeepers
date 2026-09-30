@@ -38,4 +38,4 @@ Automated evidence: `Verification/IntegratedAssets.txt`, `PlayMode.txt`, `Deskto
 
 [BUILT-UNVERIFIED] Additional headset-requested refinements: pipe manifold reduced 25% and turned toward the aisle, closed valve-ring meshes and exposed controls, 180 mm floor/landing thickness, seated stair posts, and ceiling suspension hardware. Stair finish preserved. See `Docs/WalkthroughRepairs.md`; these changes require another device inspection.
 
-[VERIFIED] September 30: refinement Edit Mode 27/27 and Play Mode 1/1 passed; Android development APK built with 0 errors / 1 diagnostic-symbol warning. [UNRESOLVED] Installation, recording and headset acceptance deferred by user; Quest disconnected. APK remains `Builds/LighthouseKeepers-Sprint2-Integration.apk` (legacy filename).
+[VERIFIED] September 30: refinement Edit Mode 27/27 and Play Mode 1/1 passed; Android development APK built with 0 errors / 1 diagnostic-symbol warning. [UNRESOLVED] Installation, recording and headset acceptance deferred by user; Quest disconnected. APK remains `Builds/LighthouseKeepers-Sprint1-Environment.apk` .
