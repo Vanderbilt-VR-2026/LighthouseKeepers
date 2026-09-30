@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Readers;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement;
@@ -18,6 +21,9 @@ public sealed class DesktopPreview:MonoBehaviour {
  }
  void Update(){
   if(XRSettings.isDeviceActive||Keyboard.current==null){Release();return;}
+  // Typing a keeper name or address must not also move or turn the player.
+  var selected=EventSystem.current?EventSystem.current.currentSelectedGameObject:null;
+  if(selected&&((selected.TryGetComponent<InputField>(out var input)&&input.isFocused)||(selected.TryGetComponent<TMP_InputField>(out var tmpInput)&&tmpInput.isFocused))){Release();return;}
   var k=Keyboard.current;var value=new Vector2((k.dKey.isPressed?1:0)-(k.aKey.isPressed?1:0),(k.wKey.isPressed?1:0)-(k.sKey.isPressed?1:0));
   // Direct CharacterController.Move competes with XRBodyTransformer's queued gravity pose.
   // Feed the existing provider instead, so keyboard and controller traversal use identical collision.
