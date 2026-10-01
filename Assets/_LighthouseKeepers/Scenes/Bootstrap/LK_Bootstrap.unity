@@ -157,6 +157,37 @@ Transform:
   - {fileID: 1016864654}
   m_Father: {fileID: 2096589226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &124656700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 124656701}
+  m_Layer: 0
+  m_Name: LK Walkthrough Repair September 29
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &124656701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124656700}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &305874095
 GameObject:
   m_ObjectHideFlags: 0
@@ -1681,6 +1712,7 @@ MonoBehaviour:
   height: -0.25
   paused: 1
   riseSpeed: 0.003
+  surgePerMetre: 0.1
   onHeightChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2388,6 +2420,10 @@ PrefabInstance:
       propertyPath: m_ClearFlags
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7239785387926719088, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -2479,6 +2515,7 @@ SceneRoots:
   - {fileID: 1621513088}
   - {fileID: 2001942172}
   - {fileID: 1150610951}
+  - {fileID: 124656701}
   - {fileID: 900514586}
   - {fileID: 2134542644}
   - {fileID: 714838636}

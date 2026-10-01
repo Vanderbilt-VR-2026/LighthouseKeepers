@@ -1,3 +1,11 @@
+# Current Sprint 1 handoff — September 30
+
+[VERIFIED] Current combined environment: `integrate/sprint1-team-work`, Unity 6000.3.23f1. The project lead approved the updated editor environment. See [Sprint1Publication.md](Sprint1Publication.md) for current contributor commits, validation and branch instructions. Second- and third-floor furnishing will continue later; preserve their anchors and circulation.
+
+[UNRESOLVED] Latest APK headset inspection, stereo/audio comfort and sustained performance remain pending. The historical records below are not evidence of completed gameplay or networked co-op.
+
+---
+
 # Sprint 1 handoff
 
 Current team editor: **6000.3.23f1**. The migration passed static validation, Play Mode, four Edit Mode tests and an Android development build (zero errors, one warning). See [Unity63Migration.md](Unity63Migration.md). Earlier device records concern the 6000.5 build; the migrated APK requires headset acceptance.
@@ -74,3 +82,14 @@ Implemented in Unity 6000.3.23f1: selected weathered industrial props, entrance/
 Final September23 result: main-project Edit Mode **9/9 PASS**; corrected Play Mode checks **PASS**, including moving flood/lens visuals; Android development APK **Succeeded**, zero errors/one BuildReport warning, 81.76MiB. The warning concerns crash-report debug symbols; unused URP terrain/spatial-mapping shader stripping messages are documented. APK is in `Builds/LighthouseKeepers-Development.apk`. No on-device test of this revision and no push/commit.
 
 Use **Lighthouse Keepers → Integration → Open complete environment** to inspect all content scenes; Play starts at Bootstrap. The main project's original package manifest/lock and tracked asset GUIDs remain unchanged.
+
+
+## September 29 headset walkthrough repairs
+
+[BUILT-UNVERIFIED] Entrance branch intrusion, floating chest proxy, generator-room clutter, unsupported pipe fittings, stair treads/landings and communications furniture access were edited based on the project lead's headset report. See WalkthroughRepairs.md for exact changes and acceptance steps. This remains Sprint 1.
+
+[VERIFIED] Walking was confirmed by the project lead after waking controllers; no input-binding fix was needed. Automated geometry checks do not replace a second headset walkthrough. Existing flood/lobby logic and 16 puzzle sockets remain preserved.
+
+[BUILT-UNVERIFIED] Additional headset-requested refinements: pipe manifold reduced 25% and turned toward the aisle, closed valve-ring meshes and exposed controls, 180 mm floor/landing thickness, seated stair posts, and ceiling suspension hardware. Stair finish preserved. See `Docs/WalkthroughRepairs.md`; these changes require another device inspection.
+
+[VERIFIED] September 30: refinement Edit Mode 27/27 and Play Mode 1/1 passed; Android development APK built with 0 errors / 1 diagnostic-symbol warning. [UNRESOLVED] Installation, recording and headset acceptance deferred by user; Quest disconnected. APK remains `Builds/LighthouseKeepers-Sprint1-Environment.apk` .

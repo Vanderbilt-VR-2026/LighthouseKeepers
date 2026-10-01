@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-30 16:36:40Z" end-time="2026-09-30 16:36:41Z" duration="1.0692704">
+  <test-suite type="TestSuite" id="1009" name="Lighthouse Keepers" fullname="Lighthouse Keepers" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-30 16:36:40Z" end-time="2026-09-30 16:36:41Z" duration="1.069270" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1003" name="LK.Tests.Integration.PlayMode.dll" fullname="/Users/aneeshvasamreddy/LighthouseKeepers-Sprint1/Library/ScriptAssemblies/LK.Tests.Integration.PlayMode.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-30 16:36:40Z" end-time="2026-09-30 16:36:41Z" duration="1.064356" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27086" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1004" name="LighthouseKeepers" fullname="LighthouseKeepers" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-30 16:36:40Z" end-time="2026-09-30 16:36:41Z" duration="1.064164" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1005" name="Tests" fullname="LighthouseKeepers.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-30 16:36:40Z" end-time="2026-09-30 16:36:41Z" duration="1.064061" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="BootstrapIntegrationTests" fullname="LighthouseKeepers.Tests.BootstrapIntegrationTests" classname="LighthouseKeepers.Tests.BootstrapIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-30 16:36:40Z" end-time="2026-09-30 16:36:41Z" duration="1.063540" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="BootstrapLoadsTeamEnvironmentWithOneFloodAuthority" fullname="LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority" methodname="BootstrapLoadsTeamEnvironmentWithOneFloodAuthority" classname="LighthouseKeepers.Tests.BootstrapIntegrationTests" runstate="Runnable" seed="178342991" result="Passed" start-time="2026-09-30 16:36:40Z" end-time="2026-09-30 16:36:41Z" duration="1.056463" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+Saving results to: /Users/aneeshvasamreddy/Library/Application Support/Lighthouse Keepers Team/Lighthouse Keepers/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
