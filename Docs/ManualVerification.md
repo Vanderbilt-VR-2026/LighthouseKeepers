@@ -28,3 +28,14 @@ Automated evidence: `Verification/IntegratedAssets.txt`, `PlayMode.txt`, `Deskto
 7. Tune `AmbienceMusicVolume` in `LK_Atmosphere` (initial -20 dB), hear the startup fade, thunder ducking and existing interior low-pass transitions. Confirm radio information remains intelligible. Current weather/machinery/thunder recordings are still procedural placeholders.
 8. Build/install the new APK using README instructions. Verify both tracked hands, left movement, right snap turning, optional smooth turn, vignette, grabbing, stairs, flood reset and puzzle reach. Prior user acceptance of the repaired build does not validate this new content.
 9. Profile at least ten minutes on Quest 3, especially the balcony, fog/ocean vista and rising flood. Record CPU/GPU frame times and thermals. 72 FPS, final loudness, visual quality and stereoscopic comfort are **not yet verified**.
+
+
+## September 29 headset walkthrough repairs
+
+[BUILT-UNVERIFIED] Entrance branch intrusion, floating chest proxy, generator-room clutter, unsupported pipe fittings, stair treads/landings and communications furniture access were edited based on the project lead's headset report. See WalkthroughRepairs.md for exact changes and acceptance steps. This remains Sprint 1.
+
+[VERIFIED] Walking was confirmed by the project lead after waking controllers; no input-binding fix was needed. Automated geometry checks do not replace a second headset walkthrough. Existing flood/lobby logic and 16 puzzle sockets remain preserved.
+
+[BUILT-UNVERIFIED] Additional headset-requested refinements: pipe manifold reduced 25% and turned toward the aisle, closed valve-ring meshes and exposed controls, 180 mm floor/landing thickness, seated stair posts, and ceiling suspension hardware. Stair finish preserved. See `Docs/WalkthroughRepairs.md`; these changes require another device inspection.
+
+[VERIFIED] September 30: refinement Edit Mode 27/27 and Play Mode 1/1 passed; Android development APK built with 0 errors / 1 diagnostic-symbol warning. [UNRESOLVED] Installation, recording and headset acceptance deferred by user; Quest disconnected. APK remains `Builds/LighthouseKeepers-Sprint1-Environment.apk` .
