@@ -10,6 +10,11 @@ The local working folder is now `/Users/aneeshvasamreddy/LighthouseKeepers-Sprin
 
 ## Original setup guide — Sprint 1
 
+## Sprint 1 demo
+Where Sprint 1 landed, recorded on Quest 3 (48 s). Click the image to play the video.
+
+[![Sprint 1 demo on Quest 3](Docs/Media/Sprint1DemoPoster.jpg)](Docs/Media/Sprint1Demo.mp4)
+
 A standalone Quest 3 lighthouse environment foundation. Open with **Unity 6000.3.23f1 (Unity 6.3 LTS)** and install **Android Build Support, SDK/NDK Tools and OpenJDK** through Unity Hub.
 
 Open `Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity` and press Play. It loads six content scenes additively. Do not also load a second player rig. For isolated tests open `Assets/_LighthouseKeepers/Scenes/Development/LK_DevGym.unity`.
