@@ -2,6 +2,8 @@
 
 **Current integration branch: `integrate/sprint1-team-work`. Unity: `6000.3.23f1`.**
 
+**[Download the Sprint 1 APK for Meta Quest 3](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint1-quest3-20261001/LighthouseKeepers-Sprint1-Environment.apk)** — Android ARM64/IL2CPP development build. See the [release notes and checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint1-quest3-20261001). Headset walkthrough and performance verification remain pending.
+
 Open this checkout, then use **Lighthouse Keepers → Play environment**. The entry scene is `Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity`; it loads the six content scenes. Click Game and use WASD/Q/E for desktop exploration. Do not open an older Desktop checkout expecting this branch's changes.
 
 This Sprint 1 version contains the repaired lighthouse environment, floor/stair circulation, compact grounded pipework, ceiling fixtures and team code integration. The second and third floors are reserved for further furnishing; existing third-floor items and puzzle anchors remain. It is an environment foundation, not a completed puzzle/survival game. See [Sprint 1 publication](Docs/Sprint1Publication.md) for contributor commits, validation, branch guidance and pending Quest checks.
@@ -30,9 +32,9 @@ Choose **Lighthouse Keepers → Play lobby preview** to enter the keeper watch r
 ## Android build and USB test
 1. Open File → Build Profiles, select Android and Switch Platform.
 2. Confirm `LK_Bootstrap` is first in the scene list. All eight scenes are registered; the automated APK uses the seven environment scenes.
-3. Enable Development Build; use ARM64/IL2CPP and the installed OpenXR loader. Build to `Builds/LighthouseKeepers-Development.apk`.
+3. Use **Lighthouse Keepers → Sprint 1 → Build Android environment** to build the authored scenes without regenerating them. Output: `Builds/LighthouseKeepers-Sprint1-Environment.apk` (Development Build, ARM64/IL2CPP, OpenXR).
 4. Connect Quest 3 via USB, allow debugging, keep it awake and turn on both controllers.
-5. Use Build And Run, or `adb install -r Builds/LighthouseKeepers-Development.apk`, then `adb shell am start -n com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
+5. Install the downloaded APK with `adb install -r LighthouseKeepers-Sprint1-Environment.apk` (or use its `Builds/` path for a local build), then `adb shell am start -n com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
 6. Verify the checklist in `Docs/ManualVerification.md`. An APK build alone does not prove comfort or 72 Hz.
 
 The game is **Lighthouse Keepers**, package `com.lighthousekeepers.game`; it does not replace Spear Throw VR.

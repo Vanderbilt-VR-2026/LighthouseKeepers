@@ -27,7 +27,9 @@ namespace LighthouseKeepers.Editor
             });
             File.WriteAllText("artifacts/verification/integration-build.txt",
                 $"Result={report.summary.result}\nErrors={report.summary.totalErrors}\nWarnings={report.summary.totalWarnings}\nBytes={report.summary.totalSize}\n");
-            if (report.summary.result != BuildResult.Succeeded)
+            // Unity can report Succeeded even when a shader compiler timed out.
+            // Do not publish an APK with reported build errors.
+            if (report.summary.result != BuildResult.Succeeded || report.summary.totalErrors != 0)
                 throw new InvalidOperationException("Integration APK failed. Inspect build log.");
         }
 
