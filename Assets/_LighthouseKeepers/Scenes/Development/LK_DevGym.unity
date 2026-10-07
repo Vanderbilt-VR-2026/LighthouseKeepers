@@ -2887,6 +2887,7 @@ MonoBehaviour:
   height: -0.25
   paused: 1
   riseSpeed: 0.003
+  surgePerMetre: 0.1
   onHeightChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3131,6 +3132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85fba2bd3f2944bc7ae0815d78b737ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.Flood.FloodSurface
+  escalateTone: 1
+  abyssColor: {r: 0.004, g: 0.012, b: 0.014, a: 1}
 --- !u!23 &1675899585
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3202,6 +3205,135 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1679806197
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1679806199}
+  - component: {fileID: 1679806198}
+  m_Layer: 0
+  m_Name: Keeper footsteps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1679806198
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679806197}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 2200431994893062751, guid: 05c098b6541904c46a78969456158420, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1679806199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679806197}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.08, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2869092318279614969}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1689309597
 GameObject:
@@ -6543,6 +6675,7 @@ Transform:
   - {fileID: 3460584004254221444}
   - {fileID: 5829258863995481043}
   - {fileID: 1542731134}
+  - {fileID: 1679806199}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2869092318279614970
@@ -6562,6 +6695,8 @@ GameObject:
   - component: {fileID: 8493174645577891256}
   - component: {fileID: 8493174645577891255}
   - component: {fileID: 8493174645577891257}
+  - component: {fileID: 8493174645577891258}
+  - component: {fileID: 8493174645577891259}
   m_Layer: 2
   m_Name: LK Quest Player
   m_TagString: Untagged
@@ -8374,7 +8509,7 @@ MonoBehaviour:
   m_SphereCastDistanceBuffer: -0.05
   m_SphereCastLayerMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 257
   m_SphereCastTriggerInteraction: 1
   m_OnGravityLockChanged:
     m_PersistentCalls:
@@ -11879,6 +12014,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa826a1c77ce4b6fae88a6bdb79485b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Player.RecenterPlayer
+--- !u!114 &8493174645577891258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2869092318279614970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7530f0f39b15b4dd185aa5141717784e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Audio.PlayerFootsteps
+  head: {fileID: 3460584004464908453}
+  gravity: {fileID: 4118471179913628671}
+  source: {fileID: 1679806198}
+  clips:
+  - {fileID: 8300000, guid: a878eed30e7254c228c39ba0723b5914, type: 3}
+  - {fileID: 8300000, guid: 9d67c7cc88451415193b01b76b51be6f, type: 3}
+  - {fileID: 8300000, guid: de94c7937fcc746a5859bb679c834bc2, type: 3}
+  - {fileID: 8300000, guid: 88bcb0738e8894f9baae4c6a5cac15be, type: 3}
+  strideLength: 0.65
+  volume: 0.28
+--- !u!114 &8493174645577891259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2869092318279614970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a657aa3664f6347a89baca0ef4ac124e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Player.GroundedSlopeMovement
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 257
+  probeDistance: 0.12
 --- !u!1 &8628437997154921820
 GameObject:
   m_ObjectHideFlags: 0

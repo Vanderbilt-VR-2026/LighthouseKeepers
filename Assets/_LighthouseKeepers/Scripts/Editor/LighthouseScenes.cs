@@ -50,6 +50,8 @@ public static class LighthouseScenes {
   var camera=origin.Camera;camera.nearClipPlane=.05f;camera.farClipPlane=250;camera.backgroundColor=new Color(.28f,.36f,.41f);camera.clearFlags=CameraClearFlags.SolidColor;camera.transform.localPosition=Vector3.up*1.65f;
   foreach(var t in rig.GetComponentsInChildren<Transform>(true))if(new[]{"Teleportation","Climb","Grab Move","Jump","Climb Teleport"}.Contains(t.name))t.gameObject.SetActive(false);
   var character=rig.GetComponent<CharacterController>();character.minMoveDistance=0;character.radius=.22f;character.height=1.65f;character.center=new Vector3(0,.875f,0);character.stepOffset=.18f;character.slopeLimit=45;character.skinWidth=.03f;
+  var gravity=rig.GetComponentInChildren<UnityEngine.XR.Interaction.Toolkit.Locomotion.Gravity.GravityProvider>(true);gravity.sphereCastLayerMask=LayerMask.GetMask("Default","Environment");
+  rig.AddComponent<GroundedSlopeMovement>();
   var move=rig.GetComponentInChildren<ContinuousMoveProvider>(true);move.moveSpeed=1.6f;move.forwardSource=camera.transform;
   if(move is DynamicMoveProvider dynamic){dynamic.leftHandMovementDirection=DynamicMoveProvider.MovementDirection.HeadRelative;dynamic.rightHandMovementDirection=DynamicMoveProvider.MovementDirection.HeadRelative;}
   var snap=rig.GetComponentInChildren<SnapTurnProvider>(true);snap.turnAmount=45;var smooth=rig.GetComponentInChildren<ContinuousTurnProvider>(true);smooth.enabled=false;
