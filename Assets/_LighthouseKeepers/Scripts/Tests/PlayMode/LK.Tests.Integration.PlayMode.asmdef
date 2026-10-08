@@ -1,5 +1,5 @@
 {
   "name": "LK.Tests.Integration.PlayMode",
-  "references": ["LighthouseKeepers.Runtime", "Unity.XR.CoreUtils"],
+  "references": ["LighthouseKeepers.Runtime", "Unity.XR.CoreUtils", "Unity.XR.Interaction.Toolkit"],
   "optionalUnityReferences": ["TestAssemblies"]
 }

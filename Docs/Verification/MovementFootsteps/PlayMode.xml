@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 16:59:24Z" end-time="2026-10-07 16:59:40Z" duration="15.9083896">
+  <test-suite type="TestSuite" id="1016" name="Lighthouse Keepers" fullname="Lighthouse Keepers" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-07 16:59:24Z" end-time="2026-10-07 16:59:40Z" duration="15.908390" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1010" name="LK.Tests.Integration.PlayMode.dll" fullname="/Users/eligripenstraw/VR-Class-2026/LighthouseKeepers/Library/ScriptAssemblies/LK.Tests.Integration.PlayMode.dll" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-07 16:59:24Z" end-time="2026-10-07 16:59:40Z" duration="15.898888" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="9420" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1011" name="LighthouseKeepers" fullname="LighthouseKeepers" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-07 16:59:24Z" end-time="2026-10-07 16:59:40Z" duration="15.897065" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1012" name="Tests" fullname="LighthouseKeepers.Tests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-07 16:59:24Z" end-time="2026-10-07 16:59:40Z" duration="15.896224" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="BootstrapIntegrationTests" fullname="LighthouseKeepers.Tests.BootstrapIntegrationTests" classname="LighthouseKeepers.Tests.BootstrapIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-07 16:59:24Z" end-time="2026-10-07 16:59:26Z" duration="1.890101" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="BootstrapLoadsTeamEnvironmentWithOneFloodAuthority" fullname="LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority" methodname="BootstrapLoadsTeamEnvironmentWithOneFloodAuthority" classname="LighthouseKeepers.Tests.BootstrapIntegrationTests" runstate="Runnable" seed="1242222498" result="Passed" start-time="2026-10-07 16:59:24Z" end-time="2026-10-07 16:59:26Z" duration="1.871567" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_INPUT raw=(0.00, 0.00)/(0.00, 0.00) moveEnabled=False actionEnabled=True read=(0.00, 0.00) turnEnabled=False turnAction=True
+LK_METRICS appFPS=0.1 focus=False tracked H/L/R=False/False/False headPosition=(-8.00, 3.06, 0.00)
+LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1003" name="PlayerTraversalTests" fullname="LighthouseKeepers.Tests.PlayerTraversalTests" classname="LighthouseKeepers.Tests.PlayerTraversalTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-07 16:59:26Z" end-time="2026-10-07 16:59:40Z" duration="14.004727" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1005" name="FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir" fullname="LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir" methodname="FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir" classname="LighthouseKeepers.Tests.PlayerTraversalTests" runstate="Runnable" seed="1451282817" result="Passed" start-time="2026-10-07 16:59:26Z" end-time="2026-10-07 16:59:27Z" duration="1.386547" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_INPUT raw=(0.00, 0.00)/(0.00, 0.00) moveEnabled=False actionEnabled=True read=(0.00, 0.00) turnEnabled=False turnAction=True
+LK_METRICS appFPS=0.1 focus=False tracked H/L/R=False/False/False headPosition=(-8.00, 3.06, 0.00)
+LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+]]></output>
+            </test-case>
+            <test-case id="1006" name="SnapTurnWithOffsetHeadDoesNotPlayFootsteps" fullname="LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps" methodname="SnapTurnWithOffsetHeadDoesNotPlayFootsteps" classname="LighthouseKeepers.Tests.PlayerTraversalTests" runstate="Runnable" seed="1255507115" result="Passed" start-time="2026-10-07 16:59:27Z" end-time="2026-10-07 16:59:29Z" duration="1.839360" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_INPUT raw=(0.00, 0.00)/(0.00, 0.00) moveEnabled=False actionEnabled=True read=(0.00, 0.00) turnEnabled=False turnAction=True
+LK_METRICS appFPS=0.1 focus=False tracked H/L/R=False/False/False headPosition=(-8.00, 3.06, 0.00)
+LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+]]></output>
+            </test-case>
+            <test-case id="1004" name="StandingOnEnvironmentIsGroundedAndReleasingStickStops" fullname="LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops" methodname="StandingOnEnvironmentIsGroundedAndReleasingStickStops" classname="LighthouseKeepers.Tests.PlayerTraversalTests" runstate="Runnable" seed="1373033209" result="Passed" start-time="2026-10-07 16:59:29Z" end-time="2026-10-07 16:59:31Z" duration="1.714235" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_INPUT raw=(0.00, 0.00)/(0.00, 0.00) moveEnabled=False actionEnabled=True read=(0.00, 0.00) turnEnabled=False turnAction=True
+LK_METRICS appFPS=0.1 focus=False tracked H/L/R=False/False/False headPosition=(-8.00, 3.06, 0.00)
+LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+]]></output>
+            </test-case>
+            <test-case id="1009" name="TowerRouteAlsoWorksAtThirtyFramesPerSecond" fullname="LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond" methodname="TowerRouteAlsoWorksAtThirtyFramesPerSecond" classname="LighthouseKeepers.Tests.PlayerTraversalTests" runstate="Runnable" seed="789914068" result="Passed" start-time="2026-10-07 16:59:31Z" end-time="2026-10-07 16:59:34Z" duration="2.934916" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_INPUT raw=(0.00, 0.00)/(0.00, 0.00) moveEnabled=False actionEnabled=True read=(0.00, 0.00) turnEnabled=False turnAction=True
+LK_METRICS appFPS=0.1 focus=False tracked H/L/R=False/False/False headPosition=(-8.00, 3.06, 0.00)
+LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+]]></output>
+            </test-case>
+            <test-case id="1008" name="WalksAllThreeFlightsUpAndDownThroughLandings" fullname="LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings" methodname="WalksAllThreeFlightsUpAndDownThroughLandings" classname="LighthouseKeepers.Tests.PlayerTraversalTests" runstate="Runnable" seed="976954921" result="Passed" start-time="2026-10-07 16:59:34Z" end-time="2026-10-07 16:59:37Z" duration="3.586055" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_INPUT raw=(0.00, 0.00)/(0.00, 0.00) moveEnabled=False actionEnabled=True read=(0.00, 0.00) turnEnabled=False turnAction=True
+LK_METRICS appFPS=0.1 focus=False tracked H/L/R=False/False/False headPosition=(-8.00, 3.06, 0.00)
+LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+]]></output>
+            </test-case>
+            <test-case id="1007" name="WalksThroughHouseAndBalconyDoorwaysInBothDirections" fullname="LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections" methodname="WalksThroughHouseAndBalconyDoorwaysInBothDirections" classname="LighthouseKeepers.Tests.PlayerTraversalTests" runstate="Runnable" seed="477987867" result="Passed" start-time="2026-10-07 16:59:37Z" end-time="2026-10-07 16:59:40Z" duration="2.537800" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[LK_INPUT raw=(0.00, 0.00)/(0.00, 0.00) moveEnabled=False actionEnabled=True read=(0.00, 0.00) turnEnabled=False turnAction=True
+LK_METRICS appFPS=0.0 focus=False tracked H/L/R=False/False/False headPosition=(-8.00, 3.06, 0.00)
+LK_READY: six content scenes loaded; movement enabled on authored spawn. Position=(-8.00, 0.05, 0.00)
+Saving results to: /Users/eligripenstraw/Library/Application Support/Lighthouse Keepers Team/Lighthouse Keepers/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
