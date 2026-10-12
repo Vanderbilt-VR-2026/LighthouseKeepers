@@ -35,7 +35,7 @@ The default build list is unchanged. For Quest, use a temporary Build Profile wi
 
 Time to a target above the maximum flood height is infinite. Reaching the cap or using a zero rise rate no longer publishes redundant height events every frame. Minimum crew requirements cannot exceed capacity; assigned transports take precedence and subscriptions are cleaned up. Desktop typing in either legacy or TMP input fields suppresses WASD/QE movement.
 
-`FloodDangerMonitor` is not attached to an environment scene yet. Connecting its stages to visible warnings remains the next flood integration step. A real network transport and synchronized launch also remain future work.
+`FloodDangerMonitor` is not attached to an environment scene yet. Connecting its stages to visible warnings remains the next flood integration step. The included Fusion launcher now supplies real crew sessions and synchronized launch; see [multiplayer setup and verification](Multiplayer.md) for capabilities and pending device checks.
 
 ## Visual references and evidence
 
