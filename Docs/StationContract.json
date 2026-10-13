@@ -1,0 +1,2175 @@
+{
+  "version": "0.9-draft",
+  "status": "BUILT-UNVERIFIED",
+  "baselineCommit": "98a1df2",
+  "productionSwitchoverOwner": "Nirvaan",
+  "scope": "Environment attachment contract only. Lab has no gameplay components, colliders, cameras, listeners or production loading changes.",
+  "coordinateSystem": {
+    "origin": "tower centre at F1 finished floor",
+    "up": "+Y",
+    "north": "+Z",
+    "azimuth": "degrees clockwise from +Z viewed from above",
+    "units": "metres",
+    "anchorForward": "local +Z faces operator",
+    "anchorScale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "stability": {
+    "footprintsAndTransformNames": "frozen for v1.0",
+    "positionToleranceBeforeV1M": 0.3,
+    "worldPositions": "proposed until geometry sign-off",
+    "rotationPolicy": "fixed; any change requires contract version notice"
+  },
+  "floors": [
+    {
+      "id": "F1",
+      "floorY": 0,
+      "interiorRadius": 4.0,
+      "clearHeight": 2.95
+    },
+    {
+      "id": "F2",
+      "floorY": 3.3,
+      "interiorRadius": 4.0,
+      "clearHeight": 2.95
+    },
+    {
+      "id": "F3",
+      "floorY": 6.6,
+      "interiorRadius": 3.9,
+      "clearHeight": 2.95
+    },
+    {
+      "id": "F4",
+      "floorY": 9.9,
+      "interiorRadius": 3.85,
+      "clearHeight": 3.4
+    }
+  ],
+  "house": {
+    "centre": [
+      0,
+      0,
+      -7.35
+    ],
+    "interiorSize": [
+      7,
+      2.7,
+      5
+    ],
+    "throat": {
+      "southZ": -5.55,
+      "northZ": -3.85,
+      "clearWidth": 1.1,
+      "clearHeight": 2.6,
+      "floorY": 0,
+      "notes": "1.70 m passage via 0.70 m house vestibule recess and 0.15 m inset into F1; tower-end steel door only. Zero threshold."
+    }
+  },
+  "stairProposal": {
+    "arcStartDeg": 200,
+    "arcEndDeg": 340,
+    "risers": 19,
+    "goings": 18,
+    "walkLineRadius": 3.3,
+    "clearWidth": 1.05,
+    "innerRadius": 2.775,
+    "outerRadius": 3.825,
+    "riserM": 0.17368421052631577,
+    "goingM": 0.4479678413452112,
+    "landingSize": [
+      1.3,
+      1.3
+    ],
+    "lowerLandingAzimuth": 188,
+    "upperLandingAzimuth": 352,
+    "landingCentreRadius": 3.1,
+    "minimumHeadroomM": 2.6
+  },
+  "integrationNumbers": {
+    "F1FloorY": 0,
+    "F2FloorY": 3.3,
+    "generatorPlinthTopY": 3.75,
+    "pumpMotorHousingY": 0.55,
+    "wallDepthZeroY": 0,
+    "F1ToF2SpillY": 3.3,
+    "status": "PROPOSED; Eli owns all simulation thresholds. F2 controls are not declared permanently dry."
+  },
+  "stations": [
+    {
+      "id": "STN_PIPE_MANIFOLD",
+      "owner": "Tapan",
+      "floor": "F1",
+      "displayName": "Pipe Manifold",
+      "anchor": {
+        "position": [
+          2.474874,
+          0,
+          2.474874
+        ],
+        "rotationEuler": [
+          0,
+          225,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          3.6,
+          2.8,
+          0.45
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F1-A",
+        "WP-F1-C"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "VALVE_01",
+          "localPosition": [
+            -0.8,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "VALVE_02",
+          "localPosition": [
+            0.8,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "VALVE_03",
+          "localPosition": [
+            -1.05,
+            1.05,
+            0.45
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "VALVE_04",
+          "localPosition": [
+            1.05,
+            1.05,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "VALVE_05",
+          "localPosition": [
+            -0.55,
+            1.3,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.3
+        },
+        {
+          "name": "VALVE_06",
+          "localPosition": [
+            0.55,
+            1.3,
+            0.45
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.3
+        },
+        {
+          "name": "GAUGE_01",
+          "localPosition": [
+            -0.8,
+            1.4,
+            0.45
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "REPAIR_SITE_01",
+          "localPosition": [
+            0.8,
+            0.95,
+            0.45
+          ],
+          "type": "repairSite",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 0.95
+        },
+        {
+          "name": "BRACE_01",
+          "localPosition": [
+            -0.8,
+            1.05,
+            0.45
+          ],
+          "type": "brace",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "WRENCH_DOCK_01",
+          "localPosition": [
+            1.0,
+            1.05,
+            0.45
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "LEAK_EFFECT_01",
+          "localPosition": [
+            0.8,
+            0.95,
+            0.43
+          ],
+          "type": "effect",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 0.95
+        },
+        {
+          "name": "REPAIR_STATUS_01",
+          "localPosition": [
+            0.8,
+            1.4,
+            0.45
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Leak",
+          "socketName": "Plumbing Repair - Leak",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "186148453",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "LEAK_EFFECT_01",
+          "localPosition": [
+            0.8,
+            0.95,
+            0.43
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Pressure Sequence",
+          "role": "Lower gauges",
+          "socketName": "Pressure Sequence - Lower gauges",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "798748199",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "GAUGE_01",
+          "localPosition": [
+            -0.8,
+            1.4,
+            0.45
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Repair status",
+          "socketName": "Plumbing Repair - Repair status",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "851224597",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "REPAIR_STATUS_01",
+          "localPosition": [
+            0.8,
+            1.4,
+            0.45
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Wrench",
+          "socketName": "Plumbing Repair - Wrench",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1320457618",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "WRENCH_DOCK_01",
+          "localPosition": [
+            1.0,
+            1.05,
+            0.45
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Brace",
+          "socketName": "Plumbing Repair - Brace",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1867752771",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "BRACE_01",
+          "localPosition": [
+            -0.8,
+            1.05,
+            0.45
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "No kneeling required. A and C are simultaneous roles. Pressure instrument and repair indicator remain visible from both positions. Envelope includes every flange and wheel."
+    },
+    {
+      "id": "STN_ELECTRIC_PUMP",
+      "owner": "Eli / Tapan",
+      "floor": "F1",
+      "displayName": "Electric Pump",
+      "anchor": {
+        "position": [
+          3.262708,
+          0,
+          -1.521426
+        ],
+        "rotationEuler": [
+          0,
+          295,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.0,
+          0.95,
+          0.5
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F1-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "MOTOR_HOUSING_LINE",
+          "localPosition": [
+            0,
+            0.55,
+            0.45
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 0.55
+        },
+        {
+          "name": "INTAKE_SERVICE",
+          "localPosition": [
+            0,
+            0.8,
+            0.5
+          ],
+          "type": "service",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 0.8
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Static mounting line at F1 +0.55 m. No water/power behaviour. Pump and elevated panel share one sequential position."
+    },
+    {
+      "id": "STN_PUMP_CONTROL",
+      "owner": "Eli",
+      "floor": "F1",
+      "displayName": "Pump Control",
+      "anchor": {
+        "position": [
+          3.036131,
+          1.0,
+          -1.415771
+        ],
+        "rotationEuler": [
+          0,
+          295,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.65,
+          0.5,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F1-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "START",
+          "localPosition": [
+            -0.16,
+            0.18,
+            0.25
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 1.18
+        },
+        {
+          "name": "STOP",
+          "localPosition": [
+            0.16,
+            0.18,
+            0.25
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 1.18
+        },
+        {
+          "name": "PUMP_READY",
+          "localPosition": [
+            0,
+            0.37,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 1.37
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Envelope begins 1.0 m above floor, above the pump; local anchor heights are relative to this elevated root."
+    },
+    {
+      "id": "STN_WALL_DEPTH_GAUGE",
+      "owner": "Eli",
+      "floor": "F1",
+      "displayName": "Wall Depth Gauge",
+      "anchor": {
+        "position": [
+          1.316778,
+          0,
+          -3.617817
+        ],
+        "rotationEuler": [
+          0,
+          340,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.3,
+          2.4,
+          0.03
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [],
+      "interactiveAnchors": [
+        {
+          "name": "DEPTH_ZERO",
+          "localPosition": [
+            0,
+            0,
+            0.03
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "",
+          "standingHeightM": 0
+        },
+        {
+          "name": "DEPTH_READOUT",
+          "localPosition": [
+            0,
+            1.4,
+            0.03
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Passive wall graduations, 0.2 m increments from world Y=0. No dedicated operator exclusion zone."
+    },
+    {
+      "id": "STN_GENERATOR",
+      "owner": "Tapan / Eli",
+      "floor": "F2",
+      "displayName": "Generator",
+      "anchor": {
+        "position": [
+          0.918808,
+          3.3,
+          3.429037
+        ],
+        "rotationEuler": [
+          0,
+          195,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          2.1,
+          2.3,
+          0.75
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "OIL_INTAKE",
+          "localPosition": [
+            0.25,
+            1.2,
+            0.75
+          ],
+          "type": "service",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 1.2
+        },
+        {
+          "name": "OIL_STORAGE",
+          "localPosition": [
+            -0.25,
+            1.0,
+            0.75
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 1.0
+        },
+        {
+          "name": "PRIMER",
+          "localPosition": [
+            0,
+            1.15,
+            0.75
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "PLINTH_TOP",
+          "localPosition": [
+            0,
+            0.45,
+            0.4
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 0.45
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Generator Service",
+          "role": "Oil storage",
+          "socketName": "Generator Service - Oil storage",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "851224597",
+          "newStationId": "STN_GENERATOR",
+          "floor": "F2",
+          "owner": "Tapan / Eli",
+          "bindsTo": "OIL_STORAGE",
+          "localPosition": [
+            -0.25,
+            1.0,
+            0.75
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Generator Service",
+          "role": "Oil intake",
+          "socketName": "Generator Service - Oil intake",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1867752771",
+          "newStationId": "STN_GENERATOR",
+          "floor": "F2",
+          "owner": "Tapan / Eli",
+          "bindsTo": "OIL_INTAKE",
+          "localPosition": [
+            0.25,
+            1.2,
+            0.75
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Envelope includes 0.45 m plinth. Service face inward. Starter lives on the separate generator panel. No generator/power implementation."
+    },
+    {
+      "id": "STN_GENERATOR_PANEL",
+      "owner": "Eli",
+      "floor": "F2",
+      "displayName": "Generator Panel",
+      "anchor": {
+        "position": [
+          3.031089,
+          3.3,
+          1.75
+        ],
+        "rotationEuler": [
+          0,
+          240,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.8,
+          1.7,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-A"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "STARTER",
+          "localPosition": [
+            0,
+            1.15,
+            0.25
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "GENERATOR_STATUS",
+          "localPosition": [
+            0,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F2-A",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Generator Service",
+          "role": "Starter",
+          "socketName": "Generator Service - Starter",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "186148453",
+          "newStationId": "STN_GENERATOR_PANEL",
+          "floor": "F2",
+          "owner": "Eli",
+          "bindsTo": "STARTER",
+          "localPosition": [
+            0,
+            1.15,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "STN_BREAKER_PANEL",
+      "owner": "Eli",
+      "floor": "F2",
+      "displayName": "Breaker Panel",
+      "anchor": {
+        "position": [
+          3.446827,
+          3.3,
+          -0.607769
+        ],
+        "rotationEuler": [
+          0,
+          280,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.75,
+          1.75,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-D"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "BREAKER_BANK",
+          "localPosition": [
+            0,
+            1.2,
+            0.25
+          ],
+          "type": "switchBank",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-D",
+          "standingHeightM": 1.2
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Breaker Coordination",
+          "role": "Breaker bank",
+          "socketName": "Breaker Coordination - Breaker bank",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1925415404",
+          "newStationId": "STN_BREAKER_PANEL",
+          "floor": "F2",
+          "owner": "Eli",
+          "bindsTo": "BREAKER_BANK",
+          "localPosition": [
+            0,
+            1.2,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Dedicated emergency readability required; circuit taxonomy belongs to Eli."
+    },
+    {
+      "id": "STN_BILGE_PUMP_MANUAL",
+      "owner": "Tapan / Eli",
+      "floor": "F2",
+      "displayName": "Bilge Pump Manual",
+      "anchor": {
+        "position": [
+          2.007518,
+          3.3,
+          -2.867032
+        ],
+        "rotationEuler": [
+          0,
+          325,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.1,
+          1.5,
+          0.65
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-C"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "CRANK_AXIS",
+          "localPosition": [
+            0,
+            1.05,
+            0.65
+          ],
+          "type": "crank",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-C",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "CRANK_GRIP",
+          "localPosition": [
+            0,
+            1.3,
+            0.65
+          ],
+          "type": "grip",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-C",
+          "standingHeightM": 1.3
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 1.0
+      },
+      "notes": "Reserve a 1.0 m diameter vertical swing clearance centred at CRANK_AXIS, included in width/height envelope. Actual handle radius 0.25 m: grip spans h=0.80\u20131.30 m. Dedicated emergency illumination. Operator stands 0.80 m in front."
+    },
+    {
+      "id": "STN_ISOLATION_MANIFOLD",
+      "owner": "Tapan",
+      "floor": "F2",
+      "displayName": "Isolation Manifold",
+      "anchor": {
+        "position": [
+          -0.15,
+          3.3,
+          -1.3
+        ],
+        "rotationEuler": [
+          0,
+          0,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.2,
+          1.7,
+          0.45
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-E"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "UPPER_VALVE_01",
+          "localPosition": [
+            -0.36,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "UPPER_VALVE_02",
+          "localPosition": [
+            -0.12,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "UPPER_VALVE_03",
+          "localPosition": [
+            0.12,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "UPPER_VALVE_04",
+          "localPosition": [
+            0.36,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Freestanding floor-bolted pipe frame moved inboard to keep the southern stair landing clear. Dedicated emergency illumination."
+    },
+    {
+      "id": "STN_RADIO",
+      "owner": "Nirvaan",
+      "floor": "F3",
+      "displayName": "Radio",
+      "anchor": {
+        "position": [
+          1.8,
+          6.6,
+          3.117691
+        ],
+        "rotationEuler": [
+          0,
+          210,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.6,
+          1.5,
+          0.7
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F3-A"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "PUSH_TO_TALK",
+          "localPosition": [
+            -0.25,
+            1.05,
+            0.7
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F3-A",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "FREQUENCY_DIAL",
+          "localPosition": [
+            0,
+            1.15,
+            0.7
+          ],
+          "type": "dial",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F3-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "WALKIE_DOCK",
+          "localPosition": [
+            0.25,
+            1.05,
+            0.7
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F3-A",
+          "standingHeightM": 1.05
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Radio Relay",
+          "role": "Push to talk",
+          "socketName": "Radio Relay - Push to talk",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "179573850",
+          "newStationId": "STN_RADIO",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "PUSH_TO_TALK",
+          "localPosition": [
+            -0.25,
+            1.05,
+            0.7
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Radio Relay",
+          "role": "Frequency dial",
+          "socketName": "Radio Relay - Frequency dial",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "780793806",
+          "newStationId": "STN_RADIO",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "FREQUENCY_DIAL",
+          "localPosition": [
+            0,
+            1.15,
+            0.7
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Radio Relay",
+          "role": "Walkie-talkie dock",
+          "socketName": "Radio Relay - Walkie-talkie dock",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "2030364761",
+          "newStationId": "STN_RADIO",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "WALKIE_DOCK",
+          "localPosition": [
+            0.25,
+            1.05,
+            0.7
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Includes desk and radio. Standing use required; optional chair cannot obstruct this work area."
+    },
+    {
+      "id": "STN_FORECAST_BOARD",
+      "owner": "Nirvaan",
+      "floor": "F3",
+      "displayName": "Forecast Board",
+      "anchor": {
+        "position": [
+          3.65,
+          6.6,
+          0.0
+        ],
+        "rotationEuler": [
+          0,
+          270,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.4,
+          2.0,
+          0.1
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F3-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "REMOTE_PRESSURE_CHART",
+          "localPosition": [
+            -0.35,
+            1.4,
+            0.1
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F3-B",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "BEARING_INFORMATION",
+          "localPosition": [
+            0.35,
+            1.4,
+            0.1
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F3-B",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Pressure Sequence",
+          "role": "Remote instruction chart",
+          "socketName": "Pressure Sequence - Remote instruction chart",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "166673684",
+          "newStationId": "STN_FORECAST_BOARD",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "REMOTE_PRESSURE_CHART",
+          "localPosition": [
+            -0.35,
+            1.4,
+            0.1
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Lantern Alignment",
+          "role": "Bearing information",
+          "socketName": "Lantern Alignment - Bearing information",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "679648237",
+          "newStationId": "STN_FORECAST_BOARD",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "BEARING_INFORMATION",
+          "localPosition": [
+            0.35,
+            1.4,
+            0.1
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Both legacy remote-information roles preserved. Information only, no forecast logic."
+    },
+    {
+      "id": "STN_BEACON_CONTROL",
+      "owner": "Eli / Nirvaan",
+      "floor": "F4",
+      "displayName": "Beacon Control",
+      "anchor": {
+        "position": [
+          1.880439,
+          9.9,
+          2.16251
+        ],
+        "rotationEuler": [
+          0,
+          215,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.5,
+          1.6,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F4-SHARED"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "BEACON_LEVER",
+          "localPosition": [
+            0,
+            1.1,
+            0.25
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.1
+        },
+        {
+          "name": "RUNNING",
+          "localPosition": [
+            -0.1,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "FAULT",
+          "localPosition": [
+            0.1,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "BEACON_STATUS",
+          "localPosition": [
+            0,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+          "stationId": "Breaker Coordination",
+          "role": "Beacon status",
+          "socketName": "Breaker Coordination - Beacon status",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "7135128",
+          "newStationId": "STN_BEACON_CONTROL",
+          "floor": "F4",
+          "owner": "Eli / Nirvaan",
+          "bindsTo": "BEACON_STATUS",
+          "localPosition": [
+            0,
+            1.4,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Shares WP-F4-SHARED sequentially with alignment; not two simultaneous operators. Emergency-readable controls. No state changes."
+    },
+    {
+      "id": "STN_BEACON_ALIGNMENT",
+      "owner": "Tapan",
+      "floor": "F4",
+      "displayName": "Beacon Alignment",
+      "anchor": {
+        "position": [
+          1.388947,
+          9.9,
+          2.506656
+        ],
+        "rotationEuler": [
+          0,
+          215,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.5,
+          1.6,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F4-SHARED"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "AZIMUTH_WHEEL",
+          "localPosition": [
+            0,
+            1.05,
+            0.25
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "ELEVATION_WHEEL",
+          "localPosition": [
+            0,
+            1.35,
+            0.25
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.35
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+          "stationId": "Lantern Alignment",
+          "role": "Bearing controls",
+          "socketName": "Lantern Alignment - Bearing controls",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1538792387",
+          "newStationId": "STN_BEACON_ALIGNMENT",
+          "floor": "F4",
+          "owner": "Tapan",
+          "bindsTo": "AZIMUTH_WHEEL",
+          "localPosition": [
+            0,
+            1.05,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Shares WP-F4-SHARED sequentially; both clusters face the same stance. Existing bearing-control identity survives."
+    },
+    {
+      "id": "STN_TOOL_WALL",
+      "owner": "Tapan",
+      "floor": "House",
+      "displayName": "Tool Wall",
+      "anchor": {
+        "position": [
+          -2.4,
+          0,
+          -5.05
+        ],
+        "rotationEuler": [
+          0,
+          180,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          2.0,
+          2.2,
+          0.9
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-HOUSE-A"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "TOOL_DOCK_01",
+          "localPosition": [
+            -0.25,
+            1.15,
+            0.9
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-HOUSE-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "TOOL_DOCK_02",
+          "localPosition": [
+            0.25,
+            1.15,
+            0.9
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-HOUSE-A",
+          "standingHeightM": 1.15
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Includes bench. Touch targets on forward-accessible docks, decorative pegboard above."
+    },
+    {
+      "id": "STN_BRIEFING_BOARD",
+      "owner": "Nirvaan",
+      "floor": "House",
+      "displayName": "Briefing Board",
+      "anchor": {
+        "position": [
+          1.8,
+          0,
+          -5.05
+        ],
+        "rotationEuler": [
+          0,
+          180,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.2,
+          2.1,
+          0.12
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-HOUSE-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "KEEPER_WATCH",
+          "localPosition": [
+            0,
+            1.4,
+            0.12
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-HOUSE-B",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Static board; no day sequencing or incident logic."
+    }
+  ],
+  "operatorPositions": [
+    {
+      "id": "WP-F1-A",
+      "floor": "F1",
+      "position": [
+        2.156676,
+        0,
+        1.025305
+      ],
+      "facingAzimuth": 45,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F1-C",
+      "floor": "F1",
+      "position": [
+        1.025305,
+        0,
+        2.156676
+      ],
+      "facingAzimuth": 45,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F1-B",
+      "floor": "F1",
+      "position": [
+        2.084508,
+        0,
+        -0.972022
+      ],
+      "facingAzimuth": 115,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": true
+    },
+    {
+      "id": "WP-F2-B",
+      "floor": "F2",
+      "position": [
+        0.517638,
+        3.3,
+        1.931852
+      ],
+      "facingAzimuth": 15,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-A",
+      "floor": "F2",
+      "position": [
+        2.121762,
+        3.3,
+        1.225
+      ],
+      "facingAzimuth": 60,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-D",
+      "floor": "F2",
+      "position": [
+        2.412779,
+        3.3,
+        -0.425438
+      ],
+      "facingAzimuth": 100,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-C",
+      "floor": "F2",
+      "position": [
+        1.175832,
+        3.3,
+        -1.679262
+      ],
+      "facingAzimuth": 145,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-E",
+      "floor": "F2",
+      "position": [
+        -0.15,
+        3.3,
+        -0.05
+      ],
+      "facingAzimuth": 180,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F3-A",
+      "floor": "F3",
+      "position": [
+        1.05,
+        6.6,
+        1.818653
+      ],
+      "facingAzimuth": 30,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F3-B",
+      "floor": "F3",
+      "position": [
+        2.75,
+        6.6,
+        0.0
+      ],
+      "facingAzimuth": 90,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F4-SHARED",
+      "floor": "F4",
+      "position": [
+        1.032438,
+        9.9,
+        1.474474
+      ],
+      "facingAzimuth": 35,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": true
+    },
+    {
+      "id": "WP-HOUSE-A",
+      "floor": "House",
+      "position": [
+        -2.4,
+        0,
+        -6.75
+      ],
+      "facingAzimuth": 0,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-HOUSE-B",
+      "floor": "House",
+      "position": [
+        1.8,
+        0,
+        -5.97
+      ],
+      "facingAzimuth": 0,
+      "radius": 0.7,
+      "posture": "standing-or-seated-with-height-adjustment",
+      "sharedSequential": false
+    }
+  ],
+  "routes": [
+    {
+      "id": "RT-HOUSE-MAIN",
+      "floor": "House",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          0,
+          0,
+          -9.85
+        ],
+        [
+          0,
+          0,
+          -7.35
+        ],
+        [
+          0,
+          0,
+          -5.55
+        ],
+        [
+          0,
+          0,
+          -3.85
+        ]
+      ]
+    },
+    {
+      "id": "RT-F1-STAIR-LINK",
+      "floor": "F1",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          -0.431437,
+          0,
+          3.069831
+        ],
+        [
+          -1.6,
+          0,
+          1.8
+        ],
+        [
+          -1.5,
+          0,
+          0
+        ],
+        [
+          -1.7,
+          0,
+          -1.6
+        ],
+        [
+          -0.431437,
+          0,
+          -3.069831
+        ]
+      ]
+    },
+    {
+      "id": "RT-F1-ENTRY",
+      "floor": "F1",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          0,
+          0,
+          -3.85
+        ],
+        [
+          0,
+          0,
+          -1.8
+        ],
+        [
+          -1.7,
+          0,
+          -1.6
+        ],
+        [
+          -0.431437,
+          0,
+          -3.069831
+        ]
+      ]
+    },
+    {
+      "id": "RT-F2-STAIR-LINK",
+      "floor": "F2",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          -0.431437,
+          3.3,
+          3.069831
+        ],
+        [
+          -1.6,
+          3.3,
+          1.8
+        ],
+        [
+          -1.5,
+          3.3,
+          0
+        ],
+        [
+          -1.7,
+          3.3,
+          -1.6
+        ],
+        [
+          -0.431437,
+          3.3,
+          -3.069831
+        ]
+      ]
+    },
+    {
+      "id": "RT-F3-STAIR-LINK",
+      "floor": "F3",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          -0.431437,
+          6.6,
+          3.069831
+        ],
+        [
+          -1.6,
+          6.6,
+          1.8
+        ],
+        [
+          -1.5,
+          6.6,
+          0
+        ],
+        [
+          -1.7,
+          6.6,
+          -1.6
+        ],
+        [
+          -0.431437,
+          6.6,
+          -3.069831
+        ]
+      ]
+    },
+    {
+      "id": "RT-F4-STAIR-LINK",
+      "floor": "F4",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          -0.431437,
+          9.9,
+          3.069831
+        ],
+        [
+          -1.6,
+          9.9,
+          1.8
+        ],
+        [
+          -1.5,
+          9.9,
+          0
+        ],
+        [
+          -1.7,
+          9.9,
+          -1.6
+        ],
+        [
+          -0.431437,
+          9.9,
+          -3.069831
+        ]
+      ]
+    },
+    {
+      "id": "RT-F4-GALLERY",
+      "floor": "F4",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          -1.6,
+          9.9,
+          1.8
+        ],
+        [
+          -1.6,
+          9.9,
+          -1.6
+        ],
+        [
+          1.6,
+          9.9,
+          -1.6
+        ],
+        [
+          2.8,
+          9.9,
+          -0.6
+        ],
+        [
+          3.85,
+          9.9,
+          0
+        ],
+        [
+          4.8,
+          9.9,
+          0
+        ]
+      ]
+    }
+  ],
+  "legacyMapping": [
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Leak",
+      "socketName": "Plumbing Repair - Leak",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "186148453",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "LEAK_EFFECT_01",
+      "localPosition": [
+        0.8,
+        0.95,
+        0.43
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Pressure Sequence",
+      "role": "Lower gauges",
+      "socketName": "Pressure Sequence - Lower gauges",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "798748199",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "GAUGE_01",
+      "localPosition": [
+        -0.8,
+        1.4,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Repair status",
+      "socketName": "Plumbing Repair - Repair status",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "851224597",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "REPAIR_STATUS_01",
+      "localPosition": [
+        0.8,
+        1.4,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Wrench",
+      "socketName": "Plumbing Repair - Wrench",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1320457618",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "WRENCH_DOCK_01",
+      "localPosition": [
+        1.0,
+        1.05,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Brace",
+      "socketName": "Plumbing Repair - Brace",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1867752771",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "BRACE_01",
+      "localPosition": [
+        -0.8,
+        1.05,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Generator Service",
+      "role": "Starter",
+      "socketName": "Generator Service - Starter",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "186148453",
+      "newStationId": "STN_GENERATOR_PANEL",
+      "floor": "F2",
+      "owner": "Eli",
+      "bindsTo": "STARTER",
+      "localPosition": [
+        0,
+        1.15,
+        0.25
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Generator Service",
+      "role": "Oil storage",
+      "socketName": "Generator Service - Oil storage",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "851224597",
+      "newStationId": "STN_GENERATOR",
+      "floor": "F2",
+      "owner": "Tapan / Eli",
+      "bindsTo": "OIL_STORAGE",
+      "localPosition": [
+        -0.25,
+        1.0,
+        0.75
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Generator Service",
+      "role": "Oil intake",
+      "socketName": "Generator Service - Oil intake",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1867752771",
+      "newStationId": "STN_GENERATOR",
+      "floor": "F2",
+      "owner": "Tapan / Eli",
+      "bindsTo": "OIL_INTAKE",
+      "localPosition": [
+        0.25,
+        1.2,
+        0.75
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Breaker Coordination",
+      "role": "Breaker bank",
+      "socketName": "Breaker Coordination - Breaker bank",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1925415404",
+      "newStationId": "STN_BREAKER_PANEL",
+      "floor": "F2",
+      "owner": "Eli",
+      "bindsTo": "BREAKER_BANK",
+      "localPosition": [
+        0,
+        1.2,
+        0.25
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Pressure Sequence",
+      "role": "Remote instruction chart",
+      "socketName": "Pressure Sequence - Remote instruction chart",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "166673684",
+      "newStationId": "STN_FORECAST_BOARD",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "REMOTE_PRESSURE_CHART",
+      "localPosition": [
+        -0.35,
+        1.4,
+        0.1
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Radio Relay",
+      "role": "Push to talk",
+      "socketName": "Radio Relay - Push to talk",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "179573850",
+      "newStationId": "STN_RADIO",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "PUSH_TO_TALK",
+      "localPosition": [
+        -0.25,
+        1.05,
+        0.7
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Lantern Alignment",
+      "role": "Bearing information",
+      "socketName": "Lantern Alignment - Bearing information",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "679648237",
+      "newStationId": "STN_FORECAST_BOARD",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "BEARING_INFORMATION",
+      "localPosition": [
+        0.35,
+        1.4,
+        0.1
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Radio Relay",
+      "role": "Frequency dial",
+      "socketName": "Radio Relay - Frequency dial",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "780793806",
+      "newStationId": "STN_RADIO",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "FREQUENCY_DIAL",
+      "localPosition": [
+        0,
+        1.15,
+        0.7
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Radio Relay",
+      "role": "Walkie-talkie dock",
+      "socketName": "Radio Relay - Walkie-talkie dock",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "2030364761",
+      "newStationId": "STN_RADIO",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "WALKIE_DOCK",
+      "localPosition": [
+        0.25,
+        1.05,
+        0.7
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+      "stationId": "Breaker Coordination",
+      "role": "Beacon status",
+      "socketName": "Breaker Coordination - Beacon status",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "7135128",
+      "newStationId": "STN_BEACON_CONTROL",
+      "floor": "F4",
+      "owner": "Eli / Nirvaan",
+      "bindsTo": "BEACON_STATUS",
+      "localPosition": [
+        0,
+        1.4,
+        0.25
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+      "stationId": "Lantern Alignment",
+      "role": "Bearing controls",
+      "socketName": "Lantern Alignment - Bearing controls",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1538792387",
+      "newStationId": "STN_BEACON_ALIGNMENT",
+      "floor": "F4",
+      "owner": "Tapan",
+      "bindsTo": "AZIMUTH_WHEEL",
+      "localPosition": [
+        0,
+        1.05,
+        0.25
+      ]
+    }
+  ],
+  "validationLimits": [
+    "Draft numerical footprint and naming checks only; no built shell, stair collision, lightmap, reach comfort or device acceptance yet.",
+    "Operator discs are clearance reservations, not a guarantee every control is reachable from every point of the disc. Named stance centres and per-anchor role assignments are binding.",
+    "Do not auto-attach PuzzleSocket components to the draft lab or scan both lab and production for active sockets. Legacy scenes and UnityEvents remain untouched."
+  ]
+}
