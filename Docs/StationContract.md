@@ -183,7 +183,7 @@ Dedicated emergency readability required; circuit taxonomy belongs to Eli.
 
 ### STN_BILGE_PUMP_MANUAL
 
-Reserve a 1.0 m diameter vertical swing clearance centred at CRANK_AXIS, included in width/height envelope. Actual handle radius 0.25 m: grip spans h=0.80–1.30 m. Dedicated emergency illumination. Operator stands 0.80 m in front.
+Reserve a 1.0 m diameter vertical swing clearance centred at CRANK_AXIS, the clearance extends to h=1.55 m (0.05 m above the equipment envelope); actual moving hardware remains inside the envelope. Actual handle radius 0.25 m: grip spans h=0.80–1.30 m. Dedicated emergency illumination. Operator stands 0.80 m in front.
 
 | Child transform | Local XYZ | Type | Assigned stance |
 |---|---|---|---|
