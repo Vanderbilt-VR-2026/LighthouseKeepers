@@ -39,6 +39,10 @@ namespace LighthouseKeepers.Networking
         public event Action StatusChanged;
         public event Action GameStarting;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void RegisterDefaultTransport() => LobbyManager.CreateDefaultTransport = () =>
+            FindAnyObjectByType<FusionLobbyTransport>() ?? new GameObject("Fusion crew session").AddComponent<FusionLobbyTransport>();
+
         void Awake()
         {
             // The network preview authors this as its own root, separate from the

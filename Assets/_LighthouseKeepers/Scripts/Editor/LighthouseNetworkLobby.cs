@@ -1,20 +1,12 @@
-using UnityEditor;
-using UnityEditor.SceneManagement;
+using System.Linq;
 
 namespace LighthouseKeepers.Editor
 {
     public static class LighthouseNetworkLobby
     {
         public const string ScenePath = "Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity";
+        public static string[] GameScenes => new[] { ScenePath }.Concat(LighthouseScenes.Names.Take(7).Select(LighthouseScenes.ScenePath)).ToArray();
+        public static string[] EditorScenes => new[] { ScenePath }.Concat(LighthouseScenes.Names.Select(LighthouseScenes.ScenePath)).ToArray();
 
-        [MenuItem("Lighthouse Keepers/Networking/Play Photon crew lobby")]
-        public static void Play()
-        {
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
-            EditorSceneManager.OpenScene(ScenePath);
-            EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath);
-            EditorApplication.delayCall += EditorApplication.EnterPlaymode;
-        }
     }
 }

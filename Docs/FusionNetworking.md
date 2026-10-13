@@ -1,16 +1,16 @@
 # Photon Fusion crew lobby — issue #33
 
-This iteration extends William's Fusion launcher into a real Host/Client crew lobby. It uses the installed Fusion SDK and the project's existing Photon settings. No new networking package is required.
+This iteration extends William's Fusion launcher into a real Host/Client crew lobby. Photon is the default game transport and startup flow, using the installed Fusion SDK and the project's existing Photon settings. No new networking package is required.
 
 ## Try it
 
-1. Open Unity **6000.3.23f1**, allow compilation to finish, and choose **Lighthouse Keepers → Networking → Play Photon crew lobby**. The dedicated scene is `Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity`.
+1. Open Unity **6000.3.23f1**, allow compilation to finish, and choose **Lighthouse Keepers → Play game**. The dedicated scene is `Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity`.
 2. Under **Crew options**, enter your keeper name and a room name. Choose **Host crew** on one client. On another client, enter exactly the same room name and choose **Join crew**. Both clients need internet access, a working Fusion App ID, compatible builds, and the same Photon region. Set a shared Fixed Region in Photon App Settings if clients choose different regions automatically.
 3. Verify both names appear on both boards. Choose **Signal ready** on each board. Only the host can choose **Begin watch**, and every player must be ready by default.
 4. The host starts `LK_Bootstrap` through Fusion's scene manager. The crew follows into the environment, and the session survives the board and lobby rig unloading. Bootstrap continues to load its six authored content scenes locally.
 5. **Leave watch** cancels a pending connection or leaves a lobby session. A host leaving ends the crew session. In the environment, the persistent **Fusion crew session** object's **Leave crew session** component context action returns to the network lobby; application exit also disconnects. An in-world session menu is future work.
 
-The original **Play lobby preview** remains local practice. Bootstrap remains the first enabled build scene, so the existing environment entry point is preserved. The network lobby is registered at the end of Build Settings. For a multiplayer test build, put `LK_NetworkLobby` first in a separate build profile and include Bootstrap plus its six content scenes. The Sprint 1 environment APK builder explicitly selects environment scenes and does not include this lobby.
+`LK_NetworkLobby` is the first enabled build scene and the normal Editor Play entry point. The standard development APK build includes that lobby, Bootstrap, and its six content scenes. Recovery scene setup preserves the Photon-first order. Hosting/joining uses Photon without a transport-mode choice or a silent local fallback. **Development → Play local lobby preview** explicitly selects simulation for isolated UI work; **Development → Play environment** skips the lobby for environment work. **Play game** returns to the normal Photon entry point. The historical **Sprint 1 → Build Android environment** command remains an explicitly named environment diagnostic build; the published Sprint 1 APK predates this networking work.
 
 ## What is shared
 
@@ -25,7 +25,7 @@ Kicking is currently exposed through `LobbyManager.Kick(playerId)` for UI integr
 
 ## Implementation
 
-`LK.Networking` references `LK.Lobby` and Fusion; the lobby assembly stays independent of Fusion. `ISessionLobbyTransport` adds asynchronous status and shared launch to the existing transport seam. `LocalLobbyTransport` remains the practice fallback. The authored network scene explicitly binds the real transport on its own persistent root. William's `FusionLauncher.StartHost` and `JoinSession` button methods delegate to the same adapter.
+`LK.Networking` references `LK.Lobby` and Fusion; the lobby assembly stays independent of Fusion. `ISessionLobbyTransport` adds asynchronous status and shared launch to the existing transport seam. `LocalLobbyTransport` is explicitly selected only by local development previews. A missing Photon adapter is reported rather than silently simulating a crew. The default game scene explicitly binds the real transport on its own persistent root, and runtime initialization registers Photon for lobbies created without an explicit transport. William's `FusionLauncher.StartHost` and `JoinSession` button methods delegate to the same adapter.
 
 Bootstrap's original Fusion debug launcher and dormant runner template are preserved in the authored scene. When an active crew enters Bootstrap, the adapter disables those prototype components at runtime before their Start callbacks, so they cannot open a second session alongside the crew. Direct environment/prototype entry keeps its existing behavior.
 
@@ -35,7 +35,9 @@ Lobby updates are small and infrequent. The adapter uses [Fusion reliable data s
 
 ## Verification
 
-Run the Edit Mode suite for host roster rules, stale request/snapshot rejection, late joins, name limits, malformed packets, and the asynchronous manager contract, alongside the original local lobby tests.
+Run the Edit Mode suite for Photon-first build order, explicitly authored local practice, host roster rules, stale request/snapshot rejection, late joins, name limits, malformed packets, and the asynchronous manager contract, alongside the original local lobby tests.
+
+`FusionLobbyIntegrationTests.DefaultLobbyUsesPhotonInsteadOfLocalSimulation` verifies that an unconfigured runtime lobby resolves to Photon without adding a local transport.
 
 `FusionLobbyIntegrationTests.OfflineFusionSessionLoadsBootstrapAndSurvivesBoardUnload` runs a real Fusion Single session and scene manager without Photon Cloud. It exercises the authored lobby binding, ready flow, Bootstrap launch, persistent runner, and return to the lobby.
 

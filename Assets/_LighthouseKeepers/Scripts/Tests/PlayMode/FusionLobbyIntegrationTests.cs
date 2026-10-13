@@ -85,6 +85,21 @@ namespace LighthouseKeepers.Tests
             Assert.IsFalse(returned.IsOnline);
         }
 
+        [UnityTest] public IEnumerator DefaultLobbyUsesPhotonInsteadOfLocalSimulation()
+        {
+            var board = new GameObject("Default lobby test");
+            try
+            {
+                var manager = board.AddComponent<LobbyManager>();
+                Assert.IsInstanceOf<FusionLobbyTransport>(manager.Transport);
+                Assert.IsFalse(manager.IsLocalPreview);
+                Assert.IsNull(board.GetComponent<LocalLobbyTransport>());
+                sessions.Add((FusionLobbyTransport)manager.Transport);
+                yield return null;
+            }
+            finally { Object.Destroy(board); }
+        }
+
         async Task<FusionLobbyTransport> CloudPeer(GameMode mode, string room)
         {
             var session = new GameObject("Cloud test " + mode).AddComponent<FusionLobbyTransport>();

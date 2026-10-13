@@ -10,7 +10,7 @@ namespace LighthouseKeepers.Lobby
     public sealed class LobbyManager : MonoBehaviour
     {
         [SerializeField] LobbyConfig config;
-        [SerializeField, Tooltip("Preferred transport. Falls back to a transport on this object, then local practice.")]
+        [SerializeField, Tooltip("Preferred transport. Falls back to a transport on this object, then the registered Photon default.")]
         MonoBehaviour transportBehaviour;
         [SerializeField] string playerName = "";
         [SerializeField] UnityEvent onRosterChanged = new();
@@ -20,6 +20,9 @@ namespace LighthouseKeepers.Lobby
         bool starting;
         string lastError = "";
         ISessionLobbyTransport Session => transport as ISessionLobbyTransport;
+        public static System.Func<INetworkTransport> CreateDefaultTransport { private get; set; }
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetDefaultTransport() => CreateDefaultTransport = null;
 
         public INetworkTransport Transport => transport;
         public UnityEvent OnRosterChanged => onRosterChanged;
@@ -120,7 +123,12 @@ namespace LighthouseKeepers.Lobby
             transport = transportBehaviour as INetworkTransport;
             if (transport == null)
                 transport = GetComponents<MonoBehaviour>().OfType<INetworkTransport>().FirstOrDefault();
-            transport ??= gameObject.AddComponent<LocalLobbyTransport>();
+            transport ??= CreateDefaultTransport?.Invoke();
+            if (transport == null)
+            {
+                lastError = "Photon crew transport is missing. Open the game lobby to connect.";
+                return;
+            }
             transport.PlayersChanged += HandleRosterChanged;
             transport.ConnectionChanged += HandleConnectionChanged;
             if (Session != null)

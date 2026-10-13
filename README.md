@@ -4,7 +4,7 @@
 
 **[Download the Sprint 1 APK for Meta Quest 3](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint1-quest3-20261001/LighthouseKeepers-Sprint1-Environment.apk)** — Android ARM64/IL2CPP development build. See the [release notes and checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint1-quest3-20261001). Headset walkthrough and performance verification remain pending.
 
-Open this checkout, then use **Lighthouse Keepers → Play environment**. The entry scene is `Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity`; it loads the six content scenes. Click Game and use WASD/Q/E for desktop exploration. Do not open an older Desktop checkout expecting this branch's changes.
+Open this checkout, then use **Lighthouse Keepers → Play game**. The default entry scene is the Photon crew lobby, `Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity`. Choose **Host crew**, or enter an existing room name under **Crew options → Join crew**; signal ready and begin the watch. Fusion launches Bootstrap, which loads the six content scenes. Click Game and use WASD/Q/E for desktop exploration. Photon is the normal game transport; local simulation is available only in the Development preview.
 
 This Sprint 1 version contains the repaired lighthouse environment, floor/stair circulation, compact grounded pipework, ceiling fixtures and team code integration. The second and third floors are reserved for further furnishing; existing third-floor items and puzzle anchors remain. It is an environment foundation, not a completed puzzle/survival game. See [Sprint 1 publication](Docs/Sprint1Publication.md) for contributor commits, validation, branch guidance and pending Quest checks.
 
@@ -19,21 +19,21 @@ Where Sprint 1 landed, recorded on Quest 3 (48 s). Click the image to play the v
 
 A standalone Quest 3 lighthouse environment foundation. Open with **Unity 6000.3.23f1 (Unity 6.3 LTS)** and install **Android Build Support, SDK/NDK Tools and OpenJDK** through Unity Hub.
 
-Open `Assets/_LighthouseKeepers/Scenes/Bootstrap/LK_Bootstrap.unity` and press Play. It loads six content scenes additively. Do not also load a second player rig. For isolated tests open `Assets/_LighthouseKeepers/Scenes/Development/LK_DevGym.unity`.
+Use **Lighthouse Keepers → Play game** or press Play to enter the Photon crew lobby by default. For isolated environment work, use **Development → Play environment**; Bootstrap loads six content scenes additively. Do not also load a second player rig. For isolated tests open `Assets/_LighthouseKeepers/Scenes/Development/LK_DevGym.unity`.
 
 Editor preview without a headset: WASD walks; Q/E snap-turn. This preview uses character collision and gravity; it does not emulate tracked controller grabbing. Test interaction on Quest. In the Inspector, the persistent systems expose flood height, pause/reset and day selection. The DevGym overlay offers mouse-operated test controls. Select the ComfortSettings asset to configure movement, snap/smooth turning and vignette intensity. Changes to these shared settings affect the team; use a branch.
 
-Quest controls: left stick walks relative to the headset, right stick snap-turns, grip grabs nearby interactables. Use the Quest system recenter gesture; a RecenterPlayer inspector action is also provided. No jumping, climbing or voice is implemented. The separate Photon crew lobby supports networking for roster, ready state and scene launch; player poses and gameplay are still local.
+Quest controls: left stick walks relative to the headset, right stick snap-turns, grip grabs nearby interactables. Use the Quest system recenter gesture; a RecenterPlayer inspector action is also provided. No jumping, climbing or voice is implemented. The default Photon crew lobby supports networking for roster, ready state and scene launch; player poses and gameplay are still local.
 
 ## Lobby and flood iteration
 
-Choose **Lighthouse Keepers → Play lobby preview** to enter the keeper watch room. Use **Take your post → Signal ready → Begin watch** on the physical board. **Lower board** adjusts its height for seated use. Crew options include an offline guest simulation. See [the iteration guide](Docs/LobbyAndFloodIteration.md) for visual concepts, implementation notes and the Quest 3 test checklist.
+Choose **Lighthouse Keepers → Development → Play local lobby preview** to enter the keeper watch room. Use **Take your post → Signal ready → Begin watch** on the physical board. **Lower board** adjusts its height for seated use. Crew options include an offline guest simulation. See [the iteration guide](Docs/LobbyAndFloodIteration.md) for visual concepts, implementation notes and the Quest 3 test checklist.
 
-For issue #33's real crew lobby, choose **Lighthouse Keepers → Networking → Play Photon crew lobby**. Host a room on one client and join the same room name on another; names, ready states and the host's scene launch are shared. See [Photon networking setup and scope](Docs/FusionNetworking.md). The published Sprint 1 APK predates this feature; synchronized in-world gameplay remains future work.
+The normal **Lighthouse Keepers → Play game** entry uses Photon hosting and joining. Host a room on one client and join the same room name on another; names, ready states and the host's scene launch are shared. See [Photon networking setup and scope](Docs/FusionNetworking.md). The published Sprint 1 APK predates this feature; synchronized in-world gameplay remains future work.
 
 ## Android build and USB test
 1. Open File → Build Profiles, select Android and Switch Platform.
-2. Confirm `LK_Bootstrap` is first in the scene list. The seven environment scenes, DevGym and Photon crew lobby are registered; the automated environment APK uses the seven environment scenes.
+2. Confirm `LK_NetworkLobby` is first in the scene list, followed by `LK_Bootstrap` and its six content scenes. This is the normal Photon game startup. The historical Sprint 1 environment diagnostic builder explicitly selects its seven environment scenes.
 3. Use **Lighthouse Keepers → Sprint 1 → Build Android environment** to build the authored scenes without regenerating them. Output: `Builds/LighthouseKeepers-Sprint1-Environment.apk` (Development Build, ARM64/IL2CPP, OpenXR).
 4. Connect Quest 3 via USB, allow debugging, keep it awake and turn on both controllers.
 5. Install the downloaded APK with `adb install -r LighthouseKeepers-Sprint1-Environment.apk` (or use its `Builds/` path for a local build), then `adb shell am start -n com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
@@ -54,6 +54,6 @@ The team-compatible editor version is now **6000.3.23f1**. Do not accept an auto
 
 ## Inspect the September 23 environment integration
 
-Use **Lighthouse Keepers → Integration → Open complete environment** to load the seven authored scenes in the editor. Press Play, click Game view, then use WASD/Q/E for the desktop preview. Play starts from LK_Bootstrap to keep one persistent rig and audio hierarchy.
+Use **Lighthouse Keepers → Development → Open complete environment** to load the seven authored scenes in the editor. Press Play, click Game view, then use WASD/Q/E for the desktop preview. This Development command explicitly starts from LK_Bootstrap for isolated environment work. Use **Play game** to return to the Photon lobby startup.
 
 Selected Asset Store props, offshore fog and the streamed horror ambience are now included; the supplied water shader has an editor comparison material and a Quest-safe runtime fallback. See [integration changes](Docs/AssetIntegrationStatus.md), [asset provenance](Docs/ThirdPartyAssets.md) and [verification](Docs/Verification/AssetIntegrationValidation.md). Final sound balance, both-eye effects and sustained Quest performance still need headset testing.
