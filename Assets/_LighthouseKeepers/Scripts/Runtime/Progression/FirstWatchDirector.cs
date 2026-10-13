@@ -13,19 +13,37 @@ namespace LighthouseKeepers.Progression
         [SerializeField] Transform station;
         [SerializeField] FirstWatchValve brace;
         [SerializeField] AudioClip feedbackClip;
+        [Header("Repair and survival")]
+        [SerializeField, Min(1), Tooltip("Accumulated wrist rotation required for each seal, in degrees.")]
+        float degreesPerValve = FirstWatchRules.DefaultDegreesPerValve;
+        [SerializeField, Min(.1f), Tooltip("Seconds of submerged head time before failure.")]
+        float airSeconds = FirstWatchRules.DefaultAirSeconds;
+        [SerializeField, Min(.1f), Tooltip("Safe time on the landing required to finish, in seconds.")]
+        float recoverySeconds = FirstWatchRules.DefaultRecoverySeconds;
+        [SerializeField, Min(.1f)] float clampSeconds = 20;
+        [SerializeField, Min(.1f)] float wrongValveCooldownSeconds = 1.5f;
+        [SerializeField, Min(0), Tooltip("Water rise per wrong turn, in metres.")]
+        float wrongValveWaterRise = .08f;
+        [Header("Flood rates in metres per second")]
         [SerializeField, Min(.001f)] float repairRiseSpeed = .018f;
         [SerializeField, Min(.001f)] float escapeRiseSpeed = .003f;
         [SerializeField, Min(0)] float repairWaterDrop = .65f;
-        public FirstWatchRules Rules { get; } = new();
+        [SerializeField, Tooltip("Starting water elevation in world-space metres.")] float startingWaterHeight = .1f;
+        [Header("Station and landing bounds in metres")]
+        [SerializeField, Min(.1f)] float stationReach = 2.3f;
+        [SerializeField] Vector2 landingFootHeight = new(3.05f, 3.65f);
+        [SerializeField, Min(.1f)] float landingRadius = 4.8f;
+        public FirstWatchRules Rules { get; private set; }
+        public float ClampSeconds => clampSeconds;
         public bool Ready { get; private set; }
         public float ClampRemaining { get; private set; }
         public string Feedback { get; private set; } = "";
         public float WaterHeight => flood ? flood.Height : -.25f;
-        public bool AtStation => head && station && Vector3.Distance(head.position, station.position + Vector3.up * .4f) < 2.3f;
+        public bool AtStation => head && station && Vector3.Distance(head.position, station.position + Vector3.up * .4f) < stationReach;
         public bool Braced => AtStation && (ClampRemaining > 0 || (brace && brace.IsHeld) || desktopBrace);
-        public bool OnLanding => rig && rig.transform.position.y >= 3.05f && rig.transform.position.y < 3.65f &&
-            new Vector2(rig.Camera.transform.position.x, rig.Camera.transform.position.z).magnitude < 4.8f;
-        public string Sequence => $"{Letter(Rules.ValveAt(0))}  →  {Letter(Rules.ValveAt(1))}  →  {Letter(Rules.ValveAt(2))}";
+        public bool OnLanding => rig && rig.Camera && rig.transform.position.y >= landingFootHeight.x && rig.transform.position.y < landingFootHeight.y &&
+            new Vector2(rig.Camera.transform.position.x, rig.Camera.transform.position.z).magnitude < landingRadius;
+        public string Sequence { get; private set; } = "";
         public static string Letter(int valve) => ((char)('A' + valve)).ToString();
         FloodController flood;
         DayDirector days;
@@ -40,14 +58,33 @@ namespace LighthouseKeepers.Progression
         bool desktopBrace;
         int watchNumber;
 
+        void Awake() => Rules = new FirstWatchRules(degreesPerValve, airSeconds, recoverySeconds);
+
+        public bool ValidateConfiguration(out string reason)
+        {
+            reason = "";
+            if (!station || !brace || !feedbackClip) reason = "Assign the repair station, brace and feedback clip.";
+            else if (!Positive(degreesPerValve) || !Positive(airSeconds) || !Positive(recoverySeconds) ||
+                !Positive(clampSeconds) || !Positive(wrongValveCooldownSeconds) || !Positive(stationReach) || !Positive(landingRadius) ||
+                !Positive(repairRiseSpeed) || !Positive(escapeRiseSpeed) || !Finite(wrongValveWaterRise) || wrongValveWaterRise < 0 ||
+                !Finite(repairWaterDrop) || repairWaterDrop < 0 || !Finite(startingWaterHeight) ||
+                !Finite(landingFootHeight.x) || !Finite(landingFootHeight.y) || landingFootHeight.x >= landingFootHeight.y)
+                reason = "Use finite, valid watch thresholds and ordered landing heights.";
+            return reason.Length == 0;
+        }
+
+        static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
+        static bool Positive(float value) => Finite(value) && value > 0;
+
         IEnumerator Start()
         {
+            if (!ValidateConfiguration(out var reason)) { Debug.LogError("First Watch: " + reason, this); yield break; }
             var bootstrap = FindAnyObjectByType<EnvironmentBootstrap>();
             while (bootstrap && !bootstrap.Ready) yield return null;
             flood = FindAnyObjectByType<FloodController>();
             days = FindAnyObjectByType<DayDirector>();
             rig = FindAnyObjectByType<XROrigin>();
-            if (!flood || !days || !rig || !station) { Debug.LogError("First Watch requires flood, days, player and repair station."); yield break; }
+            if (!flood || !days || !rig || !rig.Camera) { Debug.LogError("First Watch requires flood, days and a player with a tracked camera."); yield break; }
             head = rig.Camera.transform;
             spawn = rig.transform.position;
             spawnRotation = rig.transform.rotation;
@@ -74,15 +111,15 @@ namespace LighthouseKeepers.Progression
         public void BeginWatch()
         {
             if (!Ready || Rules.Phase != WatchPhase.Briefing) return;
-            Rules.Begin(); days.ApplyDay(3); flood.SetHeight(.1f); flood.RiseSpeed = repairRiseSpeed; flood.ResumeFlood();
+            Rules.Begin(); days.ApplyDay(3); flood.SetHeight(startingWaterHeight); flood.RiseSpeed = repairRiseSpeed; flood.ResumeFlood();
             Say("Water is rising. Find the marked plumbing controls.", .85f);
         }
 
         public void LatchClamp()
         {
             if (!Ready || Rules.Phase != WatchPhase.Repair || !AtStation) return;
-            ClampRemaining = 20;
-            Say("Clamp latched for 20 seconds. Follow the valve order.", 1);
+            ClampRemaining = clampSeconds;
+            Say($"Clamp latched for {clampSeconds:0.#} seconds. Follow the valve order.", 1);
         }
 
         public ValveResult TurnValve(int valve, float degrees)
@@ -93,8 +130,8 @@ namespace LighthouseKeepers.Progression
             var result = Rules.Turn(valve, degrees, Braced);
             if (result == ValveResult.WrongValve)
             {
-                wrongCooldown = 1.5f;
-                flood.SetHeight(flood.Height + .08f);
+                wrongCooldown = wrongValveCooldownSeconds;
+                flood.SetHeight(flood.Height + wrongValveWaterRise);
                 Say("Wrong valve — pressure surged. Check the order.", .55f);
             }
             else if (result == ValveResult.ValveSealed) Say("Seal locked. Next valve.", 1.3f);
@@ -131,6 +168,7 @@ namespace LighthouseKeepers.Progression
             flood.ResetFlood(); days.ApplyDay(1);
             if (pipeLeak) pipeLeak.SetActive(leakInitiallyActive);
             Rules.Reset(++watchNumber * 7919);
+            Sequence = $"{Letter(Rules.ValveAt(0))}  →  {Letter(Rules.ValveAt(1))}  →  {Letter(Rules.ValveAt(2))}";
             ClampRemaining = wrongCooldown = 0; desktopBrace = false; Feedback = "";
             if (!movePlayer) return;
             // Explicit retry only; never move the camera during active gameplay.

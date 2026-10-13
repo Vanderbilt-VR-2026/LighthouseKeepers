@@ -12,6 +12,8 @@ namespace LighthouseKeepers.Progression
         [SerializeField] bool isBrace;
         [SerializeField] Transform wheel;
         [SerializeField] Renderer indicator;
+        [SerializeField, Min(.01f), Tooltip("Maximum hand distance from the control, in metres. Distant ray selection cannot turn a valve.")]
+        float handReach = .65f;
         XRSimpleInteractable interactable;
         Vector3 previousHandDirection;
         bool tracking;
@@ -23,7 +25,7 @@ namespace LighthouseKeepers.Progression
         {
             if (interactable.interactorsSelecting.Count == 0) return false;
             var hand = interactable.interactorsSelecting[0].transform;
-            return Vector3.Distance(hand.position, transform.position) < .65f;
+            return Vector3.Distance(hand.position, transform.position) < handReach;
         }
         void Update()
         {

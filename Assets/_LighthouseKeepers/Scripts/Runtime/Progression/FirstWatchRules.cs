@@ -8,9 +8,27 @@ namespace LighthouseKeepers.Progression
     /// <summary>Local first-floor rehearsal rules. Contains no networking or scene authority.</summary>
     public sealed class FirstWatchRules
     {
-        public const float DegreesPerValve = 270;
-        public const float AirSeconds = 6;
-        public const float RecoverySeconds = 12;
+        public const float DefaultDegreesPerValve = 270;
+        public const float DefaultAirSeconds = 6;
+        public const float DefaultRecoverySeconds = 12;
+        public float DegreesPerValve { get; }
+        public float AirSeconds { get; }
+        public float RecoverySeconds { get; }
+
+        public FirstWatchRules(float degreesPerValve = DefaultDegreesPerValve,
+            float airSeconds = DefaultAirSeconds, float recoverySeconds = DefaultRecoverySeconds)
+        {
+            DegreesPerValve = Positive(degreesPerValve, nameof(degreesPerValve));
+            AirSeconds = Positive(airSeconds, nameof(airSeconds));
+            RecoverySeconds = Positive(recoverySeconds, nameof(recoverySeconds));
+        }
+
+        static float Positive(float value, string parameter)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value) || value <= 0)
+                throw new ArgumentOutOfRangeException(parameter, "Watch thresholds must be finite and positive.");
+            return value;
+        }
         readonly int[] order = { 0, 1, 2 };
         public WatchPhase Phase { get; private set; } = WatchPhase.Briefing;
         public int SealedCount { get; private set; }

@@ -23,7 +23,7 @@ namespace LighthouseKeepers.Editor
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
-            Create(); EditorSceneManager.OpenScene(Path);
+            Create(); ValidateEntry(); EditorSceneManager.OpenScene(Path);
             // The entry is already open. Do not leave a start-scene override that redirects tests.
             EditorSceneManager.playModeStartScene = null;
             EditorApplication.EnterPlaymode();
@@ -111,10 +111,66 @@ namespace LighthouseKeepers.Editor
             AssetDatabase.CreateAsset(material,path);return material;
         }
 
+        [MenuItem("Lighthouse Keepers/First Watch/Validate entry references")]
+        public static void ValidateEntry()
+        {
+            // Inspect the saved entry without replacing or saving the user's current scene.
+            var scene = EditorSceneManager.OpenPreviewScene(Path);
+            try
+            {
+                var roots = scene.GetRootGameObjects();
+                T[] Components<T>() where T : Component => roots.SelectMany(root => root.GetComponentsInChildren<T>(true)).ToArray();
+                var directors = Components<FirstWatchDirector>();
+                if (directors.Length != 1) throw new InvalidOperationException("First Watch needs exactly one local authority.");
+                var director = directors[0];
+                if (!director.ValidateConfiguration(out var reason)) throw new InvalidOperationException(reason);
+                var assignedBrace = new SerializedObject(director).FindProperty("brace").objectReferenceValue;
+                var valves = Components<FirstWatchValve>();
+                if (valves.Length != 4) throw new InvalidOperationException("Expected three seal valves and one brace.");
+                var indices = new System.Collections.Generic.HashSet<int>();
+                int braces = 0;
+                foreach (var valve in valves)
+                {
+                    var data = new SerializedObject(valve);
+                    if (data.FindProperty("director").objectReferenceValue != director ||
+                        !data.FindProperty("indicator").objectReferenceValue || !valve.GetComponent<XRSimpleInteractable>() ||
+                        !valve.GetComponent<Collider>())
+                        throw new InvalidOperationException("Incomplete interaction references on " + valve.name);
+                    float reach = data.FindProperty("handReach").floatValue;
+                    if (float.IsNaN(reach) || float.IsInfinity(reach) || reach <= 0)
+                        throw new InvalidOperationException("Invalid hand reach on " + valve.name);
+                    if (data.FindProperty("isBrace").boolValue)
+                    {
+                        braces++;
+                        if (assignedBrace != valve) throw new InvalidOperationException("Authority must reference the authored brace.");
+                    }
+                    else
+                    {
+                        if (!data.FindProperty("wheel").objectReferenceValue || !indices.Add(data.FindProperty("valveIndex").intValue))
+                            throw new InvalidOperationException("Missing wheel or duplicate seal index on " + valve.name);
+                    }
+                }
+                if (braces != 1 || !indices.SetEquals(new[] { 0, 1, 2 }))
+                    throw new InvalidOperationException("Expected one brace and seal indices A, B, C.");
+                var boards = Components<FirstWatchBoard>();
+                var roles = new System.Collections.Generic.HashSet<int>();
+                foreach (var board in boards)
+                {
+                    var data = new SerializedObject(board);
+                    if (data.FindProperty("director").objectReferenceValue != director || !roles.Add(data.FindProperty("role").intValue))
+                        throw new InvalidOperationException("Invalid board authority or duplicate role on " + board.name);
+                }
+                if (boards.Length != 3 || !roles.SetEquals(new[] { 0, 1, 2 }))
+                    throw new InvalidOperationException("Expected briefing, station and landing boards.");
+                Debug.Log("FIRST WATCH REFERENCES VALID: authority, tuning, three seals, brace and three boards.");
+            }
+            finally { EditorSceneManager.ClosePreviewScene(scene); }
+        }
+
         [MenuItem("Lighthouse Keepers/First Watch/Build Quest APK")]
         public static void BuildAndroid()
         {
-            Create();
+            Create(); ValidateEntry();
             var content=EditorBuildSettings.scenes.Where(s=>s.enabled&&!s.path.Contains("/Development/")&&!s.path.EndsWith("LK_Bootstrap.unity")).Select(s=>s.path).ToArray();
             if(content.Length!=6)throw new InvalidOperationException("Expected six authored environment scenes.");
             Directory.CreateDirectory("Builds");

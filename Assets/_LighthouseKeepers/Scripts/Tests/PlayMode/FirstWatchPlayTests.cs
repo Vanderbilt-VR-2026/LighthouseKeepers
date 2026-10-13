@@ -43,6 +43,7 @@ namespace LighthouseKeepers.Tests
             Assert.AreEqual(4,Object.FindObjectsByType<FirstWatchValve>(FindObjectsSortMode.None).Length);
             Assert.AreEqual(3,Object.FindObjectsByType<FirstWatchBoard>(FindObjectsSortMode.None).Length);
             Assert.IsTrue(flood.Paused);
+            Assert.IsTrue(watch.ValidateConfiguration(out var error), error);
             watch.BeginWatch(); Assert.IsFalse(flood.Paused);
             // A distant ray/keyboard action cannot repair from the safe upper floor.
             Assert.AreEqual(ValveResult.Ignored,watch.TurnValve(watch.Rules.NextValve,270));
@@ -60,7 +61,7 @@ namespace LighthouseKeepers.Tests
             Assert.Less(flood.Height,before-.5f); Assert.Less(flood.RiseSpeed,speed);
             Place(new Vector3(2.7f,3.25f,0)); yield return null; yield return null;
             Assert.AreEqual(WatchPhase.Recovery,watch.Rules.Phase); Assert.IsTrue(flood.Paused);
-            yield return new WaitForSeconds(FirstWatchRules.RecoverySeconds + .2f);
+            yield return new WaitForSeconds(watch.Rules.RecoverySeconds + .2f);
             Assert.AreEqual(WatchPhase.Complete,watch.Rules.Phase);
             watch.RestartWatch();
             Assert.AreEqual(WatchPhase.Briefing,watch.Rules.Phase); Assert.IsTrue(flood.Paused);
@@ -79,11 +80,47 @@ namespace LighthouseKeepers.Tests
             Assert.That(flood.Height-before,Is.EqualTo(.08f).Within(.001f));
             Assert.AreEqual(1,watch.Rules.Mistakes);
             flood.SetHeight(rig.Camera.transform.position.y+.1f);
-            yield return new WaitForSeconds(FirstWatchRules.AirSeconds + .2f);
+            yield return new WaitForSeconds(watch.Rules.AirSeconds + .2f);
             Assert.AreEqual(WatchPhase.Failed,watch.Rules.Phase);
             Assert.IsTrue(flood.Paused);
             watch.RestartWatch(); Assert.AreEqual(0,watch.Rules.Mistakes); Assert.AreEqual(0,watch.ClampRemaining);
             yield return null;
+        }
+
+        [UnityTest] public IEnumerator InspectorClampDurationControlsFeedbackAndExpiry()
+        {
+            var settings = new UnityEditor.SerializedObject(watch);
+            settings.FindProperty("clampSeconds").floatValue = 1.5f;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+            watch.BeginWatch(); Place(new Vector3(0, .05f, -1.85f)); yield return null;
+            watch.LatchClamp();
+            Assert.AreEqual(1.5f, watch.ClampRemaining);
+            StringAssert.Contains("1.5 seconds", watch.Feedback);
+            yield return new WaitForSeconds(.2f);
+            var texts = GameObject.Find("Seal order and pressure").GetComponentsInChildren<TMPro.TMP_Text>();
+            Assert.IsTrue(System.Array.Exists(texts, text => text.text == "LATCH CLAMP / 1.5s"));
+            yield return new WaitForSeconds(1.5f);
+            Assert.IsFalse(watch.Braced, "The configured clamp must expire, not the old hardcoded 20 seconds.");
+            Assert.AreEqual(ValveResult.Ignored, watch.TurnValve(watch.Rules.NextValve, 30));
+        }
+
+        [Test] public void MissingRequiredStationIsReportedBeforeInteraction()
+        {
+            var settings = new UnityEditor.SerializedObject(watch);
+            var station = settings.FindProperty("station").objectReferenceValue;
+            try
+            {
+                settings.FindProperty("station").objectReferenceValue = null;
+                settings.ApplyModifiedPropertiesWithoutUndo();
+                Assert.IsFalse(watch.ValidateConfiguration(out var reason));
+                StringAssert.Contains("station", reason);
+                Assert.IsFalse(watch.AtStation);
+            }
+            finally
+            {
+                settings.FindProperty("station").objectReferenceValue = station;
+                settings.ApplyModifiedPropertiesWithoutUndo();
+            }
         }
 
         [UnityTest] public IEnumerator SelectedBraceAndWristRotationActuallySealAValve()

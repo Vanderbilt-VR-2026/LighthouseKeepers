@@ -57,13 +57,13 @@ namespace LighthouseKeepers.Progression
                 else transform.SetPositionAndRotation(home, homeRotation);
             }
             title.text = role == WatchBoardRole.Station ? "PLUMBING / EMERGENCY SEALS" : role == WatchBoardRole.Landing ? "FIRST LANDING / REFUGE" : "FIRST WATCH";
-            status.text = rules.SubmergedSeconds > 0 ? $"GET ABOVE WATER • AIR {Mathf.CeilToInt(FirstWatchRules.AirSeconds - rules.SubmergedSeconds)}s" :
+            status.text = rules.SubmergedSeconds > 0 ? $"GET ABOVE WATER • AIR {Mathf.CeilToInt(rules.AirSeconds - rules.SubmergedSeconds)}s" :
                 $"WATER {director.WaterHeight:F2}m    •    SEALS {rules.SealedCount}/3";
             status.color = rules.SubmergedSeconds > 0 ? new Color(1,.4f,.3f) : Brass;
             action.gameObject.SetActive(true);
             action.interactable = false;
             actionText.text = "WATCH IN PROGRESS";
-            progress.rectTransform.localScale = new Vector3((rules.SealedCount + rules.TurnDegrees / FirstWatchRules.DegreesPerValve) / 3f, 1, 1);
+            progress.rectTransform.localScale = new Vector3((rules.SealedCount + rules.TurnDegrees / rules.DegreesPerValve) / 3f, 1, 1);
             if (terminal)
             {
                 title.text = rules.Phase == WatchPhase.Complete ? "FIRST WATCH SURVIVED" : "THE WATER CAUGHT YOU";
@@ -82,7 +82,7 @@ namespace LighthouseKeepers.Progression
                     body.text = role == WatchBoardRole.Station ?
                         $"SEAL ORDER     {director.Sequence}\n{(director.Braced ? "BRACE SECURE" : "HOLD BRACE BEFORE TURNING")}    •    {(director.ClampRemaining > 0 ? $"CLAMP {director.ClampRemaining:F0}s" : "GRIP + TWIST THE WHEEL")}\n{(string.IsNullOrEmpty(director.Feedback) ? "Green means sealed. Regrip to keep turning." : director.Feedback)}" :
                         "Contain the leak before retreating upstairs.\nFind the brass controls beside the plumbing manifold.\nHold the brace and turn the wheels in the posted order.";
-                    actionText.text = "LATCH CLAMP / 20s";
+                    actionText.text = $"LATCH CLAMP / {director.ClampSeconds:0.#}s";
                     action.interactable = role == WatchBoardRole.Station && director.AtStation; break;
                 case WatchPhase.Escape:
                     body.text = "LEAK CONTAINED • TIME BOUGHT\nTake the spiral stairs up one floor.\nStep onto the first landing and catch your breath.";
