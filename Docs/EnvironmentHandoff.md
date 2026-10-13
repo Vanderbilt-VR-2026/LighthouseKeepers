@@ -1,6 +1,6 @@
-# Environment handoff — v0.9 draft
+# Environment handoff — v1.0
 
-[BUILT-UNVERIFIED] The [station contract](StationContract.md), [JSON](StationContract.json) and `Assets/Scenes/Lab/LK_StationBoxes.unity` are published in [PR #42](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/42). Geometry awaits Aneesh's reconciliation-table sign-off. Footprint sizes and named transforms are stable through v1.0; positions may shift by at most ±0.30 m. The lab is for additive editor inspection, not a playable scene. No production switchover has occurred.
+[BUILT-UNVERIFIED] The approved v1.0 [station contract](StationContract.md), [JSON](StationContract.json) and station-box lab are published through [PR #42](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/42). Maximum station movement from v0.9 is 0.23 m; footprints and transform names are unchanged. Shell/device acceptance remains separate. No production switchover has occurred.
 
 ## For Nirvaan — opt-in scene loading
 
@@ -27,7 +27,7 @@
 
 ## For Eli — dimensions and lighting seam
 
-[PROPOSED] World heights, in metres, measured from the F1 finished floor:
+[VERIFIED] Frozen authoring heights, in metres, measured from the F1 finished floor:
 
 | Quantity | Value |
 |---|---|
@@ -68,6 +68,15 @@
 | STN_TOOL_WALL | TOOL_DOCK_01–02 |
 | STN_BRIEFING_BOARD | KEEPER_WATCH |
 
-[VERIFIED] Numeric checks place every declared touch anchor 0.75–1.45 m above its standing floor; repair is at 0.95 m. Passive depth marks/plinth lines are not touch targets. Actual seated/standing reach is not device-verified. The nominal work stance has 0.80 m front clearance; the surrounding radius-0.70 m disc reserves floor space, not reach from every point in it. F1 pump/control and F4 control/alignment share sequential positions; manifold A/C remain separate simultaneous positions. Build hardware inside its box, including moving parts, and do not move/rename/reparent the published transforms. Request any additional anchor from Aneesh.
+[VERIFIED] Numeric checks place every declared touch anchor 0.75–1.45 m above its standing floor; repair is at 0.95 m. Passive depth marks/plinth lines are not touch targets. Actual seated/standing reach is not device-verified. The nominal work stance has 0.80 m front clearance except the approved F4 wall-mounted shared controls (about 0.516 m contact reach); the surrounding radius-0.70 m disc reserves floor space, not reach from every point in it. F1 pump/control and F4 control/alignment share sequential positions; manifold A/C remain separate simultaneous positions. Build hardware inside its box, including moving parts, and do not move/rename/reparent the published transforms. Request any additional anchor from Aneesh.
 
 [VERIFIED] The lab contains no live PuzzleSocket components, repair behaviour or copied UnityEvents. Existing legacy components remain in their original scenes. Binding your system to the new transforms and migrating existing references is an explicit integration step; it is not performed silently by this environment draft.
+
+
+## Frozen recovery heights and threshold handoff
+
+[VERIFIED] Lowest operable contacts: bilge grip **Y4.10 m** at bottom of rotation; isolation handwheel rim **Y4.35 m**; breaker control **Y4.45 m**; beacon lever **Y10.90 m**. These are geometric authoring bounds, not simulation changes.
+
+[PROPOSED] The F2 defeat threshold must sit below Y4.10 m if the complete bilge rotation must remain dry. Eli may instead declare the bottom of the grip rotation operable underwater; the next geometric bound is approximately Y4.35 m at the isolation handwheel. Include water rise during the defeat-delay timer: triggering below the bound is insufficient if eight seconds of continued inflow carry the water above it before the run ends. Eli owns that operating policy and threshold.
+
+[VERIFIED] F3 remains Ø7.30 m because the incoming main stair outer edge is r3.525 m, already outside a Ø7.00 m room. Landings follow the wall with 0.08 m reveal, 1.30 m radial width and 1.30 m minimum inner-arc length. F4 shared stance is 35° at r1.95. The corbel band occupies Y9.30–9.90 and preserves F3's clear ceiling to Y9.55.

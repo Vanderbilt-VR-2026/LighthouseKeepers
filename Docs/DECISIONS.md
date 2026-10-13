@@ -26,3 +26,12 @@
 - [PROPOSED] Footprint sizes and names are promises through v1.0; world positions may change at most 0.30 m after review. Work discs reserve space; only declared stance centres, not every point in the discs, define reach checks. Actual device reach remains pending.
 - [PROPOSED] Lighting will swap two complete lightmap presets, never pretend disabling a baked Light removes GI. Relative luminance uses one fixed powered reference/exposure and rejects a near-black reference. Four emergency-readable control groups: bilge, isolation, breaker, beacon control. Use baked/emissive emergency fixtures to preserve the realtime budget.
 - [UNRESOLVED] Aneesh's dimension-table sign-off gates v1.0 and Blender Batch A. Eli must specify how F2 recovery remains available if water reaches F2; environment placement alone cannot guarantee a permanently dry recovery floor. Nirvaan owns the optional production switchover.
+
+
+## 2026-10-13 — Environment contract v1.0
+
+- [VERIFIED] Freeze the approved layout with unchanged footprints/names and maximum station movement 0.23 m; preserve production loading and all teammate systems.
+- [VERIFIED] Use curved 1.30 m landings with 0.08 m wall reveal; retain F3 Ø7.30 because the incoming stair outer radius3.525 cannot fit Ø7.00.
+- [VERIFIED] F4 stance35°/r1.95 and raised panels provide approximately0.516 m contact reach; this approved specific reach requirement supersedes the earlier0.80 m front-clearance rule for those panels only.
+- [VERIFIED] Preserve F3 ceiling throughY9.55; use a distinct0.60 m corbel band below galleryY9.90 rather than tapering through headroom.
+- [PROPOSED] Eli owns dry-versus-wet bilge operability and defeat-sustain allowance; publish geometric bounds4.10/4.35/4.45/10.90 m without changing simulation.
