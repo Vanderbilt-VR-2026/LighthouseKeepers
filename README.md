@@ -1,5 +1,9 @@
 # Lighthouse Keepers — Sprint 1 (October 1)
 
+## First playable watch
+
+Use **Lighthouse Keepers → First Watch → Play plumbing escape** for the survival prototype: brace the pipe, turn three valves in the posted order, then escape to the first landing and recover. This is local solo practice with Quest hand interactions, a timed clamp option and desktop controls. See [First Watch](Docs/FirstWatch.md) for controls, scope and the dedicated Quest APK build command. The ordinary environment preview remains available below.
+
 **Current integration branch: `integrate/sprint1-team-work`. Unity: `6000.3.23f1`.**
 
 **[Download the Sprint 1 APK for Meta Quest 3](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint1-quest3-20261001/LighthouseKeepers-Sprint1-Environment.apk)** — Android ARM64/IL2CPP development build. See the [release notes and checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint1-quest3-20261001). Headset walkthrough and performance verification remain pending.
