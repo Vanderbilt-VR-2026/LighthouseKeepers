@@ -1,5 +1,23 @@
 {
   "name": "LK.Tests.Integration.PlayMode",
-  "references": ["LighthouseKeepers.Runtime", "Unity.XR.CoreUtils", "Unity.XR.Interaction.Toolkit"],
-  "optionalUnityReferences": ["TestAssemblies"]
+  "references": [
+    "LighthouseKeepers.Runtime",
+    "Unity.XR.CoreUtils",
+    "Unity.XR.Interaction.Toolkit",
+    "LK.Networking",
+    "LK.Lobby",
+    "Fusion.Unity"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll",
+    "Fusion.Runtime.dll",
+    "Fusion.Common.dll",
+    "Fusion.Sockets.dll",
+    "Fusion.Log.dll",
+    "Fusion.Realtime.dll"
+  ]
 }

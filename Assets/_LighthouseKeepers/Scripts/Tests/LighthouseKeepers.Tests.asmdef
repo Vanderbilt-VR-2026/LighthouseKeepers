@@ -1,1 +1,14 @@
-{"name":"LighthouseKeepers.Tests","references":["LighthouseKeepers.Runtime","LK.Lobby"],"includePlatforms":["Editor"],"optionalUnityReferences":["TestAssemblies"]}
+{
+  "name": "LighthouseKeepers.Tests",
+  "references": [
+    "LighthouseKeepers.Runtime",
+    "LK.Lobby",
+    "LK.Networking"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}
