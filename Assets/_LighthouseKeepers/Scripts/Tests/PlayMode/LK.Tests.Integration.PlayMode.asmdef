@@ -4,9 +4,20 @@
     "LighthouseKeepers.Runtime",
     "Unity.XR.CoreUtils",
     "Unity.XR.Interaction.Toolkit",
-    "Unity.TextMeshPro"
+    "Unity.TextMeshPro",
+    "LK.StormWatch.Networking",
+    "Fusion.Unity"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
+  ],
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll",
+    "Fusion.Runtime.dll",
+    "Fusion.Common.dll",
+    "Fusion.Sockets.dll",
+    "Fusion.Log.dll",
+    "Fusion.Realtime.dll"
   ]
 }

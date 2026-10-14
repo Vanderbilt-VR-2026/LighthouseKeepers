@@ -42,3 +42,7 @@ Adapted from the user-supplied *AI Game Development Lexicon* on October 13, 2026
 - First Watch loop, controls and acceptance criteria: `Docs/FirstWatch.md`.
 - Executed evidence and limitations: `Docs/Verification/FirstWatch/README.md`.
 - Use the installed `unity` CLI / Pipeline bridge for Editor inspection where available. Distinguish Editor tooling from runtime/player access; do not enable player tooling implicitly.
+
+## Agreed Storm Watch scope
+
+Exactly two players; one continuous three-watch run targeting roughly ten minutes total. Day 1 teaches bracing/wrench repair with normal power and visible drainage. Day 2 splits manual pumping and generator restoration. Day 3 combines faults and radio-to-beacon relay across all four floors. Repairs open physical routes; refuges offer repair help or rescue protection while water approaches. Setbacks lose only the unfinished step. Lifeline rescue is recoverable; both players must be alive at the top after restoring the beacon. Pressure regulation and Days 4–5 are deferred. It is nighttime: no persistent exterior daylight source.
