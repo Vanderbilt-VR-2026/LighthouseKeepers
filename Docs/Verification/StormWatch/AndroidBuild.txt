@@ -1,0 +1,35 @@
+Unity=6000.3.23f1
+RuntimeSourceCommit=df1c4bf27aab128e009d02400669edd6bf5aa573
+APK=Builds/LighthouseKeepers-StormWatch.apk
+APKBytes=90103459
+SHA256=d13c90b5d1bfb98b3935df39f38ab124d360f997b5b8723fe1c88b023e6f1b2a
+ArchiveCRC=Passed
+InternetPermission=Present
+OpenXRArm64Library=Present
+GradleAssembleDebug=BUILD SUCCESSFUL in 37s
+GradleTasks=94 (29 executed, 65 up-to-date)
+
+Packaging recovery:
+Unity completed scene serialization, shader compilation and ARM64 IL2CPP compilation.
+Its Gradle mergeDebugNativeLibs step failed with No space left on device (Unity reported 3 errors, 5 warnings).
+Removed 1205 disposable object files (2.77 GiB logical size) from this worktree's Library/Bee/artifacts/Android/d8kzr only.
+Reran assembleDebug in Unity's generated Gradle project using the bundled JDK/Gradle, -Xmx1536m, --max-workers=2 and --no-daemon.
+The existing generated scene data, manifest and native libraries were preserved. Copied the resulting signed debug APK into Builds.
+This is a successful recovered APK package, not a claim that the original Unity BuildReport succeeded.
+No target-headset execution has been performed.
+
+package: name='com.lighthousekeepers.game' versionCode='1' versionName='0.1.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+sdkVersion:'32'
+targetSdkVersion:'36'
+application-label:'Lighthouse Keepers'
+native-code: 'arm64-v8a'
+
+Signature verification:
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
