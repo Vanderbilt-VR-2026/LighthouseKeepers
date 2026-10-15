@@ -1,0 +1,3188 @@
+{
+  "version": "1.0",
+  "status": "BUILT-UNVERIFIED",
+  "baselineCommit": "98a1df2",
+  "productionSwitchoverOwner": "Nirvaan",
+  "scope": "Frozen environment attachment contract. Gameplay remains in owner systems. Shell authoring does not switch production loading.",
+  "coordinateSystem": {
+    "origin": "tower centre at F1 finished floor",
+    "up": "+Y",
+    "north": "+Z",
+    "azimuth": "degrees clockwise from +Z viewed from above",
+    "units": "metres",
+    "anchorForward": "local +Z faces operator",
+    "anchorScale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "stability": {
+    "footprintsAndTransformNames": "frozen",
+    "worldPositions": "frozen following approved geometry reconciliation",
+    "maximumStationDisplacementFromV09M": 0.23,
+    "maximumOperatorDisplacementFromV09M": 0.23,
+    "futureChangePolicy": "Version bump and owner notice; never silently rename or resize."
+  },
+  "floors": [
+    {
+      "id": "F1",
+      "floorY": 0,
+      "interiorRadius": 3.9,
+      "clearHeight": 2.95,
+      "exteriorRadiusAtFloor": 4.4,
+      "wallThicknessAtFloor": 0.5,
+      "slabThickness": 0.35
+    },
+    {
+      "id": "F2",
+      "floorY": 3.3,
+      "interiorRadius": 3.7,
+      "clearHeight": 2.95,
+      "exteriorRadiusAtFloor": 4.15,
+      "wallThicknessAtFloor": 0.45,
+      "slabThickness": 0.35
+    },
+    {
+      "id": "F3",
+      "floorY": 6.6,
+      "interiorRadius": 3.65,
+      "clearHeight": 2.95,
+      "exteriorRadiusAtFloor": 4.05,
+      "wallThicknessAtFloor": 0.4,
+      "slabThickness": 0.35
+    },
+    {
+      "id": "F4",
+      "floorY": 9.9,
+      "interiorRadius": 2.7,
+      "clearHeight": 3.4,
+      "exteriorRadiusAtFloor": 3.1,
+      "wallThicknessAtFloor": 0.4,
+      "slabThickness": 0.35
+    }
+  ],
+  "house": {
+    "centre": [
+      0,
+      0,
+      -7.35
+    ],
+    "interiorSize": [
+      7,
+      2.7,
+      5
+    ],
+    "throat": {
+      "southZ": -5.55,
+      "northZ": -3.85,
+      "clearWidth": 1.1,
+      "clearHeight": 2.6,
+      "floorY": 0,
+      "notes": "1.70 m passage via 0.70 m house vestibule recess and 0.15 m inset into F1; tower-end steel door only. Zero threshold."
+    }
+  },
+  "integrationNumbers": {
+    "F1FloorY": 0,
+    "F2FloorY": 3.3,
+    "generatorPlinthTopY": 3.75,
+    "pumpMotorHousingY": 0.55,
+    "wallDepthZeroY": 0,
+    "F1ToF2SpillY": 3.3,
+    "status": "Frozen environment targets; Eli owns simulation adoption."
+  },
+  "stations": [
+    {
+      "id": "STN_PIPE_MANIFOLD",
+      "owner": "Tapan",
+      "floor": "F1",
+      "displayName": "Pipe Manifold",
+      "anchor": {
+        "position": [
+          2.439518,
+          0,
+          2.439518
+        ],
+        "rotationEuler": [
+          0,
+          225,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          3.6,
+          2.8,
+          0.45
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F1-A",
+        "WP-F1-C"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "VALVE_01",
+          "localPosition": [
+            -0.8,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "VALVE_02",
+          "localPosition": [
+            0.8,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "VALVE_03",
+          "localPosition": [
+            -1.05,
+            1.05,
+            0.45
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "VALVE_04",
+          "localPosition": [
+            1.05,
+            1.05,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "VALVE_05",
+          "localPosition": [
+            -0.55,
+            1.3,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.3
+        },
+        {
+          "name": "VALVE_06",
+          "localPosition": [
+            0.55,
+            1.3,
+            0.45
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.3
+        },
+        {
+          "name": "GAUGE_01",
+          "localPosition": [
+            -0.8,
+            1.4,
+            0.45
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "REPAIR_SITE_01",
+          "localPosition": [
+            0.8,
+            0.95,
+            0.45
+          ],
+          "type": "repairSite",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 0.95
+        },
+        {
+          "name": "BRACE_01",
+          "localPosition": [
+            -0.8,
+            1.05,
+            0.45
+          ],
+          "type": "brace",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-A",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "WRENCH_DOCK_01",
+          "localPosition": [
+            1.0,
+            1.05,
+            0.45
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "LEAK_EFFECT_01",
+          "localPosition": [
+            0.8,
+            0.95,
+            0.43
+          ],
+          "type": "effect",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 0.95
+        },
+        {
+          "name": "REPAIR_STATUS_01",
+          "localPosition": [
+            0.8,
+            1.4,
+            0.45
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-C",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Leak",
+          "socketName": "Plumbing Repair - Leak",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "186148453",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "LEAK_EFFECT_01",
+          "localPosition": [
+            0.8,
+            0.95,
+            0.43
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Pressure Sequence",
+          "role": "Lower gauges",
+          "socketName": "Pressure Sequence - Lower gauges",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "798748199",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "GAUGE_01",
+          "localPosition": [
+            -0.8,
+            1.4,
+            0.45
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Repair status",
+          "socketName": "Plumbing Repair - Repair status",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "851224597",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "REPAIR_STATUS_01",
+          "localPosition": [
+            0.8,
+            1.4,
+            0.45
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Wrench",
+          "socketName": "Plumbing Repair - Wrench",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1320457618",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "WRENCH_DOCK_01",
+          "localPosition": [
+            1.0,
+            1.05,
+            0.45
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+          "stationId": "Plumbing Repair",
+          "role": "Brace",
+          "socketName": "Plumbing Repair - Brace",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1867752771",
+          "newStationId": "STN_PIPE_MANIFOLD",
+          "floor": "F1",
+          "owner": "Tapan",
+          "bindsTo": "BRACE_01",
+          "localPosition": [
+            -0.8,
+            1.05,
+            0.45
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "No kneeling required. A and C are simultaneous roles. Pressure instrument and repair indicator remain visible from both positions. Envelope includes every flange and wheel."
+    },
+    {
+      "id": "STN_ELECTRIC_PUMP",
+      "owner": "Eli / Tapan",
+      "floor": "F1",
+      "displayName": "Electric Pump",
+      "anchor": {
+        "position": [
+          3.262708,
+          0,
+          -1.521426
+        ],
+        "rotationEuler": [
+          0,
+          295,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.0,
+          0.95,
+          0.5
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F1-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "MOTOR_HOUSING_LINE",
+          "localPosition": [
+            0,
+            0.55,
+            0.45
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 0.55
+        },
+        {
+          "name": "INTAKE_SERVICE",
+          "localPosition": [
+            0,
+            0.8,
+            0.5
+          ],
+          "type": "service",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 0.8
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Static mounting line at F1 +0.55 m. No water/power behaviour. Pump and elevated panel share one sequential position."
+    },
+    {
+      "id": "STN_PUMP_CONTROL",
+      "owner": "Eli",
+      "floor": "F1",
+      "displayName": "Pump Control",
+      "anchor": {
+        "position": [
+          3.036131,
+          1.0,
+          -1.415771
+        ],
+        "rotationEuler": [
+          0,
+          295,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.65,
+          0.5,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F1-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "START",
+          "localPosition": [
+            -0.16,
+            0.18,
+            0.25
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 1.18
+        },
+        {
+          "name": "STOP",
+          "localPosition": [
+            0.16,
+            0.18,
+            0.25
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 1.18
+        },
+        {
+          "name": "PUMP_READY",
+          "localPosition": [
+            0,
+            0.37,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F1-B",
+          "standingHeightM": 1.37
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Envelope begins 1.0 m above floor, above the pump; local anchor heights are relative to this elevated root."
+    },
+    {
+      "id": "STN_WALL_DEPTH_GAUGE",
+      "owner": "Eli",
+      "floor": "F1",
+      "displayName": "Wall Depth Gauge",
+      "anchor": {
+        "position": [
+          1.316778,
+          0,
+          -3.617817
+        ],
+        "rotationEuler": [
+          0,
+          340,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.3,
+          2.4,
+          0.03
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [],
+      "interactiveAnchors": [
+        {
+          "name": "DEPTH_ZERO",
+          "localPosition": [
+            0,
+            0,
+            0.03
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "",
+          "standingHeightM": 0
+        },
+        {
+          "name": "DEPTH_READOUT",
+          "localPosition": [
+            0,
+            1.4,
+            0.03
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Passive wall graduations, 0.2 m increments from world Y=0. No dedicated operator exclusion zone."
+    },
+    {
+      "id": "STN_GENERATOR",
+      "owner": "Tapan / Eli",
+      "floor": "F2",
+      "displayName": "Generator",
+      "anchor": {
+        "position": [
+          0.916219,
+          3.3,
+          3.419377
+        ],
+        "rotationEuler": [
+          0,
+          195,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          2.1,
+          2.3,
+          0.75
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "OIL_INTAKE",
+          "localPosition": [
+            0.25,
+            1.2,
+            0.75
+          ],
+          "type": "service",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 1.2
+        },
+        {
+          "name": "OIL_STORAGE",
+          "localPosition": [
+            -0.25,
+            1.0,
+            0.75
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 1.0
+        },
+        {
+          "name": "PRIMER",
+          "localPosition": [
+            0,
+            1.15,
+            0.75
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "PLINTH_TOP",
+          "localPosition": [
+            0,
+            0.45,
+            0.4
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F2-B",
+          "standingHeightM": 0.45
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Generator Service",
+          "role": "Oil storage",
+          "socketName": "Generator Service - Oil storage",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "851224597",
+          "newStationId": "STN_GENERATOR",
+          "floor": "F2",
+          "owner": "Tapan / Eli",
+          "bindsTo": "OIL_STORAGE",
+          "localPosition": [
+            -0.25,
+            1.0,
+            0.75
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Generator Service",
+          "role": "Oil intake",
+          "socketName": "Generator Service - Oil intake",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1867752771",
+          "newStationId": "STN_GENERATOR",
+          "floor": "F2",
+          "owner": "Tapan / Eli",
+          "bindsTo": "OIL_INTAKE",
+          "localPosition": [
+            0.25,
+            1.2,
+            0.75
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Envelope includes 0.45 m plinth. Service face inward. Starter lives on the separate generator panel. No generator/power implementation."
+    },
+    {
+      "id": "STN_GENERATOR_PANEL",
+      "owner": "Eli",
+      "floor": "F2",
+      "displayName": "Generator Panel",
+      "anchor": {
+        "position": [
+          3.031089,
+          3.3,
+          1.75
+        ],
+        "rotationEuler": [
+          0,
+          240,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.8,
+          1.7,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-A"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "STARTER",
+          "localPosition": [
+            0,
+            1.15,
+            0.25
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "GENERATOR_STATUS",
+          "localPosition": [
+            0,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F2-A",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Generator Service",
+          "role": "Starter",
+          "socketName": "Generator Service - Starter",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "186148453",
+          "newStationId": "STN_GENERATOR_PANEL",
+          "floor": "F2",
+          "owner": "Eli",
+          "bindsTo": "STARTER",
+          "localPosition": [
+            0,
+            1.15,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "STN_BREAKER_PANEL",
+      "owner": "Eli",
+      "floor": "F2",
+      "displayName": "Breaker Panel",
+      "anchor": {
+        "position": [
+          3.446827,
+          3.3,
+          -0.607769
+        ],
+        "rotationEuler": [
+          0,
+          280,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.75,
+          1.75,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-D"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "BREAKER_BANK",
+          "localPosition": [
+            0,
+            1.2,
+            0.25
+          ],
+          "type": "switchBank",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-D",
+          "standingHeightM": 1.2
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+          "stationId": "Breaker Coordination",
+          "role": "Breaker bank",
+          "socketName": "Breaker Coordination - Breaker bank",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1925415404",
+          "newStationId": "STN_BREAKER_PANEL",
+          "floor": "F2",
+          "owner": "Eli",
+          "bindsTo": "BREAKER_BANK",
+          "localPosition": [
+            0,
+            1.2,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Dedicated emergency readability required; circuit taxonomy belongs to Eli."
+    },
+    {
+      "id": "STN_BILGE_PUMP_MANUAL",
+      "owner": "Tapan / Eli",
+      "floor": "F2",
+      "displayName": "Bilge Pump Manual",
+      "anchor": {
+        "position": [
+          2.007518,
+          3.3,
+          -2.867032
+        ],
+        "rotationEuler": [
+          0,
+          325,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.1,
+          1.5,
+          0.65
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-C"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "CRANK_AXIS",
+          "localPosition": [
+            0,
+            1.05,
+            0.65
+          ],
+          "type": "crank",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-C",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "CRANK_GRIP",
+          "localPosition": [
+            0,
+            1.3,
+            0.65
+          ],
+          "type": "grip",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-C",
+          "standingHeightM": 1.3
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 1.0
+      },
+      "notes": "Reserve a 1.0 m diameter vertical swing clearance centred at CRANK_AXIS, the clearance extends to h=1.55 m (0.05 m above the equipment envelope); actual moving hardware remains inside the envelope. Actual handle radius 0.25 m: grip spans h=0.80\u20131.30 m. Dedicated emergency illumination. Operator stands 0.80 m in front."
+    },
+    {
+      "id": "STN_ISOLATION_MANIFOLD",
+      "owner": "Tapan",
+      "floor": "F2",
+      "displayName": "Isolation Manifold",
+      "anchor": {
+        "position": [
+          -0.15,
+          3.3,
+          -1.1
+        ],
+        "rotationEuler": [
+          0,
+          0,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.2,
+          1.7,
+          0.45
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F2-E"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "UPPER_VALVE_01",
+          "localPosition": [
+            -0.36,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "UPPER_VALVE_02",
+          "localPosition": [
+            -0.12,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "UPPER_VALVE_03",
+          "localPosition": [
+            0.12,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "UPPER_VALVE_04",
+          "localPosition": [
+            0.36,
+            1.15,
+            0.45
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F2-E",
+          "standingHeightM": 1.15
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Freestanding floor-bolted pipe frame moved inboard to keep the southern stair landing clear. Dedicated emergency illumination. Visible 0.05 m plinth within the existing footprint; pipes penetrate floor. Plinth does not raise published handwheel axes."
+    },
+    {
+      "id": "STN_RADIO",
+      "owner": "Nirvaan",
+      "floor": "F3",
+      "displayName": "Radio",
+      "anchor": {
+        "position": [
+          1.854717,
+          6.6,
+          2.968168
+        ],
+        "rotationEuler": [
+          0,
+          212,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.6,
+          1.5,
+          0.7
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F3-A"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "PUSH_TO_TALK",
+          "localPosition": [
+            -0.25,
+            1.05,
+            0.7
+          ],
+          "type": "button",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F3-A",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "FREQUENCY_DIAL",
+          "localPosition": [
+            0,
+            1.15,
+            0.7
+          ],
+          "type": "dial",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F3-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "WALKIE_DOCK",
+          "localPosition": [
+            0.25,
+            1.05,
+            0.7
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F3-A",
+          "standingHeightM": 1.05
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Radio Relay",
+          "role": "Push to talk",
+          "socketName": "Radio Relay - Push to talk",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "179573850",
+          "newStationId": "STN_RADIO",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "PUSH_TO_TALK",
+          "localPosition": [
+            -0.25,
+            1.05,
+            0.7
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Radio Relay",
+          "role": "Frequency dial",
+          "socketName": "Radio Relay - Frequency dial",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "780793806",
+          "newStationId": "STN_RADIO",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "FREQUENCY_DIAL",
+          "localPosition": [
+            0,
+            1.15,
+            0.7
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Radio Relay",
+          "role": "Walkie-talkie dock",
+          "socketName": "Radio Relay - Walkie-talkie dock",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "2030364761",
+          "newStationId": "STN_RADIO",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "WALKIE_DOCK",
+          "localPosition": [
+            0.25,
+            1.05,
+            0.7
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Includes desk and radio. Standing use required; optional chair cannot obstruct this work area."
+    },
+    {
+      "id": "STN_FORECAST_BOARD",
+      "owner": "Nirvaan",
+      "floor": "F3",
+      "displayName": "Forecast Board",
+      "anchor": {
+        "position": [
+          3.52,
+          6.6,
+          0.0
+        ],
+        "rotationEuler": [
+          0,
+          270,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.4,
+          2.0,
+          0.1
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F3-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "REMOTE_PRESSURE_CHART",
+          "localPosition": [
+            -0.35,
+            1.4,
+            0.1
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F3-B",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "BEARING_INFORMATION",
+          "localPosition": [
+            0.35,
+            1.4,
+            0.1
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F3-B",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Pressure Sequence",
+          "role": "Remote instruction chart",
+          "socketName": "Pressure Sequence - Remote instruction chart",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "166673684",
+          "newStationId": "STN_FORECAST_BOARD",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "REMOTE_PRESSURE_CHART",
+          "localPosition": [
+            -0.35,
+            1.4,
+            0.1
+          ]
+        },
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+          "stationId": "Lantern Alignment",
+          "role": "Bearing information",
+          "socketName": "Lantern Alignment - Bearing information",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "679648237",
+          "newStationId": "STN_FORECAST_BOARD",
+          "floor": "F3",
+          "owner": "Nirvaan",
+          "bindsTo": "BEARING_INFORMATION",
+          "localPosition": [
+            0.35,
+            1.4,
+            0.1
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Both legacy remote-information roles preserved. Information only, no forecast logic."
+    },
+    {
+      "id": "STN_BEACON_CONTROL",
+      "owner": "Eli / Nirvaan",
+      "floor": "F4",
+      "displayName": "Beacon Control",
+      "anchor": {
+        "position": [
+          1.748516,
+          9.9,
+          1.974105
+        ],
+        "rotationEuler": [
+          0,
+          215,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.5,
+          1.6,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F4-SHARED"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "BEACON_LEVER",
+          "localPosition": [
+            0,
+            1.1,
+            0.25
+          ],
+          "type": "lever",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.1
+        },
+        {
+          "name": "RUNNING",
+          "localPosition": [
+            -0.1,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "FAULT",
+          "localPosition": [
+            0.1,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.4
+        },
+        {
+          "name": "BEACON_STATUS",
+          "localPosition": [
+            0,
+            1.4,
+            0.25
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+          "stationId": "Breaker Coordination",
+          "role": "Beacon status",
+          "socketName": "Breaker Coordination - Beacon status",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "7135128",
+          "newStationId": "STN_BEACON_CONTROL",
+          "floor": "F4",
+          "owner": "Eli / Nirvaan",
+          "bindsTo": "BEACON_STATUS",
+          "localPosition": [
+            0,
+            1.4,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.42,
+        "swingArcM": 0,
+        "mountedAboveFloor": true,
+        "minimumGeometryHeightM": 0.95
+      },
+      "notes": "Shares WP-F4-SHARED sequentially with alignment; not two simultaneous operators. Emergency-readable controls. No state changes. Approved F4 reach exception: 0.42 m to the panel face, about 0.516 m diagonally to each control cluster. The assigned panel may overhang the operator floor-clearance disc above 0.95 m; no stand/plinth below it. The disc reserves foot space, not reach from every point."
+    },
+    {
+      "id": "STN_BEACON_ALIGNMENT",
+      "owner": "Tapan",
+      "floor": "F4",
+      "displayName": "Beacon Alignment",
+      "anchor": {
+        "position": [
+          1.257025,
+          9.9,
+          2.318251
+        ],
+        "rotationEuler": [
+          0,
+          215,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          0.5,
+          1.6,
+          0.25
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-F4-SHARED"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "AZIMUTH_WHEEL",
+          "localPosition": [
+            0,
+            1.05,
+            0.25
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.05
+        },
+        {
+          "name": "ELEVATION_WHEEL",
+          "localPosition": [
+            0,
+            1.35,
+            0.25
+          ],
+          "type": "handwheel",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-F4-SHARED",
+          "standingHeightM": 1.35
+        }
+      ],
+      "legacySockets": [
+        {
+          "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+          "stationId": "Lantern Alignment",
+          "role": "Bearing controls",
+          "socketName": "Lantern Alignment - Bearing controls",
+          "anchorName": "Interaction Anchor",
+          "sourceFileId": "1538792387",
+          "newStationId": "STN_BEACON_ALIGNMENT",
+          "floor": "F4",
+          "owner": "Tapan",
+          "bindsTo": "AZIMUTH_WHEEL",
+          "localPosition": [
+            0,
+            1.05,
+            0.25
+          ]
+        }
+      ],
+      "clearanceRequirements": {
+        "frontClearM": 0.42,
+        "swingArcM": 0,
+        "mountedAboveFloor": true,
+        "minimumGeometryHeightM": 0.95
+      },
+      "notes": "Shares WP-F4-SHARED sequentially; both clusters face the same stance. Existing bearing-control identity survives. Approved F4 reach exception: 0.42 m to the panel face, about 0.516 m diagonally to each control cluster. The assigned panel may overhang the operator floor-clearance disc above 0.95 m; no stand/plinth below it. The disc reserves foot space, not reach from every point."
+    },
+    {
+      "id": "STN_TOOL_WALL",
+      "owner": "Tapan",
+      "floor": "House",
+      "displayName": "Tool Wall",
+      "anchor": {
+        "position": [
+          -2.4,
+          0,
+          -5.05
+        ],
+        "rotationEuler": [
+          0,
+          180,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          2.0,
+          2.2,
+          0.9
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-HOUSE-A"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "TOOL_DOCK_01",
+          "localPosition": [
+            -0.25,
+            1.15,
+            0.9
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-HOUSE-A",
+          "standingHeightM": 1.15
+        },
+        {
+          "name": "TOOL_DOCK_02",
+          "localPosition": [
+            0.25,
+            1.15,
+            0.9
+          ],
+          "type": "toolDock",
+          "requiresTouch": true,
+          "operatorPositionId": "WP-HOUSE-A",
+          "standingHeightM": 1.15
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Includes bench. Touch targets on forward-accessible docks, decorative pegboard above."
+    },
+    {
+      "id": "STN_BRIEFING_BOARD",
+      "owner": "Nirvaan",
+      "floor": "House",
+      "displayName": "Briefing Board",
+      "anchor": {
+        "position": [
+          1.8,
+          0,
+          -5.05
+        ],
+        "rotationEuler": [
+          0,
+          180,
+          0
+        ]
+      },
+      "footprint": {
+        "size": [
+          1.2,
+          2.1,
+          0.12
+        ],
+        "pivot": "bottom-centre-back",
+        "depthDirection": "local +Z; local +X right; dimensions W,H,D"
+      },
+      "operatorPositionIds": [
+        "WP-HOUSE-B"
+      ],
+      "interactiveAnchors": [
+        {
+          "name": "KEEPER_WATCH",
+          "localPosition": [
+            0,
+            1.4,
+            0.12
+          ],
+          "type": "readout",
+          "requiresTouch": false,
+          "operatorPositionId": "WP-HOUSE-B",
+          "standingHeightM": 1.4
+        }
+      ],
+      "legacySockets": [],
+      "clearanceRequirements": {
+        "frontClearM": 0.8,
+        "swingArcM": 0
+      },
+      "notes": "Static board; no day sequencing or incident logic."
+    }
+  ],
+  "operatorPositions": [
+    {
+      "id": "WP-F1-A",
+      "floor": "F1",
+      "position": [
+        2.121320343559643,
+        0,
+        0.9899494936611664
+      ],
+      "facingAzimuth": 45,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F1-C",
+      "floor": "F1",
+      "position": [
+        0.9899494936611665,
+        0,
+        2.121320343559643
+      ],
+      "facingAzimuth": 45,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F1-B",
+      "floor": "F1",
+      "position": [
+        2.084508,
+        0,
+        -0.972022
+      ],
+      "facingAzimuth": 115,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": true
+    },
+    {
+      "id": "WP-F2-B",
+      "floor": "F2",
+      "position": [
+        0.5150498997540163,
+        3.3,
+        1.922192394315246
+      ],
+      "facingAzimuth": 15,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-A",
+      "floor": "F2",
+      "position": [
+        2.121762,
+        3.3,
+        1.225
+      ],
+      "facingAzimuth": 60,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-D",
+      "floor": "F2",
+      "position": [
+        2.412779,
+        3.3,
+        -0.425438
+      ],
+      "facingAzimuth": 100,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-C",
+      "floor": "F2",
+      "position": [
+        1.175832,
+        3.3,
+        -1.679262
+      ],
+      "facingAzimuth": 145,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F2-E",
+      "floor": "F2",
+      "position": [
+        -0.15,
+        3.3,
+        0.15
+      ],
+      "facingAzimuth": 180,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F3-A",
+      "floor": "F3",
+      "position": [
+        1.0598385284664098,
+        6.6,
+        1.696096192312852
+      ],
+      "facingAzimuth": 32,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F3-B",
+      "floor": "F3",
+      "position": [
+        2.62,
+        6.6,
+        1.6042873068830328e-16
+      ],
+      "facingAzimuth": 90,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-F4-SHARED",
+      "floor": "F4",
+      "position": [
+        1.1184740508845397,
+        9.9,
+        1.597346486363534
+      ],
+      "facingAzimuth": 35,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": true
+    },
+    {
+      "id": "WP-HOUSE-A",
+      "floor": "House",
+      "position": [
+        -2.4,
+        0,
+        -6.75
+      ],
+      "facingAzimuth": 0,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    },
+    {
+      "id": "WP-HOUSE-B",
+      "floor": "House",
+      "position": [
+        1.8,
+        0,
+        -5.97
+      ],
+      "facingAzimuth": 0,
+      "radius": 0.7,
+      "posture": "standing; seated reach awaits headset acceptance",
+      "sharedSequential": false
+    }
+  ],
+  "routes": [
+    {
+      "id": "RT-HOUSE-MAIN",
+      "floor": "House",
+      "widthM": 1.0,
+      "polyline": [
+        [
+          0,
+          0,
+          -9.85
+        ],
+        [
+          0,
+          0,
+          -7.35
+        ],
+        [
+          0,
+          0,
+          -5.55
+        ],
+        [
+          0,
+          0,
+          -3.85
+        ]
+      ]
+    },
+    {
+      "id": "RT-F1_F2",
+      "floor": "F1",
+      "widthM": 1.0,
+      "kind": "stairs",
+      "polyline": [
+        [
+          -1.589758,
+          0,
+          2.544144
+        ],
+        [
+          -1.928363,
+          0.0,
+          2.298133
+        ],
+        [
+          -2.03747,
+          0.091667,
+          2.20198
+        ],
+        [
+          -2.141789,
+          0.183333,
+          2.100652
+        ],
+        [
+          -2.241075,
+          0.275,
+          1.994388
+        ],
+        [
+          -2.335095,
+          0.366667,
+          1.883436
+        ],
+        [
+          -2.423627,
+          0.458333,
+          1.768059
+        ],
+        [
+          -2.506463,
+          0.55,
+          1.648527
+        ],
+        [
+          -2.58341,
+          0.641667,
+          1.525121
+        ],
+        [
+          -2.654285,
+          0.733333,
+          1.398131
+        ],
+        [
+          -2.718923,
+          0.825,
+          1.267855
+        ],
+        [
+          -2.777172,
+          0.916667,
+          1.1346
+        ],
+        [
+          -2.828894,
+          1.008333,
+          0.998678
+        ],
+        [
+          -2.873969,
+          1.1,
+          0.86041
+        ],
+        [
+          -2.912289,
+          1.191667,
+          0.720119
+        ],
+        [
+          -2.943766,
+          1.283333,
+          0.578137
+        ],
+        [
+          -2.968325,
+          1.375,
+          0.434796
+        ],
+        [
+          -2.985908,
+          1.466667,
+          0.290433
+        ],
+        [
+          -2.996475,
+          1.558333,
+          0.145387
+        ],
+        [
+          -3.0,
+          1.65,
+          -0.0
+        ],
+        [
+          -2.996475,
+          1.741667,
+          -0.145387
+        ],
+        [
+          -2.985908,
+          1.833333,
+          -0.290433
+        ],
+        [
+          -2.968325,
+          1.925,
+          -0.434796
+        ],
+        [
+          -2.943766,
+          2.016667,
+          -0.578137
+        ],
+        [
+          -2.912289,
+          2.108333,
+          -0.720119
+        ],
+        [
+          -2.873969,
+          2.2,
+          -0.86041
+        ],
+        [
+          -2.828894,
+          2.291667,
+          -0.998678
+        ],
+        [
+          -2.777172,
+          2.383333,
+          -1.1346
+        ],
+        [
+          -2.718923,
+          2.475,
+          -1.267855
+        ],
+        [
+          -2.654285,
+          2.566667,
+          -1.398131
+        ],
+        [
+          -2.58341,
+          2.658333,
+          -1.525121
+        ],
+        [
+          -2.506463,
+          2.75,
+          -1.648527
+        ],
+        [
+          -2.423627,
+          2.841667,
+          -1.768059
+        ],
+        [
+          -2.335095,
+          2.933333,
+          -1.883436
+        ],
+        [
+          -2.241075,
+          3.025,
+          -1.994388
+        ],
+        [
+          -2.141789,
+          3.116667,
+          -2.100652
+        ],
+        [
+          -2.03747,
+          3.208333,
+          -2.20198
+        ],
+        [
+          -1.928363,
+          3.3,
+          -2.298133
+        ],
+        [
+          -1.589758,
+          3.3,
+          -2.544144
+        ]
+      ]
+    },
+    {
+      "id": "RT-F2_F3",
+      "floor": "F2",
+      "widthM": 1.0,
+      "kind": "stairs",
+      "polyline": [
+        [
+          -1.589758,
+          3.3,
+          2.544144
+        ],
+        [
+          -1.928363,
+          3.3,
+          2.298133
+        ],
+        [
+          -2.03747,
+          3.391667,
+          2.20198
+        ],
+        [
+          -2.141789,
+          3.483333,
+          2.100652
+        ],
+        [
+          -2.241075,
+          3.575,
+          1.994388
+        ],
+        [
+          -2.335095,
+          3.666667,
+          1.883436
+        ],
+        [
+          -2.423627,
+          3.758333,
+          1.768059
+        ],
+        [
+          -2.506463,
+          3.85,
+          1.648527
+        ],
+        [
+          -2.58341,
+          3.941667,
+          1.525121
+        ],
+        [
+          -2.654285,
+          4.033333,
+          1.398131
+        ],
+        [
+          -2.718923,
+          4.125,
+          1.267855
+        ],
+        [
+          -2.777172,
+          4.216667,
+          1.1346
+        ],
+        [
+          -2.828894,
+          4.308333,
+          0.998678
+        ],
+        [
+          -2.873969,
+          4.4,
+          0.86041
+        ],
+        [
+          -2.912289,
+          4.491667,
+          0.720119
+        ],
+        [
+          -2.943766,
+          4.583333,
+          0.578137
+        ],
+        [
+          -2.968325,
+          4.675,
+          0.434796
+        ],
+        [
+          -2.985908,
+          4.766667,
+          0.290433
+        ],
+        [
+          -2.996475,
+          4.858333,
+          0.145387
+        ],
+        [
+          -3.0,
+          4.95,
+          -0.0
+        ],
+        [
+          -2.996475,
+          5.041667,
+          -0.145387
+        ],
+        [
+          -2.985908,
+          5.133333,
+          -0.290433
+        ],
+        [
+          -2.968325,
+          5.225,
+          -0.434796
+        ],
+        [
+          -2.943766,
+          5.316667,
+          -0.578137
+        ],
+        [
+          -2.912289,
+          5.408333,
+          -0.720119
+        ],
+        [
+          -2.873969,
+          5.5,
+          -0.86041
+        ],
+        [
+          -2.828894,
+          5.591667,
+          -0.998678
+        ],
+        [
+          -2.777172,
+          5.683333,
+          -1.1346
+        ],
+        [
+          -2.718923,
+          5.775,
+          -1.267855
+        ],
+        [
+          -2.654285,
+          5.866667,
+          -1.398131
+        ],
+        [
+          -2.58341,
+          5.958333,
+          -1.525121
+        ],
+        [
+          -2.506463,
+          6.05,
+          -1.648527
+        ],
+        [
+          -2.423627,
+          6.141667,
+          -1.768059
+        ],
+        [
+          -2.335095,
+          6.233333,
+          -1.883436
+        ],
+        [
+          -2.241075,
+          6.325,
+          -1.994388
+        ],
+        [
+          -2.141789,
+          6.416667,
+          -2.100652
+        ],
+        [
+          -2.03747,
+          6.508333,
+          -2.20198
+        ],
+        [
+          -1.928363,
+          6.6,
+          -2.298133
+        ],
+        [
+          -1.589758,
+          6.6,
+          -2.544144
+        ]
+      ]
+    },
+    {
+      "id": "RT-F3_F4",
+      "floor": "F3",
+      "widthM": 1.0,
+      "kind": "stairs",
+      "polyline": [
+        [
+          -0.900863,
+          6.6,
+          1.441682
+        ],
+        [
+          -1.092739,
+          6.6,
+          1.302276
+        ],
+        [
+          -1.202082,
+          6.691667,
+          1.202082
+        ],
+        [
+          -1.302276,
+          6.783333,
+          1.092739
+        ],
+        [
+          -1.392558,
+          6.875,
+          0.97508
+        ],
+        [
+          -1.472243,
+          6.966667,
+          0.85
+        ],
+        [
+          -1.540723,
+          7.058333,
+          0.718451
+        ],
+        [
+          -1.597477,
+          7.15,
+          0.581434
+        ],
+        [
+          -1.642074,
+          7.241667,
+          0.439992
+        ],
+        [
+          -1.674173,
+          7.333333,
+          0.295202
+        ],
+        [
+          -1.693531,
+          7.425,
+          0.148165
+        ],
+        [
+          -1.7,
+          7.516667,
+          -0.0
+        ],
+        [
+          -1.693531,
+          7.608333,
+          -0.148165
+        ],
+        [
+          -1.674173,
+          7.7,
+          -0.295202
+        ],
+        [
+          -1.642074,
+          7.791667,
+          -0.439992
+        ],
+        [
+          -1.597477,
+          7.883333,
+          -0.581434
+        ],
+        [
+          -1.540723,
+          7.975,
+          -0.718451
+        ],
+        [
+          -1.472243,
+          8.066667,
+          -0.85
+        ],
+        [
+          -1.392558,
+          8.158333,
+          -0.97508
+        ],
+        [
+          -1.302276,
+          8.25,
+          -1.092739
+        ],
+        [
+          -1.202082,
+          8.341667,
+          -1.202082
+        ],
+        [
+          -1.092739,
+          8.433333,
+          -1.302276
+        ],
+        [
+          -0.97508,
+          8.525,
+          -1.392558
+        ],
+        [
+          -0.85,
+          8.616667,
+          -1.472243
+        ],
+        [
+          -0.718451,
+          8.708333,
+          -1.540723
+        ],
+        [
+          -0.581434,
+          8.8,
+          -1.597477
+        ],
+        [
+          -0.439992,
+          8.891667,
+          -1.642074
+        ],
+        [
+          -0.295202,
+          8.983333,
+          -1.674173
+        ],
+        [
+          -0.148165,
+          9.075,
+          -1.693531
+        ],
+        [
+          0.0,
+          9.166667,
+          -1.7
+        ],
+        [
+          0.148165,
+          9.258333,
+          -1.693531
+        ],
+        [
+          0.295202,
+          9.35,
+          -1.674173
+        ],
+        [
+          0.439992,
+          9.441667,
+          -1.642074
+        ],
+        [
+          0.581434,
+          9.533333,
+          -1.597477
+        ],
+        [
+          0.718451,
+          9.625,
+          -1.540723
+        ],
+        [
+          0.85,
+          9.716667,
+          -1.472243
+        ],
+        [
+          0.97508,
+          9.808333,
+          -1.392558
+        ],
+        [
+          1.092739,
+          9.9,
+          -1.302276
+        ],
+        [
+          1.263346,
+          9.899999999999999,
+          -1.137522
+        ]
+      ]
+    },
+    {
+      "id": "RT-F1-ENTRY",
+      "floor": "F1",
+      "widthM": 1.0,
+      "kind": "floor",
+      "polyline": [
+        [
+          0,
+          0,
+          -3.85
+        ],
+        [
+          0,
+          0,
+          -1.7
+        ],
+        [
+          -1.4,
+          0,
+          -0.7
+        ],
+        [
+          -1.5,
+          0,
+          1.0
+        ],
+        [
+          -1.267855,
+          0,
+          2.718923
+        ]
+      ]
+    },
+    {
+      "id": "RT-F2-TRANSFER",
+      "floor": "F2",
+      "widthM": 1.0,
+      "kind": "floor",
+      "polyline": [
+        [
+          -1.22021,
+          3.3,
+          -2.740636
+        ],
+        [
+          -0.780934,
+          3.3,
+          -1.754007
+        ],
+        [
+          -0.811427,
+          3.3,
+          -1.740111
+        ],
+        [
+          -0.96,
+          3.3,
+          -1.662769
+        ],
+        [
+          -1.101267,
+          3.3,
+          -1.572772
+        ],
+        [
+          -1.234152,
+          3.3,
+          -1.470805
+        ],
+        [
+          -1.357645,
+          3.3,
+          -1.357645
+        ],
+        [
+          -1.470805,
+          3.3,
+          -1.234152
+        ],
+        [
+          -1.572772,
+          3.3,
+          -1.101267
+        ],
+        [
+          -1.662769,
+          3.3,
+          -0.96
+        ],
+        [
+          -1.740111,
+          3.3,
+          -0.811427
+        ],
+        [
+          -1.80421,
+          3.3,
+          -0.656679
+        ],
+        [
+          -1.854578,
+          3.3,
+          -0.496933
+        ],
+        [
+          -1.890831,
+          3.3,
+          -0.333405
+        ],
+        [
+          -1.912694,
+          3.3,
+          -0.167339
+        ],
+        [
+          -1.92,
+          3.3,
+          -0.0
+        ],
+        [
+          -1.912694,
+          3.3,
+          0.167339
+        ],
+        [
+          -1.890831,
+          3.3,
+          0.333405
+        ],
+        [
+          -1.854578,
+          3.3,
+          0.496933
+        ],
+        [
+          -1.80421,
+          3.3,
+          0.656679
+        ],
+        [
+          -1.740111,
+          3.3,
+          0.811427
+        ],
+        [
+          -1.662769,
+          3.3,
+          0.96
+        ],
+        [
+          -1.572772,
+          3.3,
+          1.101267
+        ],
+        [
+          -1.470805,
+          3.3,
+          1.234152
+        ],
+        [
+          -1.357645,
+          3.3,
+          1.357645
+        ],
+        [
+          -1.234152,
+          3.3,
+          1.470805
+        ],
+        [
+          -1.101267,
+          3.3,
+          1.572772
+        ],
+        [
+          -0.96,
+          3.3,
+          1.662769
+        ],
+        [
+          -0.811427,
+          3.3,
+          1.740111
+        ],
+        [
+          -1.22021,
+          3.3,
+          2.740636
+        ]
+      ]
+    },
+    {
+      "id": "RT-F3-TRANSFER",
+      "floor": "F3",
+      "widthM": 1.0,
+      "kind": "floor",
+      "polyline": [
+        [
+          -1.179536,
+          6.6,
+          -2.649282
+        ],
+        [
+          -0.974757,
+          6.6,
+          -2.678124
+        ],
+        [
+          -0.737634,
+          6.6,
+          -2.752889
+        ],
+        [
+          -0.494897,
+          6.6,
+          -2.806702
+        ],
+        [
+          -0.248394,
+          6.6,
+          -2.839155
+        ],
+        [
+          0.0,
+          6.6,
+          -2.85
+        ],
+        [
+          0.248394,
+          6.6,
+          -2.839155
+        ],
+        [
+          0.494897,
+          6.6,
+          -2.806702
+        ],
+        [
+          0.737634,
+          6.6,
+          -2.752889
+        ],
+        [
+          0.974757,
+          6.6,
+          -2.678124
+        ],
+        [
+          1.204462,
+          6.6,
+          -2.582977
+        ],
+        [
+          1.425,
+          6.6,
+          -2.468172
+        ],
+        [
+          1.634693,
+          6.6,
+          -2.334583
+        ],
+        [
+          1.831945,
+          6.6,
+          -2.183227
+        ],
+        [
+          2.015254,
+          6.6,
+          -2.015254
+        ],
+        [
+          2.183227,
+          6.6,
+          -1.831945
+        ],
+        [
+          2.334583,
+          6.6,
+          -1.634693
+        ],
+        [
+          1.310643,
+          6.6,
+          -0.917722
+        ],
+        [
+          1.4,
+          6.6,
+          0
+        ],
+        [
+          1.0,
+          6.6,
+          1.6
+        ],
+        [
+          0,
+          6.6,
+          1.7
+        ],
+        [
+          -0.718451,
+          6.6,
+          1.540723
+        ]
+      ]
+    },
+    {
+      "id": "RT-F4-GALLERY",
+      "floor": "F4",
+      "widthM": 1.0,
+      "kind": "floor",
+      "polyline": [
+        [
+          1.302276,
+          9.9,
+          -1.092739
+        ],
+        [
+          1.738431,
+          9.9,
+          -0.632737
+        ],
+        [
+          1.85,
+          9.9,
+          0.0
+        ],
+        [
+          3.65,
+          9.9,
+          0
+        ]
+      ]
+    }
+  ],
+  "legacyMapping": [
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Leak",
+      "socketName": "Plumbing Repair - Leak",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "186148453",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "LEAK_EFFECT_01",
+      "localPosition": [
+        0.8,
+        0.95,
+        0.43
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Pressure Sequence",
+      "role": "Lower gauges",
+      "socketName": "Pressure Sequence - Lower gauges",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "798748199",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "GAUGE_01",
+      "localPosition": [
+        -0.8,
+        1.4,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Repair status",
+      "socketName": "Plumbing Repair - Repair status",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "851224597",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "REPAIR_STATUS_01",
+      "localPosition": [
+        0.8,
+        1.4,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Wrench",
+      "socketName": "Plumbing Repair - Wrench",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1320457618",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "WRENCH_DOCK_01",
+      "localPosition": [
+        1.0,
+        1.05,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level01_Plumbing.unity",
+      "stationId": "Plumbing Repair",
+      "role": "Brace",
+      "socketName": "Plumbing Repair - Brace",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1867752771",
+      "newStationId": "STN_PIPE_MANIFOLD",
+      "floor": "F1",
+      "owner": "Tapan",
+      "bindsTo": "BRACE_01",
+      "localPosition": [
+        -0.8,
+        1.05,
+        0.45
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Generator Service",
+      "role": "Starter",
+      "socketName": "Generator Service - Starter",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "186148453",
+      "newStationId": "STN_GENERATOR_PANEL",
+      "floor": "F2",
+      "owner": "Eli",
+      "bindsTo": "STARTER",
+      "localPosition": [
+        0,
+        1.15,
+        0.25
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Generator Service",
+      "role": "Oil storage",
+      "socketName": "Generator Service - Oil storage",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "851224597",
+      "newStationId": "STN_GENERATOR",
+      "floor": "F2",
+      "owner": "Tapan / Eli",
+      "bindsTo": "OIL_STORAGE",
+      "localPosition": [
+        -0.25,
+        1.0,
+        0.75
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Generator Service",
+      "role": "Oil intake",
+      "socketName": "Generator Service - Oil intake",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1867752771",
+      "newStationId": "STN_GENERATOR",
+      "floor": "F2",
+      "owner": "Tapan / Eli",
+      "bindsTo": "OIL_INTAKE",
+      "localPosition": [
+        0.25,
+        1.2,
+        0.75
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level02_Generator.unity",
+      "stationId": "Breaker Coordination",
+      "role": "Breaker bank",
+      "socketName": "Breaker Coordination - Breaker bank",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1925415404",
+      "newStationId": "STN_BREAKER_PANEL",
+      "floor": "F2",
+      "owner": "Eli",
+      "bindsTo": "BREAKER_BANK",
+      "localPosition": [
+        0,
+        1.2,
+        0.25
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Pressure Sequence",
+      "role": "Remote instruction chart",
+      "socketName": "Pressure Sequence - Remote instruction chart",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "166673684",
+      "newStationId": "STN_FORECAST_BOARD",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "REMOTE_PRESSURE_CHART",
+      "localPosition": [
+        -0.35,
+        1.4,
+        0.1
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Radio Relay",
+      "role": "Push to talk",
+      "socketName": "Radio Relay - Push to talk",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "179573850",
+      "newStationId": "STN_RADIO",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "PUSH_TO_TALK",
+      "localPosition": [
+        -0.25,
+        1.05,
+        0.7
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Lantern Alignment",
+      "role": "Bearing information",
+      "socketName": "Lantern Alignment - Bearing information",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "679648237",
+      "newStationId": "STN_FORECAST_BOARD",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "BEARING_INFORMATION",
+      "localPosition": [
+        0.35,
+        1.4,
+        0.1
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Radio Relay",
+      "role": "Frequency dial",
+      "socketName": "Radio Relay - Frequency dial",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "780793806",
+      "newStationId": "STN_RADIO",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "FREQUENCY_DIAL",
+      "localPosition": [
+        0,
+        1.15,
+        0.7
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level03_Communications.unity",
+      "stationId": "Radio Relay",
+      "role": "Walkie-talkie dock",
+      "socketName": "Radio Relay - Walkie-talkie dock",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "2030364761",
+      "newStationId": "STN_RADIO",
+      "floor": "F3",
+      "owner": "Nirvaan",
+      "bindsTo": "WALKIE_DOCK",
+      "localPosition": [
+        0.25,
+        1.05,
+        0.7
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+      "stationId": "Breaker Coordination",
+      "role": "Beacon status",
+      "socketName": "Breaker Coordination - Beacon status",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "7135128",
+      "newStationId": "STN_BEACON_CONTROL",
+      "floor": "F4",
+      "owner": "Eli / Nirvaan",
+      "bindsTo": "BEACON_STATUS",
+      "localPosition": [
+        0,
+        1.4,
+        0.25
+      ]
+    },
+    {
+      "scene": "Assets/_LighthouseKeepers/Scenes/Levels/LK_Level04_Lantern.unity",
+      "stationId": "Lantern Alignment",
+      "role": "Bearing controls",
+      "socketName": "Lantern Alignment - Bearing controls",
+      "anchorName": "Interaction Anchor",
+      "sourceFileId": "1538792387",
+      "newStationId": "STN_BEACON_ALIGNMENT",
+      "floor": "F4",
+      "owner": "Tapan",
+      "bindsTo": "AZIMUTH_WHEEL",
+      "localPosition": [
+        0,
+        1.05,
+        0.25
+      ]
+    }
+  ],
+  "validationLimits": [
+    "Frozen contract is not proof of headset reach or generated-shell collision clearance.",
+    "Operator discs reserve floor space. F4 assigned wall-mounted panels are allowed above 0.95 m within the disc; nominal stance-to-control reach is 0.516 m.",
+    "Lab aliases contain no duplicate gameplay components; production scenes and UnityEvents remain untouched."
+  ],
+  "stairs": [
+    {
+      "id": "F1_F2",
+      "from": "F1",
+      "to": "F2",
+      "floorY": 0,
+      "rise": 3.3,
+      "departureAzimuth": 320,
+      "arrivalAzimuth": 220,
+      "direction": "counterclockwise",
+      "arcDegrees": 100,
+      "walkLineRadius": 3.0,
+      "clearWidth": 1.05,
+      "risers": 19,
+      "goings": 18
+    },
+    {
+      "id": "F2_F3",
+      "from": "F2",
+      "to": "F3",
+      "floorY": 3.3,
+      "rise": 3.3,
+      "departureAzimuth": 320,
+      "arrivalAzimuth": 220,
+      "direction": "counterclockwise",
+      "arcDegrees": 100,
+      "walkLineRadius": 3.0,
+      "clearWidth": 1.05,
+      "risers": 19,
+      "goings": 18
+    },
+    {
+      "id": "F3_F4",
+      "from": "F3",
+      "to": "F4",
+      "floorY": 6.6,
+      "rise": 3.3,
+      "departureAzimuth": 320,
+      "arrivalAzimuth": 140,
+      "direction": "counterclockwise",
+      "arcDegrees": 180,
+      "walkLineRadius": 1.7,
+      "clearWidth": 1.05,
+      "risers": 19,
+      "goings": 18
+    }
+  ],
+  "landings": [
+    {
+      "id": "F1_F2_departure",
+      "floor": "F1",
+      "floorY": 0,
+      "side": "departure",
+      "innerRadius": 2.5199999999999996,
+      "outerRadius": 3.82,
+      "arcStartDeg": 320,
+      "arcEndDeg": 349.55734657420913,
+      "clearRadialWidth": 1.3,
+      "minimumInnerArcLength": 1.3,
+      "wallReveal": 0.08,
+      "notes": "Flat connecting floor extends to the full stair width. Landing clear area is an annular sector, not a square."
+    },
+    {
+      "id": "F1_F2_arrival",
+      "floor": "F2",
+      "floorY": 3.3,
+      "side": "arrival",
+      "innerRadius": 2.3200000000000003,
+      "outerRadius": 3.62,
+      "arcStartDeg": 187.89460630732458,
+      "arcEndDeg": 220,
+      "clearRadialWidth": 1.3,
+      "minimumInnerArcLength": 1.3,
+      "wallReveal": 0.08,
+      "notes": "Flat connecting floor extends to the full stair width. Landing clear area is an annular sector, not a square."
+    },
+    {
+      "id": "F2_F3_departure",
+      "floor": "F2",
+      "floorY": 3.3,
+      "side": "departure",
+      "innerRadius": 2.3200000000000003,
+      "outerRadius": 3.62,
+      "arcStartDeg": 320,
+      "arcEndDeg": 352.1053936926754,
+      "clearRadialWidth": 1.3,
+      "minimumInnerArcLength": 1.3,
+      "wallReveal": 0.08,
+      "notes": "Flat connecting floor extends to the full stair width. Landing clear area is an annular sector, not a square."
+    },
+    {
+      "id": "F2_F3_arrival",
+      "floor": "F3",
+      "floorY": 6.6,
+      "side": "arrival",
+      "innerRadius": 2.2699999999999996,
+      "outerRadius": 3.57,
+      "arcStartDeg": 187.18743904537135,
+      "arcEndDeg": 220,
+      "clearRadialWidth": 1.3,
+      "minimumInnerArcLength": 1.3,
+      "wallReveal": 0.08,
+      "notes": "Flat connecting floor extends to the full stair width. Landing clear area is an annular sector, not a square."
+    },
+    {
+      "id": "F3_F4_departure",
+      "floor": "F3",
+      "floorY": 6.6,
+      "side": "departure",
+      "innerRadius": 2.2699999999999996,
+      "outerRadius": 3.57,
+      "arcStartDeg": 320,
+      "arcEndDeg": 352.8125609546287,
+      "clearRadialWidth": 1.3,
+      "minimumInnerArcLength": 1.3,
+      "wallReveal": 0.08,
+      "notes": "Flat connecting floor extends to the full stair width. Landing clear area is an annular sector, not a square."
+    },
+    {
+      "id": "F3_F4_arrival",
+      "floor": "F4",
+      "floorY": 9.9,
+      "side": "arrival",
+      "innerRadius": 1.32,
+      "outerRadius": 2.62,
+      "arcStartDeg": 83.57233835832801,
+      "arcEndDeg": 140,
+      "clearRadialWidth": 1.3,
+      "minimumInnerArcLength": 1.3,
+      "wallReveal": 0.08,
+      "notes": "Flat connecting floor extends to the full stair width. Landing clear area is an annular sector, not a square."
+    }
+  ],
+  "gallery": {
+    "floorY": 9.9,
+    "innerRadius": 3.1,
+    "outerRadius": 4.25,
+    "clearDeckWidth": 1.15,
+    "railHeight": 1.1,
+    "opaqueDeck": true
+  },
+  "exteriorProfile": [
+    [
+      0,
+      4.4
+    ],
+    [
+      3.3,
+      4.15
+    ],
+    [
+      6.6,
+      4.05
+    ],
+    [
+      9.3,
+      3.98
+    ],
+    [
+      9.55,
+      3.96
+    ],
+    [
+      9.65,
+      3.8
+    ],
+    [
+      9.78,
+      3.5
+    ],
+    [
+      9.9,
+      3.1
+    ],
+    [
+      13.3,
+      3.05
+    ]
+  ],
+  "cornice": {
+    "bottomY": 9.3,
+    "topY": 9.9,
+    "height": 0.6,
+    "dripRadius": 4.2,
+    "dripY": 9.78,
+    "notes": "Monotonic shaft profile remains full-width above F3 through Y9.55. Separate projecting corbel brackets and gallery/drip trim support the deck; these deliberate projections are not the shaft taper."
+  },
+  "depthGraduationAzimuths": [
+    0,
+    160,
+    335
+  ],
+  "recoveryMinimumWorldY": {
+    "bilgeGrip": 4.1,
+    "isolationRim": 4.35,
+    "breakerContact": 4.45,
+    "beaconContact": 10.9,
+    "dryGripDefeatUpperBoundExclusive": 4.1,
+    "wetGripAlternativeUpperBoundExclusive": 4.35,
+    "notes": "Eli decides whether submerged crank grip remains usable and accounts for continued rise during defeat sustain."
+  },
+  "lightingValidation": {
+    "referenceAlbedo": 0.18,
+    "referenceLinearLuminance": 0,
+    "calibrationStatus": "UNRESOLVED: measured powered reference and headset tuning required; validators must fail until calibrated",
+    "poweredFloorRatio": 0.12,
+    "emergencyFloorRatio": 0.04,
+    "poweredReadoutRatio": 0.9,
+    "textContrast": 4.5,
+    "exposure": 1.0,
+    "notes": "Reference captured once, then committed as constant; never recalibrate per validation run. Compare mains-sensitive samples across presets; unchanged oil/emergency emitters may remain equal."
+  },
+  "openings": [
+    {
+      "floor": "F1",
+      "type": "door",
+      "azimuth": 180,
+      "width": 1.1,
+      "height": 2.1,
+      "sill": 0
+    },
+    {
+      "floor": "F1",
+      "type": "window",
+      "azimuth": 60,
+      "width": 0.7,
+      "height": 0.95,
+      "sill": 1.1
+    },
+    {
+      "floor": "F2",
+      "type": "window",
+      "azimuth": 60,
+      "width": 0.7,
+      "height": 0.95,
+      "sill": 1.1
+    },
+    {
+      "floor": "F3",
+      "type": "window",
+      "azimuth": 45,
+      "width": 0.7,
+      "height": 0.95,
+      "sill": 1.1
+    },
+    {
+      "floor": "F3",
+      "type": "window",
+      "azimuth": 315,
+      "width": 0.7,
+      "height": 0.95,
+      "sill": 1.1
+    },
+    {
+      "floor": "F4",
+      "type": "door",
+      "azimuth": 90,
+      "width": 1.1,
+      "height": 2.1,
+      "sill": 0
+    }
+  ]
+}
