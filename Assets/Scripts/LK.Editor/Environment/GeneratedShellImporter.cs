@@ -18,7 +18,7 @@ namespace LighthouseKeepers.Editor.Environment
             var importer = (ModelImporter)assetImporter;
             importer.globalScale = 1; importer.useFileScale = true;
             importer.meshCompression = ModelImporterMeshCompression.Off;
-            importer.isReadable = false; importer.optimizeMeshPolygons = true; importer.optimizeMeshVertices = true;
+            importer.isReadable = true; importer.optimizeMeshPolygons = true; importer.optimizeMeshVertices = true;
             importer.addCollider = false; importer.importAnimation = false; importer.importCameras = false; importer.importLights = false;
             importer.generateSecondaryUV = true;
             importer.materialImportMode = ModelImporterMaterialImportMode.None;

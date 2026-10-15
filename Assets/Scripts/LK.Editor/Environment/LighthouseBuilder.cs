@@ -134,6 +134,7 @@ namespace LighthouseKeepers.Editor.Environment
             string rigPath="Assets/_LighthouseKeepers/Prefabs/Player/LK_QuestPlayer.prefab";
             var rigAsset=AssetDatabase.LoadAssetAtPath<GameObject>(rigPath);if(!rigAsset)throw new Exception("Existing player prefab missing");
             var rig=(GameObject)PrefabUtility.InstantiatePrefab(rigAsset);rig.name="Existing player — unmodified source prefab";rig.transform.position=new Vector3(0,.04f,-8.4f);
+            EnvironmentDeviceRepair.HideTorso(rig);
             var managerType=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("UnityEngine.XR.Interaction.Toolkit.XRInteractionManager")).FirstOrDefault(t=>t!=null);
             if(managerType!=null)new GameObject("Existing XRI interaction manager").AddComponent(managerType);
             var reference=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/PF_Shell_ScaleReference.prefab"));reference.transform.position=new Vector3(-2.6f,0,-8.6f);

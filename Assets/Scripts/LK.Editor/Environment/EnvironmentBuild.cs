@@ -16,7 +16,7 @@ namespace LighthouseKeepers.Editor.Environment
             Directory.CreateDirectory("artifacts/builds");IsEnvironmentLabBuild=true;
             try
             {
-                var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{LighthouseBuilder.LabPath},locationPathName="artifacts/builds/LighthouseKeepers-Environment-BatchA.apk",target=BuildTarget.Android,options=BuildOptions.Development|BuildOptions.AllowDebugging});
+                var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{EnvironmentLobbyBuild.LobbyPath,LighthouseBuilder.LabPath},locationPathName="artifacts/builds/LighthouseKeepers-Environment-BatchA.apk",target=BuildTarget.Android,options=BuildOptions.Development|BuildOptions.AllowDebugging|BuildOptions.CompressWithLz4});
                 File.WriteAllText("artifacts/batch-a/android-build.txt",report.summary.result+"\nErrors: "+report.summary.totalErrors+"\nWarnings: "+report.summary.totalWarnings+"\nBytes: "+report.summary.totalSize+"\n");
                 if(report.summary.result!=BuildResult.Succeeded||report.summary.totalErrors!=0)throw new Exception("Environment Lab Android build failed");Debug.Log("ENVIRONMENT_APK_BUILD_PASS");
             }finally{IsEnvironmentLabBuild=false;}
