@@ -82,9 +82,9 @@ namespace LighthouseKeepers.StormWatch
             generatorSound=GameObject.Find("Room-specific placeholder Generator")?.GetComponent<AudioSource>();
             BuildPartner(); Ready = true;
         }
-        public void Connect(bool host, string room) { if (Ready && !link.Connected) { rules.Reset(); lastTeleport=0; hadCrew=false; SessionEnded=false; Local.command=WatchAction.None; link.Connect(host, room); } }
         public void Leave()
         {
+            if (link && link.ReturnsToLobby) { link.Leave(); return; }
             link?.Leave(); rules.Reset(); lastTeleport=0; hadCrew=false; SessionEnded=false;
             Local.command=WatchAction.None;
             if(Ready)StartCoroutine(Relocate(new Vector3(-8,.1f,0)));
@@ -113,7 +113,14 @@ namespace LighthouseKeepers.StormWatch
             while (tick >= .05f)
             {
                 tick -= .05f;
-                if (link.IsHost && link.Connected) rules.Tick(.05f, Local, Partner);
+                if (link.IsHost && link.Connected)
+                {
+                    // The ready lobby already approved the run. Wait until the other
+                    // environment has sent valid input before starting its clock.
+                    if (State.act == WatchAct.Briefing && Partner.connected)
+                        Command(WatchAction.Begin);
+                    rules.Tick(.05f, Local, Partner);
+                }
             }
             if (transmit >= .1f)
             {

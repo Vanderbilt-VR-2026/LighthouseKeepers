@@ -70,16 +70,15 @@ namespace LighthouseKeepers.Editor
         static void Label(Transform parent,string text,Vector3 local,float size)
         {var t=new GameObject("Label").AddComponent<TextMeshPro>();t.transform.SetParent(parent,false);t.transform.localPosition=local;t.transform.localScale=Vector3.one*size;t.rectTransform.sizeDelta=new(18,3);t.text=text;t.font=TMP_Settings.defaultFontAsset;t.fontSize=5;t.alignment=TextAlignmentOptions.Center;t.textWrappingMode=TextWrappingModes.NoWrap;}
         [MenuItem("Lighthouse Keepers/Storm Watch/Play two-player watch")]
-        public static void Play(){if(EditorApplication.isPlayingOrWillChangePlaymode)return;if(!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())return;Create();EditorSceneManager.OpenScene(Entry);EditorSceneManager.playModeStartScene=null;EditorApplication.EnterPlaymode();}
+        public static void Play() => LighthousePlayLaunch.PlayGame();
         [MenuItem("Lighthouse Keepers/Storm Watch/Build Quest APK")]
         public static void BuildQuest()=>Build(BuildTarget.Android,"Builds/LighthouseKeepers-StormWatch.apk");
         [MenuItem("Lighthouse Keepers/Storm Watch/Build desktop companion")]
         public static void BuildDesktop()=>Build(BuildTarget.StandaloneOSX,"Builds/LighthouseKeepers-StormWatch.app");
         static void Build(BuildTarget target,string output)
         {
-            Create();var content=EditorBuildSettings.scenes.Where(s=>s.enabled&&!s.path.Contains("/Development/")&&!s.path.EndsWith("LK_Bootstrap.unity")).Select(s=>s.path).ToArray();
-            if(content.Length!=6)throw new InvalidOperationException("Expected six content scenes.");
-            Directory.CreateDirectory("Builds");var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{Entry}.Concat(content).ToArray(),locationPathName=output,target=target,options=BuildOptions.Development});
+            Create();
+            Directory.CreateDirectory("Builds");var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=LighthouseNetworkLobby.GameScenes,locationPathName=output,target=target,options=BuildOptions.Development});
             File.WriteAllText("Builds/StormWatch-"+target+".txt",$"Result={report.summary.result}\nErrors={report.summary.totalErrors}\nWarnings={report.summary.totalWarnings}\n");
             if(report.summary.result!=BuildResult.Succeeded||report.summary.totalErrors>0)throw new InvalidOperationException("Storm Watch build failed.");
         }

@@ -44,6 +44,30 @@ namespace LighthouseKeepers.Tests
             yield return new WaitForSeconds(.2f);
             CaptureBoardsIfRequested();
         }
+        [UnityTest] public IEnumerator LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput()
+        {
+            var fake = new GameObject("Loading partner fixture").AddComponent<WatchTestLink>();
+            fake.receiving = false;
+            var data = new SerializedObject(director);
+            data.FindProperty("link").objectReferenceValue = fake; data.ApplyModifiedPropertiesWithoutUndo();
+            try
+            {
+                yield return new WaitForSeconds(.2f);
+                Assert.AreEqual(WatchAct.Briefing, director.State.act);
+                Assert.AreEqual(0, director.State.elapsed, "Loading time must not advance the watch.");
+                fake.receiving = true;
+                yield return new WaitForSeconds(.2f);
+                Assert.AreEqual(WatchAct.FirstWatch, director.State.act, "No second Begin action is required.");
+                fake.receiving = false;
+                float elapsed = director.State.elapsed;
+                yield return new WaitForSeconds(.2f);
+                Assert.AreEqual(elapsed, director.State.elapsed, "A stalled partner input pauses authority.");
+                fake.receiving = true;
+                yield return new WaitForSeconds(.2f);
+                Assert.Greater(director.State.elapsed, elapsed);
+            }
+            finally { director.enabled = false; Object.Destroy(fake.gameObject); }
+        }
         void CaptureBoardsIfRequested()
         {
             if(System.Environment.GetEnvironmentVariable("LK_CAPTURE_WATCH")!="1")return;
@@ -100,11 +124,11 @@ namespace LighthouseKeepers.Tests
     public sealed class WatchTestLink : WatchLink
     {
         readonly KeeperInput remote=new(){connected=true,head=new(0,4.8f,-2.5f),feet=new(0,3.2f,0)};
-        public bool connected=true,partner=true;
+        public bool connected=true,partner=true,receiving=true;
         public override bool Connected=>connected;public override bool IsHost=>true;public override int LocalSlot=>0;
         public override bool PartnerConnected=>partner&&connected;public override string Status=>"Local fixture";
-        public override KeeperInput RemoteInput=>remote;public override WatchState ReceivedState=>null;
-        public override void Connect(bool host,string room){}public override void SendInput(KeeperInput input){}
+        public override KeeperInput RemoteInput { get { remote.connected=connected&&partner&&receiving;return remote; } }public override WatchState ReceivedState=>null;
+public override void SendInput(KeeperInput input){}
         public override void Publish(WatchState state){}public override void Leave(){connected=false;partner=false;}
     }
 }

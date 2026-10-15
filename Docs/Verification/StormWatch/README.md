@@ -1,6 +1,6 @@
 # Storm Watch verification
 
-Executed with Unity **6000.3.23f1** on macOS on October 13, 2026. This is the isolated two-player `LK_StormWatch` entry. Reports omit runtime log output; counts, individual test results and assertion diagnostics are retained.
+Executed with Unity **6000.3.23f1** on macOS on October 13, 2026. This historical record describes the October 13 isolated two-player `LK_StormWatch` entry. The October 15 connected crew-lobby flow is recorded in [ConnectedLobby](../ConnectedLobby/README.md). Reports omit runtime log output; counts, individual test results and assertion diagnostics are retained.
 
 ## Executed checks
 
@@ -30,4 +30,4 @@ The online test is opt-in and requires access to the project's configured Photon
 
 Run with two keepers on Quest/Quest or Quest/Editor. Verify physical reach, direct grip versus ray buttons, release/regrip, wrench targeting, radio calls, lifeline catch/pull and rescue blink in both eyes. Measure a complete three-watch run, targeting roughly ten minutes total, and adjust the exposed tuning from those observations. Check darkness and reading comfort, actual audio/haptics, packet delay/loss and disconnect recovery across devices. Profile sustained CPU/GPU frame times and allocations on the target headset before making performance claims.
 
-Known prototype limits: local tool copies rather than shared item ownership; no integrated voice (radio call buttons provide a fallback); no host migration or late-join recovery; simple station/control art. Pressure coordination and additional days are deferred. The minimal crew-room UI remains separate from the lobby PR.
+Known prototype limits: local tool copies rather than shared item ownership; no integrated voice (radio call buttons provide a fallback); no host migration or late-join recovery; simple station/control art. Pressure coordination and additional days are deferred. The minimal crew-room UI described by this historical record was replaced by the connected lobby flow on October 15.
