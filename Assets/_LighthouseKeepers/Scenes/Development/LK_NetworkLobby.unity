@@ -6540,6 +6540,7 @@ GameObject:
   - component: {fileID: 1886909107}
   - component: {fileID: 1886909106}
   - component: {fileID: 1886909105}
+  - component: {fileID: 2100000003}
   m_Layer: 0
   m_Name: Physical watch board
   m_TagString: Untagged
@@ -6575,7 +6576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbba51af44e947b1bf08a12a73667aeb, type: 3}
   m_Name:
   m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Lobby.LobbyManager
-  config: {fileID: 0}
+  config: {fileID: 11400000, guid: 78b68e5e268a4c768fd9fef0f589d05b, type: 2}
   transportBehaviour: {fileID: 2100000002}
   playerName:
   onRosterChanged:
@@ -7814,6 +7815,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: LK.Networking::LighthouseKeepers.Networking.FusionLobbyTransport
   sessionName: LighthouseKeepersRoom
   lobbySceneName: LK_NetworkLobby
+--- !u!114 &2100000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886909104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.XRInteractionManager
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-13 20:28:41Z" end-time="2026-10-13 20:29:40Z" duration="13.8108617">
+  <test-suite type="TestSuite" id="1027" name="Lighthouse Keepers" fullname="Lighthouse Keepers" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-13 20:28:41Z" end-time="2026-10-13 20:29:40Z" duration="13.810862" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1021" name="LK.Tests.Integration.PlayMode.dll" fullname="/Users/eligripenstraw/.codex/worktrees/storm-watch/LighthouseKeepers/Library/ScriptAssemblies/LK.Tests.Integration.PlayMode.dll" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-13 20:28:41Z" end-time="2026-10-13 20:29:40Z" duration="13.801621" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="43470" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1022" name="LighthouseKeepers" fullname="LighthouseKeepers" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-13 20:28:41Z" end-time="2026-10-13 20:29:40Z" duration="13.800141" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1023" name="Tests" fullname="LighthouseKeepers.Tests" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-13 20:28:41Z" end-time="2026-10-13 20:29:40Z" duration="13.798974" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1016" name="StormWatchSceneTests" fullname="LighthouseKeepers.Tests.StormWatchSceneTests" classname="LighthouseKeepers.Tests.StormWatchSceneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-13 20:28:41Z" end-time="2026-10-13 20:29:32Z" duration="8.534809" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1018" name="PhysicalPumpRequiresStrokesAndDisconnectOffersRestart" fullname="LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart" methodname="PhysicalPumpRequiresStrokesAndDisconnectOffersRestart" classname="LighthouseKeepers.Tests.StormWatchSceneTests" runstate="Runnable" seed="1073168488" result="Passed" start-time="2026-10-13 20:28:41Z" end-time="2026-10-13 20:29:30Z" duration="5.703401" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="SceneHasNightLightingAndRepairActuallyOpensStairGate" fullname="LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate" methodname="SceneHasNightLightingAndRepairActuallyOpensStairGate" classname="LighthouseKeepers.Tests.StormWatchSceneTests" runstate="Runnable" seed="1222128417" result="Passed" start-time="2026-10-13 20:29:30Z" end-time="2026-10-13 20:29:32Z" duration="2.808501" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1019" name="StormWatchTransportTests" fullname="LighthouseKeepers.Tests.StormWatchTransportTests" classname="LighthouseKeepers.Tests.StormWatchTransportTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-13 20:29:32Z" end-time="2026-10-13 20:29:40Z" duration="5.261940" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1020" name="TwoFusionPeersExchangeCommandsAndAuthoritativeState" fullname="LighthouseKeepers.Tests.StormWatchTransportTests.TwoFusionPeersExchangeCommandsAndAuthoritativeState" methodname="TwoFusionPeersExchangeCommandsAndAuthoritativeState" classname="LighthouseKeepers.Tests.StormWatchTransportTests" runstate="Runnable" seed="291724485" result="Passed" start-time="2026-10-13 20:29:32Z" end-time="2026-10-13 20:29:40Z" duration="5.257880" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Category" value="Online" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

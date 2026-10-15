@@ -74,7 +74,8 @@ namespace LighthouseKeepers.Editor
             var lobby = Object.FindAnyObjectByType<LobbyManager>();
             bool ready = errors == 0 && (SessionState.GetBool("LKDevelopmentEntry", false)
                 ? bootstrap && bootstrap.Ready && SceneManager.sceneCount == 7
-                : lobby && !lobby.IsLocalPreview && lobby.Transport != null);
+                : (lobby && !lobby.IsLocalPreview && lobby.Transport != null) ||
+                  (Object.FindAnyObjectByType<LighthouseKeepers.StormWatch.StormWatchDirector>()?.Ready == true));
             Directory.CreateDirectory("Docs/Verification");
             var result = (ready ? "PASS" : "FAIL") + ": interactive Play Mode launch; scenes=" + SceneManager.sceneCount + "; ready=" + ready + "; runtime errors=" + errors + ". Game left running for the user.";
             File.WriteAllText("Docs/Verification/InteractiveLaunch.txt", result + "\n");

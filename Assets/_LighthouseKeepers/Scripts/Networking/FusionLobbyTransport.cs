@@ -15,6 +15,12 @@ namespace LighthouseKeepers.Networking
     [DisallowMultipleComponent]
     public sealed class FusionLobbyTransport : MonoBehaviour, ISessionLobbyTransport, INetworkRunnerCallbacks
     {
+        public const string GameplaySceneName = "LK_StormWatch";
+        public const string LobbySceneName = "LK_NetworkLobby";
+        static string pendingLobbyNotice;
+        public NetworkRunner Runner => runner;
+        public bool IsInGame => enteredGame;
+
         [SerializeField] string sessionName = "LighthouseKeepersRoom";
         [SerializeField] string lobbySceneName = "LK_NetworkLobby";
         readonly FusionLobbyState state = new();
@@ -48,12 +54,20 @@ namespace LighthouseKeepers.Networking
             // The network preview authors this as its own root, separate from the
             // board and XR rig, so only the session survives the scene transition.
             initialScenePath = gameObject.scene.path;
+            if (gameObject.scene.name == lobbySceneName && !string.IsNullOrEmpty(pendingLobbyNotice))
+            {
+                LastError = pendingLobbyNotice;
+                pendingLobbyNotice = null;
+            }
             if (Application.isPlaying) DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += HandleSceneLoaded;
         }
         void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (!online || scene.name != "LK_Bootstrap") return;
+            if (!online || (scene.name != "LK_Bootstrap" && scene.name != GameplaySceneName)) return;
+            // Scene arrival is authoritative even if the separate reliable lobby
+            // snapshot has not arrived yet. Bind gameplay before its Start runs.
+            enteredGame = true;
             // William's original scene includes Fusion's debug launcher and its
             // dormant runner template. Keep those authored objects for isolated
             // prototype work, but prevent a second session alongside the crew.
@@ -86,7 +100,7 @@ namespace LighthouseKeepers.Networking
             var runnerObject = new GameObject("Fusion Network Runner");
             var current = runnerObject.AddComponent<NetworkRunner>();
             runner = current;
-            current.ProvideInput = false; // Tracked avatar/gameplay input is a later iteration.
+            current.ProvideInput = false; // Storm Watch sends bounded input on its own reliable-data channel.
             current.AddCallbacks(this);
             var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
             try
@@ -168,6 +182,7 @@ namespace LighthouseKeepers.Networking
         void ReturnToLobby()
         {
             if (!enteredGame || !Application.CanStreamedLevelBeLoaded(lobbySceneName)) return;
+            pendingLobbyNotice = LastError;
             Destroy(gameObject);
             SceneManager.LoadScene(lobbySceneName);
         }
@@ -216,6 +231,13 @@ namespace LighthouseKeepers.Networking
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
         {
             if (!IsHost || busy || state.Starting) return false;
+            if (sceneName == GameplaySceneName)
+            {
+                if (state.Capacity != 2 || state.Players.Count != 2 || runner.ActivePlayers.Count() != 2)
+                    return Fail("Storm Watch needs exactly two connected keepers.");
+                minimumPlayers = 2;
+                requireAllReady = true;
+            }
             int index = -1;
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
                 if (System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i)) == sceneName) { index = i; break; }
@@ -253,7 +275,14 @@ namespace LighthouseKeepers.Networking
         }
         public void OnPlayerLeft(NetworkRunner source, PlayerRef player)
         {
-            if (source == runner && source.IsServer && state.Remove(Id(player))) PublishRoster();
+            if (source != runner) return;
+            if (source.IsServer && state.Remove(Id(player))) PublishRoster();
+            if ((enteredGame || state.Starting) && !busy && !leaving)
+            {
+                enteredGame = true; // Approval is already committed, even before the load callback.
+                Fail("Your partner left the watch. Reconnect together to start a new run.");
+                _ = Disconnect();
+            }
         }
         public void OnReliableDataReceived(NetworkRunner source, PlayerRef sender, ReliableKey key, ReadOnlySpan<byte> data)
         {
@@ -295,7 +324,8 @@ namespace LighthouseKeepers.Networking
         }
         public void OnSceneLoadDone(NetworkRunner source)
         {
-            if (source == runner && SceneManager.GetSceneByName("LK_Bootstrap").isLoaded) enteredGame = true;
+            if (source == runner && (SceneManager.GetSceneByName("LK_Bootstrap").isLoaded ||
+                SceneManager.GetSceneByName(GameplaySceneName).isLoaded)) enteredGame = true;
         }
         public void OnConnectedToServer(NetworkRunner source) { }
         public void OnConnectFailed(NetworkRunner source, NetAddress address, NetConnectFailedReason reason) { }

@@ -67,8 +67,7 @@ public static class LighthouseArchitecture {
   Box("Storm ocean",new Vector3(0,-2.3f,0),new Vector3(400,.1f,400),"Water",null,false);
   for(int i=0;i<12;i++){var p=Polar(9,i*31,-.5f);Pipe("Dead coastal branch",p,p+new Vector3(.4f,1.5f,.1f),.07f,"Wood");Pipe("Wind bent branch",p+Vector3.up*.6f,p+new Vector3(1.1f,1.05f,.2f),.04f,"Wood");}
   for(int l=0;l<=4;l++)MeshObject("Exterior masonry course",Annulus("Cornice_"+l,5.02f,5.27f,l*3.2f+.05f,0,0,360,64),"Masonry",false);
-  var sun=new GameObject("Storm daylight").AddComponent<Light>();sun.type=LightType.Directional;sun.color=new Color(.63f,.76f,.9f);sun.intensity=.65f;sun.shadows=LightShadows.Soft;sun.transform.rotation=Quaternion.Euler(38,-35,0);sun.lightmapBakeType=LightmapBakeType.Mixed;
-  RenderSettings.sun=sun;RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Trilight;RenderSettings.ambientSkyColor=new Color(.26f,.34f,.42f);RenderSettings.ambientEquatorColor=new Color(.15f,.21f,.25f);RenderSettings.ambientGroundColor=new Color(.075f,.10f,.12f);RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogColor=new Color(.28f,.36f,.41f);RenderSettings.fogDensity=.018f;RenderSettings.skybox=null;
+  RenderSettings.sun=null;RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Trilight;RenderSettings.ambientSkyColor=new Color(.26f,.34f,.42f);RenderSettings.ambientEquatorColor=new Color(.15f,.21f,.25f);RenderSettings.ambientGroundColor=new Color(.075f,.10f,.12f);RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogColor=new Color(.28f,.36f,.41f);RenderSettings.fogDensity=.018f;RenderSettings.skybox=null;
   foreach(int side in new[]{-1,1})Rain(new Vector3(-8,4,side*3),new Vector3(7,.1f,1.2f),false);
   Rain(new Vector3(0,14,0),new Vector3(12,.1f,12),true);
   for(int i=0;i<4;i++)Rain(Polar(5.6f,i*90,12),new Vector3(1.5f,.1f,1.5f),false);
