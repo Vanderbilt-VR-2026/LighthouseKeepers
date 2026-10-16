@@ -4,6 +4,12 @@
 
 Use **Lighthouse Keepers → Play game**. Host or join one crew room, signal ready on both clients, then **Begin watch** to enter the continuous three-watch cooperative climb together. The lobby connection carries gameplay too; no second Host/Join step is required. See [Storm Watch](Docs/StormWatch.md) for controls, progression and verification limits.
 
+## William's four-player development environment
+
+Use **Lighthouse Keepers → Development → Play environment** to open `LK_Bootstrap`. Its crew board supports one host and up to three guests, synchronized keeper poses, and shared authored grabbable props. It reuses `FusionLobbyTransport` for session lifetime; it does not launch a second runner alongside the lobby. See [development multiplayer setup and checks](Docs/Multiplayer.md).
+
+The normal **Play game** entry retains the agreed two-player Storm Watch design. Four-player environment support does not rebalance its two-player mission rules. Live acceptance of the development replication layer remains pending.
+
 ## First playable watch
 
 Use **Lighthouse Keepers → First Watch → Play plumbing escape** for the survival prototype: brace the pipe, turn three valves in the posted order, then escape to the first landing and recover. This is local solo practice with Quest hand interactions, a timed clamp option and desktop controls. See [First Watch](Docs/FirstWatch.md) for controls, scope and the dedicated Quest APK build command. The ordinary environment preview remains available below.

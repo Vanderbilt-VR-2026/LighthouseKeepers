@@ -7,6 +7,13 @@ using UnityEngine;
 
 namespace LighthouseKeepers.Networking
 {
+    /// <summary>The two-player watch ends on partner loss; the development environment supports a changing crew.</summary>
+    public static class CrewSessionPolicy
+    {
+        public const string StormWatchSceneName = "LK_StormWatch";
+        public static bool RequiresWholeCrew(string sceneName) => sceneName == StormWatchSceneName;
+    }
+
     // Lobby traffic is infrequent and has no simulation state. Reliable data keeps
     // this adapter independent of network prefabs and the game's additive scenes.
     [Serializable]
