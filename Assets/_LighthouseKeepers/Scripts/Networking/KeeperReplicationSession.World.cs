@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-public sealed partial class FusionLauncher
+public sealed partial class KeeperReplicationSession
 {
     readonly GrabAuthority authority = new();
     readonly Dictionary<int, NetworkGrabbable> props = new();
@@ -34,10 +34,12 @@ public sealed partial class FusionLauncher
     void SceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (mode == LoadSceneMode.Single) ClearWorld();
+        if (scene.name == LighthouseKeepers.Networking.FusionLobbyTransport.LobbySceneName) Destroy(gameObject);
         nextScan = 0;
     }
     void Update()
     {
+        SynchronizeSession();
         if (Time.unscaledTime < nextScan || worldBound) return;
         nextScan = Time.unscaledTime + .5f;
         var bootstrap = FindAnyObjectByType<EnvironmentBootstrap>();
@@ -173,7 +175,7 @@ public sealed partial class FusionLauncher
     }
     internal void RenderPose(PlayerRef player, KeeperPose pose, int sequence)
     {
-        if (!worldBound || !runner || player == runner.LocalPlayer || !Valid(pose) || !roster.Any(p => p.Id == player.RawEncoded.ToString())) return;
+        if (!worldBound || !runner || player == runner.LocalPlayer || !Valid(pose) || !Players.Any(p => p.Id == PlayerId(player))) return;
         if (!avatars.TryGetValue(player, out var avatar) || !avatar)
         {
             avatar = new GameObject("Remote keeper " + player.RawEncoded).AddComponent<RemoteKeeper>();
@@ -191,7 +193,7 @@ public sealed partial class FusionLauncher
     void PruneAvatars()
     {
         foreach (var player in avatars.Keys.ToArray())
-            if (!roster.Any(p => p.Id == player.RawEncoded.ToString())) RemoveAvatar(player);
+            if (!Players.Any(p => p.Id == PlayerId(player))) RemoveAvatar(player);
     }
     internal void RequestGrab(NetworkGrabbable binding)
     {

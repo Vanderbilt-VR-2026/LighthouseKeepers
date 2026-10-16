@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 namespace LighthouseKeepers.Lobby {
 /// <summary>Seam between the lobby UI and whatever networking backs it.
-/// LobbyManager and LobbyScreen use this interface for local practice and Photon Fusion.
-/// ISessionTransport adds asynchronous status and a shared game launch.</summary>
+/// LobbyManager and LobbyScreen use it for local practice and Photon Fusion.
+/// ISessionLobbyTransport supplies asynchronous status and shared game launch.</summary>
 public interface INetworkTransport {
  bool IsOnline {get;}
  bool IsHost {get;}

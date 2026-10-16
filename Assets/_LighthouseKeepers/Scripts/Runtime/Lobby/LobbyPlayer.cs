@@ -1,7 +1,7 @@
 using System;
 namespace LighthouseKeepers.Lobby {
 /// <summary>One roster entry. Plain data so any transport (local stub today,
-/// Photon Fusion during crew play) can populate it without touching UI code.</summary>
+/// Photon Fusion online) can populate it without touching UI code.</summary>
 [Serializable]
 public sealed class LobbyPlayer {
  public string Id;

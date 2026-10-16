@@ -1,0 +1,20 @@
+First Watch Android development build — 2026-10-08
+Unity: 6000.3.23f1
+Result: Succeeded
+Build errors: 0
+Build warnings: 2
+Batch process exit code: 0
+APK: Builds/LighthouseKeepers-FirstWatch.apk
+APK bytes: 114606554
+SHA-256: f30ccc57638540a99f72e8b404c8a0fe9bd2d9b2edc1b7f0bbfba3f21545583e
+ABI: arm64-v8a only
+lib/arm64-v8a/libil2cpp.so: present
+First Watch local authority marker in packaged level0: present
+Unity build-report totalSize: 1371115236 (not the compressed APK file size)
+
+Build warnings:
+- Pipeline runtime configuration absent: CLI bridge is disabled in Player builds; Editor inspection remains available.
+- Diagnostics Data requests SymbolTable or Full debug symbols for crash stack traces.
+
+Build log: /tmp/lk-firstwatch-android.log
+Quest installation, controller comfort, eye-resolution readability and sustained performance: pending device testing.

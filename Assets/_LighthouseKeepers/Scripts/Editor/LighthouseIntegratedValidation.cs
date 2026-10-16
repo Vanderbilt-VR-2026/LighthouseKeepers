@@ -9,11 +9,12 @@ using LighthouseKeepers.Environment;
 using LighthouseKeepers.Puzzles;
 namespace LighthouseKeepers.Editor {
 public static class LighthouseIntegratedValidation {
- [MenuItem("Lighthouse Keepers/Integration/Open complete environment")]
+ [MenuItem("Lighthouse Keepers/Development/Open complete environment")]
  public static void OpenEnvironment(){
   if(!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())return;
   EditorSceneManager.OpenScene(LighthouseScenes.ScenePath("LK_Bootstrap"));foreach(var name in LighthouseScenes.Names.Skip(1).Take(6))EditorSceneManager.OpenScene(LighthouseScenes.ScenePath(name),OpenSceneMode.Additive);
   EditorSceneManager.playModeStartScene=AssetDatabase.LoadAssetAtPath<SceneAsset>(LighthouseScenes.ScenePath("LK_Bootstrap"));
+  SessionState.SetBool("LKDevelopmentEntry", true);
   if(SceneView.lastActiveSceneView)SceneView.lastActiveSceneView.LookAt(new Vector3(-2,5,0),Quaternion.Euler(20,35,0),20);
   Debug.Log("LK HANDOFF: complete environment open; Play starts at Bootstrap.");
  }

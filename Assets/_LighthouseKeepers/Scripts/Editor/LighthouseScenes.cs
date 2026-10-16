@@ -33,7 +33,7 @@ public static class LighthouseScenes {
   Asset<FloodProfile>("FloodProfile");Asset<ComfortSettings>("ComfortSettings");
   Action[] build={Bootstrap,LighthouseArchitecture.Exterior,LighthouseArchitecture.Core,LighthouseRooms.Plumbing,LighthouseRooms.Generator,LighthouseRooms.Communications,LighthouseRooms.Lantern,DevGym};
   for(int i=0;i<Names.Length;i++){string path=ScenePath(Names[i]);if(File.Exists(path))continue;var scene=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);build[i]();EditorSceneManager.SaveScene(scene,path);}
-  EditorBuildSettings.scenes=Names.Select(n=>new EditorBuildSettingsScene(ScenePath(n),true)).ToArray();
+  EditorBuildSettings.scenes=LighthouseNetworkLobby.EditorScenes.Select(path=>new EditorBuildSettingsScene(path,true)).ToArray();
   var tags=new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);var layers=tags.FindProperty("layers");layers.GetArrayElementAtIndex(8).stringValue="Environment";layers.GetArrayElementAtIndex(9).stringValue="Interactable";layers.GetArrayElementAtIndex(10).stringValue="PlayerBody";tags.ApplyModifiedPropertiesWithoutUndo();
   AssetDatabase.SaveAssets();EditorSceneManager.OpenScene(ScenePath("LK_Bootstrap"));Debug.Log("LIGHTHOUSE SCENES GENERATED");
  }

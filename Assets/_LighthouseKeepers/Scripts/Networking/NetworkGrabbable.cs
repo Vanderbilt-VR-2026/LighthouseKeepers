@@ -9,7 +9,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 [DefaultExecutionOrder(9000)]
 public sealed class NetworkGrabbable : MonoBehaviour, IXRSelectFilter
 {
-    FusionLauncher session;
+    KeeperReplicationSession session;
     XRGrabInteractable grab;
     Rigidbody body;
     bool originalKinematic, suppressEvents, pendingGrab, releasePending, hasState;
@@ -25,7 +25,7 @@ public sealed class NetworkGrabbable : MonoBehaviour, IXRSelectFilter
     bool HandSelected => grab && grab.interactorsSelecting.Any(i => !(i is XRSocketInteractor));
     public bool IsLocallyHeld => session && session.CanInteract && State.Owner == session.LocalOwner && HandSelected;
 
-    public void Configure(FusionLauncher owner, int id, XRGrabInteractable interactable)
+    public void Configure(KeeperReplicationSession owner, int id, XRGrabInteractable interactable)
     {
         session = owner; Id = id; grab = interactable; body = GetComponent<Rigidbody>();
         originalKinematic = body.isKinematic;

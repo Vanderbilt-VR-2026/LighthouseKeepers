@@ -17,29 +17,14 @@ public struct PropPose : INetworkStruct
     public int Owner, Epoch, Sequence;
 }
 
-/// <summary>Fusion's static RPCs work without baked NetworkObjects. The installed Assembly-CSharp weaver processes these.</summary>
+/// <summary>Fusion static RPCs without baked NetworkObjects. LK.Networking must be in AssembliesToWeave.</summary>
 public sealed class KeeperMessages : SimulationBehaviour
 {
-    static FusionLauncher Session(NetworkRunner runner) => FusionLauncher.Instance && FusionLauncher.Instance.SessionRunner == runner
-        ? FusionLauncher.Instance : null;
+    static KeeperReplicationSession Session(NetworkRunner runner) => KeeperReplicationSession.Instance && KeeperReplicationSession.Instance.SessionRunner == runner
+        ? KeeperReplicationSession.Instance : null;
     // Static RPCs do not enforce RpcSources/RpcTargets. Always verify the authenticated sender explicitly.
     static bool FromHost(NetworkRunner runner, RpcInfo info) => info.Source == PlayerRef.None && Session(runner) != null;
 
-    [Rpc(RpcSources.All, RpcTargets.All, TickAligned = false)]
-    public static void RPC_Profile(NetworkRunner runner, [RpcTarget] PlayerRef target, string name, bool ready, RpcInfo info = default)
-    {
-        if (runner.IsServer) Session(runner)?.SetProfile(info.Source, name, ready);
-    }
-    [Rpc(RpcSources.All, RpcTargets.All, TickAligned = false, Channel = RpcChannel.ReliableLargeData)]
-    public static void RPC_Roster(NetworkRunner runner, string json, RpcInfo info = default)
-    {
-        if (FromHost(runner, info)) Session(runner).ApplyRoster(json);
-    }
-    [Rpc(RpcSources.All, RpcTargets.All, TickAligned = false)]
-    public static void RPC_BeginWatch(NetworkRunner runner, [RpcTarget] PlayerRef target, RpcInfo info = default)
-    {
-        if (FromHost(runner, info)) Session(runner).EnterWatch();
-    }
     [Rpc(RpcSources.All, RpcTargets.All, TickAligned = false)]
     public static void RPC_WorldReady(NetworkRunner runner, [RpcTarget] PlayerRef target, string layout, RpcInfo info = default)
     {

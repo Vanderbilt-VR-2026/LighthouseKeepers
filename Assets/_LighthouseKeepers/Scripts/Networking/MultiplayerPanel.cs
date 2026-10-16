@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.UI;
 /// <summary>Room controls available when opening Bootstrap directly. Uses the same canvas for mouse and XR rays.</summary>
 public sealed class MultiplayerPanel : MonoBehaviour
 {
-    FusionLauncher session;
+    KeeperReplicationSession session;
     Canvas canvas;
     RectTransform content;
     TMP_Text status;
@@ -16,7 +16,7 @@ public sealed class MultiplayerPanel : MonoBehaviour
     Button host, join, leave;
     int sceneHandle = -1;
     float nextRefresh;
-    void Awake() => session = GetComponent<FusionLauncher>();
+    void Awake() => session = GetComponent<KeeperReplicationSession>();
     void Update()
     {
         var scene = SceneManager.GetSceneByName("LK_Bootstrap");

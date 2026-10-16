@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using LighthouseKeepers.Flood;
 using LighthouseKeepers.Lobby;
@@ -8,6 +9,23 @@ namespace LighthouseKeepers.Tests
 {
     public sealed class LobbyPolishTests
     {
+        [Test]
+        public void LocalPracticeSceneExplicitlyBindsSimulation()
+        {
+            var setup = EditorSceneManager.GetSceneManagerSetup();
+            try
+            {
+                EditorSceneManager.OpenScene("Assets/_LighthouseKeepers/Scenes/Development/LK_LobbyPreview.unity");
+                var manager = Object.FindAnyObjectByType<LobbyManager>();
+                var selected = new SerializedObject(manager).FindProperty("transportBehaviour").objectReferenceValue;
+                Assert.IsInstanceOf<LocalLobbyTransport>(selected);
+            }
+            finally
+            {
+                if (setup.Length > 0) EditorSceneManager.RestoreSceneManagerSetup(setup);
+                else EditorSceneManager.NewScene(NewSceneSetup.EmptyScene);
+            }
+        }
         [Test]
         public void HeadAboveMaximumFloodNeverHasSubmersionCountdown()
         {
@@ -77,6 +95,7 @@ namespace LighthouseKeepers.Tests
             var go = new GameObject();
             try
             {
+                go.AddComponent<LocalLobbyTransport>();
                 var manager = go.AddComponent<LobbyManager>();
                 TestLifecycle.Invoke(manager, "Awake");
                 Assert.IsTrue(manager.IsLocalPreview);
