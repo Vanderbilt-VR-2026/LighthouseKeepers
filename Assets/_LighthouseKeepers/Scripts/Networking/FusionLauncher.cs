@@ -1,72 +1,24 @@
-using Fusion;
+using LighthouseKeepers.Networking;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+/// <summary>Preserves William's button entry points while sharing the lobby session lifecycle.</summary>
 public class FusionLauncher : MonoBehaviour
 {
-    private NetworkRunner _runner;
+    [SerializeField] FusionLobbyTransport transport;
+    [SerializeField] string roomName = "LighthouseKeepersRoom";
+    [SerializeField, Range(2, 8)] int maxPlayers = 4;
 
-    public async void StartHost()
+    FusionLobbyTransport Transport
     {
-        await StartSession(GameMode.Host);
-    }
-
-    public async void JoinSession()
-    {
-        await StartSession(GameMode.Client);
-    }
-
-    private async System.Threading.Tasks.Task StartSession(GameMode mode)
-    {
-        // A NetworkRunner should only be used for one session,
-        // so create a fresh one each time.
-        GameObject runnerObject = new GameObject("Fusion Network Runner");
-
-        _runner = runnerObject.AddComponent<NetworkRunner>();
-        _runner.ProvideInput = true;
-
-        NetworkSceneManagerDefault sceneManager =
-            runnerObject.AddComponent<NetworkSceneManagerDefault>();
-
-        SceneRef sceneRef =
-            SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
-
-        NetworkSceneInfo sceneInfo = new NetworkSceneInfo();
-
-        if (sceneRef.IsValid)
+        get
         {
-            sceneInfo.AddSceneRef(
-                sceneRef,
-                LoadSceneMode.Single
-            );
-        }
-
-        StartGameResult result = await _runner.StartGame(
-            new StartGameArgs
-            {
-                GameMode = mode,
-                SessionName = "LighthouseKeepersRoom",
-                PlayerCount = 4,
-                Scene = sceneInfo,
-                SceneManager = sceneManager
-            }
-        );
-
-        if (result.Ok)
-        {
-            Debug.Log(
-                $"Fusion connected successfully as {mode}. " +
-                $"Room: {_runner.SessionInfo.Name}"
-            );
-        }
-        else
-        {
-            Debug.LogError(
-                $"Fusion failed to start: {result.ShutdownReason}"
-            );
-
-            Destroy(runnerObject);
-            _runner = null;
+            if (!transport) transport = FindAnyObjectByType<FusionLobbyTransport>();
+            if (!transport) transport = new GameObject("Fusion crew session").AddComponent<FusionLobbyTransport>();
+            transport.SessionName = roomName;
+            return transport;
         }
     }
+    public void StartHost() => Transport.HostGame(maxPlayers);
+    public void JoinSession() => Transport.JoinGame(roomName);
+    public void LeaveSession() => Transport.LeaveGame();
 }

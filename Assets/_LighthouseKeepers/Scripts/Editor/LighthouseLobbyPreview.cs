@@ -14,7 +14,7 @@ namespace LighthouseKeepers.Editor
         public const string ScenePath = "Assets/_LighthouseKeepers/Scenes/Development/LK_LobbyPreview.unity";
         const string VariantRoot = "Assets/_LighthouseKeepers/ThirdPartyVariants/";
 
-        [MenuItem("Lighthouse Keepers/Play lobby preview")]
+        [MenuItem("Lighthouse Keepers/Development/Play local lobby preview")]
         public static void Play()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
@@ -22,6 +22,7 @@ namespace LighthouseKeepers.Editor
             CreateScene();
             EditorSceneManager.OpenScene(ScenePath);
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath);
+            SessionState.SetBool("LKDevelopmentEntry", true);
             EditorApplication.EnterPlaymode();
         }
         public static void CreateScene()
@@ -97,7 +98,9 @@ namespace LighthouseKeepers.Editor
                     var screw = Primitive(PrimitiveType.Sphere,"Frame fastener",new(side*1.38f,end*.99f,-.005f),new(.035f,.035f,.015f),"Brass",board,false);
                 }
             }
+            var local = board.gameObject.AddComponent<LocalLobbyTransport>();
             var lobby = board.gameObject.AddComponent<LobbyManager>();
+            LighthouseScenes.Set(lobby, "transportBehaviour", local);
             var screen = board.gameObject.AddComponent<LobbyScreen>();
             LighthouseScenes.Set(screen,"manager",lobby);
             LighthouseScenes.Set(screen,"boardMount",board);

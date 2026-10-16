@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="43" result="Passed" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:59Z" duration="6.7515295">
+  <test-suite type="TestSuite" id="1000" name="Lighthouse Keepers" fullname="Lighthouse Keepers" runstate="Runnable" testcasecount="43" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:59Z" duration="6.751530" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1054" name="LighthouseKeepers.Tests.dll" fullname="/Users/eligripenstraw/VR-Class-2026/LighthouseKeepers/Library/ScriptAssemblies/LighthouseKeepers.Tests.dll" runstate="Runnable" testcasecount="43" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:59Z" duration="6.746809" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="4383" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1055" name="LighthouseKeepers" fullname="LighthouseKeepers" runstate="Runnable" testcasecount="43" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:59Z" duration="6.746295" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1056" name="Tests" fullname="LighthouseKeepers.Tests" runstate="Runnable" testcasecount="43" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:59Z" duration="6.745853" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="FirstWatchRulesTests" fullname="LighthouseKeepers.Tests.FirstWatchRulesTests" classname="LighthouseKeepers.Tests.FirstWatchRulesTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.020154" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1005" name="BriefSubmersionIsRecoverableButSustainedSubmersionFails" fullname="LighthouseKeepers.Tests.FirstWatchRulesTests.BriefSubmersionIsRecoverableButSustainedSubmersionFails" methodname="BriefSubmersionIsRecoverableButSustainedSubmersionFails" classname="LighthouseKeepers.Tests.FirstWatchRulesTests" runstate="Runnable" seed="2055048654" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.009065" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="LandingCannotSkipRepairAndRecoveryRequiresStayingSafe" fullname="LighthouseKeepers.Tests.FirstWatchRulesTests.LandingCannotSkipRepairAndRecoveryRequiresStayingSafe" methodname="LandingCannotSkipRepairAndRecoveryRequiresStayingSafe" classname="LighthouseKeepers.Tests.FirstWatchRulesTests" runstate="Runnable" seed="808118093" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000464" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="PartialTurnsSurviveReleaseAndSealedValvesCannotBeFarmed" fullname="LighthouseKeepers.Tests.FirstWatchRulesTests.PartialTurnsSurviveReleaseAndSealedValvesCannotBeFarmed" methodname="PartialTurnsSurviveReleaseAndSealedValvesCannotBeFarmed" classname="LighthouseKeepers.Tests.FirstWatchRulesTests" runstate="Runnable" seed="1057078322" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000366" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="UnbracedAndWrongValveCannotCompleteRepair" fullname="LighthouseKeepers.Tests.FirstWatchRulesTests.UnbracedAndWrongValveCannotCompleteRepair" methodname="UnbracedAndWrongValveCannotCompleteRepair" classname="LighthouseKeepers.Tests.FirstWatchRulesTests" runstate="Runnable" seed="1803391754" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000196" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="UnderwaterArrivalCannotWinAndResetClearsTheWholeAttempt" fullname="LighthouseKeepers.Tests.FirstWatchRulesTests.UnderwaterArrivalCannotWinAndResetClearsTheWholeAttempt" methodname="UnderwaterArrivalCannotWinAndResetClearsTheWholeAttempt" classname="LighthouseKeepers.Tests.FirstWatchRulesTests" runstate="Runnable" seed="863091609" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000798" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1007" name="FootstepCadenceTests" fullname="LighthouseKeepers.Tests.FootstepCadenceTests" classname="LighthouseKeepers.Tests.FootstepCadenceTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.005129" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1011" name="CadenceDependsOnDistanceAtDifferentFrameRates" fullname="LighthouseKeepers.Tests.FootstepCadenceTests.CadenceDependsOnDistanceAtDifferentFrameRates" classname="LighthouseKeepers.Tests.FootstepCadenceTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.001071" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1008" name="CadenceDependsOnDistanceAtDifferentFrameRates(30)" fullname="LighthouseKeepers.Tests.FootstepCadenceTests.CadenceDependsOnDistanceAtDifferentFrameRates(30)" methodname="CadenceDependsOnDistanceAtDifferentFrameRates" classname="LighthouseKeepers.Tests.FootstepCadenceTests" runstate="Runnable" seed="329594195" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000359" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1009" name="CadenceDependsOnDistanceAtDifferentFrameRates(72)" fullname="LighthouseKeepers.Tests.FootstepCadenceTests.CadenceDependsOnDistanceAtDifferentFrameRates(72)" methodname="CadenceDependsOnDistanceAtDifferentFrameRates" classname="LighthouseKeepers.Tests.FootstepCadenceTests" runstate="Runnable" seed="719573262" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000111" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1010" name="CadenceDependsOnDistanceAtDifferentFrameRates(120)" fullname="LighthouseKeepers.Tests.FootstepCadenceTests.CadenceDependsOnDistanceAtDifferentFrameRates(120)" methodname="CadenceDependsOnDistanceAtDifferentFrameRates" classname="LighthouseKeepers.Tests.FootstepCadenceTests" runstate="Runnable" seed="480393964" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000063" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1013" name="FallingTeleportingAndPausingResetPartialStride" fullname="LighthouseKeepers.Tests.FootstepCadenceTests.FallingTeleportingAndPausingResetPartialStride" methodname="FallingTeleportingAndPausingResetPartialStride" classname="LighthouseKeepers.Tests.FootstepCadenceTests" runstate="Runnable" seed="1306333482" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000821" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="StandingOrPushingIntoWallDoesNotProduceSteps" fullname="LighthouseKeepers.Tests.FootstepCadenceTests.StandingOrPushingIntoWallDoesNotProduceSteps" methodname="StandingOrPushingIntoWallDoesNotProduceSteps" classname="LighthouseKeepers.Tests.FootstepCadenceTests" runstate="Runnable" seed="452493565" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.002080" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1014" name="FoundationTests" fullname="LighthouseKeepers.Tests.FoundationTests" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.060215" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1022" name="BuildIncludesBootstrapFirstAndAllEightScenes" fullname="LighthouseKeepers.Tests.FoundationTests.BuildIncludesBootstrapFirstAndAllEightScenes" methodname="BuildIncludesBootstrapFirstAndAllEightScenes" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="1714487849" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.001356" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="DangerStagesEscalateAsWaterNearsHead" fullname="LighthouseKeepers.Tests.FoundationTests.DangerStagesEscalateAsWaterNearsHead" methodname="DangerStagesEscalateAsWaterNearsHead" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="634264524" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.009998" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="DaysBecomeMeasurablyMoreIntense" fullname="LighthouseKeepers.Tests.FoundationTests.DaysBecomeMeasurablyMoreIntense" methodname="DaysBecomeMeasurablyMoreIntense" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="1954496978" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.045154" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1015" name="FloodClampsAndResetPauses" fullname="LighthouseKeepers.Tests.FoundationTests.FloodClampsAndResetPauses" methodname="FloodClampsAndResetPauses" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="739795563" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000369" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="FloodSurgeAcceleratesWithHeight" fullname="LighthouseKeepers.Tests.FoundationTests.FloodSurgeAcceleratesWithHeight" methodname="FloodSurgeAcceleratesWithHeight" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="1681534936" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000529" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="FloodTimeEstimateIntegratesSurge" fullname="LighthouseKeepers.Tests.FoundationTests.FloodTimeEstimateIntegratesSurge" methodname="FloodTimeEstimateIntegratesSurge" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="735574190" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000272" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="SurfaceToneTracksNormalizedHeight" fullname="LighthouseKeepers.Tests.FoundationTests.SurfaceToneTracksNormalizedHeight" methodname="SurfaceToneTracksNormalizedHeight" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="450136230" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000433" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="ThresholdFiresOnlyOnCrossingAndSupportsReset" fullname="LighthouseKeepers.Tests.FoundationTests.ThresholdFiresOnlyOnCrossingAndSupportsReset" methodname="ThresholdFiresOnlyOnCrossingAndSupportsReset" classname="LighthouseKeepers.Tests.FoundationTests" runstate="Runnable" seed="1821439242" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000563" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1023" name="IntegratedAssetTests" fullname="LighthouseKeepers.Tests.IntegratedAssetTests" classname="LighthouseKeepers.Tests.IntegratedAssetTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.428896" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1025" name="OceanHasBoundedGeometryAndCompiles" fullname="LighthouseKeepers.Tests.IntegratedAssetTests.OceanHasBoundedGeometryAndCompiles" methodname="OceanHasBoundedGeometryAndCompiles" classname="LighthouseKeepers.Tests.IntegratedAssetTests" runstate="Runnable" seed="447237034" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.058224" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="SoundtrackUsesStreaming" fullname="LighthouseKeepers.Tests.IntegratedAssetTests.SoundtrackUsesStreaming" methodname="SoundtrackUsesStreaming" classname="LighthouseKeepers.Tests.IntegratedAssetTests" runstate="Runnable" seed="252797451" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.020313" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="VendorPropVariantsUseUrp" fullname="LighthouseKeepers.Tests.IntegratedAssetTests.VendorPropVariantsUseUrp" methodname="VendorPropVariantsUseUrp" classname="LighthouseKeepers.Tests.IntegratedAssetTests" runstate="Runnable" seed="1293265155" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.349193" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1027" name="LobbyPolishTests" fullname="LighthouseKeepers.Tests.LobbyPolishTests" classname="LighthouseKeepers.Tests.LobbyPolishTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.026609" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1030" name="ExplicitTransportTakesPrecedenceAndUnsubscribesOnDestroy" fullname="LighthouseKeepers.Tests.LobbyPolishTests.ExplicitTransportTakesPrecedenceAndUnsubscribesOnDestroy" methodname="ExplicitTransportTakesPrecedenceAndUnsubscribesOnDestroy" classname="LighthouseKeepers.Tests.LobbyPolishTests" runstate="Runnable" seed="109306250" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.015821" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="HeadAboveMaximumFloodNeverHasSubmersionCountdown" fullname="LighthouseKeepers.Tests.LobbyPolishTests.HeadAboveMaximumFloodNeverHasSubmersionCountdown" methodname="HeadAboveMaximumFloodNeverHasSubmersionCountdown" classname="LighthouseKeepers.Tests.LobbyPolishTests" runstate="Runnable" seed="1168177039" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000349" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="MinimumCrewCannotExceedCapacity" fullname="LighthouseKeepers.Tests.LobbyPolishTests.MinimumCrewCannotExceedCapacity" methodname="MinimumCrewCannotExceedCapacity" classname="LighthouseKeepers.Tests.LobbyPolishTests" runstate="Runnable" seed="1463479829" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.005932" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="ReadyAndLeaveHintsFollowLocalPracticeState" fullname="LighthouseKeepers.Tests.LobbyPolishTests.ReadyAndLeaveHintsFollowLocalPracticeState" methodname="ReadyAndLeaveHintsFollowLocalPracticeState" classname="LighthouseKeepers.Tests.LobbyPolishTests" runstate="Runnable" seed="868022719" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.002558" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1032" name="LobbyTests" fullname="LighthouseKeepers.Tests.LobbyTests" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.003762" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1033" name="HostCreatesSingleHostRoster" fullname="LighthouseKeepers.Tests.LobbyTests.HostCreatesSingleHostRoster" methodname="HostCreatesSingleHostRoster" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="1224476553" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000491" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="HostKicksGuestButNotSelf" fullname="LighthouseKeepers.Tests.LobbyTests.HostKicksGuestButNotSelf" methodname="HostKicksGuestButNotSelf" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="303845500" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000447" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="JoinLeaveFiresConnectionEvents" fullname="LighthouseKeepers.Tests.LobbyTests.JoinLeaveFiresConnectionEvents" methodname="JoinLeaveFiresConnectionEvents" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="1852296191" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000272" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1040" name="LobbyConfigDefaultsAreSane" fullname="LighthouseKeepers.Tests.LobbyTests.LobbyConfigDefaultsAreSane" methodname="LobbyConfigDefaultsAreSane" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="273924368" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000599" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="ReadyToggleMarksLocalReady" fullname="LighthouseKeepers.Tests.LobbyTests.ReadyToggleMarksLocalReady" methodname="ReadyToggleMarksLocalReady" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="1452354093" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000190" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1034" name="SecondHostOrJoinWhileOnlineFails" fullname="LighthouseKeepers.Tests.LobbyTests.SecondHostOrJoinWhileOnlineFails" methodname="SecondHostOrJoinWhileOnlineFails" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="1033287817" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000137" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1037" name="SimulatedPlayersClampedToMax" fullname="LighthouseKeepers.Tests.LobbyTests.SimulatedPlayersClampedToMax" methodname="SimulatedPlayersClampedToMax" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="903931584" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000192" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1039" name="StartRequiresOnlineHostAndAllReady" fullname="LighthouseKeepers.Tests.LobbyTests.StartRequiresOnlineHostAndAllReady" methodname="StartRequiresOnlineHostAndAllReady" classname="LighthouseKeepers.Tests.LobbyTests" runstate="Runnable" seed="2023633341" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:52Z" duration="0.000160" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1041" name="PlayerFootstepAssetTests" fullname="LighthouseKeepers.Tests.PlayerFootstepAssetTests" classname="LighthouseKeepers.Tests.PlayerFootstepAssetTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:53Z" duration="1.043196" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1043" name="DevGymHasTheSameGroundDetectionAndFootsteps" fullname="LighthouseKeepers.Tests.PlayerFootstepAssetTests.DevGymHasTheSameGroundDetectionAndFootsteps" methodname="DevGymHasTheSameGroundDetectionAndFootsteps" classname="LighthouseKeepers.Tests.PlayerFootstepAssetTests" runstate="Runnable" seed="927800948" result="Passed" start-time="2026-10-08 19:33:52Z" end-time="2026-10-08 19:33:53Z" duration="1.001965" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1042" name="SharedPlayerHasGroundDetectionAndPlayerMixerFootsteps" fullname="LighthouseKeepers.Tests.PlayerFootstepAssetTests.SharedPlayerHasGroundDetectionAndPlayerMixerFootsteps" methodname="SharedPlayerHasGroundDetectionAndPlayerMixerFootsteps" classname="LighthouseKeepers.Tests.PlayerFootstepAssetTests" runstate="Runnable" seed="226138442" result="Passed" start-time="2026-10-08 19:33:53Z" end-time="2026-10-08 19:33:53Z" duration="0.040409" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1044" name="WalkthroughGeometryTests" fullname="LighthouseKeepers.Tests.WalkthroughGeometryTests" classname="LighthouseKeepers.Tests.WalkthroughGeometryTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-08 19:33:53Z" end-time="2026-10-08 19:33:59Z" duration="5.152901" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1050" name="CommunicationsHasClearStandingRouteAroundShaft" fullname="LighthouseKeepers.Tests.WalkthroughGeometryTests.CommunicationsHasClearStandingRouteAroundShaft" methodname="CommunicationsHasClearStandingRouteAroundShaft" classname="LighthouseKeepers.Tests.WalkthroughGeometryTests" runstate="Runnable" seed="1105804617" result="Passed" start-time="2026-10-08 19:33:53Z" end-time="2026-10-08 19:33:55Z" duration="1.519854" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1047" name="EveryStairFlightHasSupportAndStandingHeadroom" fullname="LighthouseKeepers.Tests.WalkthroughGeometryTests.EveryStairFlightHasSupportAndStandingHeadroom" methodname="EveryStairFlightHasSupportAndStandingHeadroom" classname="LighthouseKeepers.Tests.WalkthroughGeometryTests" runstate="Runnable" seed="863000858" result="Passed" start-time="2026-10-08 19:33:55Z" end-time="2026-10-08 19:33:56Z" duration="0.689943" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1048" name="EveryUpperFloorHasSupportedStairExit" fullname="LighthouseKeepers.Tests.WalkthroughGeometryTests.EveryUpperFloorHasSupportedStairExit" methodname="EveryUpperFloorHasSupportedStairExit" classname="LighthouseKeepers.Tests.WalkthroughGeometryTests" runstate="Runnable" seed="557784239" result="Passed" start-time="2026-10-08 19:33:56Z" end-time="2026-10-08 19:33:56Z" duration="0.697002" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1046" name="FloorSlabsHaveThicknessWithoutChangingTheirTopElevation" fullname="LighthouseKeepers.Tests.WalkthroughGeometryTests.FloorSlabsHaveThicknessWithoutChangingTheirTopElevation" methodname="FloorSlabsHaveThicknessWithoutChangingTheirTopElevation" classname="LighthouseKeepers.Tests.WalkthroughGeometryTests" runstate="Runnable" seed="1424896716" result="Passed" start-time="2026-10-08 19:33:56Z" end-time="2026-10-08 19:33:57Z" duration="0.696559" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="PipeAssemblyFacesRoomAtThreeQuarterScaleAndWheelsHaveBackFaces" fullname="LighthouseKeepers.Tests.WalkthroughGeometryTests.PipeAssemblyFacesRoomAtThreeQuarterScaleAndWheelsHaveBackFaces" methodname="PipeAssemblyFacesRoomAtThreeQuarterScaleAndWheelsHaveBackFaces" classname="LighthouseKeepers.Tests.WalkthroughGeometryTests" runstate="Runnable" seed="915632891" result="Passed" start-time="2026-10-08 19:33:57Z" end-time="2026-10-08 19:33:58Z" duration="0.798570" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="StairRampIsCollisionOnlyAndRetainsComfortableWidth" fullname="LighthouseKeepers.Tests.WalkthroughGeometryTests.StairRampIsCollisionOnlyAndRetainsComfortableWidth" methodname="StairRampIsCollisionOnlyAndRetainsComfortableWidth" classname="LighthouseKeepers.Tests.WalkthroughGeometryTests" runstate="Runnable" seed="729159531" result="Passed" start-time="2026-10-08 19:33:58Z" end-time="2026-10-08 19:33:59Z" duration="0.726630" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1051" name="WeatherCoverageTests" fullname="LighthouseKeepers.Tests.WeatherCoverageTests" classname="LighthouseKeepers.Tests.WeatherCoverageTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 19:33:59Z" end-time="2026-10-08 19:33:59Z" duration="0.003193" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1052" name="BalconyCoverageIncludesEveryDirection" fullname="LighthouseKeepers.Tests.WeatherCoverageTests.BalconyCoverageIncludesEveryDirection" methodname="BalconyCoverageIncludesEveryDirection" classname="LighthouseKeepers.Tests.WeatherCoverageTests" runstate="Runnable" seed="1961580753" result="Passed" start-time="2026-10-08 19:33:59Z" end-time="2026-10-08 19:33:59Z" duration="0.000605" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1053" name="TowerHouseAndOverhangRejectExteriorRain" fullname="LighthouseKeepers.Tests.WeatherCoverageTests.TowerHouseAndOverhangRejectExteriorRain" methodname="TowerHouseAndOverhangRejectExteriorRain" classname="LighthouseKeepers.Tests.WeatherCoverageTests" runstate="Runnable" seed="1185884810" result="Passed" start-time="2026-10-08 19:33:59Z" end-time="2026-10-08 19:33:59Z" duration="0.000341" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/eligripenstraw/Library/Application Support/Lighthouse Keepers Team/Lighthouse Keepers/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

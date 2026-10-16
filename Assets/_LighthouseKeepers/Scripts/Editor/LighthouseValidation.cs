@@ -55,7 +55,7 @@ public static class LighthouseValidation {
  }
  public static void BuildAndroid(){
   LighthouseProjectSetup.Configure();LighthouseFinish.Apply();Validate();
-  Directory.CreateDirectory("Builds");var result=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=LighthouseScenes.Names.Take(7).Select(LighthouseScenes.ScenePath).ToArray(),locationPathName="Builds/LighthouseKeepers-Development.apk",target=BuildTarget.Android,options=BuildOptions.Development});
+  Directory.CreateDirectory("Builds");var result=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=LighthouseNetworkLobby.GameScenes,locationPathName="Builds/LighthouseKeepers-Development.apk",target=BuildTarget.Android,options=BuildOptions.Development});
   File.WriteAllText("Docs/Verification/AndroidBuild.txt","Unity editor="+Application.unityVersion+"\n"+result.summary.result+"\nErrors="+result.summary.totalErrors+" Warnings="+result.summary.totalWarnings+" Bytes="+result.summary.totalSize+"\n"+result.summary.totalTime);
   if(result.summary.result!=BuildResult.Succeeded)throw new Exception("Android build failed");
  }

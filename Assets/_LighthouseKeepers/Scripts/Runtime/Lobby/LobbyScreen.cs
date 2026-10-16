@@ -82,7 +82,7 @@ namespace LighthouseKeepers.Lobby
         }
         void Bind()
         {
-            hostButton.onClick.AddListener(() => { manager.PlayerName = nameField.text; manager.Host(); CloseOptions(); Refresh(); });
+            hostButton.onClick.AddListener(() => { manager.PlayerName = nameField.text; if (!manager.IsLocalPreview) manager.SessionName = addressField.text; manager.Host(); CloseOptions(); Refresh(); });
             joinButton.onClick.AddListener(() => { manager.PlayerName = nameField.text; manager.Join(manager.IsLocalPreview ? "local" : addressField.text); CloseOptions(); Refresh(); });
             readyButton.onClick.AddListener(() => { manager.ToggleReady(); Refresh(); });
             startButton.onClick.AddListener(() => { manager.StartGame(); Refresh(); });
@@ -93,7 +93,7 @@ namespace LighthouseKeepers.Lobby
         {
             if (!manager || !modeText) return;
             bool local = manager.IsLocalPreview;
-            modeText.text = local ? (manager.IsOnline && !manager.IsHost ? "SIMULATED GUEST" : "LOCAL PRACTICE") : "CREW SESSION";
+            modeText.text = local ? (manager.IsOnline && !manager.IsHost ? "SIMULATED GUEST" : "LOCAL PRACTICE") : manager.IsBusy ? "CONNECTING..." : "PHOTON CREW";
             crewCount.text = $"{manager.Players.Count:00} / {manager.MaxPlayers:00} KEEPERS";
             for (int i = 0; i < rosterRows.Length; i++)
             {
@@ -109,21 +109,23 @@ namespace LighthouseKeepers.Lobby
                 row.color = player.IsReady ? new Color(.12f,.35f,.22f) : Ink;
             }
             bool ready = manager.LocalPlayer()?.IsReady == true;
-            readyCaption.text = ready ? "READY" : "STANDBY";
+            readyCaption.text = manager.IsStarting ? "ENTERING..." : ready ? "READY" : "STANDBY";
             watchLamp.color = ready ? Ready : Brass;
             errorText.text = manager.LastError;
             errorText.gameObject.SetActive(!string.IsNullOrEmpty(manager.LastError));
             SetButtonLabel(readyButton, ready ? "STAND DOWN" : "SIGNAL READY");
-            hostButton.transform.parent.gameObject.SetActive(!manager.IsOnline);
-            leaveButton.transform.parent.gameObject.SetActive(manager.IsOnline);
-            readyButton.interactable = manager.LocalPlayer() != null && !manager.IsStarting;
+            hostButton.transform.parent.gameObject.SetActive(!manager.IsOnline && !manager.IsBusy);
+            leaveButton.transform.parent.gameObject.SetActive(manager.IsOnline || manager.IsBusy);
+            readyButton.interactable = manager.LocalPlayer() != null && !manager.IsStarting && !manager.IsBusy;
             startButton.interactable = manager.CanStart;
             startButton.GetComponentInChildren<TMP_Text>().color = manager.CanStart ? Ink : Muted;
-            joinButton.interactable = !manager.IsOnline;
+            joinButton.interactable = !manager.IsOnline && !manager.IsBusy;
             leaveButton.interactable = !manager.IsStarting;
-            nameField.interactable = addressField.interactable = !manager.IsOnline;
+            nameField.interactable = addressField.interactable = !manager.IsOnline && !manager.IsBusy;
             addressGroup.SetActive(!local);
             SetButtonLabel(joinButton, local ? "SIMULATE A GUEST" : "JOIN CREW");
+            SetButtonLabel(hostButton, local ? "TAKE YOUR POST" : "HOST CREW");
+            SetButtonLabel(leaveButton, manager.IsBusy ? "CANCEL CONNECTION" : "LEAVE WATCH");
         }
         void BuildUi()
         {
@@ -176,8 +178,8 @@ namespace LighthouseKeepers.Lobby
             Label(options.transform, "OptionsTitle", new(-250,169), new(500,38), 27, Chalk, "CREW OPTIONS");
             nameField = Input(options.transform, "KeeperName", new(0,99), "Keeper name");
             nameField.text = manager.PlayerName; nameField.characterLimit = 24;
-            addressField = Input(options.transform, "HostAddress", new(0,18), "Host address");
-            addressField.characterLimit = 128; addressGroup = addressField.gameObject;
+            addressField = Input(options.transform, "HostAddress", new(0,18), "Crew room name");
+            addressField.characterLimit = 64; addressField.text = manager.SessionName; addressGroup = addressField.gameObject;
             joinButton = MakeButton(options.transform, "JoinCrew", "SIMULATE A GUEST", new(0,-159), new(500,70), false);
             options.SetActive(false);
         }

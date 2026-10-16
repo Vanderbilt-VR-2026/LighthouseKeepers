@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace LighthouseKeepers.Lobby {
 /// <summary>Seam between the lobby UI and whatever networking backs it.
 /// LobbyManager and LobbyScreen only ever talk to this interface, so swapping
-/// the local stub for a Netcode-for-GameObjects transport later means adding
+/// the local stub for the Photon Fusion transport means adding
 /// one class, not rewriting the lobby.</summary>
 public interface INetworkTransport {
  bool IsOnline {get;}

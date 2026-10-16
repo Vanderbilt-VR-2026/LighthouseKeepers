@@ -22,3 +22,8 @@ Original wear textures are 128×128. Ocean and sky shaders use URP-compatible st
 ## September 23 asset integration
 
 Selected vendor props are nested in game-owned prefabs under `Assets/_LighthouseKeepers/ThirdPartyVariants/`. See AssetIntegrationStatus.md for per-scene replacements and measured circulation. Retired source geometry stays disabled and excluded from rebuilt static batches. Puzzle transforms/anchors and scene ownership remain unchanged. Baked practical fills illuminate the new props without additional runtime shadow lights. Offshore fog is bounded away from the building; the ocean uses a dedicated opaque Quest fallback.
+
+
+## Parallel environment rebuild — October 13, 2026
+
+[VERIFIED] The legacy scenes above remain the live build and retain their names and contents. [BUILT-UNVERIFIED] The new station contract and LK_StationBoxes lab are published in PR #42. [PROPOSED] Generated `LK_Shell_*` and hand-dressed `LK_Dress_*` scenes will be built alongside the legacy environment; none exists yet in this draft and nothing legacy is deleted. Nirvaan alone decides whether and when to switch production loading/build entries. See [StationContract.md](StationContract.md) and [EnvironmentHandoff.md](EnvironmentHandoff.md); publishing this branch is not a switchover.
