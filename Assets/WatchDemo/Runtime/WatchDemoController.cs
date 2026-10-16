@@ -50,7 +50,7 @@ namespace LighthouseKeepers.WatchDemo
             if(nearBed){var direction=bedPrompt.transform.position-head.position;direction.y=0;if(direction.sqrMagnitude>.01f)bedPrompt.transform.rotation=Quaternion.LookRotation(direction);}
             bool nearRepair=Vector3.Distance(wrench.transform.position,repairPoint.position)<.8f;
             // A nearby prompt is useful, but it must not float through the entire room.
-            bool nearRepairPrompt=Vector3.Distance(head.position,repairPoint.position)<1.25f;
+            bool nearRepairPrompt=Vector3.Distance(head.position,repairPoint.position)<1.45f;
             repairPrompt.text=nearRepairPrompt?(state.Repaired?"REPAIRED":nearRepair?"HOLD WRENCH + PRESS TRIGGER":"REPAIR LEAK WITH WRENCH"):"";
             if(nearRepairPrompt)
             {
@@ -92,7 +92,7 @@ namespace LighthouseKeepers.WatchDemo
             StartCoroutine(Sleep());return true;
         }
         void CancelRepair(){repairProgress=0;wrenchVisual.localRotation=originalWrenchRotation;}
-        void RefreshBoard(){board.text="KEEPER WATCH • DAY "+state.Day+"\n\n"+(state.Repaired?"[X] FIX THE FLOOD\n\n[ ] GO TO BED\nThird floor":"[ ] FIX THE FLOOD\n\nWrench: desk\nFind leaking pipe\nGrip: carry\nTrigger: repair");}
+        void RefreshBoard(){board.text="KEEPER WATCH — DAY "+state.Day+"\n\n"+(state.Repaired?"[X] FIX THE FLOOD\n\n[ ] GO TO BED\nTHIRD FLOOR":"[ ] FIX THE FLOOD\n\n1. TAKE WRENCH\n2. FIND LEAK\n3. REPAIR PIPE");}
         IEnumerator Sleep()
         {
             sleeping=true;bedPrompt.text="";
