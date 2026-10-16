@@ -14,7 +14,13 @@ namespace LighthouseKeepers.Editor.Environment
         static string CalibrationPath=>LighthouseBuilder.Layout.lightingValidation.calibrationAsset;
         [Serializable] sealed class Calibration {public float referenceLinearLuminance;public int calibrationRevision=2;public float exposure=1;public string note;}
         static Camera camera;static RenderTexture target;static Texture2D readback;
-        static void PausePresentation(){foreach(var g in UnityEngine.Object.FindObjectsByType<BeaconAndMainsLightingGroup>(FindObjectsSortMode.None))g.enabled=false;}
+        static void PausePresentation()
+        {
+            foreach(var g in UnityEngine.Object.FindObjectsByType<BeaconAndMainsLightingGroup>(FindObjectsSortMode.None))g.enabled=false;
+            // A head-mounted overlay is not room illumination. Exclude it from the independent measurement camera.
+            foreach(var view in UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsInactive.Include,FindObjectsSortMode.None))
+                foreach(var renderer in view.GetComponentsInChildren<Renderer>(true))renderer.enabled=false;
+        }
         static void Begin()
         {
             if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null)throw new Exception("Luminance validation requires a graphics device; omit -nographics.");
@@ -52,11 +58,24 @@ namespace LighthouseKeepers.Editor.Environment
                 UnityEngine.Object.DestroyImmediate(card);UnityEngine.Object.DestroyImmediate(mat);Debug.Log("POWERED_REFERENCE_CAPTURE "+value);
             }finally{End();}
         }
+        static EnvironmentLightingPreset ActivePreset(bool powered)
+        {
+            var group=UnityEngine.Object.FindFirstObjectByType<BeaconAndMainsLightingGroup>();
+            if(!group)throw new Exception("Missing lighting group");
+            return (EnvironmentLightingPreset)new SerializedObject(group).FindProperty(powered?"poweredPreset":"emergencyPreset").objectReferenceValue;
+        }
         public static void Run()
         {
             if(!File.Exists(CalibrationPath))throw new Exception("No fixed powered-reference calibration. Run explicit calibration once after baking.");
             var cal=JsonUtility.FromJson<Calibration>(File.ReadAllText(CalibrationPath));if(cal.referenceLinearLuminance<=0||cal.exposure!=1)throw new Exception("Invalid calibration");
             EditorSceneManager.OpenScene(LighthouseBuilder.LabPath,OpenSceneMode.Single);PausePresentation();var renderers=Renderers();var r=new CheckReport{validator="LuminanceValidator"};var samples=new List<Vector3>();
+            // The explicitly requested half-bright preview has a separate target; never recalibrate the reference.
+            bool halfPreview=AssetDatabase.GetAssetPath(ActivePreset(true)).EndsWith("LightingPreset_Powered_Half.asset",StringComparison.Ordinal)
+                &&AssetDatabase.GetAssetPath(ActivePreset(false)).EndsWith("LightingPreset_Emergency_Half.asset",StringComparison.Ordinal);
+            float targetScale=halfPreview?.5f:1f;
+            File.WriteAllText("artifacts/batch-a/lighting-target.txt",halfPreview
+                ?"Requested 50% preview: powered >= 0.06 and emergency >= 0.02 of the SAME original powered reference. This does NOT certify the old 0.12/0.04 targets. Headset readability pending."
+                :"Original brightness targets: powered >= 0.12 and emergency >= 0.04 of the frozen powered reference.");
             foreach(var f in LighthouseBuilder.Layout.floors)for(float x=-f.interiorRadius+.5f;x<f.interiorRadius;x+=.5f)for(float z=-f.interiorRadius+.5f;z<f.interiorRadius;z+=.5f)
             {
                 var p=new Vector3(x,f.floorY,z);if(new Vector2(x,z).magnitude>f.interiorRadius-.3f)continue;
@@ -77,21 +96,21 @@ namespace LighthouseKeepers.Editor.Environment
             {
                 foreach(bool on in new[]{true,false})
                 {
-                    var preset=AssetDatabase.LoadAssetAtPath<EnvironmentLightingPreset>("Assets/Settings/Lighting/LightingPreset_"+(on?"Powered":"Emergency")+".asset");if(!preset)throw new Exception("Missing baked preset");EnvironmentLightingBake.Apply(preset,renderers);
+                    var preset=ActivePreset(on);if(!preset)throw new Exception("Missing baked preset");EnvironmentLightingBake.Apply(preset,renderers);
                     for(int i=0;i<samples.Count;i++)
                     {
-                        float v=Measure(samples[i]+Vector3.up*1.6f,samples[i]);r.samples++;float threshold=cal.referenceLinearLuminance*(on?LighthouseBuilder.Layout.lightingValidation.poweredFloorRatio:LighthouseBuilder.Layout.lightingValidation.emergencyFloorRatio);
+                        float v=Measure(samples[i]+Vector3.up*1.6f,samples[i]);r.samples++;float threshold=targetScale*cal.referenceLinearLuminance*(on?LighthouseBuilder.Layout.lightingValidation.poweredFloorRatio:LighthouseBuilder.Layout.lightingValidation.emergencyFloorRatio);
                         if(v<threshold)r.failures.Add((on?"Powered":"Emergency")+" floor "+EnvironmentValidation.Pos(samples[i])+" luminance="+v+" required="+threshold);
                         if(on)poweredValues.Add(v);else if(v>poweredValues[i]+Mathf.Max(.0001f,poweredValues[i]*.02f))r.failures.Add("Emergency brighter than powered at "+EnvironmentValidation.Pos(samples[i])+" powered="+poweredValues[i]+" emergency="+v);
                     }
                 }
             }finally{End();}
             r.passed=r.failures.Count==0;EnvironmentValidation.Save(r);if(!r.passed)throw new Exception("Luminance floor validation failed");
-            Debug.Log("LUMINANCE_FLOORS_PASS — readout glyph/contrast checks await their art batches; no readouts exist in Batch A");
+            Debug.Log("LUMINANCE_FLOORS_PASS — see lighting-target.txt for the active target; demo text readability requires headset verification");
         }
         public static void CaptureViews()
         {
-            EditorSceneManager.OpenScene(LighthouseBuilder.LabPath,OpenSceneMode.Single);PausePresentation();var powered=AssetDatabase.LoadAssetAtPath<EnvironmentLightingPreset>("Assets/Settings/Lighting/LightingPreset_Powered.asset");if(powered)EnvironmentLightingBake.Apply(powered,Renderers());Begin();
+            EditorSceneManager.OpenScene(LighthouseBuilder.LabPath,OpenSceneMode.Single);PausePresentation();var powered=ActivePreset(true);if(powered)EnvironmentLightingBake.Apply(powered,Renderers());Begin();
             try
             {
                 target.Release();UnityEngine.Object.DestroyImmediate(target);target=new RenderTexture(1280,960,24,RenderTextureFormat.ARGB32);target.Create();camera.fieldOfView=70;

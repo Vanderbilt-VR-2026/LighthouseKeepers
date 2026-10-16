@@ -67,3 +67,9 @@ Quest logs rejected generated MeshColliders because nondefault cooking options r
 
 ### Authorized lobby-first environment preview
 Aneesh requested the original lobby followed by the new environment on 2026-10-15. Copy the existing authored lobby into LK_Lobby_Environment, preserve its behavior and UI, and supply a separate config targeting LK_Lab_Environment. Build these two scenes in that order without editing the shared production build list, original lobby, or bootstrap. The destination retains house spawn (0,0.04,-8.4).
+
+
+### 2026-10-15 — isolated seven-minute watch preview
+- User confirmed sleep advances immediately after repair; 420 seconds is the repair deadline, not a required wait. Days repeat one local task, using Eli’s unchanged height-based flood controller.
+- Keep the new loop in Assets/WatchDemo and the isolated lobby/environment preview; do not replace production loading or teammate simulation.
+- User requested all lighting at 50%. Preserve original presets and create Half variants from linear source EXRs with matching Unity lightmap import encoding. The Half preview uses explicit 0.06/0.02 floor/reference ratios instead of original 0.12/0.04; reference/exposure remain frozen. Original-target check had 78 emergency failures; headset readability is unverified.

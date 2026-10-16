@@ -35,6 +35,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_LighthouseKeepers/Scenes/Development/LK_DevGym.unity
     guid: ea8a6095c2b484bc89f7ad1ad3b4ffda
+  - enabled: 1
+    path: Assets/Scenes/Lab/LK_Lobby_Environment.unity
+    guid: c6afa3791bcee429582d58a3e815ac25
+  - enabled: 1
+    path: Assets/Scenes/Lab/LK_Lab_Environment.unity
+    guid: c2ffabb7b89d6403da11c3ba015b99e4
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
