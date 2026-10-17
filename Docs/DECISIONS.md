@@ -35,3 +35,35 @@
 - [VERIFIED] F4 stance35°/r1.95 and raised panels provide approximately0.516 m contact reach; this approved specific reach requirement supersedes the earlier0.80 m front-clearance rule for those panels only.
 - [VERIFIED] Preserve F3 ceiling throughY9.55; use a distinct0.60 m corbel band below galleryY9.90 rather than tapering through headroom.
 - [PROPOSED] Eli owns dry-versus-wet bilge operability and defeat-sustain allowance; publish geometric bounds4.10/4.35/4.45/10.90 m without changing simulation.
+
+
+### 2026-10-14 — Batch A isolated shell validation
+
+- [VERIFIED] Keep production loading/build settings and legacy content unchanged; use an explicit-scene Environment Lab APK for the greybox gate.
+- [VERIFIED] Convert Unity XYZ to Blender (-X,-Z,Y) before the approved FBX export; imported reference bounds prove scale and handedness.
+- [VERIFIED] F1 route approaches the main stair through its clear north side instead of crossing the railing; station coordinates remain frozen.
+- [BUILT-UNVERIFIED] Use smooth stair collision ramps and continuous safety barriers; render-only tread/rail proxies do not create hand-catching collision detail.
+- [BUILT-UNVERIFIED] Increase only F2/F3 emergency fixture intensity from 0.5 to 1.2 after fixed-reference floor samples failed; thresholds and exposure remain unchanged. Initial calibration was corrected to explicitly apply powered light probes before publication.
+- [BUILT-UNVERIFIED] Bake two complete combined-Lab presets including probe coefficients; production additive renderer/lightmap binding remains Nirvaan's separate adoption step.
+- [VERIFIED] Repeated unchanged-input generation preserves committed scene bytes via an output-verified build stamp; independent clean-room Unity local-file-ID determinism is not claimed.
+- [PROPOSED] Headset comfort, appearance, visibility culling and sustained 72 Hz require actual device/user acceptance; automated geometry and brightness tests do not establish them.
+
+- [BUILT-UNVERIFIED] Enable baked fixture shadows to prevent illumination passing through solid walls; no realtime shadow lights are added. Remove Unity-inferred FBX LOD groups before authoring the explicit island group to prevent duplicate renderer ownership.
+
+- [BUILT-UNVERIFIED] Extend luminance sampling beyond room grids to the passage, stair routes and full gallery ring. Add two attached battery-backed gallery fixtures so the outdoor exit remains readable in both lighting states.
+
+- [BUILT-UNVERIFIED] Replace disconnected closed floor wedges with one watertight slab per floor. Coincident internal wedge faces caused radial bake seams; the corrected topology preserves every opening and finished-floor height while removing 3,912 triangles.
+
+### Batch A bake comparison precision
+The two independent progressive light bakes meet all 1,990 floor brightness checks. Compare emergency-versus-powered brightness with 2% relative or 0.0001 absolute numerical tolerance (whichever is larger), because one gallery sample differs by 1.8% between independent bakes. This does not change either minimum brightness threshold or the fixed powered reference/exposure. Final emergency fixture intensity is 3.6 on F2 and 1.2 on F3; other floor mains are 4. Device acceptance remains pending.
+
+Lighting measurement cameras disable baked occlusion culling so the measured floor patch cannot become a zero-colour culling artifact after the visibility bake. Gameplay cameras retain occlusion culling. Prebuild validator errors use BuildFailedException so Unity cannot continue silently after an ordinary callback exception.
+
+### Quest ANR: explicit LZ4 player-content compression
+Android ANR traces show the scene preload thread waiting while reading OcclusionCullingData, the Unity main thread waiting on PersistentManager, and the async reader repeatedly inflating ZIP-backed AndroidSplitFile data. The custom Lab build omitted an explicit compression flag. Set BuildOptions.CompressWithLz4 in the environment-only builder to use chunked player data instead of ZIP-compressed split files. Retain occlusion and all geometry; no project settings or teammate systems change. This is a device-tested hypothesis until the replacement APK renders and responds. Unity API reference: https://docs.unity.com/en-us/engine/6000.3/script-reference/unityeditor/buildoptions/compresswithlz4 .
+
+### Quest collision and preview torso repair
+Quest logs rejected generated MeshColliders because nondefault cooking options require readable meshes. Enable Read/Write only for the seven owned SM_Shell models; the modest mesh CPU memory cost is preferable to missing collision. Preserve baked geometry/lightmaps and add a device import assertion. Hide BodyPresence child renderers on the isolated Lab instance only; do not edit the team player prefab. The Lab intentionally has no production lobby; Nirvaan retains that integration decision.
+
+### Authorized lobby-first environment preview
+Aneesh requested the original lobby followed by the new environment on 2026-10-15. Copy the existing authored lobby into LK_Lobby_Environment, preserve its behavior and UI, and supply a separate config targeting LK_Lab_Environment. Build these two scenes in that order without editing the shared production build list, original lobby, or bootstrap. The destination retains house spawn (0,0.04,-8.4).

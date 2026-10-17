@@ -1,0 +1,57 @@
+{
+    "inputs": "Assets/Art/Generated/ArtManifest.json:E54CF09037F0D3401FF01BB37A73C8C2080A3F30A152955A1C558F8E07325B9C\nAssets/Data/Layout/lighthouse-layout.json:349B7E38786D463EEEAA1E6F99F6358885C414AD3DEADBBF7784CC1611B0E8CC\nAssets/Scripts/LK.Editor/Environment/EnvironmentBatchAValidation.cs:F0BF14AC25110050E1C88E803F237E5E7C3B011C934C2354443FE004AB056EE6\nAssets/Scripts/LK.Editor/Environment/EnvironmentBuild.cs:B9988B275E04B87BC4CE6032DFD93E5775C1D14EBA8F8CB18CF61D34A7F6B53D\nAssets/Scripts/LK.Editor/Environment/EnvironmentLabLaunch.cs:425D242AD9B6A02AFB313DC32B0D4228845B16ED7B6B7EF57214713356BF2F75\nAssets/Scripts/LK.Editor/Environment/EnvironmentLightingBake.cs:58B5BB1D5EF529E9F498F801ECEB47960FE7CDADAE538DA5CBD11123B8B7CCB4\nAssets/Scripts/LK.Editor/Environment/EnvironmentOcclusion.cs:158396818BC58EBF040863E0B41FCC398ED891CD0531E4C9F74200882E90DC51\nAssets/Scripts/LK.Editor/Environment/EnvironmentReport.cs:DB7CA760774160174214B8CAA2E3CC1751BE1996F728AEED532D46723DE92D9D\nAssets/Scripts/LK.Editor/Environment/EnvironmentValidators.cs:AC8FCED0A402C8FA8065A66BED2C1040F62C3BE5925E2E03D7D8391D66F87E35\nAssets/Scripts/LK.Editor/Environment/GeneratedShellImporter.cs:E9B6B4119449C90B219E9D7B9113898C57701B14F7841100284124971CAD82D2\nAssets/Scripts/LK.Editor/Environment/LighthouseBuilder.cs:DDD272BC7FAF87488BBFD33E89EB9A05F894EA67133714F6BD4CB41BBED25826\nAssets/Scripts/LK.Editor/Environment/LuminanceValidator.cs:09B86CA5E21A73D0C1B6B10677A1CB5F2DDE620F33C543CEE23FA98CEB67034C\nAssets/Scripts/LK.Editor/Environment/ShellBuildCache.cs:8475BD45624CFDA2553D8E667625BBEA3509863082701ABD00A679430B4AC620\nAssets/Scripts/LK.Editor/Environment/StationBoxExporter.cs:BC9E8D816B82F1878F19AE7D3847BDC2F84F791C00EE48A5E4DF5C9612EA949B\nAssets/Scripts/LK.Editor/Environment/Tests/ShellGeometryTests.cs:5D9EDAC835EB25B4BEFA14107336DF38A13B188101287940165E4ED6087DE3D0\nAssets/Scripts/LK.Presentation/Environment/BeaconAndMainsLightingGroup.cs:FDF7C5E346877EF7A0B67EB42ED4A5ABE2C2BED5099B52E808479E44F78A3ADE\nAssets/Scripts/LK.Presentation/Environment/EnvironmentLightingPreset.cs:AB10827009B8D73CC0D6D1522C0F388792C4992100389B65FD47AD31E9DDA31B\nAssets/Scripts/LK.Presentation/Environment/Tests/EnvironmentPresentationTests.cs:B0B9ECB2B03A7CAD2ADCDC2B21475E575B0C774A372A7BD2611F535F54C00678\nAssets/Scripts/LK.Presentation/Environment/Tests/ShellTraversalTests.cs:014648A6915C1E24333CF774E4D08B62FE78E546B0B868054B64EA9A39F79DD4",
+    "outputs": [
+        {
+            "path": "Assets/Prefabs/Environment/PF_Shell_Exterior.prefab",
+            "hash": "5F69226B900C75F0AFC554AF467BD0B806F3B089C3F724FE392FE4DC80D0D4AC"
+        },
+        {
+            "path": "Assets/Prefabs/Environment/PF_Shell_F1.prefab",
+            "hash": "53953C6A246D5A08192568BF5ACD52BBAD6D29C1055393E63C7D1E4443EDE21C"
+        },
+        {
+            "path": "Assets/Prefabs/Environment/PF_Shell_F2.prefab",
+            "hash": "5C8A08CD71AEAE24F812FDA1CD446630E950A9C1AEA99948342F8EB07664570B"
+        },
+        {
+            "path": "Assets/Prefabs/Environment/PF_Shell_F3.prefab",
+            "hash": "F011CF473C152CBF111919A59C4A7AF494DB0252DA766DC47072C60E549BFA03"
+        },
+        {
+            "path": "Assets/Prefabs/Environment/PF_Shell_F4.prefab",
+            "hash": "178BA542A7B37451789FEB7BAACE346F9F8571C8DBE727818CA28076D0105C0F"
+        },
+        {
+            "path": "Assets/Prefabs/Environment/PF_Shell_House.prefab",
+            "hash": "44DAE13A33EEBEEF4CA652985BBE87530ACAD04FBA4E7E53F3215B54ABFDC6BE"
+        },
+        {
+            "path": "Assets/Prefabs/Environment/PF_Shell_ScaleReference.prefab",
+            "hash": "EF530D738C2952B4E27E4CE9F322DD30FFCAF88F1598A9D2E0F5206AAE48D757"
+        },
+        {
+            "path": "Assets/Scenes/Shell/LK_Shell_Exterior.unity",
+            "hash": "E916A09A6D5979F4597C4F6C813D23E8B04D7B062B69330E95FE21D57871A93B"
+        },
+        {
+            "path": "Assets/Scenes/Shell/LK_Shell_F1.unity",
+            "hash": "28BD025CECB2F4176DB1AF77127AD412D0C994EC08DA687AD8084FBCF968190A"
+        },
+        {
+            "path": "Assets/Scenes/Shell/LK_Shell_F2.unity",
+            "hash": "7A447F2BFBF814FEAC2B3487ECE2774D0EBE2D69937579FA7A6E636331E71713"
+        },
+        {
+            "path": "Assets/Scenes/Shell/LK_Shell_F3.unity",
+            "hash": "69E735D12A43F2092F811BD1CA1AA643DF4970CAE521AAF7C9B6357DCEF11780"
+        },
+        {
+            "path": "Assets/Scenes/Shell/LK_Shell_F4.unity",
+            "hash": "6F4E5F4E97D7A25C6FF7C1FDAD0E2BF85DAD3F886BCDA7329F79DC1B21C1BA05"
+        },
+        {
+            "path": "Assets/Scenes/Shell/LK_Shell_House.unity",
+            "hash": "E467C9CB15A1C3C528F3845C75C5707013843043C6CF56F57E2346C53FCA0DF3"
+        }
+    ]
+}

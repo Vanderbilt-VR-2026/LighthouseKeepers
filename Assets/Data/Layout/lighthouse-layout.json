@@ -2323,19 +2323,29 @@
           -1.7
         ],
         [
-          -1.4,
+          -1.2,
           0,
           -0.7
         ],
         [
-          -1.5,
+          -1.2,
           0,
-          1.0
+          1
         ],
         [
-          -1.267855,
+          -0.3,
           0,
-          2.718923
+          1.7
+        ],
+        [
+          -1.02606,
+          0,
+          2.819078
+        ],
+        [
+          -1.589758,
+          0,
+          2.544144
         ]
       ]
     },
@@ -3126,14 +3136,14 @@
   },
   "lightingValidation": {
     "referenceAlbedo": 0.18,
-    "referenceLinearLuminance": 0,
-    "calibrationStatus": "UNRESOLVED: measured powered reference and headset tuning required; validators must fail until calibrated",
+    "calibrationStatus": "Fixed powered-reference value is stored in calibrationAsset; no per-run recalibration",
     "poweredFloorRatio": 0.12,
     "emergencyFloorRatio": 0.04,
     "poweredReadoutRatio": 0.9,
     "textContrast": 4.5,
     "exposure": 1.0,
-    "notes": "Reference captured once, then committed as constant; never recalibrate per validation run. Compare mains-sensitive samples across presets; unchanged oil/emergency emitters may remain equal."
+    "notes": "Reference captured once, then committed as constant; never recalibrate per validation run. Compare mains-sensitive samples across presets; unchanged oil/emergency emitters may remain equal.",
+    "calibrationAsset": "Assets/Settings/Lighting/LuminanceCalibration.json"
   },
   "openings": [
     {
