@@ -73,3 +73,15 @@ Aneesh requested the original lobby followed by the new environment on 2026-10-1
 - User confirmed sleep advances immediately after repair; 420 seconds is the repair deadline, not a required wait. Days repeat one local task, using Eli’s unchanged height-based flood controller.
 - Keep the new loop in Assets/WatchDemo and the isolated lobby/environment preview; do not replace production loading or teammate simulation.
 - User requested all lighting at 50%. Preserve original presets and create Half variants from linear source EXRs with matching Unity lightmap import encoding. The Half preview uses explicit 0.06/0.02 floor/reference ratios instead of original 0.12/0.04; reference/exposure remain frozen. Original-target check had 78 emergency failures; headset readability is unverified.
+
+[SB] Use 1.20 s minimum manual-pump spacing with 0.200 m³ strokes — the supplied 0.55 s beats the leak; 1.20 s yields 92.59% of inflow and a 3.12× electric/manual ratio.
+[SB] Keep Unity asset/driver/debug adapters in a nested LK.Simulation.Unity assembly — the LK.Core.Simulation assembly must remain pure C# while providing a ScriptableObject and in-world panel within B's lane.
+[SB] Apply FIFO commands at the next 10 Hz tick and share cooldown across actors on the single pump — authoritative deterministic input has at most 100 ms latency and cannot multiply throughput by alternating actors.
+[SB] Require C's F1 origin and measured generator-plinth-top transform; disable power if geometry is missing — generator-root height or a guessed plinth offset is not published geometry.
+[SB] Start/reset dry with generator and electric pump off and 900 seconds of generator fuel; preserve water/power/fuel across BeginDay — D owns normal-power setup and watch timing while the core owns quantities.
+[SB] Use late-bound subscriptions to A's exact shared interaction events pending merge, with explicit IL2CPP preservation requested from A — B must compile on the base before the separately owned interaction assembly exists.
+[SB] At zero water, repair must succeed at zero rather than produce negative flow — negative dV/dt at the dry boundary contradicts the required volume floor; all positive-volume sweep states retain the negative-flow assertion.
+[SB] Keep the global networking tripwire strict and request legacy migration from E — sprint3/base already contains Fusion/Photon outside LK.Net, contrary to the task premise; no legacy exemption may hide leakage.
+[SB] Leave legacy flood/StormWatch writers and scenes untouched and request integration from C/D/E — their height clamps explain a plateau but their paths are outside B's exclusive write lane.
+[SB] Report device acceptance as PROPOSED and leave changes uncommitted in this worktree — sandbox restrictions deny Unity/ADB IPC and git metadata writes; managed compilation/tests cannot stand in for an APK or headset run.
+[SB] Publish sprint3/simulation using separate writable git metadata based on sprint3/base after the user's commit/push instruction — shared worktree metadata remains read-only, while temporary metadata can preserve the same base and source without changing the original checkout's HEAD.

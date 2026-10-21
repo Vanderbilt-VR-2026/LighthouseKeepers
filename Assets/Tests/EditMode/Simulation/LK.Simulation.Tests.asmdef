@@ -1,0 +1,7 @@
+{
+  "name": "LK.Simulation.Tests",
+  "references": ["LK.Core.Simulation", "LK.Simulation.Unity", "Unity.Cecil"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}
