@@ -1,0 +1,7 @@
+# Session E → D: gate and single source of simulation
+
+The base still runs the legacy `StormWatchDirector` / `StormWatchRules` and builds primitive remote players. No new IDayDirector exists here. Use E's distinct-actor station gate at the composition boundary; both hands of one keeper carry one ActorId. On the host, validate the two live station leases before accepting RepairLeak on Day 3. Do not trust an ActorId supplied by a client.
+
+Replace the legacy watch link/presentation at integration time so E's new representation and B's simulation do not run alongside legacy flood/progression or duplicate remote avatars. E cannot modify your progression/board files. E supplies development-only DebugSoloOverride with a release test; keep the real gate testable with that override disabled. The existing lobby still requires two ready connections (Editor host + Quest client is the documented solo-person test path).
+
+Integration entry points: `FusionGrabAuthority.TryStationId(anchor, out id)`, `HasFreshLease(actorId, id)`, and `Gate.Allows(valveId, repairId, now)` (strict) / `Gate.AllowsForDevelopment(...)` (compile-time-limited bypass). Install these in `FusionSimulationAdapter.ValidateInteraction` from LK.Net composition, so D's assembly can consume ordinary delegates without referencing Fusion. The E menu **Use strict two-actor gate (Play Mode)** disables the override on the Editor host for negative acceptance tests. This switch does not change the inherited StormWatchRules; the new day director must consume the gate explicitly.

@@ -87,6 +87,14 @@ namespace LighthouseKeepers.Tests
             Assert.IsFalse(SceneManager.GetSceneByName("LK_NetworkLobby").isLoaded);
             Assert.IsTrue(transport && transport.IsOnline, "Session was destroyed with the watch board.");
             Assert.AreEqual(1, Object.FindObjectsByType<NetworkRunner>(FindObjectsSortMode.None).Length);
+            var replication = Object.FindAnyObjectByType<KeeperReplicationSession>();
+            Assert.IsNotNull(replication, "The development environment must install its player/prop replication.");
+            Assert.AreSame(transport.Runner, replication.SessionRunner, "Replication must borrow the crew runner.");
+            var sharedRunner = transport.Runner;
+            Object.Destroy(replication.gameObject);
+            yield return null;
+            Assert.IsTrue(transport.IsOnline, "Removing the environment helper must not end the crew session.");
+            Assert.AreSame(sharedRunner, transport.Runner);
             transport.LeaveGame();
             yield return Until(() => SceneManager.GetSceneByName("LK_NetworkLobby").isLoaded,
                 "Leaving the environment did not return to the crew lobby.");

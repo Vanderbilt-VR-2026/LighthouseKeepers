@@ -4,9 +4,9 @@ using UnityEngine;
 namespace LighthouseKeepers.Lobby {
 /// <summary>Offline loopback transport: hosting and joining work with no
 /// packages, no accounts and no connection. Lets the lobby screen, roster
-/// rules and ready flow be built and tested now; a real Netcode transport
-/// implementing INetworkTransport replaces this class when the team
-/// approves a networking package. Not for production multiplayer.</summary>
+/// rules and ready flow be tested without contacting Photon. Assign this explicitly
+/// to retain local practice when the Fusion transport provider is installed.
+/// Not for production multiplayer.</summary>
 public sealed class LocalLobbyTransport:MonoBehaviour,INetworkTransport {
  [SerializeField] string pendingName="Keeper";
  readonly List<LobbyPlayer> roster=new();

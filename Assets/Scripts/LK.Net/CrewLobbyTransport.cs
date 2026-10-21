@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using LighthouseKeepers.Lobby;
+using LighthouseKeepers.Networking;
+using UnityEngine;
+
+namespace LighthouseKeepers.Net
+{
+    /// <summary>Six-character crew codes and recovery around William's unchanged Fusion transport.</summary>
+    [DefaultExecutionOrder(-200)]
+    [DisallowMultipleComponent]
+    public sealed class CrewLobbyTransport : MonoBehaviour, ISessionLobbyTransport
+    {
+        [SerializeField] FusionLobbyTransport fusion;
+        static string rememberedCode, rememberedName;
+        static bool rememberedHost;
+        string localError = "", desiredName = "Keeper", desiredCode = "";
+        bool timedOut, connecting;
+        float connectStarted;
+        public FusionLobbyTransport Fusion => fusion;
+        public bool IsOnline => fusion && fusion.IsOnline;
+        public bool IsHost => fusion && fusion.IsHost;
+        public bool IsBusy => fusion && fusion.IsBusy;
+        public bool IsStarting => fusion && fusion.IsStarting;
+        public string LocalPlayerId => fusion ? fusion.LocalPlayerId : "";
+        public IReadOnlyList<LobbyPlayer> Players => fusion ? fusion.Players : Array.Empty<LobbyPlayer>();
+        public int MaxPlayers => CrewConnectionPolicy.Capacity;
+        public string LastError => string.IsNullOrEmpty(localError) ? CrewConnectionPolicy.Explain(fusion ? fusion.LastError : "Crew transport is missing.") : localError;
+        public string SessionName { get => IsOnline || IsBusy ? fusion.SessionName : desiredCode; set => desiredCode = value ?? ""; }
+        public bool CanReconnect => !IsOnline && !IsBusy && !string.IsNullOrEmpty(rememberedCode);
+        public event Action PlayersChanged;
+        public event Action<bool> ConnectionChanged;
+        public event Action StatusChanged;
+        public event Action GameStarting;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetMemory() { rememberedCode = rememberedName = null; rememberedHost = false; }
+        void Awake()
+        {
+            if (!fusion) fusion = GetComponent<FusionLobbyTransport>();
+            if (!fusion) { localError = "Crew transport is missing. Reopen the networking lobby."; return; }
+            desiredCode = rememberedCode ?? "";
+            desiredName = rememberedName ?? "Keeper";
+            fusion.PlayersChanged += Roster;
+            fusion.ConnectionChanged += Connection;
+            fusion.StatusChanged += Status;
+            fusion.GameStarting += Starting;
+        }
+        public bool HostGame(int maxPlayers) => Connect(true, CrewConnectionPolicy.NewCode());
+        public bool JoinGame(string address)
+        {
+            if (!CrewConnectionPolicy.TryCode(address, out var code)) return Fail("Enter the six-character join code shown on your host's board.");
+            return Connect(false, code);
+        }
+        public bool Reconnect()
+        {
+            if (!CanReconnect) return false;
+            desiredName = rememberedName ?? desiredName;
+            return Connect(rememberedHost, rememberedCode);
+        }
+        bool Connect(bool host, string code)
+        {
+            if (!fusion || IsOnline || IsBusy) return false;
+            localError = ""; timedOut = false;
+            rememberedCode = desiredCode = code; rememberedHost = host; rememberedName = desiredName;
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+                return Fail("No internet connection. Connect to Wi-Fi, then press Reconnect.");
+            connecting = true; connectStarted = Time.realtimeSinceStartup;
+            fusion.SessionName = code;
+            fusion.SetLocalName(desiredName);
+            bool accepted = host ? fusion.HostGame(CrewConnectionPolicy.Capacity) : fusion.JoinGame(code);
+            Status();
+            if (!accepted) connecting = false;
+            return accepted;
+        }
+        void Update()
+        {
+            if (!connecting || !IsBusy || timedOut || Time.realtimeSinceStartup - connectStarted < 30) return;
+            timedOut = true;
+            localError = "Connection timed out. Check Wi-Fi and Photon settings, then press Reconnect.";
+            fusion.LeaveGame(); Status();
+        }
+        public void LeaveGame() { connecting = false; localError = ""; if (fusion) fusion.LeaveGame(); }
+        public void SetLocalReady(bool ready) { if (fusion) fusion.SetLocalReady(ready); }
+        public void SetLocalName(string value)
+        {
+            desiredName = LobbyProtocol.DisplayName(value);
+            if (IsOnline) rememberedName = desiredName;
+            if (fusion) fusion.SetLocalName(desiredName);
+        }
+        public bool KickPlayer(string playerId) => fusion && fusion.KickPlayer(playerId);
+        public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
+        {
+            if (!IsHost || Players.Count != CrewConnectionPolicy.Capacity) return Fail("Two connected keepers must signal ready before starting.");
+            foreach (var player in Players) if (!player.IsReady) return Fail("Every keeper must signal ready before starting.");
+            localError = "";
+            return fusion.StartGame(sceneName, CrewConnectionPolicy.Capacity, true);
+        }
+        bool Fail(string message) { localError = message; Status(); return false; }
+        void Roster() => PlayersChanged?.Invoke();
+        void Connection(bool online) { connecting = false; if (online) localError = ""; ConnectionChanged?.Invoke(online); }
+        void Status() => StatusChanged?.Invoke();
+        void Starting() => GameStarting?.Invoke();
+        void OnDestroy()
+        {
+            if (!fusion) return;
+            fusion.PlayersChanged -= Roster; fusion.ConnectionChanged -= Connection;
+            fusion.StatusChanged -= Status; fusion.GameStarting -= Starting;
+        }
+    }
+}
