@@ -94,3 +94,10 @@ Aneesh requested the original lobby followed by the new environment on 2026-10-1
 [SD] Require scene dependencies on the new director and day catalog before packaging a progression APK — a legacy-scene binary cannot verify the new sequence.
 [SD] Leave radio narration clips unassigned pending recorded assets — local sandbox speech produced a zero-sample file, so adding it would misrepresent audible feedback.
 [SD] Preserve sprint3/progression commits in a temporary Git directory and handoff bundle — worktree metadata writes are sandbox-blocked and GitHub DNS is unavailable.
+[SA] Use direct bone rotations with four baked poses and a 75 ms blend, plus OpenXR 26-joint wrist/palm/finger hierarchy — empty-air grip/trigger animation must not depend on hover.
+[SA] Use CPU-authored continuous skinned glove payloads after Blender 4.5.9 crashes in Metal device initialization; retain Blender headless source — sandbox supplies no usable Metal device and no imported rig exists.
+[SA] Bind exact scene anchors at runtime and supply separate resource hand prefabs — preserve C's scene ownership and E's rig ownership while supporting the Sprint 2 rig.
+[SA] Read manualPumpMinStrokeSeconds directly from B's referenced FloodTuning via a cached startup read, with no fallback constant — concrete B asset type is absent from this worktree and timing must have one owner.
+[SA] Add primer-stroke, choke-state and failed-crank events; require three primer strokes and CLOSED choke for a valid starter pull, reset consumed strokes on success — D needs observable physical verbs and an audible recoverable failure.
+[SA] Preserve current scenes/legacy interactions and request their Sprint 3 replacement from C/D — changing those files would violate the exclusive ownership contract.
+[SA] No APK or headset acceptance is claimed; Unity compile/build attempts abort on UPM listen EPERM and branch creation is denied at the external Git index — provide runnable commands and narrower C# evidence without substituting it for device proof.

@@ -1,0 +1,67 @@
+using System;
+using LighthouseKeepers.Gameplay.Interaction;
+
+static class InteractionRules
+{
+    static int assertions;
+    static void Expect(bool result, string label)
+    { assertions++; if (!result) throw new Exception(label); }
+    static void Main()
+    {
+        var button = new AnalogButtonState();
+        Expect(!button.Pressed && button.PressedFrame == -1 && button.ReleasedFrame == -1, "no startup edge");
+        button.Update(.54f, 1); Expect(!button.Pressed, "below press threshold");
+        button.Update(.55f, 2); Expect(button.Pressed && button.PressedFrame == 2, "grip press edge reaches XRI");
+        button.Update(.50f, 3); Expect(button.Pressed && button.PressedFrame == 2, "hysteresis prevents grip jitter");
+        button.Update(.46f, 4); Expect(button.Pressed, "hold above release threshold");
+        button.Update(.45f, 5); Expect(!button.Pressed && button.ReleasedFrame == 5, "release edge reaches XRI");
+        button.Update(0, 6); Expect(button.ReleasedFrame == 5, "release edge is not repeated");
+        button.Update(.9f, 7); Expect(button.PressedFrame == 7, "new press after release");
+        button.Update(float.NaN, 8); Expect(!button.Pressed && button.ReleasedFrame == 8, "bad input releases");
+        button.Update(float.PositiveInfinity, 9); Expect(!button.Pressed, "infinite input rejected");
+        const float minimum = .55f; // Test fixture input; runtime receives B's tuning.
+        var cycle = new StrokeCycle();
+        int count = 0;
+        for (int i = 0; i < 10; i++)
+        {
+            double start = i * 1.2;
+            Expect(!cycle.Advance(0, start, minimum), "bottom is not a stroke");
+            Expect(!cycle.Advance(.95f, start + .6, minimum) && cycle.TopReached, "top clunks once");
+            Expect(!cycle.Advance(1, start + .65, minimum) && !cycle.TopReached, "holding top does not repeat clunk");
+            if (cycle.Advance(.05f, start + 1.1, minimum)) count++;
+            Expect(!cycle.Advance(0, start + 1.15, minimum), "holding bottom never repeats stroke");
+        }
+        Expect(count == 10, "ten natural cycles give ten strokes");
+        cycle = new StrokeCycle();
+        cycle.Advance(0, 0, minimum);cycle.Advance(.8f,.3,minimum);
+        Expect(!cycle.Advance(0, .8, minimum), "partial arc rejected");
+        cycle.Advance(.95f,1,minimum);
+        Expect(!cycle.Advance(0,1.1,minimum), "fast cycle rejected");
+        cycle.Advance(.95f,1.4,minimum);
+        Expect(cycle.Advance(0,1.8,minimum), "natural cycle recovers after rejected fast cycle");
+        cycle.Reset();cycle.Advance(.95f,2,minimum);
+        Expect(!cycle.Advance(0,3,minimum), "regrabbing at top does not count");
+        cycle.Advance(.95f,3.3,minimum);cycle.Reset();
+        Expect(!cycle.Advance(0,4,minimum), "release cancels armed stroke");
+        cycle = new StrokeCycle();cycle.Advance(0,0,minimum);cycle.Advance(0,10,minimum);cycle.Advance(.95f,10.1,minimum);
+        Expect(!cycle.Advance(0,10.2,minimum), "idle at bottom cannot bypass minimum stroke time");
+        Expect(!cycle.Advance(float.NaN,11,minimum), "invalid tracking rejected");
+        Expect(!cycle.Advance(float.PositiveInfinity,12,minimum), "infinite tracking rejected");
+        Expect(!cycle.Advance(0,13,0), "zero tuning rejected");
+        Expect(!cycle.Advance(1,14,float.NaN), "NaN tuning rejected");
+        Expect(!cycle.Advance(0,15,float.PositiveInfinity), "infinite tuning rejected");
+        var generator = new GeneratorStartState();
+        Expect(!generator.TryStart(true), "unprimed start fails");
+        generator.Prime(); generator.Prime();
+        Expect(!generator.TryStart(true), "two strokes insufficient");
+        generator.Prime();
+        Expect(!generator.TryStart(false), "wrong choke fails");
+        Expect(generator.PrimerStrokes == 3, "failed crank retains primer recovery");
+        Expect(generator.TryStart(true), "three strokes and correct choke start");
+        Expect(!generator.TryStart(true), "success consumes priming and cannot repeat");
+        for(int i=0;i<9;i++) generator.Prime();
+        Expect(generator.PrimerStrokes == 3, "primer count bounded");
+        generator.Reset();Expect(!generator.TryStart(true), "retry resets generator readiness");
+        Console.WriteLine("PASS: " + assertions + " behavioral assertions (stroke/regrip/timing/recovery/primer/choke); no Unity or headset execution.");
+    }
+}
