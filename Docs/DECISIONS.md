@@ -85,3 +85,12 @@ Aneesh requested the original lobby followed by the new environment on 2026-10-1
 [SB] Leave legacy flood/StormWatch writers and scenes untouched and request integration from C/D/E — their height clamps explain a plateau but their paths are outside B's exclusive write lane.
 [SB] Report device acceptance as PROPOSED and leave changes uncommitted in this worktree — sandbox restrictions deny Unity/ADB IPC and git metadata writes; managed compilation/tests cannot stand in for an APK or headset run.
 [SB] Publish sprint3/simulation using separate writable git metadata based on sprint3/base after the user's commit/push instruction — shared worktree metadata remains read-only, while temporary metadata can preserve the same base and source without changing the original checkout's HEAD.
+[SD] Use ScriptableObject day plans and an authority-only pure sequencing model, with cached reflection at the absent Sprint 3 API boundary — independent branches compile without redeclaring B or A's shared types.
+[SD] Request ForceGeneratorFault and ActivateDayLeak from B rather than extending the shared command enum in D's lane — timed incidents are impossible through the published commands alone.
+[SD] Let B consume pump/repair events and D issue validated StartGenerator once; require pre-repair partner authorization on Day 3 — prevents duplicate commands and post-hoc co-op gating.
+[SD] Keep the new day flow opt-in and preserve the existing Storm Watch entry — the Sprint 3 solo Day 1/2 and pressure-based Day 3 explicitly supersede that experience only when integrated.
+[SD] Retry resets the current physical day while preserving the unlocked-day checkpoint; development jumps never overwrite it — avoids inconsistent retained repair flags against a reset simulation.
+[SD] Read cached shared snapshot members at 10 Hz instead of generating generic OnTick delegates at runtime — the absent shared assembly prevents guaranteeing IL2CPP generic instantiations.
+[SD] Require scene dependencies on the new director and day catalog before packaging a progression APK — a legacy-scene binary cannot verify the new sequence.
+[SD] Leave radio narration clips unassigned pending recorded assets — local sandbox speech produced a zero-sample file, so adding it would misrepresent audible feedback.
+[SD] Preserve sprint3/progression commits in a temporary Git directory and handoff bundle — worktree metadata writes are sandbox-blocked and GitHub DNS is unavailable.
