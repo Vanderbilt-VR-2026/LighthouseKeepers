@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77b378bbccd54b28b71cf002ec1053b4, type: 3}
   m_Name: EnvironmentLobbyConfig
   m_EditorClassIdentifier: LK.Lobby::LighthouseKeepers.Lobby.LobbyConfig
-  maxPlayers: 4
+  maxPlayers: 2
   minPlayersToStart: 1
   defaultPlayerName: Keeper
-  lobbyTitle: Lighthouse Keepers
-  requireAllReady: 1
+  lobbyTitle: "Lighthouse Keepers \u2014 Solo Watch"
+  requireAllReady: 0
   startSceneName: LK_Lab_Environment
