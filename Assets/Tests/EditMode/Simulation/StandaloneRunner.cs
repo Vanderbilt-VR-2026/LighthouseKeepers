@@ -34,10 +34,6 @@ namespace LighthouseKeepers.Tests.Simulation
                 typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest) })
             foreach (MethodInfo method in type.GetMethods().Where(m => m.IsDefined(typeof(TestAttribute), false)))
             {
-                if (method.Name == "OnlyLKNetMayReferenceNetworkingNamespaces")
-                {
-                    Console.WriteLine("NOT RUN (requires Unity compilation pipeline): " + method.Name); skipped++; continue;
-                }
                 object instance = Activator.CreateInstance(type);
                 type.GetField("tuning", BindingFlags.Instance | BindingFlags.NonPublic)?.SetValue(instance, tuning);
                 try { method.Invoke(instance, null); Console.WriteLine("PASS " + method.Name); passed++; }

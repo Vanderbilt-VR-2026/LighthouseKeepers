@@ -53,10 +53,9 @@ def main():
                      defines='LK_STANDALONE_RELEASE')
     compile_assembly('LK.Simulation.Editor', (core / 'Unity/Editor').glob('*.cs'),
                      [core_dll, unity_dll] + engine_refs)
-    cecil = managed / 'Unity.Cecil.dll'
     tests = root / 'Assets/Tests/EditMode/Simulation'
     test_dll = compile_assembly('LK.Simulation.Tests', tests.glob('*.cs'),
-                               [core_dll, unity_dll, nunit, cecil] + engine_refs)
+                               [core_dll, unity_dll, nunit] + engine_refs)
     runner = compile_assembly('SimulationStandalone', [tests / 'StandaloneRunner.cs'],
                               [test_dll, core_dll, nunit], defines='LK_SIMULATION_STANDALONE', executable=True)
     env = os.environ.copy()
