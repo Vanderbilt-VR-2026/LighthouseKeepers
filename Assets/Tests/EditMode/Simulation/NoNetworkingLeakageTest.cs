@@ -12,7 +12,7 @@ namespace LighthouseKeepers.Tests.Simulation
     {
         static readonly string[] NetworkingNamespaces =
         {
-            "Fusion", "Photon", "Unity.Netcode", "Unity.Networking", "System.Net",
+            "Fusion", "Photon", "Unity.Netcode", "Unity.Networking", "UnityEngine.Networking", "System.Net",
             "LighthouseKeepers.Net", "LighthouseKeepers.Networking", "LighthouseKeepers.StormWatchNetworking"
         };
 
@@ -201,9 +201,14 @@ namespace LighthouseKeepers.Tests.Simulation
 
         [Test] public void ScannerDetectsNetworkingNamespaceDeclaredInsideGameAssembly()
         {
-            var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("BoundaryProbe.OwnNamespace"), AssemblyBuilderAccess.Run);
-            assembly.DefineDynamicModule("Fixture").DefineType("LighthouseKeepers.Net.AccidentalAdapter", TypeAttributes.Public).CreateType();
-            Assert.That(FindViolations(new[] { assembly }), Has.Some.Contains("LighthouseKeepers.Net.AccidentalAdapter"));
+            foreach (string networkingNamespace in NetworkingNamespaces)
+            {
+                var assembly = AssemblyBuilder.DefineDynamicAssembly(
+                    new AssemblyName("BoundaryProbe.OwnNamespace" + Guid.NewGuid().ToString("N")), AssemblyBuilderAccess.Run);
+                string type = networkingNamespace + ".AccidentalAdapter";
+                assembly.DefineDynamicModule("Fixture").DefineType(type, TypeAttributes.Public).CreateType();
+                Assert.That(FindViolations(new[] { assembly }), Has.Some.Contains(type));
+            }
         }
     }
 }
