@@ -73,3 +73,11 @@ Aneesh requested the original lobby followed by the new environment on 2026-10-1
 - User confirmed sleep advances immediately after repair; 420 seconds is the repair deadline, not a required wait. Days repeat one local task, using Eli’s unchanged height-based flood controller.
 - Keep the new loop in Assets/WatchDemo and the isolated lobby/environment preview; do not replace production loading or teammate simulation.
 - User requested all lighting at 50%. Preserve original presets and create Half variants from linear source EXRs with matching Unity lightmap import encoding. The Half preview uses explicit 0.06/0.02 floor/reference ratios instead of original 0.12/0.04; reference/exposure remain frozen. Original-target check had 78 emergency failures; headset readability is unverified.
+
+[SA] Use direct bone rotations with four baked poses and a 75 ms blend, plus OpenXR 26-joint wrist/palm/finger hierarchy — empty-air grip/trigger animation must not depend on hover.
+[SA] Use CPU-authored continuous skinned glove payloads after Blender 4.5.9 crashes in Metal device initialization; retain Blender headless source — sandbox supplies no usable Metal device and no imported rig exists.
+[SA] Bind exact scene anchors at runtime and supply separate resource hand prefabs — preserve C's scene ownership and E's rig ownership while supporting the Sprint 2 rig.
+[SA] Read manualPumpMinStrokeSeconds directly from B's referenced FloodTuning via a cached startup read, with no fallback constant — concrete B asset type is absent from this worktree and timing must have one owner.
+[SA] Add primer-stroke, choke-state and failed-crank events; require three primer strokes and CLOSED choke for a valid starter pull, reset consumed strokes on success — D needs observable physical verbs and an audible recoverable failure.
+[SA] Preserve current scenes/legacy interactions and request their Sprint 3 replacement from C/D — changing those files would violate the exclusive ownership contract.
+[SA] No APK or headset acceptance is claimed; Unity compile/build attempts abort on UPM listen EPERM and branch creation is denied at the external Git index — provide runnable commands and narrower C# evidence without substituting it for device proof.
