@@ -43,12 +43,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 0
+  SortKey: 1845269994
+  SendPriority: 1
+  EnableInterpolation: 1
   Flags: 2
   NestedObjects: []
   NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!114 &11400001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +62,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f000cd89a77044c188c44344a1477812, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewAvatarView
   leftHandVisual: {fileID: 0}
   rightHandVisual: {fileID: 0}

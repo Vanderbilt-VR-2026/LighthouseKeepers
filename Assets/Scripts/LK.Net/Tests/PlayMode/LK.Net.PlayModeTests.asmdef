@@ -1,5 +1,7 @@
 {
   "name": "LK.Net.PlayModeTests",
   "references": ["LK.Net", "LK.Networking", "LK.Lobby", "Fusion.Unity", "Unity.XR.Interaction.Toolkit", "Unity.TextMeshPro"],
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll", "Fusion.Runtime.dll", "Fusion.Common.dll", "Fusion.Sockets.dll", "Fusion.Log.dll", "Fusion.Realtime.dll"],
   "optionalUnityReferences": ["TestAssemblies"]
 }

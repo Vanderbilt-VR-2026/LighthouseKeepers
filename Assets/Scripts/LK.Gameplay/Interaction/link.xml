@@ -1,3 +1,5 @@
 <linker>
-  <!-- HandsBuild.BindTuning writes the concrete B tuning assembly/type here before IL2CPP. -->
+  <assembly fullname="LK.Simulation.Unity">
+    <type fullname="LighthouseKeepers.Simulation.Unity.FloodTuning" preserve="all" />
+  </assembly>
 </linker>
