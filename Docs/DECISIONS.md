@@ -73,3 +73,18 @@ Aneesh requested the original lobby followed by the new environment on 2026-10-1
 - User confirmed sleep advances immediately after repair; 420 seconds is the repair deadline, not a required wait. Days repeat one local task, using Eli’s unchanged height-based flood controller.
 - Keep the new loop in Assets/WatchDemo and the isolated lobby/environment preview; do not replace production loading or teammate simulation.
 - User requested all lighting at 50%. Preserve original presets and create Half variants from linear source EXRs with matching Unity lightmap import encoding. The Half preview uses explicit 0.06/0.02 floor/reference ratios instead of original 0.12/0.04; reference/exposure remain frozen. Original-target check had 78 emergency failures; headset readability is unverified.
+
+[SC] Publish generator plinth top world Y=3.750 m (F2 3.300 + plinth 0.450) — frozen v1.0 contract, no inferred simulation changes.
+[SC] Keep new renderer, editor tools and build entry under Assets/Prefabs/Environment/Sprint3 — exclusive Session C lane excludes existing Scripts folders.
+[SC] Preserve frozen station transforms; add new Sprint 3 anchors without moving legacy anchors — newer F1 pump and house bench requirements extend v1.0.
+[SC] Use a symmetric -22.5 to +22.5 degree F1 lever sweep at radius 0.250 m — preserves the specified 45-degree arc; actual vertical hand travel is 0.191 m, since 0.35 m is geometrically incompatible.
+[SC] Add the F1 pump at (0.450,0,1.250), yaw 90, and bed at (0,6.600,0.100) — new anchors avoid changing frozen stations and are candidates pending Unity clearance validation.
+[SC] Keep the original powered calibration (0.0214306675 linear, exposure 1) for both new lighting states — no dark-state recalibration or Half-preview threshold.
+[SC] Limit ship tagging to the owned environment Lab; request player-prefab and production loading adoption from A/E — R1 excludes their assets and the production scripts.
+[SC] Treat structural wall/floor/roof joins as construction contacts in the intersection tool, but never exempt a furniture ancestor — curved wall AABBs require an actual bounds-box/mesh narrow-phase test.
+[SC] Keep all results PROPOSED: Unity Package Manager and adb local listeners are denied by the sandbox, and Git cannot write shared metadata — no compile, bake, APK, commit or device acceptance is claimed.
+[SC] Docs/INVENTORY.md and the initial Docs/Sprint3/Heights.md were absent at session start — use the frozen StationContract as source and publish the height handoff explicitly.
+[SC] Offset new board art -0.200m along its frozen anchor's local Z and centre the bench at (1.800,0,-5.750) — the existing house north wall's interior face is Z=-4.850, so the board sits flush and the bench is0.900m out.
+[SC] Use the south side of the new bench as the house operator position; preserve legacy WP-HOUSE-B metadata — the requested front-of-board bench necessarily occupies that older marker. D must use the new standing approach rather than treating the marker as an unobstructed stance.
+[SC] Shorten retained shaft liners to2.940m and remove the shipping Lab's scale-reference instance — original3.260m panels extended into the next slab and the measuring cube is inappropriate ship dressing.
+[SC] Require identical atlas indices/UV offsets across the two independent bakes — the existing single-boolean presentation component cannot safely remap statically batched UVs.
