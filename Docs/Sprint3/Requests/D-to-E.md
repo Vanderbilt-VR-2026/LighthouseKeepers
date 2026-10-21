@@ -1,0 +1,9 @@
+# Session D → E: authority, roster and development selector
+
+New D code is opt-in and has no automatic legacy-scene takeover. Instantiate/serialize `LighthouseKeepers.Core.Progression.DayDirector` once in the Sprint 3 gameplay scene, assign catalog `Assets/Data/Days/DayCatalog.asset` and B's FloodTuning/host, then call `ConfigureAuthority(isAuthority, keeperCount)` and `BeginSavedDay()` on the host. `SetKeeperCount(count)` pauses D when an active Day 3 loses its second keeper; your lobby/disconnect policy must end the session. `BeginDay(3)` with one keeper displays exactly "Day 3 requires two keepers." and sends no BeginDay/incidents. No solo fallback.
+
+Forward A's validated physical reports and actor IDs to D on the authority; never trust a client-supplied keeper count or pressure-safe claim. Call `ReportPlayerPosition(actorId, headPosition)` for remote proximity. D also exposes ReportPumpStroke and ReportLeakRepairCompleted if you forward reports directly; choose one route per input (direct report OR A's shared event), never both. Validate held valve state/pressure and grip location server-side. B remains simulation authority; D only enqueues commands.
+
+Replicate the IDayDirector projection, Stage, CurrentObjectiveText, Steps, DayResult and restart feedback to clients. D's `DayBoardPresenter` accepts an `IDayDirector` through `BindReadOnly(...)`; clients must not run another DayFlow or load a locally saved day. A missing authority setup leaves the D component inactive, rather than assuming host status.
+
+Development builds expose `JumpToDay(int)` and C board actions DEV: Day 1/2/3; route these to the host. They reset simulation via ResetRun + BeginDay and skip the intro voice, while retaining Day 3's two-keeper requirement. No production selector is compiled. E owns transport and authorization; D implements no replication.
