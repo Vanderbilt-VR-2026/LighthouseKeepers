@@ -11,7 +11,7 @@ namespace LighthouseKeepers.Net
         [SerializeField] CrewLobbyTransport transport;
         LobbyScreen screen;
         TMP_Text codeLabel;
-        Button reconnect;
+        Button reconnect, solo, optionsSolo;
         TMP_InputField codeInput;
         float nextRefresh;
         GameObject keypad;
@@ -20,9 +20,19 @@ namespace LighthouseKeepers.Net
             screen = GetComponent<LobbyScreen>();
             if (!screen || !screen.BoardCanvas || !transport) { enabled = false; return; }
             var root = screen.BoardCanvas.transform;
+            // Readiness is already shown on the ledger and ready button. Use the top-right
+            // status area for an always-visible route into the game without a crew.
+            foreach (string name in new[] { "WatchStatus", "WatchLamp" })
+            {
+                var status = root.Find(name);
+                if (status) status.gameObject.SetActive(false);
+            }
+            solo = SoloButton(root, "PlaySolo", new Vector2(310, 175), new Vector2(510, 82));
+            var options = root.Find("CrewOptionsPanel");
+            if (options) optionsSolo = SoloButton(options, "PlaySoloOptions", new Vector2(0, -65), new Vector2(500, 70));
             codeLabel = Label(root, "CrewCode", new Vector2(-80, 422), new Vector2(550, 36), 24);
             var voice = Label(root, "VoiceNotice", new Vector2(0, -270), new Vector2(1150, 35), 23);
-            voice.text = CrewConnectionPolicy.VoiceNotice;
+            voice.text = "Play Solo works offline. For crew play, use party voice.";
             var face = Rect("Reconnect", root, new Vector2(310, -176), new Vector2(510, 82));
             var image = face.gameObject.AddComponent<Image>(); image.color = new Color(.12f, .20f, .20f);
             reconnect = face.gameObject.AddComponent<Button>(); reconnect.targetGraphic = image;
@@ -49,8 +59,22 @@ namespace LighthouseKeepers.Net
             codeLabel.text = string.IsNullOrEmpty(transport.SessionName) ? "HOST TO GET A JOIN CODE" : "JOIN CODE  " + transport.SessionName;
             if (keypad && (transport.IsOnline || transport.IsBusy)) keypad.SetActive(false);
             reconnect.interactable = transport.CanReconnect;
+            solo.interactable = !transport.LaunchingSolo && !transport.IsStarting;
+            solo.GetComponentInChildren<TMP_Text>().text = transport.LaunchingSolo ? "ENTERING SOLO..." : "PLAY SOLO";
+            if (optionsSolo) optionsSolo.interactable = solo.interactable;
             reconnect.gameObject.SetActive(!keypad || !keypad.activeSelf);
             if (codeInput && (transport.IsOnline || transport.IsBusy)) codeInput.SetTextWithoutNotify(transport.SessionName);
+        }
+        Button SoloButton(Transform parent, string name, Vector2 position, Vector2 size)
+        {
+            var face = Rect(name, parent, position, size);
+            var image = face.gameObject.AddComponent<Image>(); image.color = new Color(.82f, .62f, .32f);
+            var button = face.gameObject.AddComponent<Button>(); button.targetGraphic = image;
+            var label = Label(face, "Label", Vector2.zero, size, 26); label.text = "PLAY SOLO";
+            label.color = new Color(.06f, .07f, .07f);
+            face.gameObject.AddComponent<LobbyButtonFeedback>().Initialize(button, label.rectTransform);
+            button.onClick.AddListener(() => { screen.PlaySelectionSound(); transport.PlaySolo(); });
+            return button;
         }
         void BuildKeypad(Transform root)
         {

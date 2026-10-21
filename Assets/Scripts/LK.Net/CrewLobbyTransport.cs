@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
+using LighthouseKeepers.StormWatch;
 using LighthouseKeepers.Lobby;
 using LighthouseKeepers.Networking;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LighthouseKeepers.Net
 {
@@ -15,13 +18,14 @@ namespace LighthouseKeepers.Net
         static string rememberedCode, rememberedName;
         static bool rememberedHost;
         string localError = "", desiredName = "Keeper", desiredCode = "";
-        bool timedOut, connecting;
+        bool timedOut, connecting, launchingSolo;
         float connectStarted;
         public FusionLobbyTransport Fusion => fusion;
         public bool IsOnline => fusion && fusion.IsOnline;
         public bool IsHost => fusion && fusion.IsHost;
-        public bool IsBusy => fusion && fusion.IsBusy;
-        public bool IsStarting => fusion && fusion.IsStarting;
+        public bool IsBusy => launchingSolo || fusion && fusion.IsBusy;
+        public bool IsStarting => launchingSolo || fusion && fusion.IsStarting;
+        public bool LaunchingSolo => launchingSolo;
         public string LocalPlayerId => fusion ? fusion.LocalPlayerId : "";
         public IReadOnlyList<LobbyPlayer> Players => fusion ? fusion.Players : Array.Empty<LobbyPlayer>();
         public int MaxPlayers => CrewConnectionPolicy.Capacity;
@@ -56,6 +60,54 @@ namespace LighthouseKeepers.Net
             if (!CanReconnect) return false;
             desiredName = rememberedName ?? desiredName;
             return Connect(rememberedHost, rememberedCode);
+        }
+        public bool PlaySolo()
+        {
+            if (launchingSolo || fusion && fusion.IsStarting) return false;
+            if (!Application.CanStreamedLevelBeLoaded(FusionLobbyTransport.GameplaySceneName))
+                return Fail("The solo lighthouse is missing from this build. Reinstall the current APK.");
+            launchingSolo = true;
+            connecting = false;
+            localError = "";
+            Status();
+            StartCoroutine(LaunchSolo());
+            return true;
+        }
+        IEnumerator LaunchSolo()
+        {
+            // Hosting is optional. If it was already attempted, finish cancellation before loading locally.
+            var sessions = FindObjectsByType<FusionLobbyTransport>(FindObjectsSortMode.None);
+            foreach (var session in sessions) session.LeaveGame();
+            float deadline = Time.realtimeSinceStartup + 30;
+            while (true)
+            {
+                bool closing = false;
+                foreach (var session in sessions)
+                    if (session && (session.IsBusy || session.IsOnline || session.Runner)) closing = true;
+                if (!closing) break;
+                if (Time.realtimeSinceStartup >= deadline)
+                {
+                    launchingSolo = false;
+                    Fail("Could not close the crew connection. Leave the crew, then choose Play Solo again.");
+                    yield break;
+                }
+                yield return null;
+            }
+            SoloWatchSession.Request();
+            AsyncOperation load = null;
+            try { load = SceneManager.LoadSceneAsync(FusionLobbyTransport.GameplaySceneName); }
+            catch (Exception error) { localError = "Could not open solo practice: " + error.Message; }
+            if (load == null)
+            {
+                SoloWatchSession.Cancel();
+                launchingSolo = false;
+                Status();
+                yield break;
+            }
+            yield return load;
+            // The offline watch owns no room, runner, poses or grab leases.
+            foreach (var session in sessions) if (session) Destroy(session.gameObject);
+            Destroy(gameObject);
         }
         bool Connect(bool host, string code)
         {

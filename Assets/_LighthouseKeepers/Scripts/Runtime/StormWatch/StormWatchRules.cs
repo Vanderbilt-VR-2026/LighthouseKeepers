@@ -96,13 +96,22 @@ namespace LighthouseKeepers.StormWatch
     {
         public WatchState State { get; private set; } = new();
         public readonly WatchTuning Tuning;
+        public bool SoloPractice { get; }
+        public bool SoloRadioRead { get; private set; }
         readonly int[] commands = new int[2];
         int attempt;
         float faultCooldown;
-        public StormWatchRules(WatchTuning tuning = null) { Tuning = tuning ?? new(); Tuning.Validate(); Reset(); }
+        public StormWatchRules(WatchTuning tuning = null, bool soloPractice = false)
+        { SoloPractice = soloPractice; Tuning = tuning ?? new(); Tuning.Validate(); Reset(); }
         public void Reset(bool discardCommands = true)
         {
             State = new WatchState();
+            SoloRadioRead = false;
+            if (SoloPractice)
+            {
+                State.gateOne = State.gateTwo = State.gateThree = true;
+                State.message = "Solo practice. All stairs open. Choose a watch on any instruction board.";
+            }
             if (discardCommands) commands[0] = commands[1] = -1;
             faultCooldown = 0;
             int[] code = { 0, 1, 2 }; var random = new System.Random(++attempt * 7919);
@@ -110,6 +119,16 @@ namespace LighthouseKeepers.StormWatch
             State.order0 = code[0]; State.order1 = code[1]; State.order2 = code[2];
         }
         public bool Near(KeeperInput input, Vector3 point) => Finite(input.head) && Vector3.Distance(input.head, point + Vector3.up * .35f) < Tuning.stationReach;
+        public bool SelectSoloWatch(WatchAct act)
+        {
+            if (!SoloPractice || (act != WatchAct.FirstWatch && act != WatchAct.PowerFailure &&
+                act != WatchAct.Storm && act != WatchAct.RadioRelay)) return false;
+            Reset();
+            State.power = act == WatchAct.FirstWatch || act == WatchAct.RadioRelay;
+            if (act == WatchAct.RadioRelay) State.pipeSteps = State.generatorSteps = 3;
+            Enter(act, "SOLO PRACTICE. Work stations yourself; no partner required. All stairs are open.");
+            return true;
+        }
         public static bool Finite(Vector3 v) => float.IsFinite(v.x) && float.IsFinite(v.y) && float.IsFinite(v.z);
         bool Working(KeeperInput p, int id, WatchAction action) => p.connected && !State.Down(id) && p.action == action && Near(p, WatchStations.For(action));
         float Effort(KeeperInput p) => float.IsFinite(p.effort) ? Mathf.Clamp01(p.effort) : 0;
@@ -118,8 +137,9 @@ namespace LighthouseKeepers.StormWatch
             if (!float.IsFinite(seconds) || seconds <= 0 || seconds > .25f) return;
             var s = State;
             // A lost partner pauses the shared simulation. Reconnection/retry is handled by the session.
-            if (!first.connected || !second.connected) return;
-            Command(0, first, second); Command(1, second, first);
+            if (!first.connected || (!SoloPractice && !second.connected)) return;
+            Command(0, first, second);
+            if (!SoloPractice) Command(1, second, first);
             s = State;
             if (s.act == WatchAct.Briefing || s.Terminal) return;
             s.elapsed += seconds; s.actTime += seconds; faultCooldown = Mathf.Max(0, faultCooldown - seconds);
@@ -139,7 +159,7 @@ namespace LighthouseKeepers.StormWatch
             if (repairAct)
             {
                 bool brace0 = Working(first, 0, WatchAction.Brace), brace1 = Working(second, 1, WatchAction.Brace);
-                float pipe = Working(first, 0, WatchAction.Pipe) && brace1 ? Effort(first) : Working(second, 1, WatchAction.Pipe) && brace0 ? Effort(second) : 0;
+                float pipe = Working(first, 0, WatchAction.Pipe) && (SoloPractice || brace1) ? Effort(first) : Working(second, 1, WatchAction.Pipe) && brace0 ? Effort(second) : 0;
                 if (s.pipeSteps < 3 && pipe > 0)
                 {
                     s.pipeProgress += seconds * pipe / (Tuning.pipeStepSeconds * (s.repairsRemaining > 0 ? .6f : 1));
@@ -149,7 +169,7 @@ namespace LighthouseKeepers.StormWatch
                 if (!s.power && s.generatorSteps < 3)
                 {
                     float gen = Working(first, 0, WatchAction.Generator) ? Effort(first) : Working(second, 1, WatchAction.Generator) ? Effort(second) : 0;
-                    bool separatePump = Working(first, 0, WatchAction.Generator) && Working(second, 1, WatchAction.Pump) && Effort(second) > .05f ||
+                    bool separatePump = SoloPractice || Working(first, 0, WatchAction.Generator) && Working(second, 1, WatchAction.Pump) && Effort(second) > .05f ||
                         Working(second, 1, WatchAction.Generator) && Working(first, 0, WatchAction.Pump) && Effort(first) > .05f;
                     if (separatePump) s.unsupported = Mathf.Max(0, s.unsupported - seconds * 2);
                     else if (gen > 0) s.unsupported += seconds;
@@ -174,13 +194,18 @@ namespace LighthouseKeepers.StormWatch
             }
             if (s.act == WatchAct.RadioRelay)
             {
+                if (SoloPractice && Working(first, 0, WatchAction.Radio) && !SoloRadioRead)
+                {
+                    SoloRadioRead = true;
+                    Tell("Radio code noted. Climb to the lantern; its solo board shows your code.");
+                }
                 for (int id = 0; id < 2; id++)
                 {
                     var p = id == 0 ? first : second; var other = id == 0 ? second : first;
                     int switchId = (int)p.action - (int)WatchAction.BeaconA;
                     if (switchId < 0 || switchId > 2 || !Working(p, id, p.action) || Effort(p) <= 0) continue;
                     bool alreadyLocked=false;for(int locked=0;locked<s.beaconSteps;locked++)if(s.Code(locked)==switchId)alreadyLocked=true;
-                    if(alreadyLocked || !Working(other, 1-id, WatchAction.Radio)) continue;
+                    if(alreadyLocked || !(SoloPractice ? SoloRadioRead : Working(other, 1-id, WatchAction.Radio))) continue;
                     if (switchId != s.Code(s.beaconSteps)) { if (faultCooldown <= 0) Fault("Wrong beacon switch. Unfinished step reset; ask the radio keeper for the next symbol.", true); continue; }
                     s.beaconProgress += seconds * Effort(p) / Tuning.beaconStepSeconds;
                     if (s.beaconProgress >= 1)
@@ -191,7 +216,9 @@ namespace LighthouseKeepers.StormWatch
                     }
                 }
             }
-            Survival(0, first, seconds); Survival(1, second, seconds);
+            Survival(0, first, seconds);
+            if (!SoloPractice) Survival(1, second, seconds);
+            else if (s.down0) Lose("Out of air. Restart solo practice or choose another watch on the board.");
             if (s.down0 && s.down1) Lose("Both keepers need rescue. Restart together.");
             if (s.ropeOwner >= 0)
             {
@@ -210,7 +237,8 @@ namespace LighthouseKeepers.StormWatch
                     }
                 }
             }
-            if (s.act == WatchAct.Ascent && !s.down0 && !s.down1 && Top(first) && Top(second)) Enter(WatchAct.Won, "BOTH KEEPERS SAFE. Beacon lit. Three watches survived together.");
+            if (s.act == WatchAct.Ascent && !s.down0 && !s.down1 && Top(first) && (SoloPractice || Top(second)))
+                Enter(WatchAct.Won, SoloPractice ? "SOLO PRACTICE COMPLETE. Beacon lit. Return to the lobby or try another watch." : "BOTH KEEPERS SAFE. Beacon lit. Three watches survived together.");
         }
         bool Top(KeeperInput p) => p.feet.y >= 9.45f && p.head.y > State.water && new Vector2(p.head.x, p.head.z).magnitude < 6.6f;
         void Survival(int id, KeeperInput p, float dt)
@@ -239,7 +267,7 @@ namespace LighthouseKeepers.StormWatch
             {
                 if (!s.supplyChosen && (p.command == WatchAction.RepairSupply || p.command == WatchAction.RescueSupply))
                 { s.supplyChosen = true; if (p.command == WatchAction.RepairSupply) s.repairsRemaining += 3; else s.rescueBonus += 10; Tell("Supply packed. Water is approaching; regroup and open the next watch when ready."); }
-                if (p.command == WatchAction.Continue && s.supplyChosen && !s.Down(1-id) && Mathf.Abs(other.feet.y-floor) < .4f)
+                if (p.command == WatchAction.Continue && s.supplyChosen && (SoloPractice || !s.Down(1-id) && Mathf.Abs(other.feet.y-floor) < .4f))
                 {
                     s.pipeSteps = s.generatorSteps = 0; s.pipeProgress = s.generatorProgress = s.unsupported = 0;
                     if (s.act == WatchAct.FirstRefuge) Enter(WatchAct.PowerFailure, "DAY 2 / POWER FAILURE. A fresh leak below. The generator is struggling...");
