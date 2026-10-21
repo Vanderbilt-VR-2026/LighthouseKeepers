@@ -4,6 +4,12 @@
 
 Use **Lighthouse Keepers → Play game**. Host or join one crew room, signal ready on both clients, then **Begin watch** to enter the continuous three-watch cooperative climb together. The lobby connection carries gameplay too; no second Host/Join step is required. See [Storm Watch](Docs/StormWatch.md) for controls, progression and verification limits.
 
+## Current main APK
+
+**[Download the Quest APK built from main `8c15fc6`](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/main-quest-8c15fc6/LighthouseKeepers-Main-8c15fc6.apk)**. This Android development build starts at the crew lobby and includes Storm Watch. See the [build record and checksum](Docs/Verification/MainAPK-20261015.md). Headset execution, connected play on Quest, comfort and device performance remain unverified for this APK.
+
+The `sprint-2` branch starts at this same main commit. APKs are distributed through release assets and remain outside Git.
+
 ## First playable watch
 
 Use **Lighthouse Keepers → First Watch → Play plumbing escape** for the survival prototype: brace the pipe, turn three valves in the posted order, then escape to the first landing and recover. This is local solo practice with Quest hand interactions, a timed clamp option and desktop controls. See [First Watch](Docs/FirstWatch.md) for controls, scope and the dedicated Quest APK build command. The ordinary environment preview remains available below.
@@ -42,9 +48,9 @@ The normal **Lighthouse Keepers → Play game** entry uses Photon hosting and jo
 ## Android build and USB test
 1. Open File → Build Profiles, select Android and Switch Platform.
 2. Confirm `LK_NetworkLobby` is first in the scene list, followed by `LK_StormWatch`, the development `LK_Bootstrap`, and the six content scenes. This is the normal Photon game startup. The historical Sprint 1 environment diagnostic builder explicitly selects its seven environment scenes.
-3. Use **Lighthouse Keepers → Sprint 1 → Build Android environment** to build the authored scenes without regenerating them. Output: `Builds/LighthouseKeepers-Sprint1-Environment.apk` (Development Build, ARM64/IL2CPP, OpenXR).
+3. Use **Lighthouse Keepers → Storm Watch → Build Quest APK**. Output: `Builds/LighthouseKeepers-StormWatch.apk` (Development Build, ARM64/IL2CPP, OpenXR). This uses the normal crew-lobby and Storm Watch scene list. The Sprint 1 environment builder remains a historical diagnostic path.
 4. Connect Quest 3 via USB, allow debugging, keep it awake and turn on both controllers.
-5. Install the downloaded APK with `adb install -r LighthouseKeepers-Sprint1-Environment.apk` (or use its `Builds/` path for a local build), then `adb shell am start -n com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
+5. Install the downloaded APK with `adb install -r LighthouseKeepers-Main-8c15fc6.apk` (or use `Builds/LighthouseKeepers-StormWatch.apk` for a local build), then `adb shell am start -n com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
 6. Verify the checklist in `Docs/ManualVerification.md`. An APK build alone does not prove comfort or 72 Hz.
 
 The game is **Lighthouse Keepers**, package `com.lighthousekeepers.game`; it does not replace Spear Throw VR.
