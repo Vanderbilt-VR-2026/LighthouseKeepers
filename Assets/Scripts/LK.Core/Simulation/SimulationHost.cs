@@ -14,9 +14,9 @@ namespace LighthouseKeepers.Core.Simulation
         readonly ISimulationGeometry geometry;
         readonly IAuthority authority;
         readonly Queue<SimCommand> commands = new Queue<SimCommand>();
-        double accumulator, volume, fuel, aboveFail, lastStrokeAt = double.NegativeInfinity;
+        double accumulator, volume, fuel, aboveFail, activeSeconds, leakRate, lastStrokeAt = double.NegativeInfinity;
         int tick;
-        bool leak = true, generator, electricPump, flooded, geometryAvailable;
+        bool leak = true, generator, electricPump, flooded, geometryAvailable, paused;
         RunPhase phase;
         string reject = "";
         public SimSnapshot Current { get; private set; }
@@ -31,7 +31,7 @@ namespace LighthouseKeepers.Core.Simulation
             if (!FixedSimulationGeometry.Finite(initialVolumeM3) || initialVolumeM3 < 0 ||
                 !FixedSimulationGeometry.Finite(geometry.FloorWorldY))
                 throw new ArgumentOutOfRangeException(nameof(initialVolumeM3));
-            volume = initialVolumeM3; fuel = tuning.InitialFuelSeconds;
+            volume = initialVolumeM3; fuel = tuning.InitialFuelSeconds; leakRate = tuning.LeakInflowM3PerSec;
             RefreshPower(); Publish(0);
         }
 
@@ -76,10 +76,10 @@ namespace LighthouseKeepers.Core.Simulation
             int count = commands.Count;
             for (int i = 0; i < count; i++) Apply(commands.Dequeue(), ref manualRemoved);
             double outflow = manualRemoved / TickSeconds;
-            if (phase == RunPhase.Running)
+            if (phase == RunPhase.Running && !paused)
             {
                 double startDepth = Depth;
-                double inflow = leak ? tuning.LeakInflowM3PerSec : 0;
+                double inflow = leak ? leakRate : 0;
                 double electricRate = electricPump ? tuning.ElectricPumpM3PerSec * Power : 0;
                 // Run only for remaining fuel when the tank empties within a tick.
                 double poweredSeconds = generator ? Math.Min(TickSeconds, fuel) : 0;
@@ -87,6 +87,7 @@ namespace LighthouseKeepers.Core.Simulation
                 volume = Math.Max(0, volume + inflow * TickSeconds - electricRemoved);
                 outflow += electricRemoved / TickSeconds;
                 fuel = Math.Max(0, fuel - poweredSeconds);
+                activeSeconds += TickSeconds;
                 RefreshPower();
                 if (Depth < tuning.FailHeightM) aboveFail = 0;
                 else if (startDepth < tuning.FailHeightM)
@@ -103,14 +104,32 @@ namespace LighthouseKeepers.Core.Simulation
         void Apply(SimCommand cmd, ref double manualRemoved)
         {
             if (!FixedSimulationGeometry.Finite(cmd.Value)) { reject = "Command value must be finite."; return; }
+            if (cmd.Kind == SimCommandKind.PauseSimulation || cmd.Kind == SimCommandKind.ResumeSimulation)
+            {
+                paused = cmd.Kind == SimCommandKind.PauseSimulation; reject = ""; return;
+            }
             if (cmd.Kind == SimCommandKind.ResetRun)
             {
                 volume = 0; fuel = tuning.InitialFuelSeconds; aboveFail = 0;
                 leak = true; generator = electricPump = false; phase = RunPhase.Running;
+                paused = false; activeSeconds = 0; leakRate = tuning.LeakInflowM3PerSec;
                 lastStrokeAt = double.NegativeInfinity; manualRemoved = 0; reject = "";
                 RefreshPower(); return;
             }
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
+            if (cmd.Kind == SimCommandKind.DebugSetWaterVolumeM3 || cmd.Kind == SimCommandKind.DebugSetLeakInflowM3PerSec)
+            {
+                if (phase != RunPhase.Running || !paused)
+                { reject = "Development initialization requires a paused Running simulation."; return; }
+                if (cmd.Value < 0)
+                { reject = "Development volume and leak rate must be nonnegative."; return; }
+                if (cmd.Kind == SimCommandKind.DebugSetWaterVolumeM3)
+                {
+                    volume = cmd.Value; aboveFail = 0; manualRemoved = 0; RefreshPower();
+                }
+                else leakRate = cmd.Value;
+                reject = ""; return;
+            }
             if (cmd.Kind == SimCommandKind.DebugSetLeak)
             {
                 if (cmd.Value != 0 && cmd.Value != 1) { reject = "Leak value must be 0 or 1."; return; }
@@ -128,12 +147,13 @@ namespace LighthouseKeepers.Core.Simulation
                 if (cmd.TargetId < 0) { reject = "Day index must be nonnegative."; return; }
                 leak = true; aboveFail = 0; phase = RunPhase.Running; reject = ""; return;
             }
+            if (paused) { reject = "Simulation is paused."; return; }
             if (phase != RunPhase.Running) { reject = "Day succeeded. Begin the next day or reset."; return; }
             switch (cmd.Kind)
             {
                 case SimCommandKind.RepairLeak: leak = false; break;
                 case SimCommandKind.ManualPumpStroke:
-                    double now = tick * TickSeconds;
+                    double now = activeSeconds;
                     if (now - lastStrokeAt + Epsilon < tuning.ManualPumpMinStrokeSeconds)
                     { reject = "Pump stroke too fast."; return; }
                     lastStrokeAt = now;
@@ -161,13 +181,13 @@ namespace LighthouseKeepers.Core.Simulation
 
         void Publish(double outflow)
         {
-            double inflow = phase == RunPhase.Running && leak ? tuning.LeakInflowM3PerSec : 0;
+            double inflow = phase == RunPhase.Running && !paused && leak ? leakRate : 0;
             // ETA assumes no future manual strokes and that current power persists.
             // A stroke is an impulse, not a promise of continuous 2 m³/s pumping.
             double net = inflow - (phase == RunPhase.Running && electricPump ? tuning.ElectricPumpM3PerSec * Power : 0);
             double eta = double.PositiveInfinity;
             if (phase == RunPhase.Failed) eta = 0;
-            else if (phase == RunPhase.Running)
+            else if (phase == RunPhase.Running && !paused)
             {
                 if (Depth >= tuning.FailHeightM)
                 {
@@ -179,7 +199,7 @@ namespace LighthouseKeepers.Core.Simulation
             }
             Current = new SimSnapshot(tick, volume, (float)(geometry.FloorWorldY + Depth),
                 (float)inflow, (float)outflow, leak, generator, (float)Power, electricPump, phase, reject,
-                flooded, geometryAvailable, (float)fuel, (float)aboveFail, (float)eta);
+                flooded, geometryAvailable, (float)fuel, (float)aboveFail, (float)eta, paused);
         }
     }
 }
