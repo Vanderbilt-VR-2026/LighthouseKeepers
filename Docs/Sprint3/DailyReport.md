@@ -1,119 +1,131 @@
-# Sprint 3 daily report — 2026-10-21
+# Sprint 3 consolidated report — 2026-10-21
 
-Recreated `integrate/sprint-3` from `sprint3/base` (`6f1447b`) after
-`git fetch team --prune`. Five clean `--no-ff` merges, in order:
-simulation `fd61b60`, progression `f07235c`, hands `37cb8b0`, environment
-`2d728bd`, networking `9a9722c`. No merge conflicts or hand-edited scene/prefab
-merges. Previous integration is preserved at
-`backup/integrate-sprint-3-before-networking-20261021`; both pre-existing
-untracked files were preserved.
+Fetched `team --prune`. All five latest tips dry-run cleanly from `sprint3/base`
+in **B → D → A → C → E** order. All five are already in `integrate/sprint-3`
+in that order, with `--no-ff` merge commits; no additional merges were needed.
+See [MergeReview.md](MergeReview.md) for exact tips and review findings.
+No scene/prefab was hand-merged; pre-existing untracked files were preserved.
 
-**Installed and launched:** `Builds/LighthouseKeepers-Sprint3-Networking.apk`,
-144,664,183 bytes; Unity 6000.3.23f1, Android ARM64/IL2CPP, development build.
-Existing `LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest` returned
-`result=Succeeded`, `errors=0`; archive CRC passed. SHA-256:
-`30358e0a386afb4add3e29241fce90a02d64325750fb6024ed84455752257e83`.
-`adb install -r` returned `Success` on Quest 3 `2G0YC1ZG32048T`, package
-`com.lighthousekeepers.game`. Cold launch returned `Status: ok`; the process was
-present and its captured 500-line PID log tail contained no matching runtime
-exceptions. This is launch evidence, not an observed lobby/headset pass.
+**Built:** `Builds/LighthouseKeepers-Sprint3-Networking.apk`, Android ARM64/IL2CPP
+development; **Succeeded, 0 errors**, 185,407,384 APK bytes. Archive CRC passed;
+all native libraries are arm64-v8a. SHA-256:
+`beba32ea7aa21b6fbf2a28d78a888b8c319f3e2ba27f79403cbe087f04cfc59c`.
+**Installed:** `adb install -r` returned `Success` on Quest 3 `2G0YC1ZG32048T`
+(package `com.lighthousekeepers.game`). Launch request returned `Status: ok` but
+opened Quest’s `LaunchCheckControllerRequiredDialogActivity`; no game process
+was running after the request. Wake/connect Touch controllers and clear the prompt.
+No observed lobby or in-headset gameplay pass is claimed.
+The existing networking builder uses the production lobby and inherited Storm
+Watch; it excludes Lab/DevGym. C's fixtures and D's new days are not this entry.
 
-The helper builds the production network lobby and inherited Storm Watch,
-excluding Lab and DevGym; C's new fixtures remain Lab-only. Two earlier APK
-attempts were rejected for 11,086 duplicate TypeDB errors. Restart alone did not
-fix them: stale `TypeDb-All 2.json` files in Editor/Player BuildPlayerData and
-`Player/RuntimeInitializeOnLoads 2.json` caused duplicate registrations. Moved
-those three generated files to the evidence directory's `quarantined-build-cache`
-and rebuilt successfully. A separate batch startup hit a licensing timeout;
-the successful command borrowed the already-running Hub licensing connection.
-Unrelated numbered source duplicates were left untouched and excluded from the commit.
+The first current attempt compiled but failed IL2CPP with
+`System.ArgumentException: An item with the same key has already been added. Key: mscorlib`.
+Its inputs included `mscorlib.dll`, `mscorlib 2.dll`, `mscorlib 3.dll` and other
+numbered copies. Preserved 340 generated DLL/PDB copies from
+`Library/Bee/artifacts/Android/ManagedStripped` under ignored
+`artifacts/sprint3-review/quarantined-build-cache`, then retried. No source was
+removed. Current attempt evidence: `artifacts/sprint3-review/`.
 
-Compilation initially failed on missing Mono.Cecil and Fusion.Runtime references
-in two test assemblies. Corrected their asmdefs; recompile reports zero errors.
-The existing build preprocessor binds FloodTuning and preserves it for IL2CPP;
-Fusion's existing helper bakes its network prefabs. No gameplay scene was rewritten.
-Offline checks: simulation **22 passed, 0 failed, 1 Unity-only audit not run**;
-progression **20 scenarios passed**; hands **70 assertions passed**, plus serialized
-hand payload/reference checks. Four hand/network prefabs' external GUID references
-resolve. Unity networking Play Mode: **3/3 passed**, including a real offline
-Fusion runner spawning the player prefab without an extra camera and same-actor
-controller identity. The override test ran its Editor/development assertion;
-it does not establish release-player behavior. Unity networking Edit Mode:
-**20/20 passed** (crew codes/readiness, actor gate, leases, pose buffering and
-the deterministic latency/loss model). No live Photon pair was tested.
-Offline checks are not native interaction, network transport or headset acceptance.
+Review blocks: D requires B's missing `ActivateDayLeak(int)`; E's disabled adapter
+fails a review-only symbol-enabled compile with **CS0535**, missing
+`ISimulationHost.ForceGeneratorFault()`. A's hand actor IDs are not assigned from
+E, B's direct completion-event subscriber bypasses D's gate if composed unchanged,
+and remote hand visuals remain placeholders. These prevent claiming integrated
+Sprint 3 simulation/progression even when the production APK builds.
 
-Headset checklist, in encounter order. **Expected-to-work** is a source prediction,
-not a headset pass. All steps still require a wearer.
+## Consolidated headset checklist — lobby to finish
 
-1. **Lobby — expected-to-work:** connect/wake Touch controllers, clear any Quest
-   controller-required prompt, inspect both hands, move/turn and point at the
-   physical crew board. Host/join through CREW OPTIONS and the six-character
-   keypad; invalid codes should show an error. With two keepers, ready both and
-   BEGIN WATCH. Shared lobby/pose/grab behavior remains unverified on two devices.
-2. **Play Solo — known-incomplete:** there is no standalone Play Solo route in
-   this production lobby. BEGIN WATCH requires two ready connections. Development
-   `DebugSoloOverride` does not bypass the lobby. For one-person rehearsal, host
-   in the same-revision Editor, join from Quest, ready both and begin from the host.
-3. **House — expected-to-work for the inherited watch:** after two-player start,
-   enter the house, inspect the legacy briefing board, grip/release/regrab the
-   wrench and check glove poses and ray buttons. **Known-incomplete:** C's new
-   wall board/bench, D's daily objective/Continue/Retry presentation and recorded
-   briefings are not connected to production loading.
-4. **F1 — expected-to-work for the inherited cooperative pipe/pump controls:**
-   have one keeper brace while the other repairs, then check feedback and the
-   first stair gate; test release/regrip and recovery. **Known-incomplete:** the
-   new 15-second leak, safe-water/day completion, C's physical pump fixture and
-   A/B/D authoritative stroke-to-water integration are not wired into this entry.
-5. **F2 — expected-to-work for the inherited generator watch:** once the route
-   opens, follow the existing board's pump/generator recovery controls with the
-   partner. **Known-incomplete:** C's diesel/plinth, physical primer/choke/starter
-   sequence, fuel reporting, D's 45-second fault/day progression and new
-   powered/red-fault lighting acceptance. E's new B-simulation adapter remains
-   behind `LK_SPRINT3_SIMULATION`; merging networking does not enable this path.
+**Expected** is a source prediction for this APK, not an observed headset pass.
+**Incomplete** means the named Sprint 3 integration is unavailable. Test both
+headsets with the same APK; use Editor host + Quest guest for one-person rehearsal.
 
-No current two-headset run, comfort/reach/readability result, ten-minute completion
-or measured Quest performance is claimed. The new DayDirector/backend composition
-and Day 3 distinct-actor valve gate remain incomplete; inherited Storm Watch
-behavior does not verify those Sprint 3 requirements.
+1. **Lobby entry — expected.** Wake Touch controllers, clear any controller-required
+   prompt, inspect hands, walk/turn and use the physical board's UI ray. Check
+   open/fist/pinch response and both-eye text. Comfort/reach remain unverified.
+2. **Crew setup — expected.** Host, enter the six-character code on the guest keypad,
+   test an invalid code, and compare names/readiness. One ready keeper cannot start;
+   two ready keepers allow host BEGIN WATCH. **Incomplete:** a Play Solo lobby route
+   and integrated voice. Use party/colocated voice for cooperative testing.
+3. **House arrival — expected.** Both load together, see one remote keeper, and keep
+   independent tracked cameras. Check head/hand motion and nameplate fading.
+   **Incomplete:** remote articulated gloves/hand-pose binding; placeholders remain.
+4. **House board and workbench — expected legacy behavior.** Read instructions,
+   directly grab the wrench with either hand, inspect rim/hold feedback, carry,
+   throw, regrab and test simultaneous grabs. Only one keeper should own the tool;
+   holding beyond eight seconds should not return it to the bench. Distant UI rays
+   should not grab tools. **Incomplete:** C's new board/bench and D's daily
+   checkboxes, narration, Continue/Retry board adapter.
+5. **F1 pipe and first route — expected legacy watch.** One keeper braces, the other
+   repairs; check progress, spray/drainage, release/regrip and the first stair gate
+   on both peers. **Incomplete:** D's 15-second leak, B-authoritative water/day
+   completion, hand actor identity composition and pre-repair Day 3 validation.
+   Legacy success does not establish removal of the old water plateau.
+6. **F1 manual pump — expected legacy control.** Grip and stroke; holding still
+   should not pump. Check repeated strokes and recovery after release. **Incomplete:**
+   C's new constrained fixture/outlet burst in production and the A/B/D authoritative
+   stroke path. In the future Lab integration, test ten full cycles versus partial
+   travel/jitter; the authored arc has about 0.191 m vertical travel.
+7. **F2 generator and first refuge — expected inherited sequence.** Follow the
+   existing board, divide pump/generator work, restore power, reunite and choose a
+   shared repair-help/rescue-protection reward. Test release, absent support and
+   recovery without losing completed steps. **Incomplete:** C's diesel/plinth and
+   fresh powered/red-fault bakes; A's three primes/choke/0.40 m starter sequence,
+   fuel reporting and D's 45-second Day 2 fault are not the production loop.
+8. **F3 communications and second refuge — expected inherited sequence.** Confirm
+   route unlocks, readable instructions and a shared refuge decision. **Incomplete:**
+   the new bed-rest/results/day-save flow. Intended bed behavior is repair plus safe
+   water before rest; early grips must not bank completion. It is not wired here.
+9. **Final watch across F1/F2/F3 — expected legacy cooperative faults.** Check valid
+   contributors, setbacks and recovery on both peers. **Incomplete:** D's new Day 3
+   isolation-valve sequence, strict different-actor authorization, fresh pressure
+   heartbeat and B snapshot replication. Development DebugSoloOverride defaults on
+   for E's optional gate; a development run cannot prove strict two-actor acceptance.
+10. **Radio to F4 lantern — expected legacy finale.** One keeper holds/transmits
+    SUN/WAVE/STAR; the other operates beacon switches without the lantern revealing
+    the code. Test a wrong switch, retained completed work, beacon light and victory
+    only with both alive at the top. **Incomplete:** D's day catalog has a rest
+    ending; it does not supply a new climb-to-top finale.
+11. **Flood/rescue when encountered, then finish/retry — expected legacy behavior.**
+    Test air, downed state, lifeline aim/release, catch, pull, expiry and both-downed
+    loss. Check stationary fade/recovery comfort, result return to lobby and fresh
+    retry. Separately disconnect guest then host; reconnect host first with the
+    remembered code, then guest, and require fresh readiness. **Incomplete:** live
+    two-device validation, host migration and restoration of an interrupted day.
+12. **Across the whole walk — unverified acceptance.** Record Quest model/refresh,
+    CPU/GPU frame times, draw calls, GC, thermal behavior, network RTT/loss, readable
+    boards/reach and full run duration. No ten-minute completion, comfort,
+    performance or live two-headset synchronization pass is claimed.
 
-Reproduce from the repository root with Unity open:
+## Reproduce
+
+With Unity closed, from the repository root (licensing pipe belongs to this Hub session):
 
 ```sh
-~/.unity/bin/unity recompile --json
-~/.unity/bin/unity command --detach menu --path 'Lighthouse Keepers/Sprint 3/Networking/Build Quest APK' --json
-~/.unity/bin/unity job status JOB_ID --json
+mkdir -p artifacts/sprint3-review
+/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode -quit -nographics -projectPath "$PWD" -buildTarget Android -licensingIpc LicenseClient-w0cUwLXL7i1XUa5XL3n3x -executeMethod LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest -logFile artifacts/sprint3-review/manual-build.log
 cat Builds/LighthouseKeepers-Sprint3-Networking.apk.txt
 # Only after result=Succeeded and errors=0:
 /Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb -s 2G0YC1ZG32048T install -r Builds/LighthouseKeepers-Sprint3-Networking.apk
 ```
 
-With this project's Editor closed, this was the successful batch command (the
-licensing pipe belongs to the current Hub session):
-
-```sh
-mkdir -p artifacts/sprint3-networked-integration
-/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode -quit -nographics -projectPath "$PWD" -buildTarget Android -licensingIpc LicenseClient-w0cUwLXL7i1XUa5XL3n3x -executeMethod LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest -logFile artifacts/sprint3-networked-integration/manual-build.log
-```
-
-If duplicate-cache errors return, close Unity, preserve the three generated copies
-outside its cache, then rerun the build above:
+With Unity open, use **Lighthouse Keepers → Sprint 3 → Networking → Build Quest APK**.
+If the same duplicate-assembly error returns, close Unity and preserve only the
+generated numbered DLL/PDB copies before rebuilding:
 
 ```sh
 python3 - <<'PY'
 from pathlib import Path
-import shutil
-for relative in ('Editor/TypeDb-All 2.json', 'Player/TypeDb-All 2.json', 'Player/RuntimeInitializeOnLoads 2.json'):
-    src = Path('Library/BuildPlayerData') / relative
-    dst = Path('artifacts/sprint3-networked-integration/quarantined-build-cache') / relative
-    if src.exists():
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        if dst.exists():
-            dst = dst.with_name(dst.name + '.retry')
-        if dst.exists():
-            raise RuntimeError('Preserved copy already exists: ' + str(dst))
-        shutil.move(str(src), str(dst))
+import re, shutil, time
+src = Path('Library/Bee/artifacts/Android/ManagedStripped')
+dst = Path('artifacts/sprint3-review') / ('cache-recovery-' + str(time.time_ns()))
+for file in src.iterdir():
+    if re.search(r' [2-9][0-9]*\.(dll|pdb|mdb)$', file.name):
+        dst.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(file), str(dst / file.name))
 PY
 ```
 
-Current invocation evidence is under ignored `artifacts/sprint3-networked-integration/`.
+Prior same-source evidence recorded in the preceding report: B 22 passed/1 Unity-only
+check not run; D 20 scenarios; A 70 assertions; networking Edit Mode 20/20 and Play
+Mode 3/3. These were not rerun for this unchanged source. The Play Mode runner used
+an offline Fusion session, not a live Photon pair or headset acceptance.
