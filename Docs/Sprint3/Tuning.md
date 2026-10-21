@@ -2,6 +2,8 @@
 
 Status: **[PROPOSED] for device acceptance**. Source and managed tests exist; no APK was produced and no headset test ran. These numbers are proposed from deterministic tests, not device-tuned values. The current scenes still use legacy water writers until C/D/E integrate the replacement.
 
+For the October 21 command additions, loaded-assembly reflection tripwire, current verification scope and exact binding signatures, see **[SimulationAPI.md](SimulationAPI.md)**. The original-run evidence below predates that API update.
+
 | Asset field | Value | Units / purpose |
 | --- | ---: | --- |
 | `leakInflowM3PerSec` | 0.180 | m³/s while active |
