@@ -6,25 +6,42 @@ in that order, with `--no-ff` merge commits; no additional merges were needed.
 See [MergeReview.md](MergeReview.md) for exact tips and review findings.
 No scene/prefab was hand-merged; pre-existing untracked files were preserved.
 
-**Built:** `Builds/LighthouseKeepers-Sprint3-Networking.apk`, Android ARM64/IL2CPP
-development; **Succeeded, 0 errors**, 185,407,384 APK bytes. Archive CRC passed;
-all native libraries are arm64-v8a. SHA-256:
-`beba32ea7aa21b6fbf2a28d78a888b8c319f3e2ba27f79403cbe087f04cfc59c`.
-**Installed:** `adb install -r` returned `Success` on Quest 3 `2G0YC1ZG32048T`
-(package `com.lighthousekeepers.game`). Launch request returned `Status: ok` but
-opened Quest’s `LaunchCheckControllerRequiredDialogActivity`; no game process
-was running after the request. Wake/connect Touch controllers and clear the prompt.
-No observed lobby or in-headset gameplay pass is claimed.
+**Solo update (`8386dc8`):** choose **PLAY SOLO** directly on the lobby board or in
+**CREW OPTIONS**. It needs no hosting, readiness, internet or second keeper and
+closes any surviving host session before opening offline practice. All stairs
+open; each floor's board offers DAY 1 / DAY 2 / DAY 3 / RELAY selectors. Pipe,
+generator, refuge continuation and final ascent can be completed alone; radio
+code can be noted downstairs then used upstairs. Multiplayer keeps its two-player
+rules. See the [solo headset checklist](SoloPractice.md).
+
+**Built and installed:** `Builds/LighthouseKeepers-Sprint3-Networking.apk`, Android
+ARM64/IL2CPP development, **Succeeded / 0 errors**, 185,405,708 bytes. APK archive
+CRC passed. `adb install -r` returned `Success` on Quest 3 `2G0YC1ZG32048T`,
+package `com.lighthousekeepers.game`. SHA-256:
+`01f820b8f53684f0f89b8d923da8f1fee2bdf87f1eb3c655288ad54c0ef5d686`.
+Source: `8386dc8`; evidence: `artifacts/sprint3-solo/`.
+Cold launch returned `Status: ok` for UnityPlayerGameActivity; the app process
+was running. Its captured 400-line PID log tail had no matching fatal, null-reference,
+missing-component, missing-method or type-load exception. The ADB screenshot was
+black and supplies no visual acceptance evidence. Solo entry/controls are verified
+in Editor; a wearer still needs to check the physical UI and interactions.
 The existing networking builder uses the production lobby and inherited Storm
 Watch; it excludes Lab/DevGym. C's fixtures and D's new days are not this entry.
 
-The first current attempt compiled but failed IL2CPP with
+**Executed this update:** all 21 solo/cooperative rules tests passed. Both Unity
+Play Mode lobby-flow tests passed: direct Play Solo, and Play Solo closing a
+surviving offline Fusion host runner. Tests clicked real lobby/selector buttons,
+loaded and ran the watch, checked open stairs/no network runner, checked radio UI
+spacing, and returned to the lobby with no solo-mode leakage. Logs/XML are under
+`artifacts/sprint3-solo/`. These are Editor execution, not headset acceptance.
+
+The earlier integration attempt compiled but failed IL2CPP with
 `System.ArgumentException: An item with the same key has already been added. Key: mscorlib`.
 Its inputs included `mscorlib.dll`, `mscorlib 2.dll`, `mscorlib 3.dll` and other
 numbered copies. Preserved 340 generated DLL/PDB copies from
 `Library/Bee/artifacts/Android/ManagedStripped` under ignored
 `artifacts/sprint3-review/quarantined-build-cache`, then retried. No source was
-removed. Current attempt evidence: `artifacts/sprint3-review/`.
+removed. Earlier integration evidence: `artifacts/sprint3-review/`.
 
 Review blocks: D requires B's missing `ActivateDayLeak(int)`; E's disabled adapter
 fails a review-only symbol-enabled compile with **CS0535**, missing
@@ -36,16 +53,19 @@ Sprint 3 simulation/progression even when the production APK builds.
 ## Consolidated headset checklist — lobby to finish
 
 **Expected** is a source prediction for this APK, not an observed headset pass.
-**Incomplete** means the named Sprint 3 integration is unavailable. Test both
-headsets with the same APK; use Editor host + Quest guest for one-person rehearsal.
+**Incomplete** means the named Sprint 3 integration is unavailable. For testing
+alone use [Solo practice](SoloPractice.md). The crew checks below require two
+connections; they are separate from the tested offline entry.
 
 1. **Lobby entry — expected.** Wake Touch controllers, clear any controller-required
    prompt, inspect hands, walk/turn and use the physical board's UI ray. Check
    open/fist/pinch response and both-eye text. Comfort/reach remain unverified.
-2. **Crew setup — expected.** Host, enter the six-character code on the guest keypad,
+2. **Mode selection — solo entry verified in Editor.** Choose PLAY SOLO for
+   immediate local practice; no Ready/Begin step is needed. For a crew, host,
+   enter the six-character code on the guest keypad,
    test an invalid code, and compare names/readiness. One ready keeper cannot start;
-   two ready keepers allow host BEGIN WATCH. **Incomplete:** a Play Solo lobby route
-   and integrated voice. Use party/colocated voice for cooperative testing.
+   two ready keepers allow host BEGIN WATCH. **Incomplete:** integrated voice.
+   Use party/colocated voice for cooperative testing.
 3. **House arrival — expected.** Both load together, see one remote keeper, and keep
    independent tracked cameras. Check head/hand motion and nameplate fading.
    **Incomplete:** remote articulated gloves/hand-pose binding; placeholders remain.
