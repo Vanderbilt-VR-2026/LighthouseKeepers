@@ -2,7 +2,7 @@
 
 Status: **[PROPOSED] for device acceptance**. Source and managed tests exist; no APK was produced and no headset test ran. These numbers are proposed from deterministic tests, not device-tuned values. The current scenes still use legacy water writers until C/D/E integrate the replacement.
 
-For the October 21 command additions, loaded-assembly reflection tripwire, current verification scope and exact binding signatures, see **[SimulationAPI.md](SimulationAPI.md)**. The original-run evidence below predates that API update.
+For the Round 2 watch lifecycle, canonical ship build/evidence gates, loaded-assembly tripwire and current binding signatures, see **[SimulationAPI.md](SimulationAPI.md)**. The original-run evidence below predates that update; the original build helper no longer accepts legacy scene settings.
 
 | Asset field | Value | Units / purpose |
 | --- | ---: | --- |
@@ -16,6 +16,7 @@ For the October 21 command additions, loaded-assembly reflection tripwire, curre
 | `failSustainSeconds` | 3 | continuous seconds at/above the failure line |
 | `electricPumpStartPower` | 0.35 | minimum available power to start |
 | `initialFuelSeconds` | 900 | seconds of generator runtime in a full tank |
+| `generatorFaultSeepM3PerSec` | **0.176** | m³/s during a begun watch's unresolved generator fault; hand throughput is 94.70% of this rate |
 
 The source of tuning is `Assets/Data/Tuning/FloodTuning.asset`. Immutable core parameters are copied from it when the driver starts; restart the driver/Play Mode after editing tuning. ResetRun resets state with that same parameter copy.
 

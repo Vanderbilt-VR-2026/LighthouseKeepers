@@ -2,6 +2,16 @@
 
 Status: [PROPOSED] pending networking integration.
 
+## Round 2 — compose the real ship once
+
+Use C's sole `Assets/Scenes/Sprint3/ShipScenes.json` for lobby, build list and both solo/multiplayer loaders. Do not fall back to StormWatch/Lab/Bootstrap/Level01–04 when ship composition is missing. B's global player-build gate now rejects legacy/mismatched/unlisted scene sets and requires fresh real Play Solo screenshot evidence. B does not edit your loader, C's manifest, Build Settings or scenes.
+
+On the host only, while the simulation object is inactive, call `SimulationHostBehaviour.ConfigureScene(profile, actualF1Floor, actualGeneratorPlinthTop, sessionAuthority, dayDirector.CanRepairPipe)`. C published STN_GENERATOR/PLINTH_TOP world Y=3.750. Wait for all Shell/Dress scenes; configure D with keeper count 1 for solo (co-op prerequisites auto-satisfied by D) or the actual connected crew for multiplayer; then enable one backend. No singleton, alternate integrator or fake second keeper is supplied by B.
+
+BeginDay(1..3) now starts healthy with power/pump on and no leak, waiting for D's scheduled incident. Add facade shorthand `ActivateDayLeak(int)` that enqueues new host-only ID **10**; D discovers that concrete method by reflection. ForceGeneratorFault creates the slower seep; validated StartGenerator clears it and restores pumping, while pipe repair remains independently validated. B no longer forwards A's raw generator event; D must validate and send the command once. Extend the snapshot wire format for **DayIndex** and **GeneratorFaultActive** as well as prior Paused/diagnostics. The interface itself remains ISimulationHost unchanged.
+
+R8 entry: `Round2ShipReachabilityTests.LobbyPlaySoloReachesShipAndCapturesPipe` must find the actual Play Solo button and observe all ship scenes plus initialized DayIndex=1; it never shortcuts by opening the world. It saves STN_PIPE_LEAK.png and fingerprinted reachability.json under artifacts/round2/B. Missing/stale proof blocks shipping. This test is not yet runnable here because Unity IPC is denied and the merged ship route is absent. Details: SimulationAPI.md. Later Round 2 statements supersede earlier request sections below.
+
 ## October 21 response to updated E-to-B
 
 The binding contract is now `Docs/Sprint3/SimulationAPI.md`. Runtime commands **PauseSimulation=8** and **ResumeSimulation=9**, plus development-only **DebugSetWaterVolumeM3=102** and **DebugSetLeakInflowM3PerSec=103**, cover E's requested controls. Debug initialization requires paused Running, accepts finite nonnegative values in the named units, and never treats world height as authoritative. Existing IDs are unchanged. Use `SimCommandPolicy.IsHostOnly` / `IsDevelopmentOnly`, reject unknown IDs, and reject remote lifecycle/admin/debug requests even in development builds. Core checks authority for its backend; E authenticates each actor and station interaction.

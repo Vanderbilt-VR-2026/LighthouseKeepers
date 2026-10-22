@@ -1,6 +1,6 @@
-# Simulation API — October 21, 2026
+# Simulation API — Round 2 ship integration
 
-Status: **[BUILT-UNTESTED] for managed assemblies only**. The command and reflection tests run outside Unity; Android, scene integration and headset acceptance remain unverified. This is the binding contract for B, C, D and E. It answers the updated `E-to-B.md` in E's networking worktree; that updated request was not yet present on E's fetched remote branch.
+Status: **[PROPOSED] for ship acceptance**. Managed source compiles and tests run, but R8 is not met: the canonical manifest/loader integration is not present on this checkout, Unity startup is blocked by IPC permissions, and no genuine ship Play Mode screenshot or new APK exists. The current binding contract below supersedes the earlier immediate-leak BeginDay behavior. Round 2 evidence belongs in `artifacts/round2/B/`.
 
 ## Assemblies and namespaces
 
@@ -9,7 +9,7 @@ Status: **[BUILT-UNTESTED] for managed assemblies only**. The command and reflec
 | `LK.Core.Simulation` | `LighthouseKeepers.Core.Simulation` | Pure C# state, commands, parameters, authority and geometry contracts; no Unity/networking references |
 | `LK.Simulation.Unity` | `LighthouseKeepers.Simulation.Unity` | Tuning ScriptableObject, scene driver, optional interaction event bridge and development panel |
 | `LK.Simulation.Tests` | `LighthouseKeepers.Tests.Simulation` | Editor NUnit tests, including `NoNetworkingLeakageTest` |
-| `LK.Simulation.Editor` | `LighthouseKeepers.Simulation.Editor` | Existing-scene Android builder |
+| `LK.Simulation.Editor` | `LighthouseKeepers.Simulation.Editor` | Manifest-only ship builder and build gates |
 
 E owns all networking implementations in `LK.Net`. No networking package or implementation is introduced by B. Reference `LK.Core.Simulation` from E's asmdef before enabling E's `LK_SPRINT3_SIMULATION` symbol. That symbol is not needed by B's assemblies. E's guarded adapter must implement **all** interface members, including `ForceGeneratorFault()`.
 
@@ -33,11 +33,14 @@ public sealed class LocalAuthority : IAuthority
 
 `ForceGeneratorFault()` is shorthand for enqueuing `ForceGeneratorFault`, not an out-of-band write. A failed or paused run rejects that gameplay fault command until its state permits it.
 
+The concrete host and Unity driver also expose `ActivateDayLeak(int dayIndex)`, which enqueues command ID 10. D's cached reflection port requires this concrete method on whichever backend/facade it is given; E must forward it on its facade. No additional ISimulationHost interface member is required.
+
 `SimulationHost` has this constructor and additional public driver method:
 
 ```csharp
 public SimulationHost(FloodParameters tuning, ISimulationGeometry geometry,
-    IAuthority authority, double initialVolumeM3 = 0);
+    IAuthority authority, double initialVolumeM3 = 0,
+    System.Func<int, bool> canRepairPipe = null);
 public const double TickSeconds = 0.1;
 public void Advance(double elapsedSeconds);
 ```
@@ -46,7 +49,7 @@ public void Advance(double elapsedSeconds);
 
 An unauthoritative host discards `Enqueue` input and does not advance; it is **not a client replica**. E's facade receives authenticated snapshots and forwards commands to the authoritative backend. The server derives `ActorId` from the transport sender, not client input. `IAuthority` only establishes who advances the host; it does not authenticate each actor or validate physical interactions.
 
-Initial/reset state: volume 0, active leak, generator OFF, pump OFF, full configured fuel, `Running`, unpaused. Snapshot tick is monotonic across ResetRun. `Succeeded`/`Failed` freeze integration but still publish ticks. BeginDay resumes a succeeded day; a failed run requires ResetRun.
+ResetRun restores a dry, unpowered, active-leak arithmetic baseline at DayIndex=0. It is not a ship watch: the loader/D must enqueue BeginDay(1) before declaring Play Solo ready. BeginDay starts a **healthy** watch: normal power/pump, no leak/fault, and no automatic success before an incident has actually occurred. Water/fuel persist between watches. Snapshot tick is monotonic across resets. Succeeded/Failed freeze integration but still publish ticks; failed runs require ResetRun before BeginDay.
 
 ## Commands and network authorization
 
@@ -66,20 +69,21 @@ The original IDs 0–7 and development IDs 100–101 are preserved explicitly. U
 
 | ID | `SimCommandKind` | Value / target / effect | Valid state and sender |
 | ---: | --- | --- | --- |
-| 0 | `RepairLeak` | Stop the single active leak | Running, unpaused; host-validated repair completion |
+| 0 | `RepairLeak` | Repair the pipe; in a begun watch, restore electric drainage if power is available. It cannot clear a generator-fault seep | Running, unpaused; actor must pass injected D.CanRepairPipe validation before any mutation |
 | 1 | `ManualPumpStroke` | Remove configured m³/stroke, flooring volume at zero; Value is ignored | Running, unpaused; host-validated down-stroke; one global pump cooldown across actors |
-| 2 | `StartGenerator` | Start only with measured dry plinth and fuel remaining | Running, unpaused; host-validated interaction |
+| 2 | `StartGenerator` | Start only with measured dry plinth/fuel. In a begun watch, clear the generator-fault seep and restore electric pumping; never repair an independent pipe fault | Running, unpaused; D validates fuel/prime/choke before this command |
 | 3 | `StopGenerator` | Stop generator and electric pump | Running, unpaused; host-validated interaction |
 | 4 | `SetElectricPump` | Value **0 or 1**; starting requires nonzero power at/above the configured threshold | Running, unpaused; host-validated interaction |
-| 5 | `BeginDay` | TargetId **nonnegative day index**; reopen leak, clear failure timer, resume Running; preserve volume, fuel, power/pump, pause and any development rate override | Running or Succeeded; **host only**, scheduled by D |
+| 5 | `BeginDay` | TargetId **1..3**; start healthy, clear incident/fault/failure flags, enable generator/pump, resume Running; preserve volume, remaining fuel, pause and development rate override | Running or Succeeded; **host only**; rejects unavailable/flooded/exhausted generator |
 | 6 | `ResetRun` | Restore initial dry state and published tuning rate; clear pause, rate override and cooldown | Any phase/pause; **host only** |
-| 7 | `ForceGeneratorFault` | Stop generator and electric pump; D chooses timing | Running, unpaused; **host only** |
+| 7 | `ForceGeneratorFault` | Stop generator/pump; in a begun watch start the slower fault seep. D chooses timing | Running, unpaused; **host only** |
 | 8 | **`PauseSimulation`** | Pause integration; no Value argument needed | Any phase; **host only**; does not change Phase |
 | 9 | **`ResumeSimulation`** | Resume integration only if Phase is Running | Any phase; **host only**; never revives Failed/Succeeded |
+| 10 | **`ActivateDayLeak`** | TargetId must match current DayIndex 1..3. Start pipe inflow and trip the electric pump so the fault creates visible pressure. Duplicate activation is idempotent | Running, unpaused; **host only**, scheduled by D |
 | 100 | `DebugSetLeak` | Value **0 or 1**; diagnostic leak toggle | Any phase/pause; **local host development tooling only** |
 | 101 | `DebugSetWaterHeight` | Existing diagnostic command: finite world Y, converted to volume using injected origin/area, flooring below-floor input at dry; reset failure timer | Any phase/pause; **local host development tooling only**; does not revive a terminal run |
 | 102 | **`DebugSetWaterVolumeM3`** | Finite Value **≥0 m³**; no ceiling; replace volume, clear failure timer and refresh flooding/power | **Paused Running only**; **local host development initialization only** |
-| 103 | **`DebugSetLeakInflowM3PerSec`** | Finite Value **≥0 m³/s**; no ceiling; override this run's active-leak rate without editing the asset | **Paused Running only**; **local host development initialization only** |
+| 103 | **`DebugSetLeakInflowM3PerSec`** | Finite Value **≥0 m³/s**; no ceiling; override this run's primary pipe rate without editing the asset; the separate fault-seep tuning remains unchanged | **Paused Running only**; **local host development initialization only** |
 
 IDs 100–103 exist only under `#if DEVELOPMENT_BUILD || UNITY_EDITOR`; they are absent from a release build's enum and handlers. Undefined IDs are rejected by the host. The new initialization commands reject negative input instead of silently coercing it. Zero rate preserves `LeakActive` and cannot by itself satisfy the repaired-leak success condition. BeginDay preserves a diagnostic rate override; ResetRun restores the copied asset value. Absolute world-Y remains derived from volume, including when the older height diagnostic is used. Do not translate received snapshots into any initialization command.
 
@@ -110,7 +114,7 @@ Pause continues 10 Hz ticks/events, freezes water, fuel, failure sustain and pum
 | `WaterHeightM` | float | **World Y** = injected F1 origin + volume / area |
 | `InflowM3PerSec` | float | Current actual leak inflow; zero paused/terminal/sealed |
 | `OutflowM3PerSec` | float | Actual removal during this tick / 0.1 s, including accepted manual impulses |
-| `LeakActive` | bool | Leak needs repair, independently of a diagnostic rate of zero |
+| `LeakActive` | bool | Pipe leak OR fault seep remains active; a zero diagnostic rate does not repair it |
 | `GeneratorRunning` | bool | Generator enabled and capable of running |
 | `PowerAvailable` | float | Binary 0 or 1; no partial-power state this sprint |
 | `ElectricPumpRunning` | bool | Pump enabled; pause suspends its actual flow |
@@ -122,6 +126,8 @@ Pause continues 10 Hz ticks/events, freezes water, fuel, failure sustain and pum
 | `SecondsAboveFail` | float | Sustained time at/above the failure depth, frozen by pause |
 | `TimeToFailSeconds` | float | ETA assuming no new manual strokes and persistent current power; positive infinity when not projected to fail/paused, zero after failure |
 | **`Paused`** | bool | Integration paused independently of Phase |
+| **`DayIndex`** | int | 0 before a ship watch; 1..3 after BeginDay |
+| **`GeneratorFaultActive`** | bool | Fault-induced seep still needs validated generator recovery |
 
 Public constructor, preserving E's first ten positional arguments:
 
@@ -132,12 +138,12 @@ public SimSnapshot(int tick, double waterVolumeM3, float waterHeightM,
     RunPhase phase, string lastRejectReason = "", bool generatorFlooded = false,
     bool generatorGeometryAvailable = true, float fuelRemainingSeconds = 0,
     float secondsAboveFail = 0, float timeToFailSeconds = float.PositiveInfinity,
-    bool paused = false);
+    bool paused = false, int dayIndex = 0, bool generatorFaultActive = false);
 ```
 
 This is C# source compatibility, **not a network packet specification**. E's old ten-field/40-byte snapshot packet omits diagnostics and Paused. E must version and extend its wire format, validate the added fields (ETA explicitly allows positive infinity), and replicate all fields needed by consumers. Defaults in the short constructor do not establish actual fuel, plinth geometry or rejection state on a client. Only E serializes packets; C/D read the facade's snapshots.
 
-Readable rejections include missing/flooded generator geometry, exhausted fuel, pump without power, invalid binary/finite input, too-fast stroke, paused gameplay, terminal-phase input, and initialization outside paused Running. The generator and electric pump stop when power is lost; restoring the generator does not automatically restart the electric pump.
+Readable rejections include missing/flooded geometry, exhausted fuel, pump without power, invalid input/watch identity, too-fast stroke, paused/terminal input, failed repair authorization and unavailable repair validation. The generator and electric pump stop when power is lost. In a begun watch, validated restart restores pumping. Bare DayIndex=0 arithmetic tests retain explicit pump activation.
 
 ## Geometry, parameters and Unity composition
 
@@ -154,7 +160,7 @@ public FloodParameters(double leakInflowM3PerSec, double manualPumpStrokeM3,
     double manualPumpMinStrokeSeconds, double electricPumpM3PerSec,
     double floorAreaM2, double failHeightM, double safeHeightM,
     double failSustainSeconds, double electricPumpStartPower,
-    double initialFuelSeconds);
+    double initialFuelSeconds, double generatorFaultSeepM3PerSec);
 ```
 
 Fixed geometry requires a finite floor and a finite plinth above the floor, or null for unavailable plinth data. Never substitute the STN_GENERATOR root for a plinth-top measurement. Unknown/flooded geometry prevents generator starts. FloodParameters exposes immutable double properties matching those names in PascalCase. Base rates, area, failure height and durations must be positive/finite; safe height must be nonnegative and below fail height, threshold within 0..1, fuel nonnegative/finite. Threshold heights are **depths above F1 origin**, not absolute world Y. See `Tuning.md` for asset numbers and balance evidence.
@@ -163,9 +169,33 @@ Fixed geometry requires a finite floor and a finite plinth above the floor, or n
 
 E starts the backend component disabled, calls `ConfigureAuthority(IAuthority)` **before Start**, and enables it only after host authority and scene readiness are established. E implements the network authority in LK.Net; B supplies LocalAuthority for offline use. A disabled client component must not construct/advance a SimulationHost. On the host, Unity Start constructs it and Update calls Advance(Time.deltaTime); externally driven pure hosts do not use that MonoBehaviour. Use `IsInitialized` before accessing the driver's Current or enqueuing; those operations throw before initialization. ConfigureAuthority throws after initialization.
 
-Other public driver members: `FloorWorldY`, `TryGetGeneratorPlinthTopWorldY(out double)`, `RebindInteractionEvents()` and the ISimulationHost members. The optional InteractionEventBridge subscribes only to A's exact three static Action<int> events; its public surface is `InteractionEventBridge(ISimulationHost)`, `Bind(Type)`, `BindAvailableAssembly()` and `Dispose()`. Bind a single bridge to the intended facade/authority endpoint, preserve A's event accessors for IL2CPP, and avoid duplicate subscriptions through both the facade and backend. Rebind unsubscribes existing listeners first.
+For ship composition, call the driver's typed setup while its object is inactive:
 
-C's water view moves only a dedicated presentation mesh using snapshot height. D schedules BeginDay/ResetRun/faults and waits for **repaired leak AND depth ≤ safeHeightM** for success. Failure requires depth ≥ failHeightM for the full configured three seconds; only the above-threshold fraction of a crossing tick counts. No consumer writes a legacy flood controller or copies snapshot height back into Enqueue.
+```csharp
+public void ConfigureScene(FloodTuning profile, UnityEngine.Transform floor,
+    UnityEngine.Transform plinthTop, IAuthority sessionAuthority,
+    System.Func<int, bool> canRepairPipe);
+public void ConfigureRepairValidation(System.Func<int, bool> canRepairPipe);
+public void ActivateDayLeak(int dayIndex);
+```
+
+Pass D's actual `CanRepairPipe(actorId)`, not an always-true solo bypass. D/E own solo's one-keeper cooperation policy; B applies the same validator and simulation in both modes. The callback is checked before mutating water/leak state; missing/false/throwing validation rejects the repair. A must also query D throughout physical repair effort. C published `STN_GENERATOR/PLINTH_TOP` at world **Y=3.750 m** and F1 floor Y=0; bind those real transforms, never the F2 generator root at Y=3.300. ConfigureRepairValidation can update the injected callback as composition becomes ready; ConfigureScene must precede Start.
+
+Other public driver members: `FloorWorldY`, `TryGetGeneratorPlinthTopWorldY(out double)`, `RebindInteractionEvents()` and the ISimulationHost members. InteractionEventBridge now forwards A's **pump and repair** events only. D validates prime/choke/fuel and submits StartGenerator once; B does not independently forward the raw generator event. Public bridge surface remains `InteractionEventBridge(ISimulationHost)`, `Bind(Type)`, `BindAvailableAssembly()` and `Dispose()`. Bind one bridge per input endpoint. Driver disable disposes subscriptions; re-enable rebinds without duplication. B's link.xml preserves shared contracts/driver/tuning for IL2CPP; A owns preservation of its event accessors.
+
+The watch fault circuit uses the primary pipe rate when the pipe is broken, otherwise the slower generator-fault seep rate while that fault remains; the rates are not added as two fictional leaks. Tuning adds `generatorFaultSeepM3PerSec=0.176`. Maximum manual throughput is 92.59% of the pipe rate and 94.70% of the slower fault rate, so neither fault can be drained away by hand pumping alone. Repair clears only the pipe; validated generator start clears only its fault, restores power and starts the electric pump. A watch succeeds only after an incident, both faults are resolved, water is safe **and power/pumping are restored**. BeginDay's healthy prelude cannot instantly win.
+
+C's water view moves only a dedicated presentation mesh using snapshot height; its amber beacon and lighting read PowerAvailable without changing simulation state. D schedules incidents and next-watch progression. Failure still requires depth ≥ failHeightM for the full configured three seconds. No consumer writes a legacy flood controller or copies snapshot height back into Enqueue.
+
+## Ship build and R8 acceptance gate
+
+The only scene source is C's `Assets/Scenes/Sprint3/ShipScenes.json`, with a flat `scenes` array. B does not create a competing manifest or edit C's scenes/build settings. Scene 0 must be the environment lobby and scene 1 the real Shell House; retain the existing NetworkLobby as a dependency elsewhere in the list. Include Shell/Dress House, F1..F4 and Exterior. StormWatch, Lab world, DevGym and Level01–04 are forbidden. Build Settings must exactly match this list.
+
+`ShipSimulationBuildGate` applies to every player builder, including legacy menu commands. It rejects missing/incomplete/wrong manifests, mismatching build settings, unlisted processed scenes and serialized B diagnostic panels. B's helper reads the manifest rather than blindly packaging enabled scenes. Runtime B diagnostics never create a canvas in a player, and Editor diagnostics require an explicit opt-in flag.
+
+A player build also requires fresh **real** Lobby -> Play Solo evidence from `Round2ShipReachabilityTests.LobbyPlaySoloReachesShipAndCapturesPipe`. The test enters Play Mode through the actual lobby, invokes the real Play Solo button, waits for all Shell/Dress scenes and exactly one initialized Day 1 simulation, checks D's installed director/objective and A's own physical binding validator, checks the named pipe/house board, then saves an observer-camera render facing STN_PIPE_LEAK from two metres away. It never loads the world as a shortcut, fixes missing interaction bindings, creates fake keepers, or moves a tracked camera.
+
+The output is `artifacts/round2/B/STN_PIPE_LEAK.png` plus `reachability.json`. The proof is tied to the manifest, scene asset dependencies, script sources and selected build target; stale/missing proof blocks building. This is Editor reachability evidence, not a headset comfort/performance test. Run with Android selected and graphics available. No screenshot has been produced in this restricted session.
 
 ## Reflection tripwire and verification
 
@@ -173,14 +203,15 @@ Source: `Assets/Tests/EditMode/Simulation/NoNetworkingLeakageTest.cs`, assembly 
 
 The scanner checks reflected assembly dependencies, declarations, bases/interfaces, generic constraints/arguments, members, method locals/catches and resolved IL member/type tokens. It detects Fusion, Photon, Unity.Netcode, Unity.Networking, UnityEngine.Networking, System.Net, LighthouseKeepers.Net and legacy networking namespaces, plus dependencies on networking game assemblies. Unreadable reflection metadata fails the test. Four emitted-fixture tests prove forbidden generic fields, method-body-only calls, every listed networking namespace and the exact LK.Net exception. No Mono.Cecil or Unity compilation-pipeline dependency remains.
 
-**35 managed NUnit methods passed, zero failed/skipped** on this checkout. The loaded-assembly scan in that run included LK.Core.Simulation and LK.Simulation.Unity. This does not prove E's not-yet-merged networking assemblies or the entire Unity Editor domain pass. The original four balance tests remain green: idle failure 242.0 s, electric recovery 69.0 s, manual throughput 92.59% of inflow. Core and adapter also compile with release defines.
+**51 managed NUnit methods passed, zero failed; the ship Play Mode test is unrun** on this checkout. The loaded-assembly scan covered B's core/adapter, not the entire merged Editor domain. The four original balance tests remain green: idle failure 242.0 s, electric recovery 69.0 s, manual throughput 92.59% of inflow. Core/adapter also compile with release defines. These checks do not satisfy R8.
 
 ```sh
 UNITY_BIN=/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity
-"$UNITY_BIN" -batchmode -quit -nographics -projectPath . -logFile artifacts/compile.log
-"$UNITY_BIN" -batchmode -nographics -projectPath . -runTests -testPlatform EditMode -assemblyNames LK.Simulation.Tests -testResults artifacts/simulation-editmode.xml -logFile artifacts/tests.log
-"$UNITY_BIN" -batchmode -quit -nographics -projectPath . -buildTarget Android -executeMethod LighthouseKeepers.Simulation.Editor.SimulationBuild.BuildAndroid -logFile artifacts/build.log
-adb install -r artifacts/builds/LighthouseKeepers-Simulation.apk
+mkdir -p artifacts/round2/B
+"$UNITY_BIN" -batchmode -quit -nographics -projectPath . -logFile artifacts/round2/B/compile.log
+"$UNITY_BIN" -batchmode -projectPath . -buildTarget Android -runTests -testPlatform EditMode -testFilter LighthouseKeepers.Tests.Simulation.Round2ShipReachabilityTests.LobbyPlaySoloReachesShipAndCapturesPipe -testResults artifacts/round2/B/ship-playmode.xml -logFile artifacts/round2/B/ship-playmode.log
+"$UNITY_BIN" -batchmode -quit -nographics -projectPath . -buildTarget Android -executeMethod LighthouseKeepers.Simulation.Editor.SimulationBuild.BuildAndroid -logFile artifacts/round2/B/build.log
+adb install -r artifacts/round2/B/LighthouseKeepers-Ship.apk
 ```
 
 Unity startup attempts are blocked by Package Manager socket permission errors in this sandbox, so no new APK or headset evidence exists. Reproduce the managed run with `Assets/Tests/EditMode/Simulation/run_standalone.py` as documented in Tuning.md. The previous headset checklist still applies after scene integration. Additional unexecuted checks:
