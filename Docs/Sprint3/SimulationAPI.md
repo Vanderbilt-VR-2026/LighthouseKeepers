@@ -49,7 +49,7 @@ public void Advance(double elapsedSeconds);
 
 An unauthoritative host discards `Enqueue` input and does not advance; it is **not a client replica**. E's facade receives authenticated snapshots and forwards commands to the authoritative backend. The server derives `ActorId` from the transport sender, not client input. `IAuthority` only establishes who advances the host; it does not authenticate each actor or validate physical interactions.
 
-ResetRun restores a dry, unpowered, active-leak arithmetic baseline at DayIndex=0. It is not a ship watch: the loader/D must enqueue BeginDay(1) before declaring Play Solo ready. BeginDay starts a **healthy** watch: normal power/pump, no leak/fault, and no automatic success before an incident has actually occurred. Water/fuel persist between watches. Snapshot tick is monotonic across resets. Succeeded/Failed freeze integration but still publish ticks; failed runs require ResetRun before BeginDay.
+ResetRun restores a dry, unpowered, active-leak arithmetic baseline at DayIndex=0. It is not a ship watch: the loader/D must enqueue BeginDay(1) before declaring Play Solo ready. BeginDay starts a **healthy** watch: normal power/pump, no leak/fault, and no automatic success before an incident has actually occurred. Water/fuel persist between watches. Snapshot tick is monotonic across resets. Succeeded keeps passive powered drainage/fuel consumption running until dry while waiting for the next watch; Failed freezes integration and requires ResetRun. Both keep publishing ticks. Crossing the safe threshold must not create another artificial plateau.
 
 ## Commands and network authorization
 
@@ -203,7 +203,7 @@ Source: `Assets/Tests/EditMode/Simulation/NoNetworkingLeakageTest.cs`, assembly 
 
 The scanner checks reflected assembly dependencies, declarations, bases/interfaces, generic constraints/arguments, members, method locals/catches and resolved IL member/type tokens. It detects Fusion, Photon, Unity.Netcode, Unity.Networking, UnityEngine.Networking, System.Net, LighthouseKeepers.Net and legacy networking namespaces, plus dependencies on networking game assemblies. Unreadable reflection metadata fails the test. Four emitted-fixture tests prove forbidden generic fields, method-body-only calls, every listed networking namespace and the exact LK.Net exception. No Mono.Cecil or Unity compilation-pipeline dependency remains.
 
-**51 managed NUnit methods passed, zero failed; the ship Play Mode test is unrun** on this checkout. The loaded-assembly scan covered B's core/adapter, not the entire merged Editor domain. The four original balance tests remain green: idle failure 242.0 s, electric recovery 69.0 s, manual throughput 92.59% of inflow. Core/adapter also compile with release defines. These checks do not satisfy R8.
+**52 managed NUnit methods passed, zero failed; the ship Play Mode test is unrun** on this checkout. The loaded-assembly scan covered B's core/adapter, not the entire merged Editor domain. The four original balance tests remain green: idle failure 242.0 s, electric recovery 69.0 s, manual throughput 92.59% of inflow. Core/adapter also compile with release defines. These checks do not satisfy R8.
 
 ```sh
 UNITY_BIN=/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity

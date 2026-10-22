@@ -97,3 +97,4 @@ Aneesh requested the original lobby followed by the new environment on 2026-10-1
 [SB] Inject D's actor repair validation before mutation and stop forwarding unvalidated generator-start events — physical completion must not bypass cooperative or fuel/prime/choke validation.
 [SB] Disable B's in-world diagnostics in all players and require explicit Editor opt-in — Round 2 allows only the house KEEPER WATCH task board in the shipped experience.
 [SB] Bind C's actual PLINTH_TOP at published world Y=3.750 and expose typed scene configuration — a guessed generator-root height or an unattached script does not establish integrated simulation.
+[SB] Continue automatic drainage after Succeeded while freezing Failed runs — the safe-height success threshold must not create a post-repair water plateau during recovery before the next watch.

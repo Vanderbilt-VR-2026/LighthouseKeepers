@@ -83,10 +83,10 @@ namespace LighthouseKeepers.Core.Simulation
             int count = commands.Count;
             for (int i = 0; i < count; i++) Apply(commands.Dequeue(), ref manualRemoved);
             double outflow = manualRemoved / TickSeconds;
-            if (phase == RunPhase.Running && !paused)
+            if ((phase == RunPhase.Running || phase == RunPhase.Succeeded) && !paused)
             {
                 double startDepth = Depth;
-                double inflow = ActiveInflow;
+                double inflow = phase == RunPhase.Running ? ActiveInflow : 0;
                 double electricRate = electricPump ? tuning.ElectricPumpM3PerSec * Power : 0;
                 // Run only for remaining fuel when the tank empties within a tick.
                 double poweredSeconds = generator ? Math.Min(TickSeconds, fuel) : 0;
@@ -96,14 +96,17 @@ namespace LighthouseKeepers.Core.Simulation
                 fuel = Math.Max(0, fuel - poweredSeconds);
                 activeSeconds += TickSeconds;
                 RefreshPower();
-                if (Depth < tuning.FailHeightM) aboveFail = 0;
-                else if (startDepth < tuning.FailHeightM)
-                    // Count only the part of the crossing tick actually above the line.
-                    aboveFail = TickSeconds * (Depth - tuning.FailHeightM) / (Depth - startDepth);
-                else aboveFail += TickSeconds;
-                if (aboveFail + Epsilon >= tuning.FailSustainSeconds) phase = RunPhase.Failed;
-                else if (incidentStarted && !leak && !generatorFault && Depth <= tuning.SafeHeightM &&
-                    (dayIndex == 0 || (Power > 0 && electricPump))) phase = RunPhase.Succeeded;
+                if (phase == RunPhase.Running)
+                {
+                    if (Depth < tuning.FailHeightM) aboveFail = 0;
+                    else if (startDepth < tuning.FailHeightM)
+                        // Count only the part of the crossing tick actually above the line.
+                        aboveFail = TickSeconds * (Depth - tuning.FailHeightM) / (Depth - startDepth);
+                    else aboveFail += TickSeconds;
+                    if (aboveFail + Epsilon >= tuning.FailSustainSeconds) phase = RunPhase.Failed;
+                    else if (incidentStarted && !leak && !generatorFault && Depth <= tuning.SafeHeightM &&
+                        (dayIndex == 0 || (Power > 0 && electricPump))) phase = RunPhase.Succeeded;
+                }
             }
             Publish(outflow);
             OnTick?.Invoke(Current);

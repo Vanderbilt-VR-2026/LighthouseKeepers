@@ -130,5 +130,22 @@ namespace LighthouseKeepers.Tests.Simulation
             host.Enqueue(new SimCommand(SimCommandKind.StartGenerator)); host.Advance(.1);
             Assert.That(host.Current.ElectricPumpRunning, Is.True); Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Succeeded));
         }
+
+        [Test] public void SuccessfulWatchKeepsDrainingDuringRecoveryUntilTheFloorIsDry()
+        {
+            var host = Create(); Begin(host, 1); host.ActivateDayLeak(1); host.Advance(60);
+            host.Enqueue(new SimCommand(SimCommandKind.RepairLeak)); host.Advance(.1);
+            while (host.Current.Phase == RunPhase.Running && host.Current.Tick < 1500) host.Advance(.1);
+            Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Succeeded));
+            double atSuccess = host.Current.WaterVolumeM3;
+            Assert.That(atSuccess, Is.GreaterThan(0));
+            host.Advance(5);
+            Assert.That(host.Current.WaterVolumeM3, Is.LessThan(atSuccess), "Safe height is not a water ceiling/freeze point.");
+            Assert.That(host.Current.OutflowM3PerSec, Is.GreaterThan(0)); Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Succeeded));
+            host.Advance(30);
+            Assert.That(host.Current.WaterVolumeM3, Is.Zero); Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Succeeded));
+            Begin(host, 2); Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Running));
+            Assert.That(host.Current.LeakActive, Is.False);
+        }
     }
 }
