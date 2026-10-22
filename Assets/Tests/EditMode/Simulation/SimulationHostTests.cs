@@ -28,7 +28,8 @@ namespace LighthouseKeepers.Tests.Simulation
         {
             var tall = new FloodParameters(tuning.LeakInflowM3PerSec, tuning.ManualPumpStrokeM3,
                 tuning.ManualPumpMinStrokeSeconds, tuning.ElectricPumpM3PerSec, tuning.FloorAreaM2,
-                100, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds);
+                100, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds,
+                tuning.GeneratorFaultSeepM3PerSec);
             var host = new SimulationHost(tall, new FixedSimulationGeometry(0, 200), new LocalAuthority(), 20 * tuning.FloorAreaM2);
             double before = host.Current.WaterVolumeM3; host.Advance(120);
             Assert.That(host.Current.WaterVolumeM3 - before,
@@ -43,7 +44,7 @@ namespace LighthouseKeepers.Tests.Simulation
             var slowLeak = new FloodParameters(.001, tuning.ManualPumpStrokeM3,
                 tuning.ManualPumpMinStrokeSeconds, tuning.ElectricPumpM3PerSec, tuning.FloorAreaM2,
                 tuning.FailHeightM, tuning.SafeHeightM, tuning.FailSustainSeconds,
-                tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds);
+                tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds, tuning.GeneratorFaultSeepM3PerSec);
             var host = new SimulationHost(slowLeak, new FixedSimulationGeometry(0, 3.5),
                 new LocalAuthority(), tuning.FailHeightM * tuning.FloorAreaM2);
             host.Advance(2.9); Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Running));
@@ -111,7 +112,8 @@ namespace LighthouseKeepers.Tests.Simulation
         {
             var littleFuel = new FloodParameters(tuning.LeakInflowM3PerSec, tuning.ManualPumpStrokeM3,
                 tuning.ManualPumpMinStrokeSeconds, tuning.ElectricPumpM3PerSec, tuning.FloorAreaM2,
-                tuning.FailHeightM, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, .15);
+                tuning.FailHeightM, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, .15,
+                tuning.GeneratorFaultSeepM3PerSec);
             var host = new SimulationHost(littleFuel, new FixedSimulationGeometry(0, 3.5), new LocalAuthority(), 5);
             host.Enqueue(new SimCommand(SimCommandKind.StartGenerator));
             host.Enqueue(new SimCommand(SimCommandKind.SetElectricPump, value: 1)); host.Advance(.2);
@@ -121,12 +123,13 @@ namespace LighthouseKeepers.Tests.Simulation
             Assert.That(host.Current.LastRejectReason, Does.Contain("fuel"));
         }
 
-        [Test] public void BeginDayPreservesFloodAndFuelWhileResetRunRestoresDryStart()
+        [Test] public void BeginDayPreservesVolumeAndStartsHealthyWhileResetRunRestoresDryFixture()
         {
             var host = Create(10); host.Enqueue(new SimCommand(SimCommandKind.RepairLeak)); host.Advance(.1);
             double before = host.Current.WaterVolumeM3;
             host.Enqueue(new SimCommand(SimCommandKind.BeginDay, targetId: 2)); host.Advance(.1);
-            Assert.That(host.Current.WaterVolumeM3, Is.GreaterThan(before)); Assert.That(host.Current.LeakActive, Is.True);
+            Assert.That(host.Current.WaterVolumeM3, Is.LessThan(before)); Assert.That(host.Current.LeakActive, Is.False);
+            Assert.That(host.Current.DayIndex, Is.EqualTo(2)); Assert.That(host.Current.GeneratorRunning, Is.True);
             host.Enqueue(new SimCommand(SimCommandKind.ResetRun)); host.Advance(.1);
             Assert.That(host.Current.WaterVolumeM3, Is.EqualTo(tuning.LeakInflowM3PerSec * .1).Within(1e-8));
             Assert.That(host.Current.Tick, Is.EqualTo(3));
@@ -307,6 +310,8 @@ namespace LighthouseKeepers.Tests.Simulation
             host.Enqueue(new SimCommand(SimCommandKind.BeginDay, targetId: 2)); host.Advance(.1);
             Assert.That(host.Current.Paused, Is.True);
             host.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); host.Advance(.1);
+            Assert.That(host.Current.InflowM3PerSec, Is.Zero, "BeginDay waits for a scheduled incident.");
+            host.ActivateDayLeak(2); host.Advance(.1);
             Assert.That(host.Current.InflowM3PerSec, Is.EqualTo(.25f));
             host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation));
             host.Enqueue(new SimCommand(SimCommandKind.ResetRun)); host.Advance(.1);

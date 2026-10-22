@@ -18,10 +18,12 @@ namespace LighthouseKeepers.Simulation.Unity
         [Range(0, 1)] public float electricPumpStartPower;
         [Min(0), Tooltip("Seconds of generator runtime in a full tank; preserved between days.")]
         public float initialFuelSeconds;
+        [Min(0), Tooltip("Slower flow during a watch generator fault, m³/s. Must still exceed sustained manual throughput.")]
+        public float generatorFaultSeepM3PerSec;
 
         public FloodParameters ToParameters() => new FloodParameters(leakInflowM3PerSec,
             manualPumpStrokeM3, manualPumpMinStrokeSeconds, electricPumpM3PerSec,
             floorAreaM2, failHeightM, safeHeightM, failSustainSeconds,
-            electricPumpStartPower, initialFuelSeconds);
+            electricPumpStartPower, initialFuelSeconds, generatorFaultSeepM3PerSec);
     }
 }

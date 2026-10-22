@@ -13,21 +13,25 @@ namespace LighthouseKeepers.Core.Simulation
         readonly FloodParameters tuning;
         readonly ISimulationGeometry geometry;
         readonly IAuthority authority;
+        readonly Func<int, bool> canRepairPipe;
         readonly Queue<SimCommand> commands = new Queue<SimCommand>();
         double accumulator, volume, fuel, aboveFail, activeSeconds, leakRate, lastStrokeAt = double.NegativeInfinity;
         int tick;
+        int dayIndex;
         bool leak = true, generator, electricPump, flooded, geometryAvailable, paused;
+        bool incidentStarted = true, generatorFault;
         RunPhase phase;
         string reject = "";
         public SimSnapshot Current { get; private set; }
         public event Action<SimSnapshot> OnTick;
 
         public SimulationHost(FloodParameters tuning, ISimulationGeometry geometry,
-            IAuthority authority, double initialVolumeM3 = 0)
+            IAuthority authority, double initialVolumeM3 = 0, Func<int, bool> canRepairPipe = null)
         {
             this.tuning = tuning ?? throw new ArgumentNullException(nameof(tuning));
             this.geometry = geometry ?? throw new ArgumentNullException(nameof(geometry));
             this.authority = authority ?? throw new ArgumentNullException(nameof(authority));
+            this.canRepairPipe = canRepairPipe;
             if (!FixedSimulationGeometry.Finite(initialVolumeM3) || initialVolumeM3 < 0 ||
                 !FixedSimulationGeometry.Finite(geometry.FloorWorldY))
                 throw new ArgumentOutOfRangeException(nameof(initialVolumeM3));
@@ -41,6 +45,7 @@ namespace LighthouseKeepers.Core.Simulation
         }
 
         public void ForceGeneratorFault() => Enqueue(new SimCommand(SimCommandKind.ForceGeneratorFault));
+        public void ActivateDayLeak(int dayIndex) => Enqueue(new SimCommand(SimCommandKind.ActivateDayLeak, targetId: dayIndex));
 
         public void Advance(double elapsedSeconds)
         {
@@ -57,6 +62,8 @@ namespace LighthouseKeepers.Core.Simulation
 
         double Depth => volume / tuning.FloorAreaM2;
         double Power => generator && geometryAvailable && !flooded ? 1 : 0;
+        // These are fault states of one hydraulic circuit, not additive duplicate leaks.
+        double ActiveInflow => leak ? leakRate : generatorFault ? tuning.GeneratorFaultSeepM3PerSec : 0;
 
         void RefreshPower()
         {
@@ -79,7 +86,7 @@ namespace LighthouseKeepers.Core.Simulation
             if (phase == RunPhase.Running && !paused)
             {
                 double startDepth = Depth;
-                double inflow = leak ? leakRate : 0;
+                double inflow = ActiveInflow;
                 double electricRate = electricPump ? tuning.ElectricPumpM3PerSec * Power : 0;
                 // Run only for remaining fuel when the tank empties within a tick.
                 double poweredSeconds = generator ? Math.Min(TickSeconds, fuel) : 0;
@@ -95,7 +102,8 @@ namespace LighthouseKeepers.Core.Simulation
                     aboveFail = TickSeconds * (Depth - tuning.FailHeightM) / (Depth - startDepth);
                 else aboveFail += TickSeconds;
                 if (aboveFail + Epsilon >= tuning.FailSustainSeconds) phase = RunPhase.Failed;
-                else if (!leak && Depth <= tuning.SafeHeightM) phase = RunPhase.Succeeded;
+                else if (incidentStarted && !leak && !generatorFault && Depth <= tuning.SafeHeightM &&
+                    (dayIndex == 0 || (Power > 0 && electricPump))) phase = RunPhase.Succeeded;
             }
             Publish(outflow);
             OnTick?.Invoke(Current);
@@ -113,6 +121,7 @@ namespace LighthouseKeepers.Core.Simulation
                 volume = 0; fuel = tuning.InitialFuelSeconds; aboveFail = 0;
                 leak = true; generator = electricPump = false; phase = RunPhase.Running;
                 paused = false; activeSeconds = 0; leakRate = tuning.LeakInflowM3PerSec;
+                dayIndex = 0; generatorFault = false; incidentStarted = true;
                 lastStrokeAt = double.NegativeInfinity; manualRemoved = 0; reject = "";
                 RefreshPower(); return;
             }
@@ -144,14 +153,32 @@ namespace LighthouseKeepers.Core.Simulation
             if (phase == RunPhase.Failed) { reject = "Run failed. Reset the run first."; return; }
             if (cmd.Kind == SimCommandKind.BeginDay)
             {
-                if (cmd.TargetId < 0) { reject = "Day index must be nonnegative."; return; }
-                leak = true; aboveFail = 0; phase = RunPhase.Running; reject = ""; return;
+                if (cmd.TargetId < 1 || cmd.TargetId > 3) { reject = "Watch index must be 1 to 3."; return; }
+                RefreshPower();
+                if (!CanStartGenerator()) return;
+                dayIndex = cmd.TargetId; leak = false; generatorFault = false; incidentStarted = false;
+                generator = electricPump = true; aboveFail = 0; phase = RunPhase.Running; reject = ""; return;
             }
             if (paused) { reject = "Simulation is paused."; return; }
             if (phase != RunPhase.Running) { reject = "Day succeeded. Begin the next day or reset."; return; }
             switch (cmd.Kind)
             {
-                case SimCommandKind.RepairLeak: leak = false; break;
+                case SimCommandKind.ActivateDayLeak:
+                    if (dayIndex == 0 || cmd.TargetId != dayIndex)
+                    { reject = "Leak activation must match the current watch."; return; }
+                    if (!leak) { leak = true; electricPump = false; }
+                    incidentStarted = true; break;
+                case SimCommandKind.RepairLeak:
+                    if (dayIndex > 0)
+                    {
+                        bool authorized;
+                        try { authorized = canRepairPipe != null && canRepairPipe(cmd.ActorId); }
+                        catch (Exception) { reject = "Pipe repair validation unavailable."; return; }
+                        if (!authorized) { reject = "Pipe repair is not authorized for this actor."; return; }
+                    }
+                    leak = false;
+                    if (dayIndex > 0 && Power >= tuning.ElectricPumpStartPower && Power > 0) electricPump = true;
+                    break;
                 case SimCommandKind.ManualPumpStroke:
                     double now = activeSeconds;
                     if (now - lastStrokeAt + Epsilon < tuning.ManualPumpMinStrokeSeconds)
@@ -162,13 +189,16 @@ namespace LighthouseKeepers.Core.Simulation
                     break;
                 case SimCommandKind.StartGenerator:
                     RefreshPower();
-                    if (!geometryAvailable) { reject = "Generator plinth height unavailable."; return; }
-                    if (flooded) { reject = "Generator is flooded."; return; }
-                    if (fuel <= 0) { reject = "Generator fuel exhausted."; return; }
-                    generator = true; break;
+                    if (!CanStartGenerator()) return;
+                    generator = true;
+                    if (dayIndex > 0) { generatorFault = false; electricPump = true; }
+                    break;
                 case SimCommandKind.StopGenerator:
-                case SimCommandKind.ForceGeneratorFault:
                     generator = electricPump = false; break;
+                case SimCommandKind.ForceGeneratorFault:
+                    generator = electricPump = false;
+                    if (dayIndex > 0) { generatorFault = true; incidentStarted = true; }
+                    break;
                 case SimCommandKind.SetElectricPump:
                     if (cmd.Value != 0 && cmd.Value != 1) { reject = "Pump value must be 0 or 1."; return; }
                     if (cmd.Value == 1 && (Power == 0 || Power < tuning.ElectricPumpStartPower))
@@ -179,9 +209,17 @@ namespace LighthouseKeepers.Core.Simulation
             reject = "";
         }
 
+        bool CanStartGenerator()
+        {
+            if (!geometryAvailable) { reject = "Generator plinth height unavailable."; return false; }
+            if (flooded) { reject = "Generator is flooded."; return false; }
+            if (fuel <= 0) { reject = "Generator fuel exhausted."; return false; }
+            return true;
+        }
+
         void Publish(double outflow)
         {
-            double inflow = phase == RunPhase.Running && !paused && leak ? leakRate : 0;
+            double inflow = phase == RunPhase.Running && !paused ? ActiveInflow : 0;
             // ETA assumes no future manual strokes and that current power persists.
             // A stroke is an impulse, not a promise of continuous 2 m³/s pumping.
             double net = inflow - (phase == RunPhase.Running && electricPump ? tuning.ElectricPumpM3PerSec * Power : 0);
@@ -198,8 +236,8 @@ namespace LighthouseKeepers.Core.Simulation
                 else if (net > 0) eta = (tuning.FailHeightM * tuning.FloorAreaM2 - volume) / net + tuning.FailSustainSeconds;
             }
             Current = new SimSnapshot(tick, volume, (float)(geometry.FloorWorldY + Depth),
-                (float)inflow, (float)outflow, leak, generator, (float)Power, electricPump, phase, reject,
-                flooded, geometryAvailable, (float)fuel, (float)aboveFail, (float)eta, paused);
+                (float)inflow, (float)outflow, leak || generatorFault, generator, (float)Power, electricPump, phase, reject,
+                flooded, geometryAvailable, (float)fuel, (float)aboveFail, (float)eta, paused, dayIndex, generatorFault);
         }
     }
 }

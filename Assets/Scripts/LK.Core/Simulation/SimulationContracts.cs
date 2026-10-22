@@ -16,6 +16,7 @@ namespace LighthouseKeepers.Core.Simulation
         ForceGeneratorFault = 7,
         PauseSimulation = 8,
         ResumeSimulation = 9,
+        ActivateDayLeak = 10,
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         DebugSetLeak = 100,
         DebugSetWaterHeight = 101,
@@ -82,13 +83,16 @@ namespace LighthouseKeepers.Core.Simulation
         public readonly float SecondsAboveFail;
         public readonly float TimeToFailSeconds;
         public readonly bool Paused;
+        public readonly int DayIndex;
+        public readonly bool GeneratorFaultActive;
 
         public SimSnapshot(int tick, double waterVolumeM3, float waterHeightM,
             float inflowM3PerSec, float outflowM3PerSec, bool leakActive,
             bool generatorRunning, float powerAvailable, bool electricPumpRunning,
             RunPhase phase, string lastRejectReason = "", bool generatorFlooded = false,
             bool generatorGeometryAvailable = true, float fuelRemainingSeconds = 0,
-            float secondsAboveFail = 0, float timeToFailSeconds = float.PositiveInfinity, bool paused = false)
+            float secondsAboveFail = 0, float timeToFailSeconds = float.PositiveInfinity, bool paused = false,
+            int dayIndex = 0, bool generatorFaultActive = false)
         {
             Tick = tick; WaterVolumeM3 = waterVolumeM3; WaterHeightM = waterHeightM;
             InflowM3PerSec = inflowM3PerSec; OutflowM3PerSec = outflowM3PerSec;
@@ -99,6 +103,7 @@ namespace LighthouseKeepers.Core.Simulation
             FuelRemainingSeconds = fuelRemainingSeconds; SecondsAboveFail = secondsAboveFail;
             TimeToFailSeconds = timeToFailSeconds;
             Paused = paused;
+            DayIndex = dayIndex; GeneratorFaultActive = generatorFaultActive;
         }
     }
 

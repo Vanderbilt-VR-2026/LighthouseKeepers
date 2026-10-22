@@ -28,10 +28,10 @@ namespace LighthouseKeepers.Tests.Simulation
             var tuning = new FloodParameters(values["leakInflowM3PerSec"], values["manualPumpStrokeM3"],
                 values["manualPumpMinStrokeSeconds"], values["electricPumpM3PerSec"], values["floorAreaM2"],
                 values["failHeightM"], values["safeHeightM"], values["failSustainSeconds"],
-                values["electricPumpStartPower"], values["initialFuelSeconds"]);
+                values["electricPumpStartPower"], values["initialFuelSeconds"], values["generatorFaultSeepM3PerSec"]);
             int passed = 0, failed = 0, skipped = 0;
             foreach (Type type in new[] { typeof(FloodBalanceTests), typeof(SimulationHostTests),
-                typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest) })
+                typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest), typeof(WatchLifecycleTests) })
             foreach (MethodInfo method in type.GetMethods().Where(m => m.IsDefined(typeof(TestAttribute), false)))
             {
                 object instance = Activator.CreateInstance(type);
