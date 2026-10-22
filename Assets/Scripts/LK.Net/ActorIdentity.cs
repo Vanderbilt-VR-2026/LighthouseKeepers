@@ -2,8 +2,9 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     /// <summary>One component on the local rig root; both hands resolve the same session actor.</summary>
+    public interface IPlayerIdentity { int ActorId { get; } }
     [DisallowMultipleComponent]
-    public sealed class ActorIdentity : MonoBehaviour
+    public sealed class ActorIdentity : MonoBehaviour, IPlayerIdentity
     {
         public int ActorId { get; private set; }
         public void Bind(int authenticatedActor) => ActorId = authenticatedActor > 0 ? authenticatedActor : 0;

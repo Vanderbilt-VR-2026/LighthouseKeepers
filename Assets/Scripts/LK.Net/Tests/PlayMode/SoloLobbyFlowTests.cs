@@ -1,73 +1,42 @@
 #if UNITY_EDITOR
 using System.Collections;
-using LighthouseKeepers.StormWatch;
+using System.Linq;
+using LighthouseKeepers.Core.Progression;
 using NUnit.Framework;
+using TMPro;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
-using NetworkRunner = Fusion.NetworkRunner;
-
 namespace LighthouseKeepers.Net.Tests
 {
     public sealed class SoloLobbyFlowTests
     {
-        [UnityTest] public IEnumerator SoloButtonLoadsPlayableWatchWithoutHostingAndReturnsToLobby()
-            => VerifySoloFlow(false);
-        [UnityTest] public IEnumerator SoloButtonClosesAnExistingRunnerBeforeOpeningPractice()
-            => VerifySoloFlow(true);
-        IEnumerator VerifySoloFlow(bool hosting)
+        [UnityTest] public IEnumerator LobbyPlaySoloLoadsHouseDayOneWhiteboardAndWrench()
         {
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode(
-                "Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity",
-                new LoadSceneParameters(LoadSceneMode.Single));
-            yield return null;
-            if (hosting)
+            var plan=ShipRouteSettings.Load().Plan;
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode(plan.lobbyScene,new LoadSceneParameters(LoadSceneMode.Single));
+            float deadline=Time.realtimeSinceStartup+90;
+            while(!GameObject.Find("PlaySolo") && Time.realtimeSinceStartup<deadline)yield return null;
+            var button=GameObject.Find("PlaySolo");Assert.IsNotNull(button,"Use the actual visible lobby entry.");
+            button.GetComponent<Button>().onClick.Invoke();
+            while((!ShipWorldLoader.Active || !ShipWorldLoader.Active.Ready) && Time.realtimeSinceStartup<deadline)
             {
-                // Hosting can reload the lobby while its original transport survives.
-                // The button must close that old session too, not just its board's transport.
-                var raw = new GameObject("Surviving host session fixture")
-                    .AddComponent<LighthouseKeepers.Networking.FusionLobbyTransport>();
-                var runner = new GameObject("Existing offline host fixture").AddComponent<NetworkRunner>();
-                var start = runner.StartGame(new Fusion.StartGameArgs { GameMode = Fusion.GameMode.Single,
-                    SceneManager = runner.gameObject.AddComponent<Fusion.NetworkSceneManagerDefault>() });
-                while (!start.IsCompleted) yield return null;
-                Assert.IsTrue(start.Result.Ok);
-                // Exercise the real shutdown path without depending on Photon service availability.
-                var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
-                typeof(LighthouseKeepers.Networking.FusionLobbyTransport).GetField("runner", flags).SetValue(raw, runner);
-                typeof(LighthouseKeepers.Networking.FusionLobbyTransport).GetField("online", flags).SetValue(raw, true);
+                Assert.IsTrue(!ShipWorldLoader.Active || string.IsNullOrEmpty(ShipWorldLoader.Active.LastError),ShipWorldLoader.Active?ShipWorldLoader.Active.LastError:"");
+                yield return null;
             }
-            var button = GameObject.Find("PlaySolo").GetComponent<Button>();
-            Assert.IsTrue(button.interactable);
-            Assert.IsNotNull(GameObject.Find("WatchBoardCanvas").transform.Find("CrewOptionsPanel/PlaySoloOptions"));
-            button.onClick.Invoke();
-            float deadline = Time.realtimeSinceStartup + 90;
-            StormWatchDirector director;
-            do { yield return null; director = Object.FindAnyObjectByType<StormWatchDirector>(); }
-            while ((!director || !director.Ready) && Time.realtimeSinceStartup < deadline);
-            Assert.IsNotNull(director); Assert.IsTrue(director.Ready);
-            Assert.IsTrue(director.SoloPractice); Assert.IsTrue(director.CrewReady);
-            Assert.AreEqual(0, Object.FindObjectsByType<NetworkRunner>(FindObjectsSortMode.None).Length);
-            yield return new WaitForSeconds(.2f);
-            Assert.AreEqual(WatchAct.FirstWatch, director.State.act);
-            Assert.Greater(director.State.elapsed, 0);
-            Assert.IsFalse(GameObject.Find("Route 3 / mechanical stair gate"));
-            GameObject.Find("SOLO DAY 2").GetComponent<Button>().onClick.Invoke();
-            Assert.IsFalse(director.State.power);
-            GameObject.Find("SOLO RELAY").GetComponent<Button>().onClick.Invoke();
-            yield return new WaitForSeconds(.15f);
-            Assert.AreEqual(WatchAct.RadioRelay, director.State.act);
-            var call = GameObject.Find("CALL SUN").GetComponent<RectTransform>();
-            var selector = call.parent.Find("SOLO RELAY").GetComponent<RectTransform>();
-            Assert.Greater(call.rect.min.y + call.anchoredPosition.y,
-                selector.rect.max.y + selector.anchoredPosition.y, "Radio call and solo selector must not overlap.");
-            director.Leave();
-            deadline = Time.realtimeSinceStartup + 15;
-            while (!GameObject.Find("PlaySolo") && Time.realtimeSinceStartup < deadline) yield return null;
-            Assert.IsNotNull(GameObject.Find("PlaySolo"));
-            Assert.IsFalse(SoloWatchSession.ConsumeRequest(), "A later multiplayer run must not inherit solo mode.");
+            Assert.IsTrue(ShipWorldLoader.Active && ShipWorldLoader.Active.Ready,"Ship loader timed out.");
+            Assert.AreEqual(plan.entryScene,SceneManager.GetActiveScene().path);
+            foreach(var path in new[]{plan.entryScene}.Concat(plan.additiveScenes))Assert.IsTrue(SceneManager.GetSceneByPath(path).isLoaded,path);
+            Assert.IsFalse(SceneManager.GetSceneByName("LK_StormWatch").isLoaded);
+            var board=GameObject.Find("STN_BRIEFING_BOARD");Assert.IsNotNull(board);
+            Assert.IsTrue(board.GetComponentsInChildren<TMP_Text>().Any(t=>t.text.Contains("DAY 1")));
+            Assert.IsNotNull(GameObject.Find("STN_TOOL_TABLE"));
+            Assert.IsTrue(Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None).Any(r=>r.name.ToLowerInvariant().Contains("wrench")),"Authored wrench must be present in the loaded ship world.");
+            Assert.IsFalse(Object.FindObjectsByType<Button>(FindObjectsSortMode.None).Any(b=>b.name.StartsWith("SOLO DAY")||b.name=="SOLO RELAY"));
+            Assert.AreEqual(0,Object.FindObjectsByType<Fusion.NetworkRunner>(FindObjectsSortMode.None).Length);
+            Assert.IsTrue(ShipWorldLoader.Solo);
         }
     }
 }

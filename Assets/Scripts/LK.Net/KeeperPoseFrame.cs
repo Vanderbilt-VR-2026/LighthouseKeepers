@@ -13,9 +13,10 @@ namespace LighthouseKeepers.Net
         public Quaternion HeadRotation, LeftRotation, RightRotation;
         public byte LeftPose, RightPose;
         public float LeftGrip, LeftTrigger, RightGrip, RightTrigger;
-        public const int Bytes = 110;
+        public float TorsoYaw;
+        public const int Bytes = 114;
         public bool Valid => Actor > 0 && Sequence > 0 && Position(Head) && Position(Left) && Position(Right) &&
-            Rotation(HeadRotation) && Rotation(LeftRotation) && Rotation(RightRotation) &&
+            Finite(TorsoYaw) && TorsoYaw >= 0 && TorsoYaw < 360 && Rotation(HeadRotation) && Rotation(LeftRotation) && Rotation(RightRotation) &&
             (Left - Head).sqrMagnitude <= 9 && (Right - Head).sqrMagnitude <= 9 &&
             LeftPose <= 4 && RightPose <= 4 && Analog(LeftGrip) && Analog(LeftTrigger) && Analog(RightGrip) && Analog(RightTrigger);
         public static bool Finite(float v) => !float.IsNaN(v) && !float.IsInfinity(v);
@@ -33,7 +34,7 @@ namespace LighthouseKeepers.Net
             writer.Write(Actor); writer.Write(Sequence);
             Write(writer, Head, HeadRotation); Write(writer, Left, LeftRotation); Write(writer, Right, RightRotation);
             writer.Write(LeftPose); writer.Write(LeftGrip); writer.Write(LeftTrigger);
-            writer.Write(RightPose); writer.Write(RightGrip); writer.Write(RightTrigger);
+            writer.Write(RightPose); writer.Write(RightGrip); writer.Write(RightTrigger); writer.Write(TorsoYaw);
             return stream.ToArray();
         }
         public static bool TryDecode(byte[] data, out KeeperPoseFrame frame)
@@ -44,7 +45,7 @@ namespace LighthouseKeepers.Net
             frame.Actor = reader.ReadInt32(); frame.Sequence = reader.ReadInt32();
             Read(reader, out frame.Head, out frame.HeadRotation); Read(reader, out frame.Left, out frame.LeftRotation); Read(reader, out frame.Right, out frame.RightRotation);
             frame.LeftPose = reader.ReadByte(); frame.LeftGrip = reader.ReadSingle(); frame.LeftTrigger = reader.ReadSingle();
-            frame.RightPose = reader.ReadByte(); frame.RightGrip = reader.ReadSingle(); frame.RightTrigger = reader.ReadSingle();
+            frame.RightPose = reader.ReadByte(); frame.RightGrip = reader.ReadSingle(); frame.RightTrigger = reader.ReadSingle(); frame.TorsoYaw = reader.ReadSingle();
             return frame.Valid;
         }
         static void Write(BinaryWriter w, Vector3 p, Quaternion q)
@@ -54,6 +55,7 @@ namespace LighthouseKeepers.Net
         public static KeeperPoseFrame Lerp(KeeperPoseFrame a, KeeperPoseFrame b, float t)
         {
             var f = b;
+            f.TorsoYaw = Mathf.Repeat(Mathf.LerpAngle(a.TorsoYaw,b.TorsoYaw,t),360);
             f.Head = Vector3.Lerp(a.Head,b.Head,t); f.Left = Vector3.Lerp(a.Left,b.Left,t); f.Right = Vector3.Lerp(a.Right,b.Right,t);
             f.HeadRotation = Quaternion.Slerp(a.HeadRotation,b.HeadRotation,t);
             f.LeftRotation = Quaternion.Slerp(a.LeftRotation,b.LeftRotation,t); f.RightRotation = Quaternion.Slerp(a.RightRotation,b.RightRotation,t);

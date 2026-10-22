@@ -1,5 +1,18 @@
 {
   "name": "LK.Net.Editor",
-  "references": ["LK.Net", "Fusion.Unity"],
-  "includePlatforms": ["Editor"]
+  "references": [
+    "LK.Net",
+    "Fusion.Unity",
+    "LK.Lobby",
+    "LK.Networking",
+    "Unity.XR.CoreUtils",
+    "LighthouseKeepers.Runtime",
+    "LK.Core.Progression",
+    "LK.Simulation.Unity",
+    "Unity.TextMeshPro",
+    "UnityEngine.UI"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
 }

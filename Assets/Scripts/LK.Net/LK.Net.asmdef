@@ -1,6 +1,21 @@
 {
   "name": "LK.Net",
   "rootNamespace": "LighthouseKeepers.Net",
-  "references": ["LK.Networking", "LK.Lobby", "LighthouseKeepers.Runtime", "Fusion.Unity", "Unity.XR.CoreUtils", "Unity.XR.Interaction.Toolkit", "Unity.InputSystem", "UnityEngine.UI", "Unity.TextMeshPro"],
+  "references": [
+    "LK.Networking",
+    "LK.Lobby",
+    "LighthouseKeepers.Runtime",
+    "Fusion.Unity",
+    "Unity.XR.CoreUtils",
+    "Unity.XR.Interaction.Toolkit",
+    "Unity.InputSystem",
+    "UnityEngine.UI",
+    "Unity.TextMeshPro",
+    "LK.Core.Simulation",
+    "LK.Simulation.Unity",
+    "LK.Core.Progression",
+    "LK.Gameplay.Interaction",
+    "LK.Presentation.Board"
+  ],
   "autoReferenced": true
 }

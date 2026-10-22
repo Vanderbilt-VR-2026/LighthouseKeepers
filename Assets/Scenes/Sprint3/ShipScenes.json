@@ -1,5 +1,36 @@
 {
+  "version": 2,
+  "lobbyScene": "Assets/Scenes/Lab/LK_Lobby_Environment.unity",
+  "networkLobbyScene": "Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity",
+  "entryScene": "Assets/Scenes/Shell/LK_Shell_House.unity",
+  "entryDressScene": "Assets/Scenes/Dress/LK_Dress_House.unity",
+  "additiveScenes": [
+    "Assets/Scenes/Dress/LK_Dress_House.unity",
+    "Assets/Scenes/Shell/LK_Shell_F1.unity",
+    "Assets/Scenes/Dress/LK_Dress_F1.unity",
+    "Assets/Scenes/Shell/LK_Shell_F2.unity",
+    "Assets/Scenes/Dress/LK_Dress_F2.unity",
+    "Assets/Scenes/Shell/LK_Shell_F3.unity",
+    "Assets/Scenes/Dress/LK_Dress_F3.unity",
+    "Assets/Scenes/Shell/LK_Shell_F4.unity",
+    "Assets/Scenes/Dress/LK_Dress_F4.unity",
+    "Assets/Scenes/Shell/LK_Shell_Exterior.unity",
+    "Assets/Scenes/Dress/LK_Dress_Exterior.unity"
+  ],
   "scenes": [
-    "Assets/Scenes/Lab/LK_Lab_Environment.unity"
+    "Assets/Scenes/Lab/LK_Lobby_Environment.unity",
+    "Assets/Scenes/Shell/LK_Shell_House.unity",
+    "Assets/Scenes/Dress/LK_Dress_House.unity",
+    "Assets/Scenes/Shell/LK_Shell_F1.unity",
+    "Assets/Scenes/Dress/LK_Dress_F1.unity",
+    "Assets/Scenes/Shell/LK_Shell_F2.unity",
+    "Assets/Scenes/Dress/LK_Dress_F2.unity",
+    "Assets/Scenes/Shell/LK_Shell_F3.unity",
+    "Assets/Scenes/Dress/LK_Dress_F3.unity",
+    "Assets/Scenes/Shell/LK_Shell_F4.unity",
+    "Assets/Scenes/Dress/LK_Dress_F4.unity",
+    "Assets/Scenes/Shell/LK_Shell_Exterior.unity",
+    "Assets/Scenes/Dress/LK_Dress_Exterior.unity",
+    "Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity"
   ]
 }

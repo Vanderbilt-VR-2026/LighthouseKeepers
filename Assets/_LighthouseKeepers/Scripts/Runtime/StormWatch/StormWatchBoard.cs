@@ -12,7 +12,6 @@ namespace LighthouseKeepers.StormWatch
         TMP_Text title, body, status;
         Button begin, proceed, repair, rescue, leave;
         Button[] calls;
-        Button[] practice;
         Canvas canvas;
         float refresh;
         Vector3 home;Quaternion homeRotation;
@@ -43,31 +42,10 @@ namespace LighthouseKeepers.StormWatch
                 floor==3?(s.act==WatchAct.RadioRelay?$"BEACON ORDER: {Symbol(s.order0)} → {Symbol(s.order1)} → {Symbol(s.order2)}\nHold the radio. Call the next symbol to your partner.\nUse the call buttons if you are not on voice chat.":"RADIO RELAY\nRestore plumbing and power below first.\nThen one keeper stays here while the other climbs."):
                 $"BEACON SWITCHES {s.beaconSteps}/3 • NEXT {s.beaconProgress*100:0}%\nListen for the radio keeper's symbol.\nGrip and twist the matching switch. Both climb to finish.";
             if(floor>0&&!refuge&&!showResult)body.text+="\n"+s.message;
-            if (director.SoloPractice)
-            {
-                foreach (var call in calls)
-                {
-                    var rect = call.GetComponent<RectTransform>();
-                    rect.sizeDelta = new Vector2(330, 70);
-                    rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, -270);
-                }
-                title.text = s.Terminal ? "SOLO PRACTICE / " + (s.act == WatchAct.Won ? "COMPLETE" : "RETRY") : "SOLO PRACTICE / DAY " + s.Day;
-                if (s.Terminal) body.text = s.message + $"\n{s.mistakes} setbacks / {s.elapsed/60:0.0} minutes";
-                if (!s.Terminal)
-                {
-                    body.text = refuge ? "Take a supply, then OPEN NEXT WATCH.\nYou can continue alone or choose a test below." :
-                        floor == 0 ? "Offline practice. All stairs are open.\nChoose DAY 1, DAY 2, DAY 3 or RELAY below.\nRepair and restore power yourself; no crew needed." :
-                        floor == 1 ? $"PIPE {s.pipeSteps}/3 / NEXT {s.pipeProgress*100:0}%\nGrip the wrench, touch the coupling and twist.\nNo brace needed in solo. Pump by moving its handle.\nChoose DAY 2 to test pumping during a blackout." :
-                        floor == 2 ? $"GENERATOR {s.generatorSteps}/3 / NEXT {s.generatorProgress*100:0}%\nChoose DAY 2 to turn power off. Grip and twist\nthe generator control; no partner pump needed.\nChoose another test below whenever you like." :
-                        floor == 3 ? (s.act == WatchAct.RadioRelay ? $"BEACON ORDER: {Symbol(s.order0)} / {Symbol(s.order1)} / {Symbol(s.order2)}\nHold the radio to note the code, then climb.\nThe lantern board keeps your noted code." : "Choose RELAY below to test radio and beacon.\nHold the radio here, then climb to the lantern.\nYou can complete both jobs yourself.") :
-                        $"BEACON {s.beaconSteps}/3 / NEXT {s.beaconProgress*100:0}%\n" + (director.Rules.SoloRadioRead ? $"NOTED CODE: {Symbol(s.order0)} / {Symbol(s.order1)} / {Symbol(s.order2)}\nGrip and twist each matching switch." : "Choose RELAY, then hold the radio one floor below.\nReturn here to turn the matching switches.");
-                }
-            }
             Show(begin,s.Terminal&&floor==0&&!director.SessionEnded);begin.interactable=director.CrewReady;
             begin.GetComponentInChildren<TMP_Text>().text=director.SoloPractice?"RESTART SOLO":"RESTART TOGETHER";
             Show(repair,refuge&&!s.supplyChosen);Show(rescue,refuge&&!s.supplyChosen);Show(proceed,refuge&&s.supplyChosen);Show(leave,true);
             for(int i=0;i<3;i++)Show(calls[i],floor==3&&s.act==WatchAct.RadioRelay);
-            foreach (var button in practice) Show(button, director.SoloPractice);
         }
         public static string Symbol(int index)=>index==0?"SUN":index==1?"WAVE":"STAR";
         static void Show(Button b,bool show){if(b.gameObject.activeSelf!=show)b.gameObject.SetActive(show);}
@@ -87,16 +65,6 @@ namespace LighthouseKeepers.StormWatch
             proceed=Button(root,"OPEN NEXT WATCH",new(0,-270),new(1050,85),()=>director.Command(WatchAction.Continue));
             leave=Button(root,"RETURN TO LOBBY",new(0,-390),new(350,45),()=>director.Leave());
             calls=new Button[3];for(int i=0;i<3;i++){int symbol=i;calls[i]=Button(root,"CALL "+Symbol(i),new((i-1)*350,-285),new(330,90),()=>director.Command((WatchAction)((int)WatchAction.CallSun+symbol)));}
-            var acts = new[] { WatchAct.FirstWatch, WatchAct.PowerFailure, WatchAct.Storm, WatchAct.RadioRelay };
-            var labels = new[] { "DAY 1", "DAY 2", "DAY 3", "RELAY" };
-            practice = new Button[acts.Length];
-            for (int i = 0; i < acts.Length; i++)
-            {
-                var act = acts[i];
-                practice[i] = Button(root, "SOLO " + labels[i], new((i-1.5f)*270,-340), new(250,50), () => director.SelectSoloWatch(act));
-                practice[i].GetComponentInChildren<TMP_Text>().fontSize = 23;
-                practice[i].gameObject.SetActive(false);
-            }
             foreach(var b in new[]{begin,proceed,repair,rescue,leave})b.gameObject.SetActive(false);
             foreach(var b in calls)b.gameObject.SetActive(false);
         }

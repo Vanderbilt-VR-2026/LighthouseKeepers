@@ -37,10 +37,8 @@ namespace LighthouseKeepers.Net.Editor
         static void Build(BuildTarget target,string output,BuildOptions options)
         {
             ValidatePrefabs();Directory.CreateDirectory("Builds");
-            var scenes=EditorBuildSettings.scenes.Where(s=>s.enabled && !s.path.Contains("/Lab/") && !s.path.Contains("LK_DevGym"))
-                .Select(s=>s.path).ToArray();
-            if(scenes.Length==0 || !scenes[0].EndsWith("/LK_NetworkLobby.unity",StringComparison.Ordinal))
-                throw new BuildFailedException("Put LK_NetworkLobby first in File > Build Profiles > Scene List.");
+            ShipRouteAuthoring.Validate();
+            var scenes=ShipRouteSettings.Load().Plan.scenes;
             var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=scenes,target=target,locationPathName=output,options=options});
             File.WriteAllText(output+".txt",$"result={report.summary.result}\nerrors={report.summary.totalErrors}\nsize={report.summary.totalSize}\n");
             if(report.summary.result!=BuildResult.Succeeded || report.summary.totalErrors!=0)throw new BuildFailedException("Networking APK build failed; see the build log.");

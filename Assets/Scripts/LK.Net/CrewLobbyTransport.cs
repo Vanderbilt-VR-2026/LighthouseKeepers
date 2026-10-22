@@ -64,7 +64,7 @@ namespace LighthouseKeepers.Net
         public bool PlaySolo()
         {
             if (launchingSolo || fusion && fusion.IsStarting) return false;
-            if (!Application.CanStreamedLevelBeLoaded(FusionLobbyTransport.GameplaySceneName))
+            if (!Application.CanStreamedLevelBeLoaded(ShipRouteSettings.Load().Plan.entryScene))
                 return Fail("The solo lighthouse is missing from this build. Reinstall the current APK.");
             launchingSolo = true;
             connecting = false;
@@ -93,13 +93,13 @@ namespace LighthouseKeepers.Net
                 }
                 yield return null;
             }
-            SoloWatchSession.Request();
+            ShipWorldLoader.RequestSolo();
             AsyncOperation load = null;
-            try { load = SceneManager.LoadSceneAsync(FusionLobbyTransport.GameplaySceneName); }
+            try { load = SceneManager.LoadSceneAsync(ShipRouteSettings.Load().Plan.entryScene); }
             catch (Exception error) { localError = "Could not open solo practice: " + error.Message; }
             if (load == null)
             {
-                SoloWatchSession.Cancel();
+                ShipWorldLoader.RequestCrew();
                 launchingSolo = false;
                 Status();
                 yield break;
@@ -145,7 +145,8 @@ namespace LighthouseKeepers.Net
             if (!IsHost || Players.Count != CrewConnectionPolicy.Capacity) return Fail("Two connected keepers must signal ready before starting.");
             foreach (var player in Players) if (!player.IsReady) return Fail("Every keeper must signal ready before starting.");
             localError = "";
-            return fusion.StartGame(sceneName, CrewConnectionPolicy.Capacity, true);
+            ShipWorldLoader.RequestCrew();
+            return fusion.StartGame(ShipRouteSettings.Load().Plan.EntryName, CrewConnectionPolicy.Capacity, true);
         }
         bool Fail(string message) { localError = message; Status(); return false; }
         void Roster() => PlayersChanged?.Invoke();

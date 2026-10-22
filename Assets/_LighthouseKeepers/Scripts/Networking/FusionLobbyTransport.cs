@@ -15,7 +15,8 @@ namespace LighthouseKeepers.Networking
     [DisallowMultipleComponent]
     public sealed class FusionLobbyTransport : MonoBehaviour, ISessionLobbyTransport, INetworkRunnerCallbacks
     {
-        public const string GameplaySceneName = CrewSessionPolicy.StormWatchSceneName;
+        public static Func<string> ResolveGameplayScene { private get; set; }
+        public static string GameplaySceneName => ResolveGameplayScene?.Invoke() ?? throw new InvalidOperationException("Canonical ship routing is not registered.");
         public const string LobbySceneName = "LK_NetworkLobby";
         static string pendingLobbyNotice;
         public NetworkRunner Runner => runner;
@@ -236,7 +237,7 @@ namespace LighthouseKeepers.Networking
             if (sceneName == GameplaySceneName)
             {
                 if (state.Capacity != 2 || state.Players.Count != 2 || runner.ActivePlayers.Count() != 2)
-                    return Fail("Storm Watch needs exactly two connected keepers.");
+                    return Fail("A crew needs exactly two connected keepers.");
                 minimumPlayers = 2;
                 requireAllReady = true;
             }

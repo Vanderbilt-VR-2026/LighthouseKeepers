@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Fusion;
+using LighthouseKeepers.Gameplay.Interaction;
 using LighthouseKeepers.Networking;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace LighthouseKeepers.Net
         float nextSend, nextScan;
         int serial;
         byte leftPose, rightPose;
+        float torsoYaw;
         public static CrewPoseStream Active { get; private set; }
         public FusionMessageChannel Channel => channel;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -76,7 +78,21 @@ namespace LighthouseKeepers.Net
             var ld = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand); var rd = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
             ld.TryGetFeatureValue(CommonUsages.grip,out frame.LeftGrip); ld.TryGetFeatureValue(CommonUsages.trigger,out frame.LeftTrigger);
             rd.TryGetFeatureValue(CommonUsages.grip,out frame.RightGrip); rd.TryGetFeatureValue(CommonUsages.trigger,out frame.RightTrigger);
+            torsoYaw=Mathf.LerpAngle(torsoYaw,head.eulerAngles.y,1-Mathf.Exp(-6*Time.unscaledDeltaTime));
+            frame.TorsoYaw=Mathf.Repeat(torsoYaw,360);
+            frame.LeftPose=PoseFor(left,frame.LeftGrip,frame.LeftTrigger);
+            frame.RightPose=PoseFor(right,frame.RightGrip,frame.RightTrigger);
             channel.SendToHost(SubmitKind,frame.Encode());
+        }
+        static byte PoseFor(Transform controller,float grip,float trigger)
+        {
+            var hand=controller?controller.GetComponentInChildren<HandRig>():null;
+            if(hand && hand.Direct && hand.Direct.interactablesSelected.Count>0)
+            {
+                var target=hand.Direct.interactablesSelected[0].transform.GetComponent<IHandPoseTarget>();
+                return (byte)(target?.RequiredPose??HandPose.WrapGrip);
+            }
+            return (byte)(grip>.5f?HandPose.Fist:trigger>.5f?HandPose.Pinch:HandPose.Open);
         }
         void Receive(int sender, int kind, byte[] data)
         {

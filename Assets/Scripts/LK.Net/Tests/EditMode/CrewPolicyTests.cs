@@ -58,7 +58,7 @@ namespace LighthouseKeepers.Net.Tests
         [Test] public void PosePacketHasOnlyThreeTransformsAndCompactHandStates()
         {
             var pose=ValidPose(1);pose.LeftPose=4;pose.RightPose=3;pose.LeftGrip=.75f;pose.RightTrigger=.5f;
-            byte[] bytes=pose.Encode();Assert.AreEqual(110,bytes.Length);
+            byte[] bytes=pose.Encode();Assert.AreEqual(KeeperPoseFrame.Bytes,bytes.Length);
             Assert.IsTrue(KeeperPoseFrame.TryDecode(bytes,out var read));
             Assert.AreEqual(pose.LeftPose,read.LeftPose);Assert.AreEqual(pose.RightTrigger,read.RightTrigger);
         }

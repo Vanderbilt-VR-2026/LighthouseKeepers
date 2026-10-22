@@ -4,73 +4,54 @@ using UnityEngine;
 using UnityEngine.Events;
 namespace LighthouseKeepers.Net
 {
-    /// <summary>Visual-only network rig. The user's tracked camera always remains in their existing XR Origin.</summary>
     [RequireComponent(typeof(NetworkObject))]
     public sealed class CrewAvatarView : MonoBehaviour
     {
-        [SerializeField] GameObject leftHandVisual;
-        [SerializeField] GameObject rightHandVisual;
-        [SerializeField] Material oilskinMaterial;
-        public UnityEvent<int,float,float> LeftPoseChanged = new();
-        public UnityEvent<int,float,float> RightPoseChanged = new();
+        [SerializeField] GameObject playerBody;
+        public UnityEvent<int,float,float> LeftPoseChanged=new(),RightPoseChanged=new();
         NetworkObject identity;
-        Transform head, left, right, coat;
         GameObject visuals;
+        RemoteGlove left,right;
+        RemoteKeeperBody body;
         TextMeshPro nameplate;
-        Material fallback;
         Camera observer;
         float nextName;
         void Awake()
         {
-            identity = GetComponent<NetworkObject>();
-            visuals = new GameObject("Keeper appearance"); visuals.transform.SetParent(transform,false);
-            if (!oilskinMaterial)
+            identity=GetComponent<NetworkObject>();
+            visuals=new GameObject("Remote keeper / authored body and gloves");visuals.transform.SetParent(transform,false);
+            left=Glove(true);right=Glove(false);
+            var source=playerBody?playerBody:Resources.Load<GameObject>("Hands/PF_PlayerBody");
+            if(source)
             {
-                var shader = Shader.Find("Universal Render Pipeline/Lit");
-                if (shader) fallback = new Material(shader) { color = new Color(.72f,.49f,.12f) };
+                var root=new GameObject("Remote body pose");root.transform.SetParent(visuals.transform,false);root.SetActive(false);
+                var appearance=Instantiate(source,root.transform,false);body=root.AddComponent<RemoteKeeperBody>();body.Bind(appearance);root.SetActive(true);
             }
-            head = Part("Hood",PrimitiveType.Sphere,new Vector3(.24f,.28f,.24f));
-            coat = Part("Oilskin jacket",PrimitiveType.Capsule,new Vector3(.42f,.39f,.28f));
-            left = Hand(leftHandVisual,"Left hand"); right = Hand(rightHandVisual,"Right hand");
-            nameplate = new GameObject("Keeper name").AddComponent<TextMeshPro>();
-            nameplate.transform.SetParent(visuals.transform,false); nameplate.font = TMP_Settings.defaultFontAsset;
-            nameplate.fontSize = 2; nameplate.rectTransform.sizeDelta = new Vector2(2,.3f); nameplate.alignment = TextAlignmentOptions.Center;
-            nameplate.richText = false; nameplate.textWrappingMode = TextWrappingModes.NoWrap;
+            else Debug.LogWarning("A must publish Resources/Hands/PF_PlayerBody. Remote hands render; no primitive body substitute is created.",this);
+            nameplate=new GameObject("Keeper name").AddComponent<TextMeshPro>();nameplate.transform.SetParent(visuals.transform,false);
+            nameplate.font=TMP_Settings.defaultFontAsset;nameplate.fontSize=2;nameplate.rectTransform.sizeDelta=new Vector2(2,.3f);
+            nameplate.alignment=TextAlignmentOptions.Center;nameplate.richText=false;nameplate.textWrappingMode=TextWrappingModes.NoWrap;
             visuals.SetActive(false);
         }
-        Transform Hand(GameObject reference,string label)
+        RemoteGlove Glove(bool isLeft)
         {
-            if (!reference) return Part(label,PrimitiveType.Cube,new Vector3(.09f,.12f,.16f));
-            return Instantiate(reference,visuals.transform).transform;
-        }
-        Transform Part(string label,PrimitiveType type,Vector3 scale)
-        {
-            var part = GameObject.CreatePrimitive(type); part.name = label; part.transform.SetParent(visuals.transform,false); part.transform.localScale = scale;
-            var collider = part.GetComponent<Collider>(); collider.enabled = false; Destroy(collider);
-            if (oilskinMaterial || fallback) part.GetComponent<Renderer>().sharedMaterial = oilskinMaterial ? oilskinMaterial : fallback;
-            return part.transform;
+            var hand=new GameObject(isLeft?"Remote left glove":"Remote right glove");hand.transform.SetParent(visuals.transform,false);
+            var result=hand.AddComponent<RemoteGlove>();result.Prepare(isLeft);return result;
         }
         void LateUpdate()
         {
-            var stream = CrewPoseStream.Active;
-            bool visible = identity && identity.IsValid && stream && identity.Runner == stream.Channel.Runner &&
-                identity.InputAuthority != identity.Runner.LocalPlayer && stream.Sample(identity.InputAuthority.RawEncoded,out _);
-            visuals.SetActive(visible);
-            if (!visible || !stream.Sample(identity.InputAuthority.RawEncoded,out var pose)) return;
-            head.SetPositionAndRotation(pose.Head,pose.HeadRotation);
-            left.SetPositionAndRotation(pose.Left,pose.LeftRotation); right.SetPositionAndRotation(pose.Right,pose.RightRotation);
-            var forward = Vector3.ProjectOnPlane(pose.HeadRotation*Vector3.forward,Vector3.up);
-            if (forward.sqrMagnitude > .01f) coat.rotation = Quaternion.LookRotation(forward);
-            coat.position = pose.Head - Vector3.up*.58f;
-            LeftPoseChanged.Invoke(pose.LeftPose,pose.LeftGrip,pose.LeftTrigger);
-            RightPoseChanged.Invoke(pose.RightPose,pose.RightGrip,pose.RightTrigger);
-            if (!observer) observer = Camera.main;
-            if (!observer) return;
-            nameplate.transform.position = pose.Head + Vector3.up*.35f;
-            nameplate.transform.rotation = observer.transform.rotation;
-            nameplate.alpha = Mathf.Clamp01(7-Vector3.Distance(observer.transform.position,pose.Head));
-            if (Time.unscaledTime >= nextName) { nextName = Time.unscaledTime + 1; nameplate.text = stream.NameFor(identity.InputAuthority.RawEncoded); }
+            var stream=CrewPoseStream.Active;
+            bool visible=identity && identity.IsValid && stream && identity.Runner==stream.Channel.Runner &&
+                identity.InputAuthority!=identity.Runner.LocalPlayer && stream.Sample(identity.InputAuthority.RawEncoded,out _);
+            visuals.SetActive(visible);if(!visible || !stream.Sample(identity.InputAuthority.RawEncoded,out var p))return;
+            left.transform.SetPositionAndRotation(p.Left,p.LeftRotation);right.transform.SetPositionAndRotation(p.Right,p.RightRotation);
+            left.Apply(p.LeftPose,p.LeftGrip,p.LeftTrigger);right.Apply(p.RightPose,p.RightGrip,p.RightTrigger);
+            if(body)body.Apply(p);
+            LeftPoseChanged.Invoke(p.LeftPose,p.LeftGrip,p.LeftTrigger);RightPoseChanged.Invoke(p.RightPose,p.RightGrip,p.RightTrigger);
+            if(!observer)observer=Camera.main;if(!observer)return;
+            nameplate.transform.SetPositionAndRotation(p.Head+Vector3.up*.35f,observer.transform.rotation);
+            nameplate.alpha=Mathf.Clamp01(7-Vector3.Distance(observer.transform.position,p.Head));
+            if(Time.unscaledTime>=nextName){nextName=Time.unscaledTime+1;nameplate.text=stream.NameFor(identity.InputAuthority.RawEncoded);}
         }
-        void OnDestroy() { if (fallback) Destroy(fallback); }
     }
 }
