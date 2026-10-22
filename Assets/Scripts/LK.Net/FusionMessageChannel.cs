@@ -91,11 +91,11 @@ namespace LighthouseKeepers.Net
                 if (peer != runner.LocalPlayer) runner.SendReliableDataToPlayer(peer, NextKey(kind), payload);
             Received?.Invoke(0, kind, payload);
         }
-        ReliableKey NextKey(int kind) => ReliableKey.FromInts(Channel, 1, kind, ++transfer);
+        ReliableKey NextKey(int kind) => ReliableKey.FromInts(Channel, 2, kind, ++transfer);
         public void OnReliableDataReceived(NetworkRunner source, PlayerRef player, ReliableKey key, ReadOnlySpan<byte> data)
         {
             key.GetInts(out int channel, out int version, out int kind, out _);
-            if (!Connected || source != runner || channel != Channel || version != 1 || data.Length == 0 || data.Length > MaxBytes) return;
+            if (!Connected || source != runner || channel != Channel || version != 2 || data.Length == 0 || data.Length > MaxBytes) return;
             // Host/Client streams to clients originate at the server. Clients cannot route directly to another client.
             if (IsHost && (player == runner.LocalPlayer || !runner.ActivePlayers.Contains(player))) return;
             Received?.Invoke(IsHost ? player.RawEncoded : 0, kind, data.ToArray());

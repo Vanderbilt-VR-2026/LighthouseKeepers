@@ -48,9 +48,9 @@ namespace LighthouseKeepers.Net.Editor
                 }
                 finally{UnityEngine.Object.DestroyImmediate(rig);}
                 EditorUtility.SetDirty(settings);AssetDatabase.SaveAssetIfDirty(settings);
-                const string configPath="Assets/Prefabs/Network/CrewShipLobbyConfig.asset";
                 foreach(var path in new[]{plan.lobbyScene,plan.networkLobbyScene})
                 {
+                    string configPath="Assets/Prefabs/Network/CrewShipLobbyConfig_"+Path.GetFileNameWithoutExtension(path)+".asset";
                     var scene=EditorSceneManager.OpenScene(path,OpenSceneMode.Single);
                     var manager=UnityEngine.Object.FindAnyObjectByType<LobbyManager>();
                     var screen=UnityEngine.Object.FindAnyObjectByType<LobbyScreen>();
@@ -78,7 +78,7 @@ namespace LighthouseKeepers.Net.Editor
                 }
                 AssetDatabase.SaveAssets();
             }
-            finally{EditorSceneManager.RestoreSceneManagerSetup(setup);}
+            finally{if(setup.Any(s=>s.isLoaded) && setup.Count(s=>s.isActive)==1)EditorSceneManager.RestoreSceneManagerSetup(setup);else EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);}
         }
         static void Add<T>(GameObject root) where T:Component {if(!root.GetComponent<T>())root.AddComponent<T>();}
         public static void ApplyBuildScenes()

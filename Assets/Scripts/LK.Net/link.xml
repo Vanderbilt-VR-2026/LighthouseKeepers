@@ -1,0 +1,12 @@
+<linker>
+  <assembly fullname="LK.Presentation.Board" ignoreIfMissing="1">
+    <type fullname="LighthouseKeepers.Presentation.Board.ShipDaySession" preserve="all" />
+  </assembly>
+  <assembly fullname="LK.Core.Progression" ignoreIfMissing="1">
+    <type fullname="LighthouseKeepers.Core.Progression.DayDirector" preserve="all" />
+  </assembly>
+  <assembly fullname="LK.Environment.Sprint3" ignoreIfMissing="1">
+    <type fullname="LighthouseKeepers.Environment.Sprint3.BriefingBoardView" preserve="all" />
+    <type fullname="LighthouseKeepers.Environment.Sprint3.Round2LightingController" preserve="all" />
+  </assembly>
+</linker>

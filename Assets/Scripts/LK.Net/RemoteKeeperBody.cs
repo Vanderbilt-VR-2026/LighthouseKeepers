@@ -9,6 +9,8 @@ namespace LighthouseKeepers.Net
         public void Bind(GameObject body)
         {
             foreach(var behaviour in body.GetComponentsInChildren<MonoBehaviour>(true))behaviour.enabled=false;
+            foreach(var collider in body.GetComponentsInChildren<Collider>(true))collider.enabled=false;
+            foreach(var rigidbody in body.GetComponentsInChildren<Rigidbody>(true)){rigidbody.isKinematic=true;rigidbody.detectCollisions=false;}
             leftShoulder=Find(body,"Shoulder_L");leftElbow=Find(body,"Elbow_L");leftWrist=Find(body,"Wrist_L");
             rightShoulder=Find(body,"Shoulder_R");rightElbow=Find(body,"Elbow_R");rightWrist=Find(body,"Wrist_R");
             if(!leftShoulder || !leftElbow || !leftWrist || !rightShoulder || !rightElbow || !rightWrist)

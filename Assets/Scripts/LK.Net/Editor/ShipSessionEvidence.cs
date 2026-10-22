@@ -17,11 +17,12 @@ namespace LighthouseKeepers.Net.Editor
         static bool clicked;
         static double started,readyAt;
         static ShipSessionEvidence(){EditorApplication.playModeStateChanged+=Changed;}
+        [MenuItem("LK/Ship/Capture Session E route")]
         public static void PrepareAndCapture()
         {
             try
             {
-                ShipRouteAuthoring.Apply();ShipRouteAuthoring.ApplyBuildScenes();
+                SessionState.SetBool(Key+"Fail",false);ShipRouteAuthoring.Apply();ShipRouteAuthoring.ApplyBuildScenes();
                 var author=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("LighthouseKeepers.Environment.Sprint3.Editor.Round2EnvironmentAuthoring")).FirstOrDefault(t=>t!=null);
                 if(author==null)throw new InvalidOperationException("C's Round2 environment authoring is required for real ship scene evidence.");
                 author.GetMethod("Apply").Invoke(null,null);

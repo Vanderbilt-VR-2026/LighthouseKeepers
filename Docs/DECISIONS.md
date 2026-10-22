@@ -141,3 +141,10 @@ Aneesh requested the original lobby followed by the new environment on 2026-10-1
 [SB] Disable B's in-world diagnostics in all players and require explicit Editor opt-in — Round 2 allows only the house KEEPER WATCH task board in the shipped experience.
 [SB] Bind C's actual PLINTH_TOP at published world Y=3.750 and expose typed scene configuration — a guessed generator-root height or an unattached script does not establish integrated simulation.
 [SB] Continue automatic drainage after Succeeded while freezing Failed runs — the safe-height success threshold must not create a post-repair water plateau during recovery before the next watch.
+
+[SE] 2026-10-21 Round 2: preserve the existing dirty networking worktree and implement in an isolated sprint3/networking-round2 worktree; publish a fast-forward networking tip without resetting the draft.
+[SE] Use C's version-2 ShipScenes.json TextAsset for both solo and crew routing; first load Shell House and then exactly its eleven additive paths. Missing ship dependencies fail closed; no Storm Watch fallback.
+[SE] Keep B as the only simulation arithmetic and D's ShipDaySession as the only watch/house-board authority. E supplies the typed facade, authenticated transport, typed-checkbox callback adapter and read-only client projection.
+[SE] Assign one IPlayerIdentity to the local rig/hands, offline actor zero; transport head/hands/torso yaw and hand states in a 114-byte protocol-2 packet. Use an internal LK_S3R2_ Photon room namespace to isolate older scene-index/protocol builds while retaining displayed six-character codes.
+[SE] Native graphics verification reached the complete Shell/Dress world through the visible Play Solo button and captured VIEW_BriefingBoard_2p5m. This was a C/D draft snapshot with documented C test-only corrections, not published ship acceptance. Native E tests: 25/25 Edit Mode; 3/4 Play Mode, with missing C lighting bakes blocking the ship-flow test.
+[SE] Keep C's native authoring fixes/bakes and A's absent body asset as explicit owner dependencies; preserve their lanes and do not label the earlier Storm Watch APK as Round 2.

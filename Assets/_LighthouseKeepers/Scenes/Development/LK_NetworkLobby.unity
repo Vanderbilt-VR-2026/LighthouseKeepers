@@ -6559,7 +6559,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bba1ca6130245a880400f4123720108, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Lobby.LobbyScreen
   manager: {fileID: 1886909106}
   paperTexture: {fileID: 2800000, guid: de0a9ba86bf074f669ab6060a725dceb, type: 3}
@@ -6575,11 +6575,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbba51af44e947b1bf08a12a73667aeb, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Lobby.LobbyManager
-  config: {fileID: 11400000, guid: 78b68e5e268a4c768fd9fef0f589d05b, type: 2}
+  config: {fileID: 11400000, guid: 98e6b9721852b4eaabc74ec3fdfda9eb, type: 2}
   transportBehaviour: {fileID: 2100000004}
-  playerName:
+  playerName: 
   onRosterChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -7537,6 +7537,159 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2080608622}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2100000000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2100000001}
+  - component: {fileID: 2100000002}
+  - component: {fileID: 2100000004}
+  - component: {fileID: 2100000010}
+  - component: {fileID: 2100000009}
+  - component: {fileID: 2100000008}
+  - component: {fileID: 2100000007}
+  - component: {fileID: 2100000006}
+  m_Layer: 0
+  m_Name: Fusion crew session
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2100000001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2100000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee353e917aad44ccbda165d3182e2eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Networking::LighthouseKeepers.Networking.FusionLobbyTransport
+  sessionName: LighthouseKeepersRoom
+  lobbySceneName: LK_Lobby_Environment
+--- !u!114 &2100000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886909104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.XRInteractionManager
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
+--- !u!114 &2100000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a9478a0e9243ffa2ded6b343d4dde9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewLobbyTransport
+  fusion: {fileID: 2100000002}
+--- !u!114 &2100000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886909104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331d38d59f3e443290f6deb3af909cb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewLobbyBoard
+  transport: {fileID: 2100000004}
+--- !u!114 &2100000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8116c5edc54a4644b29ed7180fd5fc13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.FusionMessageChannel
+--- !u!114 &2100000007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4b0e0dbc3814daaae26971a645445c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewPoseStream
+--- !u!114 &2100000008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86ff2097a57641c8a240a884af3176c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.FusionGrabAuthority
+--- !u!114 &2100000009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 150374ceca92466da7be1b9bfeb9b9a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.LegacyKeeperVisibility
+--- !u!114 &2100000010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5488256330564601bdeeedeede995684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewNetworkMetrics
+  recordSamples: 0
 --- !u!1 &2113508347
 GameObject:
   m_ObjectHideFlags: 0
@@ -7770,158 +7923,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2128766900}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2100000000
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2100000001}
-  - component: {fileID: 2100000002}
-  - component: {fileID: 2100000004}
-  - component: {fileID: 2100000010}
-  - component: {fileID: 2100000009}
-  - component: {fileID: 2100000008}
-  - component: {fileID: 2100000007}
-  - component: {fileID: 2100000006}
-  m_Layer: 0
-  m_Name: Fusion crew session
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2100000001
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2100000002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee353e917aad44ccbda165d3182e2eb0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Networking::LighthouseKeepers.Networking.FusionLobbyTransport
-  sessionName: LighthouseKeepersRoom
-  lobbySceneName: LK_NetworkLobby
---- !u!114 &2100000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1886909104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.XRInteractionManager
-  m_StartingHoverFilters: []
-  m_StartingSelectFilters: []
---- !u!114 &2100000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19a9478a0e9243ffa2ded6b343d4dde9, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewLobbyTransport
-  fusion: {fileID: 2100000002}
---- !u!114 &2100000005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1886909104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 331d38d59f3e443290f6deb3af909cb4, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewLobbyBoard
-  transport: {fileID: 2100000004}
---- !u!114 &2100000006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8116c5edc54a4644b29ed7180fd5fc13, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.FusionMessageChannel
---- !u!114 &2100000007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4b0e0dbc3814daaae26971a645445c0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewPoseStream
---- !u!114 &2100000008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86ff2097a57641c8a240a884af3176c1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.FusionGrabAuthority
---- !u!114 &2100000009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 150374ceca92466da7be1b9bfeb9b9a1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.LegacyKeeperVisibility
---- !u!114 &2100000010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5488256330564601bdeeedeede995684, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewNetworkMetrics
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

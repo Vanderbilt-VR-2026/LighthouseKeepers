@@ -31,15 +31,22 @@ namespace LighthouseKeepers.Net
     }
     public sealed class ShipRouteSettings : ScriptableObject
     {
+        public const string RoomPrefix="LK_S3R2_";
         public TextAsset manifest;
         public GameObject localRig;
+        public Vector3 houseSpawn = new Vector3(0,0,-8.5f);
+        public float houseSpawnYaw;
         public DayCatalog days;
         public FloodTuning tuning;
         ShipManifest parsed;
         public ShipManifest Plan => parsed ?? (parsed=manifest ? ShipManifest.Parse(manifest.text) : throw new InvalidOperationException("Assign the authoritative ShipScenes.json TextAsset."));
         void OnValidate()=>parsed=null;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void RegisterRoutes()=>LighthouseKeepers.Networking.FusionLobbyTransport.ResolveGameplayScene=()=>Load().Plan.EntryName;
+        static void RegisterRoutes()
+        {
+            LighthouseKeepers.Networking.FusionLobbyTransport.ResolveGameplayScene=()=>Load().Plan.EntryName;
+            LighthouseKeepers.Networking.FusionLobbyTransport.ResolveSessionRoom=code=>RoomPrefix+code;
+        }
         public static ShipRouteSettings Load() => Resources.Load<ShipRouteSettings>("ShipRouteSettings") ?? throw new InvalidOperationException("Run LK/Ship/Bind lobby and player routes before Play Solo or building.");
     }
 }

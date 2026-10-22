@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using LighthouseKeepers.Gameplay.Interaction;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -33,7 +33,11 @@ namespace LighthouseKeepers.Net
         {
             // House is the same entry in both modes; only the authority policy differs.
             if(scene.name=="LK_Shell_House" && !loading)StartCoroutine(LoadWorld());
-            else if(scene.name=="LK_Lobby_Environment" || scene.name=="LK_NetworkLobby") {Ready=false;}
+            else if(scene.name=="LK_Lobby_Environment" || scene.name=="LK_NetworkLobby")
+            {
+                Ready=false;
+                foreach(var origin in FindObjectsByType<XROrigin>(FindObjectsSortMode.None))StripVignette(origin.gameObject);
+            }
         }
         IEnumerator LoadWorld()
         {
@@ -58,7 +62,7 @@ namespace LighthouseKeepers.Net
                 if(!settings.localRig){Fail("ShipRouteSettings has no authored local XR rig.");yield break;}
                 var hold=new GameObject("Local keeper rig");hold.SetActive(false);SceneManager.MoveGameObjectToScene(hold,house);
                 var instance=Instantiate(settings.localRig,hold.transform,false);
-                instance.transform.SetPositionAndRotation(new Vector3(0,0,-8.5f),Quaternion.identity);
+                instance.transform.SetPositionAndRotation(settings.houseSpawn,Quaternion.Euler(0,settings.houseSpawnYaw,0));
                 hold.SetActive(true);rig=instance.GetComponent<XROrigin>();
             }
             if(!rig || !rig.Camera){Fail("Canonical House needs exactly one tracked XR Origin and camera.");yield break;}
@@ -70,7 +74,7 @@ namespace LighthouseKeepers.Net
             try{gameplay=new GameObject("Ship gameplay / one state authority").AddComponent<ShipGameplaySession>();gameplay.Configure(settings,rig,Solo);}
             catch(Exception e){if(gameplay)Destroy(gameplay.gameObject);Fail(e.Message);yield break;}
             Ready=true;loading=false;
-            Debug.Log("LK_SHIP_READY: Lobby -> Play Solo/crew -> "+string.Join(", ",new[]{settings.Plan.entryScene}.ConcatForLog(settings.Plan.additiveScenes)));
+            Debug.Log("LK_SHIP_READY: Lobby -> Play Solo/crew -> "+string.Join(", ",new[]{settings.Plan.entryScene}.Concat(settings.Plan.additiveScenes)));
         }
         void Fail(string message){LastError=message;loading=false;Debug.LogError("SHIP LOAD FAILED: "+message,this);}
         public static void StripVignette(GameObject root)
@@ -79,10 +83,5 @@ namespace LighthouseKeepers.Net
                 if(c && c.GetType().Name=="TunnelingVignetteController")
                 {c.enabled=false;c.gameObject.SetActive(false);Debug.Log("Removed comfort vignette: "+c.transform.name+" under "+root.name);}
         }
-    }
-    static class ShipSceneLog
-    {
-        public static string[] ConcatForLog(this string[] first,string[] rest)
-        {var all=new string[first.Length+rest.Length];first.CopyTo(all,0);rest.CopyTo(all,first.Length);return all;}
     }
 }

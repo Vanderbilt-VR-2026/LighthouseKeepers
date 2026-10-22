@@ -77,6 +77,7 @@ namespace LighthouseKeepers.Net
         }
         static bool Eligible(XRBaseInteractable value)
         {
+            if(value is XRGrabInteractable && value.name.IndexOf("wrench",StringComparison.OrdinalIgnoreCase)>=0)return true;
             // Only E's three requested interactions. Do not take ownership of lifelines, UI, or unrelated puzzles.
             for (var t=value.transform;t;t=t.parent)
                 if (t.name=="STN_MANUAL_PUMP" || t.name=="STN_TOOL_TABLE" || t.name=="GRIP_StarterHandle" ||
@@ -154,6 +155,12 @@ namespace LighthouseKeepers.Net
             }
             channel.Broadcast(StateKind,Encode(new Packet { id=id,path=binding.Path,epoch=lease.Epoch,owner=lease.Owner,sequence=++stateSequence,action=3,
                 position=binding.transform.position,rotation=binding.transform.rotation }));
+        }
+        public bool HasFreshWrenchLease(int actor)
+        {
+            foreach(var pair in props)
+                if(pair.Value && pair.Value.name.IndexOf("wrench",StringComparison.OrdinalIgnoreCase)>=0 && HasFreshLease(actor,pair.Key))return true;
+            return false;
         }
         public bool HasFreshLease(int actor,int station)
         {

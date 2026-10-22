@@ -2556,6 +2556,105 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534405553}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &545986971
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 545986977}
+  - component: {fileID: 545986976}
+  - component: {fileID: 545986975}
+  - component: {fileID: 545986974}
+  - component: {fileID: 545986973}
+  - component: {fileID: 545986972}
+  m_Layer: 0
+  m_Name: Fusion crew session
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &545986972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545986971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86ff2097a57641c8a240a884af3176c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.FusionGrabAuthority
+--- !u!114 &545986973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545986971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4b0e0dbc3814daaae26971a645445c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewPoseStream
+--- !u!114 &545986974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545986971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8116c5edc54a4644b29ed7180fd5fc13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.FusionMessageChannel
+--- !u!114 &545986975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545986971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a9478a0e9243ffa2ded6b343d4dde9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewLobbyTransport
+  fusion: {fileID: 545986976}
+--- !u!114 &545986976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545986971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee353e917aad44ccbda165d3182e2eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Networking::LighthouseKeepers.Networking.FusionLobbyTransport
+  sessionName: LighthouseKeepersRoom
+  lobbySceneName: LK_Lobby_Environment
+--- !u!4 &545986977
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545986971}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &566480680
 GameObject:
   m_ObjectHideFlags: 0
@@ -6545,6 +6644,7 @@ GameObject:
   - component: {fileID: 1886909106}
   - component: {fileID: 1886909105}
   - component: {fileID: 2100000002}
+  - component: {fileID: 2100000003}
   m_Layer: 0
   m_Name: Physical watch board
   m_TagString: Untagged
@@ -6580,8 +6680,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbba51af44e947b1bf08a12a73667aeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Lobby.LobbyManager
-  config: {fileID: 11400000, guid: ffcbd3d050e724ee09dec8af50d54daf, type: 2}
-  transportBehaviour: {fileID: 2100000002}
+  config: {fileID: 11400000, guid: 5eb628ee3f5824c5ba62a246e96b8b7f, type: 2}
+  transportBehaviour: {fileID: 545986975}
   playerName: 
   onRosterChanged:
     m_PersistentCalls:
@@ -7553,6 +7653,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LK.Lobby::LighthouseKeepers.Lobby.LocalLobbyTransport
   pendingName: Keeper
+--- !u!114 &2100000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886909104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331d38d59f3e443290f6deb3af909cb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewLobbyBoard
+  transport: {fileID: 545986975}
 --- !u!1 &2113508347
 GameObject:
   m_ObjectHideFlags: 0
@@ -7817,3 +7930,4 @@ SceneRoots:
   - {fileID: 770360380}
   - {fileID: 390394939}
   - {fileID: 51859952}
+  - {fileID: 545986977}

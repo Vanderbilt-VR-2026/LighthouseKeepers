@@ -64,7 +64,10 @@ namespace LighthouseKeepers.Net
         public bool PlaySolo()
         {
             if (launchingSolo || fusion && fusion.IsStarting) return false;
-            if (!Application.CanStreamedLevelBeLoaded(ShipRouteSettings.Load().Plan.entryScene))
+            ShipManifest plan;
+            try{plan=ShipRouteSettings.Load().Plan;}
+            catch(Exception e){return Fail(e.Message);}
+            if (!Application.CanStreamedLevelBeLoaded(plan.entryScene))
                 return Fail("The solo lighthouse is missing from this build. Reinstall the current APK.");
             launchingSolo = true;
             connecting = false;

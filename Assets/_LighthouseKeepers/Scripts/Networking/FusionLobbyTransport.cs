@@ -16,6 +16,7 @@ namespace LighthouseKeepers.Networking
     public sealed class FusionLobbyTransport : MonoBehaviour, ISessionLobbyTransport, INetworkRunnerCallbacks
     {
         public static Func<string> ResolveGameplayScene { private get; set; }
+        public static Func<string,string> ResolveSessionRoom { private get; set; }
         public static string GameplaySceneName => ResolveGameplayScene?.Invoke() ?? throw new InvalidOperationException("Canonical ship routing is not registered.");
         public const string LobbySceneName = "LK_NetworkLobby";
         static string pendingLobbyNotice;
@@ -116,7 +117,7 @@ namespace LighthouseKeepers.Networking
                 scenes.AddSceneRef(SceneRef.FromIndex(index), LoadSceneMode.Single);
                 var result = await current.StartGame(new StartGameArgs
                 {
-                    GameMode = mode, SessionName = sessionName, PlayerCount = state.Capacity,
+                    GameMode = mode, SessionName = ResolveSessionRoom?.Invoke(sessionName) ?? sessionName, PlayerCount = state.Capacity,
                     Scene = scenes, SceneManager = sceneManager, IsVisible = false,
                     EnableClientSessionCreation = false, StartGameCancellationToken = cancellation
                 });
@@ -281,7 +282,7 @@ namespace LighthouseKeepers.Networking
         {
             if (source != runner) return;
             if (source.IsServer && state.Remove(Id(player))) PublishRoster();
-            if ((enteredGame || state.Starting) && CrewSessionPolicy.RequiresWholeCrew(gameSceneName) && !busy && !leaving)
+            if ((enteredGame || state.Starting) && (gameSceneName == GameplaySceneName || CrewSessionPolicy.RequiresWholeCrew(gameSceneName)) && !busy && !leaving)
             {
                 enteredGame = true; // Approval is already committed, even before the load callback.
                 Fail("Your partner left the watch. Reconnect together to start a new run.");

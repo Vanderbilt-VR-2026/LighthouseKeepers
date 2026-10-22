@@ -33,19 +33,23 @@ namespace LighthouseKeepers.Net
             var anchor=GameObject.Find("STN_BRIEFING_BOARD");
             var board=anchor?anchor.GetComponentsInChildren<MonoBehaviour>(true).FirstOrDefault(c=>c && c.GetType().Name=="BriefingBoardView"):null;
             if(!board)throw new InvalidOperationException("House requires one C BriefingBoardView under STN_BRIEFING_BOARD.");
+            var bridgeRoot=new GameObject("Ship house board callback adapter");bridgeRoot.transform.SetParent(anchor.transform,false);
+            var bridge=bridgeRoot.AddComponent<ShipBoardAdapter>();bridge.Bind(board);
             var session=(MonoBehaviour)(gameObject.GetComponent(type)??gameObject.AddComponent(type));
-            type.GetMethod("AssignDependencies").Invoke(session,new object[]{settings.days,Simulation,settings.tuning,board,rig.Camera.transform});
+            type.GetMethod("AssignDependencies").Invoke(session,new object[]{settings.days,Simulation,settings.tuning,bridge,rig.Camera.transform});
             bool active=(bool)(solo?type.GetMethod("ActivateSoloAtDay").Invoke(session,new object[]{1,actor}):
                 type.GetMethod("ActivateCrewAtDay").Invoke(session,new object[]{Simulation.IsAuthoritative,2,actor,1}));
             if(!active)throw new InvalidOperationException("D could not activate the ship day session. Check its anchor/board diagnostics.");
             Days=(DayDirector)type.GetProperty("Director").GetValue(session);
+            gameObject.AddComponent<ShipBedTransition>().Bind(Days,rig,channel);
             Simulation.ValidateInteraction=ValidateRemote;
+            gameObject.AddComponent<SnapshotWaterView>().Bind(Simulation);
             if(channel)
             {
                 if(!Simulation.IsAuthoritative)
                 {
                     replica=gameObject.AddComponent<ShipDayReplica>();replica.Bind(channel);
-                    var presenter=(DayBoardPresenter)type.GetProperty("Presenter").GetValue(session);presenter.BindReadOnly(replica);
+                    var presenter=(DayBoardPresenter)type.GetProperty("Presenter").GetValue(session);bridge.Projection=replica;presenter.BindReadOnly(replica);replica.Presenter=presenter;
                 }
             }
         }
@@ -54,7 +58,9 @@ namespace LighthouseKeepers.Net
             var poses=CrewPoseStream.Active;var grabs=channel?channel.GetComponent<FusionGrabAuthority>():null;
             if(!poses || !grabs)return false;
             string station=command.Kind==SimCommandKind.ManualPumpStroke?"STN_MANUAL_PUMP":command.Kind==SimCommandKind.RepairLeak?"STN_PIPE_LEAK":null;
-            if(station==null || !grabs.TryStationId(station,out int id) || !grabs.HasFreshLease(command.ActorId,id))return false;
+            if(station==null)return false;
+            if(command.Kind==SimCommandKind.RepairLeak){if(!grabs.HasFreshWrenchLease(command.ActorId))return false;}
+            else if(!grabs.TryStationId(station,out int id) || !grabs.HasFreshLease(command.ActorId,id))return false;
             var point=GameObject.Find(station);if(!point || !poses.NearHand(command.ActorId,point.transform.position,1.5f))return false;
             return command.Kind!=SimCommandKind.RepairLeak || Days.CanRepairPipe(command.ActorId);
         }
