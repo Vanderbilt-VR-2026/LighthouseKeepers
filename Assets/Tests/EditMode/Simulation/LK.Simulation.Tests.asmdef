@@ -1,6 +1,6 @@
 {
   "name": "LK.Simulation.Tests",
-  "references": ["LK.Core.Simulation", "LK.Simulation.Unity"],
+  "references": ["LK.Core.Simulation", "LK.Simulation.Unity", "LK.Simulation.Editor", "UnityEngine.UI", "Unity.TextMeshPro"],
   "includePlatforms": ["Editor"],
   "optionalUnityReferences": ["TestAssemblies"],
   "autoReferenced": false

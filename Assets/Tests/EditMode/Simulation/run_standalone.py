@@ -51,11 +51,12 @@ def main():
     compile_assembly('LK.Simulation.Unity.Release', (core / 'Unity').glob('*.cs'),
                      [output / 'LK.Core.Simulation.Release.dll'] + engine_refs + package_refs,
                      defines='LK_STANDALONE_RELEASE')
-    compile_assembly('LK.Simulation.Editor', (core / 'Unity/Editor').glob('*.cs'),
+    editor_dll = compile_assembly('LK.Simulation.Editor', (core / 'Unity/Editor').glob('*.cs'),
                      [core_dll, unity_dll] + engine_refs)
     tests = root / 'Assets/Tests/EditMode/Simulation'
     test_dll = compile_assembly('LK.Simulation.Tests', tests.glob('*.cs'),
-                               [core_dll, unity_dll, nunit] + engine_refs)
+                               [core_dll, unity_dll, editor_dll, nunit] + engine_refs + package_refs +
+                               [args.assembly_cache / name for name in ('Unity.TextMeshPro.dll', 'UnityEngine.TestRunner.dll', 'UnityEditor.TestRunner.dll')])
     runner = compile_assembly('SimulationStandalone', [tests / 'StandaloneRunner.cs'],
                               [test_dll, core_dll, nunit], defines='LK_SIMULATION_STANDALONE', executable=True)
     env = os.environ.copy()

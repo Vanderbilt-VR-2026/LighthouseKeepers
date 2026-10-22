@@ -31,7 +31,7 @@ namespace LighthouseKeepers.Tests.Simulation
                 values["electricPumpStartPower"], values["initialFuelSeconds"], values["generatorFaultSeepM3PerSec"]);
             int passed = 0, failed = 0, skipped = 0;
             foreach (Type type in new[] { typeof(FloodBalanceTests), typeof(SimulationHostTests),
-                typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest), typeof(WatchLifecycleTests) })
+                typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest), typeof(WatchLifecycleTests), typeof(ShipSceneBuildPolicyTests) })
             foreach (MethodInfo method in type.GetMethods().Where(m => m.IsDefined(typeof(TestAttribute), false)))
             {
                 object instance = Activator.CreateInstance(type);
@@ -40,7 +40,9 @@ namespace LighthouseKeepers.Tests.Simulation
                 catch (Exception error)
                 { Console.WriteLine("FAIL " + method.Name + "\n" + (error.InnerException ?? error)); failed++; }
             }
-            Console.WriteLine($"Managed NUnit methods: {passed} passed, {failed} failed, {skipped} not run.");
+            skipped++;
+            Console.WriteLine("NOT RUN: LobbyPlaySoloReachesShipAndCapturesPipe (requires real Editor Play Mode and graphics).");
+            Console.WriteLine($"Managed NUnit methods: {passed} passed, {failed} failed; {skipped} ship Play Mode test not run.");
             Console.WriteLine($"Manual/leak={tuning.ManualPumpStrokeM3 / tuning.ManualPumpMinStrokeSeconds / tuning.LeakInflowM3PerSec:P3}; " +
                 $"electric/manual={tuning.ElectricPumpM3PerSec / (tuning.ManualPumpStrokeM3 / tuning.ManualPumpMinStrokeSeconds):F3}; " +
                 $"ideal drain={(tuning.FailHeightM - tuning.SafeHeightM) * tuning.FloorAreaM2 / tuning.ElectricPumpM3PerSec:F2}s");
