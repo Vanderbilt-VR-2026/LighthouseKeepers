@@ -1,5 +1,25 @@
 # B → E: authority and existing networking boundary
 
+
+## Latest Round 2 — interface compile fix and three-coupling protocol
+
+This section supersedes prior interface/three-watch notes below. `ISimulationHost` now declares BOTH `ActivateDayLeak(int leakId)` and `ForceGeneratorFault()`. B updated its host, scene driver and fake. R1 prohibits B from editing your adapter; add these exact public members to **FusionSimulationAdapter** to resolve CS0535:
+
+```csharp
+public void ActivateDayLeak(int leakId) =>
+    Enqueue(new SimCommand(SimCommandKind.ActivateDayLeak, targetId: leakId));
+public void ForceGeneratorFault() =>
+    Enqueue(new SimCommand(SimCommandKind.ForceGeneratorFault));
+```
+
+Use `SimCommandPolicy.IsHostOnly` for authorization. Your currently inspected Accept only grants BeginDay/ResetRun lifecycle privileges; extend to all host-only kinds, including fault, activation, pause/resume/debug. Never send these through the ordinary remote-interaction validator. Keep unknown commands rejected and authenticate ActorId from the connection.
+
+**TargetId on ActivateDayLeak=10 is now coupling ID 0..2, not current day. BeginDay=5 remains day index 1..7. RepairLeak=0 TargetId identifies one coupling.** Validate physical target identity as well as D's actor guard. B no longer converts A's actor-only repair event into a guessed target. Route a single targeted repair from A/D to the authoritative queue. Raw repair cannot complete a watch.
+
+Snapshot adds ActiveLeakMask, ActivatedLeakMask and ConfiguredLeakCount (constructor appended optional ints). Replicate these plus existing DayIndex/GeneratorFaultActive/Paused/diagnostics in a versioned packet. BeaconLit is constructor-derived from GeneratorRunning && PowerAvailable>.5; ActiveLeakCount/RepairedLeakCount are computed. Validate bit ranges/subsets and counts before constructing client snapshots; the original 40-byte packet does not supply this state. Full signatures: ../SimulationAPI.md.
+
+FloodTuning references seven DayTuningAsset profiles. D reads GetDay(day) for counts, multiplier, generator-fault plan and duration; core automatically selects count/multiplier at BeginDay, but D alone schedules incidents and completes the watch. LocalAuthority remains only an IAuthority provider, not another ISimulationHost implementation. Preserve DayTuningAsset in IL2CPP (B link.xml now does). R8 remains pending actual merged Lobby → Play Solo composition, screenshot and current APK.
+
 Status: [PROPOSED] pending networking integration.
 
 ## Round 2 — compose the real ship once

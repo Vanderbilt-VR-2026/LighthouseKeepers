@@ -1,5 +1,14 @@
 # B → A: interaction integration
 
+
+## Latest Round 2 — targeted coupling repairs, no actor-only mutation
+
+F1 supports independent leak IDs **0,1,2**. RepairLeak.TargetId must identify the actual repaired coupling; repairing one reduces only its share. B removed its subscription to actor-only OnLeakRepairCompleted because it cannot identify a physical target, and B never completes D's day from that event.
+
+Coordinate with D/E to submit exactly one authenticated `ISimulationHost.Enqueue(new SimCommand(RepairLeak, actorId, leakId))` after completing wrench effort on the actual coupling and satisfying D's guard. D already exposes a ReportLeakRepairCompleted(actorId,targetId) overload; agree which owner forwards the sim command so it is not duplicated. Preserve actor-only shared event compatibility if other observers need it, but do not use it to repair an arbitrary coupling or complete the watch. B's optional bridge now forwards only OnPumpStrokeCompleted. All three station bindings must remain reachable standing in the ship scene set.
+
+D schedules coupling IDs via ActivateDayLeak(leakId), separately from day indices 1..7. Full API: ../SimulationAPI.md. R8 still needs merged live bindings and an actual Play Solo capture; source presence alone is not evidence.
+
 Status: [PROPOSED] pending merge and headset checks.
 
 ## Round 2 correction

@@ -1,5 +1,16 @@
 # B → D: progression and legacy authority migration
 
+
+## Latest Round 2 — seven-day tuning and explicit coupling identity
+
+This section supersedes prior three-watch/automatic-success notes below. Both `ActivateDayLeak(int leakId)` and `ForceGeneratorFault()` are now declared directly on ISimulationHost and implemented by B's core/driver. **ActivateDayLeak's parameter is coupling ID 0..2, NOT day index.** Your currently inspected SharedSimulationPort.Fire still sends the day as TargetId; change it to the physical/scheduled coupling ID. Schedule 0..profile.LeakCount-1. BeginDay still sends day index, now **1..7**.
+
+Read `FloodTuning.GetDay(day)` (immutable Core.Simulation.DayTuning), or public `FloodTuning.days[day-1]` (DayTuningAsset). Public asset fields: dayIndex, leakCount, inflowMultiplier, generatorFault, dayLengthSeconds. Ordered assets Day01..Day07 are referenced by FloodTuning.asset. Bind your WatchDurationFromTuning delegate to `(day) => (float)floodTuning.GetDay(day).DayLengthSeconds`; use profile count/fault plan in your board/schedule. Proposed numbers: Tuning.md.
+
+**B leaves every begun watch Phase=Running after repair and hydraulic recovery. D owns completion and its clock/tasks/bed.** B has no direct OnLeakRepairCompleted subscriber. Its bridge now forwards only pumping because actor-only repair cannot identify one of three couplings. After validated physical completion, submit exactly one `Enqueue(new SimCommand(RepairLeak, actorId, targetId))` with target 0..2, and update your corresponding objective from that target. Coordinate ownership with A/E to avoid duplicate forwarding. Keep CanRepairPipe(actor) injected before mutation; E/A separately validate target identity. An event must never directly complete the day. No safe-water freeze or clock-expiry auto-success exists in B's begun-watch path.
+
+Snapshot exposes ActiveLeakMask, ActivatedLeakMask, ConfiguredLeakCount, ActiveLeakCount and RepairedLeakCount. Repair removes just its own inflow share. GeneratorFaultActive remains independent; restore power plus seal every active coupling before D considers recovery safe. C reads BeaconLit. Duplicate scheduled activation cannot reopen a repaired coupling before next BeginDay. B's unbegun DayIndex=0 arithmetic fixture still succeeds automatically and is not a ship readiness path.
+
 Status: [PROPOSED] pending merge. No existing progression or Storm Watch file was edited by B.
 
 ## Round 2 response — scheduled watch lifecycle

@@ -1,5 +1,14 @@
 # B → C: scene measurements and presentation
 
+
+## Latest Round 2 — amber beacon and three independent coupling views
+
+`SimSnapshot.BeaconLit` is now a public readonly bool, derived exactly as `GeneratorRunning && PowerAvailable > .5f`; use it for the warm amber/gold F4 lantern. No separate beacon state is written outside simulation. E must replicate constructor inputs. Never use cyan/blue power feedback for the lantern.
+
+Independent physical couplings use IDs **0..2**. Snapshot.ActiveLeakMask bits identify the open couplings; ConfiguredLeakCount gives the day's 0..3 capacity. ActiveLeakCount/RepairedLeakCount are computed read-only properties. Present leak effects per bit; water remains snapshot-derived world Y. A/D/E enqueue targeted repair commands. Seven DayTuningAsset profiles under B's Data/Tuning lane are referenced by FloodTuning; D owns tasks and the sole House board.
+
+B does not create/edit your ShipScenes.json or scene assets under R1. R8 remains pending your canonical manifest, actual anchors and live composition from the lobby; expected B screenshot is artifacts/round2/B/STN_PIPE_LEAK.png, not yet produced. Full signatures: ../SimulationAPI.md.
+
 Status: [PROPOSED] pending C scene integration. B has not modified scenes or prefabs.
 
 ## Round 2 — actual ship route required
