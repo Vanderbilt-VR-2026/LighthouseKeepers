@@ -1,0 +1,9 @@
+<linker>
+  <assembly fullname="LK.Core.Simulation">
+    <type fullname="LighthouseKeepers.Core.Simulation.*" preserve="all" />
+  </assembly>
+  <assembly fullname="LK.Simulation.Unity">
+    <type fullname="LighthouseKeepers.Simulation.Unity.SimulationHostBehaviour" preserve="all" />
+    <type fullname="LighthouseKeepers.Simulation.Unity.FloodTuning" preserve="all" />
+  </assembly>
+</linker>

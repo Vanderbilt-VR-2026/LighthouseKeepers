@@ -32,16 +32,16 @@ namespace LighthouseKeepers.Tests.Simulation
                 Assert.That(bridge.Bind(typeof(FakeEvents)), Is.True);
                 Assert.That(bridge.Bind(typeof(FakeEvents)), Is.True, "Rebind must not double-subscribe.");
                 FakeEvents.Raise();
-                Assert.That(host.Commands.Count, Is.EqualTo(3));
+                Assert.That(host.Commands.Count, Is.EqualTo(2));
                 Assert.That(host.Commands[0].Kind, Is.EqualTo(SimCommandKind.ManualPumpStroke));
                 Assert.That(host.Commands[0].ActorId, Is.EqualTo(7));
                 Assert.That(host.Commands[1].Kind, Is.EqualTo(SimCommandKind.RepairLeak));
                 Assert.That(host.Commands[1].ActorId, Is.EqualTo(8));
-                Assert.That(host.Commands[2].Kind, Is.EqualTo(SimCommandKind.StartGenerator));
-                Assert.That(host.Commands[2].ActorId, Is.EqualTo(9));
+                Assert.That(host.Commands.Exists(c => c.Kind == SimCommandKind.StartGenerator), Is.False,
+                    "D validates generator setup before sending StartGenerator; the raw event must not bypass it.");
             }
             finally { bridge.Dispose(); }
-            FakeEvents.Raise(); Assert.That(host.Commands.Count, Is.EqualTo(3));
+            FakeEvents.Raise(); Assert.That(host.Commands.Count, Is.EqualTo(2));
         }
     }
 }

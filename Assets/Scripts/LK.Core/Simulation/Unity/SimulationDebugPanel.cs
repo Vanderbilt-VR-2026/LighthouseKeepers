@@ -12,12 +12,18 @@ namespace LighthouseKeepers.Simulation.Unity
     public sealed class SimulationDebugPanel : MonoBehaviour
     {
         [SerializeField] SimulationHostBehaviour simulation;
+        [SerializeField, Tooltip("Editor diagnostics only. No panel is created in any player build.")]
+        bool showInEditor;
         Text readout, targetLabel;
         Font font;
         float targetHeight = .9f;
 
         void Start()
         {
+#if !UNITY_EDITOR
+            enabled = false;
+#else
+            if (!showInEditor) { enabled = false; return; }
             if (!simulation) { Debug.LogError("Debug panel requires an explicit simulation host.", this); enabled = false; return; }
             font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             var root = new GameObject("Simulation debug canvas", typeof(RectTransform), typeof(Canvas),
@@ -40,6 +46,7 @@ namespace LighthouseKeepers.Simulation.Unity
             { if (simulation.IsInitialized) targetHeight = simulation.Current.WaterHeightM; });
             simulation.OnTick += Render;
             if (simulation.IsInitialized) Render(simulation.Current);
+#endif
         }
 
         void Send(SimCommandKind kind, float value = 0)

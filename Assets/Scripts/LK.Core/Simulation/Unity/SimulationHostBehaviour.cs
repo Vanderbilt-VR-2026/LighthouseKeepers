@@ -17,11 +17,26 @@ namespace LighthouseKeepers.Simulation.Unity
         bool useLocalAuthority;
         SimulationHost host;
         IAuthority authority;
+        Func<int, bool> repairValidation;
         InteractionEventBridge interactions;
         public bool IsInitialized => host != null;
         public SimSnapshot Current => host != null ? host.Current : throw new InvalidOperationException("Simulation not initialized.");
         public double FloorWorldY => floorOrigin.position.y;
         public event Action<SimSnapshot> OnTick;
+
+        /// <summary>Composition entry for the ship loader. Configure while inactive,
+        /// before Start; E supplies authority and D supplies actor-specific repair validation.</summary>
+        public void ConfigureScene(FloodTuning profile, Transform floor, Transform plinthTop,
+            IAuthority sessionAuthority, Func<int, bool> canRepairPipe)
+        {
+            if (host != null) throw new InvalidOperationException("Configure the scene before simulation starts.");
+            if (!profile || !floor || !plinthTop) throw new ArgumentException("Supply tuning and C's measured floor/plinth transforms.");
+            tuning = profile; floorOrigin = floor; generatorPlinthTop = plinthTop;
+            ConfigureAuthority(sessionAuthority); ConfigureRepairValidation(canRepairPipe);
+        }
+
+        public void ConfigureRepairValidation(Func<int, bool> canRepairPipe)
+        { repairValidation = canRepairPipe ?? throw new ArgumentNullException(nameof(canRepairPipe)); }
 
         public void ConfigureAuthority(IAuthority value)
         {
@@ -36,7 +51,8 @@ namespace LighthouseKeepers.Simulation.Unity
                 Debug.LogError("Simulation requires FloodTuning, C's floor origin and explicit local/network authority.", this);
                 enabled = false; return;
             }
-            host = new SimulationHost(tuning.ToParameters(), this, authority ?? new LocalAuthority());
+            host = new SimulationHost(tuning.ToParameters(), this, authority ?? new LocalAuthority(),
+                canRepairPipe: actor => repairValidation != null && repairValidation(actor));
             host.OnTick += ForwardTick;
             interactions = new InteractionEventBridge(this);
             if (!interactions.BindAvailableAssembly())
@@ -52,8 +68,11 @@ namespace LighthouseKeepers.Simulation.Unity
             host.Enqueue(cmd);
         }
         public void ForceGeneratorFault() => Enqueue(new SimCommand(SimCommandKind.ForceGeneratorFault));
+        public void ActivateDayLeak(int dayIndex) => Enqueue(new SimCommand(SimCommandKind.ActivateDayLeak, targetId: dayIndex));
         void Update() { if (host != null) host.Advance(Time.deltaTime); }
         void ForwardTick(SimSnapshot snapshot) => OnTick?.Invoke(snapshot);
+        void OnEnable() { if (interactions != null) interactions.BindAvailableAssembly(); }
+        void OnDisable() { interactions?.Dispose(); }
         void OnDestroy()
         {
             interactions?.Dispose();

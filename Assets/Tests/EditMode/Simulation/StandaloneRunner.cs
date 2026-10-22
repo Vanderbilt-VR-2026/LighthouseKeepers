@@ -28,23 +28,21 @@ namespace LighthouseKeepers.Tests.Simulation
             var tuning = new FloodParameters(values["leakInflowM3PerSec"], values["manualPumpStrokeM3"],
                 values["manualPumpMinStrokeSeconds"], values["electricPumpM3PerSec"], values["floorAreaM2"],
                 values["failHeightM"], values["safeHeightM"], values["failSustainSeconds"],
-                values["electricPumpStartPower"], values["initialFuelSeconds"]);
+                values["electricPumpStartPower"], values["initialFuelSeconds"], values["generatorFaultSeepM3PerSec"]);
             int passed = 0, failed = 0, skipped = 0;
             foreach (Type type in new[] { typeof(FloodBalanceTests), typeof(SimulationHostTests),
-                typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest) })
+                typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest), typeof(WatchLifecycleTests), typeof(ShipSceneBuildPolicyTests) })
             foreach (MethodInfo method in type.GetMethods().Where(m => m.IsDefined(typeof(TestAttribute), false)))
             {
-                if (method.Name == "OnlyLKNetMayReferenceNetworkingNamespaces")
-                {
-                    Console.WriteLine("NOT RUN (requires Unity compilation pipeline): " + method.Name); skipped++; continue;
-                }
                 object instance = Activator.CreateInstance(type);
                 type.GetField("tuning", BindingFlags.Instance | BindingFlags.NonPublic)?.SetValue(instance, tuning);
                 try { method.Invoke(instance, null); Console.WriteLine("PASS " + method.Name); passed++; }
                 catch (Exception error)
                 { Console.WriteLine("FAIL " + method.Name + "\n" + (error.InnerException ?? error)); failed++; }
             }
-            Console.WriteLine($"Managed NUnit methods: {passed} passed, {failed} failed, {skipped} not run.");
+            skipped++;
+            Console.WriteLine("NOT RUN: LobbyPlaySoloReachesShipAndCapturesPipe (requires real Editor Play Mode and graphics).");
+            Console.WriteLine($"Managed NUnit methods: {passed} passed, {failed} failed; {skipped} ship Play Mode test not run.");
             Console.WriteLine($"Manual/leak={tuning.ManualPumpStrokeM3 / tuning.ManualPumpMinStrokeSeconds / tuning.LeakInflowM3PerSec:P3}; " +
                 $"electric/manual={tuning.ElectricPumpM3PerSec / (tuning.ManualPumpStrokeM3 / tuning.ManualPumpMinStrokeSeconds):F3}; " +
                 $"ideal drain={(tuning.FailHeightM - tuning.SafeHeightM) * tuning.FloorAreaM2 / tuning.ElectricPumpM3PerSec:F2}s");

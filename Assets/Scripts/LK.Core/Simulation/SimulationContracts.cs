@@ -6,13 +6,51 @@ namespace LighthouseKeepers.Core.Simulation
 
     public enum SimCommandKind
     {
-        RepairLeak, ManualPumpStroke, StartGenerator, StopGenerator,
-        SetElectricPump, BeginDay, ResetRun,
-        ForceGeneratorFault,
+        RepairLeak = 0,
+        ManualPumpStroke = 1,
+        StartGenerator = 2,
+        StopGenerator = 3,
+        SetElectricPump = 4,
+        BeginDay = 5,
+        ResetRun = 6,
+        ForceGeneratorFault = 7,
+        PauseSimulation = 8,
+        ResumeSimulation = 9,
+        ActivateDayLeak = 10,
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         DebugSetLeak = 100,
         DebugSetWaterHeight = 101,
+        DebugSetWaterVolumeM3 = 102,
+        DebugSetLeakInflowM3PerSec = 103,
 #endif
+    }
+
+    /// <summary>Transport authorization guidance. Actor identity is authenticated by E,
+    /// not by the simulation. Unknown commands fail closed as host-only.</summary>
+    public static class SimCommandPolicy
+    {
+        public static bool IsHostOnly(SimCommandKind kind)
+        {
+            switch (kind)
+            {
+                case SimCommandKind.RepairLeak:
+                case SimCommandKind.ManualPumpStroke:
+                case SimCommandKind.StartGenerator:
+                case SimCommandKind.StopGenerator:
+                case SimCommandKind.SetElectricPump: return false;
+                default: return true;
+            }
+        }
+
+        public static bool IsDevelopmentOnly(SimCommandKind kind)
+        {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            return kind == SimCommandKind.DebugSetLeak || kind == SimCommandKind.DebugSetWaterHeight ||
+                kind == SimCommandKind.DebugSetWaterVolumeM3 || kind == SimCommandKind.DebugSetLeakInflowM3PerSec;
+#else
+            return false;
+#endif
+        }
     }
 
     public readonly struct SimCommand
@@ -44,13 +82,17 @@ namespace LighthouseKeepers.Core.Simulation
         public readonly float FuelRemainingSeconds;
         public readonly float SecondsAboveFail;
         public readonly float TimeToFailSeconds;
+        public readonly bool Paused;
+        public readonly int DayIndex;
+        public readonly bool GeneratorFaultActive;
 
         public SimSnapshot(int tick, double waterVolumeM3, float waterHeightM,
             float inflowM3PerSec, float outflowM3PerSec, bool leakActive,
             bool generatorRunning, float powerAvailable, bool electricPumpRunning,
             RunPhase phase, string lastRejectReason = "", bool generatorFlooded = false,
             bool generatorGeometryAvailable = true, float fuelRemainingSeconds = 0,
-            float secondsAboveFail = 0, float timeToFailSeconds = float.PositiveInfinity)
+            float secondsAboveFail = 0, float timeToFailSeconds = float.PositiveInfinity, bool paused = false,
+            int dayIndex = 0, bool generatorFaultActive = false)
         {
             Tick = tick; WaterVolumeM3 = waterVolumeM3; WaterHeightM = waterHeightM;
             InflowM3PerSec = inflowM3PerSec; OutflowM3PerSec = outflowM3PerSec;
@@ -60,6 +102,8 @@ namespace LighthouseKeepers.Core.Simulation
             GeneratorFlooded = generatorFlooded; GeneratorGeometryAvailable = generatorGeometryAvailable;
             FuelRemainingSeconds = fuelRemainingSeconds; SecondsAboveFail = secondsAboveFail;
             TimeToFailSeconds = timeToFailSeconds;
+            Paused = paused;
+            DayIndex = dayIndex; GeneratorFaultActive = generatorFaultActive;
         }
     }
 

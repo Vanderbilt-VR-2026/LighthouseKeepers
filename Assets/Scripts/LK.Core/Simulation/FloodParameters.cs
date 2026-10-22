@@ -15,11 +15,13 @@ namespace LighthouseKeepers.Core.Simulation
         public double FailSustainSeconds { get; }
         public double ElectricPumpStartPower { get; }
         public double InitialFuelSeconds { get; }
+        public double GeneratorFaultSeepM3PerSec { get; }
 
         public FloodParameters(double leakInflowM3PerSec, double manualPumpStrokeM3,
             double manualPumpMinStrokeSeconds, double electricPumpM3PerSec,
             double floorAreaM2, double failHeightM, double safeHeightM,
-            double failSustainSeconds, double electricPumpStartPower, double initialFuelSeconds)
+            double failSustainSeconds, double electricPumpStartPower, double initialFuelSeconds,
+            double generatorFaultSeepM3PerSec)
         {
             double[] positive = { leakInflowM3PerSec, manualPumpStrokeM3, manualPumpMinStrokeSeconds,
                 electricPumpM3PerSec, floorAreaM2, failHeightM, failSustainSeconds };
@@ -28,13 +30,15 @@ namespace LighthouseKeepers.Core.Simulation
                     throw new ArgumentException("Flood rates, area and durations must be finite and positive.");
             if (!FixedSimulationGeometry.Finite(safeHeightM) || safeHeightM < 0 || safeHeightM >= failHeightM ||
                 !FixedSimulationGeometry.Finite(electricPumpStartPower) || electricPumpStartPower < 0 || electricPumpStartPower > 1 ||
-                !FixedSimulationGeometry.Finite(initialFuelSeconds) || initialFuelSeconds < 0)
-                throw new ArgumentException("Invalid safe height, power threshold or fuel duration.");
+                !FixedSimulationGeometry.Finite(initialFuelSeconds) || initialFuelSeconds < 0 ||
+                !FixedSimulationGeometry.Finite(generatorFaultSeepM3PerSec) || generatorFaultSeepM3PerSec <= 0)
+                throw new ArgumentException("Invalid safe height, power threshold, fuel duration or generator-fault seep rate.");
             LeakInflowM3PerSec = leakInflowM3PerSec; ManualPumpStrokeM3 = manualPumpStrokeM3;
             ManualPumpMinStrokeSeconds = manualPumpMinStrokeSeconds; ElectricPumpM3PerSec = electricPumpM3PerSec;
             FloorAreaM2 = floorAreaM2; FailHeightM = failHeightM; SafeHeightM = safeHeightM;
             FailSustainSeconds = failSustainSeconds; ElectricPumpStartPower = electricPumpStartPower;
             InitialFuelSeconds = initialFuelSeconds;
+            GeneratorFaultSeepM3PerSec = generatorFaultSeepM3PerSec;
         }
     }
 }

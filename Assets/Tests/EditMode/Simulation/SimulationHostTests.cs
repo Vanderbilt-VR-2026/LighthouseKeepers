@@ -28,7 +28,8 @@ namespace LighthouseKeepers.Tests.Simulation
         {
             var tall = new FloodParameters(tuning.LeakInflowM3PerSec, tuning.ManualPumpStrokeM3,
                 tuning.ManualPumpMinStrokeSeconds, tuning.ElectricPumpM3PerSec, tuning.FloorAreaM2,
-                100, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds);
+                100, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds,
+                tuning.GeneratorFaultSeepM3PerSec);
             var host = new SimulationHost(tall, new FixedSimulationGeometry(0, 200), new LocalAuthority(), 20 * tuning.FloorAreaM2);
             double before = host.Current.WaterVolumeM3; host.Advance(120);
             Assert.That(host.Current.WaterVolumeM3 - before,
@@ -43,7 +44,7 @@ namespace LighthouseKeepers.Tests.Simulation
             var slowLeak = new FloodParameters(.001, tuning.ManualPumpStrokeM3,
                 tuning.ManualPumpMinStrokeSeconds, tuning.ElectricPumpM3PerSec, tuning.FloorAreaM2,
                 tuning.FailHeightM, tuning.SafeHeightM, tuning.FailSustainSeconds,
-                tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds);
+                tuning.ElectricPumpStartPower, tuning.InitialFuelSeconds, tuning.GeneratorFaultSeepM3PerSec);
             var host = new SimulationHost(slowLeak, new FixedSimulationGeometry(0, 3.5),
                 new LocalAuthority(), tuning.FailHeightM * tuning.FloorAreaM2);
             host.Advance(2.9); Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Running));
@@ -111,7 +112,8 @@ namespace LighthouseKeepers.Tests.Simulation
         {
             var littleFuel = new FloodParameters(tuning.LeakInflowM3PerSec, tuning.ManualPumpStrokeM3,
                 tuning.ManualPumpMinStrokeSeconds, tuning.ElectricPumpM3PerSec, tuning.FloorAreaM2,
-                tuning.FailHeightM, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, .15);
+                tuning.FailHeightM, tuning.SafeHeightM, tuning.FailSustainSeconds, tuning.ElectricPumpStartPower, .15,
+                tuning.GeneratorFaultSeepM3PerSec);
             var host = new SimulationHost(littleFuel, new FixedSimulationGeometry(0, 3.5), new LocalAuthority(), 5);
             host.Enqueue(new SimCommand(SimCommandKind.StartGenerator));
             host.Enqueue(new SimCommand(SimCommandKind.SetElectricPump, value: 1)); host.Advance(.2);
@@ -121,12 +123,13 @@ namespace LighthouseKeepers.Tests.Simulation
             Assert.That(host.Current.LastRejectReason, Does.Contain("fuel"));
         }
 
-        [Test] public void BeginDayPreservesFloodAndFuelWhileResetRunRestoresDryStart()
+        [Test] public void BeginDayPreservesVolumeAndStartsHealthyWhileResetRunRestoresDryFixture()
         {
             var host = Create(10); host.Enqueue(new SimCommand(SimCommandKind.RepairLeak)); host.Advance(.1);
             double before = host.Current.WaterVolumeM3;
             host.Enqueue(new SimCommand(SimCommandKind.BeginDay, targetId: 2)); host.Advance(.1);
-            Assert.That(host.Current.WaterVolumeM3, Is.GreaterThan(before)); Assert.That(host.Current.LeakActive, Is.True);
+            Assert.That(host.Current.WaterVolumeM3, Is.LessThan(before)); Assert.That(host.Current.LeakActive, Is.False);
+            Assert.That(host.Current.DayIndex, Is.EqualTo(2)); Assert.That(host.Current.GeneratorRunning, Is.True);
             host.Enqueue(new SimCommand(SimCommandKind.ResetRun)); host.Advance(.1);
             Assert.That(host.Current.WaterVolumeM3, Is.EqualTo(tuning.LeakInflowM3PerSec * .1).Within(1e-8));
             Assert.That(host.Current.Tick, Is.EqualTo(3));
@@ -193,5 +196,128 @@ namespace LighthouseKeepers.Tests.Simulation
             Assert.That(float.IsPositiveInfinity(draining.Current.TimeToFailSeconds), Is.True,
                 "Current drainage crosses below the failure line before the sustain expires.");
         }
+
+        [Test] public void PauseFreezesVolumeFuelAndFailureClockButContinuesSnapshots()
+        {
+            var host = Create(tuning.FailHeightM * tuning.FloorAreaM2);
+            host.Enqueue(new SimCommand(SimCommandKind.StartGenerator)); host.Advance(.2);
+            var before = host.Current; int notifications = 0; host.OnTick += _ => notifications++;
+            host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation)); host.Advance(5);
+            Assert.That(host.Current.Paused, Is.True);
+            Assert.That(host.Current.Tick, Is.EqualTo(before.Tick + 50)); Assert.That(notifications, Is.EqualTo(50));
+            Assert.That(host.Current.WaterVolumeM3, Is.EqualTo(before.WaterVolumeM3));
+            Assert.That(host.Current.FuelRemainingSeconds, Is.EqualTo(before.FuelRemainingSeconds));
+            Assert.That(host.Current.SecondsAboveFail, Is.EqualTo(before.SecondsAboveFail));
+            Assert.That(host.Current.InflowM3PerSec, Is.Zero); Assert.That(host.Current.OutflowM3PerSec, Is.Zero);
+            Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Running));
+            host.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); host.Advance(.1);
+            Assert.That(host.Current.Paused, Is.False);
+            Assert.That(host.Current.WaterVolumeM3, Is.GreaterThan(before.WaterVolumeM3));
+            Assert.That(host.Current.FuelRemainingSeconds, Is.LessThan(before.FuelRemainingSeconds));
+        }
+
+        [Test] public void PausedGameplayIsRejectedAndPausedTimeCannotBypassPumpCooldown()
+        {
+            var host = Create(5);
+            host.Enqueue(new SimCommand(SimCommandKind.ManualPumpStroke)); host.Advance(.1);
+            host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation)); host.Advance(10);
+            double before = host.Current.WaterVolumeM3;
+            host.Enqueue(new SimCommand(SimCommandKind.ManualPumpStroke)); host.Advance(.1);
+            Assert.That(host.Current.LastRejectReason, Does.Contain("paused"));
+            Assert.That(host.Current.WaterVolumeM3, Is.EqualTo(before));
+            host.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation));
+            host.Enqueue(new SimCommand(SimCommandKind.ManualPumpStroke)); host.Advance(.1);
+            Assert.That(host.Current.LastRejectReason, Does.Contain("too fast"));
+        }
+
+        [Test] public void ResumeNeverRevivesATerminalPhase()
+        {
+            var failed = Create(tuning.FailHeightM * tuning.FloorAreaM2); failed.Advance(3);
+            failed.Enqueue(new SimCommand(SimCommandKind.PauseSimulation)); failed.Advance(.1);
+            failed.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); failed.Advance(.1);
+            Assert.That(failed.Current.Phase, Is.EqualTo(RunPhase.Failed));
+            var succeeded = Create(); succeeded.Enqueue(new SimCommand(SimCommandKind.RepairLeak)); succeeded.Advance(.1);
+            succeeded.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); succeeded.Advance(.1);
+            Assert.That(succeeded.Current.Phase, Is.EqualTo(RunPhase.Succeeded));
+        }
+
+        [Test] public void CommandWireIdsAndHostOnlyPolicyRemainStable()
+        {
+            Assert.That((int)SimCommandKind.RepairLeak, Is.Zero);
+            Assert.That((int)SimCommandKind.ResetRun, Is.EqualTo(6));
+            Assert.That((int)SimCommandKind.ForceGeneratorFault, Is.EqualTo(7));
+            Assert.That((int)SimCommandKind.PauseSimulation, Is.EqualTo(8));
+            Assert.That((int)SimCommandKind.ResumeSimulation, Is.EqualTo(9));
+            foreach (SimCommandKind kind in Enum.GetValues(typeof(SimCommandKind)))
+                Assert.That(SimCommandPolicy.IsHostOnly(kind), Is.EqualTo((int)kind >= 5), kind.ToString());
+            Assert.That(SimCommandPolicy.IsHostOnly((SimCommandKind)(-1)), Is.True);
+            var compatible = new SimSnapshot(1, 2, 3, 4, 5, true, false, 0, false, RunPhase.Running);
+            Assert.That(compatible.Paused, Is.False, "E's original ten-field constructor remains source-compatible.");
+        }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        [Test] public void DevelopmentInitializationSetsVolumeAndRateWithoutWritingHeightOrTuning()
+        {
+            var host = new SimulationHost(tuning, new FixedSimulationGeometry(4, 10), new LocalAuthority());
+            host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation));
+            host.Enqueue(new SimCommand(SimCommandKind.DebugSetWaterVolumeM3, value: 12));
+            host.Enqueue(new SimCommand(SimCommandKind.DebugSetLeakInflowM3PerSec, value: .25f)); host.Advance(.1);
+            Assert.That(host.Current.WaterVolumeM3, Is.EqualTo(12));
+            Assert.That(host.Current.WaterHeightM, Is.EqualTo(4 + 12 / tuning.FloorAreaM2).Within(1e-6));
+            Assert.That(host.Current.InflowM3PerSec, Is.Zero, "Paused snapshots report actual flow.");
+            host.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); host.Advance(.1);
+            Assert.That(host.Current.WaterVolumeM3, Is.EqualTo(12.025).Within(1e-8));
+            Assert.That(host.Current.InflowM3PerSec, Is.EqualTo(.25f));
+            Assert.That(tuning.LeakInflowM3PerSec, Is.EqualTo((double).18f));
+        }
+
+        [Test] public void DevelopmentInitializationRequiresPausedRunningAndFiniteNonnegativeValues()
+        {
+            var host = Create(5);
+            host.Enqueue(new SimCommand(SimCommandKind.DebugSetWaterVolumeM3, value: 10)); host.Advance(.1);
+            Assert.That(host.Current.LastRejectReason, Does.Contain("paused Running"));
+            host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation)); host.Advance(.1);
+            double before = host.Current.WaterVolumeM3;
+            foreach (var kind in new[] { SimCommandKind.DebugSetWaterVolumeM3, SimCommandKind.DebugSetLeakInflowM3PerSec })
+            foreach (float invalid in new[] { -1f, float.NaN, float.PositiveInfinity })
+            {
+                host.Enqueue(new SimCommand(kind, value: invalid)); host.Advance(.1);
+                Assert.That(host.Current.LastRejectReason, Is.Not.Empty);
+                Assert.That(host.Current.WaterVolumeM3, Is.EqualTo(before));
+            }
+            var failed = Create(tuning.FailHeightM * tuning.FloorAreaM2); failed.Advance(3);
+            failed.Enqueue(new SimCommand(SimCommandKind.PauseSimulation));
+            failed.Enqueue(new SimCommand(SimCommandKind.DebugSetWaterVolumeM3, value: 0)); failed.Advance(.1);
+            Assert.That(failed.Current.LastRejectReason, Does.Contain("paused Running"));
+            Assert.That(failed.Current.Phase, Is.EqualTo(RunPhase.Failed));
+        }
+
+        [Test] public void DevelopmentInitializationAllowsZeroWithoutCreatingNegativeVolumeOrFalseSuccess()
+        {
+            var host = Create(5); host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation));
+            host.Enqueue(new SimCommand(SimCommandKind.DebugSetWaterVolumeM3, value: 0));
+            host.Enqueue(new SimCommand(SimCommandKind.DebugSetLeakInflowM3PerSec, value: 0));
+            host.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); host.Advance(5);
+            Assert.That(host.Current.WaterVolumeM3, Is.Zero); Assert.That(host.Current.LeakActive, Is.True);
+            Assert.That(host.Current.Phase, Is.EqualTo(RunPhase.Running));
+            Assert.That(SimCommandPolicy.IsDevelopmentOnly(SimCommandKind.DebugSetWaterVolumeM3), Is.True);
+        }
+
+        [Test] public void DayTransitionPreservesPauseAndOverrideButResetRestoresPublishedRate()
+        {
+            var host = Create(5); host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation));
+            host.Enqueue(new SimCommand(SimCommandKind.DebugSetLeakInflowM3PerSec, value: .25f));
+            host.Enqueue(new SimCommand(SimCommandKind.BeginDay, targetId: 2)); host.Advance(.1);
+            Assert.That(host.Current.Paused, Is.True);
+            host.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); host.Advance(.1);
+            Assert.That(host.Current.InflowM3PerSec, Is.Zero, "BeginDay waits for a scheduled incident.");
+            host.ActivateDayLeak(2); host.Advance(.1);
+            Assert.That(host.Current.InflowM3PerSec, Is.EqualTo(.25f));
+            host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation));
+            host.Enqueue(new SimCommand(SimCommandKind.ResetRun)); host.Advance(.1);
+            Assert.That(host.Current.Paused, Is.False);
+            Assert.That(host.Current.InflowM3PerSec, Is.EqualTo((float)tuning.LeakInflowM3PerSec));
+        }
+#endif
     }
 }
