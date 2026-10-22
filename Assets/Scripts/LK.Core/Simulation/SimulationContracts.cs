@@ -85,6 +85,13 @@ namespace LighthouseKeepers.Core.Simulation
         public readonly bool Paused;
         public readonly int DayIndex;
         public readonly bool GeneratorFaultActive;
+        public readonly bool BeaconLit;
+        public readonly int ActiveLeakMask;
+        public readonly int ActivatedLeakMask;
+        public readonly int ConfiguredLeakCount;
+        public int ActiveLeakCount => CountBits(ActiveLeakMask);
+        public int RepairedLeakCount => CountBits(ActivatedLeakMask & ~ActiveLeakMask);
+        static int CountBits(int mask) => (mask & 1) + ((mask >> 1) & 1) + ((mask >> 2) & 1);
 
         public SimSnapshot(int tick, double waterVolumeM3, float waterHeightM,
             float inflowM3PerSec, float outflowM3PerSec, bool leakActive,
@@ -92,7 +99,8 @@ namespace LighthouseKeepers.Core.Simulation
             RunPhase phase, string lastRejectReason = "", bool generatorFlooded = false,
             bool generatorGeometryAvailable = true, float fuelRemainingSeconds = 0,
             float secondsAboveFail = 0, float timeToFailSeconds = float.PositiveInfinity, bool paused = false,
-            int dayIndex = 0, bool generatorFaultActive = false)
+            int dayIndex = 0, bool generatorFaultActive = false,
+            int activeLeakMask = 0, int activatedLeakMask = 0, int configuredLeakCount = 0)
         {
             Tick = tick; WaterVolumeM3 = waterVolumeM3; WaterHeightM = waterHeightM;
             InflowM3PerSec = inflowM3PerSec; OutflowM3PerSec = outflowM3PerSec;
@@ -104,6 +112,9 @@ namespace LighthouseKeepers.Core.Simulation
             TimeToFailSeconds = timeToFailSeconds;
             Paused = paused;
             DayIndex = dayIndex; GeneratorFaultActive = generatorFaultActive;
+            BeaconLit = generatorRunning && powerAvailable > .5f;
+            ActiveLeakMask = activeLeakMask; ActivatedLeakMask = activatedLeakMask;
+            ConfiguredLeakCount = configuredLeakCount;
         }
     }
 
@@ -113,9 +124,11 @@ namespace LighthouseKeepers.Core.Simulation
         void Enqueue(SimCommand cmd);
         event Action<SimSnapshot> OnTick;
         void ForceGeneratorFault();
+        void ActivateDayLeak(int leakId);
     }
 
     public interface IAuthority { bool IsAuthoritative { get; } }
+    /// <summary>Offline authority provider; simulation methods belong to ISimulationHost, not this policy.</summary>
     public sealed class LocalAuthority : IAuthority { public bool IsAuthoritative => true; }
 
     /// <summary>Published scene measurements, in world Y. Missing plinth data disables power.</summary>

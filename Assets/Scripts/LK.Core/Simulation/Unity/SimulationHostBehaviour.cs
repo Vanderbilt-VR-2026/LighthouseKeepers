@@ -68,7 +68,7 @@ namespace LighthouseKeepers.Simulation.Unity
             host.Enqueue(cmd);
         }
         public void ForceGeneratorFault() => Enqueue(new SimCommand(SimCommandKind.ForceGeneratorFault));
-        public void ActivateDayLeak(int dayIndex) => Enqueue(new SimCommand(SimCommandKind.ActivateDayLeak, targetId: dayIndex));
+        public void ActivateDayLeak(int leakId) => Enqueue(new SimCommand(SimCommandKind.ActivateDayLeak, targetId: leakId));
         void Update() { if (host != null) host.Advance(Time.deltaTime); }
         void ForwardTick(SimSnapshot snapshot) => OnTick?.Invoke(snapshot);
         void OnEnable() { if (interactions != null) interactions.BindAvailableAssembly(); }

@@ -1,3 +1,4 @@
+using System;
 using LighthouseKeepers.Core.Simulation;
 using UnityEngine;
 
@@ -21,9 +22,27 @@ namespace LighthouseKeepers.Simulation.Unity
         [Min(0), Tooltip("Slower flow during a watch generator fault, m³/s. Must still exceed sustained manual throughput.")]
         public float generatorFaultSeepM3PerSec;
 
+        [Tooltip("Exactly seven profiles ordered Day 1 through Day 7. D reads the same assets.")]
+        public DayTuningAsset[] days;
+
+        public DayTuning GetDay(int dayIndex)
+        {
+            if (days == null || days.Length != 7 || dayIndex < 1 || dayIndex > 7 || !days[dayIndex - 1])
+                throw new InvalidOperationException("Assign seven ordered day tuning assets.");
+            DayTuning result = days[dayIndex - 1].ToParameters();
+            if (result.DayIndex != dayIndex) throw new InvalidOperationException("Day tuning is out of order.");
+            return result;
+        }
+        DayTuning[] CopyDays()
+        {
+            var result = new DayTuning[7];
+            for (int i = 0; i < result.Length; i++) result[i] = GetDay(i + 1);
+            return result;
+        }
+
         public FloodParameters ToParameters() => new FloodParameters(leakInflowM3PerSec,
             manualPumpStrokeM3, manualPumpMinStrokeSeconds, electricPumpM3PerSec,
             floorAreaM2, failHeightM, safeHeightM, failSustainSeconds,
-            electricPumpStartPower, initialFuelSeconds, generatorFaultSeepM3PerSec);
+            electricPumpStartPower, initialFuelSeconds, generatorFaultSeepM3PerSec, CopyDays());
     }
 }

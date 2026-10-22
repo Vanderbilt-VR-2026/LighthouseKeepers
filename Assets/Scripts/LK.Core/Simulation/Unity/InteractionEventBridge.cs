@@ -22,8 +22,10 @@ namespace LighthouseKeepers.Simulation.Unity
             if (interactionEvents == null) return false;
             // D validates fuel/prime/choke before enqueuing StartGenerator. Forwarding
             // A's raw start event here would bypass that validation and duplicate D.
-            string[] names = { "OnPumpStrokeCompleted", "OnLeakRepairCompleted" };
-            SimCommandKind[] kinds = { SimCommandKind.ManualPumpStroke, SimCommandKind.RepairLeak };
+            // An actor-only repair event cannot identify a coupling. A/D enqueue
+            // RepairLeak with TargetId explicitly; B never completes D's day here.
+            string[] names = { "OnPumpStrokeCompleted" };
+            SimCommandKind[] kinds = { SimCommandKind.ManualPumpStroke };
             for (int i = 0; i < names.Length; i++)
             {
                 var ev = interactionEvents.GetEvent(names[i], BindingFlags.Public | BindingFlags.Static);

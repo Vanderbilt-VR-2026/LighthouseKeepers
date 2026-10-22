@@ -25,10 +25,30 @@ namespace LighthouseKeepers.Tests.Simulation
                     CultureInfo.InvariantCulture, out double value))
                     values[pair[0]] = (double)(float)value; // Match ScriptableObject float serialization.
             }
+            var days = new List<DayTuning>();
+            // Follow FloodTuning's GUID references instead of inventing a second tuning catalog.
+            bool readingDays = false;
+            foreach (string line in File.ReadAllLines("Assets/Data/Tuning/FloodTuning.asset"))
+            {
+                if (line.Trim() == "days:") { readingDays = true; continue; }
+                if (!readingDays || !line.Contains("guid:")) continue;
+                string guid = line.Split(new[] { "guid:" }, StringSplitOptions.None)[1].Split(',')[0].Trim();
+                string meta = Directory.GetFiles("Assets/Data/Tuning", "*.asset.meta")
+                    .Single(path => File.ReadAllText(path).Contains("guid: " + guid));
+                var dayValues = new Dictionary<string, double>();
+                foreach (string dayLine in File.ReadAllLines(meta.Substring(0, meta.Length - 5)))
+                {
+                    string[] pair = dayLine.Trim().Split(':');
+                    if (pair.Length == 2 && double.TryParse(pair[1].Trim(), NumberStyles.Float,
+                        CultureInfo.InvariantCulture, out double value)) dayValues[pair[0]] = (double)(float)value;
+                }
+                days.Add(new DayTuning((int)dayValues["dayIndex"], (int)dayValues["leakCount"],
+                    dayValues["inflowMultiplier"], dayValues["generatorFault"] != 0, dayValues["dayLengthSeconds"]));
+            }
             var tuning = new FloodParameters(values["leakInflowM3PerSec"], values["manualPumpStrokeM3"],
                 values["manualPumpMinStrokeSeconds"], values["electricPumpM3PerSec"], values["floorAreaM2"],
                 values["failHeightM"], values["safeHeightM"], values["failSustainSeconds"],
-                values["electricPumpStartPower"], values["initialFuelSeconds"], values["generatorFaultSeepM3PerSec"]);
+                values["electricPumpStartPower"], values["initialFuelSeconds"], values["generatorFaultSeepM3PerSec"], days);
             int passed = 0, failed = 0, skipped = 0;
             foreach (Type type in new[] { typeof(FloodBalanceTests), typeof(SimulationHostTests),
                 typeof(InteractionEventBridgeTests), typeof(NoNetworkingLeakageTest), typeof(WatchLifecycleTests), typeof(ShipSceneBuildPolicyTests) })

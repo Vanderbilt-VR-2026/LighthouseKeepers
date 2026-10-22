@@ -311,7 +311,7 @@ namespace LighthouseKeepers.Tests.Simulation
             Assert.That(host.Current.Paused, Is.True);
             host.Enqueue(new SimCommand(SimCommandKind.ResumeSimulation)); host.Advance(.1);
             Assert.That(host.Current.InflowM3PerSec, Is.Zero, "BeginDay waits for a scheduled incident.");
-            host.ActivateDayLeak(2); host.Advance(.1);
+            host.ActivateDayLeak(0); host.Advance(.1);
             Assert.That(host.Current.InflowM3PerSec, Is.EqualTo(.25f));
             host.Enqueue(new SimCommand(SimCommandKind.PauseSimulation));
             host.Enqueue(new SimCommand(SimCommandKind.ResetRun)); host.Advance(.1);
