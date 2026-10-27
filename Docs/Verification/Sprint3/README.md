@@ -25,7 +25,7 @@ The PlayMode selection covers `LighthouseKeepers.Net.Tests`, `LighthouseKeepers.
 
 This is not a claim that every historical PlayMode fixture passes under the two-scene ship manifest. The teammate's unmodified-base full-suite failure inventory remains in [M7](../../OneLighthouse/M7.md); Bootstrap/First Watch/Storm Watch fixtures need their own historical scene manifests. Earlier M4 results describe their own source and are not substituted for this run.
 
-Unity repeatedly upgrades the water-surge material on import. The candidate records that canonical Unity/URP serialization (asset version/locking metadata, unchanged shader/property values) so importing a clean build checkout does not dirty it before provenance is recorded. No rig, hand anchor or station artwork was reauthored.
+Unity repeatedly reserializes the water-surge and four radio materials on import/render. The candidate records that canonical Unity/URP serialization (asset version/locking metadata and float formatting; shader, texture and authored appearance preserved) so importing a clean build checkout does not dirty it before provenance is recorded. No rig, hand anchor or station artwork was reauthored.
 
 No target-headset acceptance is claimed from compilation, Editor execution, packaging, installation or a running process. A real video, immersive cold launch/restart, controller reach/readability, physical station use, sound mix and device performance remain separate checks. Co-op acceptance cannot pass while shared Lab state is unfinished.
 
