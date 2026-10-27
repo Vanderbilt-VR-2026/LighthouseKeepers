@@ -13,7 +13,7 @@ namespace LighthouseKeepers.Tests
 {
     public sealed class OneLighthouseTests
     {
-        static readonly string[] Names = { "LK_NetworkLobby", "LK_Bootstrap", "LK_Exterior", "LK_Core", "LK_Level01_Plumbing", "LK_Level02_Generator", "LK_Level03_Communications", "LK_Level04_Lantern" };
+        static readonly string[] Names = { "LK_NetworkLobby", "LK_Lab_Environment" };
         [Test] public void ExactShipManifestHasNoOtherScenesEvenDisabled()
         {
             CollectionAssert.AreEqual(Names, EditorBuildSettings.scenes.Select(s=>System.IO.Path.GetFileNameWithoutExtension(s.path)).ToArray());
@@ -57,6 +57,24 @@ namespace LighthouseKeepers.Tests
                         if (!(renderer is LineRenderer) && !renderer.GetComponentInParent<HandRig>(true)) Assert.IsFalse(renderer.enabled, path + "/" + renderer.name);
                 }
             }
+        }
+        [Test] public void RuntimeHandsUseTanLitMaterialWithPreloadedShaderVariants()
+        {
+            var material=Resources.Load<Material>("Hands/M_Glove");
+            Assert.AreEqual("Universal Render Pipeline/Lit",material.shader.name);
+            var color=material.GetColor("_BaseColor");
+            Assert.That(color.r,Is.EqualTo(198f/255).Within(.001f));
+            Assert.That(color.g,Is.EqualTo(142f/255).Within(.001f));
+            Assert.That(color.b,Is.EqualTo(106f/255).Within(.001f));
+            Assert.AreEqual(0,material.GetFloat("_SpecularHighlights"));
+            Assert.AreEqual(0,material.GetFloat("_EnvironmentReflections"));
+            var variants=Resources.Load<ShaderVariantCollection>("Hands/HandShaders");
+            Assert.IsNotNull(variants);
+            Assert.IsTrue(variants.Contains(new ShaderVariantCollection.ShaderVariant(material.shader,PassType.ScriptableRenderPipeline,
+                "_SPECULARHIGHLIGHTS_OFF","_ENVIRONMENTREFLECTIONS_OFF","_ADDITIONAL_LIGHTS")));
+            var graphics=new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/GraphicsSettings.asset")[0]);
+            var preloaded=graphics.FindProperty("m_PreloadedShaders");
+            Assert.IsTrue(Enumerable.Range(0,preloaded.arraySize).Any(i=>preloaded.GetArrayElementAtIndex(i).objectReferenceValue==variants));
         }
         [Test] public void ShipGuardRunsAfterUrpAndRemovesItsRecreatedVignette()
         {

@@ -63,7 +63,7 @@ namespace LighthouseKeepers.Tests
             foreach (var session in sessions.Where(s => s)) Object.Destroy(session.gameObject);
             sessions.Clear(); yield return null;
         }
-        [UnityTest] public IEnumerator OfflineFusionSessionLoadsBootstrapAndSurvivesBoardUnload()
+        [UnityTest] public IEnumerator OfflineFusionSessionLoadsLabAndSurvivesBoardUnload()
         {
             yield return SceneManager.LoadSceneAsync("LK_NetworkLobby");
             var manager = Object.FindAnyObjectByType<LobbyManager>();
@@ -80,8 +80,8 @@ namespace LighthouseKeepers.Tests
             var originalRunner = transport.Runner;
             Assert.IsTrue(manager.StartGame(), manager.LastError);
             Assert.IsFalse(manager.StartGame(), "Repeated launch must not create another world.");
-            yield return Until(() => Object.FindAnyObjectByType<LighthouseKeepers.Core.EnvironmentBootstrap>()?.Ready == true,
-                "Fusion did not launch Bootstrap and its six content scenes.", 80);
+            yield return Until(() => SceneManager.GetSceneByName("LK_Lab_Environment").isLoaded && Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Any(c=>c.GetType().Name=="WatchDemoController"),
+                "Fusion did not launch the Sprint 2 Lab world.", 80);
             Assert.IsFalse(SceneManager.GetSceneByName("LK_NetworkLobby").isLoaded);
             Assert.IsTrue(transport && transport.IsOnline);
             Assert.AreSame(originalRunner, transport.Runner);

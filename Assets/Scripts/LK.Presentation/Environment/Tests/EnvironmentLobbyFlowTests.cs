@@ -28,6 +28,9 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             var rigs=Object.FindObjectsByType<XROrigin>(FindObjectsSortMode.None);Assert.That(rigs.Length,Is.EqualTo(1));
             Assert.That(Object.FindObjectsByType<AudioListener>(FindObjectsSortMode.None).Length,Is.EqualTo(1));
             Assert.That(rigs[0].transform.position.y,Is.InRange(-.05f,.15f));
+            Assert.That(rigs[0].RequestedTrackingOriginMode,Is.EqualTo(XROrigin.TrackingOriginMode.Floor));
+            Assert.That(rigs[0].CameraFloorOffsetObject.transform.localPosition.y,Is.EqualTo(0).Within(.001f));
+            Assert.That(rigs[0].Camera.transform.position.y-rigs[0].transform.position.y,Is.InRange(1.5f,1.9f),"The authored desktop head must have one standing height, not two.");
             Assert.That(rigs[0].transform.position.z,Is.EqualTo(-8.4f).Within(.15f));
             foreach(var c in rigs[0].GetComponentsInChildren<MonoBehaviour>(true))
                 if(c && c.GetType().Name=="BodyPresence")Assert.That(c.GetComponentsInChildren<Renderer>(true).Any(r=>r.enabled),Is.False);
@@ -40,7 +43,8 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
         public void Setup()
         {
             if(SessionState.GetString(Backup,"").Length==0)SessionState.SetString(Backup,JsonUtility.ToJson(new SceneList{paths=EditorBuildSettings.scenes.Select(s=>s.path).ToArray(),enabled=EditorBuildSettings.scenes.Select(s=>s.enabled).ToArray()}));
-            EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene("Assets/Scenes/Lab/LK_Lobby_Environment.unity",true),new EditorBuildSettingsScene("Assets/Scenes/Lab/LK_Lab_Environment.unity",true)};
+            // Test setup spans the entire selected run. Preserve the ship lobby needed by other fixtures.
+            EditorBuildSettings.scenes=EditorBuildSettings.scenes.Concat(new[]{new EditorBuildSettingsScene("Assets/Scenes/Lab/LK_Lobby_Environment.unity",true),new EditorBuildSettingsScene("Assets/Scenes/Lab/LK_Lab_Environment.unity",true)}).GroupBy(s=>s.path).Select(g=>g.First()).ToArray();
         }
         public void Cleanup()
         {
