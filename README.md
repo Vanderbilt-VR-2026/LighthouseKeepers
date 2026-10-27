@@ -12,7 +12,7 @@ The earlier two-player, three-watch [Storm Watch](Docs/StormWatch.md) and local 
 | --- | --- | --- |
 | 1 | [Sprint 1](Docs/Sprints/Sprint1/README.md) | Historical environment APK and video. |
 | 2 | [Sprint 2](Docs/Sprints/Sprint2/README.md) | Historical main APK differs from the final Sprint 2 source; video missing. |
-| 3 | [Sprint 3](Docs/Sprints/Sprint3/README.md) | Fresh reconciled APK/build evidence will be linked after verification; headset acceptance/video pending. |
+| 3 | [Sprint 3](Docs/Sprints/Sprint3/README.md) | [Fresh Lab APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-one-lighthouse-candidate-20261027/LighthouseKeepers-Sprint3-89199c5a-20261027T222901Z.apk) · [checksum/build records](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint3-one-lighthouse-candidate-20261027); headset acceptance/video pending. |
 
 Sprint 3 is due **Thursday evening, October 29, 2026 (America/Chicago)**; exact cutoff not supplied. [Submission issue and agent handoff #61](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/61) · [Milestone](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/1) · [Project](https://github.com/orgs/Vanderbilt-VR-2026/projects/15).
 
