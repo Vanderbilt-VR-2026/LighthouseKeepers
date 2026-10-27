@@ -27,9 +27,9 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             Assert.That(LightmapSettings.lightmaps.Length,Is.GreaterThan(0));var bake=LightmapSettings.lightmaps[0].lightmapColor;
             var lights=Field<Light[]>(emergency,"interiorLights");var warm=lights.Select(l=>l.color).ToArray();
             Call(state,"CompleteRepair");Call(state,"Sleep");yield return new WaitForSeconds(.6f);
-            Assert.That(LightmapSettings.lightmaps[0].lightmapColor,Is.SameAs(bake),"Keep accepted bake, centrally modulate red surfaces and lights");
+            Assert.That(LightmapSettings.lightmaps[0].lightmapColor,Is.SameAs(bake),"Keep accepted bake, centrally modulate warm emergency surfaces and lights");
             Assert.That(Field<AudioSource>(emergency,"alarm").isPlaying,Is.True);
-            foreach(var light in lights){Assert.That(light.color.r,Is.GreaterThan(light.color.g*5));Assert.That(light.intensity,Is.GreaterThan(0));}
+            foreach(var light in lights){Assert.That(light.color.r,Is.InRange(light.color.g,light.color.g*2.1f));Assert.That(light.intensity,Is.GreaterThan(0));}
             var method=emergency.GetType().GetMethod("LateUpdate",BindingFlags.Instance|BindingFlags.NonPublic);
             var update=(Action)Delegate.CreateDelegate(typeof(Action),emergency,method);update();long allocated=0;
             // Measure only central lighting, including its off-state pulse; not the whole player.

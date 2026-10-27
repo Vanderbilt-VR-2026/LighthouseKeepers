@@ -12,9 +12,9 @@ namespace LighthouseKeepers.Editor.Environment.Tests
         static object Call(object s,string method,params object[] args)=>StateType.GetMethod(method).Invoke(s,args);
         static T Get<T>(object s,string property)=>(T)StateType.GetProperty(property).GetValue(s);
         static object Day2(){var s=Activator.CreateInstance(StateType);Call(s,"CompleteRepair");Call(s,"Sleep");return s;}
-        [Test] public void SevenMinuteDeadlineAndRepairDuration()
+        [Test] public void SevenMinuteDayDeadline()
         {
-            Assert.That(StateType.GetField("RepairSeconds").GetRawConstantValue(),Is.EqualTo(3.5d));var s=Activator.CreateInstance(StateType);
+            var s=Activator.CreateInstance(StateType);
             Assert.That(Get<double>(s,"Duration"),Is.EqualTo(420));Call(s,"Tick",419.9d);Assert.That(Get<bool>(s,"Failed"),Is.False);
             Call(s,"Tick",.1d);Assert.That(Get<bool>(s,"Failed"),Is.True);Assert.That(Call(s,"CompleteRepair"),Is.False);
         }

@@ -38,10 +38,18 @@ namespace LighthouseKeepers.Editor.Environment.Tests
             Lock();Code();Call("SetMicrophone",true,true);Call("Tick",4d,false);Assert.That(Get<bool>("Completed"),Is.False);
             Call("Tick",2d,true);Call("SetPower",false);Call("Tick",4d,true);Assert.That(Get<bool>("Completed"),Is.False);Assert.That(Get<float>("TransmitElapsed"),Is.Zero);
         }
-        [Test] public void EmergencyPulseIsContinuousNonBlackAndAtMostTwoThirdsHertz()
+        [Test] public void OutOfStepControlsDoNotUndoAcceptedProgress()
         {
-            var pulse=Find("EmergencyLighting").GetMethod("PulseAt");float previous=(float)pulse.Invoke(null,new object[]{0f,1.5f});
-            for(int i=1;i<=300;i++){float v=(float)pulse.Invoke(null,new object[]{i*.01f,1.5f});Assert.That(v,Is.InRange(.319f,.721f));Assert.That(Mathf.Abs(v-previous),Is.LessThan(.009f));previous=v;}
+            Assert.That(Call("PressCode",0),Is.EqualTo(-1));Call("Tune",156.8f);
+            Assert.That(Get<float>("FrequencyMHz"),Is.Not.EqualTo(156.8f));Lock();
+            Assert.That(Call("ToggleMain"),Is.False);Call("Tune",158f);
+            Assert.That(Get<bool>("Locked"),Is.True);Assert.That(Get<bool>("MainOn"),Is.True);
+            Code();Assert.That(Get<int>("Step"),Is.EqualTo(3));
+        }
+        [Test] public void EmergencyPulseIsContinuousNonBlackAndHalfHertz()
+        {
+            var pulse=Find("EmergencyLighting").GetMethod("PulseAt");float previous=(float)pulse.Invoke(null,new object[]{0f,2f});
+            for(int i=1;i<=300;i++){float v=(float)pulse.Invoke(null,new object[]{i*.01f,2f});Assert.That(v,Is.InRange(.449f,.651f));Assert.That(Mathf.Abs(v-previous),Is.LessThan(.004f));previous=v;}
         }
     }
 }

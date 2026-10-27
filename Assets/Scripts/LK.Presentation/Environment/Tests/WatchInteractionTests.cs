@@ -32,10 +32,27 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             Action<float,float> observe=(a,d)=>{pulses++;lastAmplitude=a;lastDuration=d;};haptic.GetType().GetEvent("PulseRequested").AddEventHandler(haptic,observe);
             var manager=UnityEngine.Object.FindFirstObjectByType<XRInteractionManager>();
             yield return null;manager.SelectEnter((IXRSelectInteractor)hand,(IXRSelectInteractable)wrench);
-            yield return null;Assert.That(pulses,Is.EqualTo(1));Assert.That(lastAmplitude,Is.EqualTo(.3f));Assert.That(lastDuration,Is.EqualTo(.06f));Assert.That(wrench.isSelected,Is.True);Assert.That(t.GetMethod("TryBeginRepair").Invoke(c,null),Is.True);
-            for(int i=0;i<73;i++)yield return null;
-            Assert.That(pulses,Is.EqualTo(2));Assert.That(lastAmplitude,Is.EqualTo(.6f));Assert.That(lastDuration,Is.EqualTo(.12f));
-            var state=t.GetProperty("State").GetValue(c);Assert.That(state.GetType().GetProperty("Repaired").GetValue(state),Is.True);
+            yield return null;Assert.That(pulses,Is.EqualTo(1));Assert.That(lastAmplitude,Is.EqualTo(.3f));Assert.That(lastDuration,Is.EqualTo(.06f));Assert.That(wrench.isSelected,Is.True);
+            var state=t.GetProperty("State").GetValue(c);var pipe=state.GetType().GetProperty("Pipe").GetValue(state);
+            var presentation=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Single(x=>x.GetType().Name=="WatchPipeRepair");
+            var bolts=(Transform[])presentation.GetType().GetField("bolts").GetValue(presentation);var jaw=(Transform)presentation.GetType().GetField("jaw").GetValue(presentation);
+            int Count()=> (int)pipe.GetType().GetProperty("BoltsDone").GetValue(pipe);
+            for(int bolt=0;bolt<3;bolt++)
+            {
+                int active=(int)pipe.GetType().GetProperty("ActiveBolt").GetValue(pipe);var target=bolts[active];
+                for(int i=0;i<95;i++){hand.transform.position+=Vector3.ClampMagnitude((target.position-jaw.position)*.2f,.12f);yield return null;}
+                Assert.That(Count(),Is.EqualTo(bolt),"Stationary wrench must not repair");
+                for(int frame=0;frame<600&&Count()==bolt;frame++)
+                {
+                    bool returning=(bool)pipe.GetType().GetProperty("NeedsReturn").GetValue(pipe);
+                    hand.transform.rotation=Quaternion.AngleAxis((returning?-1:1)*70*Time.deltaTime,target.forward)*hand.transform.rotation;
+                    hand.transform.position+=Vector3.ClampMagnitude((target.position-jaw.position)*.2f,.12f);yield return null;
+                }
+                Assert.That(Count(),Is.EqualTo(bolt+1),"Physical wrist twist must advance the active coupling");
+            }
+            Assert.That(pulses,Is.EqualTo(8),"Grab + six quarter turns + completion");Assert.That(lastAmplitude,Is.EqualTo(.6f));Assert.That(lastDuration,Is.EqualTo(.12f));
+            Assert.That(state.GetType().GetProperty("Repaired").GetValue(state),Is.True);
+            yield return null; // Day controller applies the pipe completion to flood on its next Update.
             var flood=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Single(x=>x.GetType().Name=="FloodController");Assert.That(flood.GetType().GetProperty("Paused").GetValue(flood),Is.True);
             var head=(Transform)t.GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(c);
             // Use an isolated test head to verify sleep does not move the tracked view.
@@ -43,7 +60,7 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             var start=testHead.position;Assert.That(t.GetMethod("TrySleep").Invoke(c,null),Is.True);
             for(int i=0;i<45;i++)yield return null;
             Assert.That(state.GetType().GetProperty("Day").GetValue(state),Is.EqualTo(2));Assert.That(testHead.position,Is.EqualTo(start));
-            Assert.That(pulses,Is.EqualTo(2),"No repeated haptics while holding the wrench");
+            Assert.That(pulses,Is.EqualTo(8),"No repeated haptics while holding the wrench");
             t.GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(c,head);
             manager.SelectExit((IXRSelectInteractor)hand,(IXRSelectInteractable)wrench);UnityEngine.Object.Destroy(hand.gameObject);UnityEngine.Object.Destroy(testHead.gameObject);
         }
