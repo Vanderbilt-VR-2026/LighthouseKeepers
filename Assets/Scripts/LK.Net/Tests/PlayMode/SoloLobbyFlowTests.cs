@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections;
+using System.Linq;
 using LighthouseKeepers.StormWatch;
 using LighthouseKeepers.Core;
 using LighthouseKeepers.Gameplay.Interaction;
@@ -29,7 +30,7 @@ namespace LighthouseKeepers.Net.Tests
             }
             yield return null;
         }
-        [UnityTest] public IEnumerator SoloButtonLoadsBootstrapWithoutHostingAndReturnsToLobby()
+        [UnityTest] public IEnumerator SoloButtonLoadsLabWithoutHostingAndReturnsToLobby()
             => VerifySoloFlow(false);
         [UnityTest] public IEnumerator SoloButtonClosesAnExistingRunnerBeforeOpeningPractice()
             => VerifySoloFlow(true);
@@ -60,13 +61,11 @@ namespace LighthouseKeepers.Net.Tests
             Assert.IsNotNull(GameObject.Find("WatchBoardCanvas").transform.Find("CrewOptionsPanel/PlaySoloOptions"));
             button.onClick.Invoke();
             float deadline = Time.realtimeSinceStartup + 90;
-            EnvironmentBootstrap bootstrap;
-            do { yield return null; bootstrap = Object.FindAnyObjectByType<EnvironmentBootstrap>(); }
-            while ((!bootstrap || !bootstrap.Ready) && Time.realtimeSinceStartup < deadline);
-            Assert.IsNotNull(bootstrap); Assert.IsTrue(bootstrap.Ready);
-            Assert.IsTrue(SceneManager.GetSceneByName("LK_Bootstrap").isLoaded);
+            while ((!SceneManager.GetSceneByName("LK_Lab_Environment").isLoaded || !Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Any(c=>c.GetType().Name=="WatchDemoController")) && Time.realtimeSinceStartup < deadline) yield return null;
+            Assert.IsTrue(SceneManager.GetSceneByName("LK_Lab_Environment").isLoaded);
+            Assert.IsFalse(SceneManager.GetSceneByName("LK_Bootstrap").isLoaded);
             Assert.IsFalse(SceneManager.GetSceneByName("LK_StormWatch").isLoaded);
-            Assert.AreEqual(7, SceneManager.sceneCount);
+            Assert.AreEqual(1, SceneManager.sceneCount);
             yield return new WaitForSeconds(1.2f);
             Assert.AreEqual(0, Object.FindObjectsByType<NetworkRunner>(FindObjectsSortMode.None).Length);
             Assert.AreEqual(1, Object.FindObjectsByType<XROrigin>(FindObjectsSortMode.None).Length);
@@ -87,11 +86,19 @@ namespace LighthouseKeepers.Net.Tests
                 var skins = hand.GetComponentsInChildren<SkinnedMeshRenderer>();
                 Assert.AreEqual(1, skins.Length);
                 Assert.IsTrue(skins[0].enabled, "Tracking recovery must preserve the Sprint 3 skin.");
+                Assert.AreEqual(UnityEngine.Rendering.LightProbeUsage.Off,skins[0].lightProbeUsage,"Overbright shell probes must not wash the runtime hand white.");
+                var visual=skins[0].transform;
+                float mirror=hand.Node==UnityEngine.XR.XRNode.LeftHand?1:-1;
+                Assert.Less(Quaternion.Angle(Quaternion.Euler(-75,0,0)*Quaternion.Euler(0,0,65*mirror),visual.localRotation),.1f,"Untracked desktop fallback preserves the Quest grip calibration.");
+                Assert.Less(Quaternion.Angle(Quaternion.identity,hand.transform.localRotation),.01f,"Only visual rotates.");
+                Vector3 wrist=new Vector3(0,-.018f,-.035f);
+                Assert.Less(Vector3.Distance(visual.localPosition+visual.localRotation*wrist,wrist),.0001f,"Visual rotates about the original wrist.");
+                Assert.Greater((visual.localRotation*Vector3.down).x*mirror,.8f,"Both palms face inward with mirrored roll.");
             }
             Assert.AreEqual(0, Object.FindObjectsByType<TunnelingVignetteController>(FindObjectsSortMode.None).Length);
             Assert.IsNull(Object.FindAnyObjectByType<StormWatchBoard>());
             Assert.IsFalse(GameObject.Find("SOLO DAY 2"));
-            Assert.IsFalse(SoloWatchSession.ConsumeRequest(), "Bootstrap must consume the one-shot launch request.");
+            Assert.IsFalse(SoloWatchSession.ConsumeRequest(), "WatchDemo must consume the one-shot launch request.");
             yield return SceneManager.LoadSceneAsync("LK_NetworkLobby");
             deadline = Time.realtimeSinceStartup + 15;
             while (!GameObject.Find("PlaySolo") && Time.realtimeSinceStartup < deadline) yield return null;

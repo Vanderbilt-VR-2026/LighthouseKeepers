@@ -81,6 +81,9 @@ namespace LighthouseKeepers.Gameplay.Interaction
             skin.sharedMesh = mesh; skin.bones = bones; skin.rootBone = bones[0];
             skin.localBounds = new Bounds(new Vector3(0, -.035f, .025f), new Vector3(.3f, .3f, .3f));
             skin.shadowCastingMode = ShadowCastingMode.Off;
+            // The restored shell has overbright baked probes (measured irradiance >170 at House).
+            // Keep the skin Lit by ambient/realtime lights without clipping it to white near fixtures.
+            skin.lightProbeUsage = LightProbeUsage.Off;
             if (!gloveMaterial)
             {
                 ownedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
@@ -98,6 +101,13 @@ namespace LighthouseKeepers.Gameplay.Interaction
             device.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion grip);
             device.TryGetFeatureValue(CommonUsages.isTracked, out bool tracked);
             Debug.Log($"HAND_DIAG {phase} {hand} device={device.name} tracked={tracked} grip={grip.eulerAngles} controllerLocal={transform.parent.localEulerAngles} gripCorrection={measuredGripCorrection.eulerAngles} measured={hasGripMeasurement} rootLocal={transform.localEulerAngles} visualLocal={(visual ? visual.localEulerAngles : Vector3.zero)} pipeline={GraphicsSettings.currentRenderPipeline} graphics={SystemInfo.graphicsDeviceType}");
+            var skin = visual ? visual.GetComponent<SkinnedMeshRenderer>() : null;
+            if (skin)
+            {
+                LightProbes.GetInterpolatedProbe(skin.bounds.center,null,out SphericalHarmonicsL2 sh);
+                var values=new Color[1]; sh.Evaluate(new[]{Vector3.up},values);
+                Debug.Log($"HAND_LIGHT {phase} {hand} probeUsage={skin.lightProbeUsage} sceneProbeUp={values[0].ToString("F3")} center={skin.bounds.center}");
+            }
             foreach (var r in transform.parent.GetComponentsInChildren<Renderer>(true))
                 foreach (var m in r.sharedMaterials)
                     Debug.Log($"HAND_DIAG {hand} renderer={r.name} type={r.GetType().Name} enabled={r.enabled} active={r.gameObject.activeInHierarchy} material={(m ? m.name : "NULL")} shader={(m && m.shader ? m.shader.name : "NULL")} supported={(m && m.shader && m.shader.isSupported)} base={(m && m.HasProperty("_BaseColor") ? m.GetColor("_BaseColor").ToString("F3") : "none")} color={(m && m.HasProperty("_Color") ? m.GetColor("_Color").ToString("F3") : "none")} propertyBlock={r.HasPropertyBlock()} keywords={(m ? string.Join(",", m.shaderKeywords) : "none")}");
