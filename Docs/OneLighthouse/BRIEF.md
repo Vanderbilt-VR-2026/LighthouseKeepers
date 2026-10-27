@@ -99,7 +99,7 @@ the bindings.
   only when the head is outdoors.
 - **Loop:** FAULT → DIAGNOSE → REPAIR / RESTORE POWER → WATER FALLS + BEACON ON → NEXT WATCH.
   Power runs pump and beacon. Repairs reduce inflow. Manual pumping buys time.
-- **Days:** 7 different days (M2).
+- **Days:** data-driven; M2 ships Day 1 and a combined Day 2, with Day 3 copying Day 2. More content later.
 
 ---
 
@@ -184,10 +184,25 @@ rotation; preserve automatic tightening/haptics. Remove grain, REC, battery and 
 only a small day/countdown/task readout. Review first-person/side grip screenshots, run regression
 checks, measure Quest GPU before/after, rebuild/install/push and stop. See `M1.5-house-fixes.md`.
 
-**M2 — Multi-day content + watch.** Preserve and extend the working Sprint 2 loop: 7 days of data,
-House board with live tasks, failure/retry, and the digital wristwatch fully specified in section 4.
-D1 one leak + wrench/pump; D2 blackout + generator; D3 leaks + radio; D4 generator fault; D5 beacon
-alignment; D6 leaks + falling power; D7 everything, dawn ending. Reuse simulation v2 deliberately.
+**M2 — Gameplay skeleton + generator foundation (lead revision).** M1.5 build 39eb8eb is
+accepted: the House → wrench → repair → drain → bed loop works. Freeze hand rotation. Log slightly
+transparent walls and imperfect wrench grip in BACKLOG.md; do not polish them in M2.
+1. ScriptableObject Day01/02/03 assets in Assets/Data/Days define station/task text, duration and
+   starting faults. D1 pipe only/power on. D2 generator + pipe, free order, power off; both required
+   before sleep. D3 copies D2. Live board checkmarks use these assets. Adding Day04 requires a new
+   asset, not code; document in exactly ten lines in DAYS.md. Development-only Day 2 lobby shortcut.
+2. STN_GENERATOR on F2 against the wall, standing reach, clear stairs/routes. Reuse the best existing
+   diesel mesh after surveying Sprint 2 Lab, Bootstrap Level02 and session C. GRIP_StarterHandle:
+   direct grab, ~0.3 m pull toward player, spring return; three good pulls start it. Each pull gets
+   crank audio, haptic and engine-only shake. Running loop, green lamp and brighter F2 lights on start.
+   Reuse Sprint 3 verbs; inspect Tapan's starter branch and Storm Watch. Primer/choke are future stubs.
+3. One day-owned PowerState. Power off dims F1/F2 to playable emergency light and disables the
+   electric pump, increasing water rise. Power on restores lights/pumping. Preserve Day 1 behavior.
+4. Preserve hands, wrench/repair, flood, bed, clean camera, solo and host-alone. No hand rotation changes.
+5. Verify Day 1 and Day 2 in graphics Play Mode from lobby: off → three pulls → on → repair → drain
+   → both board checks → sleep → Day 3. Inspect screenshots of F2 stairs/generator, held handle,
+   off/on lighting and Day 2 board. Compile/test/build Builds/LighthouseKeepers-M2.apk, install USB,
+   push team, report physical checks and stop. Wristwatch and seven-day content are deferred.
 
 **M3 — Hands/body polish.** Refine embodiment and interaction poses on the real world, upper-body
 arms/torso, reach, ownership-ready hand/watch attachment. M1.5 fixes color/orientation first.
