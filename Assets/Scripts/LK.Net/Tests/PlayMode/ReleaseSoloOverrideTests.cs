@@ -3,6 +3,17 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class ReleaseSoloOverrideTests
     {
+        [Test] public void DayShortcutHasNoMutableRequestInRelease()
+        {
+            var type=System.Type.GetType("LighthouseKeepers.StormWatch.WatchDayLaunch, LighthouseKeepers.Runtime",true);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Assert.IsNotNull(type.GetProperty("RequestedDay").SetMethod);
+#else
+            Assert.IsNull(type.GetProperty("RequestedDay"));
+            Assert.That(type.GetMethod("Consume").Invoke(null,null),Is.EqualTo(1));
+            Assert.IsEmpty(type.GetFields(System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static));
+#endif
+        }
         [Test] public void ReleaseBuildCannotEnableSoloOverride()
         {
             var property=typeof(DebugSoloOverride).GetProperty(nameof(DebugSoloOverride.Enabled));
