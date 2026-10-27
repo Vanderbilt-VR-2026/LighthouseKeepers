@@ -252,8 +252,23 @@ old weather/lens look milestone for this turn. Hands, generator feel, bed, day t
 state and appropriate two-person gates. Document Editor-host + headset-client evidence separately from
 physical two-player acceptance. Host alone remains usable for debugging.
 
-**M6 — Ship to main.** PR `sprint3/one-lighthouse` → `main`, tag `sprint3-final`, APK from that tag,
-GitHub Release and README download/sideload/PLAY SOLO instructions. Reinstall Release download and smoke test.
+**M6 — Historical ship plan, superseded by the lead's M7 below.**
+
+**M7 — Ship Sprint 3 to main (lead revision; no gameplay changes).**
+1. Fully commit/push `sprint3/one-lighthouse`; run the entire EditMode and PlayMode suites and list
+   all failures without fixing unrelated ones. Create/push `sprint-3` from this branch; check that
+   current team/main is an ancestor.
+2. On `sprint-3`, update README with the Sprint 3 release asset link, Quest install/developer-mode
+   instructions, PLAY SOLO, controls, four-line three-day loop and Run from Unity steps; retain old
+   instructions under History. Link is planned until the post-merge release is published.
+3. Open `sprint-3` → `main`: “Sprint 3: one lighthouse — pipe, generator, radio, 3 days”. Describe
+   current shell/hands/days/stations/power/beacon/solo/host-alone, backlog, actual test results and
+   how to test; credit reused teammate work from git history. Never merge; STOP for “merged”.
+4. After that explicit signal: fetch/pull main, tag its exact merge commit `sprint3-final`, push
+   tag, build that commit to `Builds/LighthouseKeepers-Sprint3.apk`, publish GitHub Release
+   “Sprint 3” with APK and SHA-256. Uninstall Quest app, download release asset, install/launch,
+   verify lobby → PLAY SOLO → House with Wi-Fi off/no Photon, and verify a fresh Unity 6000.3.23f1
+   clone opens with committed Photon settings and resolved packages. Record evidence and limits.
 
 ---
 
