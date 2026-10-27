@@ -15,7 +15,7 @@ namespace LighthouseKeepers.Tests.Simulation
         static bool NetworkingNamespace(string value) => new[]
         {
             "Fusion", "Photon", "Unity.Netcode", "Unity.Networking.Transport",
-            "LighthouseKeepers.Networking", "LighthouseKeepers.StormWatchNetworking"
+            "LighthouseKeepers.Net", "LighthouseKeepers.Networking", "LighthouseKeepers.StormWatchNetworking"
         }.Any(prefix => value == prefix || value.StartsWith(prefix + ".", StringComparison.Ordinal));
 
         // LK.Net intentionally wraps the retained Fusion lobby and historical Storm Watch
@@ -60,7 +60,7 @@ namespace LighthouseKeepers.Tests.Simulation
         [Test] public void SimulationCoreHasNoUnityOrNetworkingAssemblyReferences()
         {
             var forbidden = typeof(SimulationHost).Assembly.GetReferencedAssemblies()
-                .Where(a => a.Name.StartsWith("Unity", StringComparison.Ordinal) || NetworkingNamespace(a.Name));
+                .Where(a => a.Name.StartsWith("Unity", StringComparison.Ordinal) || NetworkingNamespace(a.Name) || NetworkAdapters.Contains(a.Name));
             Assert.That(forbidden, Is.Empty);
         }
 
