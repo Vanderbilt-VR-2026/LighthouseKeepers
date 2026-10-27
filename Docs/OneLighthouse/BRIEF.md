@@ -72,7 +72,7 @@ never merge a ref wholesale.**
 | current branch (= integrate/sprint-3) | Merged A/B/C/D/E round 1: hands (Assets/Scripts/LK.Gameplay/Interaction, Assets/Prefabs/Hands, Assets/Art/Hands), simulation (LK.Core/Simulation), progression + board (LK.Core/Progression, LK.Presentation/Board), environment fixtures/validators (Assets/Prefabs/Environment/Sprint3), Fusion networking (LK.Net) | Already here. The Sprint 3 **hands are the ones the lead likes**. Make them the hands in the Lab rig, with verified Android materials and grip orientation. |
 | `archive/sprint3-simulation` (= branch sprint3/simulation, 92dfdd2) | 3 coupling leaks, 7 watch profiles, drainage-after-success fix, simulation API v2 | Consider for M2 |
 | `archive/sprint3-networking` (= branch sprint3/networking, bfa1062) | Round 2 rig binding, ship-manifest routing | Port rig/ownership pieces; ignore its Shell/Dress routing |
-| `parked/round2-main-folder` (033ddec) | ShipLensDroplets shader + URP feature, ShipStormPresentation, ShipBeaconPresentation, build-scene guard tests | Port for M4 |
+| `parked/round2-main-folder` (033ddec) | ShipLensDroplets shader + URP feature, ShipStormPresentation, ShipBeaconPresentation, build-scene guard tests | Beacon for M4; weather/lens work deferred |
 | `archive/sprint2-final-submission` | Assets/WatchDemo (WatchWrenchHandPose, WrenchHaptics, WrenchMetal), LK_GrabWrench prefab, Sprint 2 pipe repair | Authoritative M1.5 world and existing loop; preserve wrench and animation |
 | `archive/aneesh-environment-shell` | Sprint 2 side-stair shell | Existing world source; no stairs milestone |
 | tapan/* branches (open PRs #48, #54, #55, #56) | Valve, starter lever, radio, beacon interactions | Read; reuse correct bindings |
