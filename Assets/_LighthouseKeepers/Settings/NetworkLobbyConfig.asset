@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: NetworkLobbyConfig
   m_EditorClassIdentifier: LK.Lobby::LighthouseKeepers.Lobby.LobbyConfig
   maxPlayers: 2
-  minPlayersToStart: 2
+  minPlayersToStart: 1
   defaultPlayerName: Keeper
   lobbyTitle: Lighthouse Keepers
   requireAllReady: 1
-  startSceneName: LK_StormWatch
+  startSceneName: LK_Bootstrap

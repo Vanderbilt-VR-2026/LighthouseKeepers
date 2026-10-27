@@ -15,7 +15,6 @@ namespace LighthouseKeepers.Networking
     [DisallowMultipleComponent]
     public sealed class FusionLobbyTransport : MonoBehaviour, ISessionLobbyTransport, INetworkRunnerCallbacks
     {
-        public const string GameplaySceneName = CrewSessionPolicy.StormWatchSceneName;
         public const string LobbySceneName = "LK_NetworkLobby";
         static string pendingLobbyNotice;
         public NetworkRunner Runner => runner;
@@ -65,7 +64,7 @@ namespace LighthouseKeepers.Networking
         }
         void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (!online || (scene.name != "LK_Bootstrap" && scene.name != GameplaySceneName)) return;
+            if (!online || scene.name != ShipWorld.GameplaySceneName) return;
             // Scene arrival is authoritative even if the separate reliable lobby
             // snapshot has not arrived yet. Bind gameplay before its Start runs.
             enteredGame = true;
@@ -233,11 +232,11 @@ namespace LighthouseKeepers.Networking
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
         {
             if (!IsHost || busy || state.Starting) return false;
-            if (sceneName == GameplaySceneName)
+            if (sceneName == ShipWorld.GameplaySceneName)
             {
-                if (state.Capacity != 2 || state.Players.Count != 2 || runner.ActivePlayers.Count() != 2)
-                    return Fail("Storm Watch needs exactly two connected keepers.");
-                minimumPlayers = 2;
+                if (state.Capacity != 2 || state.Players.Count < 1 || state.Players.Count > 2 || runner.ActivePlayers.Count() != state.Players.Count)
+                    return Fail("The lighthouse supports one or two connected keepers.");
+                minimumPlayers = 1;
                 requireAllReady = true;
             }
             int index = -1;
@@ -327,11 +326,10 @@ namespace LighthouseKeepers.Networking
         }
         public void OnSceneLoadDone(NetworkRunner source)
         {
-            if (source == runner && (SceneManager.GetSceneByName("LK_Bootstrap").isLoaded ||
-                SceneManager.GetSceneByName(GameplaySceneName).isLoaded))
+            if (source == runner && SceneManager.GetSceneByName(ShipWorld.GameplaySceneName).isLoaded)
             {
                 enteredGame = true;
-                gameSceneName = SceneManager.GetSceneByName(GameplaySceneName).isLoaded ? GameplaySceneName : "LK_Bootstrap";
+                gameSceneName = ShipWorld.GameplaySceneName;
             }
         }
         public void OnConnectedToServer(NetworkRunner source) { }

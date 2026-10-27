@@ -32,18 +32,8 @@ public sealed partial class KeeperReplicationSession : MonoBehaviour, INetworkRu
     public IReadOnlyList<LobbyPlayer> Players => transport ? transport.Players : Array.Empty<LobbyPlayer>();
     public NetworkRunner SessionRunner => runner;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void RegisterEnvironmentPreview()
-    {
-        Instance = null;
-        SceneManager.sceneLoaded -= EnsureSessionControls;
-        SceneManager.sceneLoaded += EnsureSessionControls;
-    }
-    static void EnsureSessionControls(Scene scene, LoadSceneMode mode)
-    {
-        // Storm Watch has its own authoritative gameplay link; do not install a second gameplay layer there.
-        if (scene.name == "LK_Bootstrap") GetOrCreate();
-    }
+    // Legacy rehearsal helper is explicitly opt-in. The ship lobby owns its runner,
+    // poses and grab leases; entering Bootstrap must not install another board/session.
     public static KeeperReplicationSession GetOrCreate()
     {
         if (Instance) return Instance;

@@ -38,7 +38,7 @@ namespace LighthouseKeepers.Lobby
         public int MinPlayersToStart => config ? config.MinPlayersToStart : 1;
         public bool RequireAllReady => config == null || config.RequireAllReady;
         public string Title => config ? config.LobbyTitle : "Lighthouse Keepers";
-        public string StartSceneName => config ? config.StartSceneName : "LK_Bootstrap";
+        public string StartSceneName => config ? config.StartSceneName : ShipWorld.GameplaySceneName;
         public string LastError => !string.IsNullOrEmpty(lastError) ? lastError : Session?.LastError ?? "";
         public IReadOnlyList<LobbyPlayer> Players => transport != null ? transport.Players : System.Array.Empty<LobbyPlayer>();
         public bool CanStart => !IsStarting && !IsBusy && IsOnline && IsHost && Players.Count >= MinPlayersToStart &&

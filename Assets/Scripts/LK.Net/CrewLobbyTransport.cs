@@ -64,7 +64,7 @@ namespace LighthouseKeepers.Net
         public bool PlaySolo()
         {
             if (launchingSolo || fusion && fusion.IsStarting) return false;
-            if (!Application.CanStreamedLevelBeLoaded(FusionLobbyTransport.GameplaySceneName))
+            if (!Application.CanStreamedLevelBeLoaded(ShipWorld.GameplaySceneName))
                 return Fail("The solo lighthouse is missing from this build. Reinstall the current APK.");
             launchingSolo = true;
             connecting = false;
@@ -95,7 +95,7 @@ namespace LighthouseKeepers.Net
             }
             SoloWatchSession.Request();
             AsyncOperation load = null;
-            try { load = SceneManager.LoadSceneAsync(FusionLobbyTransport.GameplaySceneName); }
+            try { load = SceneManager.LoadSceneAsync(ShipWorld.GameplaySceneName); }
             catch (Exception error) { localError = "Could not open solo practice: " + error.Message; }
             if (load == null)
             {
@@ -142,10 +142,10 @@ namespace LighthouseKeepers.Net
         public bool KickPlayer(string playerId) => fusion && fusion.KickPlayer(playerId);
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
         {
-            if (!IsHost || Players.Count != CrewConnectionPolicy.Capacity) return Fail("Two connected keepers must signal ready before starting.");
+            if (!IsHost || Players.Count < 1 || Players.Count > CrewConnectionPolicy.Capacity) return Fail("Host a crew before starting.");
             foreach (var player in Players) if (!player.IsReady) return Fail("Every keeper must signal ready before starting.");
             localError = "";
-            return fusion.StartGame(sceneName, CrewConnectionPolicy.Capacity, true);
+            return fusion.StartGame(ShipWorld.GameplaySceneName, 1, true);
         }
         bool Fail(string message) { localError = message; Status(); return false; }
         void Roster() => PlayersChanged?.Invoke();

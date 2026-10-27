@@ -10,8 +10,8 @@ namespace LighthouseKeepers.Networking
     /// <summary>The two-player watch ends on partner loss; the development environment supports a changing crew.</summary>
     public static class CrewSessionPolicy
     {
-        public const string StormWatchSceneName = "LK_StormWatch";
-        public static bool RequiresWholeCrew(string sceneName) => sceneName == StormWatchSceneName;
+        // Bootstrap permits a host to enter alone for interaction debugging.
+        public static bool RequiresWholeCrew(string sceneName) => false;
     }
 
     // Lobby traffic is infrequent and has no simulation state. Reliable data keeps
