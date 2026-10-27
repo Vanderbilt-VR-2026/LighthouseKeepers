@@ -15,7 +15,7 @@ namespace LighthouseKeepers.Environment.Sprint3.Editor
     public static class ShipSceneCatalog
     {
         public const string ManifestPath = "Assets/Scenes/Sprint3/ShipScenes.json";
-        public const string ScenePath = "Assets/Scenes/Lab/LK_Lab_Environment.unity";
+        public const string ScenePath = "Assets/Scenes/Shell/LK_Shell_House.unity";
         [Serializable] sealed class Manifest { public string[] scenes; }
         public static string[] Paths
         {

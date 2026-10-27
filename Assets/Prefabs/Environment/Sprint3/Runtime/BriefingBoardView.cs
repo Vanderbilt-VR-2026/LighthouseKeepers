@@ -20,6 +20,22 @@ namespace LighthouseKeepers.Environment.Sprint3
         public const float HeadingCapHeightM = .065f;
         public const int MaximumRows = 5;
 
+        // D's public presentation seam. Objective checkbox state is authoritative upstream.
+        public void SetLines(string[] lines)
+        {
+            var rows = new List<(string, bool)>();
+            foreach (var line in lines ?? Array.Empty<string>())
+            {
+                if (line == null || rows.Count == MaximumRows) continue;
+                if (line.StartsWith("[x] ", StringComparison.OrdinalIgnoreCase)) rows.Add((line.Substring(4), true));
+                else if (line.StartsWith("[ ] ", StringComparison.Ordinal)) rows.Add((line.Substring(4), false));
+            }
+            if (rows.Count == 0 && lines != null)
+                for (int i = 1; i < lines.Length && rows.Count < MaximumRows; i++)
+                    if (!string.IsNullOrWhiteSpace(lines[i])) rows.Add((lines[i], false));
+            SetLines(lines != null && lines.Length > 0 ? lines[0] : "KEEPER WATCH", rows);
+        }
+
         void Awake()
         {
             Prepare();

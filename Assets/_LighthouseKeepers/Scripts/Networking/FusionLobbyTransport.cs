@@ -15,7 +15,7 @@ namespace LighthouseKeepers.Networking
     [DisallowMultipleComponent]
     public sealed class FusionLobbyTransport : MonoBehaviour, ISessionLobbyTransport, INetworkRunnerCallbacks
     {
-        public const string GameplaySceneName = CrewSessionPolicy.StormWatchSceneName;
+        public static string GameplaySceneName => System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(1));
         public const string LobbySceneName = "LK_NetworkLobby";
         static string pendingLobbyNotice;
         public NetworkRunner Runner => runner;

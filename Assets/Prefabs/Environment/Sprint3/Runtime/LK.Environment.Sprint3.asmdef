@@ -1,1 +1,14 @@
-{"name":"LK.Environment.Sprint3","rootNamespace":"LighthouseKeepers.Environment.Sprint3","references":["Unity.TextMeshPro"],"autoReferenced":true}
+{
+  "name": "LK.Environment.Sprint3",
+  "rootNamespace": "LighthouseKeepers.Environment.Sprint3",
+  "references": [
+    "Unity.TextMeshPro",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "Unity.RenderPipelines.Core.Runtime",
+    "LK.Core.Simulation",
+    "LK.Simulation.Unity",
+    "LK.Core.Progression",
+    "LK.Presentation.Board"
+  ],
+  "autoReferenced": true
+}
