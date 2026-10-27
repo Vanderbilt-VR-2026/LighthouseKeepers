@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
   day: 2
   dayLengthSeconds: 420
+  beaconDarkLimitSeconds: 90
   tasks:
   - stationId: STN_GENERATOR
     taskText: Restart the generator

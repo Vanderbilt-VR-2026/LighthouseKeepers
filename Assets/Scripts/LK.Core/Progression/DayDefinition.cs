@@ -14,6 +14,8 @@ namespace LighthouseKeepers.Core.Progression
         [Min(1)] public int day = 1;
         [Header("One Lighthouse watch skeleton")]
         [Min(30)] public float dayLengthSeconds = 420;
+        [Tooltip("Continuous beacon outage before losing this watch; zero disables the limit.")]
+        [Min(0)] public float beaconDarkLimitSeconds;
         public WatchTaskStep[] tasks = Array.Empty<WatchTaskStep>();
         public string[] startingFaults = Array.Empty<string>();
         [Range(1, 2)] public int requiredKeepers = 1;

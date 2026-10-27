@@ -15,6 +15,7 @@ namespace LighthouseKeepers.WatchDemo
         public float TransmitElapsed {get;private set;}
         public int CodeProgress {get;private set;}
         bool power, held, trigger;
+        public int Step=>Completed?4:!MainOn?0:!Locked?1:!CodeAccepted?2:3;
         public bool CodeAccepted=>CodeProgress==Program.callCode.Length;
         public bool Transmitting=>held&&trigger&&power&&MainOn&&Locked&&CodeAccepted&&!Completed;
         public RadioState(RadioProgram program){Program=program?program:throw new ArgumentNullException(nameof(program));Reset(false);}
@@ -27,12 +28,12 @@ namespace LighthouseKeepers.WatchDemo
         }
         public bool ToggleMain()
         {
-            if(!power)return false;
+            if(!power||MainOn)return false;
             MainOn=!MainOn;Locked=false;LockElapsed=TransmitElapsed=0;CodeProgress=0;return true;
         }
         public void Tune(float mhz)
         {
-            if(float.IsNaN(mhz)||float.IsInfinity(mhz))return;
+            if(Step!=1||float.IsNaN(mhz)||float.IsInfinity(mhz))return;
             FrequencyMHz=Mathf.Clamp(mhz,Program.minimumMHz,Program.maximumMHz);
             if(Mathf.Abs(FrequencyMHz-Program.targetMHz)>Program.toleranceMHz){Locked=false;LockElapsed=TransmitElapsed=0;}
         }

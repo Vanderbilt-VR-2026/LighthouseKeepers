@@ -10,18 +10,18 @@ namespace LighthouseKeepers.WatchDemo
         [SerializeField] Renderer[] interiorSurfaces;
         [SerializeField] Light[] interiorLights;
         [SerializeField] AudioSource alarm;
-        [SerializeField,Min(1.5f)] float cycleSeconds=1.5f;
+        [SerializeField,Min(2)] float cycleSeconds=2;
         [SerializeField,Min(1)] float recoverySeconds=1;
         WatchState state;
         Material[][] originals;
         readonly List<Material> materials=new();
         readonly List<Color> baseColours=new(), emissions=new();
         Color[] normalLightColours;float[] normalIntensities;
-        float warm=1;
+        float warm=1,outageStart;
         bool power=true,initialized;
         public float WarmBlend=>warm;
         public float CycleSeconds=>cycleSeconds;
-        public static float PulseAt(float time,float cycle)=>.52f+.20f*Mathf.Sin(time*Mathf.PI*2/Mathf.Max(1.5f,cycle));
+        public static float PulseAt(float time,float cycle)=>.55f+.10f*Mathf.Sin(time*Mathf.PI*2/Mathf.Max(2,cycle));
         void Awake()
         {
             // Preserve the accepted bake/UVs. One set of shared runtime material instances
@@ -58,32 +58,34 @@ namespace LighthouseKeepers.WatchDemo
         }
         void StateChanged()
         {
-            bool next=state.Power==PowerState.On;if(next==power&&initialized)return;power=next;
+            bool next=state.Power==PowerState.On;if(next==power&&initialized&&state.Elapsed>0)return;power=next;
+            if(!power){outageStart=Time.unscaledTime;alarm.volume=.09f;}
             if(power)alarm.Stop();else if(!alarm.isPlaying)alarm.Play();
         }
         void LateUpdate()
         {
             if(!initialized)return;
             if(power&&warm>=1)return;
+            if(!power)alarm.volume=Mathf.Lerp(.09f,.02f,Mathf.SmoothStep(0,1,(Time.unscaledTime-outageStart)/10f));
             warm=Mathf.MoveTowards(warm,power?1:0,Time.deltaTime/(power?recoverySeconds:.5f));Apply();
         }
         void Apply()
         {
             float pulse=PulseAt(Time.unscaledTime,cycleSeconds);
-            var illumination=Color.Lerp(new Color(pulse,.035f,.02f,1),Color.white,Mathf.SmoothStep(0,1,warm));
+            var illumination=Color.Lerp(new Color(pulse,pulse*.82f,pulse*.68f,1),Color.white,Mathf.SmoothStep(0,1,warm));
             for(int i=0;i<materials.Count;i++)
             {
                 var colour=baseColours[i]*illumination;colour.a=baseColours[i].a;materials[i].SetColor("_BaseColor",colour);
                 if(materials[i].HasProperty("_EmissionColor"))
                 {
                     var e=emissions[i];float strength=Mathf.Max(e.r,Mathf.Max(e.g,e.b));
-                    materials[i].SetColor("_EmissionColor",Color.Lerp(new Color(Mathf.Max(strength*pulse,.035f+.05f*pulse),strength*.015f+.0015f,strength*.008f+.001f),e,warm));
+                    materials[i].SetColor("_EmissionColor",Color.Lerp(new Color(1,.78f,.58f)*strength*pulse+baseColours[i]*(.025f+.025f*pulse),e,warm));
                 }
             }
             for(int i=0;i<interiorLights.Length;i++)
             {
-                var light=interiorLights[i];light.color=Color.Lerp(new Color(1,.035f,.015f),normalLightColours[i],warm);
-                light.intensity=normalIntensities[i]*Mathf.Lerp(.45f+pulse,1,warm);
+                var light=interiorLights[i];light.color=Color.Lerp(Color.Lerp(normalLightColours[i],new Color(1,.48f,.25f),.25f),normalLightColours[i],warm);
+                light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,1,warm);
             }
         }
         void OnDestroy()

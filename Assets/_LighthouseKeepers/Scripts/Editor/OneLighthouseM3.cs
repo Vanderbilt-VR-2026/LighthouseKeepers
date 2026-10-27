@@ -106,7 +106,7 @@ namespace LighthouseKeepers.Editor
             }
             controls.Add(control);return control;
         }
-        static void BuildConsole(RadioProgram program)
+        static void BuildConsole(RadioProgram program,bool guided=false)
         {
             controls.Clear();lamps.Clear();var root=Root("STN_RADIO_CONSOLE",null,new Vector3(-.50f,10.15f,2.32f));root.rotation=Quaternion.Euler(0,180,0);root.localScale=Vector3.one*.7f;
             console=root.gameObject.AddComponent<WatchRadioConsole>();console.program=program;cabinet=Root("Console cabinet",root,Vector3.zero);
@@ -150,7 +150,7 @@ namespace LighthouseKeepers.Editor
             for(int i=0;i<4;i++){Control("Code "+i,new Vector3(.36f+i*.20f,1.15f,.32f),RadioControl.Kind.Button,colours[i],i);Label("Code label "+i,colours[i].ToUpperInvariant(),root,new Vector3(.36f+i*.20f,1.05f,.28f),.0045f);}
             for(int row=0;row<2;row++)for(int i=0;i<4;i++)
             {Control("Channel "+(row*4+i+1),new Vector3(-.9f+i*.23f,.83f+row*.15f,.32f),RadioControl.Kind.Button,colours[(i+row)%4]);}
-            for(int i=0;i<6;i++)Control("Auxiliary switch "+i,new Vector3(.10f+i*.17f,.82f,.32f),RadioControl.Kind.Toggle,"Steel");
+            if(!guided)for(int i=0;i<6;i++)Control("Auxiliary switch "+i,new Vector3(.10f+i*.17f,.82f,.32f),RadioControl.Kind.Toggle,"Steel");
             Label("Utility labels","CHANNEL BANK                  MONITOR / AUXILIARY",root,new Vector3(0,.69f,.28f),.0037f);
             console.lockLamp=Part("Tune lock lamp",root,new Vector3(.29f,1.98f,.29f),new Vector3(.07f,.045f,.03f),"Green").GetComponent<Renderer>();
             console.transmitLamp=Part("Transmission lamp",root,new Vector3(.72f,1.98f,.29f),new Vector3(.07f,.045f,.03f),"Red").GetComponent<Renderer>();
@@ -167,6 +167,11 @@ namespace LighthouseKeepers.Editor
             console.hiss=Audio(root,"Tuning static",Clip("static",2,3),0,true);
             console.tone=Audio(root,"Tuning tone",Clip("tone",2,4),0,true);
             console.chatter=Audio(root,"Transmission chatter",Clip("chatter",2,5),.25f,true);console.chatter.playOnAwake=false;
+        }
+        public static WatchRadioConsole RebuildRadioForM4()
+        {
+            foreach(string name in new[]{"STN_RADIO_CONSOLE","CodeSource"}){var old=GameObject.Find(name);if(old)Object.DestroyImmediate(old);}
+            PreparePalette();BuildConsole(AssetDatabase.LoadAssetAtPath<RadioProgram>("Assets/WatchDemo/Resources/StormRadio.asset"),true);return console;
         }
         static void BuildMicrophone(Transform root)
         {
@@ -238,7 +243,7 @@ namespace LighthouseKeepers.Editor
             var alarm=Audio(root.transform,"Low emergency alarm",Clip("alarm",3,6),.15f,true);alarm.playOnAwake=false;alarm.spatialBlend=0;
             Set(emergency,"alarm",alarm);Set(watch,"emergencyLighting",emergency);
         }
-        static bool Interior(Vector3 p)
+        public static bool Interior(Vector3 p)
         {if(p.y<-.5f||p.y>13.5f)return false;if(p.z<-4.3f)return p.z>-10.6f&&Mathf.Abs(p.x)<4.3f&&p.y<3.5f;float radius=p.y<3.3f?4.45f:p.y<6.6f?4.2f:p.y<9.9f?4.05f:3.15f;return new Vector2(p.x,p.z).magnitude<radius;}
         static void Set(Object target,string field,Object value){var s=new SerializedObject(target);s.FindProperty(field).objectReferenceValue=value;s.ApplyModifiedPropertiesWithoutUndo();}
         static void Array<T>(Object target,string field,T[] values)where T:Object
