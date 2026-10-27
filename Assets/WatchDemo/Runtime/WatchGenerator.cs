@@ -47,8 +47,13 @@ namespace LighthouseKeepers.WatchDemo
         {
             bool running = state.Power == PowerState.On;
             starter.PullEnabled = !running && !state.Failed;
-            lighting.Powered = running;
-            foreach (var light in serviceLights) light.intensity = running ? 1.2f : .22f;
+            // M3 central emergency controller owns interior presentation; keep the
+            // accepted generator mechanics, lamp, sound and engine feedback unchanged.
+            if(lighting.enabled)
+            {
+                lighting.Powered = running;
+                foreach (var light in serviceLights) light.intensity = running ? 1.2f : .22f;
+            }
             lampBlock.SetColor("_BaseColor", running ? new Color(.1f,.7f,.12f) : new Color(.2f,.055f,.025f));
             lampBlock.SetColor("_EmissionColor", running ? new Color(.08f,.9f,.1f) : Color.black);
             lamp.SetPropertyBlock(lampBlock);

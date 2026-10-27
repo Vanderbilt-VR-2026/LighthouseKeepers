@@ -16,6 +16,8 @@ namespace LighthouseKeepers.WatchDemo
         [SerializeField] Renderer fade;
         [SerializeField] AudioSource whoosh,leakAudio;
         [SerializeField] WatchGenerator generator;
+        [SerializeField] EmergencyLighting emergencyLighting;
+        [SerializeField] WatchRadioConsole radio;
         [SerializeField, Min(0)] float poweredLeakRiseMPerSecond=.0015f;
         [SerializeField, Min(0)] float unpoweredLeakRiseMPerSecond=.0045f;
         [SerializeField, Min(0)] float repairedDrainMPerSecond=.012f;
@@ -34,6 +36,8 @@ namespace LighthouseKeepers.WatchDemo
             state = new WatchState(Resources.Load<DayCatalog>("WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume());
             state.Changed += RefreshBoard;
             if (generator) generator.Bind(state);
+            if(emergencyLighting)emergencyLighting.Bind(state);
+            if(radio)radio.Bind(state);
             wrenchHaptics=wrench.GetComponent<WrenchHaptics>();originalWrenchRotation=wrenchVisual.localRotation;fadeMaterial=fade.material;fade.enabled=false;
             LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
             BeginWatch();
@@ -122,7 +126,7 @@ namespace LighthouseKeepers.WatchDemo
             boardText.Append('\n');
             if(state.Failed)boardText.Append("WATCH ENDED\nPress trigger to retry");
             else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE");
-            else boardText.Append("PIPE: F1   GENERATOR: F2\nFinish tasks, then sleep in F3");
+            else boardText.Append("PIPE F1 / GENERATOR F2 / RADIO F4\nFinish tasks, then sleep in F3");
             board.text=boardText.ToString();
         }
         IEnumerator Sleep()

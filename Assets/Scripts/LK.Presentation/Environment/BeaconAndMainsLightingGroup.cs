@@ -27,6 +27,7 @@ namespace LighthouseKeepers.Presentation.Environment
         {
             if(!p||p.probeCoefficients==null)return null;var result=new SphericalHarmonicsL2[p.probeCoefficients.Length/27];for(int i=0;i<result.Length;i++)for(int c=0;c<3;c++)for(int k=0;k<9;k++)result[i][c,k]=p.probeCoefficients[i*27+c*9+k];return result;
         }
+        public void ApplyNow()=>LateUpdate();
         void LateUpdate()
         {
             if(applied&&previous==powered)return;
