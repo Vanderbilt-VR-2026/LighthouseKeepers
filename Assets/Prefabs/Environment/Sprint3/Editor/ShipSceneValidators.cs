@@ -29,7 +29,9 @@ namespace LighthouseKeepers.Environment.Sprint3.Editor
                 return manifest.scenes;
             }
         }
-        public static bool IsShip(Scene scene) => Paths.Contains(scene.path) || scene.GetRootGameObjects().Any(g => g.GetComponentInChildren<ShipScene>(true));
+        // These checks require Session C's fixtures and bake. The Lab path also hosts the
+        // restored Sprint 2 game, so a filename alone cannot opt it into that contract.
+        public static bool IsShip(Scene scene) => scene.GetRootGameObjects().Any(g => g.GetComponentInChildren<ShipScene>(true));
         public static IEnumerable<T> In<T>(Scene scene) where T : Component => scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<T>(true));
         public static string PathOf(Transform t) => t.parent ? PathOf(t.parent) + "/" + t.name : t.name;
         public static void RunAll(Action<Scene> validate)
@@ -67,7 +69,8 @@ namespace LighthouseKeepers.Environment.Sprint3.Editor
             foreach (var renderer in ShipSceneCatalog.In<Renderer>(scene))
             {
                 checks++;
-                Mesh mesh = renderer is SkinnedMeshRenderer skinned ? skinned.sharedMesh : renderer.GetComponent<MeshFilter>()?.sharedMesh;
+                var filter = renderer.GetComponent<MeshFilter>();
+                Mesh mesh = renderer is SkinnedMeshRenderer skinned ? skinned.sharedMesh : filter ? filter.sharedMesh : null;
                 if (!mesh) continue;
                 AssetDatabase.TryGetGUIDAndLocalFileIdentifier(mesh, out string assetGuid, out long id);
                 string path = AssetDatabase.GetAssetPath(mesh);

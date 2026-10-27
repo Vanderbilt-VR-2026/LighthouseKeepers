@@ -14,6 +14,29 @@ namespace LighthouseKeepers.Tests
     public sealed class OneLighthouseTests
     {
         static readonly string[] Names = { "LK_NetworkLobby", "LK_Lab_Environment" };
+        [Test] public void RestoredLabDoesNotRequireSessionCFixturesUnlessExplicitlyMarked()
+        {
+            var previous = EditorSceneManager.GetSceneManagerSetup();
+            try
+            {
+                var scene = EditorSceneManager.OpenScene("Assets/Scenes/Lab/LK_Lab_Environment.unity");
+                var catalog = System.Type.GetType("LighthouseKeepers.Environment.Sprint3.Editor.ShipSceneCatalog, LK.Environment.Sprint3.Editor", true);
+                var isShip = catalog.GetMethod("IsShip");
+                Assert.IsFalse((bool)isShip.Invoke(null, new object[] { scene }), "Restored WatchDemo is not Session C.");
+                var marker = new GameObject("Session C validation marker");
+                try
+                {
+                    marker.AddComponent(System.Type.GetType("LighthouseKeepers.Environment.Sprint3.ShipScene, LK.Environment.Sprint3", true));
+                    Assert.IsTrue((bool)isShip.Invoke(null, new object[] { scene }), "Marked scenes must retain the Session C gates.");
+                }
+                finally { Object.DestroyImmediate(marker); }
+            }
+            finally
+            {
+                if (previous.Any(s=>s.isLoaded) && previous.Count(s=>s.isActive)==1) EditorSceneManager.RestoreSceneManagerSetup(previous);
+                else EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            }
+        }
         [Test] public void ExactShipManifestHasNoOtherScenesEvenDisabled()
         {
             CollectionAssert.AreEqual(Names, EditorBuildSettings.scenes.Select(s=>System.IO.Path.GetFileNameWithoutExtension(s.path)).ToArray());
