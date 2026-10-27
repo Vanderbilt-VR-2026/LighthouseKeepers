@@ -46,7 +46,9 @@ namespace LighthouseKeepers.Net
         void SceneLoaded(Scene scene,LoadSceneMode mode) { Clear(); nextScan = 0; }
         void Update()
         {
-            if (!channel.Connected) return;
+            // Fusion's default provider returns Retry while scene loading is busy;
+            // synchronous Spawn would throw and leave prop binding half-complete.
+            if (!channel.Connected || channel.Runner.SceneManager.IsBusy) return;
             if (Time.unscaledTime >= nextScan)
             {
                 nextScan = Time.unscaledTime + 1;
