@@ -93,8 +93,8 @@ the bindings.
 - **F1 PLUMBING:** pipes, red valve wheels, three leaking couplings with spray, hand pump, visible water.
 - **F2 POWER & RECOVERY:** yellow diesel generator (primer, choke, starter), control panel with lamps,
   manual bilge pump.
-- **F3 RADIO & FORECAST:** radio desk, storm chart, bed (sleep ends the day).
-- **F4 BEACON:** warm AMBER/gold lantern with rotating beam (never blue/cyan), outdoor gallery with railing.
+- **F3 BEDROOM & FORECAST:** bed (sleep ends the day), original storm chart.
+- **F4 RADIO & BEACON:** west-wall broadcast console; central warm AMBER/gold lantern with rotating beam (never blue/cyan), outdoor gallery with railing.
 - **EXTERIOR:** night, heavy rain, wind, crashing sea, gentle lightning. Rain droplets on the camera lens
   only when the head is outdoors.
 - **Loop:** FAULT → DIAGNOSE → REPAIR / RESTORE POWER → WATER FALLS + BEACON ON → NEXT WATCH.
@@ -204,8 +204,26 @@ transparent walls and imperfect wrench grip in BACKLOG.md; do not polish them in
    off/on lighting and Day 2 board. Compile/test/build Builds/LighthouseKeepers-M2.apk, install USB,
    push team, report physical checks and stop. Wristwatch and seven-day content are deferred.
 
-**M3 — Hands/body polish.** Refine embodiment and interaction poses on the real world, upper-body
-arms/torso, reach, ownership-ready hand/watch attachment. M1.5 fixes color/orientation first.
+**M3 — F4 radio broadcast room + red emergency lighting (lead revision).** M2 56c947a is
+accepted; preserve the generator's model, pull mechanics, thresholds, haptics and sound. Small debug
+issues, wall transparency and wrench grip remain deferred in BACKLOG.md.
+1. One central EmergencyLighting driven by WatchState.Power: all interior fixtures red when off,
+   smooth 1.5-second pulse with a nonzero minimum, readable floors/stairs, quiet generated alarm.
+   No strobe/flicker or camera effect. Power on fades to normal warm lighting over about one second.
+2. STN_RADIO_CONSOLE on F4 (above bedroom), wall-mounted and clear of stairs/central beacon. Dense
+   maritime console: 20+ working tactile-looking controls, backlit buttons, metal toggles, 2–3 knobs,
+   large needle frequency dial, bouncing VU meters, green readout, lamps, microphone/coiled cord.
+   Low-poly/shared materials; utility controls click/move even where they have no task effect yet.
+3. Broadcast loop: MAIN toggle requires generator power; tune to target and hold tolerance 1 s;
+   enter four coloured buttons in order from a separate CodeSource; grab mic/hold trigger 3 s.
+   Wrong button buzzes and resets code only. Completion checks the board and plays an original
+   generated radio reply. Static blends to clear tuning tone. Power off reads NO POWER.
+4. Day 3 has pipe + generator + broadcast tasks; Day 1/2 unchanged. Add development PLAY DAY 3.
+   Explicit Day04 placeholder permits requested bed → next day validation. No co-op this milestone.
+5. Survey Tapan radio-interaction, Storm Watch relay and Sprint 3 verbs; log reuse. Verify the full
+   Day 3 sequence and regressions in Play Mode; inspect red F1/F2, F4 stair view/console close-up,
+   lock/transmission and 3/3 board captures. Build Builds/LighthouseKeepers-M3.apk, install, push,
+   report physical checks and STOP. Earlier hands/body milestone remains deferred.
 
 **M4 — Look.** Amber beacon with power, warm tungsten interior, fault-only emergency lighting, heavy
 rain/wind/sea/soft lightning, wet windows and outdoor-only lens droplets. Reuse parked ShipLensDroplets
