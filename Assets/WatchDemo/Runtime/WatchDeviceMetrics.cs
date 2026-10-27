@@ -30,7 +30,8 @@ namespace LighthouseKeepers.WatchDemo
             var current=SceneManager.GetActiveScene().name;
             if(current!=scene) { scene=current; start=Time.realtimeSinceStartup;next=15;gpu=cpu=0;count=0; }
             float elapsed=Time.realtimeSinceStartup-start;
-            if(scene!="LK_Lab_Environment" || elapsed<15 || elapsed>50) return;
+            if(scene=="LK_Lab_Environment" && elapsed>50){Destroy(gameObject);return;}
+            if(scene!="LK_Lab_Environment" || elapsed<15) return;
             foreach(var display in displays)
             {
                 if(!display.running || !display.TryGetAppGPUTimeLastFrame(out float seconds) || seconds<=0) continue;

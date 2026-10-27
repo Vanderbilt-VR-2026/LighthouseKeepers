@@ -24,11 +24,6 @@ namespace LighthouseKeepers.WatchDemo.Editor
             var t=new GameObject(name).AddComponent<TextMesh>();t.transform.SetParent(root?root:parent,false);t.transform.localPosition=position;
             t.text=value;t.fontSize=fontSize;t.characterSize=size;t.anchor=anchor;t.alignment=alignment;t.fontStyle=style;t.color=new Color(.90f,.90f,.84f);return t;
         }
-        static GameObject HudBar(Transform root,string name,Vector3 position,Vector3 size,Material material)
-        {
-            var bar=GameObject.CreatePrimitive(PrimitiveType.Cube);bar.name=name;UnityEngine.Object.DestroyImmediate(bar.GetComponent<Collider>());
-            bar.transform.SetParent(root,false);bar.transform.localPosition=position;bar.transform.localScale=size;bar.GetComponent<Renderer>().sharedMaterial=material;return bar;
-        }
         static void StairwellLiner(string id,float floorY,float innerRadius,float startAngle,float endAngle)
         {
             // A solid backing directly behind the inner rails prevents the exposed open shaft from showing ocean/sky through every flight.
@@ -77,9 +72,8 @@ namespace LighthouseKeepers.WatchDemo.Editor
             Part("Wrench table top",PrimitiveType.Cube,new Vector3(-2.15f,.82f,-8.20f),new Vector3(1.62f,.12f,.70f),wood);
             foreach(float x in new[]{-2.82f,-1.48f})foreach(float z in new[]{-8.46f,-7.94f})Part("Wrench table leg",PrimitiveType.Cube,new Vector3(x,.38f,z),new Vector3(.09f,.76f,.09f),wood);
             var tool=new GameObject("Grab wrench — grip to hold");tool.transform.SetParent(parent);tool.transform.position=new Vector3(-2.15f,.98f,-8.20f);
-            var visual=new GameObject("Wrench visual").transform;visual.SetParent(tool.transform,false);visual.localScale=Vector3.one*1.45f;var wrenchMetal=Mat("WrenchMetal",new Color(.50f,.54f,.52f));var saved=parent;parent=visual;
-            Part("Steel handle",PrimitiveType.Cube,Vector3.zero,new Vector3(.035f,.025f,.24f),wrenchMetal,false);
-            Part("Open jaw left",PrimitiveType.Cube,new Vector3(-.035f,0,.135f),new Vector3(.025f,.03f,.08f),wrenchMetal,false);Part("Open jaw right",PrimitiveType.Cube,new Vector3(.035f,0,.135f),new Vector3(.025f,.03f,.08f),wrenchMetal,false);Part("Jaw bridge",PrimitiveType.Cube,new Vector3(0,0,.105f),new Vector3(.095f,.03f,.025f),wrenchMetal,false);parent=saved;
+            var visual=new GameObject("Wrench visual").transform;visual.SetParent(tool.transform,false);Mat("WrenchMetal",new Color(.50f,.54f,.52f));
+            // WatchHouseAuthoring supplies the single generated steel mesh and fitted colliders.
             tool.AddComponent<BoxCollider>().size=new Vector3(.32f,.22f,.66f);var body=tool.AddComponent<Rigidbody>();body.mass=.45f;body.collisionDetectionMode=CollisionDetectionMode.ContinuousDynamic;
             var grab=tool.AddComponent<XRGrabInteractable>();var attach=new GameObject("Grip attachment").transform;attach.SetParent(tool.transform,false);grab.attachTransform=attach;grab.useDynamicAttach=false;grab.throwOnDetach=true;tool.AddComponent<WrenchHaptics>();tool.AddComponent<WatchWrenchHandPose>();Set(controller,"wrench",grab);Set(controller,"wrenchVisual",visual);
             var pipe=Part("Single service pipe",PrimitiveType.Cylinder,new Vector3(.8f,1.05f,.15f),new Vector3(.18f,1.15f,.18f),metal);pipe.transform.rotation=Quaternion.Euler(0,0,90);
@@ -98,16 +92,13 @@ namespace LighthouseKeepers.WatchDemo.Editor
             var oldHud=camera.transform.Find("Watch camera HUD");if(oldHud)UnityEngine.Object.DestroyImmediate(oldHud.gameObject);
             var oldOverlay=camera.transform.Find("Camera recording overlay");if(oldOverlay)UnityEngine.Object.DestroyImmediate(oldOverlay.gameObject);
             var hud=new GameObject("Watch camera HUD").transform;hud.SetParent(camera.transform,false);
-            var grain=GameObject.CreatePrimitive(PrimitiveType.Quad);grain.name="Subtle sensor grain";UnityEngine.Object.DestroyImmediate(grain.GetComponent<Collider>());grain.transform.SetParent(hud,false);grain.transform.localPosition=new Vector3(0,0,.58f);grain.transform.localScale=new Vector3(2,2,1);grain.GetComponent<Renderer>().sharedMaterial=AssetDatabase.LoadAssetAtPath<Material>("Assets/Art/Materials/Environment/M_CameraGrain.mat");
-            var hudLight=Mat("CameraHudLight",new Color(.87f,.87f,.82f));hudLight.shader=Shader.Find("Universal Render Pipeline/Unlit");var hudDark=Mat("CameraHudDark",new Color(.04f,.04f,.04f));hudDark.shader=Shader.Find("Universal Render Pipeline/Unlit");var hudRed=Mat("CameraHudRed",new Color(.78f,.05f,.05f));hudRed.shader=Shader.Find("Universal Render Pipeline/Unlit");
-            var rec=Text("REC status","● REC",new Vector3(-.32f,.108f,.54f),.0032f,hud,38,TextAnchor.MiddleLeft,TextAlignment.Left);rec.color=new Color(.86f,.08f,.07f);
-            Set(controller,"clock",Text("Elapsed watch time","00:00 / 07:00",new Vector3(-.075f,.108f,.54f),.00345f,hud,38,TextAnchor.MiddleLeft,TextAlignment.Left));
-            var exposure=Text("Exposure indicator","W   [====]   T",new Vector3(-.075f,.035f,.54f),.00175f,hud,30);exposure.color=new Color(.82f,.82f,.78f);
-            Text("Battery count","4 / 10",new Vector3(.205f,.108f,.54f),.0021f,hud,30,TextAnchor.MiddleLeft,TextAlignment.Left);
-            HudBar(hud,"Battery body",new Vector3(.362f,.108f,.54f),new Vector3(.092f,.044f,.006f),hudLight);HudBar(hud,"Battery interior",new Vector3(.362f,.108f,.535f),new Vector3(.078f,.030f,.008f),hudDark);HudBar(hud,"Battery charge",new Vector3(.350f,.108f,.531f),new Vector3(.048f,.018f,.010f),hudLight);HudBar(hud,"Battery cap",new Vector3(.417f,.108f,.54f),new Vector3(.011f,.020f,.006f),hudLight);
-            Set(controller,"dayTitle",Text("Day title","DAY 1",new Vector3(0,.028f,.82f),.0038f,hud,40));
+            Set(controller,"clock",Text("Watch readout","D1   07:00   0/1 TASKS",new Vector3(0,-.30f,.9f),.006f,hud,38,TextAnchor.MiddleCenter,TextAlignment.Center));
             var fade=GameObject.CreatePrimitive(PrimitiveType.Quad);fade.name="Sleep fade only";UnityEngine.Object.DestroyImmediate(fade.GetComponent<Collider>());fade.transform.SetParent(hud,false);fade.transform.localPosition=new Vector3(0,0,.4f);fade.transform.localScale=new Vector3(2,2,1);var fadeMat=AssetDatabase.LoadAssetAtPath<Material>(Root+"SleepFade.mat");if(!fadeMat){fadeMat=new Material(Shader.Find("LighthouseKeepers/Watch Fade"));AssetDatabase.CreateAsset(fadeMat,Root+"SleepFade.mat");}fadeMat.color=new Color(0,0,0,0);fade.GetComponent<Renderer>().sharedMaterial=fadeMat;Set(controller,"fade",fade.GetComponent<Renderer>());
             MakeWhoosh();foreach(var a in camera.GetComponents<AudioSource>())if(a.clip&&a.clip.name=="DayWhoosh")UnityEngine.Object.DestroyImmediate(a);var whoosh=camera.gameObject.AddComponent<AudioSource>();whoosh.clip=AssetDatabase.LoadAssetAtPath<AudioClip>(Root+"DayWhoosh.wav");whoosh.playOnAwake=false;whoosh.volume=.18f;Set(controller,"whoosh",whoosh);
+            WatchHouseAuthoring.MountBoard();
+            WatchHouseAuthoring.CleanHouse();
+            WatchHouseAuthoring.FitWrench();
+            WatchHouseAuthoring.CleanHud();
             EditorSceneManager.SaveScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene());AssetDatabase.SaveAssets();Debug.Log("WATCH_DEMO_AUTHORED");
         }
         public static void CapturePreview()

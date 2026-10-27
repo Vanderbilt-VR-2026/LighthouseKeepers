@@ -173,7 +173,7 @@ namespace LighthouseKeepers.Editor
             foreach (string path in AssetDatabase.FindAssets("t:VolumeProfile", new[] { "Assets" }).Select(AssetDatabase.GUIDToAssetPath))
             {
                 var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(path);
-                foreach (var v in profile.components.OfType<Vignette>().ToArray())
+                foreach (var v in profile.components.Where(c => c is Vignette || c is FilmGrain).ToArray())
                 { profile.components.Remove(v); Object.DestroyImmediate(v, true); EditorUtility.SetDirty(profile); }
             }
             AssetDatabase.SaveAssets();
@@ -188,8 +188,8 @@ namespace LighthouseKeepers.Editor
                 target = BuildTarget.Android, locationPathName = "Builds/LighthouseKeepers-M1.apk", options = BuildOptions.Development });
             File.WriteAllText(Output + "/build.txt", $"{report.summary.result}\nErrors={report.summary.totalErrors}\nWarnings={report.summary.totalWarnings}\nBytes={report.summary.totalSize}\nDuration={report.summary.totalTime}\n");
             foreach (var guid in AssetDatabase.FindAssets("t:VolumeProfile", new[] { "Assets" }))
-                if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(AssetDatabase.GUIDToAssetPath(guid)).components.Any(c=>c is Vignette))
-                    throw new BuildFailedException("A build callback reintroduced a Vignette override.");
+                if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(AssetDatabase.GUIDToAssetPath(guid)).components.Any(c=>c is Vignette || c is FilmGrain))
+                    throw new BuildFailedException("A build callback reintroduced a Vignette/FilmGrain override.");
             if (report.summary.result != BuildResult.Succeeded) throw new BuildFailedException("M1 Android build failed.");
         }
     }

@@ -68,10 +68,7 @@ namespace LighthouseKeepers.Editor.Environment
         static void Overlay(Camera camera)
         {
             var old=camera.transform.Find("Camera recording overlay");if(old)UnityEngine.Object.DestroyImmediate(old.gameObject);
-            var root=new GameObject("Camera recording overlay");root.transform.SetParent(camera.transform,false);
-            var quad=GameObject.CreatePrimitive(PrimitiveType.Quad);quad.name="Subtle sensor grain";UnityEngine.Object.DestroyImmediate(quad.GetComponent<Collider>());quad.transform.SetParent(root.transform,false);quad.transform.localPosition=new Vector3(0,0,.55f);quad.transform.localScale=new Vector3(2,2,1);
-            var renderer=quad.GetComponent<MeshRenderer>();renderer.sharedMaterial=Mat("M_CameraGrain","LighthouseKeepers/Environment/Camera Grain");renderer.shadowCastingMode=ShadowCastingMode.Off;renderer.receiveShadows=false;
-            // HUD text belongs to the Watch Demo camera overlay. This root owns only the neutral grain layer.
+            // The ship view has no decorative recording overlay. WatchDemo owns the timer/tasks.
         }
         static AudioSource Audio(Transform parent,string name,string clip,Vector3 position,bool loop,float volume)
         {

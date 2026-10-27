@@ -137,7 +137,7 @@ namespace LighthouseKeepers.Editor.Environment
             EnvironmentDeviceRepair.HideTorso(rig);
             var managerType=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("UnityEngine.XR.Interaction.Toolkit.XRInteractionManager")).FirstOrDefault(t=>t!=null);
             if(managerType!=null)new GameObject("Existing XRI interaction manager").AddComponent(managerType);
-            var reference=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/PF_Shell_ScaleReference.prefab"));reference.transform.position=new Vector3(-2.6f,0,-8.6f);
+            // Measurement props belong to ValidateScale, never the playable House.
             EditorSceneManager.SaveScene(scene,LabPath);
         }
         public static void ValidateScale()

@@ -54,6 +54,10 @@ namespace LighthouseKeepers.Editor
                 if (path != LighthouseNetworkLobby.ScenePath && !Object.FindFirstObjectByType<WatchDemoController>()) throw new InvalidOperationException("Restored WatchDemo missing.");
                 if(path != LighthouseNetworkLobby.ScenePath)
                 {
+                    LighthouseKeepers.WatchDemo.Editor.WatchHouseAuthoring.MountBoard();
+                    LighthouseKeepers.WatchDemo.Editor.WatchHouseAuthoring.CleanHouse();
+                    LighthouseKeepers.WatchDemo.Editor.WatchHouseAuthoring.FitWrench();
+                    LighthouseKeepers.WatchDemo.Editor.WatchHouseAuthoring.CleanHud();
                     var board=scene.GetRootGameObjects().SelectMany(r=>r.GetComponentsInChildren<TextMesh>(true)).Single(t=>t.name=="Watch checklist");
                     scene.GetRootGameObjects().SelectMany(r=>r.GetComponentsInChildren<TextMesh>(true)).Single(t=>t.name=="Repair feedback").characterSize=.012f;
                     board.color=new Color(.012f,.018f,.014f); // Dark ink remains legible against the lit board face.
