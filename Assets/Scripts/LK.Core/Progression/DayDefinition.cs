@@ -3,10 +3,19 @@ using UnityEngine;
 
 namespace LighthouseKeepers.Core.Progression
 {
+    [Serializable] public struct WatchTaskStep
+    {
+        public string stationId, taskText;
+        public WatchTaskStep(string station, string text) { stationId=station; taskText=text; }
+    }
     [CreateAssetMenu(menuName = "Lighthouse Keepers/Sprint 3/Day")]
     public sealed class DayDefinition : ScriptableObject
     {
         [Min(1)] public int day = 1;
+        [Header("One Lighthouse watch skeleton")]
+        [Min(30)] public float dayLengthSeconds = 420;
+        public WatchTaskStep[] tasks = Array.Empty<WatchTaskStep>();
+        public string[] startingFaults = Array.Empty<string>();
         [Range(1, 2)] public int requiredKeepers = 1;
         public string briefingHeading = "Day 1 — The leak";
         [TextArea] public string briefingText = "Find the wrench and repair the leaking pipe.";

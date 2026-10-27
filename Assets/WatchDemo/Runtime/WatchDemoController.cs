@@ -1,3 +1,4 @@
+using LighthouseKeepers.Core.Progression;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR;
@@ -14,7 +15,12 @@ namespace LighthouseKeepers.WatchDemo
         [SerializeField] TextMesh board,clock,bedPrompt,repairPrompt;
         [SerializeField] Renderer fade;
         [SerializeField] AudioSource whoosh,leakAudio;
-        WatchState state=new WatchState();
+        [SerializeField] WatchGenerator generator;
+        [SerializeField, Min(0)] float poweredLeakRiseMPerSecond=.0015f;
+        [SerializeField, Min(0)] float unpoweredLeakRiseMPerSecond=.0045f;
+        [SerializeField, Min(0)] float repairedDrainMPerSecond=.012f;
+        WatchState state;
+        readonly System.Text.StringBuilder boardText = new System.Text.StringBuilder(256);
         float repairProgress;
         int shownSecond=-1;
         bool sleeping,previousGrip,previousTrigger;
@@ -25,14 +31,24 @@ namespace LighthouseKeepers.WatchDemo
         public float RepairProgress=>repairProgress;
         void Start()
         {
+            state = new WatchState(Resources.Load<DayCatalog>("WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume());
+            state.Changed += RefreshBoard;
+            if (generator) generator.Bind(state);
             wrenchHaptics=wrench.GetComponent<WrenchHaptics>();originalWrenchRotation=wrenchVisual.localRotation;fadeMaterial=fade.material;fade.enabled=false;
             LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
             BeginWatch();
         }
         void BeginWatch()
         {
-            flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=.0015f;flood.SurgePerMetre=.1f;flood.ResumeFlood();
-            CancelRepair();leak.Play();if(leakAudio)leakAudio.Play();whoosh.Play();repairProgress=0;shownSecond=-1;RefreshBoard();
+            flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=state.Power==PowerState.On?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond;flood.SurgePerMetre=.1f;flood.ResumeFlood();
+            if(generator)generator.ResetInteraction();
+            CancelRepair();
+            if(!state.Repaired){leak.Play();if(leakAudio)leakAudio.Play();}
+            else {leak.Stop(true,ParticleSystemStopBehavior.StopEmitting);if(leakAudio)leakAudio.Stop();}
+            whoosh.Play();repairProgress=0;shownSecond=-1;RefreshBoard();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"WATCH_DAY day={state.Day} power={state.Power} tasks={state.Definition.tasks.Length} duration={state.Duration}");
+#endif
         }
         void Update()
         {
@@ -42,9 +58,9 @@ namespace LighthouseKeepers.WatchDemo
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
             bool grip=lg||rg,trigger=lt||rt;
             state.Tick(Time.deltaTime);
-            int second=(int)state.Elapsed;if(second!=shownSecond){shownSecond=second;int remaining=Mathf.Max(0,(int)WatchState.WatchSeconds-second);clock.text=$"D{state.Day}   {remaining/60:00}:{remaining%60:00}   {(state.Repaired?1:0)}/1 TASKS";}
+            int second=(int)state.Elapsed;if(second!=shownSecond){shownSecond=second;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=$"D{state.Day}   {remaining/60:00}:{remaining%60:00}   {state.CompletedTasks}/{state.Definition.tasks.Length} TASKS";}
             bool nearBed=Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)<1.8f;
-            bedPrompt.text=nearBed?(state.Repaired?"PRESS GRIP TO SLEEP":"Repair the leak before resting"):"";
+            bedPrompt.text=nearBed?(state.Complete?(state.HasNextDay?"PRESS GRIP TO SLEEP":"ALL WATCHES COMPLETE"):"Finish the board tasks before resting"):"";
             if(nearBed){var direction=bedPrompt.transform.position-head.position;direction.y=0;if(direction.sqrMagnitude>.01f)bedPrompt.transform.rotation=Quaternion.LookRotation(direction);}
             bool nearRepair=Vector3.Distance(wrench.transform.position,repairPoint.position)<.8f;
             // A nearby prompt is useful, but it must not float through the entire room.
@@ -57,7 +73,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(state.Failed)
             {
-                if(repairProgress>0)CancelRepair();flood.Paused=true;board.text="WATCH ENDED\n\n[ ] Fix the flood\n\nPress trigger to retry";
+                if(repairProgress>0)CancelRepair();flood.Paused=true;
                 if(trigger&&!previousTrigger){state.Retry();BeginWatch();}
             }
             else if(!state.Repaired)
@@ -74,8 +90,15 @@ namespace LighthouseKeepers.WatchDemo
             }
             else
             {
-                flood.Paused=true;flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*.012f));
                 if(nearBed&&grip&&!previousGrip)TrySleep();
+            }
+            // Original Day 1 net rise/drain remains unchanged. Outage disables pumping.
+            if(!state.Failed)
+            {
+                flood.Paused=state.Repaired;
+                flood.RiseSpeed=state.Power==PowerState.On?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond;
+                if(state.Repaired && state.Power==PowerState.On)
+                    flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
             previousGrip=grip;previousTrigger=trigger;
         }
@@ -86,11 +109,22 @@ namespace LighthouseKeepers.WatchDemo
         }
         public bool TrySleep()
         {
-            if(sleeping||!state.Repaired||Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)>=1.8f)return false;
+            if(sleeping||!state.Complete||!state.HasNextDay||Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)>=1.8f)return false;
             StartCoroutine(Sleep());return true;
         }
         void CancelRepair(){repairProgress=0;wrenchVisual.localRotation=originalWrenchRotation;}
-        void RefreshBoard(){shownSecond=-1;board.text="KEEPER WATCH — DAY "+state.Day+"\n\n"+(state.Repaired?"[X] FIX THE FLOOD\n\n[ ] GO TO BED\nTHIRD FLOOR":"[ ] FIX THE FLOOD\n\n1. TAKE WRENCH\n2. FIND LEAK\n3. REPAIR PIPE");}
+        void RefreshBoard()
+        {
+            shownSecond=-1; boardText.Clear();
+            boardText.Append("KEEPER WATCH — DAY ").Append(state.Day).Append("\n\n");
+            foreach(var task in state.Definition.tasks)
+                boardText.Append(state.IsDone(task.stationId)?"[X] ":"[ ] ").Append(task.taskText).Append('\n');
+            boardText.Append('\n');
+            if(state.Failed)boardText.Append("WATCH ENDED\nPress trigger to retry");
+            else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE");
+            else boardText.Append("PIPE: F1   GENERATOR: F2\nFinish tasks, then sleep in F3");
+            board.text=boardText.ToString();
+        }
         IEnumerator Sleep()
         {
             sleeping=true;bedPrompt.text="";
@@ -99,6 +133,6 @@ namespace LighthouseKeepers.WatchDemo
             for(float t=0;t<.8f;t+=Time.deltaTime){SetFade(1-t/.8f);yield return null;}SetFade(0);sleeping=false;
         }
         void SetFade(float value){fade.enabled=value>0;fadeMaterial.color=new Color(0,0,0,value);}
-        void OnDestroy(){if(fadeMaterial)Destroy(fadeMaterial);}
+        void OnDestroy(){if(state!=null)state.Changed-=RefreshBoard;if(fadeMaterial)Destroy(fadeMaterial);}
     }
 }

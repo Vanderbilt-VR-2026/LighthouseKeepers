@@ -1,17 +1,73 @@
+using LighthouseKeepers.Core.Progression;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace LighthouseKeepers.WatchDemo
 {
-    // Small local demonstration state; networking and the team's future director are not implied.
+    public enum PowerState { Off, On }
     public sealed class WatchState
     {
-        public const double WatchSeconds=420, RepairSeconds=3.5;
-        public int Day {get;private set;}=1;
-        public double Elapsed {get;private set;}
-        public bool Repaired {get;private set;}
-        public bool Failed=>Elapsed>=WatchSeconds&&!Repaired;
-        public void Tick(double seconds){if(seconds<0||double.IsNaN(seconds)||double.IsInfinity(seconds))throw new ArgumentOutOfRangeException(nameof(seconds));Elapsed=Math.Min(WatchSeconds,Elapsed+seconds);}
-        public bool CompleteRepair(){if(Failed)return false;Repaired=true;return true;}
-        public bool Sleep(){if(!Repaired)return false;Day++;Elapsed=0;Repaired=false;return true;}
-        public void Retry(){Elapsed=0;Repaired=false;}
+        public const string PipeStation = "STN_PIPE_LEAK", GeneratorStation = "STN_GENERATOR";
+        public const double RepairSeconds = 3.5;
+        public const int RequiredStarterPulls = 3;
+        readonly DayDefinition[] days;
+        readonly HashSet<string> faults = new HashSet<string>();
+        int index;
+        public event Action Changed;
+        public DayDefinition Definition => days[index];
+        public int Day => Definition.day;
+        public double Duration => Definition.dayLengthSeconds;
+        public double Elapsed { get; private set; }
+        public int StarterPulls { get; private set; }
+        public bool Repaired => !faults.Contains(PipeStation);
+        public PowerState Power { get; private set; }
+        public bool IsDone(string station) => !faults.Contains(station);
+        public int CompletedTasks { get { int n = 0; foreach (var task in Definition.tasks) if (IsDone(task.stationId)) n++; return n; } }
+        public bool Complete => CompletedTasks == Definition.tasks.Length;
+        public bool HasNextDay => index + 1 < days.Length;
+        public bool Failed => Elapsed >= Duration && !Complete;
+        public WatchState() : this(Resources.Load<DayCatalog>("WatchDays").days, 1) { }
+        public WatchState(DayDefinition[] definitions, int firstDay)
+        {
+            if (definitions == null || definitions.Length == 0) throw new ArgumentException("No authored watch days");
+            days = definitions;
+            index = Array.FindIndex(days, d => d.day == firstDay);
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(firstDay));
+            Reset();
+        }
+        public void Tick(double seconds)
+        {
+            if (seconds < 0 || double.IsNaN(seconds) || double.IsInfinity(seconds)) throw new ArgumentOutOfRangeException(nameof(seconds));
+            bool wasFailed = Failed;
+            Elapsed = Math.Min(Duration, Elapsed + seconds);
+            if (wasFailed != Failed) Changed?.Invoke();
+        }
+        public bool CompleteRepair()
+        {
+            if (Failed || Repaired) return false;
+            faults.Remove(PipeStation); Changed?.Invoke(); return true;
+        }
+        // Called once per full stroke by the constrained interaction, never per frame.
+        public bool StarterPulled()
+        {
+            if (Failed || Power == PowerState.On) return false;
+            StarterPulls++;
+            if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; }
+            Changed?.Invoke(); return true;
+        }
+        public bool Sleep()
+        {
+            if (!Complete || !HasNextDay) return false;
+            index++; Reset(); return true;
+        }
+        public void Retry() => Reset();
+        void Reset()
+        {
+            Elapsed = 0; StarterPulls = 0; faults.Clear();
+            foreach (var fault in Definition.startingFaults) faults.Add(fault);
+            Power = faults.Contains(GeneratorStation) ? PowerState.Off : PowerState.On;
+            Changed?.Invoke();
+        }
     }
 }

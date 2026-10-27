@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -18,6 +19,17 @@ namespace LighthouseKeepers.Gameplay.Interaction
         Vector3 restLocal, initialHand;
         float extension, initialExtension;
         bool attempted;
+        [SerializeField] bool foundationMode;
+        [SerializeField] Vector3 localPullDirection = Vector3.forward;
+        public event Action PullCompleted;
+        public bool PullEnabled { get; set; } = true;
+        public float PullTravelM => pullTravelM;
+        public void ConfigureFoundation(Transform grip)
+        {
+            foundationMode = true; pullTravelM = .30f;
+            starterGrip = grip; referenceFrame = grip.parent; restLocal = grip.localPosition;
+            GetComponent<PhysicalGrip>().Configure(grip, HandPose.WrapGrip);
+        }
         readonly GeneratorStartState readiness = new GeneratorStartState();
         AudioClip failedCrank, engineCatch;
         public int PrimerStrokes => readiness.PrimerStrokes;
@@ -34,26 +46,33 @@ namespace LighthouseKeepers.Gameplay.Interaction
         {
             interactable = GetComponent<XRSimpleInteractable>(); feedback = GetComponent<PhysicalGrip>();
             interactable.selectEntered.AddListener(Begin); interactable.selectExited.AddListener(End);
+            if (foundationMode && starterGrip) { referenceFrame = starterGrip.parent; restLocal = starterGrip.localPosition; }
             failedCrank = Resources.Load<AudioClip>("Hands/failed_crank"); engineCatch = Resources.Load<AudioClip>("Hands/engine_catch");
         }
         void Primed(int actor) => readiness.Prime();
         void Begin(SelectEnterEventArgs args)
-        { initialHand = args.interactorObject.transform.position; initialExtension = extension; attempted = false; }
-        void End(SelectExitEventArgs args) { attempted = false; }
+        { initialHand = args.interactorObject.transform.position; initialExtension = extension; attempted = foundationMode && extension >= .04f; }
+        void End(SelectExitEventArgs args) { /* A re-grab at full extension is not another pull. */ }
         void Update()
         {
             if (!starterGrip) return;
-            var up = referenceFrame ? referenceFrame.up : Vector3.up;
+            var up = foundationMode ? -(referenceFrame ? referenceFrame.TransformDirection(localPullDirection.normalized) : localPullDirection.normalized) : referenceFrame ? referenceFrame.up : Vector3.up;
             if (interactable.isSelected && interactable.interactorsSelecting.Count > 0)
             {
                 var interactor = interactable.interactorsSelecting[0];
                 extension = Mathf.Clamp(initialExtension + Vector3.Dot(initialHand - interactor.transform.position, up), 0, pullTravelM);
                 var hand = feedback.HoldingHand; if (hand) hand.SetConstrainedGrip(starterGrip);
-                if (!attempted && extension >= pullTravelM * .9f)
+                if (foundationMode && extension < .04f) attempted = false;
+                if (PullEnabled && !attempted && extension >= pullTravelM * (foundationMode ? .95f : .9f))
                 {
                     attempted = true;
                     int actor = hand ? hand.ActorId : 0;
-                    if (readiness.TryStart(choke && choke.ChokeClosed == requiredChokeClosed))
+                    if (foundationMode)
+                    {
+                        feedback.Play(failedCrank, .6f); if (hand) hand.Pulse(.4f, .08f);
+                        PullCompleted?.Invoke();
+                    }
+                    else if (readiness.TryStart(choke && choke.ChokeClosed == requiredChokeClosed))
                     {
                         feedback.Play(engineCatch); if (hand) hand.Pulse(.8f, .12f);
                         InteractionEvents.StartGenerator(actor);
@@ -65,12 +84,12 @@ namespace LighthouseKeepers.Gameplay.Interaction
                     }
                 }
             }
-            else extension = Mathf.MoveTowards(extension, 0, returnSpeedMPerSec * Time.deltaTime);
+            else { extension = Mathf.MoveTowards(extension, 0, returnSpeedMPerSec * Time.deltaTime); if (extension < .04f) attempted = false; }
             var rest = referenceFrame ? referenceFrame.TransformPoint(restLocal) : restLocal;
             starterGrip.position = rest - up * extension;
         }
         public void ResetInteraction()
-        { readiness.Reset(); extension = 0; attempted = false; if (primer) primer.ResetInteraction(); if (choke) choke.ResetInteraction(); }
+        { readiness.Reset(); extension = 0; initialExtension = 0; attempted = false; if (interactable && interactable.isSelected) initialHand = interactable.interactorsSelecting[0].transform.position; if (primer) primer.ResetInteraction(); if (choke) choke.ResetInteraction(); }
         void OnDisable() { if (feedback && feedback.HoldingHand) feedback.HoldingHand.ClearPose(); }
         void OnDestroy()
         {

@@ -13,29 +13,39 @@ MonoBehaviour:
   m_Name: Day03
   m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
   day: 3
+  dayLengthSeconds: 420
+  tasks:
+  - stationId: STN_GENERATOR
+    taskText: Restart the generator
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  startingFaults:
+  - STN_GENERATOR
+  - STN_PIPE_LEAK
   requiredKeepers: 2
-  briefingHeading: "Day 3 — Two keepers"
-  briefingText: "One keeper holds and corrects the isolation valve on F2. The other repairs the pipe on F1. Call out the safe pressure band."
+  briefingHeading: "Day 3 \u2014 Two keepers"
+  briefingText: One keeper holds and corrects the isolation valve on F2. The other
+    repairs the pipe on F1. Call out the safe pressure band.
   briefingVoice: {fileID: 0}
-  faultObjectivePrefix: ""
+  faultObjectivePrefix: 
   objectives:
-  - text: "Bring both keepers to the task"
+  - text: Bring both keepers to the task
     predicates: 0a000000
-    incidentId: ""
-  - text: "Take the wrench from the bench"
+    incidentId: 
+  - text: Take the wrench from the bench
     predicates: 00000000
-    incidentId: ""
-  - text: "Hold the F2 isolation valve while your partner repairs on F1"
+    incidentId: 
+  - text: Hold the F2 isolation valve while your partner repairs on F1
     predicates: 020000000b000000
-    incidentId: "rupture"
-  - text: "Clear the water"
+    incidentId: rupture
+  - text: Clear the water
     predicates: 03000000
-    incidentId: "rupture"
-  - text: "Go to bed"
+    incidentId: rupture
+  - text: Go to bed
     predicates: 04000000
-    incidentId: ""
+    incidentId: 
   incidents:
-  - id: "rupture"
+  - id: rupture
     atSeconds: 15
     kind: 0
   successCondition: 0

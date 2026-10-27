@@ -13,29 +13,36 @@ MonoBehaviour:
   m_Name: Day01
   m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
   day: 1
+  dayLengthSeconds: 420
+  tasks:
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  startingFaults:
+  - STN_PIPE_LEAK
   requiredKeepers: 1
-  briefingHeading: "Day 1 — The leak"
-  briefingText: "Take the wrench, find the pipe downstairs and stop the leak. Clear the water, then rest upstairs."
+  briefingHeading: "Day 1 \u2014 The leak"
+  briefingText: Take the wrench, find the pipe downstairs and stop the leak. Clear
+    the water, then rest upstairs.
   briefingVoice: {fileID: 0}
-  faultObjectivePrefix: ""
+  faultObjectivePrefix: 
   objectives:
-  - text: "Take the wrench from the bench"
+  - text: Take the wrench from the bench
     predicates: 00000000
-    incidentId: ""
-  - text: "Find the leaking pipe downstairs"
+    incidentId: 
+  - text: Find the leaking pipe downstairs
     predicates: 01000000
-    incidentId: ""
-  - text: "Repair the pipe with the wrench"
+    incidentId: 
+  - text: Repair the pipe with the wrench
     predicates: 02000000
-    incidentId: "leak"
-  - text: "Clear the water"
+    incidentId: leak
+  - text: Clear the water
     predicates: 03000000
-    incidentId: "leak"
-  - text: "Go to bed"
+    incidentId: leak
+  - text: Go to bed
     predicates: 04000000
-    incidentId: ""
+    incidentId: 
   incidents:
-  - id: "leak"
+  - id: leak
     atSeconds: 15
     kind: 0
   successCondition: 0

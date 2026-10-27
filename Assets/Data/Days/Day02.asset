@@ -13,35 +13,45 @@ MonoBehaviour:
   m_Name: Day02
   m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
   day: 2
+  dayLengthSeconds: 420
+  tasks:
+  - stationId: STN_GENERATOR
+    taskText: Restart the generator
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  startingFaults:
+  - STN_GENERATOR
+  - STN_PIPE_LEAK
   requiredKeepers: 1
-  briefingHeading: "Day 2 — The generator"
-  briefingText: "The pump is running. Check the building and listen for trouble. If power fails, restore the generator on the second floor."
+  briefingHeading: "Day 2 \u2014 The generator"
+  briefingText: The pump is running. Check the building and listen for trouble. If
+    power fails, restore the generator on the second floor.
   briefingVoice: {fileID: 0}
-  faultObjectivePrefix: "Restart the generator on the second floor."
+  faultObjectivePrefix: Restart the generator on the second floor.
   objectives:
-  - text: "Inspect the lighthouse while the pumps run"
+  - text: Inspect the lighthouse while the pumps run
     predicates: 05000000
-    incidentId: "generator-fault"
-  - text: "Check the fuel gauge"
+    incidentId: generator-fault
+  - text: Check the fuel gauge
     predicates: 06000000
-    incidentId: "generator-fault"
-  - text: "Prime the generator — three strokes"
+    incidentId: generator-fault
+  - text: "Prime the generator \u2014 three strokes"
     predicates: 07000000
-    incidentId: "generator-fault"
-  - text: "Set the choke to Closed"
+    incidentId: generator-fault
+  - text: Set the choke to Closed
     predicates: 08000000
-    incidentId: "generator-fault"
-  - text: "Pull the starter handle"
+    incidentId: generator-fault
+  - text: Pull the starter handle
     predicates: 09000000
-    incidentId: "generator-fault"
-  - text: "Clear the water"
+    incidentId: generator-fault
+  - text: Clear the water
     predicates: 0300000009000000
-    incidentId: "generator-fault"
-  - text: "Go to bed"
+    incidentId: generator-fault
+  - text: Go to bed
     predicates: 04000000
-    incidentId: ""
+    incidentId: 
   incidents:
-  - id: "generator-fault"
+  - id: generator-fault
     atSeconds: 45
     kind: 1
   successCondition: 0
