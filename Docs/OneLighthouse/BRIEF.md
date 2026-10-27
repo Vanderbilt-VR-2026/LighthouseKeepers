@@ -226,9 +226,27 @@ issues, wall transparency and wrench grip remain deferred in BACKLOG.md.
    lock/transmission and 3/3 board captures. Build Builds/LighthouseKeepers-M3.apk, install, push,
    report physical checks and STOP. Earlier hands/body milestone remains deferred.
 
-**M4 — Look.** Amber beacon with power, warm tungsten interior, fault-only emergency lighting, heavy
-rain/wind/sea/soft lightning, wet windows and outdoor-only lens droplets. Reuse parked ShipLensDroplets
-and presentation pieces deliberately. Target 72 fps on Quest 3; report measured device frame time.
+**M4 — Polish the three stations (lead headset revision).** M3 radio looked good and was fun,
+but confusing; emergency red was too saturated; pipe repair needs physical work. This replaces the
+old weather/lens look milestone for this turn. Hands, generator feel, bed, day task lists and shell stay.
+1. Central emergency presentation: warm dim base about 45%, gentle orange/red wash up to about 65%,
+   smooth two-second cycle; readable board/stairs. Quieter alarm fading to a low hum after ten seconds.
+2. Beacon light, emission and beam require power; spin-up on restore, power-down sound on outage.
+   Continuous BEACON DARK timeout is authored per day: D2 90 s, D3 75 s (D4 placeholder 75 s),
+   D1 disabled. House countdown, explicit loss reason, retry resets the same day.
+3. Three reachable F1 couplings in randomized order, one active glowing/spraying target. Wrench jaw
+   must be seated and wrist turned; A two quarter-turns, B three, C steady three seconds then one.
+   Ratchet return/regrip, discrete clicks/haptic ticks, partial setback on loss of contact, completed
+   bolts retained. Spray/inflow reduce in thirds. One ScriptableObject supplies all pipe tunables;
+   target first-time physical duration 40–60 s, subject to headset timing. Board shows bolts completed.
+   Optional pressure-surge gauge is deferred to keep this loss-pressure pass understandable.
+4. Remove auxiliary toggle row from radio; replace space with decorative instrument panel. Numbered
+   POWER/TUNE/CODE/TRANSMIT strip highlights current step, green completed, dim future. Only current
+   task controls glow; unrelated controls still click/move without penalty. Large solo call code,
+   short step instructions, retain held-mic transmission and separate CodeSource.
+5. Verify Day2/3 softer F1/F2/F4 lighting, powered/dark beacon, timeout/retry, three-bolt physical
+   repair, stepped inflow, guided radio and existing regressions. Inspect graphics captures; build
+   Builds/LighthouseKeepers-M4.apk, install USB, push team, report and STOP. No co-op or weather work.
 
 **M5 — Co-op.** Two players, replicated hands/body/watch, wrench ownership, shared board/water/day
 state and appropriate two-person gates. Document Editor-host + headset-client evidence separately from
