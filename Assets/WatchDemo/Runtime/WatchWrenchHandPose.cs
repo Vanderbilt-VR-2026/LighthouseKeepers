@@ -8,8 +8,9 @@ namespace LighthouseKeepers.WatchDemo
 {
     /// <summary>Presentation-only curl for the existing controller glove while it holds the demo wrench.</summary>
     [RequireComponent(typeof(XRGrabInteractable))]
-    public sealed class WatchWrenchHandPose : MonoBehaviour
+    public sealed class WatchWrenchHandPose : MonoBehaviour, LighthouseKeepers.Gameplay.Interaction.IHandPoseTarget
     {
+        public LighthouseKeepers.Gameplay.Interaction.HandPose RequiredPose => LighthouseKeepers.Gameplay.Interaction.HandPose.WrapGrip;
         XRGrabInteractable grab;
         readonly List<Transform> digits=new List<Transform>();
         readonly List<Quaternion> openPose=new List<Quaternion>();

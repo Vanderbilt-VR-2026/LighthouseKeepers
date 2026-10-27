@@ -26,8 +26,7 @@ namespace LighthouseKeepers.WatchDemo
         void Start()
         {
             wrenchHaptics=wrench.GetComponent<WrenchHaptics>();originalWrenchRotation=wrenchVisual.localRotation;fadeMaterial=fade.material;
-            foreach(var c in head.GetComponentsInParent<Transform>()[0].root.GetComponentsInChildren<MonoBehaviour>(true))
-                if(c&&c.GetType().Name=="TunnelingVignetteController")c.gameObject.SetActive(false);
+            LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
             BeginWatch();
         }
         void BeginWatch()

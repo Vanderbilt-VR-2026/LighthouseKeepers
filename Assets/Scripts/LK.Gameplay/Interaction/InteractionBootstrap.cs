@@ -55,6 +55,8 @@ namespace LighthouseKeepers.Gameplay.Interaction
             }
             foreach (var grab in FindObjectsByType<XRGrabInteractable>(FindObjectsSortMode.None))
             {
+                // A tool with authored pose/feedback owns its grip settings and repair lifecycle.
+                if (grab.GetComponent<IHandPoseTarget>() != null && !grab.GetComponent<PhysicalGrip>()) continue;
                 var feedback = grab.GetComponent<PhysicalGrip>();
                 if (!feedback) feedback = grab.gameObject.AddComponent<PhysicalGrip>();
                 feedback.Configure(grab.attachTransform ? grab.attachTransform : feedback.AttachTransform, HandPose.WrapGrip);
