@@ -2,7 +2,7 @@
 
 Unity **6000.3.23f1** · Meta Quest · OpenXR / XR Interaction Toolkit · ARM64 IL2CPP.
 
-This Sprint 3 candidate uses the teammate's **One Lighthouse Lab world**, based on `sprint3/one-lighthouse` at `d2e30665a44b29a4e3bf84a7bfb7b049f93317b4`, reconciled in [PR #65](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/65). Its current playable loop is **solo**: four authored days with pipe repair, generator restoration, radio broadcast and the F3 bed. **Co-op gameplay is disabled until the Lab's shared state is implemented.** Connecting two clients does not turn the local Lab simulation into a shared game.
+This Sprint 3 candidate uses the teammate's **One Lighthouse Lab world**, based on `sprint3/one-lighthouse` through `7182583294c1fcf0962e755099887890f3bb5d94`, plus the `sprint-3` documentation at `e90e303`, reconciled in [PR #65](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/65). Its current playable loop is **solo**: four authored days with pipe repair, generator restoration, radio broadcast and the F3 bed. **Co-op gameplay is disabled until the Lab's shared state is implemented.** Connecting two clients does not turn the local Lab simulation into a shared game.
 
 The earlier two-player, three-watch [Storm Watch](Docs/StormWatch.md) and local [First Watch](Docs/FirstWatch.md) remain historical implementations on disk, excluded from this candidate's ship scenes. Their tests/evidence do not validate this Lab candidate.
 
@@ -37,3 +37,40 @@ The actual APK scene list must be exactly **Network Lobby → Lab**. Builds reje
 Download only the exact candidate linked in the [Sprint 3 README](Docs/Sprints/Sprint3/README.md), verify its checksum, then use `adb install -r <downloaded-candidate.apk>` and `adb shell am start -n com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
 
 [Current verification and limits](Docs/Verification/Sprint3/README.md) distinguish compilation, Editor execution, transport, Android packaging and target-headset acceptance. Check immersive cold launch/restart, controller entry/menu, physical station use, sound and performance on the downloaded APK. Two-device co-op acceptance remains blocked by the unfinished shared Lab simulation.
+
+## Open a fresh checkout
+
+
+1. Clone the repository into a local folder outside cloud-sync directories:
+
+   ```sh
+   git clone --branch codex/sprint3-technical-fixes https://github.com/Vanderbilt-VR-2026/LighthouseKeepers.git
+   cd LighthouseKeepers
+   ```
+
+   During this reconciliation review, use `codex/sprint3-technical-fixes` (PR #65). The planned final `sprint3-final` release has not been published; do not confuse it with the candidate release below.
+2. In Unity Hub, install **Unity 6000.3.23f1**, including **Android Build Support**, **Android SDK & NDK Tools**, and **OpenJDK**. Do not upgrade the project to a different Editor version.
+3. Choose **Add project from disk** and select the repository root (the directory containing `Assets`, `Packages`, and `ProjectSettings`). Open with 6000.3.23f1. Let package resolution, asset import and C# compilation finish; internet is required for the first package download.
+4. Photon Fusion is already in `Assets/Photon`. The configured `Assets/Photon/Fusion/Resources/PhotonAppSettings.asset` and its `.meta`, plus `Packages/manifest.json` and `packages-lock.json`, are committed. Do not import another Fusion SDK or replace shared app settings. All package references use registry/built-in sources, not a developer's local path.
+5. Choose **Lighthouse Keepers → Play game**. It opens `Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity`. In the Game view, select **PLAY SOLO**; the destination is `Assets/Scenes/Lab/LK_Lab_Environment.unity`. The ship scene list contains these two scenes only.
+6. Click the Game view to use **WASD** movement and **Q/E** turning for desktop inspection. Desktop movement does not emulate tracked controller grabbing; play the APK on Quest for the station interactions. Development builds also expose **DEV: PLAY DAY 2 / DAY 3** shortcuts.
+7. For automated checks, open **Window → General → Test Runner**, then **Run All** in EditMode and PlayMode. Current results and test scope are in [reconciliation verification](Docs/Verification/Sprint3/README.md); the earlier unmodified-base failures are in [M7 verification](Docs/OneLighthouse/M7.md). A fresh clone/open of the exact merged release commit is a separate post-merge check; it is not inferred from this working checkout.
+
+
+## Quest setup and installation help
+
+Enable developer mode for the paired headset in the Meta Horizon app, connect a USB data cable, and accept USB debugging in the headset. Install the downloaded candidate with SideQuest or `adb install -r <downloaded-candidate.apk>`. Open **Library → Unknown Sources → Lighthouse Keepers**, then **PLAY SOLO**.
+
+
+- In the Meta Horizon phone app, select the paired Quest 3 and open **Headset Settings → Developer Mode**. If the option is missing, confirm that the signed-in account is verified and belongs to a developer team, then reconnect the paired headset. [Meta developer-mode setup](https://developers.meta.com/vr/documentation/native/android/mobile-device-setup/).
+- Keep the headset awake, reconnect a data-capable USB cable, and accept USB debugging. `adb devices` must show `device`; `unauthorized` means the headset prompt still needs approval.
+- On Windows, install the [Meta/Oculus ADB driver](https://developers.meta.com/horizon/downloads/package/oculus-adb-drivers/) if the device is not detected. On macOS/Linux, use the SDK's `platform-tools/adb`.
+- If Android reports `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, an older build has a different signing key. Uninstall **Lighthouse Keepers** from the headset, or run `adb uninstall com.lighthousekeepers.game`, then install again. Uninstalling clears this app's local data.
+- Confirm the download is the `.apk` asset, not GitHub's source ZIP, and compare its SHA-256 with the release notes. If installation succeeds but the app is not in the main grid, look under **Unknown Sources**.
+
+
+## Credits and retained scope
+
+Reused team work: **Eli Gripenstraw** (flood and lobby foundation), **Tapan Sidhwani** (interaction patterns including radio push-to-talk), **William / Will Qian (`canwer1`)** (Photon/Fusion foundation and Sprint 2 networking), and **Nirvaan Nagaldinne** (team integration and demo documentation). **Aneesh Vasamreddy** authored the shell/environment and integrated the one-lighthouse experience. Commit/PR references are recorded in the M7 report.
+
+The first three days contain the current authored tasks; Day 4 is an explicit placeholder repeat. The teammate's original shipping plan and failure inventory remain in [M7](Docs/OneLighthouse/M7.md) as historical evidence. PR #65 supersedes PR #66 for this integration; no final release tag or main merge is performed here.
