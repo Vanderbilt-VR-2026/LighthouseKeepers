@@ -27,7 +27,9 @@ namespace LighthouseKeepers.Gameplay.Interaction
         [SerializeField, Range(.06f, .09f)] float blendSeconds = .075f;
         [SerializeField] int actorId;
         [SerializeField, Tooltip("Fallback aim-to-grip pitch in degrees, used only without a tracked grip pose.")]
-        float fallbackGripPitch = -75f;
+        float fallbackGripPitch = -60f;
+        [SerializeField, Range(0,90), Tooltip("Mesh +Z finger axis to Touch Plus grip frame, in degrees. Combined with measured -60 degree grip/aim pitch, fingers slope 15 degrees down.")]
+        float meshToGripPitch = 75f;
         [SerializeField, Range(0,90), Tooltip("Mirrored visual palm roll about the grip axis; tracked controller and interactors are unchanged.")]
         float palmRoll = 65f;
         Transform trackingSpace;
@@ -100,13 +102,11 @@ namespace LighthouseKeepers.Gameplay.Interaction
             var device = InputDevices.GetDeviceAtXRNode(hand);
             device.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion grip);
             device.TryGetFeatureValue(CommonUsages.isTracked, out bool tracked);
-            Debug.Log($"HAND_DIAG {phase} {hand} device={device.name} tracked={tracked} grip={grip.eulerAngles} controllerLocal={transform.parent.localEulerAngles} gripCorrection={measuredGripCorrection.eulerAngles} measured={hasGripMeasurement} rootLocal={transform.localEulerAngles} visualLocal={(visual ? visual.localEulerAngles : Vector3.zero)} pipeline={GraphicsSettings.currentRenderPipeline} graphics={SystemInfo.graphicsDeviceType}");
+            Debug.Log($"HAND_DIAG {phase} {hand} device={device.name} tracked={tracked} grip={grip.eulerAngles} controllerLocal={transform.parent.localEulerAngles} gripCorrection={measuredGripCorrection.eulerAngles} measured={hasGripMeasurement} rootLocal={transform.localEulerAngles} visualLocal={(visual ? visual.localEulerAngles : Vector3.zero)} fingerInController={(visual ? visual.localRotation * Vector3.forward : Vector3.zero)} pipeline={GraphicsSettings.currentRenderPipeline} graphics={SystemInfo.graphicsDeviceType}");
             var skin = visual ? visual.GetComponent<SkinnedMeshRenderer>() : null;
             if (skin)
             {
-                LightProbes.GetInterpolatedProbe(skin.bounds.center,null,out SphericalHarmonicsL2 sh);
-                var values=new Color[1]; sh.Evaluate(new[]{Vector3.up},values);
-                Debug.Log($"HAND_LIGHT {phase} {hand} probeUsage={skin.lightProbeUsage} sceneProbeUp={values[0].ToString("F3")} center={skin.bounds.center}");
+                Debug.Log($"HAND_LIGHT {phase} {hand} probeUsage={skin.lightProbeUsage} center={skin.bounds.center}");
             }
             foreach (var r in transform.parent.GetComponentsInChildren<Renderer>(true))
                 foreach (var m in r.sharedMaterials)
@@ -191,7 +191,10 @@ namespace LighthouseKeepers.Gameplay.Interaction
                     measuredGripCorrection = Quaternion.Inverse(transform.rotation) * trackingSpace.rotation * gripRotation;
                 }
                 else measuredGripCorrection = Quaternion.Euler(fallbackGripPitch,0,0);
-                visual.localRotation = measuredGripCorrection * Quaternion.Euler(0,0,hand == XRNode.LeftHand ? palmRoll : -palmRoll);
+                // The baked fingers extend along +Z, not the grip frame's handle axis.
+                // Apply this pitch before mirrored palm roll so both finger axes slope down.
+                visual.localRotation = measuredGripCorrection * Quaternion.Euler(meshToGripPitch,0,0)
+                    * Quaternion.Euler(0,0,hand == XRNode.LeftHand ? palmRoll : -palmRoll);
                 // Rotate around the baked wrist, keeping it attached to the same tracking anchor.
                 Vector3 wrist = data.bones[0].position;
                 visual.localPosition = wrist - visual.localRotation * wrist;

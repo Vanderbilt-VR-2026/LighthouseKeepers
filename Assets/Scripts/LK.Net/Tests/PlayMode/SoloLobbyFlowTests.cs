@@ -89,7 +89,13 @@ namespace LighthouseKeepers.Net.Tests
                 Assert.AreEqual(UnityEngine.Rendering.LightProbeUsage.Off,skins[0].lightProbeUsage,"Overbright shell probes must not wash the runtime hand white.");
                 var visual=skins[0].transform;
                 float mirror=hand.Node==UnityEngine.XR.XRNode.LeftHand?1:-1;
-                Assert.Less(Quaternion.Angle(Quaternion.Euler(-75,0,0)*Quaternion.Euler(0,0,65*mirror),visual.localRotation),.1f,"Untracked desktop fallback preserves the Quest grip calibration.");
+                // Test actual authored finger bones, not the quaternion used by the implementation.
+                var joints=visual.GetComponentsInChildren<Transform>();
+                var middleBase=joints.Single(t=>t.name=="middle_0");
+                var middleTip=joints.Single(t=>t.name=="middle_4");
+                Vector3 fingers=hand.transform.InverseTransformDirection((middleTip.position-middleBase.position).normalized);
+                Assert.Greater(fingers.z,.9f,"Open fingers must extend forward from the controller.");
+                Assert.That(fingers.y,Is.InRange(-.4f,-.1f),"Open fingers slope slightly down, never straight up.");
                 Assert.Less(Quaternion.Angle(Quaternion.identity,hand.transform.localRotation),.01f,"Only visual rotates.");
                 Vector3 wrist=new Vector3(0,-.018f,-.035f);
                 Assert.Less(Vector3.Distance(visual.localPosition+visual.localRotation*wrist,wrist),.0001f,"Visual rotates about the original wrist.");
