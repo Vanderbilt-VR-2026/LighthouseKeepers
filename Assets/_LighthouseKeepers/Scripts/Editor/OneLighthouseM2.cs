@@ -35,6 +35,15 @@ namespace LighthouseKeepers.Editor
             var source=prefab.GetComponentsInChildren<Transform>(true).Single(t=>t.name=="STN_GENERATOR");
             Object.DestroyImmediate(old);
             var gen=Object.Instantiate(source.gameObject,parent);gen.name="STN_GENERATOR";gen.transform.SetPositionAndRotation(position,rotation);
+            // Keep the frozen service/legacy aliases when replacing the old empty station root.
+            var contract=JsonUtility.FromJson<StationBoxExporter.Contract>(File.ReadAllText("Assets/Data/Layout/lighthouse-layout.json"));
+            var station=contract.stations.Single(s=>s.id=="STN_GENERATOR");
+            foreach(var anchor in station.interactiveAnchors)Anchor(gen.transform,anchor.name,anchor.localPosition);
+            foreach(var alias in station.legacySockets)
+            {
+                var socket=Anchor(gen.transform,alias.socketName,alias.localPosition);
+                Anchor(socket,alias.anchorName,new float[]{0,0,0});
+            }
             foreach(var t in gen.GetComponentsInChildren<Transform>(true))GameObjectUtility.SetStaticEditorFlags(t.gameObject,0);
             // Noninteractive stubs retain their authored locations for future primer/choke work.
             foreach(string name in new[]{"GRIP_PrimerLever","GRIP_ChokeLever"})
@@ -72,6 +81,11 @@ namespace LighthouseKeepers.Editor
             Set(Object.FindFirstObjectByType<WatchDemoController>(),"generator",component);
             EditorSceneManager.SaveScene(scene);AssetDatabase.SaveAssets();OneLighthouseM1.ApplyShipBuildScenes();
             EditorSceneManager.OpenScene(LighthouseNetworkLobby.ScenePath);
+        }
+        static Transform Anchor(Transform parent,string name,float[] position)
+        {
+            var t=parent.Find(name);if(!t){t=new GameObject(name).transform;t.SetParent(parent,false);}
+            t.localPosition=new Vector3(position[0],position[1],position[2]);return t;
         }
         static Material LampMaterial()
         {
