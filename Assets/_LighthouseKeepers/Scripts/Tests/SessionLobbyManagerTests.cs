@@ -70,7 +70,7 @@ namespace LighthouseKeepers.Tests
         {
             manager.Host(); transport.CompleteConnection(true); manager.ToggleReady();
             int starts = 0; manager.OnGameStarting.AddListener(() => starts++);
-            Assert.IsTrue(manager.StartGame()); Assert.AreEqual("LK_Bootstrap", transport.StartedScene);
+            Assert.IsTrue(manager.StartGame()); Assert.AreEqual("LK_Lab_Environment", transport.StartedScene);
             Assert.IsTrue(manager.IsStarting); Assert.AreEqual(1, starts); Assert.IsFalse(manager.CanStart);
             transport.FailLaunch(); Assert.IsFalse(manager.IsStarting); Assert.IsTrue(manager.CanStart);
             Assert.AreEqual("Load failed.", manager.LastError);

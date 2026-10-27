@@ -1,7 +1,11 @@
 {
   "name": "LK.Editor",
   "rootNamespace": "LighthouseKeepers.Editor.Environment",
-  "references": [],
-  "includePlatforms": ["Editor"],
+  "references": [
+    "LK.Presentation"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
   "autoReferenced": true
 }

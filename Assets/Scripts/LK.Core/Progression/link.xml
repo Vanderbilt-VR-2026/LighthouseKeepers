@@ -1,0 +1,11 @@
+<linker>
+  <!-- B/A own assembly names; preserve the exact shared namespaces under conventional names. -->
+  <assembly fullname="LK.Core" ignoreIfMissing="1"><type fullname="LighthouseKeepers.Core.Simulation.*" preserve="all" /></assembly>
+  <assembly fullname="LK.Core.Simulation" ignoreIfMissing="1"><type fullname="LighthouseKeepers.Core.Simulation.*" preserve="all" /></assembly>
+  <assembly fullname="LK.Gameplay" ignoreIfMissing="1"><type fullname="LighthouseKeepers.Gameplay.Interaction.InteractionEvents" preserve="all" /></assembly>
+  <assembly fullname="LK.Gameplay.Interaction" ignoreIfMissing="1"><type fullname="LighthouseKeepers.Gameplay.Interaction.InteractionEvents" preserve="all" /></assembly>
+  <assembly fullname="Assembly-CSharp" ignoreIfMissing="1">
+    <type fullname="LighthouseKeepers.Core.Simulation.*" preserve="all" />
+    <type fullname="LighthouseKeepers.Gameplay.Interaction.InteractionEvents" preserve="all" />
+  </assembly>
+</linker>

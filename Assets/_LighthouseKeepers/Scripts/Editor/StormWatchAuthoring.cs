@@ -72,7 +72,7 @@ namespace LighthouseKeepers.Editor
         [MenuItem("Lighthouse Keepers/Storm Watch/Play two-player watch")]
         public static void Play() => LighthousePlayLaunch.PlayGame();
         [MenuItem("Lighthouse Keepers/Storm Watch/Build Quest APK")]
-        public static void BuildQuest()=>Build(BuildTarget.Android,"Builds/LighthouseKeepers-StormWatch.apk");
+        public static void BuildQuest() => QuestBuild.QuestApkPipeline.Build(QuestBuild.ShipSceneManifest.Scenes);
         [MenuItem("Lighthouse Keepers/Storm Watch/Build desktop companion")]
         public static void BuildDesktop()=>Build(BuildTarget.StandaloneOSX,"Builds/LighthouseKeepers-StormWatch.app");
         static void Build(BuildTarget target,string output)

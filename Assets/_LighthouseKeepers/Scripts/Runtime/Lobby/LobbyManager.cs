@@ -38,18 +38,22 @@ namespace LighthouseKeepers.Lobby
         public int MinPlayersToStart => config ? config.MinPlayersToStart : 1;
         public bool RequireAllReady => config == null || config.RequireAllReady;
         public string Title => config ? config.LobbyTitle : "Lighthouse Keepers";
-        public string StartSceneName => config ? config.StartSceneName : "LK_Bootstrap";
+        public string StartSceneName => config ? config.StartSceneName : ShipWorld.GameplaySceneName;
         public string LastError => !string.IsNullOrEmpty(lastError) ? lastError : Session?.LastError ?? "";
         public IReadOnlyList<LobbyPlayer> Players => transport != null ? transport.Players : System.Array.Empty<LobbyPlayer>();
+        string LaunchBlockReason => (transport as ILobbyLaunchPolicy)?.StartBlockReason(StartSceneName) ?? "";
         public bool CanStart => !IsStarting && !IsBusy && IsOnline && IsHost && Players.Count >= MinPlayersToStart &&
-            (!RequireAllReady || Players.All(p => p.IsReady));
+            (!RequireAllReady || Players.All(p => p.IsReady)) && string.IsNullOrEmpty(LaunchBlockReason);
         public string StartHint
         {
             get
             {
                 if (IsStarting) return "Entering the lighthouse...";
                 if (IsBusy) return "Connecting to the crew...";
-                if (!IsOnline) return "Open local practice or connect to a crew to begin.";
+                if (!IsOnline) return IsLocalPreview ? "Take your post to open local practice." :
+                    StartSceneName == ShipWorld.GameplaySceneName ? "Choose PLAY SOLO to begin offline, or host a crew for connection diagnostics." :
+                    "Host a crew, or join the same room as your partner.";
+                if (!string.IsNullOrEmpty(LaunchBlockReason)) return LaunchBlockReason;
                 if (!IsHost) return IsLocalPreview ? "Guest preview only. Leave and open practice to play." : "Your host will start when the crew is ready.";
                 if (Players.Count < MinPlayersToStart) return $"Waiting for {MinPlayersToStart - Players.Count} more keeper(s).";
                 if (RequireAllReady && Players.Any(p => !p.IsReady)) return "Every keeper must be ready before entering.";

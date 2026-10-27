@@ -3,7 +3,12 @@
   "references": [
     "LighthouseKeepers.Runtime",
     "LK.Lobby",
-    "LK.Networking"
+    "LK.Networking",
+    "Unity.XR.Interaction.Toolkit",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "LK.Gameplay.Interaction",
+    "Unity.XR.CoreUtils"
   ],
   "includePlatforms": [
     "Editor"

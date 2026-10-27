@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 589140496bdd54d4b92937b4e01c7ccf, type: 3}
+  m_Name: PipeRepair
+  m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.WatchDemo.PipeRepairProfile
+  quarterTurns: 020000000300000001000000
+  quarterTurnDegrees: 90
+  returnDegrees: 65
+  maximumDegreesPerSecond: 720
+  seatSeconds: 0.6
+  sealSeconds: 3
+  retainedPartialProgress: 0.65
+  jawContactRadius: 0.18
+  steadyDegreesPerSecond: 12
+  steadyMetresPerSecond: 0.06
+  sprayParticlesPerSecond: 75
+  tickAmplitude: 0.35
+  tickSeconds: 0.045

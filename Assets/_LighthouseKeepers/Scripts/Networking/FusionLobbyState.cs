@@ -7,6 +7,17 @@ using UnityEngine;
 
 namespace LighthouseKeepers.Networking
 {
+    /// <summary>The two-player watch ends on partner loss; the development environment supports a changing crew.</summary>
+    public static class CrewSessionPolicy
+    {
+        public const string SharedGameStatePending = "Co-op gameplay is unavailable until shared game state is implemented. Use PLAY SOLO or host alone to debug.";
+        public static string GameplayLaunchBlockReason(string sceneName, int keepers) =>
+            sceneName == ShipWorld.GameplaySceneName && keepers > 1 ? SharedGameStatePending : "";
+
+        // Historical environments retain their existing session/disconnect behavior.
+        public static bool RequiresWholeCrew(string sceneName) => false;
+    }
+
     // Lobby traffic is infrequent and has no simulation state. Reliable data keeps
     // this adapter independent of network prefabs and the game's additive scenes.
     [Serializable]

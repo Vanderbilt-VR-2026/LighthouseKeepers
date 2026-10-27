@@ -35,3 +35,96 @@
 - [VERIFIED] F4 stance35°/r1.95 and raised panels provide approximately0.516 m contact reach; this approved specific reach requirement supersedes the earlier0.80 m front-clearance rule for those panels only.
 - [VERIFIED] Preserve F3 ceiling throughY9.55; use a distinct0.60 m corbel band below galleryY9.90 rather than tapering through headroom.
 - [PROPOSED] Eli owns dry-versus-wet bilge operability and defeat-sustain allowance; publish geometric bounds4.10/4.35/4.45/10.90 m without changing simulation.
+
+
+### 2026-10-14 — Batch A isolated shell validation
+
+- [VERIFIED] Keep production loading/build settings and legacy content unchanged; use an explicit-scene Environment Lab APK for the greybox gate.
+- [VERIFIED] Convert Unity XYZ to Blender (-X,-Z,Y) before the approved FBX export; imported reference bounds prove scale and handedness.
+- [VERIFIED] F1 route approaches the main stair through its clear north side instead of crossing the railing; station coordinates remain frozen.
+- [BUILT-UNVERIFIED] Use smooth stair collision ramps and continuous safety barriers; render-only tread/rail proxies do not create hand-catching collision detail.
+- [BUILT-UNVERIFIED] Increase only F2/F3 emergency fixture intensity from 0.5 to 1.2 after fixed-reference floor samples failed; thresholds and exposure remain unchanged. Initial calibration was corrected to explicitly apply powered light probes before publication.
+- [BUILT-UNVERIFIED] Bake two complete combined-Lab presets including probe coefficients; production additive renderer/lightmap binding remains Nirvaan's separate adoption step.
+- [VERIFIED] Repeated unchanged-input generation preserves committed scene bytes via an output-verified build stamp; independent clean-room Unity local-file-ID determinism is not claimed.
+- [PROPOSED] Headset comfort, appearance, visibility culling and sustained 72 Hz require actual device/user acceptance; automated geometry and brightness tests do not establish them.
+
+- [BUILT-UNVERIFIED] Enable baked fixture shadows to prevent illumination passing through solid walls; no realtime shadow lights are added. Remove Unity-inferred FBX LOD groups before authoring the explicit island group to prevent duplicate renderer ownership.
+
+- [BUILT-UNVERIFIED] Extend luminance sampling beyond room grids to the passage, stair routes and full gallery ring. Add two attached battery-backed gallery fixtures so the outdoor exit remains readable in both lighting states.
+
+- [BUILT-UNVERIFIED] Replace disconnected closed floor wedges with one watertight slab per floor. Coincident internal wedge faces caused radial bake seams; the corrected topology preserves every opening and finished-floor height while removing 3,912 triangles.
+
+### Batch A bake comparison precision
+The two independent progressive light bakes meet all 1,990 floor brightness checks. Compare emergency-versus-powered brightness with 2% relative or 0.0001 absolute numerical tolerance (whichever is larger), because one gallery sample differs by 1.8% between independent bakes. This does not change either minimum brightness threshold or the fixed powered reference/exposure. Final emergency fixture intensity is 3.6 on F2 and 1.2 on F3; other floor mains are 4. Device acceptance remains pending.
+
+Lighting measurement cameras disable baked occlusion culling so the measured floor patch cannot become a zero-colour culling artifact after the visibility bake. Gameplay cameras retain occlusion culling. Prebuild validator errors use BuildFailedException so Unity cannot continue silently after an ordinary callback exception.
+
+### Quest ANR: explicit LZ4 player-content compression
+Android ANR traces show the scene preload thread waiting while reading OcclusionCullingData, the Unity main thread waiting on PersistentManager, and the async reader repeatedly inflating ZIP-backed AndroidSplitFile data. The custom Lab build omitted an explicit compression flag. Set BuildOptions.CompressWithLz4 in the environment-only builder to use chunked player data instead of ZIP-compressed split files. Retain occlusion and all geometry; no project settings or teammate systems change. This is a device-tested hypothesis until the replacement APK renders and responds. Unity API reference: https://docs.unity.com/en-us/engine/6000.3/script-reference/unityeditor/buildoptions/compresswithlz4 .
+
+### Quest collision and preview torso repair
+Quest logs rejected generated MeshColliders because nondefault cooking options require readable meshes. Enable Read/Write only for the seven owned SM_Shell models; the modest mesh CPU memory cost is preferable to missing collision. Preserve baked geometry/lightmaps and add a device import assertion. Hide BodyPresence child renderers on the isolated Lab instance only; do not edit the team player prefab. The Lab intentionally has no production lobby; Nirvaan retains that integration decision.
+
+### Authorized lobby-first environment preview
+Aneesh requested the original lobby followed by the new environment on 2026-10-15. Copy the existing authored lobby into LK_Lobby_Environment, preserve its behavior and UI, and supply a separate config targeting LK_Lab_Environment. Build these two scenes in that order without editing the shared production build list, original lobby, or bootstrap. The destination retains house spawn (0,0.04,-8.4).
+
+
+### 2026-10-15 — isolated seven-minute watch preview
+- User confirmed sleep advances immediately after repair; 420 seconds is the repair deadline, not a required wait. Days repeat one local task, using Eli’s unchanged height-based flood controller.
+- Keep the new loop in Assets/WatchDemo and the isolated lobby/environment preview; do not replace production loading or teammate simulation.
+- User requested all lighting at 50%. Preserve original presets and create Half variants from linear source EXRs with matching Unity lightmap import encoding. The Half preview uses explicit 0.06/0.02 floor/reference ratios instead of original 0.12/0.04; reference/exposure remain frozen. Original-target check had 78 emergency failures; headset readability is unverified.
+
+[SB] Use 1.20 s minimum manual-pump spacing with 0.200 m³ strokes — the supplied 0.55 s beats the leak; 1.20 s yields 92.59% of inflow and a 3.12× electric/manual ratio.
+[SB] Keep Unity asset/driver/debug adapters in a nested LK.Simulation.Unity assembly — the LK.Core.Simulation assembly must remain pure C# while providing a ScriptableObject and in-world panel within B's lane.
+[SB] Apply FIFO commands at the next 10 Hz tick and share cooldown across actors on the single pump — authoritative deterministic input has at most 100 ms latency and cannot multiply throughput by alternating actors.
+[SB] Require C's F1 origin and measured generator-plinth-top transform; disable power if geometry is missing — generator-root height or a guessed plinth offset is not published geometry.
+[SB] Start/reset dry with generator and electric pump off and 900 seconds of generator fuel; preserve water/power/fuel across BeginDay — D owns normal-power setup and watch timing while the core owns quantities.
+[SB] Use late-bound subscriptions to A's exact shared interaction events pending merge, with explicit IL2CPP preservation requested from A — B must compile on the base before the separately owned interaction assembly exists.
+[SB] At zero water, repair must succeed at zero rather than produce negative flow — negative dV/dt at the dry boundary contradicts the required volume floor; all positive-volume sweep states retain the negative-flow assertion.
+[SB] Keep the global networking tripwire strict and request legacy migration from E — sprint3/base already contains Fusion/Photon outside LK.Net, contrary to the task premise; no legacy exemption may hide leakage.
+[SB] Leave legacy flood/StormWatch writers and scenes untouched and request integration from C/D/E — their height clamps explain a plateau but their paths are outside B's exclusive write lane.
+[SB] Report device acceptance as PROPOSED and leave changes uncommitted in this worktree — sandbox restrictions deny Unity/ADB IPC and git metadata writes; managed compilation/tests cannot stand in for an APK or headset run.
+[SB] Publish sprint3/simulation using separate writable git metadata based on sprint3/base after the user's commit/push instruction — shared worktree metadata remains read-only, while temporary metadata can preserve the same base and source without changing the original checkout's HEAD.
+[SD] Use ScriptableObject day plans and an authority-only pure sequencing model, with cached reflection at the absent Sprint 3 API boundary — independent branches compile without redeclaring B or A's shared types.
+[SD] Request ForceGeneratorFault and ActivateDayLeak from B rather than extending the shared command enum in D's lane — timed incidents are impossible through the published commands alone.
+[SD] Let B consume pump/repair events and D issue validated StartGenerator once; require pre-repair partner authorization on Day 3 — prevents duplicate commands and post-hoc co-op gating.
+[SD] Keep the new day flow opt-in and preserve the existing Storm Watch entry — the Sprint 3 solo Day 1/2 and pressure-based Day 3 explicitly supersede that experience only when integrated.
+[SD] Retry resets the current physical day while preserving the unlocked-day checkpoint; development jumps never overwrite it — avoids inconsistent retained repair flags against a reset simulation.
+[SD] Read cached shared snapshot members at 10 Hz instead of generating generic OnTick delegates at runtime — the absent shared assembly prevents guaranteeing IL2CPP generic instantiations.
+[SD] Require scene dependencies on the new director and day catalog before packaging a progression APK — a legacy-scene binary cannot verify the new sequence.
+[SD] Leave radio narration clips unassigned pending recorded assets — local sandbox speech produced a zero-sample file, so adding it would misrepresent audible feedback.
+[SD] Preserve sprint3/progression commits in a temporary Git directory and handoff bundle — worktree metadata writes are sandbox-blocked and GitHub DNS is unavailable.
+[SA] Use direct bone rotations with four baked poses and a 75 ms blend, plus OpenXR 26-joint wrist/palm/finger hierarchy — empty-air grip/trigger animation must not depend on hover.
+[SA] Use CPU-authored continuous skinned glove payloads after Blender 4.5.9 crashes in Metal device initialization; retain Blender headless source — sandbox supplies no usable Metal device and no imported rig exists.
+[SA] Bind exact scene anchors at runtime and supply separate resource hand prefabs — preserve C's scene ownership and E's rig ownership while supporting the Sprint 2 rig.
+[SA] Read manualPumpMinStrokeSeconds directly from B's referenced FloodTuning via a cached startup read, with no fallback constant — concrete B asset type is absent from this worktree and timing must have one owner.
+[SA] Add primer-stroke, choke-state and failed-crank events; require three primer strokes and CLOSED choke for a valid starter pull, reset consumed strokes on success — D needs observable physical verbs and an audible recoverable failure.
+[SA] Preserve current scenes/legacy interactions and request their Sprint 3 replacement from C/D — changing those files would violate the exclusive ownership contract.
+[SA] No APK or headset acceptance is claimed; Unity compile/build attempts abort on UPM listen EPERM and branch creation is denied at the external Git index — provide runnable commands and narrower C# evidence without substituting it for device proof.
+[SC] Publish generator plinth top world Y=3.750 m (F2 3.300 + plinth 0.450) — frozen v1.0 contract, no inferred simulation changes.
+[SC] Keep new renderer, editor tools and build entry under Assets/Prefabs/Environment/Sprint3 — exclusive Session C lane excludes existing Scripts folders.
+[SC] Preserve frozen station transforms; add new Sprint 3 anchors without moving legacy anchors — newer F1 pump and house bench requirements extend v1.0.
+[SC] Use a symmetric -22.5 to +22.5 degree F1 lever sweep at radius 0.250 m — preserves the specified 45-degree arc; actual vertical hand travel is 0.191 m, since 0.35 m is geometrically incompatible.
+[SC] Add the F1 pump at (0.450,0,1.250), yaw 90, and bed at (0,6.600,0.100) — new anchors avoid changing frozen stations and are candidates pending Unity clearance validation.
+[SC] Keep the original powered calibration (0.0214306675 linear, exposure 1) for both new lighting states — no dark-state recalibration or Half-preview threshold.
+[SC] Limit ship tagging to the owned environment Lab; request player-prefab and production loading adoption from A/E — R1 excludes their assets and the production scripts.
+[SC] Treat structural wall/floor/roof joins as construction contacts in the intersection tool, but never exempt a furniture ancestor — curved wall AABBs require an actual bounds-box/mesh narrow-phase test.
+[SC] Keep all results PROPOSED: Unity Package Manager and adb local listeners are denied by the sandbox, and Git cannot write shared metadata — no compile, bake, APK, commit or device acceptance is claimed.
+[SC] Docs/INVENTORY.md and the initial Docs/Sprint3/Heights.md were absent at session start — use the frozen StationContract as source and publish the height handoff explicitly.
+[SC] Offset new board art -0.200m along its frozen anchor's local Z and centre the bench at (1.800,0,-5.750) — the existing house north wall's interior face is Z=-4.850, so the board sits flush and the bench is0.900m out.
+[SC] Use the south side of the new bench as the house operator position; preserve legacy WP-HOUSE-B metadata — the requested front-of-board bench necessarily occupies that older marker. D must use the new standing approach rather than treating the marker as an unobstructed stance.
+[SC] Shorten retained shaft liners to2.940m and remove the shipping Lab's scale-reference instance — original3.260m panels extended into the next slab and the measuring cube is inappropriate ship dressing.
+[SC] Require identical atlas indices/UV offsets across the two independent bakes — the existing single-boolean presentation component cannot safely remap statically batched UVs.
+[SE] Keep William's Photon Fusion Host/Client transport and merge 8c5d1e4 with its ancestry; add no NGO, Relay, Lobby, Authentication or voice package — the later Session E transport instruction supersedes the old transport note.
+[SE] Preserve both sides of the README-only E0 merge conflict — retain the base APK history and William's development multiplayer guide without rewriting either system.
+[SE] Use isolated Git metadata in ignored artifacts/networking.git for sprint3/networking — the sandbox denies writes to this linked worktree's shared Git directory; original commits remain merge parents.
+[SE] Extend the existing LK.Lobby interface through an LK.Net wrapper and keep William's source/test files intact after E0 — exclusive ownership prevents relocating legacy code in this session.
+[SE] Reconnect remembers code, name and host/client role for a fresh ready-up in the same room name — the inherited transport ends Storm Watch on partner loss and has no host migration or saved-run recovery.
+[SE] Display the required external-party voice notice — no Vivox package or dashboard-plan access is available, so in-game voice cannot be promised.
+[SE] Keep the typed simulation adapter behind LK_SPRINT3_SIMULATION until B's API/assembly is merged — inventing duplicate Core contracts or a second simulation would violate the shared seam.
+[SE] Use Fusion StateAuthority on the host and transfer InputAuthority for grab leases — transferring StateAuthority to a client would contradict host-authoritative simulation in Fusion Host mode.
+[SE] Carry the new compact 110-byte pose packet on the inherited runner's reliable-data facility, with stale-sequence rejection and 100 ms buffered interpolation — this avoids modifying the out-of-lane Fusion weaver config; 1% loss stalls remain a required live measurement.
+[SE] Add visual-only NetworkObject proxy roots with fallback oilskin torso/gloves and optional A-owned visual references — A's named hand prefabs are absent in this base, and the tracked XR Origin must remain local.
+[SE] Keep the Day 3 gate strict by default at its rules entry point; provide a separately named development entry with DebugSoloOverride default true — release preprocessing removes its setter and every bypass branch.
+[SE] Add an in-world keypad for the six-character code inside the existing board's Crew Options — Quest join must not depend on a desktop keyboard or unverified native keyboard behavior.
+[SE] Hand off the preserved networking branch as artifacts/sprint3-networking.bundle after the team push failed — GitHub DNS is unavailable in the sandbox; the bundle retains William's authored commits for a normal-terminal fetch/push.
