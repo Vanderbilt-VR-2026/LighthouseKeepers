@@ -10,7 +10,7 @@ Deadline is **Thursday evening in America/Chicago**; the exact course cutoff was
 | Exact Sprint 3 Quest APK + SHA-256 | **Not published/validated.** Existing main APK predates these fixes. |
 | Sprint 3 demonstration video | **Missing** — #62. |
 | Immersive Quest cold launch | **Blocked by reported 2D launch** — #60. |
-| Controller-only lobby entry | **Blocked by reported keyboard requirement** — #59. |
+| Controller-only lobby entry | **Candidate keypad implemented; device acceptance pending** — #59. |
 | Two independent clients complete a run | **Acceptance pending** — #5/#31. |
 | One-person review route | Unity rehearsal documented; any APK review option remains a deliverable in #63. |
 
@@ -29,6 +29,12 @@ No previous APK, Editor test pass or screenshot fills these missing acceptance r
 | P1 | [#31 Fresh-install playthrough](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/31), [#5](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/5), [#33](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/33), [#19](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/19) | Exact submitted artifact, two independent clients, shared progression/flood, recovery/retry, duration and observed issues recorded. |
 
 Full criteria live in the issues. Two-player Storm Watch rules remain the target; four-player expansion, a shell migration and unrelated art polish are not required simply to fix the review blockers.
+
+## Candidate build tools
+
+[Technical candidate Editor evidence](../../Verification/Sprint3/README.md) records the completed checks and their limits.
+
+[Repeatable Quest APK pipeline](../../Verification/StormWatch/QuestBuildPipeline.md) supplies configuration guards, fresh output/provenance and final binary verification. These are reviewable candidate changes, not completed release acceptance.
 
 ## Work order
 

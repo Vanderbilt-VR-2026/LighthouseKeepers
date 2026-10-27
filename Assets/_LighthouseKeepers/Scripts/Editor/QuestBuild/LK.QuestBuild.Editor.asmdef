@@ -1,0 +1,12 @@
+{
+  "name": "LK.QuestBuild.Editor",
+  "references": [
+    "Unity.XR.Management",
+    "Unity.XR.Management.Editor",
+    "Unity.XR.OpenXR",
+    "Unity.XR.OpenXR.Features.MetaQuestSupport"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}

@@ -49,7 +49,7 @@ namespace LighthouseKeepers.Lobby
             {
                 if (IsStarting) return "Entering the lighthouse...";
                 if (IsBusy) return "Connecting to the crew...";
-                if (!IsOnline) return "Open local practice or connect to a crew to begin.";
+                if (!IsOnline) return IsLocalPreview ? "Take your post to open local practice." : "Host a crew, or join the same room as your partner.";
                 if (!IsHost) return IsLocalPreview ? "Guest preview only. Leave and open practice to play." : "Your host will start when the crew is ready.";
                 if (Players.Count < MinPlayersToStart) return $"Waiting for {MinPlayersToStart - Players.Count} more keeper(s).";
                 if (RequireAllReady && Players.Any(p => !p.IsReady)) return "Every keeper must be ready before entering.";

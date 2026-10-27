@@ -14,7 +14,7 @@ APKs are downloaded from GitHub Releases; each sprint README links its available
 
 ## Current review blockers
 
-The reviewer reported that room-code text entry required a keyboard and that the supplied APK opened as a flat 2D app. These are open release blockers: [controller-only entry #59](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/59) and [immersive APK launch #60](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/60). Editor tests and Android packaging do not establish headset acceptance.
+The reviewer reported that room-code text entry required a keyboard and that the supplied APK opened as a flat 2D app. These are open release blockers: [controller-only entry #59](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/59) and [immersive APK launch #60](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/60). The candidate source adds a controller-operated room keypad and Quest packaging gates; the older published APK predates them. Editor tests and Android packaging do not establish headset acceptance.
 
 [Track Sprint 3](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/1) · [GitHub Project](https://github.com/orgs/Vanderbilt-VR-2026/projects/15) · [Exact issue acceptance criteria](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues?q=is%3Aissue+label%3Asprint%3A3)
 
@@ -22,17 +22,17 @@ The reviewer reported that room-code text entry required a keyboard and that the
 
 1. Open the repository root in **Unity 6000.3.23f1** and let packages/compilation finish.
 2. Choose **Lighthouse Keepers → Play game**. Entry: `Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity`.
-3. Use **two compatible clients** with internet access. The host opens **Crew options**, chooses a room name, then selects **Host crew**. The guest enters the **same room name** under **Crew options** and selects **Join crew**.
+3. Use **two compatible clients** with internet access. The host opens **Crew options**, chooses a room name, then selects **Host crew**. For controller-only entry in this source, both clients use the digits, **BACK** and **CLEAR** buttons under **Crew options** to choose the same numeric room code; the guest selects **Join crew**. Keeper names can stay at their defaults.
 4. Confirm that both keeper names appear. Each keeper selects **Signal ready**. The **host** selects **Begin watch** when both are ready.
 5. Both clients enter Storm Watch on the existing connection. Day 1 starts after both environments send gameplay input. Use **Return to lobby** on a floor board to leave.
 
-Read the [complete lobby button guide and troubleshooting](Docs/Sprints/LobbyGuide.md) before testing. Controller-only text entry is currently blocked by #59; these instructions describe the intended sequence, not a verified headset fix.
+Read the [complete lobby button guide and troubleshooting](Docs/Sprints/LobbyGuide.md) before testing. The older published build has the #59 keyboard-entry blocker. The keypad in this source still requires target-headset acceptance.
 
 **Reviewing alone:** in Unity, choose **Lighthouse Keepers → First Watch → Play plumbing escape** for the local rehearsal, or **Development → Play environment** for an environment preview. These are different experiences; the current production APK does not advertise a selectable solo mode. The [one-person review task #63](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/63) tracks that gap. A simulated guest does not validate multiplayer.
 
 ## Build and install
 
-Install Android Build Support, SDK/NDK Tools and OpenJDK for the matching Unity version. Use **Lighthouse Keepers → Storm Watch → Build Quest APK** for the main crew-lobby/game build. Output: `Builds/LighthouseKeepers-StormWatch.apk`. The historical Sprint 1 environment builder makes a different experience.
+Install Android Build Support, SDK/NDK Tools and OpenJDK for the matching Unity version. Use **Lighthouse Keepers → Storm Watch → Build Quest APK** for the main crew-lobby/game build. Output is a fresh source-stamped APK under `Builds/Sprint3-<commit8>-<UTC>/`. See the [repeatable build and final APK checks](Docs/Verification/StormWatch/QuestBuildPipeline.md). The historical Sprint 1 environment builder makes a different experience.
 
 For the [existing main-snapshot APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/main-quest-8c15fc6/LighthouseKeepers-Main-8c15fc6.apk), download and verify the [checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/main-quest-8c15fc6/LighthouseKeepers-Main-8c15fc6.apk.sha256), connect Quest with USB debugging authorized, then:
 
