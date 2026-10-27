@@ -99,7 +99,8 @@ the bindings.
   only when the head is outdoors.
 - **Loop:** FAULT → DIAGNOSE → REPAIR / RESTORE POWER → WATER FALLS + BEACON ON → NEXT WATCH.
   Power runs pump and beacon. Repairs reduce inflow. Manual pumping buys time.
-- **Days:** data-driven; M2 ships Day 1 and a combined Day 2, with Day 3 copying Day 2. More content later.
+- **Days:** data-driven; Day 1 pipe, Day 2 generator + pipe, Day 3 adds the radio broadcast.
+  Day 4 is an explicit placeholder copy of Day 3; additional content comes later.
 
 ---
 
