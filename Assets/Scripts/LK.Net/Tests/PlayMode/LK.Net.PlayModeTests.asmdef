@@ -1,7 +1,26 @@
 {
   "name": "LK.Net.PlayModeTests",
-  "references": ["LK.Net", "LighthouseKeepers.Runtime", "LK.Networking", "LK.Lobby", "Fusion.Unity", "Unity.XR.Interaction.Toolkit", "Unity.TextMeshPro"],
+  "references": [
+    "LK.Net",
+    "LighthouseKeepers.Runtime",
+    "LK.Networking",
+    "LK.Lobby",
+    "Fusion.Unity",
+    "Unity.XR.Interaction.Toolkit",
+    "Unity.TextMeshPro",
+    "LK.Gameplay.Interaction",
+    "Unity.XR.CoreUtils"
+  ],
   "overrideReferences": true,
-  "precompiledReferences": ["nunit.framework.dll", "Fusion.Runtime.dll", "Fusion.Common.dll", "Fusion.Sockets.dll", "Fusion.Log.dll", "Fusion.Realtime.dll"],
-  "optionalUnityReferences": ["TestAssemblies"]
+  "precompiledReferences": [
+    "nunit.framework.dll",
+    "Fusion.Runtime.dll",
+    "Fusion.Common.dll",
+    "Fusion.Sockets.dll",
+    "Fusion.Log.dll",
+    "Fusion.Realtime.dll"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
 }

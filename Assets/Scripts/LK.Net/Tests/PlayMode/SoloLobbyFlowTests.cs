@@ -1,6 +1,10 @@
 #if UNITY_EDITOR
 using System.Collections;
 using LighthouseKeepers.StormWatch;
+using LighthouseKeepers.Core;
+using LighthouseKeepers.Gameplay.Interaction;
+using Unity.XR.CoreUtils;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Comfort;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -13,7 +17,19 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class SoloLobbyFlowTests
     {
-        [UnityTest] public IEnumerator SoloButtonLoadsPlayableWatchWithoutHostingAndReturnsToLobby()
+        [UnityTearDown] public IEnumerator Cleanup()
+        {
+            var sessions = Object.FindObjectsByType<LighthouseKeepers.Networking.FusionLobbyTransport>(FindObjectsSortMode.None);
+            foreach (var session in sessions) session.LeaveGame();
+            float deadline = Time.realtimeSinceStartup + 30;
+            foreach (var session in sessions)
+            {
+                while (session && session.IsBusy && Time.realtimeSinceStartup < deadline) yield return null;
+                if (session) Object.Destroy(session.gameObject);
+            }
+            yield return null;
+        }
+        [UnityTest] public IEnumerator SoloButtonLoadsBootstrapWithoutHostingAndReturnsToLobby()
             => VerifySoloFlow(false);
         [UnityTest] public IEnumerator SoloButtonClosesAnExistingRunnerBeforeOpeningPractice()
             => VerifySoloFlow(true);
@@ -44,26 +60,39 @@ namespace LighthouseKeepers.Net.Tests
             Assert.IsNotNull(GameObject.Find("WatchBoardCanvas").transform.Find("CrewOptionsPanel/PlaySoloOptions"));
             button.onClick.Invoke();
             float deadline = Time.realtimeSinceStartup + 90;
-            StormWatchDirector director;
-            do { yield return null; director = Object.FindAnyObjectByType<StormWatchDirector>(); }
-            while ((!director || !director.Ready) && Time.realtimeSinceStartup < deadline);
-            Assert.IsNotNull(director); Assert.IsTrue(director.Ready);
-            Assert.IsTrue(director.SoloPractice); Assert.IsTrue(director.CrewReady);
+            EnvironmentBootstrap bootstrap;
+            do { yield return null; bootstrap = Object.FindAnyObjectByType<EnvironmentBootstrap>(); }
+            while ((!bootstrap || !bootstrap.Ready) && Time.realtimeSinceStartup < deadline);
+            Assert.IsNotNull(bootstrap); Assert.IsTrue(bootstrap.Ready);
+            Assert.IsTrue(SceneManager.GetSceneByName("LK_Bootstrap").isLoaded);
+            Assert.IsFalse(SceneManager.GetSceneByName("LK_StormWatch").isLoaded);
+            Assert.AreEqual(7, SceneManager.sceneCount);
+            yield return new WaitForSeconds(1.2f);
             Assert.AreEqual(0, Object.FindObjectsByType<NetworkRunner>(FindObjectsSortMode.None).Length);
-            yield return new WaitForSeconds(.2f);
-            Assert.AreEqual(WatchAct.FirstWatch, director.State.act);
-            Assert.Greater(director.State.elapsed, 0);
-            Assert.IsFalse(GameObject.Find("Route 3 / mechanical stair gate"));
-            GameObject.Find("SOLO DAY 2").GetComponent<Button>().onClick.Invoke();
-            Assert.IsFalse(director.State.power);
-            GameObject.Find("SOLO RELAY").GetComponent<Button>().onClick.Invoke();
-            yield return new WaitForSeconds(.15f);
-            Assert.AreEqual(WatchAct.RadioRelay, director.State.act);
-            var call = GameObject.Find("CALL SUN").GetComponent<RectTransform>();
-            var selector = call.parent.Find("SOLO RELAY").GetComponent<RectTransform>();
-            Assert.Greater(call.rect.min.y + call.anchoredPosition.y,
-                selector.rect.max.y + selector.anchoredPosition.y, "Radio call and solo selector must not overlap.");
-            director.Leave();
+            Assert.AreEqual(1, Object.FindObjectsByType<XROrigin>(FindObjectsSortMode.None).Length);
+            var hands = Object.FindObjectsByType<HandRig>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            Assert.AreEqual(2, hands.Length);
+            Assert.AreNotEqual(hands[0].Node, hands[1].Node);
+            // Tracking-loss/recovery must not let legacy cleanup hide the new skin.
+            var rig = Object.FindAnyObjectByType<XROrigin>();
+            foreach (var modality in rig.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Inputs.XRInputModalityManager>(true)) modality.enabled = false;
+            foreach (var hand in hands) hand.transform.parent.gameObject.SetActive(true);
+            yield return null;
+            foreach (var hand in hands) hand.transform.parent.gameObject.SetActive(false);
+            yield return new WaitForSeconds(1.2f); // Allow the actual periodic legacy cleanup to run.
+            foreach (var hand in hands) hand.transform.parent.gameObject.SetActive(true);
+            yield return null;
+            foreach (var hand in hands)
+            {
+                var skins = hand.GetComponentsInChildren<SkinnedMeshRenderer>();
+                Assert.AreEqual(1, skins.Length);
+                Assert.IsTrue(skins[0].enabled, "Tracking recovery must preserve the Sprint 3 skin.");
+            }
+            Assert.AreEqual(0, Object.FindObjectsByType<TunnelingVignetteController>(FindObjectsSortMode.None).Length);
+            Assert.IsNull(Object.FindAnyObjectByType<StormWatchBoard>());
+            Assert.IsFalse(GameObject.Find("SOLO DAY 2"));
+            Assert.IsFalse(SoloWatchSession.ConsumeRequest(), "Bootstrap must consume the one-shot launch request.");
+            yield return SceneManager.LoadSceneAsync("LK_NetworkLobby");
             deadline = Time.realtimeSinceStartup + 15;
             while (!GameObject.Find("PlaySolo") && Time.realtimeSinceStartup < deadline) yield return null;
             Assert.IsNotNull(GameObject.Find("PlaySolo"));

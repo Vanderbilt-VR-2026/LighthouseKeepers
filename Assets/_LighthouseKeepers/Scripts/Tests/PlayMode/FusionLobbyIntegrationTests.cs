@@ -66,8 +66,8 @@ namespace LighthouseKeepers.Tests
         [UnityTest] public IEnumerator OfflineFusionSessionLoadsBootstrapAndSurvivesBoardUnload()
         {
             yield return SceneManager.LoadSceneAsync("LK_NetworkLobby");
-            var transport = Object.FindAnyObjectByType<FusionLobbyTransport>(); sessions.Add(transport);
             var manager = Object.FindAnyObjectByType<LobbyManager>();
+            var transport = ((Component)manager.Transport).GetComponent<FusionLobbyTransport>(); sessions.Add(transport);
             Assert.AreEqual(ShipWorld.GameplaySceneName, manager.StartSceneName);
             bool accepted = (bool)typeof(FusionLobbyTransport).GetMethod("BeginConnection", PrivateInstance)
                 .Invoke(transport, new object[] { GameMode.Single, "offline-integration", 2 });
