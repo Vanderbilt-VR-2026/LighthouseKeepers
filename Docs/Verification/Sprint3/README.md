@@ -12,7 +12,20 @@ Base: `sprint3/one-lighthouse` at `d2e30665a44b29a4e3bf84a7bfb7b049f93317b4`; in
 
 ## Coordinated results
 
-The integrated source's full Edit Mode, relevant Play Mode, rendered UI, Python verifier and fresh APK results will be recorded here after execution. Earlier teammate M4 records in Docs/OneLighthouse/M4.md describe their own source and are not substituted for this run.
+| Check | Actual result |
+| --- | --- |
+| Full EditMode | **200/200 passed**, no skips; [sanitized report](EditMode.xml). Runtime source `df66a6f`. |
+| Relevant Lab/lobby PlayMode, headless | **23 passed, 0 failed, 2 graphics-only skips**; [sanitized report](LabPlayMode.xml). Source `d6b6e87` adds only teammate shipping docs to the tested runtime. |
+| Graphics-enabled crew keypad + Watch Menu | **7/7 passed**, no skips; [sanitized report](TrackedUI.xml). Covers the two headless skips plus five overlapping regression cases. |
+| Distinct selected PlayMode cases across both runs | **25/25 passed**. Includes two opt-in real-Photon diagnostics using peers in one Editor; no shared Lab gameplay claim. |
+| APK verifier regression tests | **4/4 passed** (`python3 -m unittest discover -s Tools/tests -p 'test_verify_quest_apk.py'`). |
+| Fresh Android player | Build and actual-binary results will be linked below after the clean-source build. |
+
+The PlayMode selection covers `LighthouseKeepers.Net.Tests`, `LighthouseKeepers.Presentation.Environment.Tests`, `LighthouseKeepers.Tests.LobbyControllerEntryTests` and `LighthouseKeepers.Tests.FusionLobbyIntegrationTests`. Cloud diagnostics ran with `LK_FUSION_CLOUD_TESTS=1 LK_RUN_ONLINE_TESTS=1`. The graphics run selects `CrewLobbyBoardTests` and `WatchMenuFlowTests` without `-nographics`. All runs use Unity 6000.3.23f1, the installed `unity test` CLI, the explicit worktree path and `-job-worker-count 2`.
+
+This is not a claim that every historical PlayMode fixture passes under the two-scene ship manifest. The teammate's unmodified-base full-suite failure inventory remains in [M7](../../OneLighthouse/M7.md); Bootstrap/First Watch/Storm Watch fixtures need their own historical scene manifests. Earlier M4 results describe their own source and are not substituted for this run.
+
+Unity repeatedly upgrades the water-surge material on import. The candidate records that canonical Unity/URP serialization (asset version/locking metadata, unchanged shader/property values) so importing a clean build checkout does not dirty it before provenance is recorded. No rig, hand anchor or station artwork was reauthored.
 
 No target-headset acceptance is claimed from compilation, Editor execution, packaging, installation or a running process. A real video, immersive cold launch/restart, controller reach/readability, physical station use, sound mix and device performance remain separate checks. Co-op acceptance cannot pass while shared Lab state is unfinished.
 

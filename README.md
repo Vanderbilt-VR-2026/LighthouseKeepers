@@ -2,7 +2,7 @@
 
 Unity **6000.3.23f1** · Meta Quest · OpenXR / XR Interaction Toolkit · ARM64 IL2CPP.
 
-This Sprint 3 candidate uses the teammate's **One Lighthouse Lab world**, based on `sprint3/one-lighthouse` through `7182583294c1fcf0962e755099887890f3bb5d94`, plus the `sprint-3` documentation at `e90e303`, reconciled in [PR #65](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/65). Its current playable loop is **solo**: four authored days with pipe repair, generator restoration, radio broadcast and the F3 bed. **Co-op gameplay is disabled until the Lab's shared state is implemented.** Connecting two clients does not turn the local Lab simulation into a shared game.
+This Sprint 3 candidate uses the teammate's **One Lighthouse Lab world**, based on `sprint3/one-lighthouse` through `7182583294c1fcf0962e755099887890f3bb5d94`, plus the `sprint-3` documentation at `e90e303`, reconciled in [PR #65](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/65). Its current playable loop is **solo**: three content days plus a Day 4 placeholder with pipe repair, generator restoration, radio broadcast and the F3 bed. **Co-op gameplay is disabled until the Lab's shared state is implemented.** Connecting two clients does not turn the local Lab simulation into a shared game.
 
 The earlier two-player, three-watch [Storm Watch](Docs/StormWatch.md) and local [First Watch](Docs/FirstWatch.md) remain historical implementations on disk, excluded from this candidate's ship scenes. Their tests/evidence do not validate this Lab candidate.
 
