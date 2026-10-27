@@ -50,7 +50,7 @@ namespace LighthouseKeepers.Net
                     if (field.placeholder is TMP_Text hint) hint.text = "6-character join code";
                 }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            var debugFace = Rect("DebugSoloGates", root, new Vector2(0, -325), new Vector2(850, 45));
+            var debugFace = Rect("DebugSoloGates", root, new Vector2(0, -450), new Vector2(850, 45));
             var debugImage = debugFace.gameObject.AddComponent<Image>(); debugImage.color = new Color(.12f, .20f, .20f);
             var debugButton = debugFace.gameObject.AddComponent<Button>(); debugButton.targetGraphic = debugImage;
             var debugLabel = Label(debugFace, "Label", Vector2.zero, debugFace.sizeDelta, 22);

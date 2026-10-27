@@ -73,7 +73,7 @@ namespace LighthouseKeepers.Gameplay.Interaction
             if (!gloveMaterial)
             {
                 ownedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                ownedMaterial.SetColor("_BaseColor", new Color(.28f, .36f, .32f));
+                ownedMaterial.SetColor("_BaseColor", new Color(.62f, .52f, .43f));
                 ownedMaterial.SetFloat("_Smoothness", .22f); gloveMaterial = ownedMaterial;
             }
             skin.sharedMaterial = gloveMaterial;

@@ -40,13 +40,17 @@ namespace LighthouseKeepers.Gameplay.Interaction
                 foreach (var t in origin.GetComponentsInChildren<Transform>(true))
                 {
                     if (t.name != "Left Controller" && t.name != "Right Controller") continue;
+                    foreach (var renderer in t.GetComponentsInChildren<Renderer>(true))
+                        if (!(renderer is LineRenderer) && !renderer.GetComponentInParent<HandRig>(true)) renderer.enabled = false;
+                    foreach (var oldDirect in t.GetComponentsInChildren<XRDirectInteractor>(true))
+                        if (!oldDirect.GetComponentInParent<HandRig>(true)) oldDirect.enabled = false;
                     if (t.GetComponentInChildren<HandRig>(true)) continue;
                     var prefab = Resources.Load<GameObject>(t.name.StartsWith("Left") ? "Hands/PF_Hand_L" : "Hands/PF_Hand_R");
                     if (!prefab) { Debug.LogError("Missing Session A hand prefab.", t); continue; }
                     var old = t.Find("LK Stylized Glove"); if (old) old.gameObject.SetActive(false);
                     Instantiate(prefab, t, false);
                     foreach (var oldDirect in t.GetComponentsInChildren<XRDirectInteractor>(true))
-                        if (!oldDirect.GetComponentInParent<HandRig>()) oldDirect.enabled = false;
+                        if (!oldDirect.GetComponentInParent<HandRig>(true)) oldDirect.enabled = false;
                 }
             }
             foreach (var grab in FindObjectsByType<XRGrabInteractable>(FindObjectsSortMode.None))
