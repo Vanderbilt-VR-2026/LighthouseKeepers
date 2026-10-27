@@ -57,3 +57,21 @@ The new legacy bearing wheel shared space with Storm Watch's centre beacon contr
 The combined affected suite was rerun after this correction: **20 passed, 0 failed, 1 graphics-only skip covered by the rendered fixture**. Its Storm Watch scene test queries the actual centre control with a Default-layer physics overlap, asserts that no other active interactable competes there and confirms the production control remains physically selectable. The legacy-only scene test separately confirms its dial remains active.
 
 An initial APK build was stopped during native compilation to apply this correction. It produced no deliverable or passing packaging result. Only the subsequent source-recorded, fully verified APK is eligible for publication.
+
+## Published APK evidence
+
+[Candidate release](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint3-tech-candidate-20261027) · [APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-tech-candidate-20261027/LighthouseKeepers-Sprint3-e88f4e1c-20261027T202736Z.apk) · [Build record](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-tech-candidate-20261027/LighthouseKeepers-Sprint3-e88f4e1c-20261027T202736Z.build.json) · [Binary verification](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-tech-candidate-20261027/LighthouseKeepers-Sprint3-e88f4e1c-20261027T202736Z.verification.json) · [Checksums](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-tech-candidate-20261027/SHA256SUMS).
+
+Built from clean source `e88f4e1c99cee75588758196fa149a199bcd1559` with Unity 6000.3.23f1: **Succeeded, 0 errors, 4 warnings**, nine production scenes, ARM64 IL2CPP Development APK, **90,254,809 bytes**. SHA-256: `c74e0542be57e0a1a65f0571144ecdf7fd3bd2cd8b933f43580724edd5aadecf`. The CLI exited successfully and the checkout remained clean after normal build postprocessing. These linked JSON records contain build/packaging evidence; raw Editor logs are not published.
+
+The final APK passes actual binary-manifest checks for the VR launcher category, required version-1 head tracking, configured supported Quest devices, focus awareness and Internet permission; ARM64 OpenXR/IL2CPP libraries, every ZIP entry CRC and Android signature also pass. No connected Android device was available (`adb devices`: zero), so launch, usability and two-device acceptance remain unperformed.
+
+For comparison, the older published main APK (`8c15fc6`, SHA-256 `34545ffc679372a81df0976980d922c14adcde6e956c9b22d7070e8f314bfc80`) lacks the VR launcher category, head-tracking requirement, supported-devices and focus-aware metadata in its actual binary manifest. The new verifier rejects it. This establishes a published packaging defect; the reviewer's exact installed hash and headset reproduction are unavailable, so it does not establish a reproduced root cause or completed headset fix.
+
+Build command used (absolute checkout path supplied):
+
+```sh
+LK_PYTHON=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 unity --non-interactive run /absolute/path/to/LighthouseKeepers --editor-path /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app --timeout 3600 -- -buildTarget Android -nographics -job-worker-count 2 -executeMethod LighthouseKeepers.Editor.StormWatchAuthoring.BuildQuest -logFile /tmp/lk3-apk-final.log
+```
+
+Choose your installed Python/Editor paths. Do not publish raw Unity command-line logs; remove authentication/session values before sharing diagnostics. The [pipeline guide](../StormWatch/QuestBuildPipeline.md) explains standalone binary verification and source-record binding.
