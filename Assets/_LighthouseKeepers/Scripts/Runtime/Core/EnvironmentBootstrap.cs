@@ -13,6 +13,7 @@ public sealed class EnvironmentBootstrap : MonoBehaviour {
  XROrigin rig;CharacterController character;Vector3 spawn;
  readonly List<(Behaviour component,bool enabled)> movement=new();
  void Awake(){
+  LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
   rig=FindAnyObjectByType<XROrigin>();if(!rig)return;spawn=rig.transform.position;character=rig.GetComponent<CharacterController>();
   foreach(var component in rig.GetComponentsInChildren<Behaviour>(true))if(component is LocomotionProvider||component is DesktopPreview||component is PlayerComfort){movement.Add((component,component.enabled));component.enabled=false;}
   if(character)character.enabled=false;

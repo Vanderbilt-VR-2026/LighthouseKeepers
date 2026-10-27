@@ -2074,6 +2074,7 @@ MonoBehaviour:
   isBrace: 1
   wheel: {fileID: 0}
   indicator: {fileID: 1081455371}
+  handReach: 0.65
 --- !u!4 &619150020
 Transform:
   m_ObjectHideFlags: 0
@@ -2576,6 +2577,7 @@ MonoBehaviour:
   isBrace: 0
   wheel: {fileID: 2127633928}
   indicator: {fileID: 1546368270}
+  handReach: 0.65
 --- !u!114 &737876032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4108,6 +4110,7 @@ MonoBehaviour:
   isBrace: 0
   wheel: {fileID: 1856309089}
   indicator: {fileID: 415668786}
+  handReach: 0.65
 --- !u!114 &1453308476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6097,6 +6100,7 @@ MonoBehaviour:
   isBrace: 0
   wheel: {fileID: 1966251008}
   indicator: {fileID: 1146087888}
+  handReach: 0.65
 --- !u!114 &2048987490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6225,9 +6229,19 @@ MonoBehaviour:
   station: {fileID: 93028596}
   brace: {fileID: 619150019}
   feedbackClip: {fileID: 8300000, guid: 16fba6d30ed741d4a9fdd6e79ee2f3ac, type: 3}
+  degreesPerValve: 270
+  airSeconds: 6
+  recoverySeconds: 12
+  clampSeconds: 20
+  wrongValveCooldownSeconds: 1.5
+  wrongValveWaterRise: 0.08
   repairRiseSpeed: 0.018
   escapeRiseSpeed: 0.003
   repairWaterDrop: 0.65
+  startingWaterHeight: 0.1
+  stationReach: 2.3
+  landingFootHeight: {x: 3.05, y: 3.65}
+  landingRadius: 4.8
 --- !u!114 &2060760624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6728,9 +6742,6 @@ PrefabInstance:
       addedObject: {fileID: 6939470141378917677}
     - targetCorrespondingSourceObject: {fileID: 5727679800196825509, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6939470141378917678}
-    - targetCorrespondingSourceObject: {fileID: 5727679800196825509, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 6939470141378917679}
   m_SourcePrefab: {fileID: 100100000, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
 --- !u!1 &6939470141378917674 stripped
@@ -6738,17 +6749,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3597702245593015878, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
   m_PrefabInstance: {fileID: 6939470141378917673}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6939470141378917675 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9092482814206691764, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
-  m_PrefabInstance: {fileID: 6939470141378917673}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c500f2a52a5eb4a952658e1bf51e88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6939470141378917676 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5727679800196825509, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
@@ -6766,19 +6766,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa826a1c77ce4b6fae88a6bdb79485b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Player.RecenterPlayer
---- !u!114 &6939470141378917678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6939470141378917676}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 689ec084302954630a39b3f7ff33ce23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Player.HeadBoundaryComfort
-  vignette: {fileID: 6939470141378917675}
 --- !u!114 &6939470141378917679
 MonoBehaviour:
   m_ObjectHideFlags: 0

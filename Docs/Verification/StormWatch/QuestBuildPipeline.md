@@ -1,6 +1,6 @@
 # Repeatable Sprint 3 Quest APK build
 
-This pipeline builds a fresh Storm Watch player from the current checkout. It does not establish headset launch, controller usability, two-device networking, or comfort acceptance. Record those separately in the Sprint 3 submission evidence.
+This pipeline builds the current ship player from the current checkout: the Network Lobby followed by the existing Lab world. It does not establish headset launch, controller usability, two-device networking, or comfort acceptance. Record those separately in the Sprint 3 submission evidence.
 
 ## Prerequisites
 
@@ -19,13 +19,22 @@ Finish and review changes before building. Close other Editors using this checko
   -logFile /tmp/LighthouseKeepers-Sprint3-build.log
 ```
 
-The same entry is available under **Lighthouse Keepers → Storm Watch → Build Quest APK** after switching the active platform to Android. It supplies the lobby first, Storm Watch second, and required additive environment scenes explicitly. The local First Watch rehearsal is not the submission entry.
+After switching the active platform to Android, these entry points all use the same validated pipeline and two-scene manifest:
 
-The command creates a Development APK using the project's configured signing settings.
+- **Lighthouse Keepers → Storm Watch → Build Quest APK** (`StormWatchAuthoring.BuildQuest`). The menu name is retained for compatibility; it builds the current ship world.
+- **Lighthouse Keepers → Sprint 3 → Networking → Build Quest APK** (`MultiplayerBuild.BuildQuest`).
+- **Lighthouse Keepers → Sprint 3 → Networking → Build release Quest APK** (`MultiplayerBuild.BuildReleaseQuest`).
+- `LighthouseKeepers.Editor.OneLighthouseM4.Build`.
+
+Every ship APK must contain exactly `Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity` first and `Assets/Scenes/Lab/LK_Lab_Environment.unity` second. The same existing Lab world is used by both launch modes. Both committed scene files must exist; building does not author or copy a replacement world. `ShipWorld` holds the central scene paths and `ShipSceneManifest` validates the actual `BuildPlayerOptions.scenes`, including custom Android build callers. Correct global Build Settings cannot hide a lobby-only options array, an omitted Lab, a wrong entry, extra scenes or reversed order.
+
+Networking prefab validation is read-only during builds. Use the separate **Bake network prefabs** authoring menu if baking is needed, then review and commit those changes before building.
+
+The default entry points create a Development APK; the Networking release menu omits the Development flag. Both modes retain clean build caching and identical verification, using the project's configured signing settings.
 
 Each invocation defaults to a new `Builds/Sprint3-<commit8>-<UTC>/LighthouseKeepers-Sprint3-<commit8>-<UTC>.apk`. Set `LK_APK_OUTPUT` to choose a different **fresh** `.apk` path. Existing output is rejected, so a failed build cannot accidentally hand off an old binary. Clean build cache is requested. A zero-error successful BuildReport and an actual output file are required.
 
-The sibling `.build.json` records the commit, dirty checkout status, exact scene list, Unity/player versions and timestamps. A dirty checkout is explicitly recorded; a commit in a filename alone is not proof that the binary contains only that commit. Preserve this evidence with the APK.
+The sibling `.build.json` records the commit, dirty checkout status, exact scene list, Unity/player versions, actual build options and timestamps. A dirty checkout is explicitly recorded; a commit in a filename alone is not proof that the binary contains only that commit. Preserve this evidence with the APK.
 
 ## Packaging gate
 
@@ -51,6 +60,6 @@ The verifier defaults to package `com.lighthousekeepers.game`; pass `--package` 
 
 ## Regression and device acceptance
 
-Run `python3 -m unittest discover -s Tools/tests -v`. Unity Edit Mode tests in `LK.QuestBuild.Tests` cover missing VR marker repair, idempotency, both supported activity classes, unrelated activity isolation and invalid launchers. These are packaging regressions, not device acceptance.
+Run `python3 -m unittest discover -s Tools/tests -v`. Unity Edit Mode tests in `LK.QuestBuild.Tests` cover missing VR marker repair, idempotency, both supported activity classes, unrelated activity isolation and invalid launchers. Scene-manifest tests cover correct paths/order, omitted Lab despite correct global settings, wrong entry/world, extra/duplicate scenes and empty input. These are packaging regressions, not device acceptance.
 
 Then install the freshly verified APK on the target Quest and confirm it opens as immersive VR. Complete controller-only crew entry, host/join, both players Signal Ready, Begin Watch, disconnect/retry and a two-device watch. Record headset/OS, APK SHA, exact steps/results and remaining failures. Capture a video demonstrating this same APK's changes. Link the APK, video, start sequence and acceptance results from the Sprint 3 README before marking submission complete.

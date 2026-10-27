@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b81574ef45454cb42e9138d88f4e6b, type: 3}
+  m_Name: Day02
+  m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
+  day: 2
+  dayLengthSeconds: 420
+  beaconDarkLimitSeconds: 90
+  tasks:
+  - stationId: STN_GENERATOR
+    taskText: Restart the generator
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  startingFaults:
+  - STN_GENERATOR
+  - STN_PIPE_LEAK
+  requiredKeepers: 1
+  briefingHeading: "Day 2 \u2014 The generator"
+  briefingText: The pump is running. Check the building and listen for trouble. If
+    power fails, restore the generator on the second floor.
+  briefingVoice: {fileID: 0}
+  faultObjectivePrefix: Restart the generator on the second floor.
+  objectives:
+  - text: Inspect the lighthouse while the pumps run
+    predicates: 05000000
+    incidentId: generator-fault
+  - text: Check the fuel gauge
+    predicates: 06000000
+    incidentId: generator-fault
+  - text: "Prime the generator \u2014 three strokes"
+    predicates: 07000000
+    incidentId: generator-fault
+  - text: Set the choke to Closed
+    predicates: 08000000
+    incidentId: generator-fault
+  - text: Pull the starter handle
+    predicates: 09000000
+    incidentId: generator-fault
+  - text: Clear the water
+    predicates: 0300000009000000
+    incidentId: generator-fault
+  - text: Go to bed
+    predicates: 04000000
+    incidentId: 
+  incidents:
+  - id: generator-fault
+    atSeconds: 45
+    kind: 1
+  successCondition: 0
+  failCondition: 0
+  requiresPartnerIsolation: 0
+  primerStrokes: 3
+  crankCooldownSeconds: 2
+  chokeReleaseSeconds: 10
+  isolationFreshnessSeconds: 0.3
+  initialFuelFraction: 0.25

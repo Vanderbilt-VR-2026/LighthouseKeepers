@@ -43,7 +43,7 @@ namespace LighthouseKeepers.StormWatch
                 $"BEACON SWITCHES {s.beaconSteps}/3 • NEXT {s.beaconProgress*100:0}%\nListen for the radio keeper's symbol.\nGrip and twist the matching switch. Both climb to finish.";
             if(floor>0&&!refuge&&!showResult)body.text+="\n"+s.message;
             Show(begin,s.Terminal&&floor==0&&!director.SessionEnded);begin.interactable=director.CrewReady;
-            begin.GetComponentInChildren<TMP_Text>().text="RESTART TOGETHER";
+            begin.GetComponentInChildren<TMP_Text>().text=director.SoloPractice?"RESTART SOLO":"RESTART TOGETHER";
             Show(repair,refuge&&!s.supplyChosen);Show(rescue,refuge&&!s.supplyChosen);Show(proceed,refuge&&s.supplyChosen);Show(leave,true);
             for(int i=0;i<3;i++)Show(calls[i],floor==3&&s.act==WatchAct.RadioRelay);
         }

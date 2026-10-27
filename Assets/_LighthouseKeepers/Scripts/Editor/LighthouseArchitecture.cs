@@ -40,7 +40,7 @@ public static class LighthouseArchitecture {
   var probes=new GameObject("Interior light probes").AddComponent<LightProbeGroup>();var positions=new System.Collections.Generic.List<Vector3>();for(int l=0;l<4;l++)for(int a=0;a<8;a++)positions.Add(Polar(3.65f,a*45,l*3.2f+1.3f));probes.probePositions=positions.ToArray();
  }
  static void Wall(string name,float angle,float y,float width,float height){var go=Box(name,Polar(5,angle,y),new Vector3(.4f,height,width),"Masonry");go.transform.rotation=Quaternion.Euler(0,-angle,0);}
- public static void Lamp(Vector3 p){var go=Box("Caged tungsten service lamp",p,new Vector3(.18f,.28f,.15f),"Lamp",null,false);var light=go.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(1,.65f,.31f);light.range=3.7f;light.intensity=1.8f;light.shadows=LightShadows.None;light.lightmapBakeType=LightmapBakeType.Mixed;}
+ public static void Lamp(Vector3 p){var go=new GameObject("Caged tungsten service lamp");go.transform.position=p;var light=go.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(1,.65f,.31f);light.range=3.7f;light.intensity=1.8f;light.shadows=LightShadows.None;light.lightmapBakeType=LightmapBakeType.Mixed;}
  static void House(){
   Box("Keeper house floor",new Vector3(-8,-.12f,0),new Vector3(6,.24f,5),"Wood");
   Box("House end wall",new Vector3(-11,1.5f,0),new Vector3(.3f,3,5),"Masonry");

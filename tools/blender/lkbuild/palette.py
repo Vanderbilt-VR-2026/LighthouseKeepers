@@ -1,0 +1,1 @@
+COLORS = {'Stone':'6B6054','Plaster':'B5A48C','Trim':'8A7F6E','Timber':'4A3B2C','Metal':'5A6066','Valve':'B22A20','Generator':'C8961E','Bilge':'2C5F7A','Door':'3E5C43','Glass':'506777','Brass':'9B7A39','Slate':'35404A','Rock':'27313B','Lamp':'FFB85C','Emergency':'9FC4D6'}

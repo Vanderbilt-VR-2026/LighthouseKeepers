@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b81574ef45454cb42e9138d88f4e6b, type: 3}
+  m_Name: Day04
+  m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
+  day: 4
+  dayLengthSeconds: 420
+  beaconDarkLimitSeconds: 75
+  tasks:
+  - stationId: STN_GENERATOR
+    taskText: Restart the generator
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  - stationId: STN_RADIO_CONSOLE
+    taskText: Broadcast the storm warning.
+  startingFaults:
+  - STN_GENERATOR
+  - STN_PIPE_LEAK
+  - STN_RADIO_CONSOLE
+  requiredKeepers: 2
+  briefingHeading: "Day 3 \u2014 Two keepers"
+  briefingText: One keeper holds and corrects the isolation valve on F2. The other
+    repairs the pipe on F1. Call out the safe pressure band.
+  briefingVoice: {fileID: 0}
+  faultObjectivePrefix: 
+  objectives:
+  - text: Bring both keepers to the task
+    predicates: 0a000000
+    incidentId: 
+  - text: Take the wrench from the bench
+    predicates: 00000000
+    incidentId: 
+  - text: Hold the F2 isolation valve while your partner repairs on F1
+    predicates: 020000000b000000
+    incidentId: rupture
+  - text: Clear the water
+    predicates: 03000000
+    incidentId: rupture
+  - text: Go to bed
+    predicates: 04000000
+    incidentId: 
+  incidents:
+  - id: rupture
+    atSeconds: 15
+    kind: 0
+  successCondition: 0
+  failCondition: 0
+  requiresPartnerIsolation: 1
+  primerStrokes: 3
+  crankCooldownSeconds: 2
+  chokeReleaseSeconds: 10
+  isolationFreshnessSeconds: 0.3
+  initialFuelFraction: 0.25

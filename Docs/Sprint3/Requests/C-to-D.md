@@ -1,0 +1,7 @@
+# C to D — board and lighting handoff
+
+C authors `BriefingBoardView` under Assets/Prefabs/Environment/Sprint3/Runtime. Bind STN_BRIEFING_BOARD, call SetLines(string heading, IReadOnlyList<(string, bool)> rows). Five rows maximum; keep each row short enough for fixed 45 mm cap height. D owns the IDayDirector adapter; C never reads or mutates progression. Drive the sole lighting boolean `BeaconAndMainsLightingGroup.Powered`; no independent simulation authority. Existing legacy WatchDemo board TextMesh cannot consume this API; replace its presentation binding in your owned adapter when integrating.
+
+The board station root stays frozen at (1.800,0,-5.050), yaw180. Fixture/text offset is -0.200m localZ to reach the real wall. Bench centre is (1.800,0,-5.750), surfaceY0.900; approach from the south (suggested standing/view point (1.800,0,-6.650)). This requested bench occupies the older WP-HOUSE-B marker. The marker is preserved; do not use it as a spawn or unoccupied stance. The old WatchDemo TextMesh remains valid but hidden; its gameplay controller has no adapter to the new view.
+
+Reference assembly LK.Environment.Sprint3 and namespace LighthouseKeepers.Environment.Sprint3 for BriefingBoardView. The only power presentation boolean remains LighthouseKeepers.Presentation.Environment.BeaconAndMainsLightingGroup.Powered. New powered/fault preset assets are generated only by the required independent bakes; the current sandbox could not produce them.

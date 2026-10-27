@@ -15,18 +15,19 @@ namespace LighthouseKeepers.Editor.QuestBuild
         [Serializable]
         sealed class Evidence
         {
-            public string apk, sourceCommit, sourceStatus, unityVersion, playerVersion, startedUtc, finishedUtc, result;
+            public string apk, sourceCommit, sourceStatus, unityVersion, playerVersion, startedUtc, finishedUtc, result, buildOptions;
             public string[] scenes;
             public int versionCode, errors, warnings;
         }
 
-        public static void Build(string[] scenes)
+        public static void Build(string[] scenes, BuildOptions options = BuildOptions.Development)
         {
+            ShipSceneManifest.Validate(new BuildPlayerOptions { scenes = scenes, target = BuildTarget.Android });
             QuestAndroidBuildGuard.ValidateSettings();
             if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
                 throw new BuildFailedException("Switch the active build target to Android first (CLI: -buildTarget Android).");
-            if (scenes == null || scenes.Length == 0 || scenes.Any(scene => !File.Exists(scene)))
-                throw new BuildFailedException("The complete Storm Watch scene list must exist before building.");
+            if (scenes.Any(scene => !File.Exists(scene)))
+                throw new BuildFailedException("Both committed ship scenes must exist before building; run authoring separately and review the result.");
             var started = DateTime.UtcNow;
             var commit = Run("git", "rev-parse HEAD").Trim();
             var status = Run("git", "status --porcelain=v1 --untracked-files=all").Trim();
@@ -39,16 +40,19 @@ namespace LighthouseKeepers.Editor.QuestBuild
             if (EditorUserBuildSettings.buildAppBundle || EditorUserBuildSettings.exportAsGoogleAndroidProject)
                 throw new BuildFailedException("Disable App Bundle and Export Project; this command must produce an installable APK.");
             Directory.CreateDirectory(Path.GetDirectoryName(output));
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            var playerOptions = new BuildPlayerOptions
             {
                 scenes = scenes, target = BuildTarget.Android, locationPathName = output,
-                options = BuildOptions.Development | BuildOptions.CleanBuildCache
-            });
+                options = options | BuildOptions.CleanBuildCache
+            };
+            ShipSceneManifest.Validate(playerOptions);
+            var report = BuildPipeline.BuildPlayer(playerOptions);
             var record = new Evidence
             {
                 apk = output, sourceCommit = commit, sourceStatus = status, unityVersion = Application.unityVersion,
                 playerVersion = PlayerSettings.bundleVersion, versionCode = PlayerSettings.Android.bundleVersionCode,
-                scenes = scenes, startedUtc = started.ToString("O"), finishedUtc = DateTime.UtcNow.ToString("O"),
+                scenes = scenes, buildOptions = playerOptions.options.ToString(),
+                startedUtc = started.ToString("O"), finishedUtc = DateTime.UtcNow.ToString("O"),
                 result = report.summary.result.ToString(), errors = (int)report.summary.totalErrors,
                 warnings = (int)report.summary.totalWarnings
             };

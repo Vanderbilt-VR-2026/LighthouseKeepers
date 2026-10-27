@@ -23,7 +23,8 @@ namespace LighthouseKeepers.StormWatch
         public bool SessionEnded { get; private set; }
         bool hadCrew;
         public int LocalSlot => link ? link.LocalSlot : 0;
-        public bool CrewReady => Ready && link && link.Connected && link.PartnerConnected;
+        public bool SoloPractice => rules != null && rules.SoloPractice;
+        public bool CrewReady => Ready && link && link.Connected && (SoloPractice || link.PartnerConnected);
         public string Connection => link ? link.Status : "No network transport assigned.";
         public KeeperInput Local { get; } = new();
         public KeeperInput Partner => link ? link.RemoteInput : null;
@@ -51,7 +52,24 @@ namespace LighthouseKeepers.StormWatch
         Behaviour[] locomotion;
         bool[] movementStates;
 
-        void Awake() => rules = new StormWatchRules(tuning);
+        void Awake()
+        {
+            bool solo = SoloWatchSession.ConsumeRequest();
+            if (solo)
+            {
+                if (link) link.enabled = false;
+                link = gameObject.AddComponent<SoloWatchLink>();
+            }
+            rules = new StormWatchRules(tuning, solo);
+        }
+        public bool SelectSoloWatch(WatchAct act)
+        {
+            if (!Ready || !rules.SelectSoloWatch(act)) return false;
+            Local.command = WatchAction.None;
+            Local.sequence++;
+            lastTeleport = 0;
+            return true;
+        }
         IEnumerator Start()
         {
             var bootstrap = FindAnyObjectByType<EnvironmentBootstrap>();
@@ -117,7 +135,7 @@ namespace LighthouseKeepers.StormWatch
                 {
                     // The ready lobby already approved the run. Wait until the other
                     // environment has sent valid input before starting its clock.
-                    if (State.act == WatchAct.Briefing && Partner.connected)
+                    if (State.act == WatchAct.Briefing && (SoloPractice || Partner.connected))
                         Command(WatchAction.Begin);
                     rules.Tick(.05f, Local, Partner);
                 }

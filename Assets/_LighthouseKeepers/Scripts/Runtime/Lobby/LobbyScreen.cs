@@ -14,8 +14,7 @@ namespace LighthouseKeepers.Lobby
         [SerializeField] AudioClip selectSound;
         [SerializeField] Transform boardMount;
         Canvas canvas;
-        TMP_Text errorText, modeText, crewCount, readyCaption, startHint, roomCaption;
-        readonly Button[] roomKeys = new Button[12];
+        TMP_Text errorText, modeText, crewCount, readyCaption;
         readonly TMP_Text[] rosterRows = new TMP_Text[8];
         TMP_InputField nameField, addressField;
         Button hostButton, joinButton, readyButton, startButton, leaveButton, heightButton;
@@ -83,7 +82,6 @@ namespace LighthouseKeepers.Lobby
         }
         void Bind()
         {
-            addressField.onValueChanged.AddListener(_ => Refresh());
             hostButton.onClick.AddListener(() => { manager.PlayerName = nameField.text; if (!manager.IsLocalPreview) manager.SessionName = addressField.text; manager.Host(); CloseOptions(); Refresh(); });
             joinButton.onClick.AddListener(() => { manager.PlayerName = nameField.text; manager.Join(manager.IsLocalPreview ? "local" : addressField.text); CloseOptions(); Refresh(); });
             readyButton.onClick.AddListener(() => { manager.ToggleReady(); Refresh(); });
@@ -123,52 +121,11 @@ namespace LighthouseKeepers.Lobby
             startButton.GetComponentInChildren<TMP_Text>().color = manager.CanStart ? Ink : Muted;
             joinButton.interactable = !manager.IsOnline && !manager.IsBusy;
             leaveButton.interactable = !manager.IsStarting;
-            bool canEditRoom = !manager.IsOnline && !manager.IsBusy;
-            nameField.interactable = addressField.interactable = canEditRoom;
-            foreach (var key in roomKeys) key.interactable = canEditRoom;
-            roomCaption.gameObject.SetActive(!local);
-            roomCaption.text = "ROOM: " + (manager.IsOnline ? manager.SessionName : addressField.text);
-            startHint.text = manager.StartHint + "\n" + NextAction();
+            nameField.interactable = addressField.interactable = !manager.IsOnline && !manager.IsBusy;
             addressGroup.SetActive(!local);
             SetButtonLabel(joinButton, local ? "SIMULATE A GUEST" : "JOIN CREW");
             SetButtonLabel(hostButton, local ? "TAKE YOUR POST" : "HOST CREW");
             SetButtonLabel(leaveButton, manager.IsBusy ? "CANCEL CONNECTION" : "LEAVE WATCH");
-        }
-        string NextAction()
-        {
-            if (manager.IsStarting) return "Wait for the lighthouse to load.";
-            if (manager.IsBusy) return "CANCEL CONNECTION returns to room entry.";
-            if (!manager.IsOnline)
-                return manager.IsLocalPreview
-                    ? "TAKE YOUR POST, then SIGNAL READY and BEGIN WATCH."
-                    : "Host: HOST CREW. Guest: CREW OPTIONS, same room, JOIN CREW.";
-            if (manager.IsLocalPreview)
-            {
-                if (!manager.IsHost) return "LEAVE WATCH, then TAKE YOUR POST to play.";
-                return manager.LocalPlayer()?.IsReady != true ? "Select SIGNAL READY, then BEGIN WATCH." : "Select BEGIN WATCH.";
-            }
-            if (manager.LocalPlayer()?.IsReady != true) return "Select SIGNAL READY. Both keepers must be ready.";
-            return manager.IsHost ? "When both are ready, host selects BEGIN WATCH." : "Wait for the host to select BEGIN WATCH.";
-        }
-        void EditRoom(string key)
-        {
-            if (manager.IsOnline || manager.IsBusy) return;
-            string value = addressField.text;
-            if (key == "CLEAR") value = "";
-            else if (key == "BACK") value = value.Length > 0 ? value.Substring(0, value.Length - 1) : "";
-            else
-            {
-                // The shipped named room remains usable; the first digit starts a numeric room.
-                // Both peers use the exact displayed string, including leading zeroes.
-                if (!IsNumericRoom(value)) value = "";
-                if (value.Length < addressField.characterLimit) value += key;
-            }
-            addressField.text = value;
-        }
-        static bool IsNumericRoom(string value)
-        {
-            foreach (char character in value) if (character < '0' || character > '9') return false;
-            return true;
         }
         void BuildUi()
         {
@@ -212,43 +169,18 @@ namespace LighthouseKeepers.Lobby
             watchLamp = Rect("WatchLamp", root, new(75,175), new(12,12)).gameObject.AddComponent<Image>();
             watchLamp.raycastTarget = false;
             readyCaption = Label(root, "WatchStatus", new(105,175), new(450,38), 26, Brass, "STANDBY");
-            // Keep the entire accepted room visible in the band between status and options.
-            roomCaption = Label(root, "CurrentRoom", new(55,126), new(510,48), 21, Chalk, "");
-            roomCaption.textWrappingMode = TextWrappingModes.Normal;
-            roomCaption.enableAutoSizing = true;
-            roomCaption.fontSizeMin = 14; roomCaption.fontSizeMax = 21;
-            startHint = Label(root, "StartHint", new(55,-203), new(510,174), 23, Chalk, "");
-            startHint.textWrappingMode = TextWrappingModes.Normal;
-            startHint.alignment = TextAlignmentOptions.TopLeft;
             BuildOptions(root);
         }
         void BuildOptions(Transform root)
         {
             options = Rect("CrewOptionsPanel", root, new(-291,-11), new(570,432)).gameObject;
             var backing = options.AddComponent<Image>(); backing.color = Slate;
-            Label(options.transform, "OptionsTitle", new(-250,169), new(500,38), 23, Chalk, "CREW OPTIONS / NAME OPTIONAL");
-            nameField = Input(options.transform, "KeeperName", new(0,115), "Keeper name (optional)");
+            Label(options.transform, "OptionsTitle", new(-250,169), new(500,38), 27, Chalk, "CREW OPTIONS");
+            nameField = Input(options.transform, "KeeperName", new(0,99), "Keeper name");
             nameField.text = manager.PlayerName; nameField.characterLimit = 24;
-            addressField = Input(options.transform, "HostAddress", new(0,41), "Room code: use buttons below");
-            addressField.characterLimit = 64; addressField.text = manager.SessionName;
-            // Standard world-space buttons use the existing XR ray/select path. No headset keyboard is required.
-            // Keep hardware-keyboard editing available in the Editor and desktop player.
-            nameField.shouldHideSoftKeyboard = addressField.shouldHideSoftKeyboard = true;
-            var keypad = Rect("RoomKeypad", options.transform, Vector2.zero, new(500,150));
-            addressGroup = new GameObject("RoomControls", typeof(RectTransform));
-            addressGroup.transform.SetParent(options.transform, false);
-            addressField.transform.SetParent(addressGroup.transform, false);
-            keypad.SetParent(addressGroup.transform, false);
-            string[] keys = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BACK", "CLEAR" };
-            for (int i = 0; i < keys.Length; i++)
-            {
-                string key = keys[i];
-                var button = MakeButton(keypad, "RoomKey" + key, key, new(-212.5f + i % 6 * 85, -34 - i / 6 * 61), new(74,48), false);
-                button.GetComponentInChildren<TMP_Text>().fontSize = key.Length > 1 ? 18 : 26;
-                button.onClick.AddListener(() => EditRoom(key));
-                roomKeys[i] = button;
-            }
-            joinButton = MakeButton(options.transform, "JoinCrew", "SIMULATE A GUEST", new(0,-169), new(500,62), false);
+            addressField = Input(options.transform, "HostAddress", new(0,18), "Crew room name");
+            addressField.characterLimit = 64; addressField.text = manager.SessionName; addressGroup = addressField.gameObject;
+            joinButton = MakeButton(options.transform, "JoinCrew", "SIMULATE A GUEST", new(0,-159), new(500,70), false);
             options.SetActive(false);
         }
         static void Rule(Transform parent, Vector2 position, Vector2 size, Color color)
