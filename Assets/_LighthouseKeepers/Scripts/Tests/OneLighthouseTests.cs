@@ -115,7 +115,7 @@ namespace LighthouseKeepers.Tests
             foreach (string guid in AssetDatabase.FindAssets("t:VolumeProfile", new[] { "Assets" }))
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
-                Assert.IsFalse(AssetDatabase.LoadAssetAtPath<VolumeProfile>(path).components.Any(c=>c is Vignette), path);
+                Assert.IsFalse(AssetDatabase.LoadAssetAtPath<VolumeProfile>(path).components.Any(c=>c is Vignette || c is FilmGrain), path);
             }
         }
     }

@@ -175,6 +175,15 @@ Keep the successful no-vignette/no-panels/host-alone work. Editor success did no
    Physical checks: House/board, real wrench/pipe repair, water rises/falls, bed → Day 2, tan angled
    hands, no vignette. Never label installation or Editor rendering as physical headset acceptance.
 
+**M1.5 headset corrections after bb2f997:** The lead accepts the base hand rotation; freeze it.
+Before later milestones, mount the House board flush to the wall (centre 1.5 m; normal within 2°;
+back gap under 0.03 m), remove the scale-reference cube/marker at their source, texture the workbench,
+and rest a single-mesh 25 cm steel wrench on it with an eight-second return to the same pose.
+Fit mirrored handle attachments inside the existing Sprint 3 WrapGrip without changing base hand
+rotation; preserve automatic tightening/haptics. Remove grain, REC, battery and exposure text, keeping
+only a small day/countdown/task readout. Review first-person/side grip screenshots, run regression
+checks, measure Quest GPU before/after, rebuild/install/push and stop. See `M1.5-house-fixes.md`.
+
 **M2 — Multi-day content + watch.** Preserve and extend the working Sprint 2 loop: 7 days of data,
 House board with live tasks, failure/retry, and the digital wristwatch fully specified in section 4.
 D1 one leak + wrench/pump; D2 blackout + generator; D3 leaks + radio; D4 generator fault; D5 beacon

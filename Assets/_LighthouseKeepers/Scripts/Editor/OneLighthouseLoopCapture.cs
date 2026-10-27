@@ -25,7 +25,8 @@ namespace LighthouseKeepers.Editor
 {
     public static class OneLighthouseLoopCapture
     {
-        const string Key = "OneLighthouseM15Capture", Output = OneLighthouseM15.Output;
+        const string Key = "OneLighthouseM15Capture";
+        static string Output => SessionState.GetBool(Key+"House",false)?OneLighthouseM15.Output+"/house-fixes":OneLighthouseM15.Output;
         static readonly List<string> evidence = new();
         static readonly List<string> errors = new();
         static Camera preview;
@@ -38,7 +39,8 @@ namespace LighthouseKeepers.Editor
         static double deadline;
         [InitializeOnLoadMethod] static void Register() => EditorApplication.playModeStateChanged += Changed;
         public static void ProbeHands() => Begin(true);
-        public static void Run() => Begin(false);
+        public static void Run() { SessionState.SetBool(Key+"House",false); Begin(false); }
+        public static void House() { SessionState.SetBool(Key+"House",true); Begin(false); }
         static void Begin(bool probeHands)
         {
             SessionState.SetBool(Key+"Hands",probeHands);
@@ -96,7 +98,7 @@ namespace LighthouseKeepers.Editor
             Capture(Camera.main, "02-house-spawn");
             var hud = Camera.main.transform.Find("Watch camera HUD");
             if (hud) foreach (var r in hud.GetComponentsInChildren<Renderer>()) r.forceRenderingOff = true;
-            View(new Vector3(-2.15f,1.65f,-9.2f), new Vector3(-2.2f,1.45f,-7.5f)); Capture(preview, "03-keeper-watch-board");
+            View(new Vector3(-.9f,1.65f,-8.4f), new Vector3(-3.44f,1.5f,-8.4f)); Capture(preview, "03-keeper-watch-board");
             evidence.Add("House head=" + Camera.main.transform.position + "; board=" + Field<TextMesh>(watch,"board").text.Replace('\n','|'));
             foreach (var modality in rig.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Inputs.XRInputModalityManager>(true)) modality.enabled = false;
             var hands = rig.GetComponentsInChildren<HandRig>(true);
@@ -127,23 +129,54 @@ namespace LighthouseKeepers.Editor
                 yield break;
             }
             var wrench = Field<XRGrabInteractable>(watch, "wrench");
+            if(SessionState.GetBool(Key+"House",false))
+            {
+                View(wrench.transform.position+new Vector3(.75f,.55f,.5f),wrench.transform.position);Capture(preview,"desk-resting-wrench");
+                var home=wrench.transform.position;var homeRotation=wrench.transform.rotation;
+                foreach(var hand in hands)
+                {
+                    var directHand=hand.Direct;
+                    directHand.selectInput=new XRInputButtonReader("Evidence grip",inputSourceMode:XRInputButtonReader.InputSourceMode.ManualValue);
+                    directHand.selectInput.manualPerformed=true;directHand.selectInput.manualValue=1;
+                    directHand.StartManualInteraction((IXRSelectInteractable)wrench);
+                    yield return new WaitForSecondsRealtime(.4f);
+                    Require(wrench.isSelected,"Actual hand failed to grab");
+                    Capture(Camera.main,hand.Node+"-first-person");
+                    var skin=hand.GetComponentInChildren<SkinnedMeshRenderer>();
+                    LighthouseKeepers.WatchDemo.Editor.WatchGripGeometry.Verify(skin,wrench.transform);
+                    evidence.Add(hand.Node+": no skin/handle triangle intersections at 23 sampled repair angles (-55 through +55 degrees).");
+                    var centre=skin.transform.TransformPoint(WatchWrenchGrab.PalmCentre);
+                    View(centre+skin.transform.TransformVector(new Vector3(hand.Node==XRNode.LeftHand?.22f:-.22f,-.18f,.18f)),centre);
+                    Capture(preview,hand.Node+"-side");
+                    var baked=new Mesh();skin.BakeMesh(baked);
+                    File.WriteAllLines(Output+"/"+hand.Node+"-grip-vertices.txt",baked.vertices.Select(v=>wrench.transform.InverseTransformPoint(skin.transform.TransformPoint(v)).ToString("F6")));
+                    File.WriteAllText(Output+"/"+hand.Node+"-grip-triangles.txt",string.Join(",",baked.triangles));
+                    Object.Destroy(baked);
+                    evidence.Add(hand.Node+" actual XRI selection; pose=WrapGrip; tool="+wrench.transform.position+" socket="+centre);
+                    directHand.EndManualInteraction();directHand.selectInput.manualPerformed=false;directHand.selectInput.manualValue=0;
+                    yield return new WaitForSecondsRealtime(8.2f);
+                    Require(Vector3.Distance(home,wrench.transform.position)<.002f && Quaternion.Angle(homeRotation,wrench.transform.rotation)<.1f,"8-second return failed");
+                }
+                foreach(var r in hud.GetComponentsInChildren<Renderer>())r.forceRenderingOff=false;
+                Capture(Camera.main,"clean-house-view");
+                View(new Vector3(-1.2f,1.65f,-9.3f),new Vector3(-3.44f,1.5f,-8.4f));Capture(preview,"board-wall-mount");
+                View(new Vector3(0,1.65f,-7.5f),new Vector3(3.5f,1.3f,-7.5f));Capture(preview,"house-sweep-east");
+                View(new Vector3(1.5f,1.65f,-7.5f),new Vector3(0,1.3f,-9.8f));Capture(preview,"house-sweep-south");
+                View(new Vector3(1.5f,1.65f,-7.5f),new Vector3(0,1.3f,-4.6f));Capture(preview,"house-sweep-north");
+                evidence.Add("PASS: both actual HandRig direct interactors select/release; each 8-second return restores authored desk contact pose.");
+                yield break;
+            }
             Require(!wrench.GetComponent<WrenchInteraction>() && !wrench.GetComponent<PhysicalGrip>(), "Sprint 3 installer replaced WatchDemo wrench behavior");
-            var handObject = new GameObject("Editor injected direct grip");
-            handObject.SetActive(false); handObject.transform.position = wrench.transform.position;
-            var collider = handObject.AddComponent<SphereCollider>(); collider.isTrigger = true; collider.radius = .08f;
-            var handBody = handObject.AddComponent<Rigidbody>(); handBody.isKinematic = true; handBody.useGravity = false;
-            var direct = handObject.AddComponent<XRDirectInteractor>();
-            direct.selectInput = new XRInputButtonReader("Editor grip", inputSourceMode: XRInputButtonReader.InputSourceMode.ManualValue);
-            direct.selectInput.manualPerformed = true; direct.selectInput.manualValue = 1;
-            handObject.SetActive(true); yield return null;
-            var manager = Object.FindFirstObjectByType<XRInteractionManager>();
-            manager.SelectEnter((IXRSelectInteractor)direct, (IXRSelectInteractable)wrench);
-            yield return new WaitForSecondsRealtime(.2f);
-            Require(wrench.isSelected, "Wrench not selected through XRI");
             var right = hands.Single(h=>h.Node == XRNode.RightHand);
-            right.transform.parent.SetPositionAndRotation(handObject.transform.position, handObject.transform.rotation);
-            right.SetPose(HandPose.WrapGrip, direct);
-            View(new Vector3(-1.35f,1.55f,-9.0f), wrench.transform.position); Capture(preview,"06-real-wrench-grabbed"); Record("grab");
+            var handObject=right.transform.parent.gameObject;
+            handObject.transform.position=wrench.transform.position;
+            var direct=right.Direct;
+            direct.selectInput=new XRInputButtonReader("Editor grip",inputSourceMode:XRInputButtonReader.InputSourceMode.ManualValue);
+            direct.selectInput.manualPerformed=true;direct.selectInput.manualValue=1;
+            direct.StartManualInteraction((IXRSelectInteractable)wrench);
+            yield return new WaitForSecondsRealtime(.2f);
+            Require(wrench.isSelected,"Wrench not selected through actual HandRig direct interactor");
+            View(wrench.transform.position+new Vector3(.55f,.3f,-.3f),wrench.transform.position);Capture(preview,"06-real-wrench-grabbed");Record("grab");
             Vector3 from = handObject.transform.position, to = Field<Transform>(watch,"repairPoint").position + new Vector3(0,0,-.15f);
             for (float t=0; t<3; t+=Time.deltaTime)
             {
@@ -153,6 +186,7 @@ namespace LighthouseKeepers.Editor
             }
             handObject.transform.position = to; right.transform.parent.position = to;
             rig.MoveCameraToWorldLocation(new Vector3(.8f,1.65f,-1.25f));
+            handObject.transform.position=to; // Keep the injected controller at the pipe after moving its parent rig.
             View(new Vector3(1.8f,1.65f,-1.5f), new Vector3(.8f,1.05f,.15f));
             yield return new WaitForSecondsRealtime(.2f);
             Capture(preview,"07-carried-to-pipe"); Record("carried, no trigger yet");
@@ -166,7 +200,7 @@ namespace LighthouseKeepers.Editor
             View(new Vector3(1.7f,1.65f,-1.3f),new Vector3(.8f,1.1f,.15f)); Capture(preview,"09-automatic-tightening"); Record("tightening");
             yield return new WaitForSecondsRealtime(3);
             Require(watch.State.Repaired, "Repair did not complete");
-            manager.SelectExit((IXRSelectInteractor)direct,(IXRSelectInteractable)wrench); direct.selectInput.manualPerformed = false;
+            direct.EndManualInteraction(); direct.selectInput.manualPerformed = false;
             while (flood.Height > flood.MinimumHeight + .001f) yield return null;
             FloodView(); Capture(preview,"10-water-drained-after-repair"); Record("drained");
             rig.MoveCameraToWorldLocation(new Vector3(1.25f,8.2f,-.3f));
@@ -177,7 +211,7 @@ namespace LighthouseKeepers.Editor
             yield return new WaitForSecondsRealtime(2.5f);
             Require(watch.State.Day == 2 && !watch.State.Repaired, "Sleep failed to start Day 2");
             Require(Vector3.Distance(before,Camera.main.transform.position)<.01f, "Sleep moved tracked camera");
-            View(new Vector3(-2.15f,1.65f,-9.2f),new Vector3(-2.2f,1.45f,-7.5f)); Capture(preview,"12-day-two-board"); Record("Day 2");
+            View(new Vector3(-.9f,1.65f,-8.4f),new Vector3(-3.44f,1.5f,-8.4f)); Capture(preview,"12-day-two-board"); Record("Day 2");
             evidence.Add("PASS: actual lobby solo route; XRI direct selection and carry; original public trigger/grip handlers; real 60-second flood; animation, drainage and sleep/day reset. Desktop controller poses/input injected; physical headset usability not inferred.");
         }
         static void FloodView() => View(new Vector3(2.0f,1.65f,-2.6f),new Vector3(.6f,.35f,.2f));

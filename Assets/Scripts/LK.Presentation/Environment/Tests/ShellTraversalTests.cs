@@ -37,6 +37,9 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             var routes=(Array)layout.GetType().GetField("routes").GetValue(layout);
             var paths=new Dictionary<string,Vector3[]>();
             foreach(var route in routes){var t=route.GetType();paths.Add((string)t.GetField("id").GetValue(route),(Vector3[])t.GetField("points").GetValue(route));}
+            // The wall-facing House spawn is beside the centre aisle. Join it before walking
+            // back to the entrance; a straight diagonal to the door crosses its open leaf.
+            yield return WalkTo(paths["RT-HOUSE-MAIN"][1],"House spawn to centre aisle");
             foreach(var id in new[]{"RT-HOUSE-MAIN","RT-F1-ENTRY","RT-F1_F2","RT-F2-TRANSFER","RT-F2_F3","RT-F3-TRANSFER","RT-F3_F4","RT-F4-GALLERY"})
                 foreach(var point in paths[id])
                 {
