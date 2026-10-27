@@ -8,13 +8,14 @@ namespace LighthouseKeepers.WatchDemo
     public enum PowerState { Off, On }
     public sealed class WatchState
     {
-        public const string PipeStation = "STN_PIPE_LEAK", GeneratorStation = "STN_GENERATOR";
+        public const string PipeStation = "STN_PIPE_LEAK", GeneratorStation = "STN_GENERATOR", RadioStation = "STN_RADIO_CONSOLE";
         public const double RepairSeconds = 3.5;
         public const int RequiredStarterPulls = 3;
         readonly DayDefinition[] days;
         readonly HashSet<string> faults = new HashSet<string>();
         int index;
         public event Action Changed;
+        public RadioState Radio {get;}
         public DayDefinition Definition => days[index];
         public int Day => Definition.day;
         public double Duration => Definition.dayLengthSeconds;
@@ -32,6 +33,8 @@ namespace LighthouseKeepers.WatchDemo
         {
             if (definitions == null || definitions.Length == 0) throw new ArgumentException("No authored watch days");
             days = definitions;
+            Radio=new RadioState(Resources.Load<RadioProgram>("StormRadio"));
+            Radio.BroadcastCompleted+=()=>{if(faults.Remove(RadioStation))Changed?.Invoke();};
             index = Array.FindIndex(days, d => d.day == firstDay);
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(firstDay));
             Reset();
@@ -41,6 +44,7 @@ namespace LighthouseKeepers.WatchDemo
             if (seconds < 0 || double.IsNaN(seconds) || double.IsInfinity(seconds)) throw new ArgumentOutOfRangeException(nameof(seconds));
             bool wasFailed = Failed;
             Elapsed = Math.Min(Duration, Elapsed + seconds);
+            Radio.Tick(seconds,!Failed);
             if (wasFailed != Failed) Changed?.Invoke();
         }
         public bool CompleteRepair()
@@ -53,7 +57,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if (Failed || Power == PowerState.On) return false;
             StarterPulls++;
-            if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; }
+            if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; Radio.SetPower(true); }
             Changed?.Invoke(); return true;
         }
         public bool Sleep()
@@ -67,6 +71,7 @@ namespace LighthouseKeepers.WatchDemo
             Elapsed = 0; StarterPulls = 0; faults.Clear();
             foreach (var fault in Definition.startingFaults) faults.Add(fault);
             Power = faults.Contains(GeneratorStation) ? PowerState.Off : PowerState.On;
+            Radio.Reset(Power==PowerState.On);
             Changed?.Invoke();
         }
     }

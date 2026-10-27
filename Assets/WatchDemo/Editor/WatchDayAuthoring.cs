@@ -28,7 +28,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
                 if(d.day!=i+1 || d.dayLengthSeconds<30 || float.IsNaN(d.dayLengthSeconds) || float.IsInfinity(d.dayLengthSeconds) || d.tasks==null || d.tasks.Length==0)
                     throw new BuildFailedException("Invalid/duplicate/non-contiguous day: "+d.name);
                 var ids=d.tasks.Select(t=>t.stationId).ToArray();
-                if(ids.Distinct().Count()!=ids.Length || d.tasks.Any(t=>string.IsNullOrWhiteSpace(t.taskText)|| (t.stationId!=WatchState.PipeStation && t.stationId!=WatchState.GeneratorStation)) || d.startingFaults==null || d.startingFaults.Any(f=>!ids.Contains(f)))
+                if(ids.Distinct().Count()!=ids.Length || d.tasks.Any(t=>string.IsNullOrWhiteSpace(t.taskText)|| (t.stationId!=WatchState.PipeStation && t.stationId!=WatchState.GeneratorStation && t.stationId!=WatchState.RadioStation)) || d.startingFaults==null || d.startingFaults.Any(f=>!ids.Contains(f)))
                     throw new BuildFailedException("Invalid task station/text or starting fault: "+d.name);
             }
             const string path="Assets/WatchDemo/Resources/WatchDays.asset";

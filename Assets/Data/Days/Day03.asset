@@ -19,9 +19,12 @@ MonoBehaviour:
     taskText: Restart the generator
   - stationId: STN_PIPE_LEAK
     taskText: Repair the pipe
+  - stationId: STN_RADIO_CONSOLE
+    taskText: Broadcast the storm warning.
   startingFaults:
   - STN_GENERATOR
   - STN_PIPE_LEAK
+  - STN_RADIO_CONSOLE
   requiredKeepers: 2
   briefingHeading: "Day 3 \u2014 Two keepers"
   briefingText: One keeper holds and corrects the isolation valve on F2. The other

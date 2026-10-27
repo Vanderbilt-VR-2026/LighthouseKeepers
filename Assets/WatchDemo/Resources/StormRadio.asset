@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 315ae18f94ba942929e29aabfe7fdaf6, type: 3}
+  m_Name: StormRadio
+  m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.WatchDemo.RadioProgram
+  minimumMHz: 156
+  maximumMHz: 158
+  targetMHz: 156.8
+  toleranceMHz: 0.04
+  lockSeconds: 1
+  transmitSeconds: 3
+  callCode: 00000000020000000100000003000000

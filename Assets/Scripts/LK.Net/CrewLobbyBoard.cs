@@ -50,22 +50,25 @@ namespace LighthouseKeepers.Net
                     if (field.placeholder is TMP_Text hint) hint.text = "6-character join code";
                 }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            var debugFace = Rect("DebugSoloGates", root, new Vector2(-200, -450), new Vector2(650, 45));
+            var debugFace = Rect("DebugSoloGates", root, new Vector2(-280, -450), new Vector2(490, 45));
             var debugImage = debugFace.gameObject.AddComponent<Image>(); debugImage.color = new Color(.12f, .20f, .20f);
             var debugButton = debugFace.gameObject.AddComponent<Button>(); debugButton.targetGraphic = debugImage;
-            var debugLabel = Label(debugFace, "Label", Vector2.zero, debugFace.sizeDelta, 18);
+            var debugLabel = Label(debugFace, "Label", Vector2.zero, debugFace.sizeDelta, 15);
             void UpdateDebugLabel() => debugLabel.text = "Debug: allow solo co-op gates: " + (DebugSoloOverride.Enabled ? "ON" : "OFF");
             UpdateDebugLabel();
             debugButton.onClick.AddListener(() => { DebugSoloOverride.Enabled = !DebugSoloOverride.Enabled; UpdateDebugLabel(); });
 #endif
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             // A one-shot launch choice, next to the existing debug control; no world selector panels.
-            Key(root, "DevStartDay2", new Vector2(400, -450), new Vector2(300, 45), () =>
+            Key(root, "DevStartDay2", new Vector2(120, -450), new Vector2(255, 45), () =>
             {
                 LighthouseKeepers.StormWatch.WatchDayLaunch.RequestedDay = 2;
                 transport.PlaySolo();
             });
             root.Find("DevStartDay2").GetComponentInChildren<TMP_Text>().text = "DEV: PLAY DAY 2";
+            Key(root,"DevStartDay3",new Vector2(405,-450),new Vector2(255,45),()=>
+            {LighthouseKeepers.StormWatch.WatchDayLaunch.RequestedDay=3;transport.PlaySolo();});
+            root.Find("DevStartDay3").GetComponentInChildren<TMP_Text>().text="DEV: PLAY DAY 3";
 #endif
             BuildKeypad(root);
             Refresh();
