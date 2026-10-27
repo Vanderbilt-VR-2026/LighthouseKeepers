@@ -74,7 +74,7 @@ namespace LighthouseKeepers.Editor
             }
         }
 
-        static bool RemoveVignette(GameObject root)
+        public static bool RemoveVignette(GameObject root)
         {
             bool changed = false;
             foreach (var provider in root.GetComponentsInChildren<HeadBoundaryComfort>(true)) { Object.DestroyImmediate(provider); changed = true; }
@@ -92,6 +92,11 @@ namespace LighthouseKeepers.Editor
             return changed;
         }
         public static void Apply()
+        {
+            // The current ship world has an authored gameplay board and HUD. Use its narrow migration.
+            OneLighthouseM15.Apply();
+        }
+        static void ApplyHistoricalBootstrap()
         {
             Directory.CreateDirectory(Output);
             var log = new StringBuilder();

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.Rendering;
+using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -25,6 +26,14 @@ namespace LighthouseKeepers.Gameplay.Interaction
         [SerializeField] XRNode hand = XRNode.LeftHand;
         [SerializeField, Range(.06f, .09f)] float blendSeconds = .075f;
         [SerializeField] int actorId;
+        [SerializeField, Tooltip("Fallback aim-to-grip pitch in degrees, used only without a tracked grip pose.")]
+        float fallbackGripPitch = -75f;
+        [SerializeField, Range(0,90), Tooltip("Mirrored visual palm roll about the grip axis; tracked controller and interactors are unchanged.")]
+        float palmRoll = 65f;
+        Transform trackingSpace;
+        Quaternion measuredGripCorrection = Quaternion.identity;
+        bool hasGripMeasurement;
+        public Quaternion VisualRotation => visual ? visual.localRotation : Quaternion.identity;
         Transform[] bones;
         Model data;
         Mesh mesh;
@@ -45,6 +54,8 @@ namespace LighthouseKeepers.Gameplay.Interaction
         void Awake()
         {
             if (!model) { Debug.LogError("Hand rig has no baked mesh/pose payload.", this); enabled = false; return; }
+            var origin = GetComponentInParent<XROrigin>();
+            if (origin && origin.CameraFloorOffsetObject) trackingSpace = origin.CameraFloorOffsetObject.transform;
             data = JsonUtility.FromJson<Model>(model.text);
             if (data.bones.Length != 26 || data.poses.Length != 4) throw new InvalidOperationException("Expected OpenXR 26 joints and four baked poses.");
             visual = transform.Find("Skinned glove");
@@ -73,12 +84,32 @@ namespace LighthouseKeepers.Gameplay.Interaction
             if (!gloveMaterial)
             {
                 ownedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                ownedMaterial.SetColor("_BaseColor", new Color(.62f, .52f, .43f));
+                ownedMaterial.SetColor("_BaseColor", new Color(198f/255, 142f/255, 106f/255));
                 ownedMaterial.SetFloat("_Smoothness", .22f); gloveMaterial = ownedMaterial;
             }
             skin.sharedMaterial = gloveMaterial;
             ConfigureInteractor();
+            LogVisualDiagnostics("awake");
         }
+        [System.Diagnostics.Conditional("DEVELOPMENT_BUILD"), System.Diagnostics.Conditional("UNITY_EDITOR")]
+        public void LogVisualDiagnostics(string phase)
+        {
+            var device = InputDevices.GetDeviceAtXRNode(hand);
+            device.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion grip);
+            device.TryGetFeatureValue(CommonUsages.isTracked, out bool tracked);
+            Debug.Log($"HAND_DIAG {phase} {hand} device={device.name} tracked={tracked} grip={grip.eulerAngles} controllerLocal={transform.parent.localEulerAngles} gripCorrection={measuredGripCorrection.eulerAngles} measured={hasGripMeasurement} rootLocal={transform.localEulerAngles} visualLocal={(visual ? visual.localEulerAngles : Vector3.zero)} pipeline={GraphicsSettings.currentRenderPipeline} graphics={SystemInfo.graphicsDeviceType}");
+            foreach (var r in transform.parent.GetComponentsInChildren<Renderer>(true))
+                foreach (var m in r.sharedMaterials)
+                    Debug.Log($"HAND_DIAG {hand} renderer={r.name} type={r.GetType().Name} enabled={r.enabled} active={r.gameObject.activeInHierarchy} material={(m ? m.name : "NULL")} shader={(m && m.shader ? m.shader.name : "NULL")} supported={(m && m.shader && m.shader.isSupported)} base={(m && m.HasProperty("_BaseColor") ? m.GetColor("_BaseColor").ToString("F3") : "none")} color={(m && m.HasProperty("_Color") ? m.GetColor("_Color").ToString("F3") : "none")} propertyBlock={r.HasPropertyBlock()} keywords={(m ? string.Join(",", m.shaderKeywords) : "none")}");
+        }
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        bool loggedTracked;
+        System.Collections.IEnumerator Start()
+        {
+            yield return new WaitForSeconds(1.5f);
+            LogVisualDiagnostics("settled");
+        }
+#endif
         void ConfigureInteractor()
         {
             // The trigger follows tracking, while only the skinned visual follows a constrained handle.
@@ -98,6 +129,9 @@ namespace LighthouseKeepers.Gameplay.Interaction
         {
             var device = InputDevices.GetDeviceAtXRNode(hand);
             bool tracked = device.TryGetFeatureValue(CommonUsages.isTracked, out bool isTracked) && isTracked;
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            if (tracked && !loggedTracked) { loggedTracked = true; LogVisualDiagnostics("first-tracked"); }
+#endif
             device.TryGetFeatureValue(CommonUsages.grip, out float g);
             device.TryGetFeatureValue(CommonUsages.trigger, out float t);
             g = tracked ? Mathf.Clamp01(g) : 0; t = tracked ? Mathf.Clamp01(t) : 0;
@@ -134,7 +168,24 @@ namespace LighthouseKeepers.Gameplay.Interaction
         {
             if (!visual) return;
             if (constrainedGrip) visual.SetPositionAndRotation(constrainedGrip.position - constrainedGrip.rotation * new Vector3(0, -.018f, .025f), constrainedGrip.rotation);
-            else { visual.localPosition = Vector3.zero; visual.localRotation = Quaternion.identity; }
+            else
+            {
+                var device = InputDevices.GetDeviceAtXRNode(hand);
+                hasGripMeasurement = trackingSpace && device.TryGetFeatureValue(CommonUsages.isTracked, out bool tracked) && tracked
+                    && device.TryGetFeatureValue(CommonUsages.deviceRotation, out _);
+                if (hasGripMeasurement)
+                {
+                    device.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion gripRotation);
+                    // Starter Assets tracks pointer/aim. Convert the actual OpenXR grip into the
+                    // visual parent's coordinates; never rotate the tracked controller or its rays.
+                    measuredGripCorrection = Quaternion.Inverse(transform.rotation) * trackingSpace.rotation * gripRotation;
+                }
+                else measuredGripCorrection = Quaternion.Euler(fallbackGripPitch,0,0);
+                visual.localRotation = measuredGripCorrection * Quaternion.Euler(0,0,hand == XRNode.LeftHand ? palmRoll : -palmRoll);
+                // Rotate around the baked wrist, keeping it attached to the same tracking anchor.
+                Vector3 wrist = data.bones[0].position;
+                visual.localPosition = wrist - visual.localRotation * wrist;
+            }
         }
         void Selected(SelectEnterEventArgs args)
         {
