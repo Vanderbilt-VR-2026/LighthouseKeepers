@@ -119,7 +119,7 @@ namespace LighthouseKeepers.Editor
             }
             if (scene.name == "LK_Level04_Lantern")
             {
-                Dial(Socket("Lantern Alignment", "Bearing controls"), "Legacy bearing wheel");
+                Dial(Socket("Lantern Alignment", "Bearing controls"), "Legacy bearing wheel", true);
                 var socket = Socket("Breaker Coordination", "Beacon status");
                 var lever = Primitive(socket, "Legacy beacon status lever", PrimitiveType.Cube, new Vector3(.12f,.5f,.12f));
                 var control = Add<LeverSwitch>(lever);
@@ -213,13 +213,14 @@ namespace LighthouseKeepers.Editor
             }
         }
 
-        static void Dial(PuzzleSocket socket, string name)
+        static void Dial(PuzzleSocket socket, string name, bool hideDuringStormWatch = false)
         {
             var go = Primitive(socket, name, PrimitiveType.Cylinder, new Vector3(.22f,.04f,.22f));
             go.transform.localRotation = Quaternion.Euler(90, 0, 0);
             var dial = Add<RotaryDial>(go);
             Set(dial, "localTwistAxis", Vector3.up);
             Set(dial, "boundSocket", socket);
+            Set(dial, "hideDuringStormWatch", hideDuringStormWatch);
         }
         static GameObject Primitive(PuzzleSocket socket, string name, PrimitiveType type, Vector3 scale)
         {
@@ -254,5 +255,7 @@ namespace LighthouseKeepers.Editor
         { var settings = new SerializedObject(target); settings.FindProperty(field).objectReferenceValue = value; settings.ApplyModifiedProperties(); }
         static void Set(UnityEngine.Object target, string field, Vector3 value)
         { var settings = new SerializedObject(target); settings.FindProperty(field).vector3Value = value; settings.ApplyModifiedProperties(); }
+        static void Set(UnityEngine.Object target, string field, bool value)
+        { var settings = new SerializedObject(target); settings.FindProperty(field).boolValue = value; settings.ApplyModifiedProperties(); }
     }
 }

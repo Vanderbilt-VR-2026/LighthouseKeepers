@@ -49,3 +49,11 @@ LK_CAPTURE_SPRINT3=1 unity --non-interactive test /absolute/path/to/LighthouseKe
 ```
 
 The graphics fixture omits `-nographics`. Add `--editor-path` if the correct Editor is not selected automatically. The online flags create temporary Photon rooms.
+
+## Production beacon input isolation
+
+The new legacy bearing wheel shared space with Storm Watch's centre beacon control. Only that added legacy dial now hides at startup when the active watch director supplies the production beacon controls. Existing socket/anchor transforms and watch rules are preserved. The dial stays active in plain legacy scenes/rehearsal.
+
+The combined affected suite was rerun after this correction: **20 passed, 0 failed, 1 graphics-only skip covered by the rendered fixture**. Its Storm Watch scene test queries the actual centre control with a Default-layer physics overlap, asserts that no other active interactable competes there and confirms the production control remains physically selectable. The legacy-only scene test separately confirms its dial remains active.
+
+An initial APK build was stopped during native compilation to apply this correction. It produced no deliverable or passing packaging result. Only the subsequent source-recorded, fully verified APK is eligible for publication.

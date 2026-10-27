@@ -29,6 +29,18 @@ namespace LighthouseKeepers.Tests
             Assert.AreEqual(7,SceneManager.sceneCount);Assert.AreEqual(1,Object.FindObjectsByType<XROrigin>(FindObjectsSortMode.None).Length);
             Assert.AreEqual(5,Object.FindObjectsByType<StormWatchBoard>(FindObjectsSortMode.None).Length);
             Assert.IsNull(GameObject.Find("Storm daylight"));
+            var centreBeacon=GameObject.Find(StormWatchBoard.Symbol(1)).GetComponent<XRSimpleInteractable>();
+            Assert.IsNotNull(centreBeacon);
+            Physics.SyncTransforms();
+            bool foundCentreBeacon=false;
+            foreach(var hit in Physics.OverlapSphere(centreBeacon.transform.position,.05f,1<<0,QueryTriggerInteraction.Collide))
+            {
+                var selectable=hit.GetComponentInParent<XRBaseInteractable>();
+                if(!selectable||!selectable.isActiveAndEnabled)continue;
+                Assert.AreSame(centreBeacon,selectable,"An active legacy control must not compete for selection at the centre Storm Watch beacon switch: "+selectable.name);
+                foundCentreBeacon=true;
+            }
+            Assert.IsTrue(foundCentreBeacon,"The centre watch switch must remain physically selectable.");
             foreach(var light in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
                 if(light.gameObject.scene.name=="LK_Exterior")Assert.AreNotEqual(LightType.Directional,light.type);
             var gate=GameObject.Find("Route 1 / mechanical stair gate");Assert.IsNotNull(gate);Assert.IsTrue(gate.GetComponent<Collider>().enabled);
