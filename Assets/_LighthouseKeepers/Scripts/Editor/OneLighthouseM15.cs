@@ -55,8 +55,14 @@ namespace LighthouseKeepers.Editor
                 if(path != LighthouseNetworkLobby.ScenePath)
                 {
                     var board=scene.GetRootGameObjects().SelectMany(r=>r.GetComponentsInChildren<TextMesh>(true)).Single(t=>t.name=="Watch checklist");
+                    scene.GetRootGameObjects().SelectMany(r=>r.GetComponentsInChildren<TextMesh>(true)).Single(t=>t.name=="Repair feedback").characterSize=.012f;
                     board.color=new Color(.012f,.018f,.014f); // Dark ink remains legible against the lit board face.
                     log.AppendLine("BOARD: retain original text/layout; darken ink for contrast in restored lighting.");
+                    var origin=Object.FindFirstObjectByType<XROrigin>();
+                    var face=GameObject.Find("Wall-mounted checklist white face").transform;
+                    origin.transform.rotation=Quaternion.LookRotation(Vector3.ProjectOnPlane(face.position-origin.transform.position,Vector3.up));
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(origin.transform);
+                    log.AppendLine("HOUSE: initial rig heading faces the existing board; preserve spawn position and tracked camera.");
                 }
                 EditorSceneManager.SaveScene(scene);
             }

@@ -40343,7 +40343,7 @@ TextMesh:
   m_GameObject: {fileID: 1843078892}
   m_Text: 
   m_OffsetZ: 0
-  m_CharacterSize: 0.004
+  m_CharacterSize: 0.012
   m_LineSpacing: 1
   m_Anchor: 1
   m_Alignment: 1
@@ -42524,7 +42524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 822693049099324929, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.8230572
       objectReference: {fileID: 0}
     - target: {fileID: 822693049099324929, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
       propertyPath: m_LocalRotation.x
@@ -42532,11 +42532,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 822693049099324929, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: -0.56795853
       objectReference: {fileID: 0}
     - target: {fileID: 822693049099324929, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 822693049099324929, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
