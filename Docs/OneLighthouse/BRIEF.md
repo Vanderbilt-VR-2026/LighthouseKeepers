@@ -94,7 +94,7 @@ the bindings.
 - **F2 POWER & RECOVERY:** yellow diesel generator (primer, choke, starter), control panel with lamps,
   manual bilge pump.
 - **F3 BEDROOM & FORECAST:** bed (sleep ends the day), original storm chart.
-- **F4 RADIO & BEACON:** west-wall broadcast console; central warm AMBER/gold lantern with rotating beam (never blue/cyan), outdoor gallery with railing.
+- **F4 RADIO & BEACON:** north-wall broadcast console; central warm AMBER/gold lantern with rotating beam (never blue/cyan), outdoor gallery with railing.
 - **EXTERIOR:** night, heavy rain, wind, crashing sea, gentle lightning. Rain droplets on the camera lens
   only when the head is outdoors.
 - **Loop:** FAULT → DIAGNOSE → REPAIR / RESTORE POWER → WATER FALLS + BEACON ON → NEXT WATCH.
