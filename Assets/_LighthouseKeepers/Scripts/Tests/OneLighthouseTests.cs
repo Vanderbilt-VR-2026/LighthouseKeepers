@@ -58,6 +58,17 @@ namespace LighthouseKeepers.Tests
                 }
             }
         }
+        [Test] public void ShipGuardRunsAfterUrpAndRemovesItsRecreatedVignette()
+        {
+            var packageType = System.Type.GetType("UnityEditor.Rendering.Universal.URPPreprocessBuild, Unity.RenderPipelines.Universal.Editor", true);
+            var guardType = System.Type.GetType("LighthouseKeepers.Editor.OneLighthouseShipGuard, Assembly-CSharp-Editor", true);
+            var package = (UnityEditor.Build.IPreprocessBuildWithReport)System.Activator.CreateInstance(packageType, true);
+            var guard = (UnityEditor.Build.IPreprocessBuildWithReport)System.Activator.CreateInstance(guardType);
+            Assert.Greater(guard.callbackOrder, package.callbackOrder);
+            packageType.GetMethod("EnsureVolumeProfile", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).Invoke(null, null);
+            guard.OnPreprocessBuild(null);
+            NoVolumeProfileContainsVignette();
+        }
         [Test] public void NoVolumeProfileContainsVignette()
         {
             foreach (string guid in AssetDatabase.FindAssets("t:VolumeProfile", new[] { "Assets" }))

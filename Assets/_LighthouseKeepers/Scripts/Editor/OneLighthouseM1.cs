@@ -150,12 +150,7 @@ namespace LighthouseKeepers.Editor
                 }
                 if (changed) { EditorSceneManager.SaveScene(scene); log.AppendLine("CLEAN SCENE " + path); }
             }
-            foreach (string path in AssetDatabase.FindAssets("t:VolumeProfile", new[] { "Assets" }).Select(AssetDatabase.GUIDToAssetPath))
-            {
-                var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(path);
-                foreach (var v in profile.components.OfType<Vignette>().ToArray())
-                { profile.components.Remove(v); Object.DestroyImmediate(v, true); EditorUtility.SetDirty(profile); log.AppendLine("REMOVE VOLUME VIGNETTE " + path); }
-            }
+            RemoveVolumeVignettes();
             var mat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Art/Hands/Resources/Hands/M_Glove.mat");
             mat.SetColor("_BaseColor", new Color(.62f, .52f, .43f)); EditorUtility.SetDirty(mat);
             var config = AssetDatabase.LoadAssetAtPath<LobbyConfig>("Assets/_LighthouseKeepers/Settings/NetworkLobbyConfig.asset");
@@ -166,6 +161,18 @@ namespace LighthouseKeepers.Editor
             File.WriteAllText(Output + "/authoring.txt", log.ToString());
             EditorSceneManager.OpenScene(LighthouseNetworkLobby.ScenePath);
         }
+        // URP's early build callback populates every default override, including Vignette.
+        // Run again after that callback so source cleanup survives player serialization.
+        public static void RemoveVolumeVignettes()
+        {
+            foreach (string path in AssetDatabase.FindAssets("t:VolumeProfile", new[] { "Assets" }).Select(AssetDatabase.GUIDToAssetPath))
+            {
+                var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(path);
+                foreach (var v in profile.components.OfType<Vignette>().ToArray())
+                { profile.components.Remove(v); Object.DestroyImmediate(v, true); EditorUtility.SetDirty(profile); }
+            }
+            AssetDatabase.SaveAssets();
+        }
         public static void Build()
         {
             ApplyShipBuildScenes();
@@ -175,6 +182,9 @@ namespace LighthouseKeepers.Editor
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = LighthouseNetworkLobby.GameScenes,
                 target = BuildTarget.Android, locationPathName = "Builds/LighthouseKeepers-M1.apk", options = BuildOptions.Development });
             File.WriteAllText(Output + "/build.txt", $"{report.summary.result}\nErrors={report.summary.totalErrors}\nWarnings={report.summary.totalWarnings}\nBytes={report.summary.totalSize}\nDuration={report.summary.totalTime}\n");
+            foreach (var guid in AssetDatabase.FindAssets("t:VolumeProfile", new[] { "Assets" }))
+                if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(AssetDatabase.GUIDToAssetPath(guid)).components.Any(c=>c is Vignette))
+                    throw new BuildFailedException("A build callback reintroduced a Vignette override.");
             if (report.summary.result != BuildResult.Succeeded) throw new BuildFailedException("M1 Android build failed.");
         }
     }
@@ -185,6 +195,7 @@ namespace LighthouseKeepers.Editor
         {
             if (!EditorBuildSettings.scenes.Select(s=>s.path).SequenceEqual(LighthouseNetworkLobby.GameScenes) || EditorBuildSettings.scenes.Any(s=>!s.enabled))
                 throw new BuildFailedException("Use Lighthouse Keepers/Apply Ship Build Scenes before building.");
+            OneLighthouseM1.RemoveVolumeVignettes();
         }
     }
 }

@@ -87,6 +87,11 @@ namespace LighthouseKeepers.Tests
             Assert.AreSame(originalRunner, transport.Runner);
             Assert.AreEqual(1, Object.FindObjectsByType<NetworkRunner>(FindObjectsSortMode.None).Length);
             Assert.AreEqual(1, Object.FindObjectsByType<XROrigin>(FindObjectsSortMode.None).Length);
+            var rig = Object.FindAnyObjectByType<XROrigin>();
+            var hands = rig.GetComponentsInChildren<LighthouseKeepers.Gameplay.Interaction.HandRig>(true);
+            Assert.AreEqual(2, hands.Length, "Hosted play uses the same Sprint 3 hands.");
+            Assert.AreNotEqual(hands[0].Node, hands[1].Node);
+            Assert.IsEmpty(rig.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Locomotion.Comfort.TunnelingVignetteController>(true));
             Assert.IsNull(Object.FindAnyObjectByType<MultiplayerPanel>(), "No floating development board.");
             Assert.IsNull(Object.FindAnyObjectByType<KeeperReplicationSession>(), "No duplicate legacy replication.");
             Assert.IsNull(Object.FindAnyObjectByType<StormWatchDirector>());
