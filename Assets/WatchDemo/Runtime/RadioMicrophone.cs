@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using LighthouseKeepers.Gameplay.Interaction;
+using LighthouseKeepers.Net;
 namespace LighthouseKeepers.WatchDemo
 {
     // Tapan's activated/deactivated lifecycle, with explicit held/release cancellation.
@@ -14,6 +15,7 @@ namespace LighthouseKeepers.WatchDemo
         public Transform cordSocket;
         public LineRenderer cord;
         XRGrabInteractable grab;Vector3 home;Quaternion rotation;
+        FusionGrabBinding network;
         readonly Vector3[] cordPoints=new Vector3[81];
         void Awake()
         {
@@ -23,10 +25,12 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Activate(ActivateEventArgs e){if(Held)TriggerHeld=true;}
         void Deactivate(DeactivateEventArgs e)=>TriggerHeld=false;
-        void Release(SelectExitEventArgs e){TriggerHeld=false;transform.SetPositionAndRotation(home,rotation);}
+        void Release(SelectExitEventArgs e)
+        {TriggerHeld=false;if(!network || network.CanSimulateReleased)transform.SetPositionAndRotation(home,rotation);}
         void LateUpdate()
         {
-            if(!Held)transform.SetPositionAndRotation(home,rotation);
+            if(!network && FusionMessageChannel.Active && FusionMessageChannel.Active.Connected)TryGetComponent(out network);
+            if(!Held && (!network || network.CanSimulateReleased))transform.SetPositionAndRotation(home,rotation);
             var start=cordSocket.position;var end=transform.TransformPoint(new Vector3(0,-.12f,0));var axis=(end-start).normalized;
             var side=Vector3.Cross(axis,Vector3.up);if(side.sqrMagnitude<.01f)side=Vector3.right;side.Normalize();var other=Vector3.Cross(axis,side);
             for(int i=0;i<cordPoints.Length;i++)

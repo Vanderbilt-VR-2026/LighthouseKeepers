@@ -15,6 +15,9 @@ namespace LighthouseKeepers.WatchDemo
         readonly DayDefinition[] days;
         readonly HashSet<string> faults = new HashSet<string>();
         int index;
+        public bool NetworkRehearsal { get; private set; }
+        public void SetNetworkRehearsal(bool value)
+        {NetworkRehearsal=value;Pipe.ReadOnly=value;Radio.ReadOnly=value;}
         public event Action Changed;
         public RadioState Radio {get;}
         public PipeRepairState Pipe {get;}
@@ -52,7 +55,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if (seconds < 0 || double.IsNaN(seconds) || double.IsInfinity(seconds)) throw new ArgumentOutOfRangeException(nameof(seconds));
             bool wasFailed = Failed;
-            if(wasFailed)return;
+            if(wasFailed||NetworkRehearsal)return;
             if(Power==PowerState.Off && Definition.beaconDarkLimitSeconds>0)
             {BeaconDarkElapsed=Math.Min(Definition.beaconDarkLimitSeconds,BeaconDarkElapsed+seconds);BeaconDarkFailed=BeaconDarkElapsed>=Definition.beaconDarkLimitSeconds;}
             Elapsed = Math.Min(Duration, Elapsed + seconds);
@@ -61,26 +64,26 @@ namespace LighthouseKeepers.WatchDemo
         }
         public bool CompleteRepair()
         {
-            if (Failed || Repaired) return false;
+            if (NetworkRehearsal || Failed || Repaired) return false;
             faults.Remove(PipeStation); Changed?.Invoke(); return true;
         }
         // Called once per full stroke by the constrained interaction, never per frame.
         public bool StarterPulled()
         {
-            if (Failed || Power == PowerState.On) return false;
+            if (NetworkRehearsal || Failed || Power == PowerState.On) return false;
             StarterPulls++;
             if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; BeaconDarkElapsed=0; Radio.SetPower(true); }
             Changed?.Invoke(); return true;
         }
         public bool Sleep()
         {
-            if (!Complete || !HasNextDay) return false;
+            if (NetworkRehearsal || !Complete || !HasNextDay) return false;
             index++; Reset(); return true;
         }
-        public void Retry() => Reset();
+        public void Retry() {if(!NetworkRehearsal)Reset();}
         public bool ReplayFromDayOne()
         {
-            if (Failed || !Complete || HasNextDay) return false;
+            if (NetworkRehearsal || Failed || !Complete || HasNextDay) return false;
             int first = Array.FindIndex(days, day => day.day == 1);
             if (first < 0) return false;
             index = first; Reset(); return true;

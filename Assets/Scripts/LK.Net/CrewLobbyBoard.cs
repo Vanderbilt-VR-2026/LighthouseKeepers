@@ -12,7 +12,7 @@ namespace LighthouseKeepers.Net
         LobbyScreen screen;
         TMP_Text codeLabel, launchHint;
         LobbyManager manager;
-        Button reconnect, solo, optionsSolo;
+        Button reconnect, solo, optionsSolo, rehearsal;
         TMP_InputField codeInput;
         float nextRefresh;
         GameObject keypad;
@@ -60,6 +60,13 @@ namespace LighthouseKeepers.Net
                 }
             }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            var practiceFace=Rect("NetworkPractice",root,new Vector2(310,-267),new Vector2(510,55));
+            var practiceImage=practiceFace.gameObject.AddComponent<Image>();practiceImage.color=new Color(.12f,.20f,.20f);
+            rehearsal=practiceFace.gameObject.AddComponent<Button>();rehearsal.targetGraphic=practiceImage;
+            Label(practiceFace,"Label",Vector2.zero,practiceFace.sizeDelta,19).text="NETWORK PRACTICE · OBJECTIVES PAUSED";
+            rehearsal.onClick.AddListener(()=>transport.StartNetworkRehearsal());
+            launchHint.rectTransform.anchoredPosition=new Vector2(-280,-267);
+            launchHint.fontSize=17;launchHint.rectTransform.sizeDelta=new Vector2(570,82);
             var debugFace = Rect("DebugSoloGates", root, new Vector2(-280, -450), new Vector2(490, 45));
             var debugImage = debugFace.gameObject.AddComponent<Image>(); debugImage.color = new Color(.12f, .20f, .20f);
             var debugButton = debugFace.gameObject.AddComponent<Button>(); debugButton.targetGraphic = debugImage;
@@ -87,6 +94,13 @@ namespace LighthouseKeepers.Net
         void Refresh()
         {
             if (!codeLabel || !transport) return;
+            if(rehearsal)
+            {
+                rehearsal.gameObject.SetActive(transport.IsHost && !transport.IsStarting);
+                bool ready=transport.Players.Count>0;
+                foreach(var player in transport.Players)ready&=player.IsReady;
+                rehearsal.interactable=ready && !transport.IsBusy;
+            }
             if (launchHint && manager)
                 launchHint.text = manager.StartHint + "\n" + (!transport.IsOnline && !transport.IsBusy
                     ? "PLAY SOLO works offline. HOST CREW creates a code; guest enters it in CREW OPTIONS."

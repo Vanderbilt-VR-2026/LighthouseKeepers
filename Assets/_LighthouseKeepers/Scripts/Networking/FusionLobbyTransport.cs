@@ -19,6 +19,7 @@ namespace LighthouseKeepers.Networking
         static string pendingLobbyNotice;
         public NetworkRunner Runner => runner;
         public bool IsInGame => enteredGame;
+        public bool IsNetworkRehearsal => state.Starting && state.Rehearsal;
 
         [SerializeField] string sessionName = "LighthouseKeepersRoom";
         [SerializeField] string lobbySceneName = "LK_NetworkLobby";
@@ -237,14 +238,24 @@ namespace LighthouseKeepers.Networking
         }
         public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(sceneName, state.Players.Count);
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
+            => StartGameCore(sceneName,minimumPlayers,requireAllReady,false);
+        public bool StartNetworkRehearsal()
         {
-            string blocked = StartBlockReason(sceneName);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            return StartGameCore(ShipWorld.GameplaySceneName,1,true,true);
+#else
+            return Fail("Network practice is available in development builds only.");
+#endif
+        }
+        bool StartGameCore(string sceneName, int minimumPlayers, bool requireAllReady, bool rehearsal)
+        {
+            string blocked = rehearsal ? "" : StartBlockReason(sceneName);
             if (!string.IsNullOrEmpty(blocked)) return Fail(blocked);
             if (!IsHost || busy || state.Starting) return false;
             if (sceneName == ShipWorld.GameplaySceneName)
             {
-                if (state.Capacity != 2 || state.Players.Count < 1 || state.Players.Count > 2 || runner.ActivePlayers.Count() != state.Players.Count)
-                    return Fail("The lighthouse supports one or two connected keepers.");
+                if (state.Capacity > ShipWorld.MaximumCrewSize || state.Players.Count < 1 || state.Players.Count > ShipWorld.MaximumCrewSize || runner.ActivePlayers.Count() != state.Players.Count)
+                    return Fail("The lighthouse supports up to four connected keepers.");
                 minimumPlayers = 1;
                 requireAllReady = true;
             }
@@ -252,7 +263,7 @@ namespace LighthouseKeepers.Networking
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
                 if (System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i)) == sceneName) { index = i; break; }
             if (index < 0) return Fail("Add " + sceneName + " to Build Settings before starting.");
-            if (!state.Begin(minimumPlayers, requireAllReady)) return false;
+            if (!(rehearsal ? state.BeginRehearsal(minimumPlayers,requireAllReady) : state.Begin(minimumPlayers,requireAllReady))) return false;
             gameSceneName = sceneName;
             LastError = "";
             if (runner.SessionInfo.IsValid) runner.SessionInfo.IsOpen = false; // No unready late joins during launch.

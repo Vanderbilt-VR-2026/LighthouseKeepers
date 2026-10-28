@@ -6,6 +6,8 @@ This Sprint 3 candidate uses the teammate's **One Lighthouse Lab world**, based 
 
 The earlier two-player, three-watch [Storm Watch](Docs/StormWatch.md) and local [First Watch](Docs/FirstWatch.md) remain historical implementations on disk, excluded from this candidate's ship scenes. Their tests/evidence do not validate this Lab candidate.
 
+**William's Sprint 3 source branch:** four-player **Network Practice** is available in the Editor/development builds to validate shared movement, gripping and throws with Lab objectives paused. It includes prop-layout agreement, per-world generation checks and release momentum. Normal co-op mission launch remains blocked pending shared Lab state. See [core changes, actual checks and device acceptance](Docs/Sprints/Sprint3/WilliamNetworking.md). This source change is not included in the older APK linked below.
+
 ## Sprint downloads and submission
 
 | Sprint | README | Artifact status |
