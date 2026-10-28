@@ -37,6 +37,11 @@ namespace LighthouseKeepers.WatchDemo
         void Start()
         {
             state = new WatchState(Resources.Load<DayCatalog>("WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume());
+            var crew=FindAnyObjectByType<LighthouseKeepers.Networking.FusionLobbyTransport>();
+            // Fail closed if the scene arrives before the reliable launch-mode snapshot.
+            // No connected guest may run an independent copy of the Lab objectives.
+            state.SetNetworkRehearsal(crew && crew.IsOnline &&
+                (crew.IsNetworkRehearsal || !crew.IsHost || crew.Players.Count>1));
             state.Changed += StateChanged;
             if (generator) generator.Bind(state);
             if(emergencyLighting)emergencyLighting.Bind(state);
@@ -47,6 +52,7 @@ namespace LighthouseKeepers.WatchDemo
             LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
             menu=gameObject.AddComponent<WatchMenu>();menu.Initialize(this,head);
             BeginWatch();
+            if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
         }
         void BeginWatch()
         {
@@ -63,6 +69,7 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             if(sleeping)return;
+            if(state.NetworkRehearsal){flood.Paused=true;return;}
             var left=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);var right=InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
             left.TryGetFeatureValue(CommonUsages.gripButton,out bool lg);right.TryGetFeatureValue(CommonUsages.gripButton,out bool rg);
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
@@ -90,15 +97,15 @@ namespace LighthouseKeepers.WatchDemo
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
         public bool TryBeginRepair()=>!state.Failed&&!state.Repaired&&!sleeping&&pipeRepair&&pipeRepair.InContact;
-        public bool RetryDay(){if(!state.Failed||sleeping)return false;state.Retry();BeginWatch();if(menu)menu.Close();return true;}
+        public bool RetryDay(){if(state.NetworkRehearsal||!state.Failed||sleeping)return false;state.Retry();BeginWatch();if(menu)menu.Close();return true;}
         public bool ReplayFromDayOne()
         {
-            if(sleeping||!state.ReplayFromDayOne())return false;
+            if(state.NetworkRehearsal||sleeping||!state.ReplayFromDayOne())return false;
             BeginWatch();if(menu)menu.Close();return true;
         }
         public bool TrySleep()
         {
-            if(sleeping||(menu&&menu.IsOpen)||!state.Complete||!state.HasNextDay||Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)>=1.8f)return false;
+            if(state.NetworkRehearsal||sleeping||(menu&&menu.IsOpen)||!state.Complete||!state.HasNextDay||Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)>=1.8f)return false;
             StartCoroutine(Sleep());return true;
         }
         void CancelRepair(){repairProgress=0;}
@@ -106,6 +113,8 @@ namespace LighthouseKeepers.WatchDemo
         void RefreshBoard()
         {
             boardText.Clear();
+            if(state.NetworkRehearsal)
+            {board.text="NETWORK PRACTICE\n\nMove, turn and grab props together.\nObjectives and day clock are paused.\n\nLEFT MENU: Return to lobby";return;}
             boardText.Append("KEEPER WATCH — DAY ").Append(state.Day).Append("\n\n");
             foreach(var task in state.Definition.tasks)
                 boardText.Append(state.IsDone(task.stationId)?"[X] ":"[ ] ").Append(task.taskText).Append('\n');

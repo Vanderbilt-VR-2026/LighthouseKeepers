@@ -4,6 +4,7 @@ namespace LighthouseKeepers.Lobby
     public static class ShipWorld
     {
         public const string GameplaySceneName = "LK_Lab_Environment";
+        public const int MaximumCrewSize = 4;
         public const string LobbyScenePath = "Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity";
         public const string GameplayScenePath = "Assets/Scenes/Lab/" + GameplaySceneName + ".unity";
     }

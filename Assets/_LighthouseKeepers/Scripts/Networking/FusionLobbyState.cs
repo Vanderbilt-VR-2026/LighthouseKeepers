@@ -30,6 +30,7 @@ namespace LighthouseKeepers.Networking
         public bool ready;
         public int capacity;
         public bool starting;
+        public bool rehearsal;
         public LobbyPlayer[] players;
     }
 
@@ -67,11 +68,12 @@ namespace LighthouseKeepers.Networking
         public int Capacity { get; private set; } = 4;
         public int Revision { get; private set; }
         public bool Starting { get; private set; }
+        public bool Rehearsal { get; private set; }
 
         public void Reset(int capacity)
         {
             players.Clear(); requestRevisions.Clear();
-            Capacity = Mathf.Clamp(capacity, 2, 8); Revision = 0; Starting = false;
+            Capacity = Math.Max(2,Math.Min(8,capacity)); Revision = 0; Starting = Rehearsal = false;
         }
         public bool Add(string id, bool host)
         {
@@ -101,16 +103,18 @@ namespace LighthouseKeepers.Networking
             player.IsReady = request.ready;
             Revision++; return true;
         }
-        public bool Begin(int minimumPlayers, bool allReady)
+        public bool Begin(int minimumPlayers, bool allReady) => BeginCore(minimumPlayers,allReady,false);
+        public bool BeginRehearsal(int minimumPlayers, bool allReady) => BeginCore(minimumPlayers,allReady,true);
+        bool BeginCore(int minimumPlayers, bool allReady, bool rehearsal)
         {
             if (Starting || players.Count < Math.Max(1, minimumPlayers) ||
                 (allReady && players.Any(p => !p.IsReady))) return false;
-            Starting = true; Revision++; return true;
+            Starting = true; Rehearsal = rehearsal; Revision++; return true;
         }
-        public void CancelStart() { Starting = false; Revision++; }
+        public void CancelStart() { Starting = Rehearsal = false; Revision++; }
         public LobbyPacket Snapshot() => new()
         {
-            snapshot = true, revision = Revision, capacity = Capacity, starting = Starting,
+            snapshot = true, revision = Revision, capacity = Capacity, starting = Starting, rehearsal = Rehearsal,
             players = players.Select(p => new LobbyPlayer(p.Id, p.DisplayName, p.IsHost) { IsReady = p.IsReady }).ToArray()
         };
         public bool ApplySnapshot(LobbyPacket packet)
@@ -120,11 +124,11 @@ namespace LighthouseKeepers.Networking
                 packet.players.Length == 0 || packet.players.Length > packet.capacity ||
                 packet.players.Any(p => p == null || string.IsNullOrEmpty(p.Id) || p.Id.Length > 16) ||
                 packet.players.Select(p => p.Id).Distinct().Count() != packet.players.Length ||
-                packet.players.Count(p => p.IsHost) != 1) return false;
+                packet.players.Count(p => p.IsHost) != 1 || packet.rehearsal && !packet.starting) return false;
             players.Clear();
             players.AddRange(packet.players.Select(p => new LobbyPlayer(p.Id,
                 LobbyProtocol.DisplayName(p.DisplayName), p.IsHost) { IsReady = p.IsReady }));
-            Capacity = packet.capacity; Starting = packet.starting; Revision = packet.revision;
+            Capacity = packet.capacity; Starting = packet.starting; Rehearsal = packet.rehearsal; Revision = packet.revision;
             return true;
         }
     }

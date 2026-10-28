@@ -5,6 +5,7 @@ using System.Text;
 using Fusion;
 using LighthouseKeepers.Core;
 using LighthouseKeepers.Interaction;
+using LighthouseKeepers.Lobby;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -15,27 +16,36 @@ namespace LighthouseKeepers.Net
     [RequireComponent(typeof(FusionMessageChannel),typeof(CrewPoseStream))]
     public sealed class FusionGrabAuthority : MonoBehaviour
     {
-        const int RequestKind = 20, StateKind = 21, DeniedKind = 22;
+        const int RequestKind = 20, StateKind = 21, DeniedKind = 22, RegisterKind = 23, RegisteredKind = 24;
         readonly GrabAuthority leases = new();
         readonly Dictionary<int, FusionGrabBinding> props = new();
         readonly Dictionary<int, NetworkObject> authorityObjects = new();
         readonly Dictionary<int, int> ownerSequences = new();
         readonly Dictionary<int, double> requestTimes = new();
         readonly Dictionary<int, int> requestCounts = new();
+        readonly HashSet<int> registeredActors = new();
         FusionMessageChannel channel;
         CrewPoseStream poses;
         float nextScan, nextPublish;
         int stateSequence;
+        int registryGeneration;
+        int hostRegistryGeneration;
+        string layoutHash;
+        bool layoutBound, registered;
+        float nextRegistration;
         public CoopStationGate Gate { get; } = new();
         public bool IsHost => channel.IsHost;
         public int LocalActor => channel.LocalActorId;
+        public bool CanInteract => channel.Connected && registered;
+        public string LayoutStatus { get; private set; } = "Waiting for network props.";
         [Serializable] public sealed class Packet
         {
-            public int id, epoch, owner, sequence;
+            public int id, epoch, owner, sequence, generation;
             public string path;
             public int action; // 0 acquire, 1 held pose/heartbeat, 2 release, 3 authoritative state
             public Vector3 position;
             public Quaternion rotation;
+            public Vector3 velocity, angularVelocity;
         }
         void Awake()
         {
@@ -54,17 +64,25 @@ namespace LighthouseKeepers.Net
                 nextScan = Time.unscaledTime + 1;
                 var bootstrap = FindAnyObjectByType<EnvironmentBootstrap>();
                 if (bootstrap && !bootstrap.Ready) return;
-                if (props.Count == 0) BindProps();
+                if (!layoutBound) BindProps();
+            }
+            if (layoutBound && !registered && Time.unscaledTime >= nextRegistration)
+            {
+                nextRegistration = Time.unscaledTime + 1;
+                channel.SendToHost(RegisterKind, Encode(new Packet { id=props.Count, path=layoutHash, sequence=registryGeneration }));
             }
             if (!IsHost || Time.unscaledTime < nextPublish) return;
             nextPublish = Time.unscaledTime + 1f/15;
-            foreach (var id in leases.Expire(Time.unscaledTimeAsDouble)) Publish(id);
+            foreach (var id in leases.Expire(Time.unscaledTimeAsDouble))
+            { if (props.TryGetValue(id,out var released) && released) released.DropOnHost(); Publish(id); }
             foreach (var id in props.Keys) Publish(id);
         }
         void BindProps()
         {
             var candidates = FindObjectsByType<XRBaseInteractable>(FindObjectsSortMode.None)
                 .Where(Eligible).OrderBy(g => Path(g.transform),StringComparer.Ordinal).ToArray();
+            try { layoutHash = GrabRegistryLayout.Fingerprint(candidates.Select(g => Path(g.transform))); }
+            catch (ArgumentException error) { LayoutStatus = error.Message; return; }
             for (int i=0;i<candidates.Length;i++)
             {
                 int id = i+1;
@@ -76,9 +94,14 @@ namespace LighthouseKeepers.Net
                     if (obj) authorityObjects.Add(id,obj);
                 }
             }
+            layoutBound = true;
+            registryGeneration++;
+            nextRegistration = 0;
+            LayoutStatus = "Checking the crew's prop layout.";
         }
         static bool Eligible(XRBaseInteractable value)
         {
+            if (value.gameObject.scene.name == ShipWorld.GameplaySceneName && value is XRGrabInteractable) return true;
             // Only E's three requested interactions. Do not take ownership of lifelines, UI, or unrelated puzzles.
             for (var t=value.transform;t;t=t.parent)
                 if (t.name=="STN_MANUAL_PUMP" || t.name=="STN_TOOL_TABLE" || t.name=="GRIP_StarterHandle" ||
@@ -95,20 +118,38 @@ namespace LighthouseKeepers.Net
         public void Request(FusionGrabBinding binding,int action,int sequence)
         {
             if (!channel.Connected) { binding.Reject(); return; }
-            var packet=new Packet { id=binding.Id,path=binding.Path,epoch=binding.Epoch,sequence=sequence,action=action,
-                position=binding.transform.position,rotation=binding.transform.rotation };
+            var packet=new Packet { id=binding.Id,path=binding.Path,epoch=binding.Epoch,sequence=sequence,action=action,generation=hostRegistryGeneration,
+                position=binding.transform.position,rotation=binding.transform.rotation,
+                velocity=binding.ReleaseVelocity,angularVelocity=binding.ReleaseAngularVelocity };
             channel.SendToHost(RequestKind,Encode(packet));
         }
         static byte[] Encode(Packet packet) => Encoding.UTF8.GetBytes(JsonUtility.ToJson(packet));
         void Receive(int sender,int kind,byte[] data)
         {
-            if (kind!=RequestKind && kind!=StateKind && kind!=DeniedKind) return;
+            if (kind!=RequestKind && kind!=StateKind && kind!=DeniedKind && kind!=RegisterKind && kind!=RegisteredKind) return;
             Packet p;
             try { p=JsonUtility.FromJson<Packet>(Encoding.UTF8.GetString(data)); } catch (ArgumentException) { return; }
-            if (p==null || !props.TryGetValue(p.id,out var binding) || !binding || p.path!=binding.Path) return;
+            if (p==null) return;
+            if (kind==RegisterKind)
+            {
+                if (!IsHost || !layoutBound || !channel.IsActorConnected(sender) || p.sequence<=0 ||
+                    !GrabRegistryLayout.Matches(layoutHash,p.path,props.Count,p.id)) return;
+                registeredActors.Add(sender);
+                p.generation=registryGeneration;
+                channel.SendToActor(sender,RegisteredKind,Encode(p));
+                foreach (var id in props.Keys) Publish(id);
+                return;
+            }
+            if (kind==RegisteredKind)
+            {
+                if (sender==0 && p.generation>0 && p.sequence==registryGeneration && GrabRegistryLayout.Matches(layoutHash,p.path,props.Count,p.id))
+                { registered=true; hostRegistryGeneration=p.generation; LayoutStatus="Crew prop layout confirmed."; }
+                return;
+            }
+            if (!props.TryGetValue(p.id,out var binding) || !binding || p.path!=binding.Path) return;
             if (kind==RequestKind)
             {
-                if (!IsHost || !channel.IsActorConnected(sender) || !AllowRequest(sender)) return;
+                if (!IsHost || p.generation!=registryGeneration || !registeredActors.Contains(sender) || !channel.IsActorConnected(sender) || !AllowRequest(sender)) return;
                 if (p.action==0)
                 {
                     bool accepted=poses.NearHand(sender,binding.AuthoritativePosition,.8f) && leases.Acquire(p.id,sender,p.epoch,Time.unscaledTimeAsDouble);
@@ -118,7 +159,12 @@ namespace LighthouseKeepers.Net
                 if (p.action==2)
                 {
                     if (leases.Release(p.id,sender,p.epoch))
-                    { Gate.Observe(sender,p.id,false,Time.unscaledTimeAsDouble); Publish(p.id); }
+                    {
+                        if (ValidPose(p) && poses.NearHand(sender,p.position,1.2f))
+                            binding.ReleaseOnHost(p.position,p.rotation,p.velocity,p.angularVelocity);
+                        else binding.DropOnHost();
+                        Gate.Observe(sender,p.id,false,Time.unscaledTimeAsDouble); Publish(p.id);
+                    }
                     return;
                 }
                 if (p.action!=1 || !ValidPose(p) || !poses.NearHand(sender,p.position,1.2f) ||
@@ -128,8 +174,8 @@ namespace LighthouseKeepers.Net
                 if (sender!=LocalActor) binding.ApplyHeld(p.position,p.rotation);
                 Gate.Observe(sender,p.id,true,Time.unscaledTimeAsDouble);
             }
-            else if (sender==0 && kind==DeniedKind) binding.Reject(p.epoch);
-            else if (sender==0 && kind==StateKind && ValidPose(p)) binding.ApplyState(p);
+            else if (registered && p.generation==hostRegistryGeneration && sender==0 && kind==DeniedKind) binding.Reject(p.epoch);
+            else if (registered && p.generation==hostRegistryGeneration && sender==0 && kind==StateKind && ValidPose(p)) binding.ApplyState(p);
         }
         bool AllowRequest(int actor)
         {
@@ -142,9 +188,11 @@ namespace LighthouseKeepers.Net
         {
             var v=p.position;var q=p.rotation;
             float norm=q.x*q.x+q.y*q.y+q.z*q.z+q.w*q.w;
-            return KeeperPoseFrame.Finite(v.x)&&KeeperPoseFrame.Finite(v.y)&&KeeperPoseFrame.Finite(v.z)&&v.sqrMagnitude<1000000 &&
+            return FiniteVector(p.velocity) && FiniteVector(p.angularVelocity) &&
+                KeeperPoseFrame.Finite(v.x)&&KeeperPoseFrame.Finite(v.y)&&KeeperPoseFrame.Finite(v.z)&&v.sqrMagnitude<1000000 &&
                 KeeperPoseFrame.Finite(norm)&&norm>.8f&&norm<1.2f;
         }
+        static bool FiniteVector(Vector3 v) => KeeperPoseFrame.Finite(v.x) && KeeperPoseFrame.Finite(v.y) && KeeperPoseFrame.Finite(v.z);
         void Publish(int id)
         {
             if (!props.TryGetValue(id,out var binding) || !binding) return;
@@ -154,7 +202,7 @@ namespace LighthouseKeepers.Net
                 var owner=channel.TryPlayer(lease.Owner,out var peer)?peer:channel.Runner.LocalPlayer;
                 if (obj.InputAuthority!=owner) obj.AssignInputAuthority(owner);
             }
-            channel.Broadcast(StateKind,Encode(new Packet { id=id,path=binding.Path,epoch=lease.Epoch,owner=lease.Owner,sequence=++stateSequence,action=3,
+            channel.Broadcast(StateKind,Encode(new Packet { id=id,path=binding.Path,epoch=lease.Epoch,owner=lease.Owner,sequence=++stateSequence,action=3,generation=registryGeneration,
                 position=binding.transform.position,rotation=binding.transform.rotation }));
         }
         public bool HasFreshLease(int actor,int station)
@@ -172,14 +220,18 @@ namespace LighthouseKeepers.Net
         }
         void Left(int actor)
         {
+            registeredActors.Remove(actor);
             Gate.RemoveActor(actor);requestTimes.Remove(actor);requestCounts.Remove(actor);
-            if (IsHost) foreach (var id in leases.ReleasePlayer(actor)) Publish(id);
+            if (IsHost) foreach (var id in leases.ReleasePlayer(actor))
+            { if (props.TryGetValue(id,out var released) && released) released.DropOnHost(); Publish(id); }
         }
         void Clear()
         {
             foreach (var binding in props.Values) if (binding) { binding.Unbind(); Destroy(binding); }
             foreach (var obj in authorityObjects.Values) if (obj && obj.IsValid && IsHost) channel.Runner.Despawn(obj);
             props.Clear(); authorityObjects.Clear(); leases.Clear();ownerSequences.Clear();requestTimes.Clear();requestCounts.Clear();Gate.Clear();stateSequence=0;
+            registeredActors.Clear();layoutBound=registered=false;layoutHash=null;hostRegistryGeneration=0;nextRegistration=0;
+            LayoutStatus="Waiting for network props.";
         }
         void OnDestroy()
         { SceneManager.sceneLoaded-=SceneLoaded; channel.Received-=Receive;channel.SessionChanged-=Clear;channel.ActorLeft-=Left;Clear(); }
