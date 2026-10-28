@@ -6,6 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class PipeRepairState
     {
         public readonly PipeRepairProfile Profile;
+        public bool ReadOnly {get;set;}
         public event Action Changed,QuarterTurn,Completed;
         readonly int[] order={0,1,2};
         public int BoltsDone{get;private set;}
@@ -30,7 +31,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Observe(float seconds,float twistDegrees,bool contact,bool steady,bool canWork)
         {
             if(!float.IsFinite(seconds)||seconds<0||!float.IsFinite(twistDegrees))throw new ArgumentOutOfRangeException();
-            if(Complete||!canWork)return;
+            if(ReadOnly||Complete||!canWork)return;
             if(!contact)
             {
                 if(touching){StrokeDegrees*=Profile.retainedPartialProgress;if(NeedsSeal)SealElapsed*=Profile.retainedPartialProgress;NeedsReturn=false;SeatElapsed=0;Changed?.Invoke();}
