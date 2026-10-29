@@ -1,3 +1,5 @@
+**[Team design document](Docs/DesignDocument.md)**
+
 # Lighthouse Keepers
 
 ## Sprint 3 — Download for Quest 3
