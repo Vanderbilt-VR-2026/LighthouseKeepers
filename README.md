@@ -1,3 +1,5 @@
+**[Team design document](Docs/DesignDocument.md)**
+
 # Lighthouse Keepers
 
 Unity **6000.3.23f1** · Meta Quest · OpenXR / XR Interaction Toolkit · ARM64 IL2CPP.
