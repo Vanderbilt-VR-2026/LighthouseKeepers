@@ -75,6 +75,13 @@ namespace LighthouseKeepers.Net
             var frame = new KeeperPoseFrame { Actor = channel.LocalActorId, Sequence = ++serial,
                 Head = head.position, HeadRotation = head.rotation, Left = l.position, LeftRotation = l.rotation,
                 Right = r.position, RightRotation = r.rotation, LeftPose = leftPose, RightPose = rightPose };
+#if UNITY_EDITOR
+            if(!XRSettings.isDeviceActive)
+            {
+                frame.Left=head.TransformPoint(new Vector3(-.25f,-.35f,.35f));frame.Right=head.TransformPoint(new Vector3(.25f,-.35f,.35f));
+                frame.LeftRotation=frame.RightRotation=head.rotation;
+            }
+#endif
             var ld = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand); var rd = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
             ld.TryGetFeatureValue(CommonUsages.grip,out frame.LeftGrip); ld.TryGetFeatureValue(CommonUsages.trigger,out frame.LeftTrigger);
             rd.TryGetFeatureValue(CommonUsages.grip,out frame.RightGrip); rd.TryGetFeatureValue(CommonUsages.trigger,out frame.RightTrigger);

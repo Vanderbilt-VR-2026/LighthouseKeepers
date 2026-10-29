@@ -82,8 +82,8 @@ namespace LighthouseKeepers.Networking
                     prototype.RunnerPrefab.gameObject.SetActive(false);
             }
         }
-        public bool HostGame(int maxPlayers) => BeginConnection(GameMode.Host, sessionName, maxPlayers);
-        public bool JoinGame(string address) => BeginConnection(GameMode.Client, address, 4);
+        public bool HostGame(int maxPlayers) => BeginConnection(GameMode.Host, sessionName, Math.Min(ShipWorld.MaximumCrewSize,maxPlayers));
+        public bool JoinGame(string address) => BeginConnection(GameMode.Client, address, ShipWorld.MaximumCrewSize);
 
         bool BeginConnection(GameMode mode, string room, int capacity)
         {
@@ -255,7 +255,7 @@ namespace LighthouseKeepers.Networking
             if (sceneName == ShipWorld.GameplaySceneName)
             {
                 if (state.Capacity > ShipWorld.MaximumCrewSize || state.Players.Count < 1 || state.Players.Count > ShipWorld.MaximumCrewSize || runner.ActivePlayers.Count() != state.Players.Count)
-                    return Fail("The lighthouse supports up to four connected keepers.");
+                    return Fail("This test supports up to two connected keepers.");
                 minimumPlayers = 1;
                 requireAllReady = true;
             }

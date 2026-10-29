@@ -20,6 +20,13 @@ namespace LighthouseKeepers.WatchDemo
         public bool CodeAccepted=>CodeProgress==Program.callCode.Length;
         public bool Transmitting=>held&&trigger&&power&&MainOn&&Locked&&CodeAccepted&&!Completed;
         public RadioState(RadioProgram program){Program=program?program:throw new ArgumentNullException(nameof(program));Reset(false);}
+        public void ApplyReplica(WatchSnapshot s)
+        {
+            if(!ReadOnly)return;
+            power=s.power==1;MainOn=s.radioMain;Locked=s.radioLocked;Completed=s.radioDone;
+            FrequencyMHz=s.frequency;LockElapsed=s.lockElapsed;TransmitElapsed=s.transmitElapsed;CodeProgress=s.codeProgress;
+            held=trigger=TransmitElapsed>0;
+        }
         public void Reset(bool hasPower)
         {power=hasPower;MainOn=Locked=Completed=held=trigger=false;FrequencyMHz=Program.minimumMHz;LockElapsed=TransmitElapsed=0;CodeProgress=0;}
         public void SetPower(bool value)

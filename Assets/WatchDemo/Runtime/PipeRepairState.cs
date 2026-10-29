@@ -27,6 +27,12 @@ namespace LighthouseKeepers.WatchDemo
             var random=new System.Random(seed);for(int i=2;i>0;i--){int j=random.Next(i+1);(order[i],order[j])=(order[j],order[i]);}
             BoltsDone=repaired?3:0;ResetBolt();Changed?.Invoke();
         }
+        public void ApplyReplica(WatchSnapshot s)
+        {
+            if(!ReadOnly)return;
+            BoltsDone=s.bolts;if(BoltsDone<3)order[BoltsDone]=s.activeBolt;
+            TurnsDone=s.turns;StrokeDegrees=s.stroke;SealElapsed=s.seal;NeedsReturn=s.needsReturn;
+        }
         void ResetBolt(){TurnsDone=0;StrokeDegrees=SealElapsed=SeatElapsed=returned=direction=0;NeedsReturn=touching=false;}
         public void Observe(float seconds,float twistDegrees,bool contact,bool steady,bool canWork)
         {

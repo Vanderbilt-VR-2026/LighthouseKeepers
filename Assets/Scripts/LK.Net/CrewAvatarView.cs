@@ -40,7 +40,11 @@ namespace LighthouseKeepers.Net
         }
         Transform Hand(GameObject reference,string label)
         {
-            if (!reference) return Part(label,PrimitiveType.Cube,new Vector3(.09f,.12f,.16f));
+            if (!reference)
+            {
+                var anchor=new GameObject(label);anchor.transform.SetParent(visuals.transform,false);
+                anchor.AddComponent<RemoteHandVisual>().left=label.StartsWith("Left");return anchor.transform;
+            }
             return Instantiate(reference,visuals.transform).transform;
         }
         Transform Part(string label,PrimitiveType type,Vector3 scale)

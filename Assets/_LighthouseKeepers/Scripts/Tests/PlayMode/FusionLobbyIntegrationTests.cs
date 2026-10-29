@@ -61,7 +61,7 @@ namespace LighthouseKeepers.Tests
             foreach (var session in sessions.Where(s => s)) session.LeaveGame();
             yield return Until(() => sessions.Where(s => s).All(s => !s.IsBusy), "Session shutdown timed out.");
             foreach (var session in sessions.Where(s => s)) Object.Destroy(session.gameObject);
-            sessions.Clear(); yield return null;
+            sessions.Clear(); ShipWorld.CoopEnabled=true; yield return null;
         }
         [UnityTest] public IEnumerator OfflineFusionSessionLoadsLabAndSurvivesBoardUnload()
         {
@@ -141,10 +141,11 @@ namespace LighthouseKeepers.Tests
             Set(session, "online", true);
             return session;
         }
-        [UnityTest, Category("Online")] public IEnumerator ReadyCrewRemainsInLobbyUntilLabSharedStateIsImplemented()
+        [UnityTest, Category("Online")] public IEnumerator DisabledCoopFlagKeepsReadyCrewInLobby()
         {
             if (System.Environment.GetEnvironmentVariable("LK_FUSION_CLOUD_TESTS") != "1")
                 Assert.Ignore("Set LK_FUSION_CLOUD_TESTS=1 for two real Photon peers.");
+            ShipWorld.CoopEnabled=false;
             string room = "LK-ConnectedWatch-" + Guid.NewGuid().ToString("N");
             var hostTask = CloudPeer(GameMode.Host, room, 2);
             yield return Until(() => hostTask.IsCompleted, "Host timed out.", 75);
@@ -170,6 +171,42 @@ namespace LighthouseKeepers.Tests
             yield return Until(() => host.Players.Count == 1, "Host did not recover its host-alone debug route.");
             Assert.IsEmpty(host.StartBlockReason(ShipWorld.GameplaySceneName));
             Assert.IsEmpty(host.LastError, "The resolved co-op launch error must not keep misleading the remaining host.");
+        }
+
+        [UnityTest, Category("Online")] public IEnumerator TwoReadyKeepersLaunchLabAndHostStateCrossesExistingRunner()
+        {
+            if(System.Environment.GetEnvironmentVariable("LK_FUSION_CLOUD_TESTS")!="1")Assert.Ignore("Opt into Photon Cloud.");
+            ShipWorld.CoopEnabled=true;
+            string room="LK-CoopStep1-"+Guid.NewGuid().ToString("N");
+            var ht=CloudPeer(GameMode.Host,room,2);yield return Until(()=>ht.IsCompleted,"Host timeout",75);var host=ht.GetAwaiter().GetResult();
+            var gt=CloudPeer(GameMode.Client,room,2);yield return Until(()=>gt.IsCompleted,"Guest timeout",75);var guest=gt.GetAwaiter().GetResult();
+            yield return Until(()=>host.Players.Count==2 && guest.Players.Count==2,"Roster missing");
+            host.SetLocalReady(true);Assert.IsFalse(host.StartGame(ShipWorld.GameplaySceneName,1,false));
+            guest.SetLocalReady(true);yield return Until(()=>host.Players.All(p=>p.IsReady),"Ready missing");
+            var hostRunner=host.Runner;var guestRunner=guest.Runner;
+            Assert.IsTrue(host.StartGame(ShipWorld.GameplaySceneName,2,true),host.LastError);
+            yield return Until(()=>guest.IsStarting,"Shared Lab launch missing");
+            Assert.IsFalse(host.IsNetworkRehearsal);Assert.IsFalse(guest.IsNetworkRehearsal);
+            var hc=host.gameObject.AddComponent<LighthouseKeepers.Net.FusionMessageChannel>();
+            var gc=guest.gameObject.AddComponent<LighthouseKeepers.Net.FusionMessageChannel>();
+            yield return Until(()=>hc.Connected&&gc.Connected,"Message channels not bound");
+            var watchType=Type.GetType("LighthouseKeepers.WatchDemo.WatchState, Assembly-CSharp",true);
+            object h=Activator.CreateInstance(watchType),g=Activator.CreateInstance(watchType);
+            watchType.GetMethod("SetRemoteReplica").Invoke(g,new object[]{true});
+            watchType.GetMethod("Tick").Invoke(h,new object[]{17d});
+            var snapshot=watchType.GetMethod("Capture").Invoke(h,new object[]{.17f});
+            bool received=false;
+            gc.Received+=(sender,kind,data)=>
+            {
+                if(sender!=0||kind!=41)return;
+                var decoded=JsonUtility.FromJson(System.Text.Encoding.UTF8.GetString(data),snapshot.GetType());
+                received=(bool)watchType.GetMethod("ApplyRemote").Invoke(g,new[]{decoded});
+            };
+            hc.Broadcast(41,System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(snapshot)));
+            yield return Until(()=>received,"Host snapshot did not reach the read-only guest");
+            Assert.AreEqual(17d,watchType.GetProperty("Elapsed").GetValue(g));
+            Assert.IsFalse((bool)watchType.GetMethod("CompleteRepair").Invoke(g,null));
+            Assert.AreSame(hostRunner,host.Runner);Assert.AreSame(guestRunner,guest.Runner);
         }
 
         [UnityTest] public IEnumerator PhotonPeersShareRosterReadyLateJoinKickAndDisconnect()

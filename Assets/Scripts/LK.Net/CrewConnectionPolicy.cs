@@ -28,7 +28,7 @@ namespace LighthouseKeepers.Net
         {
             if (string.IsNullOrEmpty(error)) return "";
             if (error.Contains("GameNotFound")) return "No crew has that code. Check all six characters and the host's region.";
-            if (error.Contains("GameIsFull") || error.Contains("ServerFull")) return "That crew is full. Up to four keepers can connect.";
+            if (error.Contains("GameIsFull") || error.Contains("ServerFull")) return "That crew is full. This test supports two keepers.";
             if (error.Contains("GameClosed")) return "That watch has started. Ask the host to return to the lobby, then reconnect.";
             if (error.Contains("GameIdAlreadyExists")) return "That code is in use. Press Host crew to get a new code.";
             if (error.Contains("InvalidAuthentication") || error.Contains("InvalidRegion")) return "Photon setup needs attention. Check the Fusion App ID and region in the setup guide.";

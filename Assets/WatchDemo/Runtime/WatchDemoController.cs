@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using LighthouseKeepers.Flood;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed class WatchDemoController : MonoBehaviour
+    public sealed class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView
     {
         [SerializeField] FloodController flood;
         [SerializeField] Transform head,repairPoint,bed,wrenchVisual;
@@ -24,6 +24,9 @@ namespace LighthouseKeepers.WatchDemo
         [SerializeField, Min(0)] float unpoweredLeakRiseMPerSecond=.0045f;
         [SerializeField, Min(0)] float repairedDrainMPerSecond=.012f;
         WatchState state;
+        LighthouseKeepers.Lobby.ICoopWatchLink coop;
+        public float WaterHeight=>flood.Height;
+        public Transform BoardTransform=>board.transform;
         readonly System.Text.StringBuilder boardText = new System.Text.StringBuilder(256);
         float repairProgress;
         int shownSecond=-1;
@@ -32,16 +35,17 @@ namespace LighthouseKeepers.WatchDemo
         Material fadeMaterial;
         WrenchHaptics wrenchHaptics;
         WatchMenu menu;
+        public Component Owner=>this;
+        public void SetNetworkMode(bool practice,bool replica){state.SetNetworkRehearsal(practice);state.SetRemoteReplica(replica);}
+        public string CaptureState()=>JsonUtility.ToJson(state.Capture(flood.Height));
+        public bool ApplyState(string json)=>ApplyHostSnapshot(JsonUtility.FromJson<WatchSnapshot>(json));
+        public string DescribeState()=>$"day={state.Day} elapsed={state.Elapsed:F2} water={flood.Height:F4} power={state.Power} tasks={state.CompletedTasks}";
         public WatchState State=>state;
         public float RepairProgress=>state==null?0:state.Pipe.BoltsDone+state.Pipe.StrokeDegrees/state.Pipe.Profile.quarterTurnDegrees;
         void Start()
         {
             state = new WatchState(Resources.Load<DayCatalog>("WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume());
-            var crew=FindAnyObjectByType<LighthouseKeepers.Networking.FusionLobbyTransport>();
-            // Fail closed if the scene arrives before the reliable launch-mode snapshot.
-            // No connected guest may run an independent copy of the Lab objectives.
-            state.SetNetworkRehearsal(crew && crew.IsOnline &&
-                (crew.IsNetworkRehearsal || !crew.IsHost || crew.Players.Count>1));
+            coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);
             state.Changed += StateChanged;
             if (generator) generator.Bind(state);
             if(emergencyLighting)emergencyLighting.Bind(state);
@@ -53,6 +57,7 @@ namespace LighthouseKeepers.WatchDemo
             menu=gameObject.AddComponent<WatchMenu>();menu.Initialize(this,head);
             BeginWatch();
             if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
+            if(state.RemoteReplica){flood.Paused=true;clock.text="WAITING FOR HOST STATE";}
         }
         void BeginWatch()
         {
@@ -69,7 +74,8 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             if(sleeping)return;
-            if(state.NetworkRehearsal){flood.Paused=true;return;}
+            if(state.NetworkRehearsal || state.RemoteReplica){flood.Paused=true;return;}
+            if(coop!=null && !coop.Ready){flood.Paused=true;clock.text="WAITING FOR KEEPER";return;}
             var left=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);var right=InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
             left.TryGetFeatureValue(CommonUsages.gripButton,out bool lg);right.TryGetFeatureValue(CommonUsages.gripButton,out bool rg);
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
@@ -97,16 +103,24 @@ namespace LighthouseKeepers.WatchDemo
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
         public bool TryBeginRepair()=>!state.Failed&&!state.Repaired&&!sleeping&&pipeRepair&&pipeRepair.InContact;
-        public bool RetryDay(){if(state.NetworkRehearsal||!state.Failed||sleeping)return false;state.Retry();BeginWatch();if(menu)menu.Close();return true;}
+        public bool RetryDay(){if(state.ReadOnly||!state.Failed||sleeping)return false;state.Retry();BeginWatch();if(menu)menu.Close();return true;}
         public bool ReplayFromDayOne()
         {
-            if(state.NetworkRehearsal||sleeping||!state.ReplayFromDayOne())return false;
+            if(state.ReadOnly||sleeping||!state.ReplayFromDayOne())return false;
             BeginWatch();if(menu)menu.Close();return true;
         }
         public bool TrySleep()
         {
-            if(state.NetworkRehearsal||sleeping||(menu&&menu.IsOpen)||!state.Complete||!state.HasNextDay||Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)>=1.8f)return false;
+            if(state.ReadOnly||sleeping||(menu&&menu.IsOpen)||!state.Complete||!state.HasNextDay||Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)>=1.8f)return false;
             StartCoroutine(Sleep());return true;
+        }
+        public bool ApplyHostSnapshot(WatchSnapshot snapshot)
+        {
+            if(!state.ApplyRemote(snapshot))return false;
+            flood.Paused=true;flood.SetHeight(snapshot.water);
+            int remaining=Mathf.Max(0,(int)(state.Duration-state.Elapsed));
+            clock.text=$"D{state.Day}   {remaining/60:00}:{remaining%60:00}   {state.CompletedTasks}/{state.Definition.tasks.Length} TASKS";
+            bedPrompt.text="";RefreshBoard();return true;
         }
         void CancelRepair(){repairProgress=0;}
         void StateChanged(){shownSecond=-1;RefreshBoard();}
@@ -125,6 +139,7 @@ namespace LighthouseKeepers.WatchDemo
             else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE\nMenu: Replay from Day 1 or Return to lobby");
             else boardText.Append("PIPE F1 / GENERATOR F2 / RADIO F4\nFinish tasks, then sleep in F3");
             if(!state.Failed&&(!state.Complete||state.HasNextDay))boardText.Append("\nLEFT MENU: Return to lobby (Editor: Esc)");
+            if(state.RemoteReplica)boardText.Append("\nCO-OP GUEST — host operates stations");
             board.text=boardText.ToString();
         }
         IEnumerator Sleep()

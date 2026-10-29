@@ -1,4 +1,5 @@
 using System.Linq;
+using LighthouseKeepers.Interaction;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -7,13 +8,9 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 namespace LighthouseKeepers.Net
 {
-    public interface INetworkPropRelease
-    {
-        void OnNetworkReleased();
-    }
     /// <summary>XRI selection remains optimistic until the host grants the lease; denial explicitly detaches the losing hand.</summary>
     [DefaultExecutionOrder(1000)]
-    public sealed class FusionGrabBinding : MonoBehaviour, IXRSelectFilter
+    public sealed class FusionGrabBinding : MonoBehaviour, IXRSelectFilter, INetworkPropStatus
     {
         FusionGrabAuthority authority;
         XRBaseInteractable interaction;

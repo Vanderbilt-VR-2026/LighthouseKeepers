@@ -32,7 +32,7 @@ namespace LighthouseKeepers.Net
             solo = SoloButton(root, "PlaySolo", new Vector2(310, 175), new Vector2(510, 82));
             var options = root.Find("CrewOptionsPanel");
             if (options) optionsSolo = SoloButton(options, "PlaySoloOptions", new Vector2(0, -65), new Vector2(500, 70));
-            codeLabel = Label(root, "CrewCode", new Vector2(-80, 422), new Vector2(550, 36), 24);
+            codeLabel = Label(root, "CrewCode", new Vector2(-80, 422), new Vector2(650, 50), 36);
             launchHint = Label(root, "LaunchStatus", new Vector2(0, -267), new Vector2(1150, 82), 22);
             launchHint.textWrappingMode = TextWrappingModes.Normal;
             var face = Rect("Reconnect", root, new Vector2(310, -176), new Vector2(510, 82));
@@ -96,7 +96,7 @@ namespace LighthouseKeepers.Net
             if (!codeLabel || !transport) return;
             if(rehearsal)
             {
-                rehearsal.gameObject.SetActive(transport.IsHost && !transport.IsStarting);
+                rehearsal.gameObject.SetActive(!LighthouseKeepers.Lobby.ShipWorld.CoopEnabled && transport.IsHost && !transport.IsStarting);
                 bool ready=transport.Players.Count>0;
                 foreach(var player in transport.Players)ready&=player.IsReady;
                 rehearsal.interactable=ready && !transport.IsBusy;

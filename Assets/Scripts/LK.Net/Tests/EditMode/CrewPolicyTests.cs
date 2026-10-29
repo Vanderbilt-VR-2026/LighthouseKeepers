@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using LighthouseKeepers.Interaction;
+using LighthouseKeepers.Lobby;
 using LighthouseKeepers.Networking;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class CrewPolicyTests
     {
+        bool previousFlag;
+        [SetUp] public void DisableExperimentalCoop(){previousFlag=ShipWorld.CoopEnabled;ShipWorld.CoopEnabled=false;}
+        [TearDown] public void RestoreCoopFlag()=>ShipWorld.CoopEnabled=previousFlag;
         [TestCase("LK_Lab_Environment", 0, false)]
         [TestCase("LK_Lab_Environment", 1, false)]
         [TestCase("LK_Lab_Environment", 2, true)]

@@ -44,7 +44,7 @@ namespace LighthouseKeepers.Net.Tests
         [Test] public void NormalCoopStillNeedsSharedObjectivesWhilePracticeMayOpenTheLab()
         {
             Assert.IsNotEmpty(CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName,4));
-            Assert.AreEqual(4,ShipWorld.MaximumCrewSize);
+            Assert.AreEqual(2,ShipWorld.MaximumCrewSize);
         }
     }
 }

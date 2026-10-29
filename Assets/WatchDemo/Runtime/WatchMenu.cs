@@ -139,8 +139,8 @@ namespace LighthouseKeepers.WatchDemo
             status.text = state.Failed ? state.FailureMessage + "\nRetry keeps this day." :
                 state.Complete && !state.HasNextDay ? "ALL WATCHES COMPLETE\nReplay resets the full watch to Day 1." :
                 "DAY " + state.Day + "\nThe watch continues while this menu is open.";
-            retry.gameObject.SetActive(state.Failed);
-            replay.gameObject.SetActive(state.Complete && !state.HasNextDay && !state.Failed);
+            retry.gameObject.SetActive(!state.ReadOnly && state.Failed);
+            replay.gameObject.SetActive(!state.ReadOnly && state.Complete && !state.HasNextDay && !state.Failed);
         }
 
         public void ReturnToLobby()
