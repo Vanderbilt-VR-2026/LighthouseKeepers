@@ -65,4 +65,3 @@ They should see a physical route open and a temporary pause with the flood. Addi
 **Team answer:**
 
 Keepers can hypothetically see everything, but they can only be in one place at once so they need to be able to share information effectively to win.
-
