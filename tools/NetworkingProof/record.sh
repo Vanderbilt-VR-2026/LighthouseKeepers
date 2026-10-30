@@ -20,8 +20,9 @@ done
 if ! /usr/bin/grep -q PROOF_CONNECTED "$run_dir/host.log"; then
     print "Host did not connect in time; inspect $run_dir/host.log"; exit 1
 fi
-"$player" -proof-role client -proof-room "$room" -proof-output "$run_dir/client" -proof-quit 1 -screen-fullscreen 0 -screen-width 1280 -screen-height 720 -logFile "$run_dir/client.log" > "$run_dir/client-stdout.log" 2>&1 &
+"$player" -proof-role client -proof-control "$run_dir/client/control.json" -proof-room "$room" -proof-output "$run_dir/client" -proof-quit 1 -screen-fullscreen 0 -screen-width 1280 -screen-height 720 -logFile "$run_dir/client.log" > "$run_dir/client-stdout.log" 2>&1 &
 client_pid=$!
+python3 tools/NetworkingProof/drive.py "$run_dir"
 wait "$host_pid"
 wait "$client_pid"
 trap - EXIT
