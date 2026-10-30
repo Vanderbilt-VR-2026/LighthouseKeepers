@@ -1,45 +1,54 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using LighthouseKeepers.Networking;
 using LighthouseKeepers.StormWatch;
 using LighthouseKeepers.StormWatchNetworking;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LighthouseKeepers.NetworkingProof
 {
-    /// <summary>Two real Fusion players; scripted local hands, received partner, first-person camera.</summary>
+    /// <summary>Independent desktop input on each Fusion peer; the partner uses received poses only.</summary>
     public sealed class NetworkingProof : MonoBehaviour
     {
         [SerializeField] Shader proofShader;
         [SerializeField, Min(6)] float durationSeconds = 7;
-        const float PoseInterval = .2f, StateInterval = .5f;
+        [SerializeField, Min(.1f)] float moveSpeed = 1.2f;
+        const float PoseInterval = .2f;
         const int CaptureRate = 15;
         readonly KeeperInput local = new();
-        readonly WatchState clock = new();
+        readonly List<string> trace = new();
         FusionLobbyTransport crew;
         StormWatchFusionLink link;
         Avatar self, partner;
         Camera view;
         Material blue, amber, gloves, dark;
-        bool host, started, finished, contact;
+        bool host, started, finished, hadPartner, lostPartner, jumpHeld, previousVisible;
         int sent, received, lastSequence = -1, lastFrame = -1, frames, errors;
-        float deadline, sendAt, publishAt, lastSnapshotAt, maxHandMotion;
-        Vector3 previousHand;
-        WatchState previousSnapshot;
-        string output, failure = "";
-        float Clock => host ? clock.elapsed : link && link.ReceivedState != null ? link.ReceivedState.elapsed : 0;
-        float PoseClock => host ? Clock : Clock + Mathf.Min(.65f, Time.unscaledTime - lastSnapshotAt);
+        float deadline, sendAt, startedAt, pollAt, verticalSpeed, maxHandMotion, maxHeadMotion;
+        Vector3 feet, previousHand, previousHead;
+        string output, controlFile, failure = "";
+        Control control = new();
+        float Elapsed => started ? Time.unscaledTime - startedAt : 0;
+        [Serializable] sealed class Control { public int revision; public float strafe, forward; public bool jump, wave, leave; }
+        [Serializable] sealed class Sample
+        {
+            public string kind, utc;
+            public float elapsed;
+            public int sequence;
+            public Vector3 head, right;
+            public bool visible;
+        }
 
         IEnumerator Start()
         {
             host = Arg("-proof-role", "host") == "host";
-            output = Arg("-proof-output", "");
-            Application.runInBackground = true;
-            Application.targetFrameRate = 30;
-            QualitySettings.vSyncCount = 0;
-            Screen.SetResolution(1280, 720, false);
+            output = Arg("-proof-output", ""); controlFile = Arg("-proof-control", "");
+            feet = new Vector3(host ? -.85f : .85f, 0, 0);
+            Application.runInBackground = true; Application.targetFrameRate = 30;
+            QualitySettings.vSyncCount = 0; Screen.SetResolution(1280, 720, false);
             if (output.Length > 0) Directory.CreateDirectory(output);
             Application.logMessageReceived += Log;
             CreateStage();
@@ -62,96 +71,142 @@ namespace LighthouseKeepers.NetworkingProof
 
         void Update()
         {
-            if (!crew || !link) return;
-            if (finished) { if (crew.IsOnline) Transmit(); return; }
+            if (!crew || !link || finished) return;
             if (Time.unscaledTime > deadline) { Finish("Capture timed out"); return; }
-            if (!crew.IsOnline) { if (started) Finish("Partner disconnected"); return; }
-            if (link.ReceivedState != previousSnapshot)
-            { previousSnapshot = link.ReceivedState; lastSnapshotAt = Time.unscaledTime; }
-            Pose(PoseClock);
-            Transmit();
-            var remote = link.RemoteInput;
-            if (remote.connected && remote.sequence != lastSequence)
+            if (!crew.IsOnline) { if (started) Finish("Session disconnected"); return; }
+            if (!ReadInput()) return;
+            UpdateLocalPose();
+            if (link.PartnerConnected && Time.unscaledTime >= sendAt)
             {
-                if (received > 0) maxHandMotion = Mathf.Max(maxHandMotion, Vector3.Distance(previousHand, remote.right));
-                previousHand = remote.right; lastSequence = remote.sequence; received++;
+                local.sequence++; link.SendInput(local); sent++; sendAt = Time.unscaledTime + PoseInterval;
+                Record("tx", local, true);
             }
-            if (host && remote.connected)
-            { started = true; clock.elapsed += Mathf.Min(Time.unscaledDeltaTime, .2f); }
-            if (!host && Clock > 0) started = true;
-            self.Apply(local);
-            partner.root.SetActive(remote.connected);
+            var remote = link.RemoteInput;
+            if (remote.connected && !started) { started = true; startedAt = Time.unscaledTime; }
             if (remote.connected)
             {
-                partner.Apply(remote);
-                if (started && Vector3.Distance(local.right, remote.right) < .16f) contact = true;
+                hadPartner = true;
+                if (remote.sequence != lastSequence)
+                {
+                    if (received > 0)
+                    {
+                        maxHandMotion = Mathf.Max(maxHandMotion, Vector3.Distance(previousHand, remote.right));
+                        maxHeadMotion = Mathf.Max(maxHeadMotion, Vector3.Distance(previousHead, remote.head));
+                    }
+                    previousHand = remote.right; previousHead = remote.head; lastSequence = remote.sequence; received++;
+                    Record("rx", remote, true);
+                }
             }
-            // This is a desktop camera on the local keeper's eyes, never an XR tracked camera.
+            if (hadPartner && !link.PartnerConnected) lostPartner = true;
+            self.Apply(local);
+            partner.root.SetActive(remote.connected);
+            if (remote.connected) partner.Apply(remote);
+            if (previousVisible != remote.connected) { previousVisible = remote.connected; Record("visibility", remote, remote.connected); }
             view.transform.SetPositionAndRotation(local.head, local.headRotation);
-            if (started && Clock >= durationSeconds) Finish("");
+            if (started && Elapsed >= durationSeconds && Arg("-proof-quit", "0") == "1") Finish("");
         }
-        void Transmit()
+        bool ReadInput()
         {
-            if (!link.PartnerConnected) return;
-            if (Time.unscaledTime >= sendAt)
-            { local.sequence++; link.SendInput(local); sent++; sendAt = Time.unscaledTime + PoseInterval; }
-            if (host && Time.unscaledTime >= publishAt)
-            { link.Publish(clock); publishAt = Time.unscaledTime + StateInterval; }
+            if (controlFile.Length > 0)
+            {
+                // This optional test input is read only by the explicitly targeted player.
+                // The host never reads the guest's input file or a shared animation timeline.
+                if (Time.unscaledTime >= pollAt)
+                {
+                    pollAt = Time.unscaledTime + .05f;
+                    try
+                    {
+                        if (File.Exists(controlFile))
+                        {
+                            var next = JsonUtility.FromJson<Control>(File.ReadAllText(controlFile));
+                            if (next != null && next.revision > control.revision && float.IsFinite(next.strafe) && float.IsFinite(next.forward)) control = next;
+                        }
+                    }
+                    catch (IOException) { }
+                    catch (ArgumentException) { }
+                }
+            }
+            else
+            {
+                var keys = Keyboard.current;
+                control.strafe = keys == null ? 0 : (keys.dKey.isPressed ? 1 : 0) - (keys.aKey.isPressed ? 1 : 0);
+                control.forward = keys == null ? 0 : (keys.wKey.isPressed ? 1 : 0) - (keys.sKey.isPressed ? 1 : 0);
+                control.jump = keys != null && keys.spaceKey.isPressed;
+                control.wave = keys != null && keys.eKey.isPressed;
+                control.leave = keys != null && keys.escapeKey.wasPressedThisFrame;
+            }
+            if (!control.leave) return true;
+            Finish("", true); crew.LeaveGame(); return false;
         }
-        void Pose(float t)
+        void UpdateLocalPose()
         {
-            float side = host ? -1 : 1;
-            Vector3 forward = Vector3.left * side, right = Vector3.forward * side;
-            local.connected = true;
-            local.feet = new Vector3(side * .85f, 0, 0);
-            local.head = local.feet + Vector3.up * 1.65f;
+            Vector3 forward = host ? Vector3.right : Vector3.left;
+            Vector3 right = host ? Vector3.back : Vector3.forward;
+            float dt = Mathf.Min(Time.unscaledDeltaTime, .1f);
+            var movement = Vector2.ClampMagnitude(new Vector2(control.strafe, control.forward), 1);
+            feet += (right * movement.x + forward * movement.y) * (moveSpeed * dt);
+            feet.x = Mathf.Clamp(feet.x, -2, 2); feet.z = Mathf.Clamp(feet.z, -1.5f, 1.5f);
+            if (control.jump && !jumpHeld && feet.y <= .001f) verticalSpeed = 3.2f;
+            jumpHeld = control.jump;
+            verticalSpeed -= 9.81f * dt; feet.y = Mathf.Max(0, feet.y + verticalSpeed * dt);
+            if (feet.y == 0) verticalSpeed = 0;
+            local.connected = true; local.feet = feet; local.head = feet + Vector3.up * 1.65f;
             local.headRotation = Quaternion.LookRotation(forward);
-            local.left = local.feet + Vector3.up * 1.1f + forward * .26f - right * .27f;
-            Vector3 resting = local.feet + Vector3.up * 1.25f + forward * .3f + right * .27f;
-            Vector3 meeting = new(0, 1.57f, 0);
-            float reach = t < 2.5f ? Mathf.SmoothStep(0, 1, Mathf.Clamp01((t - 1.3f) / 1.2f)) :
-                1 - Mathf.SmoothStep(0, 1, Mathf.Clamp01((t - 3.2f) / 1.0f));
-            local.right = Vector3.Lerp(resting, meeting, reach);
-            if (!host && (t < 1.3f || t > 4.5f))
-                local.right = local.feet + forward * .28f + right * (.28f + Mathf.Sin(t * 8) * .1f) + Vector3.up * 1.88f;
+            local.left = feet + Vector3.up * 1.22f + forward * .36f - right * .27f;
+            local.right = feet + Vector3.up * 1.22f + forward * .36f + right * .27f;
+            if (control.wave) local.right = feet + forward * .28f + right * (.28f + Mathf.Sin(Time.unscaledTime * 8) * .1f) + Vector3.up * 1.88f;
             local.leftRotation = local.rightRotation = local.headRotation;
+        }
+        void Record(string kind, KeeperInput input, bool visible)
+        {
+            if (output.Length == 0 || trace.Count >= 2000) return;
+            trace.Add(JsonUtility.ToJson(new Sample { kind = kind, utc = DateTime.UtcNow.ToString("O"), elapsed = Elapsed,
+                sequence = input.sequence, head = input.head, right = input.right, visible = visible }));
         }
         IEnumerator Capture()
         {
+            bool marked = false;
             while (!finished)
             {
                 yield return new WaitForEndOfFrame();
-                if (!started || Clock < .5f || output.Length == 0) continue;
-                int frame = Mathf.FloorToInt(PoseClock * CaptureRate);
+                if (!started || Elapsed < .3f || output.Length == 0) continue;
+                int frame = Mathf.FloorToInt(Elapsed * CaptureRate);
                 if (frame <= lastFrame) continue;
                 lastFrame = frame;
                 ScreenCapture.CaptureScreenshot(Path.Combine(output, "frame-" + frame.ToString("D5") + ".png"));
+                if (!marked) { File.WriteAllText(Path.Combine(output, "capture-started.txt"), DateTime.UtcNow.ToString("O")); marked = true; }
                 frames++;
             }
         }
         [Serializable] sealed class Result
         {
             public int processId, received, sent, capturedFrames, errors;
-            public float elapsed, maxRemoteHandMotion, poseRateHz = 5, stateRateHz = 2;
-            public bool passed, partnerConnected, handContactObserved;
-            public string role, failure;
+            public float elapsed, maxRemoteHandMotion, maxRemoteHeadMotion, poseRateHz = 5;
+            public bool passed, wasConnected, disconnectObserved, intentionalLeave, partnerVisibleAtEnd;
+            public string role, failure, inputMode;
         }
-        void Finish(string reason)
+        void Finish(string reason, bool intentionalLeave = false)
         {
             if (finished) return;
             failure = reason; finished = true;
-            if (host && crew && crew.IsOnline) link.Publish(clock);
             var result = new Result { role = host ? "host" : "client", processId = System.Diagnostics.Process.GetCurrentProcess().Id,
-                received = received, sent = sent, capturedFrames = frames, errors = errors, elapsed = Clock,
-                maxRemoteHandMotion = maxHandMotion, partnerConnected = link && link.RemoteInput.connected,
-                handContactObserved = contact, failure = failure };
-            result.passed = failure.Length == 0 && result.partnerConnected && received >= 20 && contact && maxHandMotion > .05f && errors == 0;
-            if (output.Length > 0) File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(result, true));
+                received = received, sent = sent, capturedFrames = frames, errors = errors, elapsed = Elapsed,
+                maxRemoteHandMotion = maxHandMotion, maxRemoteHeadMotion = maxHeadMotion,
+                wasConnected = hadPartner, disconnectObserved = lostPartner, intentionalLeave = intentionalLeave,
+                partnerVisibleAtEnd = partner != null && partner.root.activeSelf, failure = failure,
+                inputMode = controlFile.Length == 0 ? "Keyboard (WASD / Space / E / Escape)" : "External commands delivered only to this process" };
+            result.passed = failure.Length == 0 && hadPartner && received >= 10 && errors == 0 &&
+                (host ? lostPartner && !result.partnerVisibleAtEnd && maxHeadMotion > .05f : intentionalLeave);
+            if (output.Length > 0)
+            {
+                File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(result, true));
+                File.WriteAllLines(Path.Combine(output, "traffic.jsonl"), trace);
+            }
             Debug.Log("PROOF_RESULT " + JsonUtility.ToJson(result));
             if (Arg("-proof-quit", "0") == "1") StartCoroutine(Quit(result.passed ? 0 : 1));
         }
-        IEnumerator Quit(int code) { yield return new WaitForSecondsRealtime(3); Application.Quit(code); }
-        void Log(string message, string trace, LogType type) { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors++; }
+        IEnumerator Quit(int code) { yield return new WaitForSecondsRealtime(2); Application.Quit(code); }
+        void Log(string message, string stack, LogType type) { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors++; }
         void OnDestroy() { Application.logMessageReceived -= Log; if (crew) crew.LeaveGame(); }
         static string Arg(string key, string fallback)
         { var args = System.Environment.GetCommandLineArgs(); int i = Array.IndexOf(args, key); return i >= 0 && i + 1 < args.Length ? args[i + 1] : fallback; }
@@ -201,7 +256,7 @@ namespace LighthouseKeepers.NetworkingProof
             public void Apply(KeeperInput p)
             {
                 float blend = initialized ? 1 - Mathf.Exp(-22 * Time.unscaledDeltaTime) : 1; initialized = true;
-                head.SetPositionAndRotation(p.head, p.headRotation); body.position = p.head - Vector3.up * .62f;
+                head.SetPositionAndRotation(Vector3.Lerp(head.position, p.head, blend), p.headRotation); body.position = head.position - Vector3.up * .62f;
                 left.position = Vector3.Lerp(left.position, p.left, blend); right.position = Vector3.Lerp(right.position, p.right, blend);
                 var side = p.headRotation * Vector3.right;
                 Sleeve(armL, p.head - Vector3.up * .4f - side * .24f, left.position);
