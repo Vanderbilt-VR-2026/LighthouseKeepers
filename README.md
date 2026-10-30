@@ -1,6 +1,36 @@
+# Lighthouse Keepers — VR co-op survival for Meta Quest 3
+
+**Professor / TA submissions:** Sprint 3 includes a **playable Quest APK and submission video**. Sprint 2 is a **resubmission of the playable Quest APK** for the original Sprint 2 lighthouse.
+
+**Download using the links below. You do not need Unity, the source code, or a GitHub account to play.** These submission builds are playable solo; shared co-op gameplay is not enabled.
+
+| Sprint | Download APK | Video | What to try |
+| --- | --- | --- | --- |
+| **Sprint 3 — current submission** | **[Download Sprint 3 APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-final/LighthouseKeepers-Sprint3.apk)** | **[Download Sprint 3 video (MP4)](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-final/LighthouseKeepers-Sprint3-Video.mp4)** | Open **Lighthouse Keepers** → **PLAY SOLO**. Three days: repair the pipe, restart the generator, broadcast the storm warning; sleep to advance. |
+| **Sprint 2 — playable APK resubmission** | **[Download Sprint 2 APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint2-final-v2/LighthouseKeepers-Sprint2.apk)** | — | Open **Lighthouse Keepers S2** → **TAKE YOUR POST** → **SIGNAL READY** → **BEGIN WATCH**. House → wrench → F1 pipe → water drains → F3 bed. |
+
+The **APK is the playable game**, installed on the Quest. The **MP4 is the Sprint 3 submission video**, watched on a computer or phone. Download the `.apk` links above, **not** GitHub's “Source code” ZIP files. [Sprint 3 release / checksums](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint3-final) · [Sprint 2 release / checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint2-final-v2).
+
+## How to install (5 min)
+
+1. In the **Meta Horizon phone app**, select your paired Quest and enable **Headset Settings → Developer Mode**. If the setting is missing, follow [Meta's developer setup instructions](https://developers.meta.com/horizon/documentation/native/android/mobile-device-setup/), then return to the app.
+2. Download the **Sprint 3 APK** and/or **Sprint 2 APK** from the table. Connect the Quest to your computer with a USB data cable. Put on the headset and accept **Allow USB debugging**.
+3. Install with **SideQuest** by dragging the downloaded APK into it, or run `adb install -r <file>.apk` with the downloaded filename. Wait for installation to finish.
+4. In the headset, open **Library → Unknown Sources** and launch the appropriate app:
+   - **Sprint 3 / Lighthouse Keepers:** press **PLAY SOLO**.
+   - **Sprint 2 / Lighthouse Keepers S2:** press **TAKE YOUR POST**, then **SIGNAL READY**, then **BEGIN WATCH**. This is its original offline solo lobby; no join code or second player is needed.
+
+**Controls:** left stick move · right stick snap turn · grip grab · trigger interact.
+
+**Both sprints can be installed at the same time (Sprint 2 shows as 'Lighthouse Keepers S2').**
+
+## History
+
+The material below records earlier builds, development instructions and milestones. **Use the submission downloads above for grading; older candidate APKs below are historical.**
+
 **[Team design document](Docs/DesignDocument.md)**
 
-# Lighthouse Keepers
+### Lighthouse Keepers
 
 Unity **6000.3.23f1** · Meta Quest · OpenXR / XR Interaction Toolkit · ARM64 IL2CPP.
 
@@ -8,7 +38,7 @@ This Sprint 3 candidate uses the teammate's **One Lighthouse Lab world**, based 
 
 The earlier two-player, three-watch [Storm Watch](Docs/StormWatch.md) and local [First Watch](Docs/FirstWatch.md) remain historical implementations on disk, excluded from this candidate's ship scenes. Their tests/evidence do not validate this Lab candidate.
 
-## Sprint downloads and submission
+#### Sprint downloads and submission
 
 | Sprint | README | Artifact status |
 | --- | --- | --- |
@@ -18,7 +48,7 @@ The earlier two-player, three-watch [Storm Watch](Docs/StormWatch.md) and local 
 
 Sprint 3 is due **Thursday evening, October 29, 2026 (America/Chicago)**; exact cutoff not supplied. [Submission issue and agent handoff #61](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/61) · [Milestone](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/1) · [Project](https://github.com/orgs/Vanderbilt-VR-2026/projects/15).
 
-## Start the candidate
+#### Start the candidate
 
 1. Open this checkout in Unity 6000.3.23f1 and let compilation finish. Choose **Lighthouse Keepers → Play game** to enter `LK_NetworkLobby`.
 2. Choose **PLAY SOLO**. It works offline and opens `Assets/Scenes/Lab/LK_Lab_Environment.unity`; hosting is unnecessary.
@@ -30,7 +60,7 @@ Sprint 3 is due **Thursday evening, October 29, 2026 (America/Chicago)**; exact 
 
 **Network diagnostics:** Host crew generates a six-character code. A second client uses **Crew options → room field → controller keypad** to enter it and joins; keeper names can remain at their defaults. Roster/readiness remain testable. A ready host may enter alone for debugging; **two connected keepers cannot launch the unreplicated Lab**. Use Play Solo for the playable candidate. No shared progression, two-person station gates or voice transport is claimed.
 
-## Build and install
+#### Build and install
 
 Install matching Android Build Support, SDK/NDK Tools and OpenJDK. **Lighthouse Keepers → Storm Watch → Build Quest APK**, **One Lighthouse M4 Build**, and both **Sprint 3 → Networking** Quest build menus now use one pipeline. The historical Storm Watch menu name is retained for compatibility; its build contains the current Lab.
 
@@ -40,7 +70,7 @@ Download only the exact candidate linked in the [Sprint 3 README](Docs/Sprints/S
 
 [Current verification and limits](Docs/Verification/Sprint3/README.md) distinguish compilation, Editor execution, transport, Android packaging and target-headset acceptance. Check immersive cold launch/restart, controller entry/menu, physical station use, sound and performance on the downloaded APK. Two-device co-op acceptance remains blocked by the unfinished shared Lab simulation.
 
-## Open a fresh checkout
+#### Open a fresh checkout
 
 
 1. Clone the repository into a local folder outside cloud-sync directories:
@@ -59,7 +89,7 @@ Download only the exact candidate linked in the [Sprint 3 README](Docs/Sprints/S
 7. For automated checks, open **Window → General → Test Runner**, then **Run All** in EditMode and PlayMode. Current results and test scope are in [reconciliation verification](Docs/Verification/Sprint3/README.md); the earlier unmodified-base failures are in [M7 verification](Docs/OneLighthouse/M7.md). A fresh clone/open of the exact merged release commit is a separate post-merge check; it is not inferred from this working checkout.
 
 
-## Quest setup and installation help
+#### Quest setup and installation help
 
 Enable developer mode for the paired headset in the Meta Horizon app, connect a USB data cable, and accept USB debugging in the headset. Install the downloaded candidate with SideQuest or `adb install -r <downloaded-candidate.apk>`. Open **Library → Unknown Sources → Lighthouse Keepers**, then **PLAY SOLO**.
 
@@ -71,7 +101,7 @@ Enable developer mode for the paired headset in the Meta Horizon app, connect a 
 - Confirm the download is the `.apk` asset, not GitHub's source ZIP, and compare its SHA-256 with the release notes. If installation succeeds but the app is not in the main grid, look under **Unknown Sources**.
 
 
-## Credits and retained scope
+#### Credits and retained scope
 
 Reused team work: **Eli Gripenstraw** (flood and lobby foundation), **Tapan Sidhwani** (interaction patterns including radio push-to-talk), **William / Will Qian (`canwer1`)** (Photon/Fusion foundation and Sprint 2 networking), and **Nirvaan Nagaldinne** (team integration and demo documentation). **Aneesh Vasamreddy** authored the shell/environment and integrated the one-lighthouse experience. Commit/PR references are recorded in the M7 report.
 
