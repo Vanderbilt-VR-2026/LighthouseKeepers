@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "processes": {
+    "host": {
+      "processId": 68941,
+      "received": 35,
+      "sent": 35,
+      "capturedFrames": 98,
+      "errors": 0,
+      "elapsed": 7.000231742858887,
+      "maxRemoteHandMotion": 0.6356071829795837,
+      "poseRateHz": 5.0,
+      "stateRateHz": 2.0,
+      "passed": true,
+      "partnerConnected": true,
+      "handContactObserved": true,
+      "role": "host",
+      "failure": ""
+    },
+    "client": {
+      "processId": 68982,
+      "received": 35,
+      "sent": 36,
+      "capturedFrames": 92,
+      "errors": 0,
+      "elapsed": 7.000231742858887,
+      "maxRemoteHandMotion": 0.20195060968399048,
+      "poseRateHz": 5.0,
+      "stateRateHz": 2.0,
+      "passed": true,
+      "partnerConnected": true,
+      "handContactObserved": true,
+      "role": "client",
+      "failure": ""
+    }
+  },
+  "scope": "Two macOS Unity processes; real Photon traffic; scripted local hands; received partner; desktop first-person camera. No headset acceptance."
+}
