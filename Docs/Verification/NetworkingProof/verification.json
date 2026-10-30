@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "matchedClientPackets": 21,
+  "leaveToRemoteHideSeconds": 0.096492,
+  "remoteHideAtSeconds": 4.317445755004883,
+  "processes": {
+    "host": {
+      "processId": 71105,
+      "received": 21,
+      "sent": 23,
+      "capturedFrames": 86,
+      "errors": 0,
+      "elapsed": 7.018566131591797,
+      "maxRemoteHandMotion": 0.6667354702949524,
+      "maxRemoteHeadMotion": 0.385656476020813,
+      "poseRateHz": 5.0,
+      "passed": true,
+      "wasConnected": true,
+      "disconnectObserved": true,
+      "intentionalLeave": false,
+      "partnerVisibleAtEnd": false,
+      "role": "host",
+      "failure": "",
+      "inputMode": "Keyboard (WASD / Space / E / Escape)"
+    },
+    "client": {
+      "processId": 71154,
+      "received": 22,
+      "sent": 22,
+      "capturedFrames": 61,
+      "errors": 0,
+      "elapsed": 4.306417465209961,
+      "maxRemoteHandMotion": 0.0,
+      "maxRemoteHeadMotion": 0.0,
+      "poseRateHz": 5.0,
+      "passed": true,
+      "wasConnected": true,
+      "disconnectObserved": false,
+      "intentionalLeave": true,
+      "partnerVisibleAtEnd": true,
+      "role": "client",
+      "failure": "",
+      "inputMode": "External commands delivered only to this process"
+    }
+  },
+  "scope": "Independent input commands applied only to the client; matching Photon pose traffic on the host; actual client leave removes the received avatar. First-person desktop capture, not headset acceptance."
+}
