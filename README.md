@@ -11,6 +11,32 @@
 
 The **APK is the playable game**, installed on the Quest. The **MP4 is the Sprint 3 submission video**, watched on a computer or phone. Download the `.apk` links above, **not** GitHub's “Source code” ZIP files. [Sprint 3 release / checksums](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint3-final) · [Sprint 2 release / checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint2-final-v2).
 
+## Design
+
+### Start screen and first steps
+
+The first view is a keeper watch room with a framed, world-space **LIGHTHOUSE KEEPERS** board. Timber, brass, warm lamps and sea/rain ambience introduce the coastal workplace before the emergency begins. The board stays anchored as players look or move around; **Lower board** adjusts it for seated use without moving the camera.
+
+For the current Sprint 3 solo experience, choose **PLAY SOLO**, then read the House task board, collect the wrench and approach the glowing F1 pipe coupling. Tasks are introduced in the environment as players reach them. Host/join and crew readiness remain available for network diagnostics; shared Lab co-op gameplay is disabled. See the [lobby guide](Docs/Sprints/LobbyGuide.md).
+
+### Experience and pacing
+
+The team's intended experience is **tense teamwork with recovery moments**, eventually surviving together to the top of the lighthouse. The current solo Lab develops the repair-and-recovery rhythm through pipe repair, generator restoration, radio broadcast and sleeping at the F3 bed to advance days. Rising water and power loss create pressure; reduced spray, drainage and restored lighting make successful work visible. Failure offers a same-day retry.
+
+The earlier [Storm Watch](Docs/StormWatch.md) implements a separate two-player, three-watch climb targeting roughly ten minutes, with split jobs, refuges and lifeline rescue. Those systems express the cooperative direction; they are historical and excluded from the current submission's ship scenes.
+
+### Interactions and feedback
+
+We retain familiar XR Interaction Toolkit controls: left-stick movement, right-stick snap turning, grip to select nearby tools/controls and trigger to activate the held microphone. Ray pointing suits lobby and menu choices. Direct interaction suits maintenance: seat the wrench jaw on the active coupling and make wrist turns, pull the generator starter, then operate the radio controls and hold its microphone to transmit. Distance selection alone does not complete the physical work.
+
+Station behavior is customized beyond the toolkit defaults. The active pipe coupling glows and sprays, accepted repair steps reduce the leak, and the radio's step strip and guide lamps identify the next control. Progress, lighting, sound and haptics communicate results. Completed pipe turns survive release/regrip, supporting recovery while handling tools.
+
+### Hands and controllers
+
+The Lab keeps its accepted tan hand visuals and tracked controller alignment across days. Visible hands support judging reach and tool contact; the held tool and task change while the hand appearance stays consistent. Further hand-art changes should preserve that alignment and keep station controls readable.
+
+These are design choices and implementation descriptions, not new headset acceptance results. Physical reach, grip alignment, both-eye readability, audio/haptics, pacing and sustained Quest performance need evidence for the exact build being played. See [Sprint 3 verification](Docs/Verification/Sprint3/README.md) and the [team design document](Docs/DesignDocument.md).
+
 ## How to install (5 min)
 
 1. In the **Meta Horizon phone app**, select your paired Quest and enable **Headset Settings → Developer Mode**. If the setting is missing, follow [Meta's developer setup instructions](https://developers.meta.com/horizon/documentation/native/android/mobile-device-setup/), then return to the app.
