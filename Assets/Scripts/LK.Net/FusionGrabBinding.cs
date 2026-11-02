@@ -35,6 +35,8 @@ namespace LighthouseKeepers.Net
         public string Path { get; private set; }
         public int Epoch { get; private set; }
         public int Owner { get; private set; }
+        public float PoseInterval {get;private set;}=.05f;
+        float previousHeldTime;
         public Vector3 AuthoritativePosition => hasState?targetPosition:transform.position;
         public bool canProcess => isActiveAndEnabled;
         bool Selected => interaction && interaction.interactorsSelecting.Any(i=>!(i is XRSocketInteractor));
@@ -101,6 +103,8 @@ namespace LighthouseKeepers.Net
         }
         public void ApplyHeld(Vector3 position,Quaternion rotation)
         {
+            PoseInterval=previousHeldTime>0?Mathf.Clamp(Time.unscaledTime-previousHeldTime,.025f,.2f):.05f;
+            previousHeldTime=Time.unscaledTime;
             if (body) body.isKinematic=true;
             transform.SetPositionAndRotation(position,rotation.normalized);
         }

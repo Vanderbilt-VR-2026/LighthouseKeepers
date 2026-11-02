@@ -4,6 +4,7 @@ namespace LighthouseKeepers.Interaction
     {
         int Owner {get;}
         bool CanSimulateReleased {get;}
+        float PoseInterval {get;}
     }
     public interface INetworkPropRelease { void OnNetworkReleased(); }
 }
