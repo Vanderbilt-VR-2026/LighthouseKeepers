@@ -1,0 +1,83 @@
+{
+  "editmode": {
+    "before": {
+      "passed": "200",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "after": {
+      "passed": "218",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "regressions": [],
+    "new_failures": [],
+    "existing_failures": [],
+    "added_tests": [
+      "LighthouseKeepers.Net.Tests.CoopBedVotesTests.DisconnectRemovesVoteAndRemainingKeeperCanContinueAlone",
+      "LighthouseKeepers.Net.Tests.CoopBedVotesTests.EveryConnectedKeeperMustVoteAndDuplicateCannotReplacePartner",
+      "LighthouseKeepers.Net.Tests.CoopCommandWindowTests.RejectsOldDayReplayInvalidActorAndNonfiniteInputWithoutConsumingValidSequence",
+      "LighthouseKeepers.Net.Tests.CoopLaunchTests.FlagGatesTwoKeeperLabAndStillRejectsThirdKeeper",
+      "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.AmbiguousHierarchyPathsFailClosed",
+      "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.DifferentObjectSetsCannotAcquireEachOthersIds",
+      "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.MissingOrMalformedFingerprintsCannotConfirmARegistry(null)",
+      "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.MissingOrMalformedFingerprintsCannotConfirmARegistry(\"\")",
+      "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.MissingOrMalformedFingerprintsCannotConfirmARegistry(\"invalid\")",
+      "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.ObjectDiscoveryOrderDoesNotChangeTheAgreedLayout",
+      "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.CongestionKeepsLatestPosePerActorAndPropWithoutOverwritingPartner",
+      "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.TruncatedOversizedAndNonSampleTrafficIsRejected",
+      "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.VisualMayHoldLastPoseWhileGameplayRejectsTheStaleHand",
+      "LighthouseKeepers.Net.Tests.NetworkPracticeTests.AReadyPacketCannotEnablePracticeMode",
+      "LighthouseKeepers.Net.Tests.NetworkPracticeTests.CancellingOrResettingClearsPracticeMode",
+      "LighthouseKeepers.Net.Tests.NetworkPracticeTests.FourReadyKeepersCanEnterPracticeAndTheSnapshotCarriesTheMode",
+      "LighthouseKeepers.Net.Tests.NetworkPracticeTests.NormalCoopStillNeedsSharedObjectivesWhilePracticeMayOpenTheLab",
+      "LighthouseKeepers.Net.Tests.NetworkPracticeTests.PracticeDoesNotBypassReadinessOrPermitAFifthKeeper"
+    ]
+  },
+  "playmode": {
+    "before": {
+      "passed": "25",
+      "failed": "15",
+      "skipped": "0"
+    },
+    "after": {
+      "passed": "38",
+      "failed": "15",
+      "skipped": "0"
+    },
+    "regressions": [],
+    "new_failures": [],
+    "existing_failures": [
+      "LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections",
+      "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput",
+      "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart",
+      "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate"
+    ],
+    "added_tests": [
+      "LighthouseKeepers.Net.Tests.CoopAppearanceTests.BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes",
+      "LighthouseKeepers.Net.Tests.CoopAppearanceTests.RemoteGloveSurvivesDestructionOfTheLobbyRigResources",
+      "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.DisconnectClearsRemoteOwnerAndNotifiesTheEightSecondReturnExactlyOnce",
+      "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.HostReceivesReleaseMomentumAndCapsExtremeThrows",
+      "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.ReleasePacketPreservesMomentumAndWorldGeneration",
+      "LighthouseKeepers.Net.Tests.NetworkPracticeFreezeTests.PracticeCannotAdvanceToAnotherDayEvenAfterATaskWasCompleted",
+      "LighthouseKeepers.Net.Tests.NetworkPracticeFreezeTests.PracticeDoesNotAdvanceTheClockOrAcceptIndependentRepairAndRadioProgress",
+      "LighthouseKeepers.Net.Tests.WatchReplicaTests.CompleteSnapshotFitsExistingReliableChannelAndRejectsCorruptPipePermutation",
+      "LighthouseKeepers.Net.Tests.WatchReplicaTests.HostDayPowerAndTaskStateAppliesToReadOnlyGuestWhileGuestCannotAdvanceAnything",
+      "LighthouseKeepers.Net.Tests.WatchReplicaTests.HostLossContinuationPreservesTheEntirePipeOrderAndUnfinishedRatchet",
+      "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast",
+      "LighthouseKeepers.Net.Tests.WatchReplicaTests.SoloRejectsRemoteWritesAndReplicaRejectsMalformedOrUnknownDay",
+      "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.TwoReadyKeepersLaunchLabAndHostStateCrossesExistingRunner"
+    ]
+  }
+}

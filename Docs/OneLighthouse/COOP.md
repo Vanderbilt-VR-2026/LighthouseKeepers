@@ -48,7 +48,14 @@ Day 3, and guest departure with host continuation. See the
 Runtime source `8e3b98a` also adds the requested grey remote torso/head/visor and
 name tag; the owner does not see their own avatar. Continuous samples now use
 bounded, acknowledged latest-sample batches after the real test exposed a backlog.
-Final solo rerun and rebuilt Quest join are pending.
+Final full EditMode: 218/218 pass. Full PlayMode: 38 passed, the same 15 baseline
+failures; zero regressions or new failures. The identical solo graphics Day 1–3
+loop, loss/retry and final bed passed with zero logged errors; compared screenshots
+preserve the solo layout/look. The exact runtime APK was rebuilt and installed;
+the installed bytes match SHA-256 `76f2e69b9f82891e300e8657eac664f3208b41a1ddfeec14111188aecd78b9fa`.
+Quest co-op remains unproven: fresh room JFPTKH stayed at Mac Host only during the
+60-second monitor, with no Quest Photon/Fusion connection activity. See the linked
+report for observations and explicit remaining acceptance checks.
 
 ## Earlier candidate validation
 

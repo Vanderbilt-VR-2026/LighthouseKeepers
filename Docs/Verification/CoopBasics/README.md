@@ -52,10 +52,67 @@ An initial test-driver reach error was corrected: the driver now approaches the
 bench before grabbing, waits for the host to observe the hand and grant ownership,
 then carries the wrench to the pipe. Reach checks were not weakened.
 
-## Solo and Quest status
+## Regression checks — final runtime `8e3b98a`
 
-The prior candidate passed the user’s one-minute offline Quest Day 1 check:
-“yes everything works normally.” The full suites and identical solo Day 1–3
-replay are being rerun on `8e3b98a`; final results will be recorded here.
-The rebuilt Quest co-op join and moving-avatar headset check are still pending.
-A Mac-only pass does not establish headset acceptance.
+Unity 6000.3.23f1, same full suites and Photon-cloud opt-in as the untouched baseline.
+[Exact results and failure names](regression-results.json):
+
+| Suite | Untouched baseline | Final candidate |
+| --- | --- | --- |
+| EditMode | 200 passed, 0 failed | 218 passed, 0 failed |
+| Graphics PlayMode | 25 passed, 15 failed | 38 passed, same 15 failed |
+
+Every previously passing test still passes; no new failures. The existing failures
+are BootstrapIntegration (1), FirstWatch (5), PlayerTraversal (6), and StormWatchScene
+(3). Unrelated fixtures were not changed. Full XML/logs remain in
+`artifacts/coop/final/`; the baseline is preserved in `artifacts/coop/baseline/`.
+
+The identical graphics solo harness passed with **zero logged errors**: PLAY SOLO,
+Day 1 three bolts/drain/bed, Day 2 generator/pipe/bed, Day 3 actual 75-second beacon
+loss/retry, POWER/TUNE/CODE/PTT, water drain, board 3/3, and bed into the existing
+Day 4 placeholder. [Recorded assertions](solo-final-evidence.txt). No Photon crew
+was created by this solo run. This uses the same injected XRI inputs and test-only
+pipe seed as the baseline, with no authored asset changes.
+
+I opened the before/after House, emergency F2, beacon-failure, tuned-radio,
+completed-Day-3 and next-day frames. Layout, controls, task state and solo look
+are preserved. Pulse phase, moving rain and frame timing differ; the images are
+not claimed to be pixel-identical. Serialized scene/prefab/material/day assets,
+project settings, packages and local HandRig source have no diff from the base.
+
+| Solo comparison | Before | After |
+| --- | --- | --- |
+| House | [Baseline](solo-before-house.png) | [Final](solo-after-house.png) |
+| Radio locked | [Baseline](solo-before-radio.png) | [Final](solo-after-radio.png) |
+| Day 3 complete | [Baseline](solo-before-day-three-complete.png) | [Final](solo-after-day-three-complete.png) |
+
+## Quest install — successful; co-op acceptance — NOT YET PROVEN
+
+The prior candidate passed the user's one-minute offline Quest Day 1 check:
+“yes everything works normally.” The new APK was built from clean runtime commit
+`8e3b98a655617d4ea4d4e3b9d8728539a896e68f`, using the repo's ship pipeline:
+Unity 6000.3.23f1, development IL2CPP, zero errors and seven warnings.
+
+- File: `LighthouseKeepers-Coop-8e3b98a.apk`, 83,369,234 bytes.
+- SHA-256: `76f2e69b9f82891e300e8657eac664f3208b41a1ddfeec14111188aecd78b9fa`.
+- Package: `com.lighthousekeepers.game`, version `0.1.0` (1).
+- `adb install -r` succeeded; reading the installed `base.apk` back from the Quest
+  produced the identical SHA-256. The app launched and OpenXR reached FOCUSED.
+
+A fresh Editor host opened room `JFPTKH`, region `us`, and displayed the code in
+large type. During the monitored 60-second interval the roster stayed at **Mac Host,
+1/2**. The Quest had validated Wi-Fi. Logcat contained no Photon/Fusion connection
+activity or Unity exception; tracking-service permission warnings were present,
+but their effect has not been established. ADB's screen capture was black and is
+not treated as headset visual proof. Logs and room observations are in
+`artifacts/coop/final/`.
+
+The first check is to close the code keypad and explicitly press **JOIN**, then
+**SIGNAL READY**. No observed connection attempt means there is not enough evidence
+to blame a region/version mismatch or claim a successful Quest join. The requested
+headset sighting of the grey keeper and Editor capture of moving Quest hands remain
+pending. A Mac-only pass does not establish headset acceptance.
+
+Guest radio end-to-end operation has not been exercised in the paired Mac run;
+its replica/command paths are implemented and covered in model tests. The paired
+run specifically proves guest pipe, host generator, shared bed and departure.
