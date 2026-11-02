@@ -10,7 +10,6 @@ namespace LighthouseKeepers.Net
     {
         [SerializeField] GameObject leftHandVisual;
         [SerializeField] GameObject rightHandVisual;
-        [SerializeField] Material oilskinMaterial;
         public UnityEvent<int,float,float> LeftPoseChanged = new();
         public UnityEvent<int,float,float> RightPoseChanged = new();
         NetworkObject identity;
@@ -20,17 +19,21 @@ namespace LighthouseKeepers.Net
         Material fallback;
         Camera observer;
         float nextName;
+        bool bodyPlaced;
         void Awake()
         {
             identity = GetComponent<NetworkObject>();
             visuals = new GameObject("Keeper appearance"); visuals.transform.SetParent(transform,false);
-            if (!oilskinMaterial)
-            {
-                var shader = Shader.Find("Universal Render Pipeline/Lit");
-                if (shader) fallback = new Material(shader) { color = new Color(.72f,.49f,.12f) };
-            }
-            head = Part("Hood",PrimitiveType.Sphere,new Vector3(.24f,.28f,.24f));
-            coat = Part("Oilskin jacket",PrimitiveType.Capsule,new Vector3(.42f,.39f,.28f));
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader) fallback = new Material(shader) { name = "Remote keeper grey", color = new Color(.48f,.48f,.48f) };
+            head = Part("Keeper head",PrimitiveType.Sphere,new Vector3(.24f,.28f,.24f));
+            var visor = Part("Dark forward visor",PrimitiveType.Cube,Vector3.one);
+            visor.SetParent(head,false); visor.localPosition = new Vector3(0,0,.46f);
+            visor.localScale = new Vector3(.88f,.24f,.16f);
+            // Reuse the single grey material; only the visor's colour differs.
+            var tint = new MaterialPropertyBlock(); tint.SetColor("_BaseColor",new Color(.035f,.045f,.05f));
+            visor.GetComponent<Renderer>().SetPropertyBlock(tint);
+            coat = Part("Upright grey torso",PrimitiveType.Capsule,new Vector3(.38f,.30f,.25f));
             left = Hand(leftHandVisual,"Left hand"); right = Hand(rightHandVisual,"Right hand");
             nameplate = new GameObject("Keeper name").AddComponent<TextMeshPro>();
             nameplate.transform.SetParent(visuals.transform,false); nameplate.font = TMP_Settings.defaultFontAsset;
@@ -51,7 +54,7 @@ namespace LighthouseKeepers.Net
         {
             var part = GameObject.CreatePrimitive(type); part.name = label; part.transform.SetParent(visuals.transform,false); part.transform.localScale = scale;
             var collider = part.GetComponent<Collider>(); collider.enabled = false; Destroy(collider);
-            if (oilskinMaterial || fallback) part.GetComponent<Renderer>().sharedMaterial = oilskinMaterial ? oilskinMaterial : fallback;
+            if (fallback) part.GetComponent<Renderer>().sharedMaterial = fallback;
             return part.transform;
         }
         void LateUpdate()
@@ -64,8 +67,13 @@ namespace LighthouseKeepers.Net
             head.SetPositionAndRotation(pose.Head,pose.HeadRotation);
             left.SetPositionAndRotation(pose.Left,pose.LeftRotation); right.SetPositionAndRotation(pose.Right,pose.RightRotation);
             var forward = Vector3.ProjectOnPlane(pose.HeadRotation*Vector3.forward,Vector3.up);
-            if (forward.sqrMagnitude > .01f) coat.rotation = Quaternion.LookRotation(forward);
-            coat.position = pose.Head - Vector3.up*.58f;
+            if (forward.sqrMagnitude > .01f)
+            {
+                var yaw = Quaternion.LookRotation(forward,Vector3.up);
+                coat.rotation = bodyPlaced ? Quaternion.Slerp(coat.rotation,yaw,1-Mathf.Exp(-6*Time.unscaledDeltaTime)) : yaw;
+            }
+            coat.position = pose.Head - Vector3.up*.48f;
+            bodyPlaced = true;
             LeftPoseChanged.Invoke(pose.LeftPose,pose.LeftGrip,pose.LeftTrigger);
             RightPoseChanged.Invoke(pose.RightPose,pose.RightGrip,pose.RightTrigger);
             if (!observer) observer = Camera.main;

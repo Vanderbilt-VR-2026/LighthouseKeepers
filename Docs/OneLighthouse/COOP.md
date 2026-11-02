@@ -59,8 +59,8 @@ were changed. A connected-crew-only dev readout shows region/code/count/names.
   Unity 6000.3.23f1, development IL2CPP, 0 errors / 7 warnings, 83,341,122 bytes.
   SHA-256: `0b2cbca70b6b7feec15f2788c66e0e42b5946ed4ef0717e754244173da00c0bc`.
   Installed successfully on Quest 3 and launched with Wi-Fi disabled for the
-  required user solo check. Headset solo acceptance and live Editor/Quest shared
-  tasks are pending; automated model/transport checks do not establish acceptance.
+  required user solo check. User confirmed "yes everything works normally" after
+  the requested one-minute Day 1 check. Live Editor/Quest shared tasks are pending; automated model/transport checks do not establish acceptance.
 - Evidence: `artifacts/coop/baseline/`, `artifacts/coop/after/` and
   `artifacts/coop/device/`. No serialized scene/day/material/hand assets changed.
 
