@@ -17,6 +17,7 @@ namespace LighthouseKeepers.WatchDemo
         int index;
         public bool NetworkRehearsal { get; private set; }
         public bool RemoteReplica { get; private set; }
+        public LighthouseKeepers.Lobby.ICoopWatchLink Coop {get;set;}
         public bool ReadOnly => NetworkRehearsal || RemoteReplica;
         public void SetRemoteReplica(bool value)
         { RemoteReplica=value; Pipe.ReadOnly=Radio.ReadOnly=ReadOnly; }
@@ -100,6 +101,9 @@ namespace LighthouseKeepers.WatchDemo
                 beaconDarkElapsed=BeaconDarkElapsed,beaconDarkFailed=BeaconDarkFailed,starterPulls=StarterPulls,
                 bolts=Pipe.BoltsDone,activeBolt=Pipe.ActiveBolt,turns=Pipe.TurnsDone,stroke=Pipe.StrokeDegrees,
                 seal=Pipe.SealElapsed,needsReturn=Pipe.NeedsReturn,
+                order0=Pipe.Order(0),order1=Pipe.Order(1),order2=Pipe.Order(2),seat=Pipe.SeatElapsed,
+                direction=Pipe.Direction,returned=Pipe.Returned,touching=Pipe.Touching,
+                radioHeld=Radio.Held,radioTrigger=Radio.Trigger,
                 radioMain=Radio.MainOn,radioLocked=Radio.Locked,radioDone=Radio.Completed,frequency=Radio.FrequencyMHz,
                 lockElapsed=Radio.LockElapsed,transmitElapsed=Radio.TransmitElapsed,codeProgress=Radio.CodeProgress };
         }

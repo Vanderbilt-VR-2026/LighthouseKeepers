@@ -37,11 +37,18 @@ namespace LighthouseKeepers.WatchDemo
         public void ResetInteraction() { starter.ResetInteraction(); shakeTime = 0; engine.localPosition = engineRest; Refresh(); }
         void Pulled()
         {
-            if (state == null || !state.StarterPulled()) return;
+            if(state!=null&&state.RemoteReplica&&state.Coop!=null)
+            {state.Coop.Send(LighthouseKeepers.Lobby.CoopAction.Starter);shakeTime=.22f;return;}
+            ApplyPull();
+        }
+        public bool ApplyPull()
+        {
+            if (state == null || !state.StarterPulled()) return false;
             shakeTime=.22f;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"WATCH_STARTER day={state.Day} pulls={state.StarterPulls} power={state.Power}");
 #endif
+            return true;
         }
         void Refresh()
         {

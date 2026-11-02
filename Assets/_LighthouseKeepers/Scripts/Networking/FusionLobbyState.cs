@@ -11,9 +11,9 @@ namespace LighthouseKeepers.Networking
     public static class CrewSessionPolicy
     {
         public const string SharedGameStatePending = "Co-op gameplay is unavailable until shared game state is implemented. Use PLAY SOLO or host alone to debug.";
-        public static string GameplayLaunchBlockReason(string sceneName, int keepers) =>
+        public static string GameplayLaunchBlockReason(string sceneName, int keepers, bool connectedCrew=false) =>
             sceneName != ShipWorld.GameplaySceneName ? "" : keepers > ShipWorld.MaximumCrewSize ? "This test supports two keepers." :
-            keepers > 1 && !ShipWorld.CoopEnabled ? SharedGameStatePending : "";
+            keepers > 1 && !(ShipWorld.CoopEnabled&&connectedCrew) ? SharedGameStatePending : "";
 
         // Historical environments retain their existing session/disconnect behavior.
         public static bool RequiresWholeCrew(string sceneName) => ShipWorld.CoopEnabled && sceneName == ShipWorld.GameplaySceneName;

@@ -147,7 +147,7 @@ namespace LighthouseKeepers.Net
             localError="";
             return fusion.StartNetworkRehearsal();
         }
-        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName, Players.Count);
+        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName, Players.Count, IsOnline);
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
         {
             string blocked = StartBlockReason(sceneName);

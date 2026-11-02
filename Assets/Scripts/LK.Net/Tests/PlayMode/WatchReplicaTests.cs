@@ -24,6 +24,41 @@ namespace LighthouseKeepers.Net.Tests
             Assert.IsFalse((bool)Call(guest,"Sleep"));Call(host,"Sleep");
             Assert.IsTrue((bool)Call(guest,"ApplyRemote",Call(host,"Capture",.02f)));Assert.AreEqual(3,Get<int>(guest,"Day"));
         }
+        [Test] public void HostLossContinuationPreservesTheEntirePipeOrderAndUnfinishedRatchet()
+        {
+            var host=Watch();var guest=Watch();var pipe=Get<object>(host,"Pipe");
+            Call(pipe,"Reset",17,false);
+            for(int i=0;i<32;i++)StepPipe(pipe);
+            Call(guest,"SetRemoteReplica",true);
+            Assert.IsTrue((bool)Call(guest,"ApplyRemote",Call(host,"Capture",.2f)));
+            var copy=Get<object>(guest,"Pipe");
+            Call(guest,"SetRemoteReplica",false);
+            for(int i=0;i<1000&&!Get<bool>(pipe,"Complete");i++)
+            {
+                StepPipe(pipe);StepPipe(copy);
+                Assert.AreEqual(Get<int>(pipe,"ActiveBolt"),Get<int>(copy,"ActiveBolt"));
+                Assert.AreEqual(Get<int>(pipe,"TurnsDone"),Get<int>(copy,"TurnsDone"));
+                Assert.AreEqual(Get<float>(pipe,"StrokeDegrees"),Get<float>(copy,"StrokeDegrees"));
+                Assert.AreEqual(Get<bool>(pipe,"NeedsReturn"),Get<bool>(copy,"NeedsReturn"));
+            }
+            Assert.IsTrue(Get<bool>(host,"Repaired"));Assert.IsTrue(Get<bool>(guest,"Repaired"));
+            Assert.IsTrue((bool)Call(guest,"Sleep"));Assert.AreEqual(2,Get<int>(guest,"Day"));
+        }
+        static void StepPipe(object pipe)
+        {Call(pipe,"Observe",.1f,Get<bool>(pipe,"NeedsReturn")?-7f:7f,true,true,true);}
+        [Serializable] sealed class Wire
+        {public string protocol="LK-Lab-Coop-v2",world=new string('a',32),nonce=new string('b',32),state;public int sequence=100000;}
+        [Test] public void CompleteSnapshotFitsExistingReliableChannelAndRejectsCorruptPipePermutation()
+        {
+            var host=Watch();var guest=Watch();Call(guest,"SetRemoteReplica",true);
+            var snapshot=Call(host,"Capture",.2f);
+            snapshot.GetType().GetField("notice").SetValue(snapshot,new string('x',160));
+            var packet=UnityEngine.JsonUtility.ToJson(new Wire{state=UnityEngine.JsonUtility.ToJson(snapshot)});
+            Assert.LessOrEqual(System.Text.Encoding.UTF8.GetByteCount(packet),FusionMessageChannel.MaxBytes);
+            snapshot.GetType().GetField("order1").SetValue(snapshot,snapshot.GetType().GetField("order0").GetValue(snapshot));
+            Assert.IsFalse((bool)Call(guest,"ApplyRemote",snapshot));
+            Assert.AreEqual(0d,Get<double>(guest,"Elapsed"));
+        }
         [Test] public void SoloRejectsRemoteWritesAndReplicaRejectsMalformedOrUnknownDay()
         {
             var host=Watch();var guest=Watch();var snapshot=Call(host,"Capture",.02f);

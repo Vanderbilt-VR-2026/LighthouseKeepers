@@ -12,7 +12,8 @@ namespace LighthouseKeepers.Net.Tests
             {
                 ShipWorld.CoopEnabled=false;Assert.IsNotEmpty(CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName,2));
                 Assert.IsEmpty(CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName,1));
-                ShipWorld.CoopEnabled=true;Assert.IsEmpty(CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName,2));
+                ShipWorld.CoopEnabled=true;Assert.IsNotEmpty(CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName,2));
+                Assert.IsEmpty(CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName,2,true));
                 Assert.IsNotEmpty(CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName,3));
                 var roster=new FusionLobbyState();roster.Reset(ShipWorld.MaximumCrewSize);
                 Assert.IsTrue(roster.Add("1",true));Assert.IsTrue(roster.Add("2",false));Assert.IsFalse(roster.Add("3",false));

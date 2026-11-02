@@ -16,6 +16,8 @@ namespace LighthouseKeepers.WatchDemo
         public float TransmitElapsed {get;private set;}
         public int CodeProgress {get;private set;}
         bool power, held, trigger;
+        public bool Held=>held;
+        public bool Trigger=>trigger;
         public int Step=>Completed?4:!MainOn?0:!Locked?1:!CodeAccepted?2:3;
         public bool CodeAccepted=>CodeProgress==Program.callCode.Length;
         public bool Transmitting=>held&&trigger&&power&&MainOn&&Locked&&CodeAccepted&&!Completed;
@@ -23,9 +25,10 @@ namespace LighthouseKeepers.WatchDemo
         public void ApplyReplica(WatchSnapshot s)
         {
             if(!ReadOnly)return;
+            bool justCompleted=!Completed&&s.radioDone;
             power=s.power==1;MainOn=s.radioMain;Locked=s.radioLocked;Completed=s.radioDone;
             FrequencyMHz=s.frequency;LockElapsed=s.lockElapsed;TransmitElapsed=s.transmitElapsed;CodeProgress=s.codeProgress;
-            held=trigger=TransmitElapsed>0;
+            held=s.radioHeld;trigger=s.radioTrigger;if(justCompleted)BroadcastCompleted?.Invoke();
         }
         public void Reset(bool hasPower)
         {power=hasPower;MainOn=Locked=Completed=held=trigger=false;FrequencyMHz=Program.minimumMHz;LockElapsed=TransmitElapsed=0;CodeProgress=0;}

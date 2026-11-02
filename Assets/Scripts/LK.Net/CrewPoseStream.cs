@@ -78,8 +78,8 @@ namespace LighthouseKeepers.Net
 #if UNITY_EDITOR
             if(!XRSettings.isDeviceActive)
             {
-                frame.Left=head.TransformPoint(new Vector3(-.25f,-.35f,.35f));frame.Right=head.TransformPoint(new Vector3(.25f,-.35f,.35f));
-                frame.LeftRotation=frame.RightRotation=head.rotation;
+                if(!left||!left.gameObject.activeInHierarchy){frame.Left=head.TransformPoint(new Vector3(-.25f,-.35f,.35f));frame.LeftRotation=head.rotation;}
+                if(!right||!right.gameObject.activeInHierarchy){frame.Right=head.TransformPoint(new Vector3(.25f,-.35f,.35f));frame.RightRotation=head.rotation;}
             }
 #endif
             var ld = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand); var rd = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);

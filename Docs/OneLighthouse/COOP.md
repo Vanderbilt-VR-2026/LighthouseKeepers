@@ -1,28 +1,64 @@
-# Co-op step 1 — Editor host + Quest guest
+# Co-op basics — Lab lighthouse
 
-Branch `coop/two-headsets` starts at Will’s PR #67 (`a8fde691`), based on merged PR #65. Main is untouched. Read PR #67 body and `Docs/Sprints/Sprint3/WilliamNetworking.md` before implementation.
+Branch `coop/basics`; never merged or pushed to main. Baseline discovery and the
+untouched solo results are in [COOP-BASELINE.md](COOP-BASELINE.md).
 
-Reuse: existing FusionLobbyTransport/CrewLobbyTransport, six-character join code and controller keypad; CrewPoseStream 20 Hz interpolated head/hands; FusionMessageChannel on the existing runner; Will’s host-owned prop leases, layout fingerprints, world generation and throw/recovery handling. PR #67 only enables development network practice with objectives frozen; 19 portable tests reported, but no Unity compilation or APK/device testing.
+## Implementation under verification
 
-Requested step 1: one CoopEnabled flag, maximum two keepers, normal Host/Join/Ready/Begin Watch path into the same Lab, separated House spawns, tan remote hands/simple head, Editor WASD/mouse look, host-owned day and read-only guest snapshots. Guest station actions disabled; authoritative guest interaction commands are co-op step 2. Solo must retain the existing loop. No main changes or merges.
+`ShipWorld.CoopEnabled` is ON here. Only a connected normal crew gets the shared
+Lab adapter. PLAY SOLO creates no runner or adapter and keeps its original rules.
+Normal HOST CREW / code / CREW OPTIONS / READY / BEGIN WATCH launches at most two
+keepers into the same Lab used by solo, with House spawns 1.5 m apart. Photon crew
+connections use fixed region `us`. Historical practice remains separate.
 
-Verification and device results will be appended after execution; no co-op headset acceptance inferred from source or Editor tests.
+Reused William's runner, keypad/room protocol, interpolated 20 Hz keeper poses,
+prop layout/generation validation, first-grab leases and release physics. Reused
+`coop/two-headsets` tan remote hand visuals, two spawns and host snapshot seam.
+Eli Gripenstraw's latest main fixes supply the accepted solo lobby, offline entry
+and Watch Menu; his independent network proof informed receive-side verification.
+Remote keepers have no active camera, listener, UI or gameplay controllers.
 
-## Implementation
+The host owns day/time/water/power/beacon/lighting/task state. Guest starter,
+radio and bed/retry/replay inputs use the existing reliable channel. Commands
+carry scene nonce, host world, day/retry revision and monotonic sequence. The
+host checks authenticated sender, bounds, rate, reach and prop lease where
+applicable. The host measures pipe contact/twist from the leased wrench pose;
+client models cannot finish tasks independently. Wrench/mic ownership uses the
+existing exclusive lease; release returns simulation authority to the host.
+Guest microphone trigger heartbeats expire after 0.5 s and require the mic lease.
 
-- `ShipWorld.CoopEnabled` defaults ON on this branch; max crew is 2. Flag OFF restores the prior multi-keeper Lab guard. Host-alone remains available, solo still closes/avoids Photon. Normal Begin Watch requires every connected keeper ready; the separate practice button is hidden while the flag is ON.
-- Existing `FusionMessageChannel` carries a versioned, scene-generation-bound host snapshot at 5 Hz. Guest acknowledgements gate the host clock while its partner is loading/stale. Day/time, water, power (driving beacon and emergency lights), faults/checkmarks, pipe and radio display progress are host-owned. Guest snapshot application validates values and rejects stale/wrong-world packets; local guest clock and station mutations are disabled. No new runner or networking package.
-- Host/guest House positions are (-0.9, 0.04, -9.15) and (-0.9, 0.04, -7.65), facing the existing wall board. The XR Origin moves once at network spawn; tracked camera/controller transforms and accepted hand rotations remain unchanged.
-- Remote keepers reuse the existing interpolated pose stream and visual-only head/jacket. Remote hands copy only the accepted tan skinned glove hierarchy/material, with no cameras, UI, audio or interactors. Editor pose packets use head-relative default hand offsets; hold right mouse to look and WASD to move in co-op.
-- Will’s wrench/microphone recovery now uses narrow runtime ownership interfaces instead of importing networking types into gameplay. The adapter remains in LK.Net; the architecture test is preserved, not weakened.
-- **Co-op step 2:** guest station commands/ownership validation for shared task progress. For this test all guest world interactables are disabled; Watch Menu/return remains available. The Editor host is the day authority. This is not a completed two-person station game.
+Every connected keeper must vote at the bed after tasks are complete. The board
+shows the waiting count; the host's existing sleep coroutine advances the day
+and the guest follows state/fade snapshots. Departure removes that keeper's
+vote/props/avatar. On host loss the guest retains the full latest rule snapshot
+(including unfinished ratchet and remaining bolt order) and continues alone.
+Intentional Watch Menu return still goes to the lobby.
+
+The Editor uses WASD and right-mouse look; inactive XR hands use head-relative
+pose offsets. Active test/controller hands replicate their actual transforms.
+No accepted hand visual rotations, scene geometry, day assets or look assets
+were changed. A connected-crew-only dev readout shows region/code/count/names.
 
 ## Validation so far
 
-- Unmodified PR #67 imported/compiled in Unity 6000.3.23f1; baseline solo/menu/station PlayMode **11/11 passed**.
-- Initial co-op focused PlayMode **16/16 passed**, including the unchanged 11 cases, host-alone launch, replica safety and practice freeze.
-- Full EditMode initially **211/212**: networking boundary identified direct gameplay references (including PR #67 recovery code). Moved dependencies behind interfaces; full rerun **212/212 passed**.
-- Connected Quest is the lead’s device `2G0YC1ZG32048T`; authorized USB confirmed. Build/install and physical co-op acceptance are still pending at this point.
+- Unity 6000.3.23f1 compilation passes.
+- EditMode: 215/215 pass (baseline 200/200).
+- Focused networking + solo menu/entry PlayMode: 22/22 pass.
+- Full after-suite, graphics comparison, APK and actual Editor/Quest shared tasks
+  are pending. Model/transport tests alone are not headset co-op acceptance.
+- Original baseline full PlayMode has 15 historical fixture failures; they remain
+  explicitly recorded rather than hidden by changing the build list.
 
-- Final focused PlayMode **19/19 passed**, zero skips, with `LK_FUSION_CLOUD_TESTS=1`: unchanged solo/menu/station cases, read-only replica behavior, practice freeze, host-alone real Lab scene launch, both spawn floor/standing clearances, remote tan mesh/no camera/audio/interactor checks, disabled-flag guard, and two real Photon peers launching normal Lab mode and delivering a host state snapshot over the existing runner. The traffic-only two-peer test does not replace physical Editor+Quest acceptance.
-- Test artifacts: `artifacts/coop/solo-baseline.xml`, `solo-and-coop.xml`, `editmode-final.xml`, `playmode-final.xml` and matching logs. No test disables the architecture boundary or changes accepted solo assertions.
+## Live test order
+
+1. Install the verified candidate. First check PLAY SOLO Day 1 on Quest for one
+   minute, including offline entry, before testing crew mode.
+2. Editor hosts with HOST CREW and reads its six-character code. Quest opens
+   CREW OPTIONS, enters that same code, and joins. Both select SIGNAL READY.
+3. Editor presses BEGIN WATCH. Verify two avatars in the same House; move Quest
+   hands and inspect the received motion in the Editor.
+4. Guest completes a task, then host completes a task; check both boards after
+   each. Both go to the F3 bed; check the same next day/fade on both.
+5. Inspect Unity console and adb logcat, and capture each acceptance case.
+
+Do not call this accepted until those live checks have been performed.

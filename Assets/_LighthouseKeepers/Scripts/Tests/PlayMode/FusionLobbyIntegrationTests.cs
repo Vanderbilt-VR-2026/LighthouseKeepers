@@ -141,7 +141,7 @@ namespace LighthouseKeepers.Tests
             Set(session, "online", true);
             return session;
         }
-        [UnityTest, Category("Online")] public IEnumerator DisabledCoopFlagKeepsReadyCrewInLobby()
+        [UnityTest, Category("Online")] public IEnumerator ReadyCrewRemainsInLobbyUntilLabSharedStateIsImplemented()
         {
             if (System.Environment.GetEnvironmentVariable("LK_FUSION_CLOUD_TESTS") != "1")
                 Assert.Ignore("Set LK_FUSION_CLOUD_TESTS=1 for two real Photon peers.");

@@ -113,8 +113,11 @@ namespace LighthouseKeepers.Networking
                 if (index < 0) throw new InvalidOperationException("Add the networking lobby to Build Settings.");
                 var scenes = new NetworkSceneInfo();
                 scenes.AddSceneRef(SceneRef.FromIndex(index), LoadSceneMode.Single);
+                var photonSettings=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
+                if(ShipWorld.CoopEnabled)photonSettings.FixedRegion="us";
                 var result = await current.StartGame(new StartGameArgs
                 {
+                    CustomPhotonAppSettings=photonSettings,
                     GameMode = mode, SessionName = sessionName, PlayerCount = state.Capacity,
                     Scene = scenes, SceneManager = sceneManager, IsVisible = false,
                     EnableClientSessionCreation = false, StartGameCancellationToken = cancellation
@@ -154,13 +157,15 @@ namespace LighthouseKeepers.Networking
             if (busy) { StatusChanged?.Invoke(); return; }
             _ = Disconnect();
         }
+        bool SharedLabActive=>ShipWorld.CoopEnabled&&!IsNetworkRehearsal&&(enteredGame||state.Starting)&&gameSceneName==ShipWorld.GameplaySceneName;
         async Task Disconnect()
         {
+            bool continueWatch=!leaving&&SharedLabActive&&SceneManager.GetActiveScene().name==ShipWorld.GameplaySceneName;
             busy = true; StatusChanged?.Invoke();
             await ReleaseRunner(runner);
             if (!this) return;
             ClearConnection(); busy = leaving = false; StatusChanged?.Invoke();
-            ReturnToLobby();
+            if(continueWatch)Destroy(gameObject);else ReturnToLobby();
         }
         async Task ReleaseRunner(NetworkRunner current)
         {
@@ -177,7 +182,7 @@ namespace LighthouseKeepers.Networking
         void ClearConnection()
         {
             bool wasOnline = online;
-            online = false; state.Reset(4); localReady = false;
+            online = false; state.Reset(ShipWorld.MaximumCrewSize); localReady = false;
             if (wasOnline) ConnectionChanged?.Invoke(false);
             PlayersChanged?.Invoke();
         }
@@ -236,7 +241,7 @@ namespace LighthouseKeepers.Networking
             }
             return false;
         }
-        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(sceneName, state.Players.Count);
+        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(sceneName, state.Players.Count, IsOnline);
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
             => StartGameCore(sceneName,minimumPlayers,requireAllReady,false);
         public bool StartNetworkRehearsal()
@@ -299,7 +304,7 @@ namespace LighthouseKeepers.Networking
         {
             if (source != runner) return;
             if (source.IsServer && state.Remove(Id(player))) PublishRoster();
-            if ((enteredGame || state.Starting) && CrewSessionPolicy.RequiresWholeCrew(gameSceneName) && !busy && !leaving)
+            if ((enteredGame || state.Starting) && CrewSessionPolicy.RequiresWholeCrew(gameSceneName) && !SharedLabActive && !busy && !leaving)
             {
                 enteredGame = true; // Approval is already committed, even before the load callback.
                 Fail("Your partner left the watch. Reconnect together to start a new run.");

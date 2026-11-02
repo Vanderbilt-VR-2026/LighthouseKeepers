@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchState watch;
         MaterialPropertyBlock dark,green,red,current,codeBlock,stepDone;
         MaterialPropertyBlock[] panelOn,panelOff;
-        float nextReadout;int currentDay;bool completed;
+        float nextReadout,nextMicrophone,nextTune;int currentDay;bool completed,previousMic;
         public RadioState State=>watch.Radio;
         void Awake()
         {
@@ -43,10 +43,22 @@ namespace LighthouseKeepers.WatchDemo
             nextReadout=0;
         }
         void Complete(){effects.PlayOneShot(reply,.7f);completed=true;nextReadout=0;}
-        public bool ToggleMain(){bool changed=State.ToggleMain();nextReadout=0;return changed;}
-        public void Tune(float normalized)=>State.Tune(Mathf.Lerp(program.minimumMHz,program.maximumMHz,normalized));
+        public bool ToggleMain()
+        {
+            if(watch.RemoteReplica&&watch.Coop!=null)return watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.RadioPower);
+            bool changed=State.ToggleMain();nextReadout=0;return changed;
+        }
+        public void Tune(float normalized)
+        {
+            if(watch.RemoteReplica&&watch.Coop!=null)
+            {if(Time.unscaledTime>=nextTune){nextTune=Time.unscaledTime+.05f;watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.RadioTune,normalized);}return;}
+            State.Tune(Mathf.Lerp(program.minimumMHz,program.maximumMHz,normalized));
+        }
+        public void CodeResult(int result){if(result==0)effects.PlayOneShot(buzzer,.35f);nextReadout=0;}
         public void Press(RadioControl control)
         {
+            if(watch.RemoteReplica&&watch.Coop!=null&&control.codeColour>=0)
+            {watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.RadioCode,control.codeColour);Click();return;}
             if(control.codeColour>=0)
             {int result=State.PressCode(control.codeColour);if(result==0)effects.PlayOneShot(buzzer,.35f);else Click();}
             else Click();
@@ -56,7 +68,14 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             if(watch==null)return;
-            State.SetMicrophone(microphone.Held,microphone.TriggerHeld);
+            if(watch.RemoteReplica&&watch.Coop!=null)
+            {
+                bool pressed=microphone.Held&&microphone.TriggerHeld;
+                if(Time.unscaledTime>=nextMicrophone||pressed!=previousMic)
+                {nextMicrophone=Time.unscaledTime+.1f;if(microphone.Held||previousMic)watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.Microphone,0,pressed);previousMic=pressed;}
+            }
+            else if(watch.Coop!=null&&watch.Coop.RemoteMicrophone(microphone,out bool remoteTrigger))State.SetMicrophone(true,remoteTrigger);
+            else State.SetMicrophone(microphone.Held,microphone.TriggerHeld);
             bool live=State.MainOn&&watch.Power==PowerState.On;
             float distance=Mathf.Abs(State.FrequencyMHz-program.targetMHz);
             float quality=1-Mathf.Clamp01(distance/.45f);

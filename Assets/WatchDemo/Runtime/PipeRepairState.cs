@@ -20,6 +20,10 @@ namespace LighthouseKeepers.WatchDemo
         public bool NeedsSeal=>ActiveBolt==2&&SealElapsed<Profile.sealSeconds;
         public float InflowFraction=>1-BoltsDone/3f;
         bool touching;float direction,returned;
+        public int Order(int index)=>order[index];
+        public float Direction=>direction;
+        public float Returned=>returned;
+        public bool Touching=>touching;
         public PipeRepairState(PipeRepairProfile profile){Profile=profile?profile:throw new ArgumentNullException(nameof(profile));}
         public void Reset(int seed,bool repaired=false)
         {
@@ -30,8 +34,12 @@ namespace LighthouseKeepers.WatchDemo
         public void ApplyReplica(WatchSnapshot s)
         {
             if(!ReadOnly)return;
-            BoltsDone=s.bolts;if(BoltsDone<3)order[BoltsDone]=s.activeBolt;
+            bool tick=s.bolts>BoltsDone||s.bolts==BoltsDone&&s.turns>TurnsDone;
+            bool complete=!Complete&&s.bolts==3;
+            BoltsDone=s.bolts;order[0]=s.order0;order[1]=s.order1;order[2]=s.order2;
             TurnsDone=s.turns;StrokeDegrees=s.stroke;SealElapsed=s.seal;NeedsReturn=s.needsReturn;
+            SeatElapsed=s.seat;direction=s.direction;returned=s.returned;touching=s.touching;
+            if(tick)QuarterTurn?.Invoke();Changed?.Invoke();if(complete)Completed?.Invoke();
         }
         void ResetBolt(){TurnsDone=0;StrokeDegrees=SealElapsed=SeatElapsed=returned=direction=0;NeedsReturn=touching=false;}
         public void Observe(float seconds,float twistDegrees,bool contact,bool steady,bool canWork)
