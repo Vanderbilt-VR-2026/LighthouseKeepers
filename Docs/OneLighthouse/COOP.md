@@ -39,7 +39,18 @@ pose offsets. Active test/controller hands replicate their actual transforms.
 No accepted hand visual rotations, scene geometry, day assets or look assets
 were changed. A connected-crew-only dev readout shows region/code/count/names.
 
-## Validation so far
+## November 2 proof
+
+Two independent Mac Editors passed normal lobby -> same House, guest pipe bolts
+on both boards, host generator/power on both, two shared bed transitions through
+Day 3, and guest departure with host continuation. See the
+[paired screenshots and evidence](../Verification/CoopBasics/README.md).
+Runtime source `8e3b98a` also adds the requested grey remote torso/head/visor and
+name tag; the owner does not see their own avatar. Continuous samples now use
+bounded, acknowledged latest-sample batches after the real test exposed a backlog.
+Final solo rerun and rebuilt Quest join are pending.
+
+## Earlier candidate validation
 
 - Unity 6000.3.23f1 compilation passes.
 - EditMode: 215/215 pass (baseline 200/200).
