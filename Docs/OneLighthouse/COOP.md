@@ -43,11 +43,26 @@ were changed. A connected-crew-only dev readout shows region/code/count/names.
 
 - Unity 6000.3.23f1 compilation passes.
 - EditMode: 215/215 pass (baseline 200/200).
-- Focused networking + solo menu/entry PlayMode: 22/22 pass.
-- Full after-suite, graphics comparison, APK and actual Editor/Quest shared tasks
-  are pending. Model/transport tests alone are not headset co-op acceptance.
-- Original baseline full PlayMode has 15 historical fixture failures; they remain
-  explicitly recorded rather than hidden by changing the build list.
+- Full graphics PlayMode: 38 passed, 15 failed; baseline 25 passed, the same 15
+  failed. Every previously passing test remains passing; zero new failures.
+  Actual Photon cloud lobby tests were enabled in both runs. Legacy Bootstrap,
+  First Watch, traversal and Storm Watch fixture failures remain recorded in
+  `artifacts/coop/after/comparison.json`; unrelated failures were not repaired.
+- The identical external graphics replay passed Day 1 -> Day 2 -> Day 3 actual
+  beacon loss/retry, physical XRI station inputs, board 3/3 and bed -> Day 4 with
+  zero logged errors. Inspected House, pipe, emergency F2/F4, failure, tuned radio,
+  transmission and completed-board screenshots against baseline. Layout and look
+  are preserved; moving rain, pulse phase and timing prevent pixel identity.
+  Baseline gameplay assertions passed too, but its raw result retains an unrelated
+  Editor search-index exception; see the baseline report.
+- Candidate APK built from clean `3a17683abf50cb9d2ba5334b01dcce18dc7c5b1f`:
+  Unity 6000.3.23f1, development IL2CPP, 0 errors / 7 warnings, 83,341,122 bytes.
+  SHA-256: `0b2cbca70b6b7feec15f2788c66e0e42b5946ed4ef0717e754244173da00c0bc`.
+  Installed successfully on Quest 3 and launched with Wi-Fi disabled for the
+  required user solo check. Headset solo acceptance and live Editor/Quest shared
+  tasks are pending; automated model/transport checks do not establish acceptance.
+- Evidence: `artifacts/coop/baseline/`, `artifacts/coop/after/` and
+  `artifacts/coop/device/`. No serialized scene/day/material/hand assets changed.
 
 ## Live test order
 
