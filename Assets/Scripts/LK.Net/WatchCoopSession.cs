@@ -42,8 +42,8 @@ namespace LighthouseKeepers.Net
             {
                 var rig=FindAnyObjectByType<XROrigin>();if(!rig||!rig.Camera)return;
                 var go=new GameObject("Local crew debug readout");go.transform.SetParent(rig.Camera.transform,false);
-                go.transform.localPosition=new Vector3(0,-.24f,.75f);
-                debugLine=go.AddComponent<TextMesh>();debugLine.fontSize=64;debugLine.characterSize=.006f;
+                go.transform.localPosition=new Vector3(0,-.34f,.85f);
+                debugLine=go.AddComponent<TextMesh>();debugLine.fontSize=64;debugLine.characterSize=.0028f;
                 debugLine.anchor=TextAnchor.UpperCenter;debugLine.alignment=TextAlignment.Center;debugLine.color=Color.white;
             }
             debugLine.text=$"us | {crew.SessionName} | {crew.Players.Count}/2 keepers\n"+string.Join(" / ",crew.Players.Select(p=>p.DisplayName));
@@ -123,7 +123,7 @@ namespace LighthouseKeepers.Net
                 {
                     var state=watch.CaptureState();++sequence;
                     foreach(var peer in nonces)
-                        channel.SendToActor(peer.Key,SnapshotKind,Encode(new Envelope{world=world,nonce=peer.Value,sequence=sequence,state=state}));
+                        channel.SampleToActor(peer.Key,SnapshotKind,Encode(new Envelope{world=world,nonce=peer.Value,sequence=sequence,state=state}));
                 }
                 else channel.SendToHost(HelloKind,Encode(new Hello{world=world,nonce=nonce}));
             }

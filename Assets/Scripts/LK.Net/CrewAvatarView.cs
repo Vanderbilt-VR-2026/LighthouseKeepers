@@ -37,7 +37,7 @@ namespace LighthouseKeepers.Net
             left = Hand(leftHandVisual,"Left hand"); right = Hand(rightHandVisual,"Right hand");
             nameplate = new GameObject("Keeper name").AddComponent<TextMeshPro>();
             nameplate.transform.SetParent(visuals.transform,false); nameplate.font = TMP_Settings.defaultFontAsset;
-            nameplate.fontSize = 2; nameplate.rectTransform.sizeDelta = new Vector2(2,.3f); nameplate.alignment = TextAlignmentOptions.Center;
+            nameplate.fontSize = .9f; nameplate.rectTransform.sizeDelta = new Vector2(2,.3f); nameplate.alignment = TextAlignmentOptions.Center;
             nameplate.richText = false; nameplate.textWrappingMode = TextWrappingModes.NoWrap;
             visuals.SetActive(false);
         }
@@ -61,9 +61,9 @@ namespace LighthouseKeepers.Net
         {
             var stream = CrewPoseStream.Active;
             bool visible = identity && identity.IsValid && stream && identity.Runner == stream.Channel.Runner &&
-                identity.InputAuthority != identity.Runner.LocalPlayer && stream.Sample(identity.InputAuthority.RawEncoded,out _);
+                identity.InputAuthority != identity.Runner.LocalPlayer && stream.SampleVisual(identity.InputAuthority.RawEncoded,out _);
             visuals.SetActive(visible);
-            if (!visible || !stream.Sample(identity.InputAuthority.RawEncoded,out var pose)) return;
+            if (!visible || !stream.SampleVisual(identity.InputAuthority.RawEncoded,out var pose)) return;
             head.SetPositionAndRotation(pose.Head,pose.HeadRotation);
             left.SetPositionAndRotation(pose.Left,pose.LeftRotation); right.SetPositionAndRotation(pose.Right,pose.RightRotation);
             var forward = Vector3.ProjectOnPlane(pose.HeadRotation*Vector3.forward,Vector3.up);

@@ -121,7 +121,8 @@ namespace LighthouseKeepers.Net
             var packet=new Packet { id=binding.Id,path=binding.Path,epoch=binding.Epoch,sequence=sequence,action=action,generation=hostRegistryGeneration,
                 position=binding.transform.position,rotation=binding.transform.rotation,
                 velocity=binding.ReleaseVelocity,angularVelocity=binding.ReleaseAngularVelocity };
-            channel.SendToHost(RequestKind,Encode(packet));
+            if(action==1)channel.SampleToHost(RequestKind,Encode(packet),binding.Id);
+            else channel.SendToHost(RequestKind,Encode(packet));
         }
         static byte[] Encode(Packet packet) => Encoding.UTF8.GetBytes(JsonUtility.ToJson(packet));
         void Receive(int sender,int kind,byte[] data)
@@ -202,8 +203,8 @@ namespace LighthouseKeepers.Net
                 var owner=channel.TryPlayer(lease.Owner,out var peer)?peer:channel.Runner.LocalPlayer;
                 if (obj.InputAuthority!=owner) obj.AssignInputAuthority(owner);
             }
-            channel.Broadcast(StateKind,Encode(new Packet { id=id,path=binding.Path,epoch=lease.Epoch,owner=lease.Owner,sequence=++stateSequence,action=3,generation=registryGeneration,
-                position=binding.transform.position,rotation=binding.transform.rotation }));
+            channel.SampleBroadcast(StateKind,Encode(new Packet { id=id,path=binding.Path,epoch=lease.Epoch,owner=lease.Owner,sequence=++stateSequence,action=3,generation=registryGeneration,
+                position=binding.transform.position,rotation=binding.transform.rotation }),id);
         }
         public bool HasFreshLease(int actor,int station)
         {
