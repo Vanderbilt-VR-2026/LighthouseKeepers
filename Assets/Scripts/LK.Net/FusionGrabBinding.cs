@@ -152,12 +152,14 @@ namespace LighthouseKeepers.Net
         }
         public void Unbind()
         {
+            bool wasOwned=Owner!=0;
             CancelSelection();
             if (interaction) { interaction.selectFilters.Remove(this);interaction.selectEntered.RemoveListener(Grab);interaction.selectExited.RemoveListener(Release); }
             if (body) body.isKinematic=initialKinematic;
             if (legacyWrench) legacyWrench.enabled=wrenchWasEnabled;
             if (legacyControl) legacyControl.enabled=controlWasEnabled;
-            authority=null;
+            authority=null;Owner=0;
+            if(wasOwned)foreach(var observer in releaseObservers)observer.OnNetworkReleased();
         }
         void OnDestroy() => Unbind();
     }

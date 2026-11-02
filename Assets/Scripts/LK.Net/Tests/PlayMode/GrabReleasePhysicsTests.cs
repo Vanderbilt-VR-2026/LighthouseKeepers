@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace LighthouseKeepers.Net.Tests
 {
+    public sealed class CoopReleaseObserver : MonoBehaviour,LighthouseKeepers.Interaction.INetworkPropRelease
+    {public int releases;public void OnNetworkReleased()=>releases++;}
     public sealed class GrabReleasePhysicsTests
     {
         [Test] public void ReleasePacketPreservesMomentumAndWorldGeneration()
@@ -14,6 +16,24 @@ namespace LighthouseKeepers.Net.Tests
             var received=JsonUtility.FromJson<FusionGrabAuthority.Packet>(json);
             Assert.AreEqual(sent.velocity,received.velocity);Assert.AreEqual(sent.angularVelocity,received.angularVelocity);
             Assert.AreEqual(7,received.generation);Assert.AreEqual(3,received.epoch);
+        }
+        [Test] public void DisconnectClearsRemoteOwnerAndNotifiesTheEightSecondReturnExactlyOnce()
+        {
+            var root=new GameObject("Disconnect prop");var session=new GameObject("Disconnect authority");
+            try
+            {
+                var observer=root.AddComponent<CoopReleaseObserver>();
+                var body=root.AddComponent<Rigidbody>();
+                var grab=root.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                var authority=session.AddComponent<FusionGrabAuthority>();
+                var binding=root.AddComponent<FusionGrabBinding>();binding.Bind(authority,1,"Test/Wrench",grab);
+                binding.ApplyState(new FusionGrabAuthority.Packet{owner=2,epoch=1,sequence=1,position=Vector3.zero,rotation=Quaternion.identity});
+                Assert.AreEqual(2,binding.Owner);Assert.IsFalse(binding.CanSimulateReleased);
+                binding.Unbind();Assert.AreEqual(0,binding.Owner);Assert.IsTrue(binding.CanSimulateReleased);
+                Assert.IsFalse(body.isKinematic);Assert.AreEqual(1,observer.releases);
+                binding.Unbind();Assert.AreEqual(1,observer.releases);
+            }
+            finally{Object.DestroyImmediate(root);Object.DestroyImmediate(session);}
         }
         [Test] public void HostReceivesReleaseMomentumAndCapsExtremeThrows()
         {
