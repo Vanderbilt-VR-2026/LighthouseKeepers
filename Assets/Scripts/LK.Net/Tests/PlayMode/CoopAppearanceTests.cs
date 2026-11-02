@@ -9,6 +9,21 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class CoopAppearanceTests
     {
+        [UnityTest] public IEnumerator RemoteGloveSurvivesDestructionOfTheLobbyRigResources()
+        {
+            yield return SceneManager.LoadSceneAsync("LK_NetworkLobby");yield return null;
+            var copy=new GameObject("Persistent remote glove");Object.DontDestroyOnLoad(copy);
+            copy.AddComponent<RemoteHandVisual>().left=true;
+            yield return new WaitForSeconds(1.1f);
+            var skin=copy.GetComponentInChildren<SkinnedMeshRenderer>();Assert.IsNotNull(skin);
+            int vertices=skin.sharedMesh.vertexCount;
+            yield return SceneManager.LoadSceneAsync("LK_Lab_Environment");yield return null;
+            Assert.IsTrue(skin.sharedMesh,"Remote glove borrowed a mesh destroyed by the departing lobby rig");
+            Assert.IsTrue(skin.sharedMaterial,"Remote glove borrowed the lobby rig's destroyed material");
+            Assert.AreEqual(vertices,skin.sharedMesh.vertexCount);
+            Assert.That(skin.sharedMaterial.GetColor("_BaseColor").r,Is.EqualTo(198f/255).Within(.01f));
+            Object.Destroy(copy);
+        }
         [UnityTest] public IEnumerator BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes()
         {
             yield return SceneManager.LoadSceneAsync("LK_Lab_Environment");yield return null;

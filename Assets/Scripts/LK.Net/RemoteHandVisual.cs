@@ -6,6 +6,7 @@ namespace LighthouseKeepers.Net
     {
         public bool left;
         float nextTry;
+        Mesh ownedMesh;Material ownedMaterial;
         void Update()
         {
             if(Time.unscaledTime<nextTry)return;nextTry=Time.unscaledTime+1;
@@ -18,6 +19,11 @@ namespace LighthouseKeepers.Net
             {
                 if(!skin.sharedMesh || skin.name!="Skinned glove")continue;
                 var clone=Instantiate(skin.gameObject,transform);clone.name="Remote tan glove visual only";
+                // The local HandRig destroys its generated resources when the lobby unloads.
+                // A network avatar may survive that load, so its visual owns independent copies.
+                var renderer=clone.GetComponent<SkinnedMeshRenderer>();
+                ownedMesh=Instantiate(skin.sharedMesh);renderer.sharedMesh=ownedMesh;
+                if(skin.sharedMaterial){ownedMaterial=Instantiate(skin.sharedMaterial);renderer.sharedMaterial=ownedMaterial;}
                 clone.transform.localPosition=controller.InverseTransformPoint(skin.transform.position);
                 clone.transform.localRotation=Quaternion.Inverse(controller.rotation)*skin.transform.rotation;
                 clone.transform.localScale=skin.transform.lossyScale;
@@ -26,5 +32,6 @@ namespace LighthouseKeepers.Net
                 enabled=false;return;
             }
         }
+        void OnDestroy(){if(ownedMesh)Destroy(ownedMesh);if(ownedMaterial)Destroy(ownedMaterial);}
     }
 }
