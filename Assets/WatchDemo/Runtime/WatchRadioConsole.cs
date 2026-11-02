@@ -42,6 +42,8 @@ namespace LighthouseKeepers.WatchDemo
             {currentDay=watch.Day;foreach(var control in controls)control.ResetControl();completed=false;}
             nextReadout=0;
         }
+        public void ResetReplicaInteraction()
+        {foreach(var control in controls)control.ResetControl();completed=State.Completed;currentDay=watch.Day;nextReadout=0;}
         void Complete(){effects.PlayOneShot(reply,.7f);completed=true;nextReadout=0;}
         public bool ToggleMain()
         {
@@ -87,7 +89,8 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<meterNeedles.Length;i++)
             {float value=sending?.5f+.4f*Mathf.Sin(Time.time*(13+i*4)):(live?.10f+.06f*Mathf.Sin(Time.time*3+i):0);meterNeedles[i].localRotation=Quaternion.Euler(0,0,Mathf.Lerp(50,-50,value));}
             if(Time.unscaledTime<nextReadout)return;nextReadout=Time.unscaledTime+.1f;
-            foreach(var control in controls)control.SyncMain(State.MainOn);
+            foreach(var control in controls)
+            {control.SyncMain(State.MainOn);if(watch.Coop!=null||watch.RemoteReplica)control.SyncCrewFrequency(Mathf.InverseLerp(program.minimumMHz,program.maximumMHz,State.FrequencyMHz));}
             lockLamp.SetPropertyBlock(live&&State.Locked?green:dark);transmitLamp.SetPropertyBlock(sending?red:dark);
             // Utility and out-of-step controls still move/click, but do not light or undo progress.
             for(int i=0;i<panelLamps.Length;i++)panelLamps[i].SetPropertyBlock(dark);

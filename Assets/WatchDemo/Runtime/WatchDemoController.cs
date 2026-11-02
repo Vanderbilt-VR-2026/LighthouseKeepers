@@ -126,7 +126,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(snapshot==null||snapshot.revision<Revision||!state.ApplyRemote(snapshot))return false;
             if(snapshot.revision!=Revision)
-            {Revision=snapshot.revision;if(generator)generator.ResetInteraction();if(pipeRepair)pipeRepair.ResetView();whoosh.Play();if(menu)menu.Close();}
+            {Revision=snapshot.revision;if(generator)generator.ResetInteraction();if(pipeRepair)pipeRepair.ResetView();if(radio)radio.ResetReplicaInteraction();whoosh.Play();if(menu)menu.Close();}
             sleeping=snapshot.sleeping;replicaFadeTarget=snapshot.fade;
             crewBeds=snapshot.beds;crewKeepers=snapshot.keepers;crewNotice=snapshot.notice??"";
             flood.Paused=true;flood.SetHeight(snapshot.water);

@@ -1,4 +1,9 @@
 using System;
+using System.Collections;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 using NUnit.Framework;
 namespace LighthouseKeepers.Net.Tests
 {
@@ -58,6 +63,26 @@ namespace LighthouseKeepers.Net.Tests
             snapshot.GetType().GetField("order1").SetValue(snapshot,snapshot.GetType().GetField("order0").GetValue(snapshot));
             Assert.IsFalse((bool)Call(guest,"ApplyRemote",snapshot));
             Assert.AreEqual(0d,Get<double>(guest,"Elapsed"));
+        }
+        [UnityTest] public IEnumerator SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast()
+        {
+            yield return SceneManager.LoadSceneAsync("LK_Lab_Environment");yield return null;
+            var view=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Single(x=>x.GetType().FullName=="LighthouseKeepers.WatchDemo.WatchDemoController");
+            Call(view,"SetNetworkMode",false,true);
+            var host=Watch();Call(host,"CompleteRepair");Call(host,"Sleep");
+            for(int i=0;i<3;i++)Call(host,"StarterPulled");Call(host,"CompleteRepair");Call(host,"Sleep");
+            for(int i=0;i<3;i++)Call(host,"StarterPulled");var radio=Get<object>(host,"Radio");
+            Call(radio,"ToggleMain");Call(radio,"Tune",156.8f);Call(host,"Tick",1.1d);
+            foreach(int symbol in new[]{0,2,1,3})Call(radio,"PressCode",symbol);
+            Call(radio,"SetMicrophone",true,true);Call(host,"Tick",3.1d);Assert.IsTrue(Get<bool>(radio,"Completed"));
+            var first=Call(host,"Capture",.12f);first.GetType().GetField("revision").SetValue(first,1);
+            Assert.IsTrue((bool)Call(view,"ApplyHostSnapshot",first));yield return null;
+            Call(host,"Retry");for(int i=0;i<3;i++)Call(host,"StarterPulled");Call(radio,"ToggleMain");Call(host,"Tick",.1d);
+            var retry=Call(host,"Capture",.02f);retry.GetType().GetField("revision").SetValue(retry,2);
+            Assert.IsTrue((bool)Call(view,"ApplyHostSnapshot",retry));yield return null;
+            var console=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Single(x=>x.GetType().FullName=="LighthouseKeepers.WatchDemo.WatchRadioConsole");
+            var hiss=(AudioSource)console.GetType().GetField("hiss").GetValue(console);
+            Assert.Greater(hiss.volume,.05f,"Guest retained the previous broadcast's muted tuning audio after a same-day retry");
         }
         [Test] public void SoloRejectsRemoteWritesAndReplicaRejectsMalformedOrUnknownDay()
         {
