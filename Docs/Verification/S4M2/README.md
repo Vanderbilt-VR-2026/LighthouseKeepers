@@ -1,0 +1,13 @@
+# S4-M2 verification
+
+Base: `s4/m1` 529fbe6 (runtime 8098ea4). Work branch `s4/m2`. Unity 6000.3.23f1. No main merge.
+
+Before any gameplay edits, full suites ran with S4 enabled: 220 EditMode passes; 37 PlayMode passes / 18 failures. The 15 archived-scene failures remain. Three additional S4-enabled baseline failures: EnvironmentPresentationTests expects old lighting; WatchInteractionTests expects the shorter old sleep; CoopAppearanceTests receives a coroutine-on-disabled-wrench teardown error. These were observed on the unchanged base, not introduced by M2. The previous S4-disabled suite had 40 passes / 15 failures. [Exact baseline list](before-tests.json).
+
+The unchanged `artifacts/s4m1/S4Replay.cs` passed solo Days 1–3 with zero errors, including physical pipe/starter/radio input, actual beacon deadline/retry and beds through the existing Day 4. [Result](before-solo.json). House and final board screenshots inspected.
+
+Live Mac + Quest, CREW88: guest repaired three bolts (45.28 s); host board updated and flood drained; both normal bed votes produced NIGHT 1 SURVIVED then Day 2; three host XRI starter pulls restored power. User confirmed the shared night and Day 2. [Result](before-coop.json). Both night screenshots and the host board/generator screenshots inspected.
+
+Full logs, XML and captures: `artifacts/s4m2/before/`. Graphics Editor import initially timed out; recovery resumed only the graphics replay, without changing gameplay or rerunning completed suites.
+
+Implementation sequence: grid → test → generator → test → beacon → test. After checks pending.
