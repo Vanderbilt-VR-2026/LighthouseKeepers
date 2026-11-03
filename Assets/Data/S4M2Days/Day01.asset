@@ -17,6 +17,11 @@ MonoBehaviour:
   powerCapacity: 3.25
   fuelDrainPerSecond: 0
   initialCircuitMask: 15
+  beaconInitiallyLit: 1
+  beaconInitialAlignment: 0.5
+  beaconTargetAlignment: 0.5
+  beaconInitialSoot: 0
+  beaconSootPerSecond: 0
   tasks:
   - stationId: STN_PIPE_LEAK
     taskText: Repair the pipe

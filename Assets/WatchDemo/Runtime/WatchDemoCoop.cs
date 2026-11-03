@@ -16,6 +16,8 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(action==CoopAction.GridCircuit)return powerPanel?powerPanel.Control((int)value):null;
             if(action==CoopAction.GridReset)return powerPanel?powerPanel.ResetControl:null;
+            if(action==CoopAction.BeaconIgnition)return beaconStation?beaconStation.Ignition:null;
+            if(action==CoopAction.BeaconAlign)return beaconStation?beaconStation.Wheel:null;
             if(action==CoopAction.EnginePrime)return engineControls?engineControls.Primer:null;
             if(action==CoopAction.EngineChoke)return engineControls?engineControls.Choke:null;
             if(action==CoopAction.Starter)return generator.Starter;
@@ -34,6 +36,8 @@ namespace LighthouseKeepers.WatchDemo
                     if(!float.IsFinite(value)||value!=(int)value||value<0||value>3)return -1;
                     return state.SetCircuit((int)value,pressed)?1:-1;
                 case CoopAction.GridReset:return state.ResetBreaker()?1:-1;
+                case CoopAction.BeaconIgnition:return state.IgniteBeacon(pressed)?1:-1;
+                case CoopAction.BeaconAlign:return state.AlignBeacon(value)?1:-1;
                 case CoopAction.EnginePrime:return state.PrimeEngine()?1:-1;
                 case CoopAction.EngineChoke:return state.SetChoke(pressed)?1:-1;
                 case CoopAction.Starter:return generator.ApplyPull()?1:-1;

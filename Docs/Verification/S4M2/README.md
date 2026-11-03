@@ -21,3 +21,9 @@ Three EditMode rule tests passed: overload/recovery, generous Day 1 capacity, an
 Four EditMode rule tests passed (wrong order, stall/flood recovery, fuel exhaustion/refill, and read-only/Day 1 behavior). Graphics solo passed actual XRI grabs, trigger squeezes, starter travel and carried-can tilt/proximity; also verified stalled/flooded recovery. Lamp and pour captures inspected. Legacy decorative gauge/cap are hidden only while the new controls are enabled to avoid contradictory readings. The accepted starter attachment is unchanged. Two independent Mac clients passed guest primer/choke/starter/open-choke commands and guest leased-can pouring measured on the host. [Co-op result](generator/coop.json). The guest fuel-pour capture was inspected.
 
 New catalog fuel: Day 1 100% and no drain; Day 2 80% at 0.15%/s; Days 3/4 4% at 0.25%/s. Pour 6%/s, minimum start 12%, warning below 20%. Primer 3; starter 3; flood on pull 5; choke open within 5 s; flood wait 8 s. Beacon allowance in the new catalog is 120/150 s before the existing 0.8 difficulty multiplier (96/120 s effective), allowing the longer generator sequence. First-timer completion time is not yet headset verified.
+
+## Piece 3: beacon station
+
+Three beacon rule tests passed. Graphics solo used XRI ignition/wheel and a carried rag: no-power ignition rejected; power alone did not light an unready beacon; alignment ticked its task; motion cleaned while a stationary rag did not. Actual dark-beacon state caused failure and normal Retry restored the authored day. Alignment/cleaning captures inspected. Outside beam opacity was increased after the first capture was too faint; final capture and two-client test pending.
+
+Days 1/2 begin lit/aligned/clean. Days 3/4 begin unlit, alignment 0.18 (target 0.5 ±0.025), 30% soot, accumulating 0.1%/s while shining. Cleaning removes 40% per metre of rubbing; fully dirty beam retains 25% brightness. Dark timer requires power, ignition and alignment.

@@ -18,6 +18,11 @@ MonoBehaviour:
   powerCapacity: 2.5
   fuelDrainPerSecond: .0015
   initialCircuitMask: 11
+  beaconInitiallyLit: 1
+  beaconInitialAlignment: 0.5
+  beaconTargetAlignment: 0.5
+  beaconInitialSoot: 0
+  beaconSootPerSecond: 0
   tasks:
   - stationId: STN_GENERATOR
     taskText: Restart the generator

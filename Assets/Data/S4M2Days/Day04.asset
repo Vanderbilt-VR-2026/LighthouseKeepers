@@ -18,17 +18,25 @@ MonoBehaviour:
   powerCapacity: 2.5
   fuelDrainPerSecond: .0025
   initialCircuitMask: 11
+  beaconInitiallyLit: 0
+  beaconInitialAlignment: 0.18
+  beaconTargetAlignment: 0.5
+  beaconInitialSoot: 0.3
+  beaconSootPerSecond: 0.001
   tasks:
   - stationId: STN_GENERATOR
-    taskText: Restart the generator
+    taskText: Refuel and restart the generator
   - stationId: STN_PIPE_LEAK
     taskText: Repair the pipe
   - stationId: STN_RADIO_CONSOLE
     taskText: Broadcast the storm warning.
+  - stationId: STN_BEACON_CONTROL
+    taskText: Light and align the beacon
   startingFaults:
   - STN_GENERATOR
   - STN_PIPE_LEAK
   - STN_RADIO_CONSOLE
+  - STN_BEACON_CONTROL
   requiredKeepers: 2
   briefingHeading: "Day 3 \u2014 Two keepers"
   briefingText: One keeper holds and corrects the isolation valve on F2. The other

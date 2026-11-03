@@ -8,6 +8,10 @@ namespace LighthouseKeepers.Core
         public bool enabledForWatch=true;
         public bool powerGrid=true;
         public bool generatorSequence=true;
+        public bool beaconStation=true;
+        [Range(.001f,.2f)] public float alignmentTolerance=.025f;
+        [Min(.01f)] public float sootRemovedPerMetre=.4f;
+        [Range(.05f,1)] public float dirtyBeamBrightness=.25f;
         [Min(1)] public int primerSqueezes=3, starterPulls=3, floodAtPulls=5;
         [Min(.1f)] public float chokeOpenSeconds=5, engineFloodSeconds=8;
         [Range(0,1)] public float minimumFuel=.12f, lowFuelWarning=.2f;

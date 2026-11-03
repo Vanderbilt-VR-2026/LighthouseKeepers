@@ -20,6 +20,9 @@ namespace LighthouseKeepers.Core.Progression
         [Min(.01f)] public float powerCapacity = 3.25f;
         [Range(0,15)] public int initialCircuitMask = 15;
         [Min(0)] public float fuelDrainPerSecond;
+        public bool beaconInitiallyLit=true;
+        [Range(0,1)] public float beaconInitialAlignment=.5f,beaconTargetAlignment=.5f,beaconInitialSoot;
+        [Min(0)] public float beaconSootPerSecond;
         public WatchTaskStep[] tasks = Array.Empty<WatchTaskStep>();
         public string[] startingFaults = Array.Empty<string>();
         [Range(1, 2)] public int requiredKeepers = 1;

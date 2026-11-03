@@ -39,6 +39,7 @@ namespace LighthouseKeepers.WatchDemo
         S4WatchPresentation s4Presentation;
         WatchPowerPanel powerPanel;
         WatchEngineControls engineControls;
+        WatchBeaconStation beaconStation;
         int sleepDay;
         public Component Owner=>this;
         public void SetNetworkMode(bool practice,bool replica){state.SetNetworkRehearsal(practice);state.SetRemoteReplica(replica);}
@@ -66,6 +67,7 @@ namespace LighthouseKeepers.WatchDemo
             if(beacon)beacon.Bind(state);
             if(state.Grid!=null)powerPanel=WatchPowerPanel.Create(this);
             if(state.Engine!=null)engineControls=WatchEngineControls.Create(this,generator);
+            if(state.Beacon!=null)beaconStation=WatchBeaconStation.Create(this,beacon);
             wrenchHaptics=wrench.GetComponent<WrenchHaptics>();originalWrenchRotation=wrenchVisual.localRotation;fadeMaterial=fade.material;fade.enabled=false;
             LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
             menu=gameObject.AddComponent<WatchMenu>();menu.Initialize(this,head);
@@ -81,6 +83,7 @@ namespace LighthouseKeepers.WatchDemo
             flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond;flood.SurgePerMetre=.1f;flood.ResumeFlood();
             if(generator)generator.ResetInteraction();
             if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();
+            if(beaconStation&&!state.RemoteReplica)beaconStation.ResetProps();
             CancelRepair();
             leak.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);if(leakAudio)leakAudio.Stop();
             if(pipeRepair)pipeRepair.ResetView();
@@ -141,7 +144,8 @@ namespace LighthouseKeepers.WatchDemo
             if(snapshot==null||snapshot.revision<Revision||!state.ApplyRemote(snapshot))return false;
             if(snapshot.revision!=Revision)
             {Revision=snapshot.revision;if(generator)generator.ResetInteraction();
-            if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();if(pipeRepair)pipeRepair.ResetView();if(radio)radio.ResetReplicaInteraction();whoosh.Play();if(menu)menu.Close();}
+            if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();
+            if(beaconStation&&!state.RemoteReplica)beaconStation.ResetProps();if(pipeRepair)pipeRepair.ResetView();if(radio)radio.ResetReplicaInteraction();whoosh.Play();if(menu)menu.Close();}
             sleeping=snapshot.sleeping;sleepDay=snapshot.sleepDay;replicaFadeTarget=snapshot.fade;
             if(s4Presentation)s4Presentation.Night(sleeping,sleepDay,snapshot.fade);
             crewBeds=snapshot.beds;crewKeepers=snapshot.keepers;crewNotice=snapshot.notice??"";
@@ -165,11 +169,11 @@ namespace LighthouseKeepers.WatchDemo
             {boardText.Append("POWER: ").Append(state.Grid.Demand.ToString("0.##")).Append('/').Append(state.Grid.Capacity.ToString("0.##")).Append(state.Grid.Tripped?" — TRIPPED: RESET F2":" — ");
                 if(!state.Grid.Tripped)for(int i=0;i<4;i++)if(state.Grid.Selected((PowerCircuit)i))boardText.Append(((PowerCircuit)i).ToString().ToUpperInvariant()).Append(' ');
                 boardText.Append('\n');}
-            if(!state.HasPower(PowerCircuit.Beacon)&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
+            if(!state.BeaconShining&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
             boardText.Append('\n');
             if(state.Failed)boardText.Append(state.FailureMessage).Append("\nTrigger to retry this day / Menu for retry or lobby");
             else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE\nMenu: Replay from Day 1 or Return to lobby");
-            else boardText.Append("PIPE F1 / GENERATOR F2 / RADIO F4\nFinish tasks, then sleep in F3");
+            else boardText.Append(state.Beacon!=null?"PIPE F1 / POWER F2 / RADIO + BEACON F4\nFinish tasks, then sleep in F3":"PIPE F1 / GENERATOR F2 / RADIO F4\nFinish tasks, then sleep in F3");
             if(!state.Failed&&(!state.Complete||state.HasNextDay))boardText.Append("\nLEFT MENU: Return to lobby (Editor: Esc)");
             if(crewBeds>0&&!sleeping)boardText.Append("\nWaiting for other keeper (").Append(crewBeds).Append('/').Append(crewKeepers).Append(" in bed)");
             if(!string.IsNullOrEmpty(crewNotice))boardText.Append('\n').Append(crewNotice);
