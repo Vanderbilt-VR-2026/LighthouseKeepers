@@ -1,0 +1,12 @@
+{
+  "pid": "15422",
+  "exceptions": [],
+  "openXRTransitions": [
+    "11-03 00:37:58.483 15422 15465 I Unity   : [XR] [514061666800] [00:37:58.483][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_UNKNOWN->XR_SESSION_STATE_IDLE session=3 time=7493905335583",
+    "11-03 00:37:58.484 15422 15465 I Unity   : [XR] [514061666800] [00:37:58.484][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_IDLE->XR_SESSION_STATE_READY session=3 time=7493909191417",
+    "11-03 00:37:58.672 15422 15465 I Unity   : [XR] [514061666800] [00:37:58.672][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_READY->XR_SESSION_STATE_SYNCHRONIZED session=3 time=7494099285915",
+    "11-03 00:37:58.677 15422 15465 I Unity   : [XR] [514061666800] [00:37:58.677][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_SYNCHRONIZED->XR_SESSION_STATE_VISIBLE session=3 time=7494101317998",
+    "11-03 00:37:58.677 15422 15465 I Unity   : [XR] [514061666800] [00:37:58.677][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_VISIBLE->XR_SESSION_STATE_FOCUSED session=3 time=7494104074978"
+  ],
+  "headsetUserAcceptance": false
+}

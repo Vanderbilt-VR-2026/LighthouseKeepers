@@ -13,13 +13,15 @@ namespace LighthouseKeepers.WatchDemo
         public float degreesPerSecond=18;
         WatchState watch;bool powered,initialized;float speed;
         MaterialPropertyBlock block;
+        Renderer visibleBeam;float brightness=1,previousAlignment=.5f;
         public bool Lit=>lantern.enabled;
         public float SpinFraction=>speed;
         void Awake(){block=new MaterialPropertyBlock();Apply(false);}
         public void Bind(WatchState state){watch=state;watch.Changed+=Changed;Changed();}
         void Changed()
         {
-            bool next=watch.Power==PowerState.On;if(initialized&&powered==next)return;
+            if(watch.Beacon!=null){float angle=watch.Beacon.Alignment;rotor.Rotate(Vector3.up,(angle-previousAlignment)*270,Space.Self);previousAlignment=angle;}
+            brightness=watch.Beacon?.Brightness??1;bool next=watch.BeaconShining;if(initialized&&powered==next){if(watch.Beacon!=null)Apply(powered);return;}
             powered=next;Apply(powered);
             audioSource.PlayOneShot(powered?powerUp:powerDown,.35f);
             if(!powered)speed=0;
@@ -28,17 +30,20 @@ namespace LighthouseKeepers.WatchDemo
         void Apply(bool on)
         {
             lantern.enabled=beam.enabled=on;
+            if(visibleBeam)visibleBeam.enabled=on;
             block.SetColor("_BaseColor",on?new Color(.8f,.42f,.12f):new Color(.07f,.065f,.05f));
-            block.SetColor("_EmissionColor",on?new Color(1,.30f,.045f)*.7f:Color.black);
+            block.SetColor("_EmissionColor",on?new Color(1,.30f,.045f)*(.7f*brightness):Color.black);
             foreach(var lens in lenses)lens.SetPropertyBlock(block);
+            if(visibleBeam){block.SetColor("_BaseColor",new Color(1,.55f,.16f,.12f*brightness));visibleBeam.SetPropertyBlock(block);}
         }
         void Update()
         {
             if(!powered)return;
             speed=Mathf.MoveTowards(speed,1,Time.deltaTime/spinUpSeconds);
             rotor.Rotate(Vector3.up,degreesPerSecond*speed*Time.deltaTime,Space.Self);
-            lantern.intensity=1.8f*speed;beam.intensity=6*speed;
+            lantern.intensity=1.8f*speed*brightness;beam.intensity=6*speed*brightness;
         }
+        public void SetVisibleBeam(Renderer renderer){visibleBeam=renderer;Apply(powered);}
         void OnDestroy(){if(watch!=null)watch.Changed-=Changed;}
     }
 }

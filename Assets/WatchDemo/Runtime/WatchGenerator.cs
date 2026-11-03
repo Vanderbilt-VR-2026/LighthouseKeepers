@@ -22,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         MaterialPropertyBlock lampBlock;
         public GeneratorRestart Starter => starter;
         // Primer/choke readiness will be added here in a later milestone, not enabled in M2.
-        public bool RequiresPrimerAndChoke => false;
+        public bool RequiresPrimerAndChoke => state?.Engine!=null;
         public void Bind(WatchState value)
         {
             if (state != null) state.Changed -= Refresh;
@@ -53,7 +53,7 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             bool running = state.Power == PowerState.On;
-            starter.PullEnabled = !running && !state.Failed;
+            starter.PullEnabled = !state.Failed && (!running||state.Engine!=null&&state.Engine.ChokeClosed);
             // M3 central emergency controller owns interior presentation; keep the
             // accepted generator mechanics, lamp, sound and engine feedback unchanged.
             if(lighting.enabled)
@@ -64,7 +64,8 @@ namespace LighthouseKeepers.WatchDemo
             lampBlock.SetColor("_BaseColor", running ? new Color(.1f,.7f,.12f) : new Color(.2f,.055f,.025f));
             lampBlock.SetColor("_EmissionColor", running ? new Color(.08f,.9f,.1f) : Color.black);
             lamp.SetPropertyBlock(lampBlock);
-            prompt.text = running ? "POWER ON" : state.Failed ? "WATCH ENDED" : $"PULL STARTER  {state.StarterPulls}/{WatchState.RequiredStarterPulls}\nGRAB + PULL TOWARD YOU";
+            prompt.text = running ? (state.Grid!=null?"ENGINE RUNNING":"POWER ON") : state.Failed ? "WATCH ENDED" : $"PULL STARTER  {state.StarterPulls}/{WatchState.RequiredStarterPulls}\nGRAB + PULL TOWARD YOU";
+            if(state.Engine!=null)prompt.text=WatchEngineControls.Instruction(state);
             if (running && !wasRunning) { runningAudio.Play(); if(engineCatch)runningAudio.PlayOneShot(engineCatch,.7f); }
             else if (!running) runningAudio.Stop();
             wasRunning = running;
