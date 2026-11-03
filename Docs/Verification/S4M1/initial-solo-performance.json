@@ -1,0 +1,47 @@
+{
+  "source": "artifacts/s4m1/device/vrapi-solo.log",
+  "pid": "17250",
+  "samples": 250,
+  "start": "11-02 21:03:18.082",
+  "end": "11-02 21:07:27.100",
+  "metrics": {
+    "gpu_ms": {
+      "median": 6.83,
+      "p95": 7.07,
+      "max": 7.25,
+      "min": 6.48
+    },
+    "render_thread_estimate_ms": {
+      "median": 4.385,
+      "p95": 5.120000000000001,
+      "max": 6.140000000000001,
+      "min": 3.370000000000001
+    },
+    "frame_ms": {
+      "median": 11.245000000000001,
+      "p95": 11.98,
+      "max": 13.23,
+      "min": 10.13
+    },
+    "fps": {
+      "median": 73.0,
+      "p95": 73.0,
+      "max": 73.0,
+      "min": 72.0
+    },
+    "stale": {
+      "median": 0.0,
+      "p95": 0.0,
+      "max": 3.0,
+      "min": 0.0
+    },
+    "temp": {
+      "median": 38.0,
+      "p95": 38.0,
+      "max": 38.0,
+      "min": 38.0
+    }
+  },
+  "definition": "Approximate render-thread wall time = CPU&GPU minus App GPU, per Meta Logcat Stats Definitions; not full main-thread CPU cost.",
+  "source_definition": "https://developers.meta.com/vr/documentation/unreal/ts-logcat-stats/"
+}

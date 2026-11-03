@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "duration": 0.61,
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.WatchEngineTests.ClosedChokeDeadlineStallsAndExcessPullsFloodForEightSeconds",
+      "Status": "Passed",
+      "Duration": 0.0269938,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.WatchEngineTests.LowFuelCannotStartPourIsBoundedAndRunningEngineCanRunDry",
+      "Status": "Passed",
+      "Duration": 0.000378,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.WatchEngineTests.ReadOnlyGuestCannotChangeFuelOrEngineAndDayOneNeverDrains",
+      "Status": "Passed",
+      "Duration": 0.000154,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.WatchEngineTests.WrongOrderCoughsThenThreePrimersClosedChokeAndThreePullsRequireOpening",
+      "Status": "Passed",
+      "Duration": 0.0001416,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

@@ -72,6 +72,26 @@ namespace LighthouseKeepers.Tests
             Assert.IsTrue(crew.ApplyRequest("2", Request(1)));
             Assert.IsTrue(crew.Players.Last().IsReady);
         }
+        [Test] public void ExplicitWatchAdmissionRestoresVacantSlotWithoutRestartingOrUnreadyingHost()
+        {
+            var host=new FusionLobbyState();host.Reset(2);host.Add("1",true);host.Add("2",false);
+            host.ApplyRequest("1",Request(1,"Captain"));host.ApplyRequest("2",Request(1,"Original"));
+            Assert.IsTrue(host.Begin(2,true));host.Remove("2");
+            Assert.IsFalse(host.Add("3",false),"Ordinary launch lock stays unchanged");
+            Assert.IsTrue(host.AddToRunningWatch("3"));
+            Assert.IsTrue(host.ApplyRequest("3",Request(1,"Returning keeper",false),true));
+            Assert.IsTrue(host.Starting);Assert.IsTrue(host.Players.All(p=>p.IsReady));
+            Assert.AreEqual("Captain",host.Players.Single(p=>p.IsHost).DisplayName);
+            Assert.AreEqual("Returning keeper",host.Players.Single(p=>!p.IsHost).DisplayName);
+            Assert.IsFalse(host.AddToRunningWatch("4"),"Capacity remains two");
+            Assert.IsFalse(host.ApplyRequest("3",Request(1,"Stale"),true));
+            var guest=new FusionLobbyState();Assert.IsTrue(guest.ApplySnapshot(host.Snapshot()));
+            Assert.IsTrue(guest.Starting);Assert.AreEqual(2,guest.Players.Count);
+            host.Remove("3");Assert.IsTrue(host.AddToRunningWatch("3"));
+            Assert.IsTrue(host.ApplyRequest("3",Request(1,"Returned twice"),true));
+            host.CancelStart();Assert.IsFalse(host.AddToRunningWatch("4"));
+            host.BeginRehearsal(2,true);host.Remove("3");Assert.IsFalse(host.AddToRunningWatch("4"));
+        }
         [Test] public void BadSnapshotsLeaveExistingRosterUntouched()
         {
             var host = Crew(); var guest = new FusionLobbyState(); guest.ApplySnapshot(host.Snapshot());

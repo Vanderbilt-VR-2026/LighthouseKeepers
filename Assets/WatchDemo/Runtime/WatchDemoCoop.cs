@@ -14,6 +14,12 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.GridCircuit)return powerPanel?powerPanel.Control((int)value):null;
+            if(action==CoopAction.GridReset)return powerPanel?powerPanel.ResetControl:null;
+            if(action==CoopAction.BeaconIgnition)return beaconStation?beaconStation.Ignition:null;
+            if(action==CoopAction.BeaconAlign)return beaconStation?beaconStation.Wheel:null;
+            if(action==CoopAction.EnginePrime)return engineControls?engineControls.Primer:null;
+            if(action==CoopAction.EngineChoke)return engineControls?engineControls.Choke:null;
             if(action==CoopAction.Starter)return generator.Starter;
             if(action==CoopAction.Microphone)return radio.microphone;
             foreach(var control in radio.controls)
@@ -26,6 +32,14 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly||sleeping)return -1;
             switch(action)
             {
+                case CoopAction.GridCircuit:
+                    if(!float.IsFinite(value)||value!=(int)value||value<0||value>3)return -1;
+                    return state.SetCircuit((int)value,pressed)?1:-1;
+                case CoopAction.GridReset:return state.ResetBreaker()?1:-1;
+                case CoopAction.BeaconIgnition:return state.IgniteBeacon(pressed)?1:-1;
+                case CoopAction.BeaconAlign:return state.AlignBeacon(value)?1:-1;
+                case CoopAction.EnginePrime:return state.PrimeEngine()?1:-1;
+                case CoopAction.EngineChoke:return state.SetChoke(pressed)?1:-1;
                 case CoopAction.Starter:return generator.ApplyPull()?1:-1;
                 case CoopAction.RadioPower:return !state.Failed&&radio.ToggleMain()?1:-1;
                 case CoopAction.RadioTune:
@@ -61,7 +75,7 @@ namespace LighthouseKeepers.WatchDemo
             left.TryGetFeatureValue(CommonUsages.gripButton,out bool lg);right.TryGetFeatureValue(CommonUsages.gripButton,out bool rg);
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
             bool grip=lg||rg,trigger=lt||rt,near=Vector3.Distance(head.position,BedPosition)<1.8f;
-            bedPrompt.text=near?(CanSleep?"PRESS GRIP TO SLEEP TOGETHER":"Finish the board tasks before resting"):"";
+            bedPrompt.text=near?(CanSleep?SleepPrompt+" TOGETHER":"Finish the board tasks before resting"):"";
             if(near){var direction=bedPrompt.transform.position-head.position;direction.y=0;if(direction.sqrMagnitude>.01f)bedPrompt.transform.rotation=Quaternion.LookRotation(direction);}
             if((!menu||!menu.IsOpen)&&state.Failed&&trigger&&!previousTrigger)RetryDay();
             else if((!menu||!menu.IsOpen)&&near&&grip&&!previousGrip)TrySleep();

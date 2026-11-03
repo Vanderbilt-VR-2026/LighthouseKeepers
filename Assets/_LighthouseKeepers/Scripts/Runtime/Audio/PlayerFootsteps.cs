@@ -23,6 +23,9 @@ namespace LighthouseKeepers.Audio
         bool paused;
 
         public int StepsPlayed { get; private set; }
+        public System.Func<AudioClip,AudioClip> SurfaceClip {get;set;}
+        public void Configure(Transform trackedHead,GravityProvider gravityProvider,AudioSource audio,AudioClip[] samples)
+        {head=trackedHead;gravity=gravityProvider;source=audio;clips=samples;}
 
         void Awake() => character = GetComponent<CharacterController>();
         void OnEnable() => ResetMotion();
@@ -69,7 +72,7 @@ namespace LighthouseKeepers.Audio
             if (!clips[index]) return;
             previousClip = index;
             source.pitch = Random.Range(.94f, 1.06f);
-            source.PlayOneShot(clips[index], volume * Random.Range(.9f, 1f));
+            source.PlayOneShot(SurfaceClip?.Invoke(clips[index])??clips[index], volume * Random.Range(.9f, 1f));
             StepsPlayed++;
         }
     }

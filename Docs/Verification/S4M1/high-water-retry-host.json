@@ -1,0 +1,72 @@
+{
+  "region": "us",
+  "poses": [
+    {
+      "actor": 2,
+      "name": "Mac Host",
+      "sequence": 26240,
+      "head": {
+        "x": 0.334990978,
+        "y": 4.95,
+        "z": 2.17749357
+      },
+      "left": {
+        "x": 0.620027661,
+        "y": 4.6,
+        "z": 2.49960256
+      },
+      "right": {
+        "x": 0.7321329,
+        "y": 4.6,
+        "z": 2.012332
+      }
+    },
+    {
+      "actor": 4,
+      "name": "Keeper",
+      "sequence": 5202,
+      "head": {
+        "x": -1.95568514,
+        "y": 1.21300018,
+        "z": -8.134822
+      },
+      "left": {
+        "x": -1.60217941,
+        "y": 0.9141761,
+        "z": -8.096391
+      },
+      "right": {
+        "x": -1.7558167,
+        "y": 0.892836,
+        "z": -8.260109
+      }
+    }
+  ],
+  "playing": true,
+  "scenes": [
+    "LK_Lab_Environment"
+  ],
+  "code": "CREW77",
+  "online": true,
+  "host": true,
+  "starting": true,
+  "error": "",
+  "canStart": false,
+  "players": [
+    {
+      "Id": "1",
+      "DisplayName": "Mac Host",
+      "IsHost": true,
+      "IsReady": true
+    },
+    {
+      "Id": "3",
+      "DisplayName": "Keeper",
+      "IsHost": false,
+      "IsReady": true
+    }
+  ],
+  "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":2,\"power\":0,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":0,\"turns\":0,\"codeProgress\":0,\"elapsed\":1.0326034557074309,\"beaconDarkElapsed\":1.0326034557074309,\"highWaterElapsed\":0.0,\"highWaterFailed\":false,\"sleepDay\":0,\"water\":0.026228507980704309,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":3,\"beds\":0,\"keepers\":2,\"order0\":0,\"order1\":1,\"order2\":2,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+  "watch": "day=2 elapsed=1.03 water=0.0262 power=Off tasks=0",
+  "avatars": 2
+}

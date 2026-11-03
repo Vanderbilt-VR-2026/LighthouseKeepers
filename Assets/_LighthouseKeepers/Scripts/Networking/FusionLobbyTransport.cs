@@ -115,6 +115,9 @@ namespace LighthouseKeepers.Networking
                 scenes.AddSceneRef(SceneRef.FromIndex(index), LoadSceneMode.Single);
                 var photonSettings=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
                 if(ShipWorld.CoopEnabled)photonSettings.FixedRegion="us";
+                // Keep the public S3 preview separate: its snapshots do not carry S4 loss/night state.
+                if(ShipWorld.CoopEnabled&&LighthouseKeepers.Core.S4M2Tuning.Current)photonSettings.AppVersion="LK-S4-M2";
+                else if(ShipWorld.CoopEnabled&&LighthouseKeepers.Core.S4Tuning.Current)photonSettings.AppVersion="LK-S4-M1";
                 var result = await current.StartGame(new StartGameArgs
                 {
                     CustomPhotonAppSettings=photonSettings,
@@ -157,6 +160,8 @@ namespace LighthouseKeepers.Networking
             if (busy) { StatusChanged?.Invoke(); return; }
             _ = Disconnect();
         }
+        bool RejoinEnabled => ShipWorld.CoopEnabled && LighthouseKeepers.Core.S4Tuning.Current && LighthouseKeepers.Core.S4Tuning.Current.crewRejoin;
+        bool AcceptWatchJoin => RejoinEnabled && SharedLabActive && enteredGame && SceneManager.GetSceneByName(ShipWorld.GameplaySceneName).isLoaded;
         bool SharedLabActive=>ShipWorld.CoopEnabled&&!IsNetworkRehearsal&&(enteredGame||state.Starting)&&gameSceneName==ShipWorld.GameplaySceneName;
         async Task Disconnect()
         {
@@ -209,7 +214,7 @@ namespace LighthouseKeepers.Networking
             var request = new LobbyPacket { revision = ++requestSequence, name = pendingName, ready = localReady };
             if (runner.IsServer)
             {
-                if (state.ApplyRequest(LocalPlayerId, request)) PublishRoster();
+                if (state.ApplyRequest(LocalPlayerId, request, AcceptWatchJoin)) PublishRoster();
             }
             else runner.SendReliableDataToServer(NextKey(), LobbyProtocol.Encode(request));
         }
@@ -278,7 +283,11 @@ namespace LighthouseKeepers.Networking
         }
         async Task LoadGame(SceneRef scene)
         {
-            try { await runner.LoadScene(scene, LoadSceneMode.Single); }
+            try
+            {
+                await runner.LoadScene(scene, LoadSceneMode.Single);
+                if (this && IsHost && AcceptWatchJoin && runner.SessionInfo.IsValid) runner.SessionInfo.IsOpen = true;
+            }
             catch (Exception e)
             {
                 if (!this || !IsHost) return;
@@ -296,8 +305,11 @@ namespace LighthouseKeepers.Networking
         public void OnPlayerJoined(NetworkRunner source, PlayerRef player)
         {
             if (source != runner || !source.IsServer) return;
-            if (state.Starting) { source.Disconnect(player); return; }
-            state.Add(Id(player), player == source.LocalPlayer);
+            if (state.Starting)
+            {
+                if (!AcceptWatchJoin || !state.AddToRunningWatch(Id(player))) { source.Disconnect(player); return; }
+            }
+            else state.Add(Id(player), player == source.LocalPlayer);
             PublishRoster();
         }
         public void OnPlayerLeft(NetworkRunner source, PlayerRef player)
@@ -318,7 +330,7 @@ namespace LighthouseKeepers.Networking
                 !LobbyProtocol.TryDecode(data, out var packet)) return;
             if (source.IsServer)
             {
-                if (state.ApplyRequest(Id(sender), packet)) PublishRoster();
+                if (state.ApplyRequest(Id(sender), packet, AcceptWatchJoin)) PublishRoster();
             }
             // Host/Client mode routes client-bound reliable streams through the server.
             else if (state.ApplySnapshot(packet))
@@ -342,7 +354,7 @@ namespace LighthouseKeepers.Networking
         }
         public void OnConnectRequest(NetworkRunner source, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
         {
-            if (state.Starting || state.Players.Count >= state.Capacity) request.Refuse(); else request.Accept();
+            if ((state.Starting && !AcceptWatchJoin) || state.Players.Count >= state.Capacity) request.Refuse(); else request.Accept();
         }
         public void OnSceneLoadStart(NetworkRunner source)
         {
@@ -358,7 +370,13 @@ namespace LighthouseKeepers.Networking
                 gameSceneName = ShipWorld.GameplaySceneName;
             }
         }
-        public void OnConnectedToServer(NetworkRunner source) { }
+        public void OnConnectedToServer(NetworkRunner source)
+        {
+            // A rejoining client loads the host's current scene inside StartGame.
+            // Mark the established connection before that scene's Start methods bind
+            // the read-only guest watch; otherwise it would briefly start a solo day.
+            if (source == runner && source.GameMode == GameMode.Client && RejoinEnabled) online = true;
+        }
         public void OnConnectFailed(NetworkRunner source, NetAddress address, NetConnectFailedReason reason) { }
         public void OnInput(NetworkRunner source, NetworkInput input) { }
         public void OnInputMissing(NetworkRunner source, PlayerRef player, NetworkInput input) { }

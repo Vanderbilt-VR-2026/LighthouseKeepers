@@ -88,20 +88,27 @@ namespace LighthouseKeepers.Networking
             if (players.Count >= Capacity) return false;
             players.Add(new LobbyPlayer(id, "Keeper", host)); Revision++; return true;
         }
+        // Explicit host admission after the Lab is loaded; ordinary lobby Add stays locked.
+        public bool AddToRunningWatch(string id)
+        {
+            if (!Starting || Rehearsal || string.IsNullOrEmpty(id) || players.Count >= Capacity || players.Any(p => p.Id == id)) return false;
+            players.Add(new LobbyPlayer(id, "Keeper", false) { IsReady = true });
+            requestRevisions.Remove(id); Revision++; return true;
+        }
         public bool Remove(string id)
         {
             if (players.RemoveAll(p => p.Id == id) == 0) return false;
             requestRevisions.Remove(id); Revision++; return true;
         }
-        public bool ApplyRequest(string senderId, LobbyPacket request)
+        public bool ApplyRequest(string senderId, LobbyPacket request, bool runningWatch = false)
         {
             var player = players.Find(p => p.Id == senderId);
-            if (Starting || player == null || request == null || request.snapshot || request.version != 1 ||
+            if ((Starting && (!runningWatch || Rehearsal)) || player == null || request == null || request.snapshot || request.version != 1 ||
                 request.revision <= 0 ||
                 (requestRevisions.TryGetValue(senderId, out int previous) && request.revision <= previous)) return false;
             requestRevisions[senderId] = request.revision;
             player.DisplayName = LobbyProtocol.DisplayName(request.name);
-            player.IsReady = request.ready;
+            if (!Starting) player.IsReady = request.ready;
             Revision++; return true;
         }
         public bool Begin(int minimumPlayers, bool allReady) => BeginCore(minimumPlayers,allReady,false);

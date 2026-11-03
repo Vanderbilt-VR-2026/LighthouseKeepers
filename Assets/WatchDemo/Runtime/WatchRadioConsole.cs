@@ -78,7 +78,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             else if(watch.Coop!=null&&watch.Coop.RemoteMicrophone(microphone,out bool remoteTrigger))State.SetMicrophone(true,remoteTrigger);
             else State.SetMicrophone(microphone.Held,microphone.TriggerHeld);
-            bool live=State.MainOn&&watch.Power==PowerState.On;
+            bool live=State.MainOn&&watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio);
             float distance=Mathf.Abs(State.FrequencyMHz-program.targetMHz);
             float quality=1-Mathf.Clamp01(distance/.45f);
             hiss.volume=live&&!completed?.09f*(1-quality):0;
@@ -107,7 +107,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             microphoneHighlight.SetPropertyBlock(State.Step==3?current:dark);
             if(watch.Failed)readout.text="WATCH LOST\nPRESS TRIGGER TO RETRY";
-            else if(watch.Power==PowerState.Off)readout.text="NO POWER\nSTART GENERATOR ON F2";
+            else if(!watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio))readout.text=watch.Grid!=null?"NO RADIO POWER\nCHECK BREAKER ON F2":"NO POWER\nSTART GENERATOR ON F2";
             else if(!State.MainOn)readout.text="1  FLIP MAIN POWER";
             else if(State.Completed)readout.text="COPY, KEEPER\nWARNING RECEIVED";
             else if(sending)readout.text=$"TRANSMITTING  {State.TransmitElapsed:F1}s\nKEEP TRIGGER HELD";

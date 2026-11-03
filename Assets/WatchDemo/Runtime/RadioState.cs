@@ -26,7 +26,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!ReadOnly)return;
             bool justCompleted=!Completed&&s.radioDone;
-            power=s.power==1;MainOn=s.radioMain;Locked=s.radioLocked;Completed=s.radioDone;
+            power=s.CircuitPowered(2);MainOn=s.radioMain;Locked=s.radioLocked;Completed=s.radioDone;
             FrequencyMHz=s.frequency;LockElapsed=s.lockElapsed;TransmitElapsed=s.transmitElapsed;CodeProgress=s.codeProgress;
             held=s.radioHeld;trigger=s.radioTrigger;if(justCompleted)BroadcastCompleted?.Invoke();
         }

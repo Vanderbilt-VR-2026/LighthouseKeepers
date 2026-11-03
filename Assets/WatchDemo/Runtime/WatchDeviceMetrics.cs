@@ -14,12 +14,15 @@ namespace LighthouseKeepers.WatchDemo
         ProfilerRecorder draws, allocations, mainThread;
         string scene;
         float start, next;
+        float maxFrameMs;
+        bool extended;
         double gpu, cpu;
         int count;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install() { var go=new GameObject("Development GPU measurement"); DontDestroyOnLoad(go); go.AddComponent<WatchDeviceMetrics>(); }
         void Start()
         {
+            extended=LighthouseKeepers.Core.S4Tuning.Current;
             SubsystemManager.GetSubsystems(displays);
             mainThread=ProfilerRecorder.StartNew(ProfilerCategory.Internal,"Main Thread");
             draws=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Draw Calls Count");
@@ -30,8 +33,9 @@ namespace LighthouseKeepers.WatchDemo
             var current=SceneManager.GetActiveScene().name;
             if(current!=scene) { scene=current; start=Time.realtimeSinceStartup;next=15;gpu=cpu=0;count=0; }
             float elapsed=Time.realtimeSinceStartup-start;
-            if(scene=="LK_Lab_Environment" && elapsed>50){Destroy(gameObject);return;}
+            if(scene=="LK_Lab_Environment" && elapsed>(extended?1800:50)){Destroy(gameObject);return;}
             if(scene!="LK_Lab_Environment" || elapsed<15) return;
+            maxFrameMs=Mathf.Max(maxFrameMs,Time.unscaledDeltaTime*1000);
             foreach(var display in displays)
             {
                 if(!display.running || !display.TryGetAppGPUTimeLastFrame(out float seconds) || seconds<=0) continue;
@@ -40,7 +44,12 @@ namespace LighthouseKeepers.WatchDemo
                 display.TryGetDisplayRefreshRate(out float hz);
                 var head=Camera.main ? Camera.main.transform : null;
                 Debug.Log($"WATCH_PERF build={Application.buildGUID} scene={scene} elapsed={elapsed:F2} samples={count} gpu_ms={gpu/count:F3} main_thread_ms={cpu/count:F3} hz={hz:F1} draws={(draws.Valid?draws.LastValue:-1)} gc_bytes={(allocations.Valid?allocations.LastValue:-1)} head={(head?head.position:Vector3.zero)} forward={(head?head.forward:Vector3.zero)}");
-                next=elapsed;gpu=cpu=0;count=0;break;
+                if(extended)
+                {
+                    var watch=FindAnyObjectByType<WatchDemoController>();var voice=LighthouseKeepers.Lobby.CrewVoiceBridge.Current;
+                    Debug.Log($"S4_PERF day={(watch?watch.State.Day:0)} fps={count/(elapsed-next):F1} max_frame_ms={maxFrameMs:F2} voice={(voice!=null?voice.StatusText:"OFF")} focus={Application.isFocused}");
+                }
+                next=elapsed;gpu=cpu=0;count=0;maxFrameMs=0;break;
             }
         }
         void OnDestroy(){draws.Dispose();allocations.Dispose();mainThread.Dispose();}

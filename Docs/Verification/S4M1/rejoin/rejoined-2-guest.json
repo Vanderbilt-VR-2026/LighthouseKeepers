@@ -1,0 +1,72 @@
+{
+  "region": "us",
+  "poses": [
+    {
+      "actor": 5,
+      "name": "Mac Guest",
+      "sequence": 30,
+      "head": {
+        "x": -0.9,
+        "y": 1.68999994,
+        "z": -7.65
+      },
+      "left": {
+        "x": -1.16487551,
+        "y": 1.33999991,
+        "z": -7.988882
+      },
+      "right": {
+        "x": -1.30646956,
+        "y": 1.33999991,
+        "z": -7.50935
+      }
+    },
+    {
+      "actor": 2,
+      "name": "Mac Host",
+      "sequence": 439,
+      "head": {
+        "x": 0.334990978,
+        "y": 4.95,
+        "z": 2.17749357
+      },
+      "left": {
+        "x": -0.0714786053,
+        "y": 4.6,
+        "z": 2.0368433
+      },
+      "right": {
+        "x": 0.0701155663,
+        "y": 4.6,
+        "z": 2.51637554
+      }
+    }
+  ],
+  "playing": true,
+  "scenes": [
+    "LK_Lab_Environment"
+  ],
+  "code": "LYHYAW",
+  "online": true,
+  "host": false,
+  "starting": true,
+  "error": "",
+  "canStart": false,
+  "players": [
+    {
+      "Id": "1",
+      "DisplayName": "Mac Host",
+      "IsHost": true,
+      "IsReady": true
+    },
+    {
+      "Id": "4",
+      "DisplayName": "Mac Guest",
+      "IsHost": false,
+      "IsReady": true
+    }
+  ],
+  "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":2,\"power\":1,\"doneMask\":1,\"starterPulls\":3,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":36.15275005903095,\"beaconDarkElapsed\":0.0,\"highWaterElapsed\":0.0,\"highWaterFailed\":false,\"sleepDay\":0,\"water\":0.06989079713821411,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":2,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":0,\"order2\":2,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+  "watch": "day=2 elapsed=36.15 water=0.0699 power=On tasks=1",
+  "avatars": 2
+}

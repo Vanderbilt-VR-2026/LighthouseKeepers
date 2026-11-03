@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30d402bd5ef6406597d94977a22586da, type: 3}
+  m_Name: S4Tuning
+  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Core.S4Tuning
+  enabledForWatch: 1
+  difficulty: 1
+  highWaterLoss: 1
+  blackout: 1
+  starterGrip: 1
+  soundPass: 1
+  nightSequence: 1
+  crewVoice: 1
+  desktopSleep: 1
+  crewRejoin: 1
+  dayLengthMultiplier: 0.75
+  beaconLimitMultiplier: 0.8
+  poweredRiseMPerSecond: 0.002
+  unpoweredRiseMPerSecond: 0.006
+  drainMPerSecond: 0.012
+  slipRetainedFraction: 0.5
+  failWaterHeightM: 0.55
+  failWaterSustainSeconds: 3
+  emergencyMinimum: 0.115
+  emergencyMaximum: 0.1725
+  emergencyCycleSeconds: 2
+  warmRecoverySeconds: 1
+  emergencyTint: {r: 1, g: 0.22, b: 0.13, a: 1}
+  guideLampIntensity: 0.253
+  guideLampRangeM: 1.5
+  fadeOutSeconds: 1
+  nightHoldSeconds: 2
+  fadeInSeconds: 1
+  effectsVolume: 0.3
+  weatherVolume: 0.12
+  waterVolume: 0.12
+  alarmVolume: 0.04
+  alarmHumVolume: 0.012
+  alarmFadeSeconds: 10
+  voiceAppId: dc2a78e7-5a6c-46b3-98fa-385baa318097
+  voiceNearM: 2
+  voiceFarM: 12
+  voiceVolume: 0.85
