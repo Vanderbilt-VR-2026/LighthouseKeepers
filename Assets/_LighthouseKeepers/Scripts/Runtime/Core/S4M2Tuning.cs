@@ -11,6 +11,7 @@ namespace LighthouseKeepers.Core
         public bool beaconStation=true;
         [Range(.001f,.2f)] public float alignmentTolerance=.025f;
         [Min(.01f)] public float sootRemovedPerMetre=.4f;
+        [Min(.001f)] public float wipeStrokeMetres=.012f;
         [Range(.05f,1)] public float dirtyBeamBrightness=.25f;
         [Min(1)] public int primerSqueezes=3, starterPulls=3, floodAtPulls=5;
         [Min(.1f)] public float chokeOpenSeconds=5, engineFloodSeconds=8;

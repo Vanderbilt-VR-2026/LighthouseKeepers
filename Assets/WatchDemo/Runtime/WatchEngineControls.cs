@@ -80,7 +80,7 @@ namespace LighthouseKeepers.WatchDemo
             if(held&&Vector3.Distance(FuelCan.Tip.position,Filler.position)<.20f&&Vector3.Dot(FuelCan.transform.up,Vector3.up)<.35f)
                 State.PourFuel(Time.deltaTime);
         }
-        public void ResetProps(){FuelCan.ResetHome();lastCough=State.Engine.CoughSerial;}
+        public void ResetProps(){if(!FuelCan.Grab.isSelected&&State.Coop?.RemoteHeld(FuelCan.Grab)!=true)FuelCan.ResetHome();lastCough=State.Engine.CoughSerial;}
         void OnDestroy(){if(watch&&watch.State!=null)watch.State.Changed-=Refresh;}
     }
     [DefaultExecutionOrder(100)]

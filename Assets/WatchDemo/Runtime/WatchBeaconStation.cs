@@ -67,10 +67,10 @@ namespace LighthouseKeepers.WatchDemo
   {
    var point=Rag.Tip.position;bool held=Rag.Grab.isSelected||State.Coop?.RemoteHeld(Rag.Grab)==true;
    if(!State.ReadOnly&&!State.Failed&&held&&wasHeld&&Vector3.Distance(point,LensPoint)<.58f)
-   {float distance=Vector3.Distance(point,previousRag);if(distance>.001f&&distance<.15f)State.WipeBeacon(distance);}
-   previousRag=point;wasHeld=held;
+   {float distance=Vector3.Distance(point,previousRag);if(distance>=State.PowerTuning.wipeStrokeMetres){if(distance<.15f)State.WipeBeacon(distance);previousRag=point;}}
+   else previousRag=point;wasHeld=held;
   }
-  public void ResetProps(){Rag.ResetHome();wasHeld=false;}
+  public void ResetProps(){if(!Rag.Grab.isSelected&&State.Coop?.RemoteHeld(Rag.Grab)!=true)Rag.ResetHome();wasHeld=false;}
   void BuildBeam()
   {
    var shader=Resources.Load<Shader>("S4BeaconBeam");if(!shader)throw new System.InvalidOperationException("Missing included beacon beam shader");

@@ -25,7 +25,7 @@ namespace LighthouseKeepers.Core
   {if(ReadOnly||!float.IsFinite(metres)||metres<=0)return;Soot=Mathf.Max(0,Soot-Mathf.Min(.1f,metres)*tuning.sootRemovedPerMetre);}
   public void Tick(float seconds,bool powered)
   {if(ReadOnly||!float.IsFinite(seconds)||seconds<=0)return;if(Shining(powered))Soot=Mathf.Min(1,Soot+seconds*sootRate);notifyAfter-=seconds;if(notifyAfter<=0){notifyAfter=.2f;Changed?.Invoke();}}
-  public void ApplyReplica(bool lit,float angle,float target,float soot)
-  {if(!ReadOnly)return;Ignited=lit;Alignment=angle;Target=target;Soot=soot;}
+  public void ApplyReplica(bool lit,float angle,float target,float soot,float rate=0)
+  {if(!ReadOnly)return;sootRate=rate;Ignited=lit;Alignment=angle;Target=target;Soot=soot;}
  }
 }

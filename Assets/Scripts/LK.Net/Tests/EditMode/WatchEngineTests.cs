@@ -16,6 +16,10 @@ namespace LighthouseKeepers.Net.Tests
   {Prime();engine.SetChoke(true);Pull(3);engine.Tick(5);Assert.IsFalse(engine.Running);Assert.AreEqual(0,engine.Primer);Prime();Pull(5);Assert.IsFalse(engine.Running);Assert.Greater(engine.FloodRemaining,7);Assert.IsFalse(engine.Pull());Assert.IsFalse(engine.Prime());engine.Tick(8);Assert.AreEqual(0,engine.FloodRemaining);Assert.IsTrue(engine.Prime());}
   [Test]public void LowFuelCannotStartPourIsBoundedAndRunningEngineCanRunDry()
   {engine.Reset(.04f,.1f,false);Prime();engine.SetChoke(true);Pull(3);Assert.IsFalse(engine.Running);for(int i=0;i<20;i++)engine.Pour(.1f);Assert.GreaterOrEqual(engine.Fuel,tuning.minimumFuel);Pull(3);engine.SetChoke(false);engine.Tick(10);Assert.IsFalse(engine.Running);Assert.AreEqual(0,engine.Fuel);}
+  [Test]public void ClosedChokeFloodsEvenWhenPullsWereUnprimed()
+  {engine.SetChoke(true);Pull(5);Assert.IsFalse(engine.Running);Assert.Greater(engine.FloodRemaining,7);Assert.AreEqual(0,engine.Pulls);}
+  [Test]public void GuestContinuingAloneRetainsCurrentDayFuelConsumption()
+  {engine.ReadOnly=true;engine.ApplyReplica(.5f,3,3,false,true,true,0,0,0,.01f,0);engine.ReadOnly=false;engine.Tick(10);Assert.AreEqual(.4f,engine.Fuel,.001f);}
   [Test]public void ReadOnlyGuestCannotChangeFuelOrEngineAndDayOneNeverDrains()
   {engine.Reset(1,0,true);engine.Tick(1000);Assert.IsTrue(engine.Running);Assert.AreEqual(1,engine.Fuel);engine.ReadOnly=true;Assert.IsFalse(engine.SetChoke(true));Assert.IsFalse(engine.Prime());Assert.IsFalse(engine.Pull());engine.Pour(1);engine.Tick(10);Assert.IsTrue(engine.Running);}
  }

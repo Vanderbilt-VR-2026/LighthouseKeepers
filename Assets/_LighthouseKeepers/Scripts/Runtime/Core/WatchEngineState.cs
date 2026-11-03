@@ -12,6 +12,7 @@ namespace LighthouseKeepers.Core
         public float Fuel {get;private set;}
         public int Primer {get;private set;}
         public int Pulls {get;private set;}
+        public int ClosedPulls {get;private set;}
         public bool ChokeClosed {get;private set;}
         public bool Running {get;private set;}
         public bool Settled {get;private set;}
@@ -23,13 +24,14 @@ namespace LighthouseKeepers.Core
         public bool Primed=>Primer>=tuning.primerSqueezes;
         public WatchEngineState(S4M2Tuning value){tuning=value;}
         public void Reset(float fuel,float consumption,bool running)
-        {Fuel=Mathf.Clamp01(fuel);drain=Mathf.Max(0,consumption);Primer=Pulls=CoughSerial=0;ChokeClosed=false;Running=Settled=running;OpenRemaining=FloodRemaining=primerWait=crankWait=0;Changed?.Invoke();}
+        {Fuel=Mathf.Clamp01(fuel);drain=Mathf.Max(0,consumption);Primer=Pulls=ClosedPulls=CoughSerial=0;ChokeClosed=false;Running=Settled=running;OpenRemaining=FloodRemaining=primerWait=crankWait=0;Changed?.Invoke();}
         public bool Prime()
         {if(ReadOnly||Running||FloodRemaining>0||primerWait>0)return false;primerWait=tuning.primerCooldown;Primer=Math.Min(tuning.primerSqueezes,Primer+1);Changed?.Invoke();return true;}
         public bool SetChoke(bool closed)
         {
             if(ReadOnly||ChokeClosed==closed)return false;
             ChokeClosed=closed;
+            if(!closed)ClosedPulls=0;
             if(Running&&!closed){Settled=true;OpenRemaining=0;}
             else if(Running&&closed){Settled=false;OpenRemaining=tuning.chokeOpenSeconds;}
             Changed?.Invoke();return true;
@@ -38,15 +40,15 @@ namespace LighthouseKeepers.Core
         {
             if(ReadOnly||FloodRemaining>0||crankWait>0||Running&&!ChokeClosed)return false;
             crankWait=tuning.crankCooldown;
+            if(ChokeClosed&&++ClosedPulls>=tuning.floodAtPulls){Stop();FloodRemaining=tuning.engineFloodSeconds;CoughSerial++;Changed?.Invoke();return true;}
             if(!EnoughFuel||!Primed||!ChokeClosed){CoughSerial++;Changed?.Invoke();return true;}
             Pulls++;
-            if(Pulls>=tuning.floodAtPulls){Stop();FloodRemaining=tuning.engineFloodSeconds;CoughSerial++;}
-            else if(!Running&&Pulls>=tuning.starterPulls){Running=true;OpenRemaining=tuning.chokeOpenSeconds;}
+            if(!Running&&Pulls>=tuning.starterPulls){Running=true;OpenRemaining=tuning.chokeOpenSeconds;}
             Changed?.Invoke();return true;
         }
         public void Pour(float seconds)
         {if(ReadOnly||!float.IsFinite(seconds)||seconds<=0||Fuel>=1)return;Fuel=Mathf.Min(1,Fuel+tuning.fuelPourPerSecond*Mathf.Min(seconds,.1f));}
-        void Stop(){Running=Settled=false;OpenRemaining=0;Primer=Pulls=0;}
+        void Stop(){Running=Settled=false;OpenRemaining=0;Primer=Pulls=ClosedPulls=0;}
         public void Tick(float seconds)
         {
             if(ReadOnly||!float.IsFinite(seconds)||seconds<=0)return;
@@ -61,7 +63,7 @@ namespace LighthouseKeepers.Core
             }
             if(wasRunning!=Running||notifyAfter<=0){notifyAfter=.2f;Changed?.Invoke();}
         }
-        public void ApplyReplica(float fuel,int primer,int pulls,bool closed,bool running,bool settled,float open,float flooded,int cough)
-        {if(!ReadOnly)return;Fuel=fuel;Primer=primer;Pulls=pulls;ChokeClosed=closed;Running=running;Settled=settled;OpenRemaining=open;FloodRemaining=flooded;CoughSerial=cough;}
+        public void ApplyReplica(float fuel,int primer,int pulls,bool closed,bool running,bool settled,float open,float flooded,int cough,float consumption=0,int closedPulls=0)
+        {if(!ReadOnly)return;drain=consumption;ClosedPulls=closedPulls;Fuel=fuel;Primer=primer;Pulls=pulls;ChokeClosed=closed;Running=running;Settled=settled;OpenRemaining=open;FloodRemaining=flooded;CoughSerial=cough;}
     }
 }

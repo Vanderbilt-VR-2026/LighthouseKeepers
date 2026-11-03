@@ -13,13 +13,14 @@ namespace LighthouseKeepers.WatchDemo
         public float degreesPerSecond=18;
         WatchState watch;bool powered,initialized;float speed;
         MaterialPropertyBlock block;
-        Renderer visibleBeam;float brightness=1;
+        Renderer visibleBeam;float brightness=1,previousAlignment=.5f;
         public bool Lit=>lantern.enabled;
         public float SpinFraction=>speed;
         void Awake(){block=new MaterialPropertyBlock();Apply(false);}
         public void Bind(WatchState state){watch=state;watch.Changed+=Changed;Changed();}
         void Changed()
         {
+            if(watch.Beacon!=null){float angle=watch.Beacon.Alignment;rotor.Rotate(Vector3.up,(angle-previousAlignment)*270,Space.Self);previousAlignment=angle;}
             brightness=watch.Beacon?.Brightness??1;bool next=watch.BeaconShining;if(initialized&&powered==next){if(watch.Beacon!=null)Apply(powered);return;}
             powered=next;Apply(powered);
             audioSource.PlayOneShot(powered?powerUp:powerDown,.35f);
