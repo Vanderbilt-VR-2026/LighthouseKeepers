@@ -1,8 +1,10 @@
-# Sprint 2 — Playable APK Resubmission
+# Sprint 2 — Resubmission
 
-**[Download the Sprint 2 game (APK)](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint2-final-v2/LighthouseKeepers-Sprint2.apk)**
+**[Download the submission video (MP4)](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint2-final-v2/LighthouseKeepers-Sprint2-Video.mp4)**
 
-For the professor / TA: **this is the playable Sprint 2 resubmission** — the original shell lighthouse with the House, wrench, pipe repair, flood and bed.
+**[Download the playable game (APK)](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint2-final-v2/LighthouseKeepers-Sprint2.apk)**
+
+For the professor / TA: **this resubmission includes both the video and the playable Quest game**. Download the video to watch it; install the APK to play.
 
 ## Install on Quest
 
@@ -28,4 +30,4 @@ Sprint 2 installs as **Lighthouse Keepers S2**, so it can stay installed alongsi
 
 [Release notes and checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint2-final-v2) · [Sprint 3 game and video](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-3) · [All submissions](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers)
 
-Source: `sprint2-final-v2` (`5b390be`), based on the original `c299d6c` hand-in, plus this README only. [Earlier documentation](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/blob/sprint2-final-v2/README.md).
+Source: `sprint2-final-v2` (`5b390be`), based on the original `c299d6c` hand-in, plus this README only. Video and APK downloads remain in the permanent GitHub Release. [Earlier documentation](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/blob/sprint2-final-v2/README.md).
