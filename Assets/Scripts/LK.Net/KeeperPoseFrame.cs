@@ -80,10 +80,10 @@ namespace LighthouseKeepers.Net
             frames[at] = frame; times[at] = receivedAt; Sequence = frame.Sequence; LastReceived = receivedAt;
             return true;
         }
-        public bool Sample(double now, out KeeperPoseFrame frame)
+        public bool Sample(double now, out KeeperPoseFrame frame, bool retainLastVisual=false)
         {
             frame = default;
-            if (count == 0 || now - LastReceived > .6) return false;
+            if (count == 0 || !retainLastVisual && now - LastReceived > .6) return false;
             double target = now - .10; // 100 ms receive-time interpolation, bounded; never extrapolate a disconnected hand.
             int a = start;
             if (target <= times[a]) { frame = frames[a]; return true; }

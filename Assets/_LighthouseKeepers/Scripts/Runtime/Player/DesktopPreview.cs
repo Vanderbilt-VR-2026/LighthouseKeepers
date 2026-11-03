@@ -13,6 +13,8 @@ public sealed class DesktopPreview:MonoBehaviour {
  [SerializeField] CharacterController character;
  [SerializeField] Transform head;
 #if UNITY_EDITOR
+ public bool MouseLookEnabled { get; set; }
+ float mousePitch;
  ContinuousMoveProvider move;SnapTurnProvider turn;
  XRInputValueReader<Vector2> originalMove,originalTurn;bool moving,turning;
  void Start(){
@@ -24,6 +26,10 @@ public sealed class DesktopPreview:MonoBehaviour {
   // Typing a keeper name or address must not also move or turn the player.
   var selected=EventSystem.current?EventSystem.current.currentSelectedGameObject:null;
   if(selected&&((selected.TryGetComponent<InputField>(out var input)&&input.isFocused)||(selected.TryGetComponent<TMP_InputField>(out var tmpInput)&&tmpInput.isFocused))){Release();return;}
+  if(MouseLookEnabled && Mouse.current!=null && Mouse.current.rightButton.isPressed){
+   var delta=Mouse.current.delta.ReadValue();transform.Rotate(Vector3.up,delta.x*.12f,Space.World);
+   mousePitch=Mathf.Clamp(mousePitch-delta.y*.12f,-75,75);head.localRotation=Quaternion.Euler(mousePitch,0,0);
+  }
   var k=Keyboard.current;var value=new Vector2((k.dKey.isPressed?1:0)-(k.aKey.isPressed?1:0),(k.wKey.isPressed?1:0)-(k.sKey.isPressed?1:0));
   // Direct CharacterController.Move competes with XRBodyTransformer's queued gravity pose.
   // Feed the existing provider instead, so keyboard and controller traversal use identical collision.

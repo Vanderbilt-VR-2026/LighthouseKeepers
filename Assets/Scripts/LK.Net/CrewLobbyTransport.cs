@@ -140,7 +140,14 @@ namespace LighthouseKeepers.Net
             if (fusion) fusion.SetLocalName(desiredName);
         }
         public bool KickPlayer(string playerId) => fusion && fusion.KickPlayer(playerId);
-        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName, Players.Count);
+        public bool StartNetworkRehearsal()
+        {
+            if(!IsHost || IsBusy || IsStarting)return false;
+            foreach(var player in Players)if(!player.IsReady)return Fail("Every keeper must signal ready before network practice.");
+            localError="";
+            return fusion.StartNetworkRehearsal();
+        }
+        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(ShipWorld.GameplaySceneName, Players.Count, IsOnline);
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
         {
             string blocked = StartBlockReason(sceneName);

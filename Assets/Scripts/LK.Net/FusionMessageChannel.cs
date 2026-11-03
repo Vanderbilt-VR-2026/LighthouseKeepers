@@ -43,7 +43,7 @@ namespace LighthouseKeepers.Net
             var current = transport && transport.IsOnline && transport.Runner && transport.Runner.IsRunning ? transport.Runner : null;
             if (current == runner) return;
             if (runner) runner.RemoveCallbacks(this);
-            runner = current; transfer = 0;
+            runner = current; transfer = 0; samples.Clear();awaiting.Clear();sentAt.Clear();
             if (localActor) localActor.Bind(0);
             if (runner) { runner.AddCallbacks(this); Active = this; }
             else if (Active == this) Active = null;
@@ -52,6 +52,7 @@ namespace LighthouseKeepers.Net
         void Update()
         {
             Bind();
+            FlushSamples();
             if (!Connected || Time.unscaledTime < nextBind) return;
             nextBind = Time.unscaledTime + .5f;
             if (!localActor)
@@ -91,6 +92,62 @@ namespace LighthouseKeepers.Net
                 if (peer != runner.LocalPlayer) runner.SendReliableDataToPlayer(peer, NextKey(kind), payload);
             Received?.Invoke(0, kind, payload);
         }
+        public void SampleToHost(int kind,byte[] payload,int slot=0)
+        {
+            if(!Connected)return;
+            if(IsHost){Received?.Invoke(LocalActorId,kind,payload);return;}
+            QueueSample(0,kind,slot,payload);
+        }
+        public void SampleToActor(int actor,int kind,byte[] payload)
+        {
+            if(!IsHost||!TryPlayer(actor,out var peer))return;
+            if(peer==runner.LocalPlayer)Received?.Invoke(0,kind,payload);
+            else QueueSample(actor,kind,0,payload);
+        }
+        public void SampleBroadcast(int kind,byte[] payload,int slot=0)
+        {
+            if(!IsHost)return;
+            foreach(var peer in runner.ActivePlayers)
+                if(peer!=runner.LocalPlayer)QueueSample(peer.RawEncoded,kind,slot,payload);
+            Received?.Invoke(0,kind,payload);
+        }
+        readonly Dictionary<int,LatestSampleBatch> samples=new();
+        readonly Dictionary<int,int> awaiting=new();
+        readonly Dictionary<int,float> sentAt=new();
+        int sampleSequence;float nextSamples;
+        void QueueSample(int target,int kind,int slot,byte[] payload)
+        {
+            if(payload==null||payload.Length==0||payload.Length>MaxBytes)return;
+            if(!samples.TryGetValue(target,out var batch))samples[target]=batch=new LatestSampleBatch();
+            batch.Put(kind,slot,payload);
+        }
+        void FlushSamples()
+        {
+            if(!Connected||Time.unscaledTime<nextSamples)return;nextSamples=Time.unscaledTime+.05f;
+            foreach(var pair in samples)
+            {
+                int target=pair.Key;
+                if(awaiting.ContainsKey(target)&&Time.unscaledTime-sentAt[target]<2)continue;
+                if(pair.Value.Count==0)continue;
+                var data=pair.Value.Pack(++sampleSequence);
+                if(data.Length>MaxBytes){Debug.LogError("Crew sample batch exceeds bounded channel");continue;}
+                if(IsHost&&!TryPlayer(target,out _))continue;
+                awaiting[target]=sampleSequence;sentAt[target]=Time.unscaledTime;
+                if(IsHost)SendToActor(target,30,data);else SendToHost(30,data);
+            }
+        }
+        void ReceiveBatch(int sender,int kind,ReadOnlySpan<byte> data)
+        {
+            if(kind==31)
+            {
+                if(data.Length==4&&awaiting.TryGetValue(sender,out var seq)&&BitConverter.ToInt32(data.ToArray(),0)==seq)awaiting.Remove(sender);
+                return;
+            }
+            if(!LatestSampleBatch.TryUnpack(data.ToArray(),out int sequence,out var batch))return;
+            // Acknowledge before delivering; a subsequent batch replaces outdated samples.
+            if(IsHost)SendToActor(sender,31,BitConverter.GetBytes(sequence));else SendToHost(31,BitConverter.GetBytes(sequence));
+            foreach(var sample in batch)Received?.Invoke(sender,sample.Kind,sample.Data);
+        }
         ReliableKey NextKey(int kind) => ReliableKey.FromInts(Channel, 1, kind, ++transfer);
         public void OnReliableDataReceived(NetworkRunner source, PlayerRef player, ReliableKey key, ReadOnlySpan<byte> data)
         {
@@ -98,7 +155,9 @@ namespace LighthouseKeepers.Net
             if (!Connected || source != runner || channel != Channel || version != 1 || data.Length == 0 || data.Length > MaxBytes) return;
             // Host/Client streams to clients originate at the server. Clients cannot route directly to another client.
             if (IsHost && (player == runner.LocalPlayer || !runner.ActivePlayers.Contains(player))) return;
-            Received?.Invoke(IsHost ? player.RawEncoded : 0, kind, data.ToArray());
+            int sender=IsHost?player.RawEncoded:0;
+            if(kind==30||kind==31){ReceiveBatch(sender,kind,data);return;}
+            Received?.Invoke(sender,kind,data.ToArray());
         }
         void OnDestroy()
         {
@@ -107,7 +166,7 @@ namespace LighthouseKeepers.Net
             if (localActor) localActor.Bind(0);
             if (Active == this) Active = null;
         }
-        public void OnPlayerLeft(NetworkRunner r, PlayerRef p) { if (r == runner) ActorLeft?.Invoke(p.RawEncoded); }
+        public void OnPlayerLeft(NetworkRunner r, PlayerRef p) { if (r != runner)return; samples.Remove(p.RawEncoded);awaiting.Remove(p.RawEncoded);sentAt.Remove(p.RawEncoded);ActorLeft?.Invoke(p.RawEncoded); }
         public void OnPlayerJoined(NetworkRunner r, PlayerRef p) { }
         public void OnShutdown(NetworkRunner r, ShutdownReason reason) { if (r == runner) Bind(); }
         public void OnDisconnectedFromServer(NetworkRunner r, NetDisconnectReason reason) { }

@@ -19,6 +19,7 @@ namespace LighthouseKeepers.Networking
         static string pendingLobbyNotice;
         public NetworkRunner Runner => runner;
         public bool IsInGame => enteredGame;
+        public bool IsNetworkRehearsal => state.Starting && state.Rehearsal;
 
         [SerializeField] string sessionName = "LighthouseKeepersRoom";
         [SerializeField] string lobbySceneName = "LK_NetworkLobby";
@@ -81,8 +82,8 @@ namespace LighthouseKeepers.Networking
                     prototype.RunnerPrefab.gameObject.SetActive(false);
             }
         }
-        public bool HostGame(int maxPlayers) => BeginConnection(GameMode.Host, sessionName, maxPlayers);
-        public bool JoinGame(string address) => BeginConnection(GameMode.Client, address, 4);
+        public bool HostGame(int maxPlayers) => BeginConnection(GameMode.Host, sessionName, Math.Min(ShipWorld.MaximumCrewSize,maxPlayers));
+        public bool JoinGame(string address) => BeginConnection(GameMode.Client, address, ShipWorld.MaximumCrewSize);
 
         bool BeginConnection(GameMode mode, string room, int capacity)
         {
@@ -112,8 +113,11 @@ namespace LighthouseKeepers.Networking
                 if (index < 0) throw new InvalidOperationException("Add the networking lobby to Build Settings.");
                 var scenes = new NetworkSceneInfo();
                 scenes.AddSceneRef(SceneRef.FromIndex(index), LoadSceneMode.Single);
+                var photonSettings=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
+                if(ShipWorld.CoopEnabled)photonSettings.FixedRegion="us";
                 var result = await current.StartGame(new StartGameArgs
                 {
+                    CustomPhotonAppSettings=photonSettings,
                     GameMode = mode, SessionName = sessionName, PlayerCount = state.Capacity,
                     Scene = scenes, SceneManager = sceneManager, IsVisible = false,
                     EnableClientSessionCreation = false, StartGameCancellationToken = cancellation
@@ -153,13 +157,15 @@ namespace LighthouseKeepers.Networking
             if (busy) { StatusChanged?.Invoke(); return; }
             _ = Disconnect();
         }
+        bool SharedLabActive=>ShipWorld.CoopEnabled&&!IsNetworkRehearsal&&(enteredGame||state.Starting)&&gameSceneName==ShipWorld.GameplaySceneName;
         async Task Disconnect()
         {
+            bool continueWatch=!leaving&&SharedLabActive&&SceneManager.GetActiveScene().name==ShipWorld.GameplaySceneName;
             busy = true; StatusChanged?.Invoke();
             await ReleaseRunner(runner);
             if (!this) return;
             ClearConnection(); busy = leaving = false; StatusChanged?.Invoke();
-            ReturnToLobby();
+            if(continueWatch)Destroy(gameObject);else ReturnToLobby();
         }
         async Task ReleaseRunner(NetworkRunner current)
         {
@@ -176,7 +182,7 @@ namespace LighthouseKeepers.Networking
         void ClearConnection()
         {
             bool wasOnline = online;
-            online = false; state.Reset(4); localReady = false;
+            online = false; state.Reset(ShipWorld.MaximumCrewSize); localReady = false;
             if (wasOnline) ConnectionChanged?.Invoke(false);
             PlayersChanged?.Invoke();
         }
@@ -235,16 +241,26 @@ namespace LighthouseKeepers.Networking
             }
             return false;
         }
-        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(sceneName, state.Players.Count);
+        public string StartBlockReason(string sceneName) => CrewSessionPolicy.GameplayLaunchBlockReason(sceneName, state.Players.Count, IsOnline);
         public bool StartGame(string sceneName, int minimumPlayers, bool requireAllReady)
+            => StartGameCore(sceneName,minimumPlayers,requireAllReady,false);
+        public bool StartNetworkRehearsal()
         {
-            string blocked = StartBlockReason(sceneName);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            return StartGameCore(ShipWorld.GameplaySceneName,1,true,true);
+#else
+            return Fail("Network practice is available in development builds only.");
+#endif
+        }
+        bool StartGameCore(string sceneName, int minimumPlayers, bool requireAllReady, bool rehearsal)
+        {
+            string blocked = rehearsal ? "" : StartBlockReason(sceneName);
             if (!string.IsNullOrEmpty(blocked)) return Fail(blocked);
             if (!IsHost || busy || state.Starting) return false;
             if (sceneName == ShipWorld.GameplaySceneName)
             {
-                if (state.Capacity != 2 || state.Players.Count < 1 || state.Players.Count > 2 || runner.ActivePlayers.Count() != state.Players.Count)
-                    return Fail("The lighthouse supports one or two connected keepers.");
+                if (state.Capacity > ShipWorld.MaximumCrewSize || state.Players.Count < 1 || state.Players.Count > ShipWorld.MaximumCrewSize || runner.ActivePlayers.Count() != state.Players.Count)
+                    return Fail("This test supports up to two connected keepers.");
                 minimumPlayers = 1;
                 requireAllReady = true;
             }
@@ -252,7 +268,7 @@ namespace LighthouseKeepers.Networking
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
                 if (System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i)) == sceneName) { index = i; break; }
             if (index < 0) return Fail("Add " + sceneName + " to Build Settings before starting.");
-            if (!state.Begin(minimumPlayers, requireAllReady)) return false;
+            if (!(rehearsal ? state.BeginRehearsal(minimumPlayers,requireAllReady) : state.Begin(minimumPlayers,requireAllReady))) return false;
             gameSceneName = sceneName;
             LastError = "";
             if (runner.SessionInfo.IsValid) runner.SessionInfo.IsOpen = false; // No unready late joins during launch.
@@ -288,7 +304,7 @@ namespace LighthouseKeepers.Networking
         {
             if (source != runner) return;
             if (source.IsServer && state.Remove(Id(player))) PublishRoster();
-            if ((enteredGame || state.Starting) && CrewSessionPolicy.RequiresWholeCrew(gameSceneName) && !busy && !leaving)
+            if ((enteredGame || state.Starting) && CrewSessionPolicy.RequiresWholeCrew(gameSceneName) && !SharedLabActive && !busy && !leaving)
             {
                 enteredGame = true; // Approval is already committed, even before the load callback.
                 Fail("Your partner left the watch. Reconnect together to start a new run.");

@@ -39,6 +39,10 @@ namespace LighthouseKeepers.Net
         }
         public bool Sample(int actor, out KeeperPoseFrame pose)
         { pose = default; return poses.TryGetValue(actor, out var buffer) && buffer.Sample(Time.unscaledTimeAsDouble, out pose); }
+        // A brief network stall freezes the remote visual instead of blinking it.
+        // Reach/lease validation still uses the fresh-only Sample method above.
+        public bool SampleVisual(int actor,out KeeperPoseFrame pose)
+        {pose=default;return poses.TryGetValue(actor,out var buffer)&&buffer.Sample(Time.unscaledTimeAsDouble,out pose,true);}
         public bool NearHand(int actor, Vector3 point, float metres)
         {
             if (!Sample(actor, out var p)) return false;
@@ -75,10 +79,17 @@ namespace LighthouseKeepers.Net
             var frame = new KeeperPoseFrame { Actor = channel.LocalActorId, Sequence = ++serial,
                 Head = head.position, HeadRotation = head.rotation, Left = l.position, LeftRotation = l.rotation,
                 Right = r.position, RightRotation = r.rotation, LeftPose = leftPose, RightPose = rightPose };
+#if UNITY_EDITOR
+            if(!XRSettings.isDeviceActive)
+            {
+                if(!left||!left.gameObject.activeInHierarchy){frame.Left=head.TransformPoint(new Vector3(-.25f,-.35f,.35f));frame.LeftRotation=head.rotation;}
+                if(!right||!right.gameObject.activeInHierarchy){frame.Right=head.TransformPoint(new Vector3(.25f,-.35f,.35f));frame.RightRotation=head.rotation;}
+            }
+#endif
             var ld = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand); var rd = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
             ld.TryGetFeatureValue(CommonUsages.grip,out frame.LeftGrip); ld.TryGetFeatureValue(CommonUsages.trigger,out frame.LeftTrigger);
             rd.TryGetFeatureValue(CommonUsages.grip,out frame.RightGrip); rd.TryGetFeatureValue(CommonUsages.trigger,out frame.RightTrigger);
-            channel.SendToHost(SubmitKind,frame.Encode());
+            channel.SampleToHost(SubmitKind,frame.Encode());
         }
         void Receive(int sender, int kind, byte[] data)
         {
@@ -88,7 +99,7 @@ namespace LighthouseKeepers.Net
             {
                 if (!channel.IsHost || !channel.IsActorConnected(sender)) return;
                 pose.Actor = sender; // Replace the untrusted payload's identity.
-                if (Accept(pose)) channel.Broadcast(StateKind,pose.Encode());
+                if (Accept(pose)) channel.SampleBroadcast(StateKind,pose.Encode(),pose.Actor);
             }
             else if (sender == 0 && !channel.IsHost && channel.IsActorConnected(pose.Actor)) Accept(pose);
         }

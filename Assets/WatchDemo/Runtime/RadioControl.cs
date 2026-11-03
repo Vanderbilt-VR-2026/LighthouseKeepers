@@ -34,6 +34,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Released(SelectExitEventArgs e){depression=0;}
         public void SyncMain(bool value){if(mainPower)Toggled=value;}
+        public void SyncCrewFrequency(float normalized){if(frequency&&!interaction.isSelected)Normalized=Mathf.Clamp01(normalized);}
         void Update()
         {
             if(kind==Kind.Knob && interaction.isSelected && interaction.interactorsSelecting.Count>0)

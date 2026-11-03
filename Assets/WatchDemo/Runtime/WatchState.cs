@@ -15,6 +15,14 @@ namespace LighthouseKeepers.WatchDemo
         readonly DayDefinition[] days;
         readonly HashSet<string> faults = new HashSet<string>();
         int index;
+        public bool NetworkRehearsal { get; private set; }
+        public bool RemoteReplica { get; private set; }
+        public LighthouseKeepers.Lobby.ICoopWatchLink Coop {get;set;}
+        public bool ReadOnly => NetworkRehearsal || RemoteReplica;
+        public void SetRemoteReplica(bool value)
+        { RemoteReplica=value; Pipe.ReadOnly=Radio.ReadOnly=ReadOnly; }
+        public void SetNetworkRehearsal(bool value)
+        {NetworkRehearsal=value;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;}
         public event Action Changed;
         public RadioState Radio {get;}
         public PipeRepairState Pipe {get;}
@@ -52,7 +60,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if (seconds < 0 || double.IsNaN(seconds) || double.IsInfinity(seconds)) throw new ArgumentOutOfRangeException(nameof(seconds));
             bool wasFailed = Failed;
-            if(wasFailed)return;
+            if(wasFailed||ReadOnly)return;
             if(Power==PowerState.Off && Definition.beaconDarkLimitSeconds>0)
             {BeaconDarkElapsed=Math.Min(Definition.beaconDarkLimitSeconds,BeaconDarkElapsed+seconds);BeaconDarkFailed=BeaconDarkElapsed>=Definition.beaconDarkLimitSeconds;}
             Elapsed = Math.Min(Duration, Elapsed + seconds);
@@ -61,29 +69,53 @@ namespace LighthouseKeepers.WatchDemo
         }
         public bool CompleteRepair()
         {
-            if (Failed || Repaired) return false;
+            if (ReadOnly || Failed || Repaired) return false;
             faults.Remove(PipeStation); Changed?.Invoke(); return true;
         }
         // Called once per full stroke by the constrained interaction, never per frame.
         public bool StarterPulled()
         {
-            if (Failed || Power == PowerState.On) return false;
+            if (ReadOnly || Failed || Power == PowerState.On) return false;
             StarterPulls++;
             if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; BeaconDarkElapsed=0; Radio.SetPower(true); }
             Changed?.Invoke(); return true;
         }
         public bool Sleep()
         {
-            if (!Complete || !HasNextDay) return false;
+            if (ReadOnly || !Complete || !HasNextDay) return false;
             index++; Reset(); return true;
         }
-        public void Retry() => Reset();
+        public void Retry() {if(!ReadOnly)Reset();}
         public bool ReplayFromDayOne()
         {
-            if (Failed || !Complete || HasNextDay) return false;
+            if (ReadOnly || Failed || !Complete || HasNextDay) return false;
             int first = Array.FindIndex(days, day => day.day == 1);
             if (first < 0) return false;
             index = first; Reset(); return true;
+        }
+        public WatchSnapshot Capture(float waterHeight)
+        {
+            int done=0;
+            for(int i=0;i<Definition.tasks.Length;i++)if(IsDone(Definition.tasks[i].stationId))done|=1<<i;
+            return new WatchSnapshot { day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
+                beaconDarkElapsed=BeaconDarkElapsed,beaconDarkFailed=BeaconDarkFailed,starterPulls=StarterPulls,
+                bolts=Pipe.BoltsDone,activeBolt=Pipe.ActiveBolt,turns=Pipe.TurnsDone,stroke=Pipe.StrokeDegrees,
+                seal=Pipe.SealElapsed,needsReturn=Pipe.NeedsReturn,
+                order0=Pipe.Order(0),order1=Pipe.Order(1),order2=Pipe.Order(2),seat=Pipe.SeatElapsed,
+                direction=Pipe.Direction,returned=Pipe.Returned,touching=Pipe.Touching,
+                radioHeld=Radio.Held,radioTrigger=Radio.Trigger,
+                radioMain=Radio.MainOn,radioLocked=Radio.Locked,radioDone=Radio.Completed,frequency=Radio.FrequencyMHz,
+                lockElapsed=Radio.LockElapsed,transmitElapsed=Radio.TransmitElapsed,codeProgress=Radio.CodeProgress };
+        }
+        public bool ApplyRemote(WatchSnapshot snapshot)
+        {
+            if(!RemoteReplica || snapshot==null || !snapshot.Valid())return false;
+            int next=Array.FindIndex(days,d=>d.day==snapshot.day);
+            if(next<0 || snapshot.elapsed>days[next].dayLengthSeconds || (snapshot.doneMask>>days[next].tasks.Length)!=0)return false;
+            index=next;Elapsed=snapshot.elapsed;Power=(PowerState)snapshot.power;StarterPulls=snapshot.starterPulls;
+            BeaconDarkElapsed=snapshot.beaconDarkElapsed;BeaconDarkFailed=snapshot.beaconDarkFailed;
+            faults.Clear();for(int i=0;i<Definition.tasks.Length;i++)if((snapshot.doneMask&(1<<i))==0)faults.Add(Definition.tasks[i].stationId);
+            Pipe.ApplyReplica(snapshot);Radio.ApplyReplica(snapshot);Changed?.Invoke();return true;
         }
         void Reset()
         {

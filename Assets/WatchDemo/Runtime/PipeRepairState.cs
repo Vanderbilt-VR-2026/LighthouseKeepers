@@ -6,6 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class PipeRepairState
     {
         public readonly PipeRepairProfile Profile;
+        public bool ReadOnly {get;set;}
         public event Action Changed,QuarterTurn,Completed;
         readonly int[] order={0,1,2};
         public int BoltsDone{get;private set;}
@@ -19,6 +20,10 @@ namespace LighthouseKeepers.WatchDemo
         public bool NeedsSeal=>ActiveBolt==2&&SealElapsed<Profile.sealSeconds;
         public float InflowFraction=>1-BoltsDone/3f;
         bool touching;float direction,returned;
+        public int Order(int index)=>order[index];
+        public float Direction=>direction;
+        public float Returned=>returned;
+        public bool Touching=>touching;
         public PipeRepairState(PipeRepairProfile profile){Profile=profile?profile:throw new ArgumentNullException(nameof(profile));}
         public void Reset(int seed,bool repaired=false)
         {
@@ -26,11 +31,21 @@ namespace LighthouseKeepers.WatchDemo
             var random=new System.Random(seed);for(int i=2;i>0;i--){int j=random.Next(i+1);(order[i],order[j])=(order[j],order[i]);}
             BoltsDone=repaired?3:0;ResetBolt();Changed?.Invoke();
         }
+        public void ApplyReplica(WatchSnapshot s)
+        {
+            if(!ReadOnly)return;
+            bool tick=s.bolts>BoltsDone||s.bolts==BoltsDone&&s.turns>TurnsDone;
+            bool complete=!Complete&&s.bolts==3;
+            BoltsDone=s.bolts;order[0]=s.order0;order[1]=s.order1;order[2]=s.order2;
+            TurnsDone=s.turns;StrokeDegrees=s.stroke;SealElapsed=s.seal;NeedsReturn=s.needsReturn;
+            SeatElapsed=s.seat;direction=s.direction;returned=s.returned;touching=s.touching;
+            if(tick)QuarterTurn?.Invoke();Changed?.Invoke();if(complete)Completed?.Invoke();
+        }
         void ResetBolt(){TurnsDone=0;StrokeDegrees=SealElapsed=SeatElapsed=returned=direction=0;NeedsReturn=touching=false;}
         public void Observe(float seconds,float twistDegrees,bool contact,bool steady,bool canWork)
         {
             if(!float.IsFinite(seconds)||seconds<0||!float.IsFinite(twistDegrees))throw new ArgumentOutOfRangeException();
-            if(Complete||!canWork)return;
+            if(ReadOnly||Complete||!canWork)return;
             if(!contact)
             {
                 if(touching){StrokeDegrees*=Profile.retainedPartialProgress;if(NeedsSeal)SealElapsed*=Profile.retainedPartialProgress;NeedsReturn=false;SeatElapsed=0;Changed?.Invoke();}

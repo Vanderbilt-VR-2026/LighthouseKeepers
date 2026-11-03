@@ -1,0 +1,578 @@
+[
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 2423,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.28711259,
+          "y": 1.33999991,
+          "z": -9.199461
+        },
+        "right": {
+          "x": -1.07233834,
+          "y": 1.33999991,
+          "z": -8.799853
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 1325,
+        "head": {
+          "x": -1.20488453,
+          "y": 0.885479748,
+          "z": -7.63521957
+        },
+        "left": {
+          "x": -1.13948023,
+          "y": 0.886413753,
+          "z": -7.68847227
+        },
+        "right": {
+          "x": -1.13501143,
+          "y": 0.881557047,
+          "z": -7.61278534
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":25.7567018296686,\"beaconDarkElapsed\":0.0,\"water\":0.05890477076172829,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=25.76 water=0.0589 power=On tasks=0",
+    "avatars": 2
+  },
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 2463,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.21427941,
+          "y": 1.33999991,
+          "z": -8.856353
+        },
+        "right": {
+          "x": -0.7241545,
+          "y": 1.33999991,
+          "z": -8.757471
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 1368,
+        "head": {
+          "x": -1.21324718,
+          "y": 0.8890086,
+          "z": -7.654537
+        },
+        "left": {
+          "x": -1.13902366,
+          "y": 0.8864045,
+          "z": -7.68827868
+        },
+        "right": {
+          "x": -1.14082122,
+          "y": 0.8849733,
+          "z": -7.635283
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":27.9948996604071,\"beaconDarkElapsed\":0.0,\"water\":0.06229243054986,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=27.99 water=0.0623 power=On tasks=0",
+    "avatars": 2
+  },
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 2504,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.21427941,
+          "y": 1.33999991,
+          "z": -8.856353
+        },
+        "right": {
+          "x": -0.7241545,
+          "y": 1.33999991,
+          "z": -8.757471
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 1406,
+        "head": {
+          "x": -1.2136054,
+          "y": 0.888581157,
+          "z": -7.65458775
+        },
+        "left": {
+          "x": -1.13902164,
+          "y": 0.8864044,
+          "z": -7.688278
+        },
+        "right": {
+          "x": -1.14123487,
+          "y": 0.884816,
+          "z": -7.63529348
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":30.192378622945399,\"beaconDarkElapsed\":0.0,\"water\":0.06561961024999619,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=30.19 water=0.0656 power=On tasks=0",
+    "avatars": 2
+  },
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 3338,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.16312563,
+          "y": 1.20325482,
+          "z": -9.113338
+        },
+        "right": {
+          "x": -0.6737696,
+          "y": 1.20325482,
+          "z": -9.010719
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 2174,
+        "head": {
+          "x": -1.21369267,
+          "y": 0.8880639,
+          "z": -7.654087
+        },
+        "left": {
+          "x": -1.12510586,
+          "y": 0.621831,
+          "z": -8.058755
+        },
+        "right": {
+          "x": -1.10115027,
+          "y": 0.6341841,
+          "z": -7.635454
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":72.7940685885842,\"beaconDarkElapsed\":0.0,\"water\":0.13033945858478547,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=72.79 water=0.1303 power=On tasks=0",
+    "avatars": 2
+  },
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 3369,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.16312563,
+          "y": 1.20325482,
+          "z": -9.113338
+        },
+        "right": {
+          "x": -0.6737696,
+          "y": 1.20325482,
+          "z": -9.010719
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 2205,
+        "head": {
+          "x": -1.213693,
+          "y": 0.8880547,
+          "z": -7.6540885
+        },
+        "left": {
+          "x": -1.12510586,
+          "y": 0.621831,
+          "z": -8.058755
+        },
+        "right": {
+          "x": -1.10115027,
+          "y": 0.6341841,
+          "z": -7.635454
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":74.57580020214664,\"beaconDarkElapsed\":0.0,\"water\":0.13305538892745973,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=74.58 water=0.1331 power=On tasks=0",
+    "avatars": 2
+  },
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 3400,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.16312563,
+          "y": 1.20325482,
+          "z": -9.113338
+        },
+        "right": {
+          "x": -0.6737696,
+          "y": 1.20325482,
+          "z": -9.010719
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 2237,
+        "head": {
+          "x": -1.21369326,
+          "y": 0.8880488,
+          "z": -7.6540904
+        },
+        "left": {
+          "x": -1.12510586,
+          "y": 0.621831,
+          "z": -8.058755
+        },
+        "right": {
+          "x": -1.10115027,
+          "y": 0.6341841,
+          "z": -7.635454
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":76.27975536364829,\"beaconDarkElapsed\":0.0,\"water\":0.13565339148044587,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=76.28 water=0.1357 power=On tasks=0",
+    "avatars": 2
+  },
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 3431,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.16312563,
+          "y": 1.20325482,
+          "z": -9.113338
+        },
+        "right": {
+          "x": -0.6737696,
+          "y": 1.20325482,
+          "z": -9.010719
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 2268,
+        "head": {
+          "x": -1.21369326,
+          "y": 0.8880522,
+          "z": -7.65409374
+        },
+        "left": {
+          "x": -1.12510586,
+          "y": 0.621831,
+          "z": -8.058755
+        },
+        "right": {
+          "x": -1.10115027,
+          "y": 0.6341841,
+          "z": -7.635454
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":78.02785811666399,\"beaconDarkElapsed\":0.0,\"water\":0.13831953704357148,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=78.03 water=0.1383 power=On tasks=0",
+    "avatars": 2
+  },
+  {
+    "region": "us",
+    "poses": [
+      {
+        "actor": 2,
+        "name": "Mac Host",
+        "sequence": 3462,
+        "head": {
+          "x": -0.9,
+          "y": 1.68999994,
+          "z": -9.15
+        },
+        "left": {
+          "x": -1.16312563,
+          "y": 1.20325482,
+          "z": -9.113338
+        },
+        "right": {
+          "x": -0.6737696,
+          "y": 1.20325482,
+          "z": -9.010719
+        }
+      },
+      {
+        "actor": 3,
+        "name": "Keeper",
+        "sequence": 2299,
+        "head": {
+          "x": -1.21369338,
+          "y": 0.8880397,
+          "z": -7.65408945
+        },
+        "left": {
+          "x": -1.12510586,
+          "y": 0.621831,
+          "z": -8.058755
+        },
+        "right": {
+          "x": -1.10115027,
+          "y": 0.6341841,
+          "z": -7.635454
+        }
+      }
+    ],
+    "playing": true,
+    "scenes": [
+      "LK_Lab_Environment"
+    ],
+    "code": "6KVZS9",
+    "online": true,
+    "host": true,
+    "starting": true,
+    "error": "",
+    "canStart": false,
+    "players": [
+      {
+        "Id": "1",
+        "DisplayName": "Mac Host",
+        "IsHost": true,
+        "IsReady": true
+      },
+      {
+        "Id": "2",
+        "DisplayName": "Keeper",
+        "IsHost": false,
+        "IsReady": true
+      }
+    ],
+    "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":1,\"power\":1,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":1,\"turns\":0,\"codeProgress\":0,\"elapsed\":79.74269215809182,\"beaconDarkElapsed\":0.0,\"water\":0.14093554019927979,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":1,\"beds\":0,\"keepers\":2,\"order0\":1,\"order1\":2,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+    "watch": "day=1 elapsed=79.74 water=0.1409 power=On tasks=0",
+    "avatars": 2
+  }
+]
