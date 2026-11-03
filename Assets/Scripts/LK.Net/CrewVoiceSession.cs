@@ -9,7 +9,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     /// <summary>Photon's Fusion room lifecycle, with primary open-mic audio attached to our existing pose avatars.</summary>
-    public sealed class CrewVoiceSession: FusionVoiceClient
+    public sealed class CrewVoiceSession: FusionVoiceClient, ICrewVoice
     {
         FusionMessageChannel channel;
         S4Tuning tuning;
@@ -25,7 +25,7 @@ namespace LighthouseKeepers.Net
             var t=S4Tuning.Current;
             if(!ShipWorld.CoopEnabled||!t||!t.crewVoice||!channel.Connected||runner.GameMode==GameMode.Single||runner.GetComponent<CrewVoiceSession>())return;
             if(!System.Guid.TryParse(t.voiceAppId,out _)){Debug.LogWarning("CREW_VOICE missing Photon Voice App ID");return;}
-            var voice=runner.gameObject.AddComponent<CrewVoiceSession>();voice.channel=channel;voice.tuning=t;
+            var voice=runner.gameObject.AddComponent<CrewVoiceSession>();voice.channel=channel;voice.tuning=t;CrewVoiceBridge.Current=voice;
         }
         protected override void Awake(){AutoConnectAndJoin=false;base.Awake();}
         protected override void Start()
@@ -84,6 +84,7 @@ namespace LighthouseKeepers.Net
         }
         protected override void OnDestroy()
         {
+            if(ReferenceEquals(CrewVoiceBridge.Current,this))CrewVoiceBridge.Current=null;
             if(PrimaryRecorder)PrimaryRecorder.RecordingEnabled=false;
             if(channel&&channel.Runner)channel.Runner.RemoveCallbacks(this);
             base.OnDestroy();

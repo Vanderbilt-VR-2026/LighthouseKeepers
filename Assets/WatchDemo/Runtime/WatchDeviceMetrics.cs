@@ -46,8 +46,8 @@ namespace LighthouseKeepers.WatchDemo
                 Debug.Log($"WATCH_PERF build={Application.buildGUID} scene={scene} elapsed={elapsed:F2} samples={count} gpu_ms={gpu/count:F3} main_thread_ms={cpu/count:F3} hz={hz:F1} draws={(draws.Valid?draws.LastValue:-1)} gc_bytes={(allocations.Valid?allocations.LastValue:-1)} head={(head?head.position:Vector3.zero)} forward={(head?head.forward:Vector3.zero)}");
                 if(extended)
                 {
-                    var watch=FindAnyObjectByType<WatchDemoController>();var voice=FindAnyObjectByType<LighthouseKeepers.Net.CrewVoiceSession>();
-                    Debug.Log($"S4_PERF day={(watch?watch.State.Day:0)} fps={count/(elapsed-next):F1} max_frame_ms={maxFrameMs:F2} voice={(voice?voice.StatusText:"OFF")} focus={Application.isFocused}");
+                    var watch=FindAnyObjectByType<WatchDemoController>();var voice=LighthouseKeepers.Lobby.CrewVoiceBridge.Current;
+                    Debug.Log($"S4_PERF day={(watch?watch.State.Day:0)} fps={count/(elapsed-next):F1} max_frame_ms={maxFrameMs:F2} voice={(voice!=null?voice.StatusText:"OFF")} focus={Application.isFocused}");
                 }
                 next=elapsed;gpu=cpu=0;count=0;maxFrameMs=0;break;
             }

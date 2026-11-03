@@ -25,7 +25,7 @@ namespace LighthouseKeepers.WatchDemo
         PlayerFootsteps footsteps;
         XRGrabInteractable microphone;
         WatchRadioConsole radioConsole;
-        int day,bolts,pulls;
+        int day,bolts,pulls,shownNight;
         bool failed,complete,night;
         PowerState power;
         float nextWater;
@@ -45,7 +45,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(tuning.soundPass)
             {
-                foreach(var clip in Resources.LoadAll<AudioClip>("S4Audio"))clips[clip.name]=clip;
+                foreach(var clip in Resources.LoadAll<AudioClip>("S4Audio")){clip.LoadAudioData();clips[clip.name]=clip;}
                 pipeFx=Source("S4 pipe clunks",pipe.transform.position);generatorFx=Source("S4 engine cough and breaker",gen.transform.position);
                 bedFx=Source("S4 night storm",bed.position);boardFx=Source("S4 watch bell",watch.BoardTransform.position);
                 water=Source("S4 rising water",Vector3.zero);water.clip=Clip("water");water.loop=true;water.volume=0;water.Play();
@@ -116,7 +116,7 @@ namespace LighthouseKeepers.WatchDemo
             if(nightText)
             {
                 nightText.gameObject.SetActive(sleeping&&survivedDay>0&&fade>.55f);
-                nightText.text="NIGHT "+survivedDay+" SURVIVED";
+                if(shownNight!=survivedDay){shownNight=survivedDay;nightText.text="NIGHT "+survivedDay+" SURVIVED";}
                 nightText.color=new Color(.95f,.88f,.7f,Mathf.InverseLerp(.55f,.9f,fade));
             }
         }
