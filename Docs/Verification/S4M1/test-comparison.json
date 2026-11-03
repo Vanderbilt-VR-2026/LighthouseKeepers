@@ -1,0 +1,49 @@
+{
+  "editmode": {
+    "before": {
+      "Passed": 218
+    },
+    "after": {
+      "Passed": 219
+    },
+    "lost_passes": [],
+    "new_failures": [],
+    "existing_failures": [],
+    "new_tests": {
+      "LighthouseKeepers.Net.Tests.S4TuningTests.OutagePulseIsSmoothBoundedAndHasOnePeakPerTwoSeconds": "Passed"
+    }
+  },
+  "playmode": {
+    "before": {
+      "Passed": 38,
+      "Failed": 15
+    },
+    "after": {
+      "Passed": 40,
+      "Failed": 15
+    },
+    "lost_passes": [],
+    "new_failures": [],
+    "existing_failures": [
+      "LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve",
+      "LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings",
+      "LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections",
+      "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput",
+      "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart",
+      "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate"
+    ],
+    "new_tests": {
+      "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults": "Passed",
+      "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss": "Passed"
+    }
+  }
+}
