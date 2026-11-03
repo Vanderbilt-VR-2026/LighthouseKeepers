@@ -21,6 +21,8 @@ namespace LighthouseKeepers.WatchDemo
         Canvas canvas;
         Text status;
         Button retry, replay, leave, close;
+        Button mute;
+        LighthouseKeepers.Net.CrewVoiceSession voice;
         bool previousMenu, exiting;
         int previousTerminal;
         public bool IsOpen => panel && panel.activeSelf;
@@ -72,6 +74,12 @@ namespace LighthouseKeepers.WatchDemo
             replay = Action("ReplayWatchFromDayOne", "REPLAY FROM DAY 1", 10, () => watch.ReplayFromDayOne());
             leave = Action("ReturnWatchToLobby", "RETURN TO LOBBY", -70, ReturnToLobby);
             close = Action("CloseWatchMenu", "CLOSE MENU", -150, Close);
+            voice=FindAnyObjectByType<LighthouseKeepers.Net.CrewVoiceSession>();
+            if(voice)
+            {
+                ((RectTransform)panel.transform).sizeDelta=new Vector2(600,510);
+                mute=Action("ToggleCrewMicrophone",voice.StatusText,-225,()=>{if(voice)voice.ToggleMute();Refresh();});
+            }
             panel.SetActive(false);
         }
 
@@ -108,6 +116,7 @@ namespace LighthouseKeepers.WatchDemo
             bool keyboard = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
             if ((pressed && !previousMenu) || keyboard) { if (IsOpen) Close(); else Open(); }
             previousMenu = pressed;
+            if(IsOpen&&mute&&voice)mute.GetComponentInChildren<Text>().text=voice.StatusText;
         }
 
         public void Open()

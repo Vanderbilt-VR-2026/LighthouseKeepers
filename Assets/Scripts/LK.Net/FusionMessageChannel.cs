@@ -45,7 +45,7 @@ namespace LighthouseKeepers.Net
             if (runner) runner.RemoveCallbacks(this);
             runner = current; transfer = 0; samples.Clear();awaiting.Clear();sentAt.Clear();
             if (localActor) localActor.Bind(0);
-            if (runner) { runner.AddCallbacks(this); Active = this; }
+            if (runner) { runner.AddCallbacks(this); Active = this; CrewVoiceSession.Ensure(runner,this); }
             else if (Active == this) Active = null;
             SessionChanged?.Invoke();
         }

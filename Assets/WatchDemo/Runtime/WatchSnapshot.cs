@@ -8,6 +8,9 @@ namespace LighthouseKeepers.WatchDemo
         public string protocol=Protocol,world;
         public int sequence,day,power,doneMask,starterPulls,bolts,activeBolt,turns,codeProgress;
         public double elapsed,beaconDarkElapsed;
+        public double highWaterElapsed;
+        public bool highWaterFailed;
+        public int sleepDay;
         public float water,stroke,seal,frequency,lockElapsed,transmitElapsed;
         public bool beaconDarkFailed,needsReturn,radioMain,radioLocked,radioDone;
         public int revision,beds,keepers,order0,order1=1,order2=2;
@@ -19,6 +22,7 @@ namespace LighthouseKeepers.WatchDemo
             order0>=0&&order0<=2&&order1>=0&&order1<=2&&order2>=0&&order2<=2&&order0!=order1&&order0!=order2&&order1!=order2 &&
             float.IsFinite(seat)&&seat>=0&&float.IsFinite(direction)&&Math.Abs(direction)<=1&&float.IsFinite(returned)&&returned>=0 && day>0 && power>=0 && power<=1 && doneMask>=0 &&
             double.IsFinite(elapsed)&&elapsed>=0 && double.IsFinite(beaconDarkElapsed)&&beaconDarkElapsed>=0 &&
+            double.IsFinite(highWaterElapsed)&&highWaterElapsed>=0&&highWaterElapsed<=60&&sleepDay>=0 &&
             float.IsFinite(water)&&water>=-10&&water<=30 && bolts>=0&&bolts<=3 &&
             activeBolt>=-1&&activeBolt<=2 && (bolts==3?activeBolt==-1:activeBolt>=0) &&
             turns>=0&&turns<=20 && starterPulls>=0&&starterPulls<=3 &&

@@ -6,6 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class PipeRepairState
     {
         public readonly PipeRepairProfile Profile;
+        public float RetainedPartialProgress { get; set; }
         public bool ReadOnly {get;set;}
         public event Action Changed,QuarterTurn,Completed;
         readonly int[] order={0,1,2};
@@ -24,7 +25,7 @@ namespace LighthouseKeepers.WatchDemo
         public float Direction=>direction;
         public float Returned=>returned;
         public bool Touching=>touching;
-        public PipeRepairState(PipeRepairProfile profile){Profile=profile?profile:throw new ArgumentNullException(nameof(profile));}
+        public PipeRepairState(PipeRepairProfile profile){Profile=profile?profile:throw new ArgumentNullException(nameof(profile));RetainedPartialProgress=profile.retainedPartialProgress;}
         public void Reset(int seed,bool repaired=false)
         {
             for(int i=0;i<3;i++)order[i]=i;
@@ -48,7 +49,7 @@ namespace LighthouseKeepers.WatchDemo
             if(ReadOnly||Complete||!canWork)return;
             if(!contact)
             {
-                if(touching){StrokeDegrees*=Profile.retainedPartialProgress;if(NeedsSeal)SealElapsed*=Profile.retainedPartialProgress;NeedsReturn=false;SeatElapsed=0;Changed?.Invoke();}
+                if(touching){StrokeDegrees*=RetainedPartialProgress;if(NeedsSeal)SealElapsed*=RetainedPartialProgress;NeedsReturn=false;SeatElapsed=0;Changed?.Invoke();}
                 touching=false;return;
             }
             touching=true;SeatElapsed+=seconds;if(SeatElapsed<Profile.seatSeconds)return;
