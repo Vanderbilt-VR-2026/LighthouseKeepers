@@ -37,6 +37,7 @@ namespace LighthouseKeepers.WatchDemo
         WrenchHaptics wrenchHaptics;
         WatchMenu menu;
         S4WatchPresentation s4Presentation;
+        WatchPowerPanel powerPanel;
         int sleepDay;
         public Component Owner=>this;
         public void SetNetworkMode(bool practice,bool replica){state.SetNetworkRehearsal(practice);state.SetRemoteReplica(replica);}
@@ -51,7 +52,8 @@ namespace LighthouseKeepers.WatchDemo
         public float RepairProgress=>state==null?0:state.Pipe.BoltsDone+state.Pipe.StrokeDegrees/state.Pipe.Profile.quarterTurnDegrees;
         void Start()
         {
-            state = new WatchState(Resources.Load<DayCatalog>("WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current);
+            var powerTuning=S4M2Tuning.Current;
+            state = new WatchState(Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning);
             if(state.Tuning&&state.Tuning.difficulty)
             {poweredLeakRiseMPerSecond=state.Tuning.poweredRiseMPerSecond;unpoweredLeakRiseMPerSecond=state.Tuning.unpoweredRiseMPerSecond;repairedDrainMPerSecond=state.Tuning.drainMPerSecond;}
             coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);state.Coop=coop;
@@ -61,6 +63,7 @@ namespace LighthouseKeepers.WatchDemo
             if(radio)radio.Bind(state);
             if(pipeRepair)pipeRepair.Bind(state);
             if(beacon)beacon.Bind(state);
+            if(state.Grid!=null)powerPanel=WatchPowerPanel.Create(this);
             wrenchHaptics=wrench.GetComponent<WrenchHaptics>();originalWrenchRotation=wrenchVisual.localRotation;fadeMaterial=fade.material;fade.enabled=false;
             LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
             menu=gameObject.AddComponent<WatchMenu>();menu.Initialize(this,head);
@@ -73,7 +76,7 @@ namespace LighthouseKeepers.WatchDemo
         void BeginWatch()
         {
             if(coop!=null&&!state.RemoteReplica)Revision++;
-            flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=state.Power==PowerState.On?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond;flood.SurgePerMetre=.1f;flood.ResumeFlood();
+            flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond;flood.SurgePerMetre=.1f;flood.ResumeFlood();
             if(generator)generator.ResetInteraction();
             CancelRepair();
             leak.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);if(leakAudio)leakAudio.Stop();
@@ -109,8 +112,8 @@ namespace LighthouseKeepers.WatchDemo
             if(!state.Failed)
             {
                 flood.Paused=state.Repaired;
-                flood.RiseSpeed=(state.Power==PowerState.On?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.Pipe.InflowFraction;
-                if(state.Repaired && state.Power==PowerState.On)
+                flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.Pipe.InflowFraction;
+                if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
             previousGrip=grip;previousTrigger=trigger;
@@ -154,7 +157,11 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var task in state.Definition.tasks)
                 boardText.Append(state.IsDone(task.stationId)?"[X] ":"[ ] ").Append(task.taskText).Append('\n');
             if(!state.Repaired)boardText.Append("Pipe: ").Append(state.Pipe.BoltsDone).Append("/3 bolts\n");
-            if(state.Power==PowerState.Off&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
+            if(state.Grid!=null)
+            {boardText.Append("POWER: ").Append(state.Grid.Demand.ToString("0.##")).Append('/').Append(state.Grid.Capacity.ToString("0.##")).Append(state.Grid.Tripped?" — TRIPPED: RESET F2":" — ");
+                if(!state.Grid.Tripped)for(int i=0;i<4;i++)if(state.Grid.Selected((PowerCircuit)i))boardText.Append(((PowerCircuit)i).ToString().ToUpperInvariant()).Append(' ');
+                boardText.Append('\n');}
+            if(!state.HasPower(PowerCircuit.Beacon)&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
             boardText.Append('\n');
             if(state.Failed)boardText.Append(state.FailureMessage).Append("\nTrigger to retry this day / Menu for retry or lobby");
             else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE\nMenu: Replay from Day 1 or Return to lobby");

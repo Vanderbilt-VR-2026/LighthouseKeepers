@@ -64,7 +64,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void StateChanged()
         {
-            bool next=state.Power==PowerState.On;if(next==power&&initialized&&state.Elapsed>0)return;power=next;
+            bool next=state.HasPower(PowerCircuit.Lights);if(next==power&&initialized&&state.Elapsed>0)return;power=next;
             if(!power){outageStart=Time.unscaledTime;alarm.volume=tuning&&tuning.soundPass?tuning.alarmVolume:.09f;}
             if(power)alarm.Stop();else if(!alarm.isPlaying)alarm.Play();
         }

@@ -11,3 +11,7 @@ Live Mac + Quest, CREW88: guest repaired three bolts (45.28 s); host board updat
 Full logs, XML and captures: `artifacts/s4m2/before/`. Graphics Editor import initially timed out; recovery resumed only the graphics replay, without changing gameplay or rerunning completed suites.
 
 Implementation sequence: grid → test → generator → test → beacon → test. After checks pending.
+
+## Piece 1: power grid
+
+Three EditMode rule tests passed: overload/recovery, generous Day 1 capacity, and read-only replica/invalid-state handling. Graphics PlayMode passed real XRI switch and reset grabs, actual starter pulls, all four consumers, radio refusal during trip, blackout/beacon presentation, safe recovery, reallocation and replica application. [Steps](grid/solo-steps.txt). New day assets live in `Assets/Data/S4M2Days`, outside the original auto-scanned Days folder, preserving the old catalog and its rebuild behavior. Grid and catalog are opt-in through `S4M2Tuning`; Editor off-switch is `LK_S4M2_DISABLED=1`. Two-client grid check pending.

@@ -15,6 +15,12 @@ namespace LighthouseKeepers.WatchDemo
         public const int RequiredStarterPulls = 3;
         readonly DayDefinition[] days;
         public S4Tuning Tuning {get;}
+        public S4M2Tuning PowerTuning {get;}
+        public PowerGrid Grid {get;}
+        public bool HasPower(PowerCircuit circuit)=>Grid!=null?Grid.Powered(circuit):Power==PowerState.On;
+        public bool SetCircuit(int circuit,bool selected)=>!ReadOnly&&!Failed&&Grid!=null&&Grid.SetCircuit((PowerCircuit)circuit,selected);
+        public bool ResetBreaker()=>!ReadOnly&&!Failed&&Grid!=null&&Grid.ResetBreaker();
+        void GridChanged(){Radio.SetPower(HasPower(PowerCircuit.Radio));if(HasPower(PowerCircuit.Beacon))BeaconDarkElapsed=0;Changed?.Invoke();}
         public double HighWaterElapsed {get;private set;}
         public bool HighWaterFailed {get;private set;}
         readonly HashSet<string> faults = new HashSet<string>();
@@ -24,9 +30,9 @@ namespace LighthouseKeepers.WatchDemo
         public LighthouseKeepers.Lobby.ICoopWatchLink Coop {get;set;}
         public bool ReadOnly => NetworkRehearsal || RemoteReplica;
         public void SetRemoteReplica(bool value)
-        { RemoteReplica=value; Pipe.ReadOnly=Radio.ReadOnly=ReadOnly; }
+        { RemoteReplica=value; Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly; }
         public void SetNetworkRehearsal(bool value)
-        {NetworkRehearsal=value;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;}
+        {NetworkRehearsal=value;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;}
         public event Action Changed;
         public RadioState Radio {get;}
         public PipeRepairState Pipe {get;}
@@ -50,7 +56,8 @@ namespace LighthouseKeepers.WatchDemo
         public bool Failed => HighWaterFailed || BeaconDarkFailed || (Elapsed >= Duration && !Complete);
         public WatchState() : this(Resources.Load<DayCatalog>("WatchDays").days, 1) { }
         public WatchState(DayDefinition[] definitions, int firstDay):this(definitions,firstDay,null){}
-        public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning)
+        public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning):this(definitions,firstDay,tuning,null){}
+        public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning,S4M2Tuning powerTuning)
         {
             if (definitions == null || definitions.Length == 0) throw new ArgumentException("No authored watch days");
             days = definitions;
@@ -60,6 +67,8 @@ namespace LighthouseKeepers.WatchDemo
             Pipe.Changed+=()=>Changed?.Invoke();Pipe.Completed+=()=>CompleteRepair();
             Radio=new RadioState(Resources.Load<RadioProgram>("StormRadio"));
             Radio.BroadcastCompleted+=()=>{if(faults.Remove(RadioStation))Changed?.Invoke();};
+            PowerTuning=powerTuning&&powerTuning.enabledForWatch?powerTuning:null;
+            if(PowerTuning&&PowerTuning.powerGrid){Grid=new PowerGrid(PowerTuning.pumpLoad,PowerTuning.beaconLoad,PowerTuning.radioLoad,PowerTuning.lightsLoad);Grid.Changed+=GridChanged;}
             index = Array.FindIndex(days, d => d.day == firstDay);
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(firstDay));
             Reset();
@@ -69,7 +78,7 @@ namespace LighthouseKeepers.WatchDemo
             if (seconds < 0 || double.IsNaN(seconds) || double.IsInfinity(seconds)) throw new ArgumentOutOfRangeException(nameof(seconds));
             bool wasFailed = Failed;
             if(wasFailed||ReadOnly)return;
-            if(Power==PowerState.Off && Definition.beaconDarkLimitSeconds>0)
+            if(!HasPower(PowerCircuit.Beacon) && Definition.beaconDarkLimitSeconds>0)
             {BeaconDarkElapsed=Math.Min(BeaconDarkLimit,BeaconDarkElapsed+seconds);BeaconDarkFailed=BeaconDarkElapsed>=BeaconDarkLimit;}
             Elapsed = Math.Min(Duration, Elapsed + seconds);
             Radio.Tick(seconds,!Failed);
@@ -92,7 +101,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if (ReadOnly || Failed || Power == PowerState.On) return false;
             StarterPulls++;
-            if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; BeaconDarkElapsed=0; Radio.SetPower(true); }
+            if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; if(Grid!=null)Grid.SetEngine(true);else {BeaconDarkElapsed=0; Radio.SetPower(true);} }
             Changed?.Invoke(); return true;
         }
         public bool Sleep()
@@ -113,6 +122,7 @@ namespace LighthouseKeepers.WatchDemo
             int done=0;
             for(int i=0;i<Definition.tasks.Length;i++)if(IsDone(Definition.tasks[i].stationId))done|=1<<i;
             return new WatchSnapshot { day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
+                gridEnabled=Grid!=null,gridCapacity=Grid?.Capacity??0,gridMask=Grid?.SelectedMask??0,gridTripped=Grid?.Tripped??false,
                 beaconDarkElapsed=BeaconDarkElapsed,beaconDarkFailed=BeaconDarkFailed,starterPulls=StarterPulls,
                 highWaterElapsed=HighWaterElapsed,highWaterFailed=HighWaterFailed,
                 bolts=Pipe.BoltsDone,activeBolt=Pipe.ActiveBolt,turns=Pipe.TurnsDone,stroke=Pipe.StrokeDegrees,
@@ -128,6 +138,8 @@ namespace LighthouseKeepers.WatchDemo
             if(!RemoteReplica || snapshot==null || !snapshot.Valid())return false;
             int next=Array.FindIndex(days,d=>d.day==snapshot.day);
             if(next<0 || snapshot.elapsed>days[next].dayLengthSeconds || (snapshot.doneMask>>days[next].tasks.Length)!=0)return false;
+            if(snapshot.gridEnabled!=(Grid!=null))return false;
+            if(Grid!=null&&!Grid.ApplyReplica(snapshot.gridCapacity,snapshot.gridMask,snapshot.power==1,snapshot.gridTripped))return false;
             index=next;Elapsed=snapshot.elapsed;Power=(PowerState)snapshot.power;StarterPulls=snapshot.starterPulls;
             BeaconDarkElapsed=snapshot.beaconDarkElapsed;BeaconDarkFailed=snapshot.beaconDarkFailed;
             HighWaterElapsed=snapshot.highWaterElapsed;HighWaterFailed=snapshot.highWaterFailed;
@@ -140,7 +152,8 @@ namespace LighthouseKeepers.WatchDemo
             HighWaterElapsed=0;HighWaterFailed=false;
             foreach (var fault in Definition.startingFaults) faults.Add(fault);
             Power = faults.Contains(GeneratorStation) ? PowerState.Off : PowerState.On;
-            Radio.Reset(Power==PowerState.On);
+            if(Grid!=null)Grid.Reset(Definition.powerCapacity,Definition.initialCircuitMask,Power==PowerState.On);
+            Radio.Reset(HasPower(PowerCircuit.Radio));
             Pipe.Reset(unchecked(++repairSeed),Repaired);
             Changed?.Invoke();
         }

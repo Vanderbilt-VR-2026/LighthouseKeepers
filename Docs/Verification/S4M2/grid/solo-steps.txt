@@ -1,0 +1,34 @@
+Panel created at F2 anchor
+Day 1 has generous capacity
+Day 1 powered Pump
+Day 1 powered Beacon
+Day 1 powered Radio
+Day 1 powered Lights
+Day 2 starts with engine off
+Existing three pulls restore engine, pump, beacon and lights
+Radio starts switched off on Day 2
+XRI grip: SWITCH_RADIO
+Third major load trips distribution but engine stays running
+Trip cuts Pump
+Trip cuts Beacon
+Trip cuts Radio
+Trip cuts Lights
+Trip extinguishes actual beacon
+Trip enters blackout presentation
+Radio refuses power while tripped
+XRI grip: RESET breaker lever
+Overloaded RESET remains safely tripped
+XRI grip: SWITCH_PUMP
+Switching a load off does not auto-reset breaker
+XRI grip: RESET breaker lever
+Safe RESET powers radio + beacon without pump
+Radio can be powered after distribution reset
+Guest accepts grid snapshot
+Guest cannot mutate grid directly
+Guest circuit delivery matches host
+XRI grip: SWITCH_RADIO
+XRI grip: SWITCH_PUMP
+Switching back restores pump and cuts radio
+XRI grip: SWITCH_LIGHTS
+Lights off alone does not count as a dark beacon
+XRI grip: SWITCH_LIGHTS

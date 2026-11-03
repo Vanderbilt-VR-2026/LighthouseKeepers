@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Bind(WatchState state){watch=state;watch.Changed+=Changed;Changed();}
         void Changed()
         {
-            bool next=watch.Power==PowerState.On;if(initialized&&powered==next)return;
+            bool next=watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon);if(initialized&&powered==next)return;
             powered=next;Apply(powered);
             audioSource.PlayOneShot(powered?powerUp:powerDown,.35f);
             if(!powered)speed=0;

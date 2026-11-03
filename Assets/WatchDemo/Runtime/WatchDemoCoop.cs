@@ -14,6 +14,8 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.GridCircuit)return powerPanel?powerPanel.Control((int)value):null;
+            if(action==CoopAction.GridReset)return powerPanel?powerPanel.ResetControl:null;
             if(action==CoopAction.Starter)return generator.Starter;
             if(action==CoopAction.Microphone)return radio.microphone;
             foreach(var control in radio.controls)
@@ -26,6 +28,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly||sleeping)return -1;
             switch(action)
             {
+                case CoopAction.GridCircuit:
+                    if(!float.IsFinite(value)||value!=(int)value||value<0||value>3)return -1;
+                    return state.SetCircuit((int)value,pressed)?1:-1;
+                case CoopAction.GridReset:return state.ResetBreaker()?1:-1;
                 case CoopAction.Starter:return generator.ApplyPull()?1:-1;
                 case CoopAction.RadioPower:return !state.Failed&&radio.ToggleMain()?1:-1;
                 case CoopAction.RadioTune:

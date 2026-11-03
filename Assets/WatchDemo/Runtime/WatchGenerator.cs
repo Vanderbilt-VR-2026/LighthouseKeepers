@@ -64,7 +64,7 @@ namespace LighthouseKeepers.WatchDemo
             lampBlock.SetColor("_BaseColor", running ? new Color(.1f,.7f,.12f) : new Color(.2f,.055f,.025f));
             lampBlock.SetColor("_EmissionColor", running ? new Color(.08f,.9f,.1f) : Color.black);
             lamp.SetPropertyBlock(lampBlock);
-            prompt.text = running ? "POWER ON" : state.Failed ? "WATCH ENDED" : $"PULL STARTER  {state.StarterPulls}/{WatchState.RequiredStarterPulls}\nGRAB + PULL TOWARD YOU";
+            prompt.text = running ? (state.Grid!=null?"ENGINE RUNNING":"POWER ON") : state.Failed ? "WATCH ENDED" : $"PULL STARTER  {state.StarterPulls}/{WatchState.RequiredStarterPulls}\nGRAB + PULL TOWARD YOU";
             if (running && !wasRunning) { runningAudio.Play(); if(engineCatch)runningAudio.PlayOneShot(engineCatch,.7f); }
             else if (!running) runningAudio.Stop();
             wasRunning = running;

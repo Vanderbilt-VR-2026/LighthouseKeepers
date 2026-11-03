@@ -16,6 +16,9 @@ namespace LighthouseKeepers.Core.Progression
         [Min(30)] public float dayLengthSeconds = 420;
         [Tooltip("Continuous beacon outage before losing this watch; zero disables the limit.")]
         [Min(0)] public float beaconDarkLimitSeconds;
+        [Header("Optional S4-M2 distribution (used only by the switched catalog)")]
+        [Min(.01f)] public float powerCapacity = 3.25f;
+        [Range(0,15)] public int initialCircuitMask = 15;
         public WatchTaskStep[] tasks = Array.Empty<WatchTaskStep>();
         public string[] startingFaults = Array.Empty<string>();
         [Range(1, 2)] public int requiredKeepers = 1;
