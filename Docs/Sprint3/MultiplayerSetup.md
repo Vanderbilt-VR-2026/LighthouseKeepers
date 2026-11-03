@@ -1,4 +1,4 @@
-> **Current PR #65 candidate:** the shipped Lab world is solo. Two-keeper gameplay launch is disabled until shared Lab state is implemented. The networking setup below is historical/diagnostic and does not establish current co-op gameplay. See [current Sprint 3 README](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/blob/codex/sprint3-technical-fixes/Docs/Sprints/Sprint3/README.md).
+> **Current PR #65 candidate:** the shipped Lab world is solo. Two-keeper gameplay launch is disabled until shared Lab state is implemented. The networking setup below is historical/diagnostic and does not establish current co-op gameplay. See [current Sprint 3 README](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/blob/sprint3-final/Docs/Sprints/Sprint3/README.md).
 
 # Sprint 3 multiplayer setup — Session E
 

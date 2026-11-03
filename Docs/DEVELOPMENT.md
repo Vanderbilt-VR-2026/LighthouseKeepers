@@ -31,6 +31,6 @@ Both use fixed Photon region `us`, maximum two players. Keep the Mac awake and U
 
 Choose **Lighthouse Keepers → Storm Watch → Build Quest APK**. The historical menu name invokes the current ship pipeline (`StormWatchAuthoring.BuildQuest`); it builds Network Lobby + Lab, not the old Storm Watch world. Output includes a source-stamped APK, build manifest and package verification. See [build pipeline](Verification/StormWatch/QuestBuildPipeline.md).
 
-Open **Window → General → Test Runner** for EditMode and PlayMode. Latest recorded preview validation: EditMode **218/218**; PlayMode **38 passed and 15 pre-existing failures**, with no new regressions. The identical solo Day 1–3 graphics replay passed. [Exact failures and proof](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/blob/coop/basics/Docs/Verification/CoopBasics/README.md).
+Open **Window → General → Test Runner** for EditMode and PlayMode. Latest recorded preview validation: EditMode **218/218**; PlayMode **38 passed and 15 pre-existing failures**, with no new regressions. The identical solo Day 1–3 graphics replay passed. [Exact failures and proof](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/blob/8e3b98a655617d4ea4d4e3b9d8728539a896e68f/Docs/Verification/CoopBasics/README.md).
 
 A successful compile or Editor run does not establish two-Quest acceptance. Preserve the accepted solo path, scene assets, hand rotation, and release tags when developing co-op. Read [agent/repository guidance](../.AGENTS/README.md) before automated changes.
