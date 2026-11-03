@@ -57,7 +57,7 @@ After the NGCAVK voice attempt was interrupted by PLAY SOLO, Quest join attempts
 
 [Build identity and SHA-256](build.json). Only one Quest was connected. [250-second solo performance sample](initial-solo-performance.json): median GPU 6.83 ms, p95 7.07 ms, 72 Hz target; approximate render-thread wall time median 4.39 ms, p95 5.12 ms. This sample is from f83507f before the final guide-light visibility/brightness adjustment. Not full CPU cost, not voice overhead, and not a no-hitch claim.
 
-Live shared day/night, guest pipe, host generator, high-water failure/retry and voice in both directions are now confirmed below. Remaining: headset rejoin acceptance on 8098ea4, a complete matched voice-on/muted timing window, hitch/jitter acceptance and a second Quest. Beacon network propagation now passed with two Editors as recorded below; its Quest capture remains missing. The first beacon capture was missed when the guest immediately retried; later recapture occurred after the guest left and is not two-client evidence.
+Live shared day/night, guest pipe, host generator, high-water failure/retry and voice in both directions are now confirmed below. Remaining: a complete matched voice-on/muted timing window, hitch/jitter acceptance and a second Quest. Beacon network propagation now passed with two Editors as recorded below; its Quest capture remains missing. The first beacon capture was missed when the guest immediately retried; later recapture occurred after the guest left and is not two-client evidence.
 
 ## Repeat
 
@@ -121,3 +121,13 @@ The failure snapshots and screenshots are saved in `rejoin/`. At the bed, the pr
 [Stable-view microphone-on sample](crew-performance.json): F3 view on Quest, 31 VrApi samples, GPU median **10.21 ms**, p95 **10.57 ms**; approximate render-thread wall time median **7.92 ms**, p95 **8.95 ms**. Refresh target 72 Hz; sampled FPS 72–73. Two stale frames occurred. The muted window was interrupted by Return to lobby, so **voice overhead is not isolated**. The broader shared-night/traversal window includes 27.78 ms frames and screenshot capture; a zero-hitch claim is not supported. These are measurements, not inferred from Editor FPS.
 
 Final 8098ea4 regression comparison: **220 EditMode passes; 40 PlayMode passes and the same 15 existing failures**. No lost passes and no new failures. [Exact solo replay result](rejoin-solo-result.json); the after-House image above is from this final unchanged replay.
+
+## Quest rejoin accepted: CREW88, 8098ea4
+
+The user returned to the lobby, entered the same code and joined directly into the running House without another READY round: “Yes, I rejoined the House.” Host controller instance stayed **63556**, day revision stayed **1**, elapsed time advanced from **7.70 to 66.53 seconds**, and water continued rising. A fresh guest actor joined, both avatars were visible, and the disconnect notice cleared. Quest logs show the guest received the running host snapshot rather than restarting the day. Voice reconnected (`MIC ON · Joined`). These captures were inspected.
+
+[Headset rejoin result and limits](quest-rejoin/result.json) · [Quest logs](quest-rejoin/quest-rejoin-log.txt)
+
+| Quest sees Mac Host after rejoin | Mac sees returning Keeper |
+|---|---|
+| ![Quest](quest-rejoin/quest-rejoined.png) | ![Editor](quest-rejoin/quest-rejoined-editor.png) |
