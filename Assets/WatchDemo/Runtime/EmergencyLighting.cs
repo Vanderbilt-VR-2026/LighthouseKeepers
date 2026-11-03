@@ -22,7 +22,6 @@ namespace LighthouseKeepers.WatchDemo
         bool power=true,initialized;
         S4Tuning tuning;
         readonly List<Light> guides=new();
-        Material guideMaterial;
         public float WarmBlend=>warm;
         public float CycleSeconds=>cycleSeconds;
         public static float PulseAt(float time,float cycle)=>.55f+.10f*Mathf.Sin(time*Mathf.PI*2/Mathf.Max(2,cycle));
@@ -97,14 +96,11 @@ namespace LighthouseKeepers.WatchDemo
                 var light=interiorLights[i];light.color=Color.Lerp(blackout?tint:Color.Lerp(normalLightColours[i],new Color(1,.48f,.25f),.25f),normalLightColours[i],warm);
                 light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,1,warm);
             }
-            foreach(var guide in guides)guide.intensity=tuning.guideLampIntensity*(1-warm);
-            if(guideMaterial)guideMaterial.SetColor("_EmissionColor",new Color(1,.025f,.01f)*(.15f+.7f*(1-warm)));
+            foreach(var guide in guides)guide.intensity=tuning.guideLampIntensity*(1-warm)*(blackout?pulse/Mathf.Max(.01f,tuning.emergencyMaximum):1);
         }
         void CreateGuides()
         {
             if(guides.Count>0)return;
-            guideMaterial=new Material(Shader.Find("Universal Render Pipeline/Lit")){name="S4 shared red guide lamp"};
-            guideMaterial.SetColor("_BaseColor",new Color(.25f,.015f,.01f));guideMaterial.EnableKeyword("_EMISSION");
             // Frozen Sprint 2 side-stair walk lines from lighthouse-layout.json. Small,
             // shadowless lights sit beside the route; no geometry or colliders on the walkway.
             for(int floor=0;floor<3;floor++)
@@ -119,10 +115,8 @@ namespace LighthouseKeepers.WatchDemo
         static Vector3 Polar(float angle,float radius,float y)=>new Vector3(Mathf.Sin(angle*Mathf.Deg2Rad)*radius,y,Mathf.Cos(angle*Mathf.Deg2Rad)*radius);
         void AddGuide(Vector3 position,string label)
         {
-            var go=GameObject.CreatePrimitive(PrimitiveType.Sphere);go.name="S4 red guide "+label;go.transform.SetParent(transform,false);
-            go.transform.position=position;go.transform.localScale=new Vector3(.065f,.065f,.065f);
-            var collider=go.GetComponent<Collider>();collider.enabled=false;Destroy(collider);
-            go.GetComponent<Renderer>().sharedMaterial=guideMaterial;
+            var go=new GameObject("S4 red guide light "+label);go.transform.SetParent(transform,false);
+            go.transform.position=position;
             var light=go.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(1,.06f,.025f);
             light.range=tuning.guideLampRangeM;light.shadows=LightShadows.None;guides.Add(light);
         }
@@ -131,7 +125,6 @@ namespace LighthouseKeepers.WatchDemo
             if(state!=null)state.Changed-=StateChanged;
             if(originals!=null)for(int i=0;i<interiorSurfaces.Length;i++)if(interiorSurfaces[i]&&originals[i]!=null)interiorSurfaces[i].sharedMaterials=originals[i];
             foreach(var m in materials)Destroy(m);
-            if(guideMaterial)Destroy(guideMaterial);
         }
     }
 }

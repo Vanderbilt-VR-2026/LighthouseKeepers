@@ -29,12 +29,12 @@ MonoBehaviour:
   slipRetainedFraction: 0.5
   failWaterHeightM: 0.55
   failWaterSustainSeconds: 3
-  emergencyMinimum: 0.1
-  emergencyMaximum: 0.15
+  emergencyMinimum: 0.115
+  emergencyMaximum: 0.1725
   emergencyCycleSeconds: 2
   warmRecoverySeconds: 1
   emergencyTint: {r: 1, g: 0.22, b: 0.13, a: 1}
-  guideLampIntensity: 0.22
+  guideLampIntensity: 0.253
   guideLampRangeM: 1.5
   fadeOutSeconds: 1
   nightHoldSeconds: 2
