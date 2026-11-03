@@ -29,3 +29,29 @@ Three beacon rule tests passed. Graphics solo used XRI ignition/wheel and a carr
 Days 1/2 begin lit/aligned/clean. Days 3/4 begin unlit, alignment 0.18 (target 0.5 ±0.025), 30% soot, accumulating 0.1%/s while shining. Cleaning removes 40% per metre of rubbing; fully dirty beam retains 25% brightness. Dark timer requires power, ignition and alignment.
 
 Starter cooldown is 0.25 s, matching the existing network minimum and accepting the previously tested 0.5 s full-stroke cadence. Primer cooldown remains 0.35 s. Full regression compares S4 enabled / M2 disabled to the before run; a separate M2-enabled replay tests the intentionally revised sequence and day data.
+
+## Regression status (in progress)
+
+The full suites on 3ff9d46, S4 enabled and M2 disabled, finished with **230/230 EditMode** and **38/55 PlayMode**. Every before-pass still passed. The remaining 17 failures match before-failures; the previously failing avatar teardown case passed this run. [Exact after list](after-tests.json). No unrelated failing tests were changed. Three additional review tests and the final graphics/Quest checks are still pending.
+
+Review commit 6a7ebcf adds actual lens rotation when aligning, restores current-day fuel/soot rates for a guest who continues alone after disconnect, counts unprimed closed-choke pulls toward flooding, avoids resetting a held new prop during the shared night, filters sub-stroke cloth jitter, and labels engine-off power on the board.
+
+## Tuning
+
+| Setting | Accepted S4-M1 | S4-M2 enabled |
+| --- | --- | --- |
+| Day duration | 315 s effective | 315 s, unchanged |
+| Available output | All loads together | Day 1: 3.25; later: 2.5 |
+| Circuit demand | One on/off state | Pump / beacon / radio: 1 each; lights: 0.25 |
+| Overload | None | Latched trip; shed load, then grip RESET |
+| Beacon outage deadline | Day 2: 72 s; Day 3: 60 s | Day 2: 96 s; Days 3/4: 120 s |
+| Start | Three pulls | Fuel ≥12%, three primer squeezes, choke closed, three pulls, choke open within 5 s |
+| Flooded engine | None | Five closed-choke attempts; 8 s recovery |
+| Fuel | No consumption | Day 1: 100%, no drain; Day 2: 80%, 0.15%/s; Days 3/4: 4%, 0.25%/s |
+| Pour / warning | None | 6%/s; warning below 20% |
+| Beacon readiness | Power only | Power + ignition + alignment |
+| Alignment | Automatic | Target 0.5 ±0.025 (±6.75°); Days 3/4 start at 0.18 |
+| Soot | None | Days 3/4 start at 30%; +0.1%/s while shining; dirty beam retains 25% brightness |
+| Cleaning | None | 40% removed per metre; minimum accumulated rubbing stroke 1.2 cm |
+
+Shared controls/tunables: `Assets/WatchDemo/Resources/S4M2Tuning.asset`. Day-specific settings: `Assets/Data/S4M2Days/Day01–04.asset`. Disable `enabledForWatch` to return to the accepted catalog and mechanics; Editor regression uses `LK_S4M2_DISABLED=1`. The existing S4 tuning still supplies the 0.75 day-duration and 0.8 beacon-deadline multipliers.
