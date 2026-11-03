@@ -1,20 +1,20 @@
 # S4-M1 evidence (2026-11-02)
 
-Runtime/build: **7cc8702**, Unity **6000.3.23f1**. This is an in-progress verification record, not full headset acceptance. Baseline: `coop/basics` 1217866 / runtime 8e3b98a. Main is untouched.
+Rejoin runtime/build: **8098ea4**; live headset evidence below: **7cc8702**, Unity **6000.3.23f1**. This is an in-progress verification record, not full headset acceptance. Baseline: `coop/basics` 1217866 / runtime 8e3b98a. Main is untouched.
 
 ## Regression results
 
 | Run | Before | After | Result |
 |---|---|---|---|
-| Full EditMode | 218 passed | 219 passed | No lost passes |
+| Full EditMode | 218 passed | 220 passed | No lost passes |
 | Full PlayMode | 38 passed, 15 failed | 40 passed, 15 failed | No lost passes or new failures |
 | Exact graphics solo replay, S4 off | Days 1–3 + bed, zero errors | Same, zero errors | Passed |
 | S4 enabled | Not applicable | Final replay passed Days 1–3, loss/retry, four-second nights, zero errors | Passed |
 | Mac + Quest | Shared Lab, guest bolts, both bed → Day 2 | Guest pipe, shared night → Day 2, host generator; voice both directions confirmed | Passed live |
 
-[Test-by-test comparison](test-comparison.json) lists every pre-existing failure: Bootstrap 1, First Watch 5, old PlayerTraversal 6, Storm Watch 3. The original archived scenes are not part of this Lab build. Failures are reported, not silently removed or repaired out of scope. Full XML/logs are in `artifacts/s4m1/before/` and `artifacts/s4m1/after/`; the exact graphics run is `after/solo/`.
+[Test-by-test comparison](test-comparison.json) lists every pre-existing failure: Bootstrap 1, First Watch 5, old PlayerTraversal 6, Storm Watch 3. The original archived scenes are not part of this Lab build. Failures are reported, not silently removed or repaired out of scope. Full XML/logs are in `artifacts/s4m1/before/` and `artifacts/s4m1/rejoin-regression/`; the exact graphics run is `rejoin-regression/solo/`.
 
-New tests cover bounded smooth lighting, sustained high-water failure/reset, beacon failure/reset, read-only guest snapshots and no Photon Voice in offline solo. They do not prove live network failure/retry.
+New tests cover vacant-slot rejoin admission, bounded smooth lighting, sustained high-water failure/reset, beacon failure/reset, read-only guest snapshots and no Photon Voice in offline solo. They do not prove live network failure/retry.
 
 ## Images inspected
 
@@ -43,7 +43,7 @@ Final S4 blackout and starter captures are Editor graphics evidence; handheld co
 
 [Final S4 replay result](s4-solo-result.json) and [step evidence](s4-solo-evidence.txt).
 
-These avatar shots are from the **lobby**, not the House. User confirmed hearing the original bell sent through Photon Voice. Quest microphone permission was granted; intelligible return speech has not yet been accepted.
+These avatar shots are from the **lobby**, not the House. User confirmed hearing the original bell sent through Photon Voice. Quest microphone permission was granted. Return speech was subsequently confirmed in the CREW77 House session below.
 
 | Quest sees Mac Host | Editor sees Keeper |
 |---|---|
@@ -57,7 +57,7 @@ After the NGCAVK voice attempt was interrupted by PLAY SOLO, Quest join attempts
 
 [Build identity and SHA-256](build.json). Only one Quest was connected. [250-second solo performance sample](initial-solo-performance.json): median GPU 6.83 ms, p95 7.07 ms, 72 Hz target; approximate render-thread wall time median 4.39 ms, p95 5.12 ms. This sample is from f83507f before the final guide-light visibility/brightness adjustment. Not full CPU cost, not voice overhead, and not a no-hitch claim.
 
-Live shared day/night, guest pipe, host generator, high-water failure/retry and voice in both directions are now confirmed below. Remaining: beacon network failure capture, a complete matched voice-on/muted timing window, hitch/jitter acceptance and a second Quest. The first beacon capture was missed when the guest immediately retried; later recapture occurred after the guest left and is not two-client evidence.
+Live shared day/night, guest pipe, host generator, high-water failure/retry and voice in both directions are now confirmed below. Remaining: headset rejoin acceptance on 8098ea4, a complete matched voice-on/muted timing window, hitch/jitter acceptance and a second Quest. Beacon network propagation now passed with two Editors as recorded below; its Quest capture remains missing. The first beacon capture was missed when the guest immediately retried; later recapture occurred after the guest left and is not two-client evidence.
 
 ## Repeat
 
@@ -92,3 +92,32 @@ The flood setup injected .56 m on the host. The normal three-second sustained-he
 ### Rejoin issue found during mute test
 
 Quest successfully changed to MIC MUTED, then the user accidentally selected Return to lobby. Rejoining the same room returned GameClosed (32764) because the existing transport closes a running watch and refuses all late joins. Host continued safely with one keeper and a disconnect notice. User requested this be fixed: a vacant slot must accept the same code and load the host’s current Lab state. The muted performance sample was interrupted, so no voice overhead delta is claimed.
+
+
+## Rejoin fix: 8098ea4
+
+The two-Editor test in room LYHYAW passed **two** cycles of guest Return to lobby → join the same code → current Lab watch. Host controller identity and day revision stayed unchanged; Day 2, running generator, clock, water and tasks synchronized. Each returning guest was read-only, with fresh actor/command state, two avatars and the disconnect notice cleared. Capacity remains two. The `crewRejoin` switch only permits this after the shared Lab has loaded; initial launch remains locked during scene loading.
+
+After the second rejoin, the guest repaired the pipe through real XRI input; both voted in bed and woke on Day 3. Both network clients received high-water and beacon loss, then normal retry cleared each loss and restored Day 3 faults. High water used a .56 m injected setup and the real three-second threshold. The beacon network test advanced the host clock to its deadline; the earlier solo graphics replay exercised the real wait. This separates network propagation evidence from timing evidence.
+
+[Rejoin results](rejoin/result.json) · [Post-rejoin tasks, bed and failures](rejoin/extended-result.json)
+
+| Host preserved Day 2 | Returning guest received Day 2 |
+|---|---|
+| ![Host](rejoin/rejoined-2-host.png) | ![Guest](rejoin/rejoined-2-guest.png) |
+
+| Returning guest repairs: host | Returning guest repairs: guest |
+|---|---|
+| ![Host task](rejoin/returning-guest-repair-host.png) | ![Guest task](rejoin/returning-guest-repair-guest.png) |
+
+| Shared night after rejoin: host | Shared night after rejoin: guest |
+|---|---|
+| ![Host night](rejoin/rejoin-shared-night-host.png) | ![Guest night](rejoin/rejoin-shared-night-guest.png) |
+
+The failure snapshots and screenshots are saved in `rejoin/`. At the bed, the pre-existing world-space bed prompt can overlap the Watch Menu in these views; the failure HUD remains readable. This is a presentation limitation, not a claimed clean screenshot of the entire menu.
+
+### Live performance limits
+
+[Stable-view microphone-on sample](crew-performance.json): F3 view on Quest, 31 VrApi samples, GPU median **10.21 ms**, p95 **10.57 ms**; approximate render-thread wall time median **7.92 ms**, p95 **8.95 ms**. Refresh target 72 Hz; sampled FPS 72–73. Two stale frames occurred. The muted window was interrupted by Return to lobby, so **voice overhead is not isolated**. The broader shared-night/traversal window includes 27.78 ms frames and screenshot capture; a zero-hitch claim is not supported. These are measurements, not inferred from Editor FPS.
+
+Final 8098ea4 regression comparison: **220 EditMode passes; 40 PlayMode passes and the same 15 existing failures**. No lost passes and no new failures. [Exact solo replay result](rejoin-solo-result.json); the after-House image above is from this final unchanged replay.

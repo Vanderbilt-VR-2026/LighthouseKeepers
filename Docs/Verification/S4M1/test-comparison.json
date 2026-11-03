@@ -4,14 +4,11 @@
       "Passed": 218
     },
     "after": {
-      "Passed": 219
+      "Passed": 220
     },
     "lost_passes": [],
     "new_failures": [],
-    "existing_failures": [],
-    "new_tests": {
-      "LighthouseKeepers.Net.Tests.S4TuningTests.OutagePulseIsSmoothBoundedAndHasOnePeakPerTwoSeconds": "Passed"
-    }
+    "existing_failures": []
   },
   "playmode": {
     "before": {
@@ -40,10 +37,6 @@
       "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput",
       "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart",
       "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate"
-    ],
-    "new_tests": {
-      "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults": "Passed",
-      "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss": "Passed"
-    }
+    ]
   }
 }
