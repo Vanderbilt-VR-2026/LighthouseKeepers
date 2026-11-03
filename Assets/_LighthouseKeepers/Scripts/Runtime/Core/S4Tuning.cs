@@ -10,6 +10,7 @@ namespace LighthouseKeepers.Core
         public bool difficulty = true, highWaterLoss = true, blackout = true;
         public bool starterGrip = true, soundPass = true, nightSequence = true, crewVoice = true;
         public bool desktopSleep = true;
+        public bool crewRejoin = true;
         [Header("Difficulty")]
         [Range(.25f, 1)] public float dayLengthMultiplier = .75f;
         [Range(.25f, 1)] public float beaconLimitMultiplier = .8f;

@@ -146,7 +146,8 @@ namespace LighthouseKeepers.Net
                     if(h==null||h.protocol!=Protocol||string.IsNullOrEmpty(h.nonce)||h.nonce.Length!=32)return;
                     if(!nonces.TryGetValue(sender,out var old)||old!=h.nonce)
                     {nonces[sender]=h.nonce;acknowledged.Remove(sender);commands.Remove(sender);beds.Remove(sender);}
-                    if(h.world==world)acknowledged.Add(sender);
+                    if(h.world==world && acknowledged.Add(sender))
+                    { notice="";UpdateStatus(); }
                 }
                 else if(kind==SnapshotKind&&!channel.IsHost&&sender==0)
                 {
