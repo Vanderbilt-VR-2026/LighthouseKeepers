@@ -53,9 +53,12 @@ failures; zero regressions or new failures. The identical solo graphics Day 1–
 loop, loss/retry and final bed passed with zero logged errors; compared screenshots
 preserve the solo layout/look. The exact runtime APK was rebuilt and installed;
 the installed bytes match SHA-256 `76f2e69b9f82891e300e8657eac664f3208b41a1ddfeec14111188aecd78b9fa`.
-Quest co-op remains unproven: fresh room JFPTKH stayed at Mac Host only during the
-60-second monitor, with no Quest Photon/Fusion connection activity. See the linked
-report for observations and explicit remaining acceptance checks.
+Quest follow-up now proves join/READY/BEGIN into the shared House and visible
+avatars: user confirmed seeing Mac Host in room 6KVZS9, and the Editor received
+both Quest hand movements. The stale JFPTKH room had become a Fusion backup room
+without updating its advertised code; fresh hosting resolved the join without
+changing the APK. Automatic stale-code recovery remains a known issue. Full
+Quest shared-station/bed acceptance is still pending; see the evidence report.
 
 ## Earlier candidate validation
 

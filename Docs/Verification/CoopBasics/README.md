@@ -86,7 +86,7 @@ project settings, packages and local HandRig source have no diff from the base.
 | Radio locked | [Baseline](solo-before-radio.png) | [Final](solo-after-radio.png) |
 | Day 3 complete | [Baseline](solo-before-day-three-complete.png) | [Final](solo-after-day-three-complete.png) |
 
-## Quest install — successful; co-op acceptance — NOT YET PROVEN
+## Quest install and live join — PASS on follow-up
 
 The prior candidate passed the user's one-minute offline Quest Day 1 check:
 “yes everything works normally.” The new APK was built from clean runtime commit
@@ -99,6 +99,8 @@ Unity 6000.3.23f1, development IL2CPP, zero errors and seven warnings.
 - `adb install -r` succeeded; reading the installed `base.apk` back from the Quest
   produced the identical SHA-256. The app launched and OpenXR reached FOCUSED.
 
+### Initial attempt (superseded by the successful live follow-up below)
+
 A fresh Editor host opened room `JFPTKH`, region `us`, and displayed the code in
 large type. During the monitored 60-second interval the roster stayed at **Mac Host,
 1/2**. The Quest had validated Wi-Fi. Logcat contained no Photon/Fusion connection
@@ -107,11 +109,42 @@ but their effect has not been established. ADB's screen capture was black and is
 not treated as headset visual proof. Logs and room observations are in
 `artifacts/coop/final/`.
 
-The first check is to close the code keypad and explicitly press **JOIN**, then
-**SIGNAL READY**. No observed connection attempt means there is not enough evidence
-to blame a region/version mismatch or claim a successful Quest join. The requested
-headset sighting of the grey keeper and Editor capture of moving Quest hands remain
-pending. A Mac-only pass does not establish headset acceptance.
+### Live Quest + Mac follow-up, November 2
+
+The user had pressed JOIN. Fresh device logs showed Photon **GameNotFound (32758)**.
+Inspecting the actual runner revealed session `JFPTKH[bkp-26a32f]` while the board
+still advertised `JFPTKH`. The stale advertised room caused the failed join;
+SIGNAL READY correctly remained disabled because the guest had not joined.
+The earlier logcat process had stopped; fresh capture was used for this diagnosis.
+
+Leaving and hosting a fresh room produced **6KVZS9**, verified against the actual
+runner name, region `us`. The same installed APK then joined, the ledger showed
+Mac Host + Keeper (2/2), both READY signals arrived, and BEGIN WATCH loaded both
+into `LK_Lab_Environment`. No source, APK, solo path, or hand rotation changed
+for this recovery. The Mac was kept awake during the active test.
+
+The user confirmed **“Yes, joined and ready”** and **“Yes, I see Mac Host.”**
+The Editor screenshot shows the remote Quest keeper with grey head/visor/torso
+and both tan hands. Received House poses show 0.455 m left-hand and 0.254 m
+right-hand position ranges over the captured observations. The later short
+capture interval itself was stationary; the ranges use the whole House sequence.
+The Editor camera was tilted down to frame the guest's tracked head height.
+Own avatar was hidden; the remote torso stayed upright with head tilt, and had
+no cameras or audio listeners.
+
+- [Quest ledger: both keepers connected](quest-two-keepers-lobby.png).
+- [Editor sees the Quest keeper in the House](editor-sees-quest-house.png).
+- [Received poses](quest-received-house-poses.json) and [movement ranges in metres](quest-received-motion-ranges.json).
+
+The headset screenshot taken later was black and is not offered as a visual of
+Mac Host. Headset visibility is supported by the user's explicit confirmation;
+the Editor view and received motion are separately captured.
+
+**Known issue:** after Fusion cloud recovery changes the underlying room name,
+the lobby can keep advertising the stale six-character code. Fresh hosting is
+the verified workaround; automatic recovery of a joinable short code is not fixed.
+The two-Editor shared-task/bed proof remains separate from this Quest join/avatar
+check; full Quest pipe/generator/bed interaction acceptance is still pending.
 
 Guest radio end-to-end operation has not been exercised in the paired Mac run;
 its replica/command paths are implemented and covered in model tests. The paired
