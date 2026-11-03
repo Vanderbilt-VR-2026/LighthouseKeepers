@@ -1,0 +1,19 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=15.042 day=1 repaired=False water=0.02000m
+day-one physical bolt 1 complete; inflow=0.6666667: elapsed=8.993s realtime=24.033 day=1 repaired=False water=0.03809m
+day-one physical bolt 0 complete; inflow=0.3333333: elapsed=14.482s realtime=29.521 day=1 repaired=False water=0.04547m
+day-one physical bolt 2 complete; inflow=0: elapsed=20.280s realtime=35.329 day=1 repaired=True water=0.04938m
+Day 1 bed -> Day 2: elapsed=0.799s realtime=46.839 day=2 repaired=False water=0.03102m
+Three actual generator XRI pulls: elapsed=17.482s realtime=64.258 day=2 repaired=False water=0.12392m
+day-two physical bolt 2 complete; inflow=0.6666667: elapsed=25.491s realtime=72.752 day=2 repaired=False water=0.14020m
+day-two physical bolt 0 complete; inflow=0.3333333: elapsed=31.186s realtime=78.429 day=2 repaired=False water=0.14794m
+day-two physical bolt 1 complete; inflow=0: elapsed=39.143s realtime=86.387 day=2 repaired=True water=0.15335m
+Real tuned dark beacon loss: elapsed=60.000s realtime=151.167 day=3 repaired=False water=0.39466m
+Three actual generator XRI pulls: elapsed=6.817s realtime=157.968 day=3 repaired=False water=0.05260m
+Actual XRI main/tuning/code/mic and activated/deactivated PTT; wrong code and released PTT reset only unfinished step: elapsed=16.623s realtime=168.473 day=3 repaired=False water=0.07240m
+day-three physical bolt 2 complete; inflow=0.6666667: elapsed=24.739s realtime=176.574 day=3 repaired=False water=0.08881m
+day-three physical bolt 0 complete; inflow=0.3333333: elapsed=31.081s realtime=182.832 day=3 repaired=False water=0.09745m
+day-three physical bolt 1 complete; inflow=0: elapsed=39.465s realtime=191.215 day=3 repaired=True water=0.10311m
+Water drained; board 3/3: elapsed=50.484s realtime=202.493 day=3 repaired=True water=-0.02912m
+Bed -> authored Day 4 reset: elapsed=0.726s realtime=207.261 day=4 repaired=False water=0.03041m
+PASS: graphics Play Mode from PLAY SOLO Day 1 through Day 2, Day 3 loss/retry and Day 4; physical controller inputs injected in Editor, not headset usability or sound acceptance. Stair locomotion separately covered by ShellTraversalTests.
