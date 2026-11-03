@@ -131,3 +131,13 @@ The user returned to the lobby, entered the same code and joined directly into t
 | Quest sees Mac Host after rejoin | Mac sees returning Keeper |
 |---|---|
 | ![Quest](quest-rejoin/quest-rejoined.png) | ![Editor](quest-rejoin/quest-rejoined-editor.png) |
+
+### Quest microphone toggle measurement after rejoin
+
+The user completed MIC ON → MIC MUTED → MIC ON while remaining in CREW88. [Saved timings](quest-rejoin/microphone-performance.json) contain 29 muted and 30 enabled VrApi samples. Muted GPU median/p95: **4.90/5.80 ms**; enabled: **4.81/5.94 ms**. Approximate render-thread wall time median/p95: muted **5.18/5.93 ms**, enabled **4.73/6.28 ms**. Target 72 Hz; enabled samples ranged 71–73 FPS. Muted had zero stale frames; enabled had 15, with maximum sampled frame **27.78 ms**. The views and head positions still differed, so these are operating measurements, **not isolated voice overhead**. Muting disables local capture/transmit; remote receiving and networking remain active. Full CPU work and sustained hitch-free play remain unproven.
+
+## Final acceptance boundaries
+
+Works: exact solo regression; S4 graphics Days 1–3; Mac+Quest shared Day 1 → Day 2, guest pipe, host generator, night and high-water retry; grey avatars; two-way voice accepted; Quest same-room rejoin and mic toggle. Two-Editor tests additionally cover returning-guest task completion, bed and both network failure/retry paths.
+
+Not fully verified: two physical Quests, final-build headset playthrough of every Day 3 step, headset left/right starter-grip comfort, isolated Voice frame cost, sustained 72 FPS through every transition and absence of held-prop jitter. The bed prompt can obscure part of Watch Menu in some views. The full suite retains 15 baseline failures. This is not a claim that every requested acceptance criterion is complete.

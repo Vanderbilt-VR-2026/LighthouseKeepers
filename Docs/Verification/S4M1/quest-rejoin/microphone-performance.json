@@ -1,0 +1,160 @@
+{
+  "runtime": "8098ea4",
+  "microphone_muted": {
+    "start": "11-02 22:40:04.000",
+    "end": "11-02 22:40:33.999",
+    "vrapi_samples": 29,
+    "gpu_ms": {
+      "median": 4.9,
+      "p95": 5.8,
+      "max": 5.88,
+      "min": 4.74
+    },
+    "render_thread_wall_estimate_ms": {
+      "median": 5.180000000000001,
+      "p95": 5.93,
+      "max": 6.129999999999999,
+      "min": 4.3500000000000005
+    },
+    "fps": {
+      "median": 73.0,
+      "p95": 73.0,
+      "max": 73.0,
+      "min": 72.0
+    },
+    "stale_sum": 0.0,
+    "unity_samples": 29,
+    "paced_main_ms": {
+      "median": 13.872,
+      "p95": 13.885,
+      "max": 13.889,
+      "min": 13.858
+    },
+    "draws": {
+      "median": 26,
+      "p95": 34,
+      "max": 35,
+      "min": 26
+    },
+    "gc_bytes_per_frame": {
+      "median": 1112,
+      "p95": 5941,
+      "max": 5976,
+      "min": 708
+    },
+    "poses": [
+      [
+        "(-1.12, 1.26, -7.76)",
+        "(-0.89, 0.32, -0.32)"
+      ],
+      [
+        "(-1.12, 1.26, -7.77)",
+        "(-0.87, 0.30, -0.41)"
+      ],
+      [
+        "(-1.13, 1.25, -7.75)",
+        "(-0.93, 0.25, -0.28)"
+      ],
+      [
+        "(-1.12, 1.26, -7.76)",
+        "(-0.91, 0.27, -0.31)"
+      ],
+      [
+        "(-1.12, 1.26, -7.77)",
+        "(-0.86, 0.29, -0.42)"
+      ],
+      [
+        "(-1.12, 1.26, -7.76)",
+        "(-0.87, 0.30, -0.39)"
+      ]
+    ],
+    "max_frame_ms": {
+      "median": 13.89,
+      "p95": 13.89,
+      "max": 13.89,
+      "min": 13.89
+    },
+    "voice_states": [
+      "MIC MUTED"
+    ]
+  },
+  "microphone_on": {
+    "start": "11-02 22:40:40.000",
+    "end": "11-02 22:41:09.999",
+    "vrapi_samples": 30,
+    "gpu_ms": {
+      "median": 4.81,
+      "p95": 5.94,
+      "max": 5.94,
+      "min": 4.54
+    },
+    "render_thread_wall_estimate_ms": {
+      "median": 4.7299999999999995,
+      "p95": 6.28,
+      "max": 6.28,
+      "min": 3.5699999999999994
+    },
+    "fps": {
+      "median": 72.0,
+      "p95": 73.0,
+      "max": 73.0,
+      "min": 71.0
+    },
+    "stale_sum": 15.0,
+    "unity_samples": 30,
+    "paced_main_ms": {
+      "median": 13.8745,
+      "p95": 14.083,
+      "max": 14.091,
+      "min": 13.76
+    },
+    "draws": {
+      "median": 24.0,
+      "p95": 159,
+      "max": 164,
+      "min": 20
+    },
+    "gc_bytes_per_frame": {
+      "median": 1128.0,
+      "p95": 19374,
+      "max": 20170,
+      "min": 492
+    },
+    "poses": [
+      [
+        "(-1.20, 1.22, -7.80)",
+        "(-0.84, 0.02, -0.55)"
+      ],
+      [
+        "(-0.94, 1.24, -7.88)",
+        "(-0.97, 0.16, -0.18)"
+      ],
+      [
+        "(-1.63, 0.78, -7.97)",
+        "(-0.50, -0.76, -0.41)"
+      ],
+      [
+        "(-1.00, 1.23, -7.76)",
+        "(0.56, 0.10, 0.82)"
+      ],
+      [
+        "(-0.95, 1.25, -7.88)",
+        "(-0.96, 0.22, -0.17)"
+      ],
+      [
+        "(-1.01, 0.81, -7.78)",
+        "(0.57, -0.26, 0.78)"
+      ]
+    ],
+    "max_frame_ms": {
+      "median": 13.89,
+      "p95": 27.77,
+      "max": 27.78,
+      "min": 13.89
+    },
+    "voice_states": [
+      "MIC ON \u00b7 Joined"
+    ]
+  },
+  "limits": "Local microphone capture/transmit toggle, not whole Voice transport off. Remote receiver and networking remain active. Head position/view changed between windows; these are measured operating timings, not an isolated causal voice overhead. Render-thread wall estimate is CPU&GPU minus App, not full CPU. Paced main-thread metric includes waits."
+}
