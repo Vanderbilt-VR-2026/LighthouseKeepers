@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 namespace LighthouseKeepers.Lobby
 {
-    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset }
+    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke }
     public interface ICoopWatchView
     {
         Component Owner {get;}

@@ -38,6 +38,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchMenu menu;
         S4WatchPresentation s4Presentation;
         WatchPowerPanel powerPanel;
+        WatchEngineControls engineControls;
         int sleepDay;
         public Component Owner=>this;
         public void SetNetworkMode(bool practice,bool replica){state.SetNetworkRehearsal(practice);state.SetRemoteReplica(replica);}
@@ -64,6 +65,7 @@ namespace LighthouseKeepers.WatchDemo
             if(pipeRepair)pipeRepair.Bind(state);
             if(beacon)beacon.Bind(state);
             if(state.Grid!=null)powerPanel=WatchPowerPanel.Create(this);
+            if(state.Engine!=null)engineControls=WatchEngineControls.Create(this,generator);
             wrenchHaptics=wrench.GetComponent<WrenchHaptics>();originalWrenchRotation=wrenchVisual.localRotation;fadeMaterial=fade.material;fade.enabled=false;
             LighthouseKeepers.StormWatch.SoloWatchSession.ConsumeRequest();
             menu=gameObject.AddComponent<WatchMenu>();menu.Initialize(this,head);
@@ -78,6 +80,7 @@ namespace LighthouseKeepers.WatchDemo
             if(coop!=null&&!state.RemoteReplica)Revision++;
             flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond;flood.SurgePerMetre=.1f;flood.ResumeFlood();
             if(generator)generator.ResetInteraction();
+            if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();
             CancelRepair();
             leak.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);if(leakAudio)leakAudio.Stop();
             if(pipeRepair)pipeRepair.ResetView();
@@ -137,7 +140,8 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(snapshot==null||snapshot.revision<Revision||!state.ApplyRemote(snapshot))return false;
             if(snapshot.revision!=Revision)
-            {Revision=snapshot.revision;if(generator)generator.ResetInteraction();if(pipeRepair)pipeRepair.ResetView();if(radio)radio.ResetReplicaInteraction();whoosh.Play();if(menu)menu.Close();}
+            {Revision=snapshot.revision;if(generator)generator.ResetInteraction();
+            if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();if(pipeRepair)pipeRepair.ResetView();if(radio)radio.ResetReplicaInteraction();whoosh.Play();if(menu)menu.Close();}
             sleeping=snapshot.sleeping;sleepDay=snapshot.sleepDay;replicaFadeTarget=snapshot.fade;
             if(s4Presentation)s4Presentation.Night(sleeping,sleepDay,snapshot.fade);
             crewBeds=snapshot.beds;crewKeepers=snapshot.keepers;crewNotice=snapshot.notice??"";

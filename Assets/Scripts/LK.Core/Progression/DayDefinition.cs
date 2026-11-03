@@ -19,6 +19,7 @@ namespace LighthouseKeepers.Core.Progression
         [Header("Optional S4-M2 distribution (used only by the switched catalog)")]
         [Min(.01f)] public float powerCapacity = 3.25f;
         [Range(0,15)] public int initialCircuitMask = 15;
+        [Min(0)] public float fuelDrainPerSecond;
         public WatchTaskStep[] tasks = Array.Empty<WatchTaskStep>();
         public string[] startingFaults = Array.Empty<string>();
         [Range(1, 2)] public int requiredKeepers = 1;

@@ -15,6 +15,7 @@ MonoBehaviour:
   day: 1
   dayLengthSeconds: 420
   powerCapacity: 3.25
+  fuelDrainPerSecond: 0
   initialCircuitMask: 15
   tasks:
   - stationId: STN_PIPE_LEAK
@@ -54,4 +55,4 @@ MonoBehaviour:
   crankCooldownSeconds: 2
   chokeReleaseSeconds: 10
   isolationFreshnessSeconds: 0.3
-  initialFuelFraction: 0.25
+  initialFuelFraction: 1

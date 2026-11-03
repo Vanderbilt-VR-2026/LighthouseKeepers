@@ -18,3 +18,14 @@ MonoBehaviour:
   beaconLoad: 1
   radioLoad: 1
   lightsLoad: 0.25
+  generatorSequence: 1
+  primerSqueezes: 3
+  starterPulls: 3
+  floodAtPulls: 5
+  chokeOpenSeconds: 5
+  engineFloodSeconds: 8
+  minimumFuel: 0.12
+  lowFuelWarning: 0.2
+  fuelPourPerSecond: 0.06
+  primerCooldown: 0.35
+  crankCooldown: 0.55

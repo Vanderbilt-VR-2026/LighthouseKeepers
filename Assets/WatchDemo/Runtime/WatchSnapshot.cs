@@ -11,6 +11,9 @@ namespace LighthouseKeepers.WatchDemo
         public double highWaterElapsed;
         public bool highWaterFailed;
         public int sleepDay;
+        public bool engineEnabled,chokeClosed,engineSettled;
+        public float fuel,chokeRemaining,engineFloodRemaining;
+        public int primer,enginePulls,coughSerial;
         public bool gridEnabled,gridTripped;
         public float gridCapacity;
         public int gridMask;
@@ -21,7 +24,7 @@ namespace LighthouseKeepers.WatchDemo
         public float fade,seat,direction,returned;
         public bool sleeping,touching,radioHeld,radioTrigger;
         public string notice;
-        public bool Valid() => (!gridEnabled||LighthouseKeepers.Core.PowerGrid.ValidState(gridCapacity,gridMask)) && protocol==Protocol && revision>=0 && beds>=0 && beds<=2 && keepers>=0 && keepers<=2 &&
+        public bool Valid() => (!engineEnabled||float.IsFinite(fuel)&&fuel>=0&&fuel<=1&&primer>=0&&primer<=20&&enginePulls>=0&&enginePulls<=20&&float.IsFinite(chokeRemaining)&&chokeRemaining>=0&&chokeRemaining<=60&&float.IsFinite(engineFloodRemaining)&&engineFloodRemaining>=0&&engineFloodRemaining<=60&&coughSerial>=0)&& (!gridEnabled||LighthouseKeepers.Core.PowerGrid.ValidState(gridCapacity,gridMask)) && protocol==Protocol && revision>=0 && beds>=0 && beds<=2 && keepers>=0 && keepers<=2 &&
             (notice==null||notice.Length<=160) && float.IsFinite(fade)&&fade>=0&&fade<=1 &&
             order0>=0&&order0<=2&&order1>=0&&order1<=2&&order2>=0&&order2<=2&&order0!=order1&&order0!=order2&&order1!=order2 &&
             float.IsFinite(seat)&&seat>=0&&float.IsFinite(direction)&&Math.Abs(direction)<=1&&float.IsFinite(returned)&&returned>=0 && day>0 && power>=0 && power<=1 && doneMask>=0 &&

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
   day: 3
   dayLengthSeconds: 420
-  beaconDarkLimitSeconds: 75
+  beaconDarkLimitSeconds: 150
   powerCapacity: 2.5
+  fuelDrainPerSecond: .0025
   initialCircuitMask: 11
   tasks:
   - stationId: STN_GENERATOR
@@ -61,4 +62,4 @@ MonoBehaviour:
   crankCooldownSeconds: 2
   chokeReleaseSeconds: 10
   isolationFreshnessSeconds: 0.3
-  initialFuelFraction: 0.25
+  initialFuelFraction: 0.04
