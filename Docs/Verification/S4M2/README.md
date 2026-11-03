@@ -24,6 +24,8 @@ New catalog fuel: Day 1 100% and no drain; Day 2 80% at 0.15%/s; Days 3/4 4% at 
 
 ## Piece 3: beacon station
 
-Three beacon rule tests passed. Graphics solo used XRI ignition/wheel and a carried rag: no-power ignition rejected; power alone did not light an unready beacon; alignment ticked its task; motion cleaned while a stationary rag did not. Actual dark-beacon state caused failure and normal Retry restored the authored day. Alignment/cleaning captures inspected. Outside beam opacity was increased after the first capture was too faint; final capture and two-client test pending.
+Three beacon rule tests passed. Graphics solo used XRI ignition/wheel and a carried rag: no-power ignition rejected; power alone did not light an unready beacon; alignment ticked its task; motion cleaned while a stationary rag did not. Actual dark-beacon state caused failure and normal Retry restored the authored day. Alignment/cleaning captures inspected. Outside beam opacity was increased after the first capture was too faint; the two-client test passed guest ignition, alignment, leased rag and host-measured cleaning. [Co-op result](beacon/coop.json). Final outside capture pending.
 
 Days 1/2 begin lit/aligned/clean. Days 3/4 begin unlit, alignment 0.18 (target 0.5 ±0.025), 30% soot, accumulating 0.1%/s while shining. Cleaning removes 40% per metre of rubbing; fully dirty beam retains 25% brightness. Dark timer requires power, ignition and alignment.
+
+Starter cooldown is 0.25 s, matching the existing network minimum and accepting the previously tested 0.5 s full-stroke cadence. Primer cooldown remains 0.35 s. Full regression compares S4 enabled / M2 disabled to the before run; a separate M2-enabled replay tests the intentionally revised sequence and day data.

@@ -9,7 +9,7 @@ namespace LighthouseKeepers.Net.Tests
   [SetUp]public void Setup(){tuning=ScriptableObject.CreateInstance<S4M2Tuning>();engine=new WatchEngineState(tuning);engine.Reset(.8f,.0025f,false);}
   [TearDown]public void Cleanup(){Object.DestroyImmediate(tuning);}
   void Prime(){for(int i=0;i<3;i++){Assert.IsTrue(engine.Prime());engine.Tick(.4f);}}
-  void Pull(int count){for(int i=0;i<count;i++){Assert.IsTrue(engine.Pull());engine.Tick(.6f);}}
+  void Pull(int count){for(int i=0;i<count;i++){Assert.IsTrue(engine.Pull());engine.Tick(.5f);}}
   [Test]public void WrongOrderCoughsThenThreePrimersClosedChokeAndThreePullsRequireOpening()
   {Assert.IsTrue(engine.Pull());Assert.IsFalse(engine.Running);Assert.AreEqual(0,engine.Pulls);engine.Tick(1);Prime();engine.SetChoke(true);Pull(3);Assert.IsTrue(engine.Running);Assert.IsFalse(engine.Settled);engine.SetChoke(false);Assert.IsTrue(engine.Settled);engine.Tick(10);Assert.IsTrue(engine.Running);}
   [Test]public void ClosedChokeDeadlineStallsAndExcessPullsFloodForEightSeconds()

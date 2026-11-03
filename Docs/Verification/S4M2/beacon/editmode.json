@@ -1,0 +1,34 @@
+{
+  "status": "completed",
+  "duration": 0.63,
+  "summary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.BeaconStationTests.PowerIgnitionAndAlignmentAreAllRequired",
+      "Status": "Passed",
+      "Duration": 0.0216864,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.BeaconStationTests.ReplicaAndInvalidAlignmentCannotMutateState",
+      "Status": "Passed",
+      "Duration": 0.0031143,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.BeaconStationTests.SootDimsAndMovementCleansButStationaryRagDoesNot",
+      "Status": "Passed",
+      "Duration": 0.0040091,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}
