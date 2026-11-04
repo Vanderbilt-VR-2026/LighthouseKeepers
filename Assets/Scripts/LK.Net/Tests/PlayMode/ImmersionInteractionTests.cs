@@ -73,10 +73,22 @@ namespace LighthouseKeepers.Net.Tests
                 float deadline=Time.realtimeSinceStartup+8;
                 while(!Value<bool>(socket,"IsSnapped")&&Time.realtimeSinceStartup<deadline){controller.position+=Vector3.ClampMagnitude((Value<Vector3>(pipe,"ActivePosition")-jaw.position)*.2f,.12f);yield return null;}
                 Assert.True(Value<bool>(socket,"IsSnapped"),"No snap for "+hand.Node);
-                yield return new WaitForSeconds(.2f);int ticks=Value<int>(state,"BoltsDone")*10+Value<int>(state,"TurnsDone");
-                deadline=Time.realtimeSinceStartup+3;
-                while(Value<int>(state,"BoltsDone")*10+Value<int>(state,"TurnsDone")==ticks&&Time.realtimeSinceStartup<deadline){controller.rotation=Quaternion.AngleAxis(100*Time.deltaTime,controller.forward)*controller.rotation;yield return null;}
-                Assert.Greater(Value<int>(state,"BoltsDone")*10+Value<int>(state,"TurnsDone"),ticks,"Wrist roll did not turn bolt for "+hand.Node+" angle="+Field<float>(socket,"angle")+" contact="+Value<bool>(pipe,"InContact")+" seat="+Value<float>(state,"SeatElapsed")+" stroke="+Value<float>(state,"StrokeDegrees")+" direction="+Value<float>(state,"Direction"));
+                yield return new WaitForSeconds(.2f);
+                int initialBolt=Value<int>(state,"BoltsDone");
+                var rest=controller.rotation;
+                var peak=Quaternion.AngleAxis(30,rest*Vector3.forward)*rest;
+                for(int crank=0;crank<16&&Value<int>(state,"BoltsDone")==initialBolt;crank++)
+                {
+                    for(float t=0;t<.35f;t+=Time.deltaTime){controller.rotation=Quaternion.Slerp(rest,peak,t/.35f);yield return null;}
+                    controller.rotation=peak;yield return new WaitForSeconds(.12f);
+                    if(Value<int>(state,"BoltsDone")!=initialBolt)break;
+                    float earned=Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees");
+                    for(float t=0;t<.35f;t+=Time.deltaTime){controller.rotation=Quaternion.Slerp(peak,rest,t/.35f);yield return null;}
+                    controller.rotation=rest;yield return new WaitForSeconds(.12f);
+                    if(Value<int>(state,"BoltsDone")==initialBolt)
+                        Assert.GreaterOrEqual(Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees"),earned-.1f,"Resetting wrist unwound progress for "+hand.Node);
+                }
+                Assert.Greater(Value<int>(state,"BoltsDone"),initialBolt,"30-degree ratchet strokes did not finish a bolt for "+hand.Node);
                 float progress=Value<float>(state,"StrokeDegrees");controller.position+=Vector3.down*.30f;yield return new WaitForSeconds(.2f);
                 Assert.False(Value<bool>(socket,"IsSnapped"));Assert.GreaterOrEqual(Value<float>(state,"StrokeDegrees"),progress-.1f);
                 direct.EndManualInteraction();direct.selectInput.manualPerformed=false;yield return null;

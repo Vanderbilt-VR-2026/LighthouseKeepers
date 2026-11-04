@@ -69,7 +69,11 @@ namespace LighthouseKeepers.WatchDemo
             if(Mathf.Abs(delta)<.01f)return;
             if(direction==0)direction=Mathf.Sign(delta);
             if(NeedsReturn){returned=Mathf.Max(0,returned-delta*direction);if(returned>=Profile.returnDegrees){NeedsReturn=false;returned=0;Changed?.Invoke();}return;}
-            StrokeDegrees=Mathf.Clamp(StrokeDegrees+delta*direction,0,Profile.quarterTurnDegrees);
+            // The socket still follows the wrist on the return stroke, but the bolt's
+            // ratchet holds every degree already earned (including an unfinished click).
+            float tightening=delta*direction;
+            if(Forgiving&&tightening<0)return;
+            StrokeDegrees=Mathf.Clamp(StrokeDegrees+tightening,0,Profile.quarterTurnDegrees);
             if(StrokeDegrees<Profile.quarterTurnDegrees)return;
             TurnsDone++;StrokeDegrees=0;QuarterTurn?.Invoke();
             if(TurnsDone>=Profile.quarterTurns[ActiveBolt])
