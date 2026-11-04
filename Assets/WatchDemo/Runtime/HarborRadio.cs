@@ -97,6 +97,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Capture(WatchSnapshot s){s.radioCue=Cue;s.radioSerial=Serial;s.radioAge=Age;}
         public void Apply(WatchSnapshot s)
         {
+            if(watch.State.Failed){pending.Clear();wall.Stop();belt.Stop();StopStatic();return;}
             if(s.radioSerial>Serial)Play(s.radioCue,s.radioSerial,s.radioAge);
             else Age=s.radioAge;
             var clip=catalog?catalog.Line(Cue):null;if(!clip||Age>clip.length+.2f)StopStatic();

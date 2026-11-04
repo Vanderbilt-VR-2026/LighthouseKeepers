@@ -9,12 +9,12 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;M2StationParts parts;Transform bed;
         Light[] bunk=new Light[2];readonly List<Light> stair=new();readonly List<Light> station=new();
         readonly List<AudioSource> faultAudio=new();
-        readonly List<(Light light,Renderer lens)> lenses=new();readonly MaterialPropertyBlock lensBlock=new();
+        readonly List<(Light light,Renderer lens)> lenses=new();MaterialPropertyBlock lensBlock;
         Font chalk;int bedMask;HarborRadio narrator;
         public HarborRadio Narrator=>narrator;
         public static ImmersionWorld Create(WatchDemoController watch,Transform head,Transform bed,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
         {
-            var p=watch.gameObject.AddComponent<ImmersionWorld>();p.watch=watch;p.bed=bed;p.parts=watch.gameObject.AddComponent<M2StationParts>();p.parts.Initialize();
+            var p=watch.gameObject.AddComponent<ImmersionWorld>();p.watch=watch;p.bed=bed;p.lensBlock=new MaterialPropertyBlock();p.parts=watch.gameObject.AddComponent<M2StationParts>();p.parts.Initialize();
             p.chalk=Resources.Load<Font>("Fonts/Kalam-Regular");
             if(watch.State.Immersion.physicalGuidance)p.Build(head,board,pipe,generator,radio,beacon);
             var cabinet=p.HouseRadio(board);
@@ -44,9 +44,10 @@ namespace LighthouseKeepers.WatchDemo
             parts.Text("Bunk instructions","JOBS DONE? REST TILL DAWN.\nGRIP TO LIE DOWN",bedPlate,new Vector3(0,0,.012f),.003f).color=new Color(.12f,.08f,.03f);
             for(int i=0;i<4;i++)
             {
-                float a=320*Mathf.Deg2Rad,r=i<3?3:1.7f;
+                float a=320*Mathf.Deg2Rad,r=i<2?3.48f:2.18f;
                 var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,new Vector3(Mathf.Sin(a)*r,i*3.3f+1.1f,Mathf.Cos(a)*r));
                 t.localRotation=Quaternion.LookRotation(new Vector3(-t.localPosition.x,0,-t.localPosition.z));
+                parts.Part("Stair lamp mounting post",t,new Vector3(0,-.55f,-.04f),new Vector3(.025f,1.1f,.025f),parts.Metal);
                 stair.Add(Fixture(parts,t,Vector3.zero,"Shielded stair lamp"));
             }
             station.Add(Fixture(parts,generator.transform,new Vector3(0,1.9f,.55f),"Generator fault service lamp"));

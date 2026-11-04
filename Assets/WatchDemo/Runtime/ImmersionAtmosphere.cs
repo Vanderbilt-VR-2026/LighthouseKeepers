@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
         AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100;int eventNumber,day;bool failed;
         public void Initialize(WatchDemoController w,Transform h)
         {
-            watch=w;head=h;hands=FindObjectsByType<HandRig>(FindObjectsSortMode.None);
+            watch=w;head=h;hands=FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None);
             wind=Source("Storm through window",new Vector3(2.5f,5,-.5f));wind.clip=Resources.Load<AudioClip>("ImmersionAudio/wind");wind.loop=true;wind.volume=w.State.Immersion.atmosphereVolume*.5f;wind.Play();
             events=Source("Tower creaks and distant weather",new Vector3(0,6,0));events.volume=w.State.Immersion.atmosphereVolume;
             thunder=Resources.Load<AudioClip>("ImmersionAudio/thunder");creak=Resources.Load<AudioClip>("ImmersionAudio/creak");horn=Resources.Load<AudioClip>("ImmersionAudio/foghorn");drip=Resources.Load<AudioClip>("ImmersionAudio/drip");
