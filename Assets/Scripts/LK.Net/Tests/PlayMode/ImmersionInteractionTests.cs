@@ -96,6 +96,11 @@ namespace LighthouseKeepers.Net.Tests
             origin.MoveCameraToWorldLocation(new Vector3(1.7f,1.65f,0));yield return null;
             controller.position=home;hand.Direct.selectInput.manualPerformed=true;hand.Direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
             controller.position=new Vector3(1.7f,1.1f,0);yield return new WaitForSeconds(.5f);
+            // Drop from a stationary carry, not the throw velocity of the bench-to-pipe teleport.
+            var body=grab.GetComponent<Rigidbody>();float settle=Time.realtimeSinceStartup+4;
+            while((Vector3.Distance(grab.transform.position,controller.position)>.3f||body.linearVelocity.sqrMagnitude>.0025f)&&Time.realtimeSinceStartup<settle)yield return null;
+            Assert.Less(Vector3.Distance(grab.transform.position,controller.position),.3f,"Carry did not settle before drop");
+            yield return new WaitForSeconds(.3f);
             hand.Direct.EndManualInteraction();hand.Direct.selectInput.manualPerformed=false;
             yield return new WaitForSeconds(2f);
             // Follow the actual resting position: XRI throw velocity may carry it beyond the intended drop.
