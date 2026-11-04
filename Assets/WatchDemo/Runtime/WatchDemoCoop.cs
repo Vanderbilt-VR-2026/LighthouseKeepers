@@ -22,6 +22,7 @@ namespace LighthouseKeepers.WatchDemo
             if(action==CoopAction.EngineChoke)return engineControls?engineControls.Choke:null;
             if(action==CoopAction.Starter)return generator.Starter;
             if(action==CoopAction.Microphone)return radio.microphone;
+            if(action==CoopAction.WrenchClutch)return wrench;
             foreach(var control in radio.controls)
                 if(action==CoopAction.RadioPower&&control.mainPower||action==CoopAction.RadioTune&&control.frequency||
                     action==CoopAction.RadioCode&&value>=0&&value<=3&&value==(int)value&&control.codeColour==(int)value)return control;

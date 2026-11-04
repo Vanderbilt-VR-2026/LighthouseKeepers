@@ -16,7 +16,8 @@ namespace LighthouseKeepers.WatchDemo
         WatchState watch;WrenchHaptics haptics;
         readonly bool[] finished=new bool[3];
         MaterialPropertyBlock active,done,idle;
-        float queuedTwistDegrees,returnClickDegrees;
+        float queuedTwistDegrees,returnClickDegrees,nextClutchSend;
+        bool previousClutch;ImmersionWrenchSocket socket;
         LighthouseKeepers.Interaction.INetworkPropStatus network;
         Quaternion previousRotation;Vector3 previousJaw;bool previousContact,failureShown;int lastBolt=-1;float nextText;
         public bool InContact{get;private set;}
@@ -66,7 +67,14 @@ namespace LighthouseKeepers.WatchDemo
             if(watch==null)return;
             var state=watch.Pipe;int index=state.ActiveBolt;
             bool remoteHeld=watch.Coop!=null&&watch.Coop.RemoteHeld(wrench);
-            InContact=index>=0&&(wrench.isSelected||remoteHeld)&&Vector3.Distance(jaw.position,SocketPosition(index))<=state.Profile.jawContactRadius+(state.Forgiving?.025f:0);
+            bool triggerMode=watch.Immersion&&watch.Immersion.leverPipe&&watch.Immersion.triggerClutch;
+            if(triggerMode&&!socket)socket=wrench.GetComponent<ImmersionWrenchSocket>();
+            bool locked=socket&&socket.ClutchHeld&&socket.IsSnapped;
+            if(triggerMode&&watch.RemoteReplica&&watch.Coop!=null&&(Time.unscaledTime>=nextClutchSend||locked!=previousClutch))
+            {nextClutchSend=Time.unscaledTime+.1f;if(wrench.isSelected||previousClutch)watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.WrenchClutch,0,locked);previousClutch=locked;}
+            if(remoteHeld)locked=(watch.Coop as LighthouseKeepers.Lobby.ICoopWrenchClutch)?.RemoteWrenchTrigger(wrench)==true;
+
+            InContact=index>=0&&(!triggerMode||locked)&&(wrench.isSelected||remoteHeld)&&Vector3.Distance(jaw.position,SocketPosition(index))<=state.Profile.jawContactRadius+(state.Forgiving?.025f:0);
             if(remoteHeld&&network==null)network=wrench.GetComponent<LighthouseKeepers.Interaction.INetworkPropStatus>();
             float sampleSeconds=remoteHeld&&network!=null?network.PoseInterval:Time.deltaTime;
             float degrees=0,speed=0;

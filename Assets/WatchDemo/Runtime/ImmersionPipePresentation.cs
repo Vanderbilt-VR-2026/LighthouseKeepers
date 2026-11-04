@@ -19,6 +19,7 @@ namespace LighthouseKeepers.WatchDemo
                 // Chalk sits on the coupling's flanged metal face, not beside it in space.
                 chalk[i]=parts.Text("Chalk coupling "+(char)('A'+i),((char)('A'+i))+" ↻",t,new Vector3(0,.075f,.016f),.0035f);
                 chalk[i].color=new Color(.85f,.84f,.72f);
+                if(state.Immersion.leverPipe)chalk[i].transform.localRotation=Quaternion.Euler(0,180,180);
                 bulbs[i]=ImmersionWorld.Fixture(parts,t,new Vector3(0,.27f,-.055f),"Pipe service bulb "+i);
                 if(state.Immersion.leverPipe)
                 {
@@ -28,9 +29,17 @@ namespace LighthouseKeepers.WatchDemo
                 parts.Part("Bulb support",t,new Vector3(0,.18f,-.075f),new Vector3(.025f,.18f,.025f),parts.Metal);
             }
             var gauge=M2StationParts.Root("Mechanical pipe pressure gauge",pipe.bolts[1],new Vector3(.23f,.24f,-.06f));
+            if(state.Immersion.leverPipe)gauge.SetPositionAndRotation(pipe.bolts[1].position+new Vector3(-.24f,.16f,0),Quaternion.LookRotation(Vector3.left,Vector3.up));
             var rim=parts.Part("Gauge brass surround",gauge,Vector3.zero,new Vector3(.20f,.025f,.20f),parts.Brass,PrimitiveType.Cylinder);rim.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Part("Gauge dial face",gauge,new Vector3(0,0,.026f),new Vector3(.16f,.16f,.012f),parts.Dark);
             parts.Text("Pressure dial scale","LOW        HIGH",gauge,new Vector3(0,.055f,.035f),.0017f);
+            if(state.Immersion.triggerClutch)
+            {
+                var plate=M2StationParts.Root("Wrench clutch instructions",transform,pipe.bolts[1].position+new Vector3(-.20f,-.18f,0));
+                plate.rotation=Quaternion.LookRotation(Vector3.left,Vector3.up);
+                parts.Part("Riveted clutch plate",plate,Vector3.zero,new Vector3(.48f,.14f,.025f),parts.Dark);
+                parts.Text("Clutch stencil","GRIP: HOLD   TRIGGER: LOCK\nSHORT PULL · RELEASE TRIGGER · RESET",plate,new Vector3(0,0,.014f),.0017f);
+            }
             needle=M2StationParts.Root("Pressure gauge needle",gauge,new Vector3(0,-.025f,.039f));
             parts.Part("Pressure pointer",needle,new Vector3(0,.045f,0),new Vector3(.007f,.09f,.006f),parts.Brass);
             parts.Part("Gauge pipe stem",gauge,new Vector3(0,-.16f,-.03f),new Vector3(.03f,.15f,.03f),parts.Metal);
@@ -43,7 +52,7 @@ namespace LighthouseKeepers.WatchDemo
                 bool done=false;for(int j=0;j<p.BoltsDone;j++)if(p.Order(j)==i)done=true;
                 bool active=p.ActiveBolt==i;
                 float turns=done?p.Profile.quarterTurns[i]:active?p.TurnsDone+p.StrokeDegrees/p.Profile.quarterTurnDegrees:0;
-                bolts[i].localRotation=Quaternion.Euler(0,0,(state.Immersion.leverPipe?0:45)+turns*90*(p.Direction==0?1:p.Direction));
+                bolts[i].localRotation=Quaternion.Euler(0,0,(state.Immersion.leverPipe?0:45)+turns*p.Profile.quarterTurnDegrees*(p.Direction==0?1:p.Direction));
                 bolts[i].localPosition=rests[i]-Vector3.forward*(.022f*turns/p.Profile.quarterTurns[i]);
                 int mark=done?2:active?1:0;if(chalkState[i]!=mark){chalkState[i]=mark;chalk[i].text=done?((char)('A'+i))+" ✓":active?((char)('A'+i))+" ↻":((char)('A'+i)).ToString();}
                 bulbs[i].intensity=done?.18f:active?.45f+.12f*Mathf.Sin(Time.time*2.4f):.12f;

@@ -24,6 +24,8 @@ namespace LighthouseKeepers.WatchDemo
         int bolt = -1, frame = -1;
         float angle;
         public bool IsSnapped => bolt >= 0;
+        public bool ClutchHeld {get;private set;}
+        XRGrabInteractable sourceGrab;
         public int BoltIndex => bolt;
 
         public void Initialize(WatchPipeRepair owner, WatchState state)
@@ -32,6 +34,7 @@ namespace LighthouseKeepers.WatchDemo
             jawLocal = transform.InverseTransformPoint(pipe.jaw.position);
             palm = new GameObject("Seated wrench palm").transform;
             palm.SetParent(transform, false);
+            sourceGrab=owner.wrench;sourceGrab.activated.AddListener(Activate);sourceGrab.deactivated.AddListener(Deactivate);sourceGrab.selectExited.AddListener(Released);
         }
 
         public override void Process(XRGrabInteractable grab, XRInteractionUpdateOrder.UpdatePhase phase,
@@ -40,6 +43,7 @@ namespace LighthouseKeepers.WatchDemo
             if (!pipe || !tuning || !tuning.forgivingPipe || watch.Failed || watch.Pipe.Complete ||
                 !grab.isSelected || grab.interactorsSelecting.Count != 1)
             { Unseat(); return; }
+            if(tuning.leverPipe&&tuning.triggerClutch&&!ClutchHeld){Unseat();return;}
             var holder = grab.interactorsSelecting[0];
             var holdingHand = holder.transform.GetComponentInParent<HandRig>();
             // Direct-interactor frames differ between mirrored hands. Wrist roll belongs to
@@ -47,7 +51,7 @@ namespace LighthouseKeepers.WatchDemo
             var tracked = holdingHand ? holdingHand.transform.parent : holder.transform;
             int active = watch.Pipe.ActiveBolt;
             if (bolt >= 0 && (active != bolt || controller != tracked ||
-                (tuning.leverPipe ? OutsideLever(tracked.position, bolt) : Vector3.Distance(tracked.position, handAtSeat) > tuning.wrenchReleaseMetres)))
+                (tuning.leverPipe ? !tuning.triggerClutch&&OutsideLever(tracked.position, bolt) : Vector3.Distance(tracked.position, handAtSeat) > tuning.wrenchReleaseMetres)))
             { Unseat(); return; }
 
             if (bolt < 0)
@@ -71,7 +75,7 @@ namespace LighthouseKeepers.WatchDemo
                 if (hand)
                 {
                     var visual = hand.GetComponentInChildren<SkinnedMeshRenderer>();
-                    if (visual)
+                    if (visual && !tuning.triggerClutch)
                     {
                         palm.SetPositionAndRotation(visual.transform.position + visual.transform.rotation * new Vector3(0, -.018f, .025f), visual.transform.rotation);
                         hand.SetConstrainedGrip(palm);
@@ -113,7 +117,10 @@ namespace LighthouseKeepers.WatchDemo
             return Mathf.Abs(Vector3.Dot(offset, normal)) > tuning.leverReleaseHeight ||
                 Vector3.ProjectOnPlane(offset, normal).magnitude > tuning.leverReleaseRadius;
         }
-        public override void OnGrab(XRGrabInteractable grab) => Unseat();
+        void Activate(ActivateEventArgs args){if(sourceGrab&&sourceGrab.isSelected)ClutchHeld=true;}
+        void Deactivate(DeactivateEventArgs args){ClutchHeld=false;Unseat();}
+        void Released(SelectExitEventArgs args){ClutchHeld=false;Unseat();}
+        public override void OnGrab(XRGrabInteractable grab) {ClutchHeld=false;Unseat();}
         void Update() { if (pipe && !pipe.wrench.isSelected) Unseat(); }
         void Unseat()
         {
@@ -126,6 +133,6 @@ namespace LighthouseKeepers.WatchDemo
             if (hand) hand.SetConstrainedGrip(null);
             hand = null; controller = null; bolt = -1; angle = 0; frame = -1;
         }
-        protected override void OnDestroy() { Unseat(); base.OnDestroy(); }
+        protected override void OnDestroy() { if(sourceGrab){sourceGrab.activated.RemoveListener(Activate);sourceGrab.deactivated.RemoveListener(Deactivate);sourceGrab.selectExited.RemoveListener(Released);}Unseat(); base.OnDestroy(); }
     }
 }

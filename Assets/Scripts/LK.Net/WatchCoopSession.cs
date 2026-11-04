@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     // Shared Lab commands and snapshots use Will's existing authenticated Fusion channel.
-    public sealed class WatchCoopSession : MonoBehaviour, ICoopWatchLink, LighthouseKeepers.Interaction.INetworkKeeperProximity
+    public sealed class WatchCoopSession : MonoBehaviour, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
     {
         const int HelloKind=40,SnapshotKind=41,CommandKind=42,ResultKind=43;
         const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
@@ -31,9 +31,9 @@ namespace LighthouseKeepers.Net
         readonly Dictionary<int,float> lastPull=new(),rateStart=new();
         readonly Dictionary<int,int> rateCount=new();
         string world,nonce,notice="";
-        int sequence,receivedSequence,commandSequence,resultSequence,revision,micActor;
-        float nextSend,nextLog,micSeen,nextStatus;
-        bool micPressed,detached;
+        int sequence,receivedSequence,commandSequence,resultSequence,revision,micActor,wrenchActor;
+        float nextSend,nextLog,micSeen,nextStatus,wrenchSeen;
+        bool micPressed,wrenchPressed,detached;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         TextMesh debugLine;
         void RefreshDebug()
@@ -120,11 +120,13 @@ namespace LighthouseKeepers.Net
         }
         public bool RemoteMicrophone(Component prop,out bool trigger)
         {trigger=micPressed&&Time.unscaledTime-micSeen<=.5f;return RemoteHeld(prop)&&prop.GetComponent<FusionGrabBinding>().Owner==micActor;}
+        public bool RemoteWrenchTrigger(Component prop)
+        {return wrenchPressed&&Time.unscaledTime-wrenchSeen<=.5f&&RemoteHeld(prop)&&prop.GetComponent<FusionGrabBinding>().Owner==wrenchActor;}
         void Update()
         {
             if(detached||!channel||!channel.Connected)return;
             if(channel.IsHost&&revision!=watch.Revision)
-            {revision=watch.Revision;beds.Clear();micActor=0;micPressed=false;UpdateStatus();}
+            {revision=watch.Revision;beds.Clear();micActor=wrenchActor=0;micPressed=wrenchPressed=false;UpdateStatus();}
             if(Time.unscaledTime>=nextSend)
             {
                 nextSend=Time.unscaledTime+(channel.IsHost?.1f:.5f);
@@ -200,7 +202,7 @@ namespace LighthouseKeepers.Net
             if(c.action==CoopAction.Retry||c.action==CoopAction.Replay)return watch.ApplyCommand(c.action,c.value,c.pressed);
             var target=watch.Target(c.action,c.value);if(!target)return -1;
             if(!poses.NearHand(actor,target.transform.position,c.action==CoopAction.Microphone?1.2f:.85f))return -1;
-            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone)
+            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch)
             {
                 var binding=target.GetComponent<FusionGrabBinding>();
                 if(!binding||!props.HasFreshLease(actor,binding.Id))return -1;
@@ -212,6 +214,8 @@ namespace LighthouseKeepers.Net
             }
             if(c.action==CoopAction.Microphone)
             {micActor=actor;micSeen=Time.unscaledTime;micPressed=c.pressed;return 1;}
+            if(c.action==CoopAction.WrenchClutch)
+            {wrenchActor=actor;wrenchSeen=Time.unscaledTime;wrenchPressed=c.pressed;return 1;}
             return watch.ApplyCommand(c.action,c.value,c.pressed);
         }
         void TryBed()
@@ -233,6 +237,7 @@ namespace LighthouseKeepers.Net
         {
             nonces.Remove(actor);acknowledged.Remove(actor);commands.Remove(actor);beds.Remove(actor);lastPull.Remove(actor);rateStart.Remove(actor);rateCount.Remove(actor);
             if(micActor==actor){micActor=0;micPressed=false;}
+            if(wrenchActor==actor){wrenchActor=0;wrenchPressed=false;}
             if(channel&&channel.IsHost){notice="Other keeper disconnected. You can keep playing.";UpdateStatus();TryBed();}
         }
         void Connection()

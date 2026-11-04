@@ -117,54 +117,73 @@ namespace LighthouseKeepers.Net.Tests
             var socket=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="ImmersionWrenchSocket");
             var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
             var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
-            Assert.GreaterOrEqual(grab.singleGrabTransformersCount,2);
+            Func<float> progress=()=>Value<int>(state,"TurnsDone")*30+Value<float>(state,"StrokeDegrees");
             foreach(var hand in hands)
             for(int stance=0;stance<3;stance++)
             {
                 Call(state,"Reset",91,false);Call(pipe,"ResetView");Call(recovery,"ReturnHome");
                 var pivot=Value<Vector3>(pipe,"ActivePosition");
-                Assert.That(pivot.x,Is.EqualTo(3.05f).Within(.01f));Assert.That(pivot.y,Is.InRange(1f,1.1f));
+                Assert.That(pivot.x,Is.InRange(3.5f,3.9f));Assert.That(pivot.y,Is.InRange(1f,1.1f));
                 var bolts=Field<Transform[]>(pipe,"bolts");Assert.Greater(Vector3.Dot(bolts[Value<int>(state,"ActiveBolt")].forward,Vector3.up),.999f);
-                origin.MoveCameraToWorldLocation(new Vector3(2.2f,stance==1?1.15f:1.65f,pivot.z+(stance-1)*.55f));
+                origin.MoveCameraToWorldLocation(new Vector3(2.85f,stance==1?1.15f:1.65f,pivot.z+(stance-1)*.4f));
                 var direct=hand.Direct;var controller=hand.transform.parent;
-                controller.SetPositionAndRotation(grab.transform.position,Quaternion.Euler(0,stance*35,0));
+                controller.SetPositionAndRotation(grab.transform.position,Quaternion.Euler(0,stance*25,0));
                 direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
-                float deadline=Time.realtimeSinceStartup+6;
-                while(!Value<bool>(socket,"IsSnapped")&&Time.realtimeSinceStartup<deadline)
-                {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.3f,.10f);yield return null;}
-                Assert.True(Value<bool>(socket,"IsSnapped"),hand.Node+" stance "+stance);
-                yield return new WaitForSeconds(.2f);
-                float earned=Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees");
-                controller.rotation=Quaternion.Euler(60,35,120)*controller.rotation;yield return new WaitForSeconds(.2f);
-                Assert.AreEqual(earned,Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees"),.5f,"Wrist rotation alone repaired bolt");
-                Vector3 rest=Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up).normalized*.20f;
-                controller.position=pivot+rest;yield return new WaitForSeconds(.1f);
-                for(int stroke=0;stroke<4&&Value<int>(state,"BoltsDone")==0;stroke++)
+                for(int stroke=0;stroke<10&&Value<int>(state,"BoltsDone")==0;stroke++)
                 {
-                    for(float t=0;t<.65f&&Value<int>(state,"BoltsDone")==0;t+=Time.deltaTime)
+                    float before=progress();float deadline=Time.realtimeSinceStartup+5;
+                    while(Vector3.Distance(jaw.position,pivot)>.025f&&Time.realtimeSinceStartup<deadline)
+                    {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.3f,.08f);yield return null;}
+                    Assert.False(Value<bool>(socket,"IsSnapped"),"Auto-lock happened without trigger");
+                    Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Unlocked readjustment repaired bolt");
+                    grab.activated.Invoke(new ActivateEventArgs{interactorObject=direct,interactableObject=grab});
+                    yield return new WaitForSeconds(.12f);
+                    Assert.True(Value<bool>(socket,"IsSnapped"),hand.Node+" stance "+stance+" trigger failed to lock");
+                    if(stroke==0)
                     {
-                        controller.position=pivot+Quaternion.AngleAxis(95*Mathf.Clamp01(t/.6f),Vector3.up)*rest;
+                        before=progress();controller.rotation=Quaternion.Euler(60,35,120)*controller.rotation;yield return new WaitForSeconds(.15f);
+                        Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Wrist rotation alone repaired bolt");
+                    }
+                    var rest=Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up);float height=controller.position.y-pivot.y;
+                    for(float t=0;t<.35f&&Value<int>(state,"BoltsDone")==0;t+=Time.deltaTime)
+                    {
+                        controller.position=pivot+Quaternion.AngleAxis(16*Mathf.Clamp01(t/.3f),Vector3.up)*rest+Vector3.up*height;
                         yield return null;
                         if(Value<bool>(socket,"IsSnapped"))Assert.Greater(Vector3.Dot(-grab.transform.forward,Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up).normalized),.98f,"Tool fights hand direction");
                     }
                     if(Value<int>(state,"BoltsDone")>0)break;
-                    earned=Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees");
-                    for(float t=0;t<.65f;t+=Time.deltaTime)
-                    {controller.position=pivot+Quaternion.AngleAxis(95*(1-Mathf.Clamp01(t/.6f)),Vector3.up)*rest;yield return null;}
-                    Assert.GreaterOrEqual(Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees"),earned-.5f,"Return stroke unwound bolt");
+                    float earned=progress();Assert.Greater(earned,before+5,"Small arm stroke did not accumulate");
+                    grab.deactivated.Invoke(new DeactivateEventArgs{interactorObject=direct,interactableObject=grab});yield return new WaitForSeconds(.1f);
+                    Assert.False(Value<bool>(socket,"IsSnapped"),"Trigger release did not free wrench");
+                    controller.position=pivot+rest+Vector3.up*height;yield return new WaitForSeconds(.2f);
+                    Assert.That(progress(),Is.EqualTo(earned).Within(.5f),"Trigger release/readjust lost or added progress");
                 }
-                Assert.Greater(Value<int>(state,"BoltsDone"),0,"Arm pulls did not finish bolt");
-                // Release over clear air, not on the pipe supporting the wrench.
-                controller.position+=Vector3.left*.45f;yield return new WaitForSeconds(.4f);
-                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;
-                yield return new WaitForSeconds(.1f);
+                Assert.Greater(Value<int>(state,"BoltsDone"),0,"Repeated small clutched pulls did not finish bolt");
+                grab.deactivated.Invoke(new DeactivateEventArgs{interactorObject=direct,interactableObject=grab});
+                controller.position+=Vector3.left*.55f;yield return new WaitForSeconds(.5f);
+                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;yield return new WaitForSeconds(.1f);
                 Assert.False(grab.GetComponent<Rigidbody>().isKinematic,"Released wrench floats");
-                // Detach preserves XRI throw velocity: allow the thrown tool to rise/bounce before settling.
                 float settleDeadline=Time.realtimeSinceStartup+4f;
                 while(grab.transform.position.y>=.5f&&Time.realtimeSinceStartup<settleDeadline)yield return null;
-                Assert.Less(grab.transform.position.y,.5f,"Wrench did not fall to the floor/water");
+                Assert.Less(grab.transform.position.y,.5f,"Wrench did not fall to floor/water");
             }
         }
+        [UnityTest]public IEnumerator PipeBracketsTouchRealShellAndMarkingsFaceRoom()
+        {
+            yield return null;Physics.SyncTransforms();
+            for(int i=0;i<3;i++)
+            {
+                var plate=GameObject.Find("Bracket wall plate "+i).transform;
+                var hits=Physics.RaycastAll(plate.position+plate.forward*.03f,-plate.forward,.2f);
+                var wall=hits.Where(h=>h.collider.name.StartsWith("UCX_SM_Wall_F1_")).OrderBy(h=>h.distance).First();
+                Assert.Less(wall.distance-.03f,.03f,"Bracket does not reach shell wall");
+                Assert.Less(Vector3.Angle(plate.forward,wall.normal),2);
+                var chalk=GameObject.Find("Chalk coupling "+(char)('A'+i)).transform;
+                Assert.Greater(Vector3.Dot(chalk.up,-wall.normal),.98f,"Chalk reads upside down from room centre");
+            }
+            Assert.Greater(Vector3.Dot(GameObject.Find("Pressure dial scale").transform.up,Vector3.up),.99f);
+        }
+
     }
 }
 #endif
