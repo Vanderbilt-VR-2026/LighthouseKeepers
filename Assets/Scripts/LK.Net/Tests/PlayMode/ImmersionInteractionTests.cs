@@ -97,7 +97,11 @@ namespace LighthouseKeepers.Net.Tests
             controller.position=home;hand.Direct.selectInput.manualPerformed=true;hand.Direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
             controller.position=new Vector3(1.7f,1.1f,0);yield return new WaitForSeconds(.5f);
             hand.Direct.EndManualInteraction();hand.Direct.selectInput.manualPerformed=false;
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2f);
+            // Follow the actual resting position: XRI throw velocity may carry it beyond the intended drop.
+            origin.MoveCameraToWorldLocation(grab.transform.position+Vector3.up*1.65f);
+            yield return new WaitForSeconds(.3f);
+            Assert.AreEqual(0,Field<float>(recovery,"awaySeconds"),.01f,"Nearby keeper did not reset recovery timer");
             Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Dropped tool returned while keeper is beside it");
             origin.MoveCameraToWorldLocation(new Vector3(0,8.2f,-.3f));
             yield return new WaitForSeconds(19);Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Recovery happened before 20 seconds away: "+Value<string>(recovery,"LastReturnReason"));
@@ -150,6 +154,8 @@ namespace LighthouseKeepers.Net.Tests
                     Assert.GreaterOrEqual(Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees"),earned-.5f,"Return stroke unwound bolt");
                 }
                 Assert.Greater(Value<int>(state,"BoltsDone"),0,"Arm pulls did not finish bolt");
+                // Release over clear air, not on the pipe supporting the wrench.
+                controller.position+=Vector3.left*.45f;yield return new WaitForSeconds(.4f);
                 direct.EndManualInteraction();direct.selectInput.manualPerformed=false;
                 yield return new WaitForSeconds(.1f);
                 Assert.False(grab.GetComponent<Rigidbody>().isKinematic,"Released wrench floats");

@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
                     t.name == "Leaking centre coupling" || t.name.StartsWith("Pipe branch ")) t.gameObject.SetActive(false);
             var barrel = parts.Part("East wall service pipe",pipe.transform,new Vector3(WallX,.90f,0),new Vector3(.20f,1.45f,.20f),parts.Metal,PrimitiveType.Cylinder);
             barrel.transform.rotation = Quaternion.Euler(90,0,0);
-            var collider = barrel.AddComponent<BoxCollider>(); collider.size = new Vector3(1,2,1);
+            var collider = barrel.AddComponent<CapsuleCollider>(); collider.direction = 1; collider.height = 2; collider.radius = .5f;
             for (int i=0;i<3;i++)
             {
                 var bolt = pipe.bolts[i];
