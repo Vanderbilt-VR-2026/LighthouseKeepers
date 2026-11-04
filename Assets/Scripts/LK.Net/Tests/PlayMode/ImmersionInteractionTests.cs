@@ -129,20 +129,24 @@ namespace LighthouseKeepers.Net.Tests
                 var direct=hand.Direct;var controller=hand.transform.parent;
                 controller.SetPositionAndRotation(grab.transform.position,Quaternion.Euler(0,stance*25,0));
                 direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
+                var face=Quaternion.LookRotation(Quaternion.AngleAxis((stance-1)*20,Vector3.up)*Vector3.right,Vector3.up);
+                for(int align=0;align<2;align++){controller.rotation=face*Quaternion.Inverse(grab.transform.rotation)*controller.rotation;yield return new WaitForSeconds(.25f);}
                 for(int stroke=0;stroke<10&&Value<int>(state,"BoltsDone")==0;stroke++)
                 {
                     float before=progress();float deadline=Time.realtimeSinceStartup+5;
                     while(Vector3.Distance(jaw.position,pivot)>.025f&&Time.realtimeSinceStartup<deadline)
                     {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.3f,.08f);yield return null;}
+                    Assert.Less(Vector3.Distance(jaw.position,pivot),.03f,"Visible jaw did not reach bolt before trigger: "+hand.Node+" stance "+stance);
                     Assert.False(Value<bool>(socket,"IsSnapped"),"Auto-lock happened without trigger");
                     Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Unlocked readjustment repaired bolt");
                     grab.activated.Invoke(new ActivateEventArgs{interactorObject=direct,interactableObject=grab});
                     yield return new WaitForSeconds(.12f);
+                    Assert.Less(controller.position.x,pivot.x,"Test hand must approach from the room, not through the wall");
                     Assert.True(Value<bool>(socket,"IsSnapped"),hand.Node+" stance "+stance+" trigger failed to lock: held="+Value<bool>(socket,"ClutchHeld")+" selected="+grab.isSelected+" distance="+Vector3.Distance(jaw.position,pivot)+" stroke="+stroke);
                     if(stroke==0)
                     {
-                        before=progress();controller.rotation=Quaternion.Euler(60,35,120)*controller.rotation;yield return new WaitForSeconds(.15f);
-                        Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Wrist rotation alone repaired bolt");
+                        before=progress();var original=controller.rotation;controller.rotation=Quaternion.Euler(60,35,120)*controller.rotation;yield return new WaitForSeconds(.15f);
+                        Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Wrist rotation alone repaired bolt");controller.rotation=original;
                     }
                     var rest=Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up);float height=controller.position.y-pivot.y;
                     for(float t=0;t<.35f&&Value<int>(state,"BoltsDone")==0;t+=Time.deltaTime)

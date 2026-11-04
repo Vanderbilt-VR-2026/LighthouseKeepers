@@ -76,7 +76,7 @@ namespace LighthouseKeepers.WatchDemo
                 if (hand)
                 {
                     var visual = hand.GetComponentInChildren<SkinnedMeshRenderer>();
-                    if (visual && !tuning.triggerClutch)
+                    if (visual && !(tuning.leverPipe&&tuning.triggerClutch))
                     {
                         palm.SetPositionAndRotation(visual.transform.position + visual.transform.rotation * new Vector3(0, -.018f, .025f), visual.transform.rotation);
                         hand.SetConstrainedGrip(palm);
@@ -124,7 +124,7 @@ namespace LighthouseKeepers.WatchDemo
             ClutchHeld=true;
             // Lock the jaw the player sees at the press, before XRI advances its smoothed carry pose.
             int active=watch.Pipe.ActiveBolt;
-            if(tuning.triggerClutch&&active>=0&&Vector3.Distance(pipe.jaw.position,pipe.SocketPosition(active))<=tuning.wrenchSnapMetres)requestedBolt=active;
+            if(tuning.leverPipe&&tuning.triggerClutch&&active>=0&&Vector3.Distance(pipe.jaw.position,pipe.SocketPosition(active))<=tuning.wrenchSnapMetres)requestedBolt=active;
         }
         void Deactivate(DeactivateEventArgs args){ClutchHeld=false;requestedBolt=-1;Unseat();}
         void Released(SelectExitEventArgs args){ClutchHeld=false;requestedBolt=-1;Unseat();}
