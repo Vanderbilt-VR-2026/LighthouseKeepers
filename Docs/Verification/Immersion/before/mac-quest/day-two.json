@@ -1,0 +1,72 @@
+{
+  "region": "us",
+  "poses": [
+    {
+      "actor": 2,
+      "name": "Mac Host",
+      "sequence": 8935,
+      "head": {
+        "x": 1.25,
+        "y": 8.2,
+        "z": -0.3
+      },
+      "left": {
+        "x": 1.07794154,
+        "y": 7.84999943,
+        "z": 0.09420282
+      },
+      "right": {
+        "x": 1.56709182,
+        "y": 7.84999943,
+        "z": -0.00939244
+      }
+    },
+    {
+      "actor": 3,
+      "name": "Keeper",
+      "sequence": 6977,
+      "head": {
+        "x": 0.409277678,
+        "y": 4.50799656,
+        "z": 1.89478159
+      },
+      "left": {
+        "x": 0.404041529,
+        "y": 4.0559144,
+        "z": 2.15383625
+      },
+      "right": {
+        "x": 0.5560247,
+        "y": 4.41340637,
+        "z": 2.34835649
+      }
+    }
+  ],
+  "playing": true,
+  "scenes": [
+    "LK_Lab_Environment"
+  ],
+  "code": "3DAALN",
+  "online": true,
+  "host": true,
+  "starting": true,
+  "error": "",
+  "canStart": false,
+  "players": [
+    {
+      "Id": "1",
+      "DisplayName": "Mac Host",
+      "IsHost": true,
+      "IsReady": true
+    },
+    {
+      "Id": "2",
+      "DisplayName": "Keeper",
+      "IsHost": false,
+      "IsReady": true
+    }
+  ],
+  "snapshot": "{\"protocol\":\"LK-Lab-Coop-v2\",\"world\":\"\",\"sequence\":0,\"day\":2,\"power\":0,\"doneMask\":0,\"starterPulls\":0,\"bolts\":0,\"activeBolt\":2,\"turns\":0,\"codeProgress\":0,\"elapsed\":48.324984762701209,\"beaconDarkElapsed\":48.324984762701209,\"highWaterElapsed\":0.0,\"highWaterFailed\":false,\"sleepDay\":0,\"beaconStationEnabled\":true,\"beaconIgnited\":true,\"beaconAlignment\":0.5,\"beaconTarget\":0.5,\"beaconSoot\":0.0,\"engineEnabled\":true,\"chokeClosed\":true,\"engineSettled\":false,\"fuel\":0.800000011920929,\"chokeRemaining\":0.0,\"engineFloodRemaining\":0.0,\"primer\":3,\"enginePulls\":0,\"engineClosedPulls\":0,\"coughSerial\":0,\"gridEnabled\":true,\"gridTripped\":false,\"gridCapacity\":2.5,\"gridMask\":11,\"water\":0.32191717624664309,\"stroke\":0.0,\"seal\":0.0,\"frequency\":156.0,\"lockElapsed\":0.0,\"transmitElapsed\":0.0,\"beaconDarkFailed\":false,\"needsReturn\":false,\"radioMain\":false,\"radioLocked\":false,\"radioDone\":false,\"revision\":3,\"beds\":0,\"keepers\":2,\"order0\":2,\"order1\":1,\"order2\":0,\"fade\":0.0,\"seat\":0.0,\"direction\":0.0,\"returned\":0.0,\"sleeping\":false,\"touching\":false,\"radioHeld\":false,\"radioTrigger\":false,\"notice\":\"\"}",
+  "watch": "day=2 elapsed=48.32 water=0.3219 power=Off tasks=0",
+  "avatars": 2
+}
