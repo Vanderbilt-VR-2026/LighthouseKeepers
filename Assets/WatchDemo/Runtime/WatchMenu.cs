@@ -73,7 +73,7 @@ namespace LighthouseKeepers.WatchDemo
             panel.GetComponent<GraphicRaycaster>().blockingObjects = GraphicRaycaster.BlockingObjects.None;
             panel.GetComponent<Image>().color = new Color(.035f, .06f, .065f, .98f);
             if(Book){inkMaterial=new Material(Resources.Load<Shader>("ImmersionLogbook"));ImmersionLogbook.Decorate(panel,inkMaterial,out paper,out paperSprite);canvas.overrideSorting=true;canvas.sortingOrder=100;}
-            Label("Title", Book?"KEEPER'S LOG":"KEEPER WATCH", 170, 42, 32);
+            Label("Title", Book?"KEEPER'S LOG":"KEEPER WATCH", 170, Book?55:42, Book?28:32);
             status = Label("Status", "", 100, 84, 23);
             retry = Action("RetryWatchDay", Book?"TRY THE NIGHT AGAIN":"RETRY THIS DAY", 10, () => watch.RetryDay());
             replay = Action("ReplayWatchFromDayOne", "REPLAY FROM DAY 1", 10, () => watch.ReplayFromDayOne());
@@ -156,6 +156,7 @@ namespace LighthouseKeepers.WatchDemo
                 "DAY " + state.Day + "\nThe watch continues while this menu is open.";
             if(Book)status.text=state.Failed?(state.HighWaterFailed?"The sea took the tower.\nWe could not hold back the water.":state.BeaconDarkFailed?"The light went dark.\nThe Mary Ellen hit the rocks.":"Dawn came before our work was done.\nThe watch was lost."):state.Complete&&!state.HasNextDay?"The ships made harbor.\nOur watch is done.":"NIGHT "+state.Day+"\nKeep the light. Survive till dawn.";
             retry.gameObject.SetActive(!state.NetworkRehearsal && state.Failed);
+            close.gameObject.SetActive(!Book||!state.Failed);
             replay.gameObject.SetActive(!state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
         }
 

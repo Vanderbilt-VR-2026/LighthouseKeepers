@@ -71,8 +71,22 @@ namespace LighthouseKeepers.WatchDemo
                 Enqueue(hint);
             }
             var clip=catalog?catalog.Line(Cue):null;
-            if(pending.Count>0&&(Cue==0||!clip||Age>clip.length+.6f))Play(pending.Dequeue(),Serial+1,0);
+            if(pending.Count>0&&(Cue==0||!clip||Age>clip.length+.6f))
+                while(pending.Count>0){int next=pending.Dequeue();if(Relevant(next)){Play(next,Serial+1,0);break;}}
             if(clip&&Age>clip.length+.2f)StopStatic();
+        }
+        bool Relevant(int id)
+        {
+            var s=watch.State;
+            if(id==2||id==6)return !watch.WrenchHeld&&!s.Repaired;
+            if(id==3||id==7)return !s.Repaired;
+            if(id==4||id==8)return s.Power==PowerState.Off;
+            if(id==5||id==12)return s.Complete;
+            if(id==9)return !s.HasPower(PowerCircuit.Beacon);
+            if(id==10)return !s.BeaconShining;
+            if(id==11)return !s.IsDone(WatchState.RadioStation);
+            if(id==16)return !s.Complete;
+            return true;
         }
         int Progress()
         {var s=watch.State;return s.Pipe.BoltsDone*1000+s.Pipe.TurnsDone*100+s.CompletedTasks*10000+(s.Engine==null?0:s.Engine.Primer*3+s.Engine.Pulls*10)+(s.Radio.Locked?1:0)+s.Radio.CodeProgress;}

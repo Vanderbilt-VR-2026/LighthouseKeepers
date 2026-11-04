@@ -38,9 +38,16 @@ namespace LighthouseKeepers.Net
             PrimaryRecorder.UserData=channel.LocalActorId;PrimaryRecorder.VoiceDetection=false;
             PrimaryRecorder.StopRecordingWhenPaused=true;PrimaryRecorder.Bitrate=24000;
             base.Start();AddRecorder(PrimaryRecorder);channel.Runner.AddCallbacks(this);
-            AutoConnectAndJoin=true;ConnectAndJoinRoom();
+            AutoConnectAndJoin=true;StartCoroutine(ConnectWhenRoomReady());
             StartCoroutine(RequestMicrophone());
-            Debug.Log("CREW_VOICE joined crew; permission before capture; region="+Settings.FixedRegion);
+            Debug.Log("CREW_VOICE prepared; permission before capture; region="+Settings.FixedRegion);
+        }
+        IEnumerator ConnectWhenRoomReady()
+        {
+            // Fusion may invalidate SessionInfo during shutdown before transport IsOnline
+            // changes. Let Photon follow a valid room, never force-connect a departed leader.
+            while(channel&&channel.Connected&&!LeaderInRoom)yield return null;
+            if(channel&&channel.Connected&&LeaderInRoom)LeaderStateChanged(Photon.Realtime.ClientState.Joined);
         }
         IEnumerator RequestMicrophone()
         {

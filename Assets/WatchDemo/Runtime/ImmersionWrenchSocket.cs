@@ -38,7 +38,10 @@ namespace LighthouseKeepers.WatchDemo
                 !grab.isSelected || grab.interactorsSelecting.Count != 1)
             { Unseat(); return; }
             var holder = grab.interactorsSelecting[0];
-            var tracked = holder.transform;
+            var holdingHand = holder.transform.GetComponentInParent<HandRig>();
+            // Direct-interactor frames differ between mirrored hands. Wrist roll belongs to
+            // the tracked controller parent, not the palm/interactor's authored local axes.
+            var tracked = holdingHand ? holdingHand.transform.parent : holder.transform;
             int active = watch.Pipe.ActiveBolt;
             if (bolt >= 0 && (active != bolt || controller != tracked ||
                 Vector3.Distance(tracked.position, handAtSeat) > tuning.wrenchReleaseMetres))
@@ -53,7 +56,7 @@ namespace LighthouseKeepers.WatchDemo
                 Vector3 normal = pipe.bolts[bolt].forward;
                 if (Vector3.Dot(targetPose.rotation * Vector3.up, normal) < 0) normal = -normal;
                 seatedRotation = Quaternion.FromToRotation(targetPose.rotation * Vector3.up, normal) * targetPose.rotation;
-                hand = tracked.GetComponentInParent<HandRig>();
+                hand = holdingHand;
                 if (hand)
                 {
                     var visual = hand.GetComponentInChildren<SkinnedMeshRenderer>();

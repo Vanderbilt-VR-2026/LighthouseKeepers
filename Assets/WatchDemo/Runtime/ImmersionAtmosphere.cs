@@ -5,8 +5,8 @@ namespace LighthouseKeepers.WatchDemo
 {
     public sealed class ImmersionAtmosphere : MonoBehaviour
     {
-        WatchDemoController watch;Transform head;AudioSource wind,events;Light lightning;HandRig[] hands;
-        AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100;int eventNumber,day;
+        WatchDemoController watch;Transform head;AudioSource wind,events,heartbeat;Light lightning;HandRig[] hands;
+        AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100;int eventNumber,day;bool failed;
         public void Initialize(WatchDemoController w,Transform h)
         {
             watch=w;head=h;hands=FindObjectsByType<HandRig>(FindObjectsSortMode.None);
@@ -15,12 +15,14 @@ namespace LighthouseKeepers.WatchDemo
             thunder=Resources.Load<AudioClip>("ImmersionAudio/thunder");creak=Resources.Load<AudioClip>("ImmersionAudio/creak");horn=Resources.Load<AudioClip>("ImmersionAudio/foghorn");drip=Resources.Load<AudioClip>("ImmersionAudio/drip");
             var go=new GameObject("Gentle lightning through windows");go.transform.SetParent(transform,false);go.transform.position=new Vector3(8,7,-8);
             lightning=go.AddComponent<Light>();lightning.type=LightType.Directional;lightning.color=new Color(.58f,.68f,.8f);lightning.transform.rotation=Quaternion.Euler(35,-50,0);lightning.shadows=LightShadows.None;lightning.intensity=0;
+            heartbeat=Source("Keeper low heartbeat",h.position);heartbeat.transform.SetParent(h,false);heartbeat.transform.localPosition=Vector3.zero;heartbeat.volume=.16f;heartbeat.clip=Resources.Load<AudioClip>("ImmersionAudio/heartbeat");heartbeat.loop=true;
             nextEvent=Time.time+12;
         }
         AudioSource Source(string name,Vector3 position)
         {var t=M2StationParts.Root(name,transform,position);var s=t.gameObject.AddComponent<AudioSource>();s.playOnAwake=false;s.spatialBlend=1;s.dopplerLevel=0;s.minDistance=3;s.maxDistance=25;s.rolloffMode=AudioRolloffMode.Linear;t.gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=1800;return s;}
         void Update()
         {
+            if(watch.State.Failed!=failed){failed=watch.State.Failed;if(failed){heartbeat.Play();if(watch.State.HighWaterFailed){var roar=Resources.Load<AudioClip>("S4Audio/water");if(roar)events.PlayOneShot(roar,1);}}else heartbeat.Stop();}
             if(day!=watch.State.Day){day=watch.State.Day;flashAge=0;PlayThunder();}
             flashAge+=Time.deltaTime;
             // One broad 1.4-second envelope, never repeated rapidly. No hard flashes or camera shake.
