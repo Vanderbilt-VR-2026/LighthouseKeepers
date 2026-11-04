@@ -27,3 +27,7 @@ The first co-op matrix stopped on a test setup error: after dropping the wrench 
 Phase 1 software checks passed. Changed-build Quest acceptance is reserved for the final combined build. The accepted Quest APK remains `2c6ca0c` / `PULL3` until then. No snapshot fields changed.
 
 The user reduced subsequent verification to focused phase tests plus one quick solo Night 1 check per phase, and one final Mac+Quest smoke check. Stop before Phase 6; Day 3 balance is deferred.
+
+## Phase 2 — recorded radio
+
+17 selected single takes replace TTS with existing GUIDs preserved. Focused clip test passed: 17 mono 44.1 kHz clips, each 1–10 seconds. Offline measurements: two-pass normalization about −18 LUFS; every true peak ≤ −1 dBTP. All three alternatives per line remain gitignored. Chosen takes, reasons, lengths, loudness and switching instructions are in `Docs/Design/RadioLines.md` and `Tools/S4/radio_takes.json`. The importer rejects ≥10-second multi-take inputs. Quick solo Night 1 passed, zero captured errors (`artifacts/audio-pass/phase2/solo/`).

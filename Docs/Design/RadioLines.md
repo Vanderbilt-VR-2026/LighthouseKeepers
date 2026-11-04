@@ -26,4 +26,30 @@ Cue 6 is retired (`keeper_hint_wrench`); it is never played. Win is the final au
 
 Drop named .m4a, .wav or .mp3 recordings into `Recordings/Radio/`, then use **Lighthouse Keepers → Import Radio Recordings**. The importer uses FFmpeg (install on macOS with `brew install ffmpeg`), converts to mono 44.1 kHz WAV, trims leading/trailing silence, gently reduces noise and normalizes loudness. Asset GUIDs stay intact. Keep recordings plain: Unity supplies the radio sound.
 
-TTS placeholders: macOS Daniel voice at 145 words/minute. Regenerate with `python3 Docs/Design/generate_radio_placeholders.py --force`.
+Recorded lines are now shipped. The old TTS generator is retained as a development fallback; do not run it over the selected recordings.
+
+## Recorded takes
+
+Teammate recordings replace TTS. Automatic selection uses clipping, edge noise and middle-length preference; subjective delivery awaits headset listening. Every output is one take, mono 44.1 kHz, high-pass 80 Hz, gentle denoise/compression, two-pass −18 LUFS normalization, true peak ≤ −1 dBTP. Unity adds the radio filter. Originals are untouched.
+
+| Line | Take | Seconds | LUFS | True peak dBTP |
+|---|---:|---:|---:|---:|
+| `keeper_all_done` | 1 | 3.74 | -18.0 | -1.9 |
+| `keeper_arrival` | 2 | 8.76 | -18.0 | -3.1 |
+| `keeper_early_bed` | 2 | 2.02 | -18.0 | -3.2 |
+| `keeper_first_bolt` | 2 | 4.94 | -18.0 | -2.7 |
+| `keeper_generator` | 3 | 5.68 | -18.0 | -3.9 |
+| `keeper_hint_beacon` | 1 | 4.92 | -18.0 | -3.9 |
+| `keeper_hint_bed` | 2 | 2.72 | -18.0 | -4.2 |
+| `keeper_hint_generator` | 2 | 7.14 | -18.0 | -3.2 |
+| `keeper_hint_pipe` | 2 | 3.72 | -18.0 | -3.2 |
+| `keeper_hint_power` | 3 | 3.70 | -18.0 | -1.5 |
+| `keeper_hint_radio` | 3 | 5.10 | -18.0 | -3.4 |
+| `keeper_lose` | 2 | 3.80 | -18.0 | -4.2 |
+| `keeper_next_night` | 3 | 4.28 | -18.0 | -1.6 |
+| `keeper_night_three` | 3 | 4.08 | -18.0 | -3.2 |
+| `keeper_night_two` | 3 | 4.90 | -18.0 | -2.8 |
+| `keeper_win` | 3 | 4.26 | -18.0 | -2.9 |
+| `keeper_wrench` | 2 | 4.20 | -18.0 | -3.2 |
+
+Selection reason for each row: unclipped, cleanly bounded take with a middle-length preference and measured edge-noise penalty. Change that line’s `take` (1–3) in `Tools/S4/radio_takes.json`, then rerun `Tools/S4/process_radio_takes.py` with the source folder. All alternatives are in gitignored `Recordings/Radio/takes/`. These take files can also be copied individually into `Recordings/Radio/` for the Unity import menu; never import a three-take source as a finished line.

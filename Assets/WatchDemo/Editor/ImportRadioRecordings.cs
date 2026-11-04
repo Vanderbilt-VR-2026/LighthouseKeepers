@@ -12,7 +12,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
     {
         static readonly string[] Names={"keeper_arrival","keeper_wrench","keeper_first_bolt","keeper_generator","keeper_all_done","keeper_hint_pipe","keeper_hint_generator","keeper_hint_power","keeper_hint_beacon","keeper_hint_radio","keeper_hint_bed","keeper_night_two","keeper_night_three","keeper_next_night","keeper_early_bed","keeper_win","keeper_lose"};
         // Mild denoising; trim only the two ends (reverse twice); EBU loudness normalization.
-        public const string Filter="afftdn=nr=6:nf=-40,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.04,areverse,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.08,areverse,loudnorm=I=-18:TP=-1.5:LRA=7";
+        public const string Filter="highpass=f=80,afftdn=nr=6:nf=-40,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.04,areverse,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.08,areverse,acompressor=threshold=0.125:ratio=2:attack=10:release=80,loudnorm=I=-18:TP=-1.2:LRA=7";
         public static string FindFfmpeg()
         {
             var configured=System.Environment.GetEnvironmentVariable("LK_FFMPEG");if(!string.IsNullOrEmpty(configured)&&File.Exists(configured))return configured;
@@ -35,6 +35,18 @@ namespace LighthouseKeepers.WatchDemo.Editor
                 if(!process.WaitForExit(120000)){process.Kill();throw new TimeoutException("Audio conversion exceeded two minutes: "+Path.GetFileName(source));}
                 process.WaitForExit();if(process.ExitCode!=0)throw new InvalidOperationException(errors.ToString());
                 if(!File.Exists(temporary)||new FileInfo(temporary).Length<9000)throw new InvalidDataException("No usable speech remains in "+Path.GetFileName(source));
+                using(var reader=new BinaryReader(File.OpenRead(temporary)))
+                {
+                    reader.BaseStream.Position=12;int bytesPerSecond=0;
+                    while(reader.BaseStream.Position+8<=reader.BaseStream.Length)
+                    {
+                        var tag=new string(reader.ReadChars(4));int size=reader.ReadInt32();long end=reader.BaseStream.Position+size;
+                        if(tag=="fmt "){reader.ReadInt16();reader.ReadInt16();reader.ReadInt32();bytesPerSecond=reader.ReadInt32();}
+                        if(tag=="data"&&bytesPerSecond>0&&(double)size/bytesPerSecond>=10)
+                            throw new InvalidDataException("Select one take first (under 10 seconds): "+Path.GetFileName(source)+". Use Tools/S4/process_radio_takes.py for three-take recordings.");
+                        reader.BaseStream.Position=end+size%2;
+                    }
+                }
                 // Stage completely before replacing; leave .meta files untouched.
                 File.Copy(temporary,destination,true);
             }
