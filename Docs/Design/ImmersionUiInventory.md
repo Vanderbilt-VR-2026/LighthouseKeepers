@@ -20,4 +20,4 @@ Observed in the unchanged main-game runtime, Mac host + Quest guest on November 
 | Remote keeper floating name label | William’s avatar/body ownership | Leave avatar implementation untouched; record as ownership exception, not a gameplay guidance panel | Mac+Quest avatar capture |
 | Lobby crew UI | CrewLobbyBoard | Retain; add NETWORK VERSION here only | Baseline lobby capture |
 
-Status: inventory and before evidence captured. Replacements are planned; this document is not a claim that UI removal has shipped.
+Status: replacements implemented behind `ImmersionTuning` and checked in graphics Play Mode on `841b790`. The old camera readout, crew debug line, repair/sleep billboards, starter instruction and floating lens caption are inactive. The chalkboard, mounted equipment labels, lobby and deliberately opened logbook remain. Remote name tags are unchanged under William’s ownership. Device readability and the post-change live co-op check are tracked separately in the verification report.
