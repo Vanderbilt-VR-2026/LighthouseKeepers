@@ -138,7 +138,7 @@ namespace LighthouseKeepers.Net.Tests
                     Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Unlocked readjustment repaired bolt");
                     grab.activated.Invoke(new ActivateEventArgs{interactorObject=direct,interactableObject=grab});
                     yield return new WaitForSeconds(.12f);
-                    Assert.True(Value<bool>(socket,"IsSnapped"),hand.Node+" stance "+stance+" trigger failed to lock");
+                    Assert.True(Value<bool>(socket,"IsSnapped"),hand.Node+" stance "+stance+" trigger failed to lock: held="+Value<bool>(socket,"ClutchHeld")+" selected="+grab.isSelected+" distance="+Vector3.Distance(jaw.position,pivot)+" stroke="+stroke);
                     if(stroke==0)
                     {
                         before=progress();controller.rotation=Quaternion.Euler(60,35,120)*controller.rotation;yield return new WaitForSeconds(.15f);
