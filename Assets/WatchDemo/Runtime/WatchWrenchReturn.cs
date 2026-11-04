@@ -62,8 +62,17 @@ namespace LighthouseKeepers.WatchDemo
             if(head){var d=head.position-transform.position;near|=Mathf.Abs(d.y)<2.5f&&new Vector2(d.x,d.z).sqrMagnitude<tuning.droppedWrenchKeeperRadius*tuning.droppedWrenchKeeperRadius;}
             awaySeconds=near?0:awaySeconds+Time.deltaTime;
             var p=transform.position;
-            bool unreachable=p.y<-.35f||p.y>14.5f||Mathf.Abs(p.x)>5.5f||p.z>5.5f||p.z< -11.5f;
+            bool unreachable=!InsidePlayableRooms(p);
             if(unreachable||awaySeconds>=tuning.droppedWrenchReturnSeconds)ReturnHome();
+        }
+        public static bool InsidePlayableRooms(Vector3 p)
+        {
+            if(!float.IsFinite(p.x)||!float.IsFinite(p.y)||!float.IsFinite(p.z)||p.y<-.35f||p.y>13.5f)return false;
+            // Small collision tolerance around the authored shell; include the House throat.
+            if(p.y<3f&&Mathf.Abs(p.x)<3.7f&&p.z> -10.05f&&p.z< -4.65f)return true;
+            if(p.y<3f&&Mathf.Abs(p.x)<.75f&&p.z>=-5.55f&&p.z<=-3.75f)return true;
+            float radius=p.y>=9.9f?2.85f:p.y>=6.6f?3.8f:p.y>=3.3f?3.85f:4.05f;
+            return p.x*p.x+p.z*p.z<radius*radius;
         }
         void Splash()
         {
@@ -76,7 +85,7 @@ namespace LighthouseKeepers.WatchDemo
                 var emission=entrySplash.emission;emission.enabled=false;
             }
             entrySplash.transform.SetPositionAndRotation(new Vector3(transform.position.x,watch.WaterHeight+.01f,transform.position.z),Quaternion.LookRotation(Vector3.up));
-            entrySplash.Emit(10);
+            entrySplash.Play();entrySplash.Emit(10);
         }
         void OnCollisionEnter(Collision collision)
         {

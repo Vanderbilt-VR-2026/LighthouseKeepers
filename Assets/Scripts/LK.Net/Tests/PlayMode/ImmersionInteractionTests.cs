@@ -87,6 +87,24 @@ namespace LighthouseKeepers.Net.Tests
             Call(radio,"EarlyBed");pending.Clear(); // Deliberate interaction is still a once-per-night cue.
             Assert.False(Field<System.Collections.Generic.HashSet<int>>(radio,"spoken").Contains(6),"Retired wrench hint played");
         }
+        [UnityTest]public IEnumerator DroppedWrenchStaysNearKeeperThenReturnsAfterTwentySecondsAway()
+        {
+            var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");
+            var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
+            var home=grab.transform.position;var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
+            var hand=hands[0];var controller=hand.transform.parent;
+            controller.position=home;hand.Direct.selectInput.manualPerformed=true;hand.Direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
+            controller.position=new Vector3(1.7f,1.1f,0);yield return new WaitForSeconds(.5f);
+            hand.Direct.EndManualInteraction();hand.Direct.selectInput.manualPerformed=false;
+            origin.MoveCameraToWorldLocation(new Vector3(1.7f,1.65f,0));yield return new WaitForSeconds(1.5f);
+            Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Dropped tool returned while keeper is beside it");
+            origin.MoveCameraToWorldLocation(new Vector3(0,8.2f,-.3f));
+            yield return new WaitForSeconds(19);Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Recovery happened before 20 seconds away");
+            yield return new WaitForSeconds(2);Assert.Less(Vector3.Distance(home,grab.transform.position),.01f);Assert.True(grab.GetComponent<Rigidbody>().isKinematic);
+            // An out-of-room drop is recovered immediately instead of waiting out the timeout.
+            Call(recovery,"OnNetworkReleased");grab.transform.position=new Vector3(4.5f,.2f,0);yield return null;yield return null;
+            Assert.Less(Vector3.Distance(home,grab.transform.position),.01f);
+        }
         [UnityTest]public IEnumerator WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops()
         {
             var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");var jaw=Field<Transform>(pipe,"jaw");

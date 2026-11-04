@@ -14,7 +14,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchPipeRepair pipe;
         WatchState watch;
         ImmersionTuning tuning;
-        Vector3 jawLocal, handAtSeat;
+        Vector3 jawLocal, handAtSeat, leverNormal;
         Quaternion wristPrevious, seatedRotation;
         Transform controller, palm;
         HandRig hand;
@@ -65,6 +65,7 @@ namespace LighthouseKeepers.WatchDemo
                 wristPrevious = tracked.rotation; angle = 0;
                 Vector3 normal = pipe.bolts[bolt].forward;
                 if (Vector3.Dot(targetPose.rotation * Vector3.up, normal) < 0) normal = -normal;
+                leverNormal = normal;
                 seatedRotation = Quaternion.FromToRotation(targetPose.rotation * Vector3.up, normal) * targetPose.rotation;
                 hand = holdingHand;
                 if (hand)
@@ -89,7 +90,7 @@ namespace LighthouseKeepers.WatchDemo
                 var normal = pipe.bolts[bolt].forward;
                 var radial = Vector3.ProjectOnPlane(tracked.position - pivot, normal);
                 if (radial.sqrMagnitude > .0016f)
-                    seatedRotation = Quaternion.LookRotation(-radial.normalized, normal);
+                    seatedRotation = Quaternion.LookRotation(-radial.normalized, leverNormal);
                 targetPose.rotation = seatedRotation;
                 targetPose.position = pivot - seatedRotation * Vector3.Scale(jawLocal, localScale);
                 return;

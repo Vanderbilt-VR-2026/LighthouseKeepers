@@ -23,3 +23,7 @@ Actual displacement controls cadence, so holding the stick against a wall does n
 Ground detection includes Default (DevGym) and Environment (tower geometry), ignores triggers, and excludes Water, UI, PlayerBody and Interactable. The previous Starter Assets mask omitted Environment and could classify a standing keeper as airborne. The prefab, DevGym and fallback rig authoring now use the corrected mask.
 
 `GroundedSlopeMovement` adjusts queued walking motion to follow nearby walkable slopes through XRI’s collision pipeline. This prevents repeated loss of grounding and silent footsteps on the descending spiral. The ground probe honors the controller’s slope limit; unsupported falls retain the gravity provider’s behavior.
+
+## Pipe lever cleanup (November 4)
+
+`Assets/WatchDemo/Resources/ImmersionAudio/wrench-splash.wav` is an original synthesized water-entry sound (seeded filtered noise plus a descending bubble tone; no sampled recording). Existing original S4 bolt-clunk and hiss clips provide tool impact and pressure feedback. Harbor narration uses the line script in `Docs/Design/RadioLines.md`; placeholders are plain macOS Daniel TTS and the radio filter stays in-engine. Raw replacement recordings are ignored under `Recordings/Radio/`; the importer preserves existing Unity clip GUIDs.
