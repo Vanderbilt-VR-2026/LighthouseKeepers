@@ -30,7 +30,7 @@ namespace LighthouseKeepers.WatchDemo
         public Transform BoardTransform=>board.transform;
         readonly System.Text.StringBuilder boardText = new System.Text.StringBuilder(256);
         float repairProgress;
-        int shownSecond=-1;
+        int shownSecond=-1,shownChalkLetters=-1;
         bool sleeping,previousGrip,previousTrigger;
         Quaternion originalWrenchRotation;
         Material fadeMaterial;
@@ -108,6 +108,11 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
+            if(state.Immersion&&state.Immersion.physicalGuidance)
+            {
+                int letters=Mathf.Min(16,(int)(state.Elapsed/state.Immersion.chalkLetterSeconds));
+                if(letters!=shownChalkLetters){shownChalkLetters=letters;RefreshBoard();}
+            }
             if(state.RemoteReplica){UpdateReplicaInput();return;}
             if(sleeping)return;
             if(state.NetworkRehearsal){flood.Paused=true;return;}
@@ -184,7 +189,14 @@ namespace LighthouseKeepers.WatchDemo
             boardText.Clear();
             if(state.NetworkRehearsal)
             {board.text="NETWORK PRACTICE\n\nMove, turn and grab props together.\nObjectives and day clock are paused.\n\nLEFT MENU: Return to lobby";return;}
-            if(state.Immersion&&state.Immersion.physicalGuidance)boardText.Append("Keep the light. Survive till dawn.\nNIGHT ").Append(state.Day).Append(" — DAWN IN ").Append(Mathf.Max(0,(int)(state.Duration-state.Elapsed))/60).Append(':').Append((Mathf.Max(0,(int)(state.Duration-state.Elapsed))%60).ToString("00")).Append("\n");
+            if(state.Immersion&&state.Immersion.physicalGuidance)
+            {
+                string heading="NIGHT "+state.Day;
+                int letters=Mathf.Clamp((int)(state.Elapsed/state.Immersion.chalkLetterSeconds),0,heading.Length);
+                boardText.Append("Keep the light. Survive till dawn.\n").Append(heading,0,letters);
+                if(letters<heading.Length)boardText.Append("<color=#FFFFFF00>").Append(heading,letters,heading.Length-letters).Append("</color>");
+                boardText.Append(" — DAWN IN ").Append(Mathf.Max(0,(int)(state.Duration-state.Elapsed))/60).Append(':').Append((Mathf.Max(0,(int)(state.Duration-state.Elapsed))%60).ToString("00")).Append("\n");
+            }
             else boardText.Append("KEEPER WATCH — DAY ").Append(state.Day).Append("\n\n");
             foreach(var task in state.Definition.tasks)
                 boardText.Append(state.IsDone(task.stationId)?(state.Immersion?"✓ ":"[X] "):(state.Immersion?"○ ":"[ ] ")).Append(task.taskText).Append('\n');

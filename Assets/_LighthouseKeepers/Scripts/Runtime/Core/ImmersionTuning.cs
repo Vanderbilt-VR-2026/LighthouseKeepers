@@ -16,6 +16,9 @@ namespace LighthouseKeepers.Core
         [Range(30, 100)] public float fuelPourTiltDegrees = 60;
         [Range(.1f, 1)] public float interiorLightMultiplier = .6f;
         [Range(0, 1)] public float atmosphereVolume = .12f;
+        [Min(1)] public float dawnWashSeconds = 6;
+        [Range(0, .5f)] public float dawnWashIntensity = .22f;
+        [Min(.05f)] public float chalkLetterSeconds = .16f;
         static ImmersionTuning current;
         public static ImmersionTuning Current
         {
