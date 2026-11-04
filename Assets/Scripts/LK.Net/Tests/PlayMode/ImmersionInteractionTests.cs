@@ -159,7 +159,9 @@ namespace LighthouseKeepers.Net.Tests
                 direct.EndManualInteraction();direct.selectInput.manualPerformed=false;
                 yield return new WaitForSeconds(.1f);
                 Assert.False(grab.GetComponent<Rigidbody>().isKinematic,"Released wrench floats");
-                yield return new WaitForSeconds(.8f);
+                // Detach preserves XRI throw velocity: allow the thrown tool to rise/bounce before settling.
+                float settleDeadline=Time.realtimeSinceStartup+4f;
+                while(grab.transform.position.y>=.5f&&Time.realtimeSinceStartup<settleDeadline)yield return null;
                 Assert.Less(grab.transform.position.y,.5f,"Wrench did not fall to the floor/water");
             }
         }
