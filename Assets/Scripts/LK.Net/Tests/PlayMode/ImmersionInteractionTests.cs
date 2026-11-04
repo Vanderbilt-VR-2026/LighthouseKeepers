@@ -93,13 +93,14 @@ namespace LighthouseKeepers.Net.Tests
             var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
             var home=grab.transform.position;var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
             var hand=hands[0];var controller=hand.transform.parent;
+            origin.MoveCameraToWorldLocation(new Vector3(1.7f,1.65f,0));yield return null;
             controller.position=home;hand.Direct.selectInput.manualPerformed=true;hand.Direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
             controller.position=new Vector3(1.7f,1.1f,0);yield return new WaitForSeconds(.5f);
             hand.Direct.EndManualInteraction();hand.Direct.selectInput.manualPerformed=false;
-            origin.MoveCameraToWorldLocation(new Vector3(1.7f,1.65f,0));yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.5f);
             Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Dropped tool returned while keeper is beside it");
             origin.MoveCameraToWorldLocation(new Vector3(0,8.2f,-.3f));
-            yield return new WaitForSeconds(19);Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Recovery happened before 20 seconds away");
+            yield return new WaitForSeconds(19);Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Recovery happened before 20 seconds away: "+Value<string>(recovery,"LastReturnReason"));
             yield return new WaitForSeconds(2);Assert.Less(Vector3.Distance(home,grab.transform.position),.01f);Assert.True(grab.GetComponent<Rigidbody>().isKinematic);
             // An out-of-room drop is recovered immediately instead of waiting out the timeout.
             Call(recovery,"OnNetworkReleased");grab.transform.position=new Vector3(4.5f,.2f,0);yield return null;yield return null;

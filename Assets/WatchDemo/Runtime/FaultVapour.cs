@@ -15,16 +15,16 @@ namespace LighthouseKeepers.WatchDemo
             var s=watch.gameObject.AddComponent<FaultVapour>();s.watch=watch;s.pipe=pipe;
             s.mesh=s.Quads();var shader=Resources.Load<Shader>("ImmersionVapour");
             if(!shader){Debug.LogError("Missing service vapour shader");s.enabled=false;return;}
-            s.steamMaterial=new Material(shader);s.steamMaterial.SetColor("_Tint",new Color(.72f,.78f,.8f,.09f));
+            s.steamMaterial=new Material(shader);s.steamMaterial.SetColor("_Tint",new Color(.72f,.78f,.8f,.14f));
             s.steamMaterial.SetFloat("_Rise",.45f);s.steamMaterial.SetFloat("_Size",.13f);s.steamMaterial.SetFloat("_Rate",.85f);
-            s.smokeMaterial=new Material(shader);s.smokeMaterial.SetColor("_Tint",new Color(.24f,.25f,.26f,.08f));
+            s.smokeMaterial=new Material(shader);s.smokeMaterial.SetColor("_Tint",new Color(.24f,.25f,.26f,.10f));
             s.smokeMaterial.SetFloat("_Rise",.65f);s.smokeMaterial.SetFloat("_Size",.10f);s.smokeMaterial.SetFloat("_Rate",.5f);
             s.steam=s.Emitter("GPU leak steam",pipe.transform,s.steamMaterial);
             Transform exhaust=null;foreach(var t in generator.GetComponentsInChildren<Transform>())if(t.name.ToLowerInvariant().Contains("exhaust")){exhaust=t;break;}
             s.smoke=s.Emitter("GPU broken-engine smoke",watch.transform,s.smokeMaterial);
             var exhaustRenderer=exhaust?exhaust.GetComponent<Renderer>():null;
             s.smoke.transform.position=exhaustRenderer?new Vector3(exhaustRenderer.bounds.center.x,exhaustRenderer.bounds.max.y+.02f,exhaustRenderer.bounds.center.z):generator.transform.TransformPoint(new Vector3(.35f,1.5f,0));
-            if(Camera.main){s.cameraData=Camera.main.GetComponent<UniversalAdditionalCameraData>();if(s.cameraData){s.oldDepth=s.cameraData.requiresDepthOption;s.cameraData.requiresDepthOption=CameraOverrideOption.On;}}
+            if(Camera.main){s.cameraData=Camera.main.GetUniversalAdditionalCameraData();if(s.cameraData){s.oldDepth=s.cameraData.requiresDepthOption;s.cameraData.requiresDepthOption=CameraOverrideOption.On;}}
         }
         MeshRenderer Emitter(string name,Transform parent,Material material)
         {

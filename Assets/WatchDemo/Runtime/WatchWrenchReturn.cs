@@ -18,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         int previousOwner;bool released,wet;float nextClank;
         ImmersionTuning tuning;
         bool Physical => tuning&&tuning.physicalWrenchDrops;
+        public string LastReturnReason {get;private set;}
         public bool ReleasedBodyIsKinematic => !Physical||!released;
         void Awake()
         {
@@ -63,7 +64,14 @@ namespace LighthouseKeepers.WatchDemo
             awaySeconds=near?0:awaySeconds+Time.deltaTime;
             var p=transform.position;
             bool unreachable=!InsidePlayableRooms(p);
-            if(unreachable||awaySeconds>=tuning.droppedWrenchReturnSeconds)ReturnHome();
+            if(unreachable||awaySeconds>=tuning.droppedWrenchReturnSeconds)
+            {
+                LastReturnReason=unreachable?"out of playable rooms":"20 seconds away from keepers";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"WRENCH_RETURN reason={LastReturnReason} position={p} awaySeconds={awaySeconds:F2}");
+#endif
+                ReturnHome();
+            }
         }
         public static bool InsidePlayableRooms(Vector3 p)
         {
