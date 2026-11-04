@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
         public static string FindFfmpeg()
         {
             var configured=System.Environment.GetEnvironmentVariable("LK_FFMPEG");if(!string.IsNullOrEmpty(configured)&&File.Exists(configured))return configured;
-            foreach(var directory in (System.Environment.GetEnvironmentVariable("PATH")??"").Split(Path.PathSeparator).Concat(new[]{"/opt/homebrew/bin","/usr/local/bin"}))
+            foreach(var directory in (System.Environment.GetEnvironmentVariable("PATH")??"").Split(Path.PathSeparator).Concat(new[]{"/opt/homebrew/bin","/usr/local/bin",Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile),".local/bin")}))
             {var p=Path.Combine(directory,Application.platform==RuntimePlatform.WindowsEditor?"ffmpeg.exe":"ffmpeg");if(File.Exists(p))return p;}
             throw new FileNotFoundException("FFmpeg is required. Install it (macOS: brew install ffmpeg), then restart Unity, or set LK_FFMPEG to its executable path.");
         }

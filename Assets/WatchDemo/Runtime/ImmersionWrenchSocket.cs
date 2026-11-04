@@ -18,6 +18,9 @@ namespace LighthouseKeepers.WatchDemo
         Quaternion wristPrevious, seatedRotation;
         Transform controller, palm;
         HandRig hand;
+        XRGrabInteractable constrainedGrab;
+        XRBaseInteractable.MovementType savedMovement;
+        bool savedPositionSmoothing,savedRotationSmoothing;
         int bolt = -1, frame = -1;
         float angle;
         public bool IsSnapped => bolt >= 0;
@@ -51,6 +54,13 @@ namespace LighthouseKeepers.WatchDemo
             {
                 var predictedJaw = targetPose.position + targetPose.rotation * Vector3.Scale(jawLocal, localScale);
                 if (Vector3.Distance(predictedJaw, pipe.SocketPosition(active)) > tuning.wrenchSnapMetres) return;
+                if(tuning.leverPipe)
+                {
+                    constrainedGrab=grab;savedMovement=grab.movementType;
+                    savedPositionSmoothing=grab.smoothPosition;savedRotationSmoothing=grab.smoothRotation;
+                    grab.smoothPosition=grab.smoothRotation=false;
+                    grab.movementType=XRBaseInteractable.MovementType.Instantaneous;
+                }
                 bolt = active; controller = tracked; handAtSeat = tracked.position;
                 wristPrevious = tracked.rotation; angle = 0;
                 Vector3 normal = pipe.bolts[bolt].forward;
@@ -106,6 +116,12 @@ namespace LighthouseKeepers.WatchDemo
         void Update() { if (pipe && !pipe.wrench.isSelected) Unseat(); }
         void Unseat()
         {
+            if(constrainedGrab)
+            {
+                constrainedGrab.movementType=savedMovement;
+                constrainedGrab.smoothPosition=savedPositionSmoothing;constrainedGrab.smoothRotation=savedRotationSmoothing;
+                constrainedGrab=null;
+            }
             if (hand) hand.SetConstrainedGrip(null);
             hand = null; controller = null; bolt = -1; angle = 0; frame = -1;
         }
