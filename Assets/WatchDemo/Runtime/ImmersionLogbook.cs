@@ -17,7 +17,7 @@ namespace LighthouseKeepers.WatchDemo
             c.material=new Material(Resources.Load<Shader>("ImmersionLogbook"));
             Decorate(c.page,c.material,out c.paper,out c.sprite);
             var text=new GameObject("Night written in ink",typeof(RectTransform),typeof(Text));text.transform.SetParent(rect,false);
-            c.ink=text.GetComponent<Text>();c.ink.rectTransform.sizeDelta=new Vector2(470,240);c.ink.font=Resources.Load<Font>("Fonts/Kalam-Regular");c.ink.fontSize=35;c.ink.alignment=TextAnchor.MiddleCenter;c.ink.color=new Color(.12f,.08f,.045f);c.ink.material=c.material;c.ink.raycastTarget=false;
+            c.ink=text.GetComponent<Text>();c.ink.rectTransform.sizeDelta=new Vector2(470,300);c.ink.font=Resources.Load<Font>("Fonts/Kalam-Regular");c.ink.fontSize=31;c.ink.alignment=TextAnchor.MiddleCenter;c.ink.color=new Color(.12f,.08f,.045f);c.ink.material=c.material;c.ink.raycastTarget=false;
             c.page.SetActive(false);return c;
         }
         public static void Decorate(GameObject page,Material overlay,out Texture2D paper,out Sprite sprite)

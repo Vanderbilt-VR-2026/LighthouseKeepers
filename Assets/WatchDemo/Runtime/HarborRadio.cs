@@ -12,7 +12,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
         Transform head,wrench;WatchPipeRepair pipe;readonly Queue<int> pending=new();
-        int day,progress;bool firstBolt,complete;float idle,earlyNext;
+        int day,progress;bool firstBolt,complete,staticActive;float idle,earlyNext;
         public static HarborRadio Create(WatchDemoController watch,Transform head,Transform wrench,WatchPipeRepair pipe,Transform cabinet)
         {
             var r=cabinet.gameObject.AddComponent<HarborRadio>();r.watch=watch;r.tuning=watch.State.Immersion;r.head=head;r.wrench=wrench;r.pipe=pipe;
@@ -20,6 +20,10 @@ namespace LighthouseKeepers.WatchDemo
             r.noise=MakeNoise();r.click=Resources.Load<AudioClip>("Hands/clunk");
             r.wall=r.Voice(cabinet,"Harbor master wall voice",r.tuning.wallRadioVolume,1,10);
             var receiver=new GameObject("Keeper belt radio receiver").transform;receiver.SetParent(watch.transform,false);r.belt=r.Voice(receiver,"Harbor master belt voice",r.tuning.beltRadioVolume,.25f,2);
+            var parts=watch.GetComponent<M2StationParts>();
+            parts.Part("Belt radio case",receiver,Vector3.zero,new Vector3(.075f,.13f,.035f),parts.Dark);
+            parts.Part("Belt radio aerial",receiver,new Vector3(-.025f,.10f,0),new Vector3(.008f,.075f,.008f),parts.Metal);
+            for(int i=0;i<4;i++)parts.Part("Belt radio speaker slit",receiver,new Vector3(0,-.025f+i*.012f,.019f),new Vector3(.05f,.004f,.004f),parts.Brass);
             r.wallNoise=r.Static(cabinet);r.beltNoise=r.Static(receiver);
             return r;
         }
@@ -45,6 +49,7 @@ namespace LighthouseKeepers.WatchDemo
             var yaw=Quaternion.Euler(0,head.eulerAngles.y,0);belt.transform.parent.SetPositionAndRotation(head.position+Vector3.down*.75f+yaw*new Vector3(.18f,0,.02f),yaw);
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
             belt.volume=tuning.beltRadioVolume*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
+            beltNoise.volume=.007f*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
             if(s.RemoteReplica)return;
             Age+=Time.deltaTime;
             if(day!=s.Day)
@@ -52,6 +57,7 @@ namespace LighthouseKeepers.WatchDemo
                 day=s.Day;pending.Clear();firstBolt=complete=false;idle=0;progress=Progress();
                 Enqueue(day==1?1:day==2?13:day==3?14:15);
                 if(day==1)Enqueue(2);
+                if(day==2)Enqueue(4);
             }
             if(s.Failed){pending.Clear();wall.Stop();belt.Stop();StopStatic();return;}
             int current=Progress();if(current!=progress){progress=current;idle=0;}else idle+=Time.deltaTime;
@@ -87,9 +93,9 @@ namespace LighthouseKeepers.WatchDemo
             var clip=catalog?catalog.Line(id):null;
             if(!clip||age>=clip.length)return;
             foreach(var source in new[]{wall,belt}){source.Stop();source.clip=clip;source.time=Mathf.Min(age,clip.length-.01f);source.Play();}
-            wallNoise.Play();beltNoise.Play();if(age<.1f&&click)wallNoise.PlayOneShot(click,.5f);
+            staticActive=true;wallNoise.Play();beltNoise.Play();if(age<.1f&&click)wallNoise.PlayOneShot(click,.5f);
         }
-        void StopStatic(){if(wallNoise.isPlaying){wallNoise.Stop();beltNoise.Stop();if(click)wallNoise.PlayOneShot(click,.25f);}}
+        void StopStatic(){if(!staticActive)return;staticActive=false;wallNoise.Stop();beltNoise.Stop();if(click)wallNoise.PlayOneShot(click,.25f);}
         void OnDestroy(){if(noise)Destroy(noise);if(belt)Destroy(belt.transform.parent.gameObject);}
     }
 }

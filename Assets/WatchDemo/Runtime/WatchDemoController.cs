@@ -184,7 +184,7 @@ namespace LighthouseKeepers.WatchDemo
             boardText.Clear();
             if(state.NetworkRehearsal)
             {board.text="NETWORK PRACTICE\n\nMove, turn and grab props together.\nObjectives and day clock are paused.\n\nLEFT MENU: Return to lobby";return;}
-            if(state.Immersion&&state.Immersion.physicalGuidance)boardText.Append("Keep the light. Survive till dawn.\nNIGHT ").Append(state.Day).Append(" — TONIGHT'S JOBS\n\n");
+            if(state.Immersion&&state.Immersion.physicalGuidance)boardText.Append("Keep the light. Survive till dawn.\nNIGHT ").Append(state.Day).Append(" — DAWN IN ").Append(Mathf.Max(0,(int)(state.Duration-state.Elapsed))/60).Append(':').Append((Mathf.Max(0,(int)(state.Duration-state.Elapsed))%60).ToString("00")).Append("\n");
             else boardText.Append("KEEPER WATCH — DAY ").Append(state.Day).Append("\n\n");
             foreach(var task in state.Definition.tasks)
                 boardText.Append(state.IsDone(task.stationId)?(state.Immersion?"✓ ":"[X] "):(state.Immersion?"○ ":"[ ] ")).Append(task.taskText).Append('\n');
@@ -201,7 +201,7 @@ namespace LighthouseKeepers.WatchDemo
             if(!state.Immersion&&!state.Failed&&(!state.Complete||state.HasNextDay))boardText.Append("\nLEFT MENU: Return to lobby (Editor: Esc)");
             if(crewBeds>0&&!sleeping)boardText.Append("\nWaiting for other keeper (").Append(crewBeds).Append('/').Append(crewKeepers).Append(" in bed)");
             if(!string.IsNullOrEmpty(crewNotice))boardText.Append('\n').Append(crewNotice);
-            if(state.Immersion)boardText.Append("\n\nWater too high or light dark too long = lost.");
+            if(state.Immersion)boardText.Append("\nWater too high or light dark too long = lost.");
             board.text=boardText.ToString();
         }
         IEnumerator Sleep()

@@ -5,6 +5,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         WatchPipeRepair pipe;WatchState state;M2StationParts parts;Transform needle;
         readonly Transform[] bolts=new Transform[3];readonly Vector3[] rests=new Vector3[3];
+        readonly int[] chalkState={-1,-1,-1};
         readonly TextMesh[] chalk=new TextMesh[3];readonly Light[] bulbs=new Light[3];
         public static void Create(WatchPipeRepair pipe,WatchState state)
         {var p=pipe.gameObject.AddComponent<ImmersionPipePresentation>();p.pipe=pipe;p.state=state;p.Build();}
@@ -39,7 +40,7 @@ namespace LighthouseKeepers.WatchDemo
                 float turns=done?p.Profile.quarterTurns[i]:active?p.TurnsDone+p.StrokeDegrees/p.Profile.quarterTurnDegrees:0;
                 bolts[i].localRotation=Quaternion.Euler(0,0,45+turns*90*(p.Direction==0?1:p.Direction));
                 bolts[i].localPosition=rests[i]-Vector3.forward*(.022f*turns/p.Profile.quarterTurns[i]);
-                chalk[i].text=done?((char)('A'+i))+" ✓":active?((char)('A'+i))+" ↻":((char)('A'+i)).ToString();
+                int mark=done?2:active?1:0;if(chalkState[i]!=mark){chalkState[i]=mark;chalk[i].text=done?((char)('A'+i))+" ✓":active?((char)('A'+i))+" ↻":((char)('A'+i)).ToString();}
                 bulbs[i].intensity=done?.18f:active?.45f+.12f*Mathf.Sin(Time.time*2.4f):.12f;
             }
             needle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(60,-60,p.InflowFraction));

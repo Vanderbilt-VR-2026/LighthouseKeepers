@@ -100,6 +100,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
+            AnimateCounters();
             starterCord.SetPosition(0,transform.TransformPoint(starterCordMount));starterCord.SetPosition(1,starterHandle.position-starterHandle.forward*.025f);
             if(State.Engine.LowFuel&&State.Engine.Running&&Time.time>=nextWarning){nextWarning=Time.time+8;if(cough)sound.PlayOneShot(cough,.2f);}
             bool held=FuelCan.Grab.isSelected||State.Coop?.RemoteHeld(FuelCan.Grab)==true;

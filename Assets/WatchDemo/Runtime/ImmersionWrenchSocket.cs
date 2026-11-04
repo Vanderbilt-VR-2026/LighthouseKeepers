@@ -47,7 +47,7 @@ namespace LighthouseKeepers.WatchDemo
             if (bolt < 0)
             {
                 var predictedJaw = targetPose.position + targetPose.rotation * Vector3.Scale(jawLocal, localScale);
-                if (Vector3.Distance(predictedJaw, pipe.bolts[active].position) > tuning.wrenchSnapMetres) return;
+                if (Vector3.Distance(predictedJaw, pipe.SocketPosition(active)) > tuning.wrenchSnapMetres) return;
                 bolt = active; controller = tracked; handAtSeat = tracked.position;
                 wristPrevious = tracked.rotation; angle = 0;
                 Vector3 normal = pipe.bolts[bolt].forward;
@@ -79,7 +79,7 @@ namespace LighthouseKeepers.WatchDemo
                 wristPrevious = tracked.rotation; frame = Time.frameCount;
             }
             targetPose.rotation = Quaternion.AngleAxis(angle, pipe.bolts[bolt].forward) * seatedRotation;
-            targetPose.position = pipe.bolts[bolt].position - targetPose.rotation * Vector3.Scale(jawLocal, localScale);
+            targetPose.position = pipe.SocketPosition(bolt) - targetPose.rotation * Vector3.Scale(jawLocal, localScale);
         }
         public override void OnGrab(XRGrabInteractable grab) => Unseat();
         void Update() { if (pipe && !pipe.wrench.isSelected) Unseat(); }

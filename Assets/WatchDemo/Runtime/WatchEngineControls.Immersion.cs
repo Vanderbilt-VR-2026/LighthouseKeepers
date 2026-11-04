@@ -4,6 +4,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed partial class WatchEngineControls
     {
         TextMesh primerTally,starterTally;
+        Transform primerDrum,starterDrum;
         Renderer finalChokeLamp;
         LineRenderer fuelStream;
         AudioSource pourSound;
@@ -16,7 +17,7 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var name in new[]{"Generator sequence panel","Starter pull label","Primer label","Choke label","Filler label"})
             {var t=transform.Find(name);if(t)t.gameObject.SetActive(false);}
             parts.Part("Riveted starting instructions",transform,new Vector3(0,1.53f,.88f),new Vector3(1.18f,.23f,.035f),parts.Brass);
-            parts.Text("Engraved starting order","1 FUEL   2 PRIME ×3   3 CHOKE ▲\n4 PULL ×3   5 CHOKE ▼",transform,new Vector3(0,1.53f,.901f),.0085f).color=new Color(.09f,.07f,.035f);
+            parts.Text("Engraved starting order","1 FUEL   2 PRIME ×3   3 CHOKE ▲\n4 PULL ×3   5 CHOKE ▼",transform,new Vector3(0,1.53f,.901f),.0085f).color=Color.black;
             for(int x=-1;x<=1;x+=2)for(int y=-1;y<=1;y+=2)
                 parts.Part("Plate rivet",transform,new Vector3(x*.56f,1.53f+y*.085f,.907f),Vector3.one*.016f,parts.Metal,PrimitiveType.Sphere);
             // Existing four lamps still show fuel, priming, choke and running; fifth confirms reopening.
@@ -30,8 +31,8 @@ namespace LighthouseKeepers.WatchDemo
             collar.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Part("Primer fuel hose",Primer.transform,new Vector3(0,-.16f,-.045f),new Vector3(.022f,.25f,.022f),parts.Dark,PrimitiveType.Cylinder);
             parts.Part("Choke pivot housing",Choke.transform,new Vector3(0,0,-.025f),new Vector3(.13f,.13f,.08f),parts.Metal);
-            primerTally=Counter("Primer tally",new Vector3(.4f,1.20f,.93f));
-            starterTally=Counter("Starter tally",new Vector3(.23f,1.14f,1.01f));
+            primerTally=Counter("Primer tally",new Vector3(.4f,1.20f,.93f),out primerDrum);
+            starterTally=Counter("Starter tally",new Vector3(.23f,1.14f,1.01f),out starterDrum);
             Filler.localPosition=new Vector3(.68f,1.12f,.99f);
             parts.Part("Filler neck",Filler,new Vector3(0,-.07f,-.015f),new Vector3(.10f,.07f,.10f),parts.Metal,PrimitiveType.Cylinder);
             parts.Part("Filler neck bracket",Filler,new Vector3(0,-.16f,-.09f),new Vector3(.19f,.04f,.25f),parts.Dark);
@@ -53,11 +54,13 @@ namespace LighthouseKeepers.WatchDemo
             parts.Part(name+" backing",transform,position-Vector3.forward*.014f,new Vector3(size.x,size.y,.025f),parts.Dark);
             parts.Text(name,caption,transform,position,.005f);
         }
-        TextMesh Counter(string name,Vector3 pos)
+        TextMesh Counter(string name,Vector3 pos,out Transform drum)
         {
             parts.Part(name+" metal bezel",transform,pos,new Vector3(.13f,.075f,.035f),parts.Brass);
             parts.Part(name+" black window",transform,pos+Vector3.forward*.02f,new Vector3(.105f,.053f,.008f),parts.Dark);
-            return parts.Text(name+" numbered wheel","0 / 3",transform,pos+Vector3.forward*.026f,.004f);
+            drum=M2StationParts.Root(name+" rotating drum",transform,pos+Vector3.forward*.026f);
+            var wheel=parts.Part(name+" engraved drum",drum,Vector3.zero,new Vector3(.055f,.045f,.055f),parts.Metal,PrimitiveType.Cylinder);wheel.transform.localRotation=Quaternion.Euler(0,0,90);
+            return parts.Text(name+" numbered wheel","0 / 3",transform,pos+Vector3.forward*.058f,.004f);
         }
         void RefreshPhysicalGuidance()
         {
@@ -66,6 +69,12 @@ namespace LighthouseKeepers.WatchDemo
             if(shownPrimer!=e.Primer||shownStarter!=e.Pulls)
             {if(shownPrimer>=0&&clunk)sound.PlayOneShot(clunk,.12f);shownPrimer=e.Primer;shownStarter=e.Pulls;primerTally.text=$"{e.Primer} / {State.PowerTuning.primerSqueezes}";starterTally.text=$"{e.Pulls} / {State.PowerTuning.starterPulls}";}
             var col=e.Settled?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",e.Settled?col*.65f:Color.black);finalChokeLamp.SetPropertyBlock(block);
+        }
+        void AnimateCounters()
+        {
+            if(!physicalGuidance)return;
+            primerDrum.localRotation=Quaternion.Slerp(primerDrum.localRotation,Quaternion.Euler(State.Engine.Primer*36,0,0),1-Mathf.Exp(-18*Time.deltaTime));
+            starterDrum.localRotation=Quaternion.Slerp(starterDrum.localRotation,Quaternion.Euler(State.Engine.Pulls*36,0,0),1-Mathf.Exp(-18*Time.deltaTime));
         }
         public bool CanPour(bool held)
         {
