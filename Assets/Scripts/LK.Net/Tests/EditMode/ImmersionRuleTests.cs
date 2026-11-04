@@ -26,8 +26,9 @@ namespace LighthouseKeepers.Net.Tests
         [Test] public void EveryBoltUsesTwistOnlySeparationRetainsProgressAndFlowDropsEachClick()
         {
             var profile=Resources.Load("ImmersionPipeRepair");Assert.NotNull(profile);
+            float click=(float)profile.GetType().GetField("quarterTurnDegrees").GetValue(profile);
             var pipe=Activator.CreateInstance(Type("PipeRepairState"),profile,true);Call(pipe,"Reset",91,false);
-            Call(pipe,"Observe",.1f,0f,true,true,true);Call(pipe,"Observe",.1f,45f,true,false,true);
+            Call(pipe,"Observe",.1f,0f,true,true,true);Call(pipe,"Observe",.1f,click*.5f,true,false,true);
             float partial=Get<float>(pipe,"StrokeDegrees");Assert.Greater(partial,0);
             Call(pipe,"Observe",.1f,0f,false,false,true);Assert.AreEqual(partial,Get<float>(pipe,"StrokeDegrees"));
             float previous=1;int ticks=0,lastTurns=0,lastBolts=0;
@@ -43,23 +44,25 @@ namespace LighthouseKeepers.Net.Tests
         [TestCase(1f)] [TestCase(-1f)]
         public void ShortRatchetStrokesAccumulateWithoutUnwinding(float sign)
         {
-            var pipe=Activator.CreateInstance(Type("PipeRepairState"),Resources.Load("ImmersionPipeRepair"),true);
+            var profile=Resources.Load("ImmersionPipeRepair");
+            float click=(float)profile.GetType().GetField("quarterTurnDegrees").GetValue(profile);
+            var pipe=Activator.CreateInstance(Type("PipeRepairState"),profile,true);
             Call(pipe,"Reset",91,false);Call(pipe,"Observe",.1f,0f,true,true,true);
             float progress=0;
-            for(int stroke=0;Get<int>(pipe,"BoltsDone")==0&&stroke<15;stroke++)
+            for(int stroke=0;Get<int>(pipe,"BoltsDone")==0&&stroke<40;stroke++)
             {
-                Call(pipe,"Observe",.1f,30f*sign,true,false,true);
+                Call(pipe,"Observe",.1f,(click/3)*sign,true,false,true);
                 if(Get<int>(pipe,"BoltsDone")>0)break;
-                float earned=Get<int>(pipe,"TurnsDone")*90+Get<float>(pipe,"StrokeDegrees");
+                float earned=Get<int>(pipe,"TurnsDone")*click+Get<float>(pipe,"StrokeDegrees");
                 Assert.Greater(earned,progress,"A short tightening stroke must add progress");
                 float flow=Get<float>(pipe,"InflowFraction");
-                Call(pipe,"Observe",.1f,-30f*sign,true,false,true);
-                Assert.AreEqual(earned,Get<int>(pipe,"TurnsDone")*90+Get<float>(pipe,"StrokeDegrees"),.001f,"Return stroke unwound the bolt");
+                Call(pipe,"Observe",.1f,-(click/3)*sign,true,false,true);
+                Assert.AreEqual(earned,Get<int>(pipe,"TurnsDone")*click+Get<float>(pipe,"StrokeDegrees"),.001f,"Return stroke unwound the bolt");
                 Assert.AreEqual(flow,Get<float>(pipe,"InflowFraction"),.0001f,"Return stroke brought the leak back");
                 Call(pipe,"Observe",.5f,0f,true,true,true);
-                Assert.AreEqual(earned,Get<int>(pipe,"TurnsDone")*90+Get<float>(pipe,"StrokeDegrees"),.001f,"Holding still must not repair");
+                Assert.AreEqual(earned,Get<int>(pipe,"TurnsDone")*click+Get<float>(pipe,"StrokeDegrees"),.001f,"Holding still must not repair");
                 Call(pipe,"Observe",.1f,0f,false,false,true);Call(pipe,"Observe",.1f,0f,true,true,true);
-                Assert.AreEqual(earned,Get<int>(pipe,"TurnsDone")*90+Get<float>(pipe,"StrokeDegrees"),.001f,"Re-seating lost partial progress");
+                Assert.AreEqual(earned,Get<int>(pipe,"TurnsDone")*click+Get<float>(pipe,"StrokeDegrees"),.001f,"Re-seating lost partial progress");
                 progress=earned;
             }
             Assert.AreEqual(1,Get<int>(pipe,"BoltsDone"),"Repeated 30-degree cranks must finish the coupling");
