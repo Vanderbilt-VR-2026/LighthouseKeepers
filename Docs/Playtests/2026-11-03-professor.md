@@ -16,3 +16,7 @@ Baseline game source: main `3f882fe`; current main `0ed2a95` adds submission doc
 Keep existing working hands, grip, voice, shared state, power grid, beacon deadline and tuning except explicit S4-M3 interaction changes. William Qian owns avatars/body and flood water visuals; do not edit them. Gameplay/flood rules may change only within requested scope.
 
 Before gameplay edits: fresh solo Days 1–3 and Mac-host + Quest-guest join/avatar/voice/shared-task/shared-bed baseline in `artifacts/immersion/before/`. Repeat after. Headset comfort and networking acceptance require actual headset evidence.
+
+## Follow-up from the lead during the baseline
+
+The lead reports that tipping the red fuel can over the filler either does not work or is unclear, the can is hard to grip and clips into the generator, and the primer looks like a floating circular block. S4-M3 must provide an accessible handle collider and clear resting position, a legible filler/tilt affordance and visible/audible pouring with host-owned fuel increase, plus a visibly mounted rubber primer assembly. Verify host and guest pouring and both-hand grip without changing the base hand rotation.

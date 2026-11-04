@@ -13,7 +13,7 @@ namespace LighthouseKeepers.Net
     public sealed class WatchCoopSession : MonoBehaviour, ICoopWatchLink
     {
         const int HelloKind=40,SnapshotKind=41,CommandKind=42,ResultKind=43;
-        const string Protocol="LK-Lab-Coop-v2";
+        const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
         [Serializable] sealed class Hello {public string protocol=Protocol,world,nonce;}
         [Serializable] sealed class Envelope {public string protocol=Protocol,world,nonce,state;public int sequence;}
         [Serializable] public sealed class Command
@@ -38,6 +38,7 @@ namespace LighthouseKeepers.Net
         TextMesh debugLine;
         void RefreshDebug()
         {
+            if(LighthouseKeepers.Core.ImmersionTuning.Current){if(debugLine)debugLine.gameObject.SetActive(false);return;}
             if(!debugLine)
             {
                 var rig=FindAnyObjectByType<XROrigin>();if(!rig||!rig.Camera)return;
@@ -184,7 +185,8 @@ namespace LighthouseKeepers.Net
             if(!Ready)return -1;
             if(c.action==CoopAction.Bed)
             {
-                if(!watch.CanSleep||!poses.Sample(actor,out var pose)||Vector3.Distance(pose.Head,watch.BedPosition)>=1.8f)return -1;
+                if(!poses.Sample(actor,out var pose)||Vector3.Distance(pose.Head,watch.BedPosition)>=1.8f)return -1;
+                if(!watch.CanSleep)return watch.ApplyCommand(CoopAction.Bed,0,false);
                 beds.Add(actor,true);UpdateStatus();TryBed();return 1;
             }
             if(c.action==CoopAction.Retry||c.action==CoopAction.Replay)return watch.ApplyCommand(c.action,c.value,c.pressed);
@@ -210,7 +212,15 @@ namespace LighthouseKeepers.Net
             if(!beds.AllReady(channel.Runner.ActivePlayers.Select(p=>p.RawEncoded)))return;
             watch.BeginSharedSleep();
         }
-        void UpdateStatus()=>watch.CrewStatus(beds.Count,crew.Players.Count,notice);
+        void UpdateStatus()
+        {
+            watch.CrewStatus(beds.Count,crew.Players.Count,notice);
+            if(watch is ICoopBedPresentation lamps&&channel&&channel.Runner)
+            {
+                int mask=0;foreach(var p in channel.Runner.ActivePlayers)if(beds.Contains(p.RawEncoded))mask|=p==channel.Runner.LocalPlayer?1:2;
+                lamps.SetBedMask(mask);
+            }
+        }
         void Left(int actor)
         {
             nonces.Remove(actor);acknowledged.Remove(actor);commands.Remove(actor);beds.Remove(actor);lastPull.Remove(actor);rateStart.Remove(actor);rateCount.Remove(actor);

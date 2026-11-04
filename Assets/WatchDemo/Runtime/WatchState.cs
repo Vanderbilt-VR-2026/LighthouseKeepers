@@ -16,6 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         readonly DayDefinition[] days;
         public S4Tuning Tuning {get;}
         public S4M2Tuning PowerTuning {get;}
+        public ImmersionTuning Immersion {get;}
         public PowerGrid Grid {get;}
         public WatchEngineState Engine {get;}
         public BeaconStationState Beacon {get;}
@@ -79,18 +80,22 @@ namespace LighthouseKeepers.WatchDemo
         public WatchState(DayDefinition[] definitions, int firstDay):this(definitions,firstDay,null){}
         public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning):this(definitions,firstDay,tuning,null){}
         public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning,S4M2Tuning powerTuning)
+            :this(definitions,firstDay,tuning,powerTuning,null){}
+        public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning,S4M2Tuning powerTuning,ImmersionTuning immersion)
         {
             if (definitions == null || definitions.Length == 0) throw new ArgumentException("No authored watch days");
             days = definitions;
             Tuning=tuning&&tuning.enabledForWatch?tuning:null;
-            Pipe=new PipeRepairState(Resources.Load<PipeRepairProfile>("PipeRepair"));
+            Immersion=immersion&&immersion.enabledForWatch?immersion:null;
+            bool forgiving=Immersion&&Immersion.forgivingPipe;
+            Pipe=new PipeRepairState(Resources.Load<PipeRepairProfile>(forgiving?"ImmersionPipeRepair":"PipeRepair"),forgiving);
             if(Tuning&&Tuning.difficulty)Pipe.RetainedPartialProgress=Tuning.slipRetainedFraction;
             Pipe.Changed+=()=>Changed?.Invoke();Pipe.Completed+=()=>CompleteRepair();
             Radio=new RadioState(Resources.Load<RadioProgram>("StormRadio"));
             Radio.BroadcastCompleted+=()=>{if(faults.Remove(RadioStation))Changed?.Invoke();};
             PowerTuning=powerTuning&&powerTuning.enabledForWatch?powerTuning:null;
             if(PowerTuning&&PowerTuning.powerGrid){Grid=new PowerGrid(PowerTuning.pumpLoad,PowerTuning.beaconLoad,PowerTuning.radioLoad,PowerTuning.lightsLoad);Grid.Changed+=GridChanged;}
-            if(PowerTuning&&PowerTuning.generatorSequence){Engine=new WatchEngineState(PowerTuning);Engine.Changed+=EngineChanged;}
+            if(PowerTuning&&PowerTuning.generatorSequence){Engine=new WatchEngineState(PowerTuning){IgnoreExtraPulls=Immersion&&Immersion.forgivingGenerator};Engine.Changed+=EngineChanged;}
             if(PowerTuning&&PowerTuning.beaconStation){Beacon=new BeaconStationState(PowerTuning);Beacon.Changed+=BeaconChanged;}
             index = Array.FindIndex(days, d => d.day == firstDay);
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(firstDay));

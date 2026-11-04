@@ -7,7 +7,7 @@ using LighthouseKeepers.Flood;
 using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView
+    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation
     {
         [SerializeField] FloodController flood;
         [SerializeField] Transform head,repairPoint,bed,wrenchVisual;
@@ -40,13 +40,18 @@ namespace LighthouseKeepers.WatchDemo
         WatchPowerPanel powerPanel;
         WatchEngineControls engineControls;
         WatchBeaconStation beaconStation;
-        int sleepDay;
+        int sleepDay,bedMask;
+        ImmersionWorld immersionWorld;
+        ImmersionLogbook logbook;
+        public bool WrenchHeld=>wrench.isSelected||coop?.RemoteHeld(wrench)==true;
+        public void SetBedMask(int value){bedMask=value;if(immersionWorld)immersionWorld.SetBeds(value);}
+
         public Component Owner=>this;
         public void SetNetworkMode(bool practice,bool replica){state.SetNetworkRehearsal(practice);state.SetRemoteReplica(replica);}
         public string CaptureState()
         {
             var value=state.Capture(flood.Height);value.revision=Revision;value.sleeping=sleeping;value.fade=currentFade;
-            value.beds=crewBeds;value.keepers=crewKeepers;value.notice=crewNotice;value.sleepDay=sleepDay;return JsonUtility.ToJson(value);
+            value.beds=crewBeds;value.keepers=crewKeepers;value.notice=crewNotice;value.sleepDay=sleepDay;value.bedMask=bedMask;if(immersionWorld&&immersionWorld.Narrator)immersionWorld.Narrator.Capture(value);return JsonUtility.ToJson(value);
         }
         public bool ApplyState(string json)=>ApplyHostSnapshot(JsonUtility.FromJson<WatchSnapshot>(json));
         public string DescribeState()=>$"day={state.Day} elapsed={state.Elapsed:F2} water={flood.Height:F4} power={state.Power} tasks={state.CompletedTasks}";
@@ -55,7 +60,7 @@ namespace LighthouseKeepers.WatchDemo
         void Start()
         {
             var powerTuning=S4M2Tuning.Current;
-            state = new WatchState(Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning);
+            state = new WatchState(Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current);
             if(state.Tuning&&state.Tuning.difficulty)
             {poweredLeakRiseMPerSecond=state.Tuning.poweredRiseMPerSecond;unpoweredLeakRiseMPerSecond=state.Tuning.unpoweredRiseMPerSecond;repairedDrainMPerSecond=state.Tuning.drainMPerSecond;}
             coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);state.Coop=coop;
@@ -73,6 +78,12 @@ namespace LighthouseKeepers.WatchDemo
             menu=gameObject.AddComponent<WatchMenu>();menu.Initialize(this,head);
             if(state.Tuning)
             {s4Presentation=gameObject.AddComponent<S4WatchPresentation>();s4Presentation.Initialize(this,head,bed,generator,pipeRepair,radio,fade);}
+            if(state.Immersion)
+            {
+                if(state.Immersion.physicalGuidance){clock.gameObject.SetActive(false);bedPrompt.gameObject.SetActive(false);repairPrompt.gameObject.SetActive(false);}
+                immersionWorld=ImmersionWorld.Create(this,head,bed,board,wrench.transform,pipeRepair,generator,radio,beacon);
+                if(state.Immersion.logbook)logbook=ImmersionLogbook.Create(head,transform);
+            }
             BeginWatch();
             if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
             if(state.RemoteReplica){flood.Paused=true;clock.text="WAITING FOR HOST STATE";}
@@ -84,6 +95,9 @@ namespace LighthouseKeepers.WatchDemo
             if(generator)generator.ResetInteraction();
             if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();
             if(beaconStation&&!state.RemoteReplica)beaconStation.ResetProps();
+            if(immersionWorld&&immersionWorld.Narrator&&!state.RemoteReplica)immersionWorld.Narrator.ResetNight();
+            SetBedMask(0);
+            if(!sleeping)SetFade(0);
             CancelRepair();
             leak.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);if(leakAudio)leakAudio.Stop();
             if(pipeRepair)pipeRepair.ResetView();
@@ -111,9 +125,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Failed)
             {
                 flood.Paused=true;
-                if(trigger&&!previousTrigger&&(!menu||!menu.IsOpen))RetryDay();
+                if(state.Immersion&&state.Immersion.logbook)SetFade(Mathf.MoveTowards(currentFade,1,Time.deltaTime));
+                else if(trigger&&!previousTrigger&&(!menu||!menu.IsOpen))RetryDay();
             }
-            else if(state.Complete&&nearBed&&grip&&!previousGrip&&(!menu||!menu.IsOpen))TrySleep();
+            else if((state.Complete||state.Immersion)&&nearBed&&grip&&!previousGrip&&(!menu||!menu.IsOpen))TrySleep();
             // Original Day 1 net rise/drain remains unchanged. Outage disables pumping.
             if(!state.Failed)
             {
@@ -135,9 +150,15 @@ namespace LighthouseKeepers.WatchDemo
         }
         public bool TrySleep()
         {
+            if(state.Immersion&&!CanSleep&&!state.Failed&&!sleeping&&(!menu||!menu.IsOpen)&&Vector3.Distance(head.position,BedPosition)<1.8f)
+            {
+                if(coop!=null)coop.Send(LighthouseKeepers.Lobby.CoopAction.Bed);
+                else if(immersionWorld&&immersionWorld.Narrator)immersionWorld.Narrator.EarlyBed();
+                return false;
+            }
             if(coop!=null)return CanSleep&&(!menu||!menu.IsOpen)&&Vector3.Distance(head.position,BedPosition)<1.8f&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Bed);
             if(state.ReadOnly||sleeping||(menu&&menu.IsOpen)||!state.Complete||!state.HasNextDay||Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)>=1.8f)return false;
-            StartCoroutine(Sleep());return true;
+            SetBedMask(1);StartCoroutine(Sleep());return true;
         }
         public bool ApplyHostSnapshot(WatchSnapshot snapshot)
         {
@@ -146,8 +167,10 @@ namespace LighthouseKeepers.WatchDemo
             {Revision=snapshot.revision;if(generator)generator.ResetInteraction();
             if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();
             if(beaconStation&&!state.RemoteReplica)beaconStation.ResetProps();if(pipeRepair)pipeRepair.ResetView();if(radio)radio.ResetReplicaInteraction();whoosh.Play();if(menu)menu.Close();}
+            SetBedMask(snapshot.bedMask);if(immersionWorld&&immersionWorld.Narrator)immersionWorld.Narrator.Apply(snapshot);
             sleeping=snapshot.sleeping;sleepDay=snapshot.sleepDay;replicaFadeTarget=snapshot.fade;
             if(s4Presentation)s4Presentation.Night(sleeping,sleepDay,snapshot.fade);
+            if(logbook)logbook.Night(sleeping,sleepDay,snapshot.fade);
             crewBeds=snapshot.beds;crewKeepers=snapshot.keepers;crewNotice=snapshot.notice??"";
             flood.Paused=true;flood.SetHeight(snapshot.water);
             int remaining=Mathf.Max(0,(int)(state.Duration-state.Elapsed));
@@ -161,9 +184,10 @@ namespace LighthouseKeepers.WatchDemo
             boardText.Clear();
             if(state.NetworkRehearsal)
             {board.text="NETWORK PRACTICE\n\nMove, turn and grab props together.\nObjectives and day clock are paused.\n\nLEFT MENU: Return to lobby";return;}
-            boardText.Append("KEEPER WATCH — DAY ").Append(state.Day).Append("\n\n");
+            if(state.Immersion&&state.Immersion.physicalGuidance)boardText.Append("Keep the light. Survive till dawn.\nNIGHT ").Append(state.Day).Append(" — TONIGHT'S JOBS\n\n");
+            else boardText.Append("KEEPER WATCH — DAY ").Append(state.Day).Append("\n\n");
             foreach(var task in state.Definition.tasks)
-                boardText.Append(state.IsDone(task.stationId)?"[X] ":"[ ] ").Append(task.taskText).Append('\n');
+                boardText.Append(state.IsDone(task.stationId)?(state.Immersion?"✓ ":"[X] "):(state.Immersion?"○ ":"[ ] ")).Append(task.taskText).Append('\n');
             if(!state.Repaired)boardText.Append("Pipe: ").Append(state.Pipe.BoltsDone).Append("/3 bolts\n");
             if(state.Grid!=null)
             {boardText.Append("POWER: ").Append(state.Grid.Demand.ToString("0.##")).Append('/').Append(state.Grid.Capacity.ToString("0.##")).Append(state.Grid.Tripped?" — TRIPPED: RESET F2":!state.Grid.EngineRunning?" — ENGINE OFF":" — ");
@@ -171,12 +195,13 @@ namespace LighthouseKeepers.WatchDemo
                 boardText.Append('\n');}
             if(!state.BeaconShining&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
             boardText.Append('\n');
-            if(state.Failed)boardText.Append(state.FailureMessage).Append("\nTrigger to retry this day / Menu for retry or lobby");
+            if(state.Failed)boardText.Append(state.FailureMessage).Append(state.Immersion?"\nOpen the logbook to try again.":"\nTrigger to retry this day / Menu for retry or lobby");
             else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE\nMenu: Replay from Day 1 or Return to lobby");
             else boardText.Append(state.Beacon!=null?"PIPE F1 / POWER F2 / RADIO + BEACON F4\nFinish tasks, then sleep in F3":"PIPE F1 / GENERATOR F2 / RADIO F4\nFinish tasks, then sleep in F3");
-            if(!state.Failed&&(!state.Complete||state.HasNextDay))boardText.Append("\nLEFT MENU: Return to lobby (Editor: Esc)");
+            if(!state.Immersion&&!state.Failed&&(!state.Complete||state.HasNextDay))boardText.Append("\nLEFT MENU: Return to lobby (Editor: Esc)");
             if(crewBeds>0&&!sleeping)boardText.Append("\nWaiting for other keeper (").Append(crewBeds).Append('/').Append(crewKeepers).Append(" in bed)");
             if(!string.IsNullOrEmpty(crewNotice))boardText.Append('\n').Append(crewNotice);
+            if(state.Immersion)boardText.Append("\n\nWater too high or light dark too long = lost.");
             board.text=boardText.ToString();
         }
         IEnumerator Sleep()
@@ -196,7 +221,7 @@ namespace LighthouseKeepers.WatchDemo
             yield return new WaitForSeconds(.2f);state.Sleep();BeginWatch();
             for(float t=0;t<.8f;t+=Time.deltaTime){SetFade(1-t/.8f);yield return null;}SetFade(0);sleeping=false;
         }
-        void SetFade(float value){currentFade=value;fade.enabled=value>0;fadeMaterial.color=new Color(0,0,0,value);if(s4Presentation)s4Presentation.Night(sleeping,sleepDay,value);}
+        void SetFade(float value){currentFade=value;fade.enabled=value>0;fadeMaterial.color=new Color(0,0,0,value);if(s4Presentation)s4Presentation.Night(sleeping,sleepDay,value);if(logbook)logbook.Night(sleeping,sleepDay,value);}
         string SleepPrompt
         {
             get

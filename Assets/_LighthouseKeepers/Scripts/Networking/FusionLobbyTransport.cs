@@ -115,9 +115,8 @@ namespace LighthouseKeepers.Networking
                 scenes.AddSceneRef(SceneRef.FromIndex(index), LoadSceneMode.Single);
                 var photonSettings=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
                 if(ShipWorld.CoopEnabled)photonSettings.FixedRegion="us";
-                // Keep the public S3 preview separate: its snapshots do not carry S4 loss/night state.
-                if(ShipWorld.CoopEnabled&&LighthouseKeepers.Core.S4M2Tuning.Current)photonSettings.AppVersion="LK-S4-M2";
-                else if(ShipWorld.CoopEnabled&&LighthouseKeepers.Core.S4Tuning.Current)photonSettings.AppVersion="LK-S4-M1";
+                // Wire contract identity is shared by lobby label and snapshot validation.
+                if(ShipWorld.CoopEnabled)photonSettings.AppVersion=LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking;
                 var result = await current.StartGame(new StartGameArgs
                 {
                     CustomPhotonAppSettings=photonSettings,

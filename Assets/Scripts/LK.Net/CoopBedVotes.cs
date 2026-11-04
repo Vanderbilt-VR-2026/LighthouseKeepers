@@ -6,6 +6,7 @@ namespace LighthouseKeepers.Net
     {
         readonly HashSet<int> votes=new();
         public int Count=>votes.Count;
+        public bool Contains(int actor)=>votes.Contains(actor);
         public bool Add(int actor,bool eligible){return actor>0&&eligible&&votes.Add(actor);}
         public void Remove(int actor)=>votes.Remove(actor);
         public void Clear()=>votes.Clear();

@@ -35,7 +35,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             watch=controller;tuning=watch.State.Tuning;head=view;bed=bedPoint;generator=gen;pipe=repair;
             if(tuning.starterGrip&&!generator.Starter.GetComponent<S4StarterGrip>())generator.Starter.gameObject.AddComponent<S4StarterGrip>();
-            if(tuning.nightSequence)
+            if(tuning.nightSequence&&!(watch.State.Immersion&&watch.State.Immersion.logbook))
             {
                 nightText=new GameObject("Night survived readout").AddComponent<TextMesh>();nightText.transform.SetParent(head,false);
                 nightText.transform.localPosition=new Vector3(0,0,.32f);nightText.characterSize=.0015f;nightText.fontSize=64;

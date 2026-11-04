@@ -20,6 +20,7 @@ namespace LighthouseKeepers.Lobby
         bool ApplyState(string json);
         string DescribeState();
     }
+    public interface ICoopBedPresentation { void SetBedMask(int mask); }
     public interface ICoopWatchLink
     {
         bool Ready {get;}

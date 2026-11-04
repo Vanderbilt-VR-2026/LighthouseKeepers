@@ -24,7 +24,10 @@ namespace LighthouseKeepers.WatchDemo
         void Awake(){haptics=wrench.GetComponent<WrenchHaptics>();active=Block(new Color(1,.58f,.12f),1);done=Block(new Color(.1f,.65f,.2f),.3f);idle=Block(new Color(.2f,.25f,.27f),0);}
         static MaterialPropertyBlock Block(Color c,float glow){var p=new MaterialPropertyBlock();p.SetColor("_BaseColor",c);p.SetColor("_EmissionColor",c*glow);return p;}
         public void Bind(WatchState state)
-        {watch=state;watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;ResetView();}
+        {watch=state;watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;
+            if(state.Immersion&&state.Immersion.forgivingPipe&&!wrench.GetComponent<ImmersionWrenchSocket>())
+                wrench.gameObject.AddComponent<ImmersionWrenchSocket>().Initialize(this,state);
+            ResetView();}
         public void ResetView(){for(int i=0;i<3;i++)finished[i]=false;if(watch!=null&&watch.RemoteReplica)for(int i=0;i<watch.Pipe.BoltsDone;i++)finished[watch.Pipe.Order(i)]=true;previousContact=false;failureShown=false;lastBolt=-1;Changed();}
         void TickFeedback(){haptics.RatchetTick(watch.Pipe.Profile.tickAmplitude,watch.Pipe.Profile.tickSeconds);audioSource.PlayOneShot(ratchetClick,.7f);}
         void CompleteFeedback(){haptics.RepairCompleted();}
@@ -47,7 +50,7 @@ namespace LighthouseKeepers.WatchDemo
             if(watch==null)return;
             var state=watch.Pipe;int index=state.ActiveBolt;
             bool remoteHeld=watch.Coop!=null&&watch.Coop.RemoteHeld(wrench);
-            InContact=index>=0&&(wrench.isSelected||remoteHeld)&&Vector3.Distance(jaw.position,bolts[index].position)<=state.Profile.jawContactRadius;
+            InContact=index>=0&&(wrench.isSelected||remoteHeld)&&Vector3.Distance(jaw.position,bolts[index].position)<=state.Profile.jawContactRadius+(state.Forgiving?.025f:0);
             if(remoteHeld&&network==null)network=wrench.GetComponent<LighthouseKeepers.Interaction.INetworkPropStatus>();
             float sampleSeconds=remoteHeld&&network!=null?network.PoseInterval:Time.deltaTime;
             float degrees=0,speed=0;

@@ -5,7 +5,7 @@ Observed in the unchanged main-game runtime, Mac host + Quest guest on November 
 | Visible object / group | Creator / owner | S4-M3 treatment | Before |
 | --- | --- | --- | --- |
 | `Watch camera HUD/Watch readout`: day, countdown, tasks, loss message | WatchDemoBuilder / WatchDemoController | Remove camera readout; goal/tasks/time belong on chalkboard; loss on logbook | [HUD](../Verification/Immersion/before/view-hud.png) |
-| `Main Camera/Local crew debug readout`: region, code, names/count | CrewPoseStream / networking presentation | Lobby only; remove Lab debug text, retain transport | [HUD](../Verification/Immersion/before/view-hud.png) |
+| `Main Camera/Local crew debug readout`: region, code, names/count | WatchCoopSession / networking presentation | Lobby only; remove Lab debug text, retain transport | [HUD](../Verification/Immersion/before/view-hud.png) |
 | `Watch demo/Repair feedback`: billboard coupling/hold/turn/progress prompt | WatchPipeRepair | Remove billboard; chalk on coupling, physical motion/gauge, sound/haptics | [Pipe](../Verification/Immersion/before/pipe-ui.png) |
 | `Watch demo/Sleep prompt`: turn-to-view bed text | WatchDemoController | Remove; physical bunk plate, lamp and spoken early/ready cue | [Bed](../Verification/Immersion/before/bed-ui.png) |
 | `Night survived readout`: text parented to camera | S4WatchPresentation | Replace with ink on the logbook during existing comfort fade | Solo night capture in artifacts |
