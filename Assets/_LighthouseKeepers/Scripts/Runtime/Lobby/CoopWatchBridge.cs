@@ -21,7 +21,11 @@ namespace LighthouseKeepers.Lobby
         string DescribeState();
     }
     public interface ICoopBedPresentation { void SetBedMask(int mask); }
-    public interface ICoopWrenchClutch { bool RemoteWrenchTrigger(Component prop); }
+    public interface ICoopWrenchClutch
+    {
+        bool RemoteWrenchTrigger(Component prop);
+        bool RemoteWrenchKeeper(Component prop,out Vector3 head);
+    }
     public interface ICoopWatchLink
     {
         bool Ready {get;}

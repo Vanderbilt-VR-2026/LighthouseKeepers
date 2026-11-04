@@ -74,5 +74,28 @@ namespace LighthouseKeepers.Net.Tests
             foreach(var invalid in new[]{("radioCue",(object)99),("radioAge",(object)float.NaN),("bedMask",(object)4)})
             {var field=snapshot.GetType().GetField(invalid.Item1);var saved=field.GetValue(snapshot);field.SetValue(snapshot,invalid.Item2);Assert.False((bool)Call(snapshot,"Valid"));field.SetValue(snapshot,saved);}
         }
+        [TestCase(-60f)] [TestCase(0f)] [TestCase(60f)] [TestCase(180f)]
+        public void TowardKeeperTightensFromEitherSideAndPushingFirstCannotChooseDirection(float stance)
+        {
+            var classify=Type("WatchPipeRepair").GetMethod("TowardKeeperDegrees");
+            var keeper=Quaternion.AngleAxis(stance,Vector3.up)*Vector3.back;
+            foreach(float side in new[]{-1f,1f})
+            {
+                var far=Quaternion.AngleAxis(side*50,Vector3.up)*keeper;
+                var near=Quaternion.AngleAxis(side*30,Vector3.up)*keeper;
+                float pull=(float)classify.Invoke(null,new object[]{-side*20,far,near,Vector3.up,keeper});
+                float push=(float)classify.Invoke(null,new object[]{side*20,near,far,Vector3.up,keeper});
+                Assert.AreEqual(20,pull,.001f);Assert.AreEqual(-20,push,.001f);
+                var pipe=Activator.CreateInstance(Type("PipeRepairState"),Resources.Load("ImmersionPipeRepair"),true);
+                pipe.GetType().GetProperty("PullTowardTightens").SetValue(pipe,true);Call(pipe,"Reset",91,false);
+                Call(pipe,"Observe",.2f,push,true,false,true);
+                Assert.Zero(Get<float>(pipe,"StrokeDegrees"),"Initial push earned progress");
+                Call(pipe,"Observe",.2f,pull,true,false,true);
+                Assert.AreEqual(20,Get<float>(pipe,"StrokeDegrees"),.001f);
+                Call(pipe,"Observe",.2f,push,true,false,true);
+                Assert.AreEqual(20,Get<float>(pipe,"StrokeDegrees"),.001f,"Return loosened bolt");
+                Assert.AreEqual(1,Get<float>(pipe,"Direction"),"Visual must always tighten clockwise");
+            }
+        }
     }
 }

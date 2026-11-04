@@ -137,7 +137,11 @@ namespace LighthouseKeepers.Net.Tests
                 direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
                 Assert.True(grab.isSelected,"Grip failed: "+hand.Node);Assert.AreSame(direct,grab.interactorsSelecting[0],"Wrong holder");
                 Debug.Log($"CLUTCH_TEST begin hand={hand.Node} stance={stance} controller={controller.position} jaw={jaw.position} active={direct.isActiveAndEnabled} timescale={Time.timeScale}");
-                var face=Quaternion.LookRotation(Quaternion.AngleAxis((stance-1)*20,Vector3.up)*Vector3.right,Vector3.up);
+                // Start off-centre so a short arc has room to travel toward the
+                // keeper; a handle already pointing directly at them is at its
+                // nearest point. Exercise mirrored strokes with the two hands.
+                var keeperRadial=Vector3.ProjectOnPlane(origin.Camera.transform.position-pivot,Vector3.up).normalized;
+                var face=Quaternion.LookRotation(-(Quaternion.AngleAxis(hand.Node==UnityEngine.XR.XRNode.LeftHand?45:-45,Vector3.up)*keeperRadial),Vector3.up);
                 for(int align=0;align<2;align++){controller.rotation=face*Quaternion.Inverse(grab.transform.rotation)*controller.rotation;yield return new WaitForSeconds(.25f);}
                 for(int stroke=0;stroke<10&&Value<int>(state,"BoltsDone")==0;stroke++)
                 {
@@ -160,9 +164,11 @@ namespace LighthouseKeepers.Net.Tests
                         Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Wrist rotation alone repaired bolt");controller.rotation=original;
                     }
                     var rest=Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up);float height=controller.position.y-pivot.y;
+                    var toward=Vector3.ProjectOnPlane(origin.Camera.transform.position-pivot,Vector3.up).normalized;
+                    float pullSign=Vector3.Dot(Quaternion.AngleAxis(1,Vector3.up)*rest-rest,toward)>=0?1:-1;
                     for(float t=0;t<.35f&&Value<int>(state,"BoltsDone")==0;t+=Time.deltaTime)
                     {
-                        controller.position=pivot+Quaternion.AngleAxis(16*Mathf.Clamp01(t/.3f),Vector3.up)*rest+Vector3.up*height;
+                        controller.position=pivot+Quaternion.AngleAxis(pullSign*16*Mathf.Clamp01(t/.3f),Vector3.up)*rest+Vector3.up*height;
                         yield return null;
                         if(Value<bool>(socket,"IsSnapped"))Assert.Greater(Vector3.Dot(-grab.transform.forward,Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up).normalized),.98f,"Tool fights hand direction");
                     }

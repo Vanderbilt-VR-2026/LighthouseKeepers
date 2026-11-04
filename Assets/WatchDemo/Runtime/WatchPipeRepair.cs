@@ -84,6 +84,12 @@ namespace LighthouseKeepers.WatchDemo
                 if(state.Forgiving)degrees=SignedTwist(delta,bolts[index].forward);
                 else{delta.ToAngleAxis(out float angle,out var axis);if(angle>180)angle-=360;degrees=angle*Vector3.Dot(axis,bolts[index].forward);}speed=Vector3.Distance(jaw.position,previousJaw)/Mathf.Max(.001f,sampleSeconds);
                 if(!float.IsFinite(degrees))degrees=0;
+                if(state.PullTowardTightens)
+                {
+                    Vector3 keeper=head.position;
+                    bool known=!remoteHeld||(watch.Coop is LighthouseKeepers.Lobby.ICoopWrenchClutch clutch&&clutch.RemoteWrenchKeeper(wrench,out keeper));
+                    degrees=known?TowardKeeperDegrees(degrees,-(previousRotation*Vector3.forward),-wrench.transform.forward,bolts[index].forward,keeper-bolts[index].position):0;
+                }
             }
             previousContact=InContact;previousRotation=wrench.transform.rotation;previousJaw=jaw.position;
             bool steady=Mathf.Abs(degrees)<=state.Profile.steadyDegreesPerSecond*sampleSeconds&&speed<=state.Profile.steadyMetresPerSecond;
@@ -116,6 +122,18 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(delta.w<0)delta=new Quaternion(-delta.x,-delta.y,-delta.z,-delta.w);
             return 2*Mathf.Atan2(Vector3.Dot(new Vector3(delta.x,delta.y,delta.z),axis),delta.w)*Mathf.Rad2Deg;
+        }
+        // Compare the angular handle travel against the keeper's position, not wrist
+        // orientation or the first direction they happened to move. The host uses
+        // its existing fresh replicated keeper pose for a guest-owned wrench.
+        public static float TowardKeeperDegrees(float degrees,Vector3 before,Vector3 after,Vector3 axis,Vector3 keeper)
+        {
+            before=Vector3.ProjectOnPlane(before,axis).normalized;
+            after=Vector3.ProjectOnPlane(after,axis).normalized;
+            keeper=Vector3.ProjectOnPlane(keeper,axis).normalized;
+            float toward=Vector3.Dot(after-before,keeper);
+            if(Mathf.Abs(toward)<.000001f)return 0;
+            return Mathf.Abs(degrees)*Mathf.Sign(toward);
         }
         void OnDestroy(){if(watch!=null){watch.Pipe.QuarterTurn-=TickFeedback;watch.Pipe.Completed-=CompleteFeedback;watch.Pipe.Changed-=Changed;}}
     }

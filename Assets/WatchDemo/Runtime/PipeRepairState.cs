@@ -9,6 +9,9 @@ namespace LighthouseKeepers.WatchDemo
         public bool Forgiving {get;}
         public float RetainedPartialProgress { get; set; }
         public bool ReadOnly {get;set;}
+        // In this mode input is already classified: positive = toward keeper,
+        // negative = free return. Never choose the direction from initial jitter.
+        public bool PullTowardTightens {get;set;}
         public event Action Changed,QuarterTurn,Completed;
         readonly int[] order={0,1,2};
         public int BoltsDone{get;private set;}
@@ -67,7 +70,8 @@ namespace LighthouseKeepers.WatchDemo
             if(NeedsSeal){SealElapsed=steady?Mathf.Min(Profile.sealSeconds,SealElapsed+seconds):0;return;}
             float delta=Mathf.Clamp(twistDegrees,-Profile.maximumDegreesPerSecond*seconds,Profile.maximumDegreesPerSecond*seconds);
             if(Mathf.Abs(delta)<.01f)return;
-            if(direction==0)direction=Mathf.Sign(delta);
+            if(PullTowardTightens)direction=1;
+            else if(direction==0)direction=Mathf.Sign(delta);
             if(NeedsReturn){returned=Mathf.Max(0,returned-delta*direction);if(returned>=Profile.returnDegrees){NeedsReturn=false;returned=0;Changed?.Invoke();}return;}
             // The socket still follows the wrist on the return stroke, but the bolt's
             // ratchet holds every degree already earned (including an unfinished click).

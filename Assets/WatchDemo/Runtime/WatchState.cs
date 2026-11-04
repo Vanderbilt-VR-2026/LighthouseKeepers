@@ -89,6 +89,7 @@ namespace LighthouseKeepers.WatchDemo
             Immersion=immersion&&immersion.enabledForWatch?immersion:null;
             bool forgiving=Immersion&&Immersion.forgivingPipe;
             Pipe=new PipeRepairState(Resources.Load<PipeRepairProfile>(forgiving?"ImmersionPipeRepair":"PipeRepair"),forgiving);
+            Pipe.PullTowardTightens=forgiving&&Immersion.leverPipe&&Immersion.pullTowardTightens;
             if(Tuning&&Tuning.difficulty)Pipe.RetainedPartialProgress=Tuning.slipRetainedFraction;
             Pipe.Changed+=()=>Changed?.Invoke();Pipe.Completed+=()=>CompleteRepair();
             Radio=new RadioState(Resources.Load<RadioProgram>("StormRadio"));

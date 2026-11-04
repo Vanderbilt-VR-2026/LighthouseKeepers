@@ -122,6 +122,12 @@ namespace LighthouseKeepers.Net
         {trigger=micPressed&&Time.unscaledTime-micSeen<=.5f;return RemoteHeld(prop)&&prop.GetComponent<FusionGrabBinding>().Owner==micActor;}
         public bool RemoteWrenchTrigger(Component prop)
         {return wrenchPressed&&Time.unscaledTime-wrenchSeen<=.5f&&RemoteHeld(prop)&&prop.GetComponent<FusionGrabBinding>().Owner==wrenchActor;}
+        public bool RemoteWrenchKeeper(Component prop,out Vector3 head)
+        {
+            head=default;
+            if(!RemoteWrenchTrigger(prop)||!CrewPoseStream.Active||!CrewPoseStream.Active.Sample(wrenchActor,out var pose))return false;
+            head=pose.Head;return true;
+        }
         void Update()
         {
             if(detached||!channel||!channel.Connected)return;
