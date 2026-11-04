@@ -21,8 +21,9 @@ namespace LighthouseKeepers.WatchDemo
             s.smokeMaterial.SetFloat("_Rise",.65f);s.smokeMaterial.SetFloat("_Size",.10f);s.smokeMaterial.SetFloat("_Rate",.5f);
             s.steam=s.Emitter("GPU leak steam",pipe.transform,s.steamMaterial);
             Transform exhaust=null;foreach(var t in generator.GetComponentsInChildren<Transform>())if(t.name.ToLowerInvariant().Contains("exhaust")){exhaust=t;break;}
-            s.smoke=s.Emitter("GPU broken-engine smoke",exhaust?exhaust:generator.transform,s.smokeMaterial);
-            s.smoke.transform.localPosition=exhaust?Vector3.up*.25f:new Vector3(.35f,1.5f,0);
+            s.smoke=s.Emitter("GPU broken-engine smoke",watch.transform,s.smokeMaterial);
+            var exhaustRenderer=exhaust?exhaust.GetComponent<Renderer>():null;
+            s.smoke.transform.position=exhaustRenderer?new Vector3(exhaustRenderer.bounds.center.x,exhaustRenderer.bounds.max.y+.02f,exhaustRenderer.bounds.center.z):generator.transform.TransformPoint(new Vector3(.35f,1.5f,0));
             if(Camera.main){s.cameraData=Camera.main.GetComponent<UniversalAdditionalCameraData>();if(s.cameraData){s.oldDepth=s.cameraData.requiresDepthOption;s.cameraData.requiresDepthOption=CameraOverrideOption.On;}}
         }
         MeshRenderer Emitter(string name,Transform parent,Material material)
