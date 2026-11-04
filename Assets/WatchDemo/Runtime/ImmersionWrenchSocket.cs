@@ -21,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
         XRGrabInteractable constrainedGrab;
         XRBaseInteractable.MovementType savedMovement;
         bool savedPositionSmoothing,savedRotationSmoothing;
-        int bolt = -1, frame = -1;
+        int bolt = -1, frame = -1, requestedBolt = -1;
         float angle;
         public bool IsSnapped => bolt >= 0;
         public bool ClutchHeld {get;private set;}
@@ -57,7 +57,8 @@ namespace LighthouseKeepers.WatchDemo
             if (bolt < 0)
             {
                 var predictedJaw = targetPose.position + targetPose.rotation * Vector3.Scale(jawLocal, localScale);
-                if (Vector3.Distance(predictedJaw, pipe.SocketPosition(active)) > tuning.wrenchSnapMetres) return;
+                if (Vector3.Distance(predictedJaw, pipe.SocketPosition(active)) > tuning.wrenchSnapMetres && requestedBolt!=active) return;
+                requestedBolt=-1;
                 if(tuning.leverPipe)
                 {
                     constrainedGrab=grab;savedMovement=grab.movementType;
@@ -117,10 +118,17 @@ namespace LighthouseKeepers.WatchDemo
             return Mathf.Abs(Vector3.Dot(offset, normal)) > tuning.leverReleaseHeight ||
                 Vector3.ProjectOnPlane(offset, normal).magnitude > tuning.leverReleaseRadius;
         }
-        void Activate(ActivateEventArgs args){if(sourceGrab&&sourceGrab.isSelected)ClutchHeld=true;}
-        void Deactivate(DeactivateEventArgs args){ClutchHeld=false;Unseat();}
-        void Released(SelectExitEventArgs args){ClutchHeld=false;Unseat();}
-        public override void OnGrab(XRGrabInteractable grab) {ClutchHeld=false;Unseat();}
+        void Activate(ActivateEventArgs args)
+        {
+            if(!sourceGrab||!sourceGrab.isSelected)return;
+            ClutchHeld=true;
+            // Lock the jaw the player sees at the press, before XRI advances its smoothed carry pose.
+            int active=watch.Pipe.ActiveBolt;
+            if(tuning.triggerClutch&&active>=0&&Vector3.Distance(pipe.jaw.position,pipe.SocketPosition(active))<=tuning.wrenchSnapMetres)requestedBolt=active;
+        }
+        void Deactivate(DeactivateEventArgs args){ClutchHeld=false;requestedBolt=-1;Unseat();}
+        void Released(SelectExitEventArgs args){ClutchHeld=false;requestedBolt=-1;Unseat();}
+        public override void OnGrab(XRGrabInteractable grab) {ClutchHeld=false;requestedBolt=-1;Unseat();}
         void Update() { if (pipe && !pipe.wrench.isSelected) Unseat(); }
         void Unseat()
         {
