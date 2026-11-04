@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchState watch;WrenchHaptics haptics;
         readonly bool[] finished=new bool[3];
         MaterialPropertyBlock active,done,idle;
-        float queuedTwistDegrees;
+        float queuedTwistDegrees,returnClickDegrees;
         LighthouseKeepers.Interaction.INetworkPropStatus network;
         Quaternion previousRotation;Vector3 previousJaw;bool previousContact,failureShown;int lastBolt=-1;float nextText;
         public bool InContact{get;private set;}
@@ -84,6 +84,12 @@ namespace LighthouseKeepers.WatchDemo
             if((remoteHeld||state.Forgiving)&&InContact)
             {queuedTwistDegrees+=degrees;degrees=Mathf.Clamp(queuedTwistDegrees,-state.Profile.maximumDegreesPerSecond*Time.deltaTime,state.Profile.maximumDegreesPerSecond*Time.deltaTime);queuedTwistDegrees-=degrees;}
             else queuedTwistDegrees=0;
+            if(watch.Immersion&&watch.Immersion.leverPipe&&InContact&&!watch.Failed&&!state.Complete&&degrees*state.Direction<0)
+            {
+                returnClickDegrees+=Mathf.Abs(degrees);
+                if(returnClickDegrees>=30){returnClickDegrees%=30;audioSource.PlayOneShot(ratchetClick,.2f);}
+            }
+            else if(!InContact||degrees*state.Direction>0)returnClickDegrees=0;
             state.Observe(Time.deltaTime,degrees,InContact,steady,!watch.Failed);
             if(watch.Failed){if(!failureShown){Changed();prompt.text="WATCH LOST — PRESS TRIGGER TO RETRY";failureShown=true;}return;}
             if(watch.Immersion&&watch.Immersion.physicalGuidance)return;

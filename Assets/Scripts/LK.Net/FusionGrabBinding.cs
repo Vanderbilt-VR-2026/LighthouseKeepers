@@ -114,13 +114,15 @@ namespace LighthouseKeepers.Net
         {
             transform.SetPositionAndRotation(position,rotation.normalized);
             if (!body) return;
-            foreach(var observer in releaseObservers)observer.OnNetworkReleased();
+            if(releasedBody!=null)foreach(var observer in releaseObservers)observer.OnNetworkReleased();
             body.position=position;body.rotation=rotation.normalized;body.isKinematic=RestingKinematic;
             if (!body.isKinematic)
             {
                 body.linearVelocity=Vector3.ClampMagnitude(velocity,10);
                 body.angularVelocity=Vector3.ClampMagnitude(angularVelocity,20);
             }
+            // Preserve existing release ordering for props without a released-body policy.
+            if(releasedBody==null)foreach(var observer in releaseObservers)observer.OnNetworkReleased();
         }
         public void DropOnHost() => ReleaseOnHost(transform.position,transform.rotation,Vector3.zero,Vector3.zero);
         void PhysicsOwner()
