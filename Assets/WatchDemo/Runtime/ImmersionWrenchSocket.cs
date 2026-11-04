@@ -74,10 +74,8 @@ namespace LighthouseKeepers.WatchDemo
             if (frame != Time.frameCount)
             {
                 var delta = tracked.rotation * Quaternion.Inverse(wristPrevious);
-                delta.ToAngleAxis(out float degrees, out Vector3 axis);
-                if (degrees > 180) degrees -= 360;
                 var rollAxis = (wristPrevious * Vector3.forward + tracked.forward).normalized;
-                float roll = degrees * Vector3.Dot(axis, rollAxis);
+                float roll = WatchPipeRepair.SignedTwist(delta,rollAxis);
                 if (float.IsFinite(roll)) angle += Mathf.Clamp(roll, -720 * Time.deltaTime, 720 * Time.deltaTime);
                 wristPrevious = tracked.rotation; frame = Time.frameCount;
             }

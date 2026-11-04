@@ -93,7 +93,7 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             var e=State.Engine;
-            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed:i==2?e.ChokeClosed:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);lamps[i].SetPropertyBlock(block);}
+            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);lamps[i].SetPropertyBlock(block);}
             RefreshPhysicalGuidance();
             gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=$"FUEL {e.Fuel*100:0}%";
             if(e.CoughSerial!=lastCough&&cough)sound.PlayOneShot(cough,.5f);lastCough=e.CoughSerial;

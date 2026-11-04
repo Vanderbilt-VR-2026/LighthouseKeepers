@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchState watch;WrenchHaptics haptics;
         readonly bool[] finished=new bool[3];
         MaterialPropertyBlock active,done,idle;
-        float queuedRemoteDegrees;
+        float queuedTwistDegrees;
         LighthouseKeepers.Interaction.INetworkPropStatus network;
         Quaternion previousRotation;Vector3 previousJaw;bool previousContact,failureShown;int lastBolt=-1;float nextText;
         public bool InContact{get;private set;}
@@ -72,17 +72,18 @@ namespace LighthouseKeepers.WatchDemo
             float degrees=0,speed=0;
             if(InContact&&previousContact)
             {
-                var delta=wrench.transform.rotation*Quaternion.Inverse(previousRotation);delta.ToAngleAxis(out float angle,out var axis);if(angle>180)angle-=360;
-                degrees=angle*Vector3.Dot(axis,bolts[index].forward);speed=Vector3.Distance(jaw.position,previousJaw)/Mathf.Max(.001f,sampleSeconds);
+                var delta=wrench.transform.rotation*Quaternion.Inverse(previousRotation);
+                if(state.Forgiving)degrees=SignedTwist(delta,bolts[index].forward);
+                else{delta.ToAngleAxis(out float angle,out var axis);if(angle>180)angle-=360;degrees=angle*Vector3.Dot(axis,bolts[index].forward);}speed=Vector3.Distance(jaw.position,previousJaw)/Mathf.Max(.001f,sampleSeconds);
                 if(!float.IsFinite(degrees))degrees=0;
             }
             previousContact=InContact;previousRotation=wrench.transform.rotation;previousJaw=jaw.position;
             bool steady=Mathf.Abs(degrees)<=state.Profile.steadyDegreesPerSecond*sampleSeconds&&speed<=state.Profile.steadyMetresPerSecond;
-            // Network poses arrive at 20 Hz. Spread a received twist across host frames
-            // so a fast Editor frame rate cannot discard the guest's legitimate rotation.
-            if(remoteHeld&&InContact)
-            {queuedRemoteDegrees+=degrees;degrees=Mathf.Clamp(queuedRemoteDegrees,-state.Profile.maximumDegreesPerSecond*Time.deltaTime,state.Profile.maximumDegreesPerSecond*Time.deltaTime);queuedRemoteDegrees-=degrees;}
-            else queuedRemoteDegrees=0;
+            // Network and kinematic-tool poses arrive slower than Update. Spread their
+            // motion across frames so the speed limit preserves legitimate wrist travel.
+            if((remoteHeld||state.Forgiving)&&InContact)
+            {queuedTwistDegrees+=degrees;degrees=Mathf.Clamp(queuedTwistDegrees,-state.Profile.maximumDegreesPerSecond*Time.deltaTime,state.Profile.maximumDegreesPerSecond*Time.deltaTime);queuedTwistDegrees-=degrees;}
+            else queuedTwistDegrees=0;
             state.Observe(Time.deltaTime,degrees,InContact,steady,!watch.Failed);
             if(watch.Failed){if(!failureShown){Changed();prompt.text="WATCH LOST — PRESS TRIGGER TO RETRY";failureShown=true;}return;}
             if(watch.Immersion&&watch.Immersion.physicalGuidance)return;
@@ -94,6 +95,13 @@ namespace LighthouseKeepers.WatchDemo
             string name=((char)('A'+index)).ToString();
             string instruction=!InContact?"SEAT WRENCH JAW ON GLOWING BOLT":state.NeedsSeal?$"HOLD STEADY  {Mathf.CeilToInt(state.Profile.sealSeconds-state.SealElapsed)}s":state.NeedsReturn?"RETURN WRIST / REGRIP":$"TURN WRIST  {state.TurnsDone}/{state.Profile.quarterTurns[index]} CLICKS";
             prompt.text=$"COUPLING {name}  /  PIPE {state.BoltsDone}/3\n{instruction}";
+        }
+        // atan2 preserves sub-degree motion at high Editor frame rates; acos(w) in
+        // ToAngleAxis rounds tiny rotations to zero and made slow turns inconsistent.
+        internal static float SignedTwist(Quaternion delta,Vector3 axis)
+        {
+            if(delta.w<0)delta=new Quaternion(-delta.x,-delta.y,-delta.z,-delta.w);
+            return 2*Mathf.Atan2(Vector3.Dot(new Vector3(delta.x,delta.y,delta.z),axis),delta.w)*Mathf.Rad2Deg;
         }
         void OnDestroy(){if(watch!=null){watch.Pipe.QuarterTurn-=TickFeedback;watch.Pipe.Completed-=CompleteFeedback;watch.Pipe.Changed-=Changed;}}
     }

@@ -31,7 +31,7 @@ namespace LighthouseKeepers.Net.Tests
             WatchDayLaunch.RequestedDay=3;SoloWatchSession.Request();
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return null;
             watch=Find("WatchDemoController");
-            foreach(var b in Object.FindObjectsByType<Behaviour>(FindObjectsSortMode.None))if(b.GetType().Name=="XRInputModalityManager"||b.GetType().Name=="TrackedPoseDriver")b.enabled=false;
+            foreach(var b in Object.FindObjectsByType<Behaviour>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(b.GetType().Name=="XRInputModalityManager"||b.GetType().Name=="TrackedPoseDriver")b.enabled=false;
             hands=Object.FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None);
             foreach(var hand in hands){hand.transform.parent.gameObject.SetActive(true);hand.Direct.selectInput=new XRInputButtonReader("Immersion test grip",inputSourceMode:XRInputButtonReader.InputSourceMode.ManualValue);}
         }
@@ -76,7 +76,7 @@ namespace LighthouseKeepers.Net.Tests
                 yield return new WaitForSeconds(.2f);int ticks=Value<int>(state,"BoltsDone")*10+Value<int>(state,"TurnsDone");
                 deadline=Time.realtimeSinceStartup+3;
                 while(Value<int>(state,"BoltsDone")*10+Value<int>(state,"TurnsDone")==ticks&&Time.realtimeSinceStartup<deadline){controller.rotation=Quaternion.AngleAxis(100*Time.deltaTime,controller.forward)*controller.rotation;yield return null;}
-                Assert.Greater(Value<int>(state,"BoltsDone")*10+Value<int>(state,"TurnsDone"),ticks,"Wrist roll did not turn bolt for "+hand.Node);
+                Assert.Greater(Value<int>(state,"BoltsDone")*10+Value<int>(state,"TurnsDone"),ticks,"Wrist roll did not turn bolt for "+hand.Node+" angle="+Field<float>(socket,"angle")+" contact="+Value<bool>(pipe,"InContact")+" seat="+Value<float>(state,"SeatElapsed")+" stroke="+Value<float>(state,"StrokeDegrees")+" direction="+Value<float>(state,"Direction"));
                 float progress=Value<float>(state,"StrokeDegrees");controller.position+=Vector3.down*.30f;yield return new WaitForSeconds(.2f);
                 Assert.False(Value<bool>(socket,"IsSnapped"));Assert.GreaterOrEqual(Value<float>(state,"StrokeDegrees"),progress-.1f);
                 direct.EndManualInteraction();direct.selectInput.manualPerformed=false;yield return null;

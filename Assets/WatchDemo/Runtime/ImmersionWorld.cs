@@ -9,6 +9,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;M2StationParts parts;Transform bed;
         Light[] bunk=new Light[2];readonly List<Light> stair=new();readonly List<Light> station=new();
         readonly List<AudioSource> faultAudio=new();
+        readonly List<(Light light,Renderer lens)> lenses=new();readonly MaterialPropertyBlock lensBlock=new();
         Font chalk;int bedMask;HarborRadio narrator;
         public HarborRadio Narrator=>narrator;
         public static ImmersionWorld Create(WatchDemoController watch,Transform head,Transform bed,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
@@ -17,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
             p.chalk=Resources.Load<Font>("Fonts/Kalam-Regular");
             if(watch.State.Immersion.physicalGuidance)p.Build(head,board,pipe,generator,radio,beacon);
             var cabinet=p.HouseRadio(board);
+            foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>()));}
             if(watch.State.Immersion.radioNarration)p.narrator=HarborRadio.Create(watch,head,wrench,pipe,cabinet);
             if(watch.State.Immersion.atmosphere)p.gameObject.AddComponent<ImmersionAtmosphere>().Initialize(watch,head);
             return p;
@@ -33,6 +35,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<2;i++)
             {
                 bunk[i]=Fixture(parts,bed,new Vector3(i==0?-.63f:.63f,1.05f,.66f),i==0?"Host bunk lamp":"Guest bunk lamp");
+                bunk[i].transform.parent.localRotation=Quaternion.Euler(0,180,0);
                 var label=parts.Text("Bunk lamp keeper "+i,i==0?"KEEPER 1":"KEEPER 2",bunk[i].transform.parent,new Vector3(0,-.075f,.04f),.0025f);
                 parts.Part("Bunk lamp name plate",label.transform,new Vector3(0,0,.007f),new Vector3(.18f,.045f,.012f),parts.Dark);
             }
@@ -43,6 +46,7 @@ namespace LighthouseKeepers.WatchDemo
             {
                 float a=320*Mathf.Deg2Rad,r=i<3?3:1.7f;
                 var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,new Vector3(Mathf.Sin(a)*r,i*3.3f+1.1f,Mathf.Cos(a)*r));
+                t.localRotation=Quaternion.LookRotation(new Vector3(-t.localPosition.x,0,-t.localPosition.z));
                 stair.Add(Fixture(parts,t,Vector3.zero,"Shielded stair lamp"));
             }
             station.Add(Fixture(parts,generator.transform,new Vector3(0,1.9f,.55f),"Generator fault service lamp"));
@@ -108,6 +112,8 @@ namespace LighthouseKeepers.WatchDemo
                 if(i==0){if(fault&&!s.Failed&&Time.time>=nextCough){a.Play();nextCough=Time.time+9;}continue;}
                 if(fault&&!s.Failed){if(!a.isPlaying)a.Play();}else if(a.isPlaying)a.Stop();
             }
+            foreach(var fitting in lenses)
+            {lensBlock.Clear();lensBlock.SetColor("_BaseColor",new Color(.7f,.42f,.15f));lensBlock.SetColor("_EmissionColor",fitting.light.color*fitting.light.intensity*2);fitting.lens.SetPropertyBlock(lensBlock);}
         }
     }
 }
