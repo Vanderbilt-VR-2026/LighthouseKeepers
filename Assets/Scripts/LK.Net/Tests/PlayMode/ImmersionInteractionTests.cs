@@ -136,9 +136,12 @@ namespace LighthouseKeepers.Net.Tests
                 for(int align=0;align<2;align++){controller.rotation=face*Quaternion.Inverse(grab.transform.rotation)*controller.rotation;yield return new WaitForSeconds(.25f);}
                 for(int stroke=0;stroke<10&&Value<int>(state,"BoltsDone")==0;stroke++)
                 {
-                    float before=progress();float deadline=Time.realtimeSinceStartup+5;
+                    float before=progress();
+                    // Carry from the bench to the station, then let XRI settle before approaching.
+                    if(stroke==0){controller.position+=pivot+Vector3.left*.20f-jaw.position;yield return new WaitForSeconds(.6f);}
+                    float deadline=Time.realtimeSinceStartup+5;
                     while(Vector3.Distance(jaw.position,pivot)>.025f&&Time.realtimeSinceStartup<deadline)
-                    {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.3f,.08f);yield return null;}
+                    {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.5f,.04f);yield return new WaitForSeconds(.06f);}
                     Assert.Less(Vector3.Distance(jaw.position,pivot),.03f,"Visible jaw did not reach bolt before trigger: "+hand.Node+" stance "+stance+" selected="+grab.isSelected+" holder="+(grab.isSelected?grab.interactorsSelecting[0].transform.name:"none")+" controller="+controller.position+" jaw="+jaw.position+" pivot="+pivot+" failed="+Value<bool>(Value<object>(watch,"State"),"Failed"));
                     Assert.False(Value<bool>(socket,"IsSnapped"),"Auto-lock happened without trigger");
                     Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Unlocked readjustment repaired bolt");
