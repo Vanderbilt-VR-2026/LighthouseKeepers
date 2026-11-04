@@ -1,5 +1,7 @@
 # S4-M3 verification — immersion and clarity
 
+[November 4 follow-up: short-stroke wrench ratcheting](ratchet/README.md). The report below records the original immersion build; the follow-up has its own source, test and APK evidence.
+
 Runtime source: `3ba74c1`, branch `s4/immersion`, based on `team/main` `0ed2a95` (same game as `3f882fe`). Unity **6000.3.23f1**. Main is untouched. This page distinguishes automated/Editor evidence from headset acceptance.
 
 ## Before
@@ -40,7 +42,7 @@ The initial stairwell camera was blocked by the inner liner. The recapture above
 
 ## What changed and how to try it
 
-Start PLAY SOLO or use a same-version host/guest crew. The House chalkboard and radio explain the goal. Take the wrench to the spraying, chalk-marked pipe coupling; bring the jaw within roughly 8 cm, then roll the wrist. Pulling away preserves progress. Couplings take 2/3/4 quarter-turns, visibly turn/sink, and reduce spray/pressure with each click.
+Start PLAY SOLO or use a same-version host/guest crew. The House chalkboard and radio explain the goal. Take the wrench to the spraying, chalk-marked pipe coupling; bring the jaw within roughly 8 cm, then roll the wrist. Short repeated cranks accumulate tightening; bringing the wrist back freewheels without loosening the bolt. Pulling away preserves partial progress too. Couplings take 2/3/4 quarter-turns, visibly turn/sink, and reduce spray/pressure with each click.
 
 On the generator, follow its brass plate: fuel → prime three times → choke up → pull three times → choke down. The fuel can rests separately from the engine; grip its carry bar and tip its spout down over the visible filler opening. A valid pour has a stream/sound and raises the gauge. The primer has a mounting plate, retaining collar and hose. Extra starter pulls no longer create the hidden “engine flooded” penalty. Existing choke deadline and all day/power/beacon tuning remain in place.
 

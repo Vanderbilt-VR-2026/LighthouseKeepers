@@ -1,0 +1,10 @@
+{
+  "runtime": "d383fb7",
+  "controllerStrokeDegrees": 30,
+  "returnMotion": "back to original rotation after each 30-degree stroke",
+  "soloDriver": "artifacts/immersion/AfterReplay.cs",
+  "coopDriver": "artifacts/immersion/ImmersionCoopDriver.cs",
+  "feature": "ImmersionTuning.forgivingPipe",
+  "networkPayloadChanged": false,
+  "featureOffRepairUnchanged": true
+}
