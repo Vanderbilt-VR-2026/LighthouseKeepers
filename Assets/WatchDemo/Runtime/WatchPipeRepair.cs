@@ -30,7 +30,7 @@ namespace LighthouseKeepers.WatchDemo
         void Awake(){haptics=wrench.GetComponent<WrenchHaptics>();active=Block(new Color(1,.58f,.12f),1);done=Block(new Color(.1f,.65f,.2f),.3f);idle=Block(new Color(.2f,.25f,.27f),0);}
         static MaterialPropertyBlock Block(Color c,float glow){var p=new MaterialPropertyBlock();p.SetColor("_BaseColor",c);p.SetColor("_EmissionColor",c*glow);return p;}
         public void Bind(WatchState state)
-        {watch=state;watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;
+        {watch=state;if(state.Immersion&&state.Immersion.leverPipe)PipeWallLayout.Apply(this);watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;
             if(state.Immersion&&state.Immersion.forgivingPipe&&!wrench.GetComponent<ImmersionWrenchSocket>())
             {
                 // XRI adds its ordinary follow transformer lazily only when the list is empty.
@@ -49,7 +49,7 @@ namespace LighthouseKeepers.WatchDemo
         void CompleteFeedback(){haptics.RepairCompleted();}
         void Changed()
         {
-            if(lastBolt>=0&&watch.Pipe.ActiveBolt!=lastBolt)finished[lastBolt]=true;
+            if(lastBolt>=0&&watch.Pipe.ActiveBolt!=lastBolt){finished[lastBolt]=true;previousContact=false;queuedTwistDegrees=0;}
             lastBolt=watch.Pipe.ActiveBolt;nextText=0;
             for(int i=0;i<3;i++)
             {

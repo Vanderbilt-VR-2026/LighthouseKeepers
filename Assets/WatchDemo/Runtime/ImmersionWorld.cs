@@ -20,6 +20,7 @@ namespace LighthouseKeepers.WatchDemo
             var cabinet=p.HouseRadio(board);
             foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>()));}
             if(watch.State.Immersion.radioNarration)p.narrator=HarborRadio.Create(watch,head,wrench,pipe,cabinet);
+            if(watch.State.Immersion.faultMist)FaultVapour.Create(watch,pipe,generator);
             if(watch.State.Immersion.atmosphere)p.gameObject.AddComponent<ImmersionAtmosphere>().Initialize(watch,head);
             return p;
         }

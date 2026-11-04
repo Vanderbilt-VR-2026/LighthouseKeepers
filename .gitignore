@@ -117,3 +117,7 @@ InitTestScene*.unity*
 
 # Unity performance-test generated run metadata
 /Assets/Resources/PerformanceTestRun*.json*
+
+# Unprocessed personal radio takes; processed WAVs live in Assets/Audio/Radio.
+/Recordings/Radio/*
+!/Recordings/Radio/README.md

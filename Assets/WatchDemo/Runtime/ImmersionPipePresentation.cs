@@ -17,9 +17,14 @@ namespace LighthouseKeepers.WatchDemo
                 var t=pipe.bolts[i];bolts[i]=t.Find("Ratchet bolt");rests[i]=bolts[i].localPosition;
                 var old=t.Find("Coupling marker");if(old)old.gameObject.SetActive(false);
                 // Chalk sits on the coupling's flanged metal face, not beside it in space.
-                chalk[i]=parts.Text("Chalk coupling "+(char)('A'+i),((char)('A'+i))+" ↻",t,new Vector3(0,.075f,-.037f),.0035f);
+                chalk[i]=parts.Text("Chalk coupling "+(char)('A'+i),((char)('A'+i))+" ↻",t,new Vector3(0,.075f,.016f),.0035f);
                 chalk[i].color=new Color(.85f,.84f,.72f);
                 bulbs[i]=ImmersionWorld.Fixture(parts,t,new Vector3(0,.27f,-.055f),"Pipe service bulb "+i);
+                if(state.Immersion.leverPipe)
+                {
+                    var fixture=bulbs[i].transform.parent;
+                    fixture.SetPositionAndRotation(t.position+Vector3.up*.36f+Vector3.right*.13f,Quaternion.LookRotation(Vector3.left));
+                }
                 parts.Part("Bulb support",t,new Vector3(0,.18f,-.075f),new Vector3(.025f,.18f,.025f),parts.Metal);
             }
             var gauge=M2StationParts.Root("Mechanical pipe pressure gauge",pipe.bolts[1],new Vector3(.23f,.24f,-.06f));
@@ -38,7 +43,7 @@ namespace LighthouseKeepers.WatchDemo
                 bool done=false;for(int j=0;j<p.BoltsDone;j++)if(p.Order(j)==i)done=true;
                 bool active=p.ActiveBolt==i;
                 float turns=done?p.Profile.quarterTurns[i]:active?p.TurnsDone+p.StrokeDegrees/p.Profile.quarterTurnDegrees:0;
-                bolts[i].localRotation=Quaternion.Euler(0,0,45+turns*90*(p.Direction==0?1:p.Direction));
+                bolts[i].localRotation=Quaternion.Euler(0,0,(state.Immersion.leverPipe?0:45)+turns*90*(p.Direction==0?1:p.Direction));
                 bolts[i].localPosition=rests[i]-Vector3.forward*(.022f*turns/p.Profile.quarterTurns[i]);
                 int mark=done?2:active?1:0;if(chalkState[i]!=mark){chalkState[i]=mark;chalk[i].text=done?((char)('A'+i))+" ✓":active?((char)('A'+i))+" ↻":((char)('A'+i)).ToString();}
                 bulbs[i].intensity=done?.18f:active?.45f+.12f*Mathf.Sin(Time.time*2.4f):.12f;

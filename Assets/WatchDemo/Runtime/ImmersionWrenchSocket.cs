@@ -44,7 +44,7 @@ namespace LighthouseKeepers.WatchDemo
             var tracked = holdingHand ? holdingHand.transform.parent : holder.transform;
             int active = watch.Pipe.ActiveBolt;
             if (bolt >= 0 && (active != bolt || controller != tracked ||
-                Vector3.Distance(tracked.position, handAtSeat) > tuning.wrenchReleaseMetres))
+                (tuning.leverPipe ? OutsideLever(tracked.position, bolt) : Vector3.Distance(tracked.position, handAtSeat) > tuning.wrenchReleaseMetres)))
             { Unseat(); return; }
 
             if (bolt < 0)
@@ -71,6 +71,19 @@ namespace LighthouseKeepers.WatchDemo
                 if (clunk) pipe.audioSource.PlayOneShot(clunk, .6f);
                 frame = Time.frameCount;
             }
+            if (tuning.leverPipe)
+            {
+                // The hand, not wrist orientation, is the lever. Never add an angular
+                // offset on snap: doing so makes the tool fight the player's arm.
+                var pivot = pipe.SocketPosition(bolt);
+                var normal = pipe.bolts[bolt].forward;
+                var radial = Vector3.ProjectOnPlane(tracked.position - pivot, normal);
+                if (radial.sqrMagnitude > .0016f)
+                    seatedRotation = Quaternion.LookRotation(-radial.normalized, normal);
+                targetPose.rotation = seatedRotation;
+                targetPose.position = pivot - seatedRotation * Vector3.Scale(jawLocal, localScale);
+                return;
+            }
             if (frame != Time.frameCount)
             {
                 var delta = tracked.rotation * Quaternion.Inverse(wristPrevious);
@@ -81,6 +94,13 @@ namespace LighthouseKeepers.WatchDemo
             }
             targetPose.rotation = Quaternion.AngleAxis(angle, pipe.bolts[bolt].forward) * seatedRotation;
             targetPose.position = pipe.SocketPosition(bolt) - targetPose.rotation * Vector3.Scale(jawLocal, localScale);
+        }
+        bool OutsideLever(Vector3 position, int index)
+        {
+            var offset = position - pipe.SocketPosition(index);
+            var normal = pipe.bolts[index].forward;
+            return Mathf.Abs(Vector3.Dot(offset, normal)) > tuning.leverReleaseHeight ||
+                Vector3.ProjectOnPlane(offset, normal).magnitude > tuning.leverReleaseRadius;
         }
         public override void OnGrab(XRGrabInteractable grab) => Unseat();
         void Update() { if (pipe && !pipe.wrench.isSelected) Unseat(); }

@@ -16,12 +16,19 @@ MonoBehaviour:
   physicalGuidance: 1
   radioNarration: 1
   forgivingPipe: 1
+  leverPipe: 1
+  physicalWrenchDrops: 1
+  faultMist: 1
+  leverReleaseRadius: 0.48
+  leverReleaseHeight: 0.22
+  droppedWrenchReturnSeconds: 20
+  droppedWrenchKeeperRadius: 1.8
   forgivingGenerator: 1
   atmosphere: 1
   logbook: 1
   wrenchSnapMetres: 0.08
   wrenchReleaseMetres: 0.18
-  idleHintSeconds: 45
+  idleHintSeconds: 90
   wallRadioVolume: 0.65
   beltRadioVolume: 0.18
   fuelFillRadius: 0.25

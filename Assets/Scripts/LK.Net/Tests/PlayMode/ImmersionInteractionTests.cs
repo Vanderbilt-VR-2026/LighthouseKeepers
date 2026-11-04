@@ -62,36 +62,55 @@ namespace LighthouseKeepers.Net.Tests
                 direct.EndManualInteraction();direct.selectInput.manualPerformed=false;Call(can,"ResetHome");Assert.Less(Vector3.Distance(home,can.transform.position),.001f);
             }
         }
-        [UnityTest]public IEnumerator WrenchCarriesSnapsTwistsAndRetainsProgressForBothHands()
+        [UnityTest]public IEnumerator WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops()
         {
-            var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");var jaw=Field<Transform>(pipe,"jaw");var state=Value<object>(Value<object>(watch,"State"),"Pipe");
+            var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");var jaw=Field<Transform>(pipe,"jaw");
+            var state=Value<object>(Value<object>(watch,"State"),"Pipe");
             var socket=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="ImmersionWrenchSocket");
-            Assert.GreaterOrEqual(grab.singleGrabTransformersCount,2,"Socket replaced the regular free-carry transformer");
+            var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
+            var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
+            Assert.GreaterOrEqual(grab.singleGrabTransformersCount,2);
             foreach(var hand in hands)
+            for(int stance=0;stance<3;stance++)
             {
-                var direct=hand.Direct;var controller=hand.transform.parent;controller.position=grab.transform.position;direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
-                float deadline=Time.realtimeSinceStartup+8;
-                while(!Value<bool>(socket,"IsSnapped")&&Time.realtimeSinceStartup<deadline){controller.position+=Vector3.ClampMagnitude((Value<Vector3>(pipe,"ActivePosition")-jaw.position)*.2f,.12f);yield return null;}
-                Assert.True(Value<bool>(socket,"IsSnapped"),"No snap for "+hand.Node);
+                Call(state,"Reset",91,false);Call(pipe,"ResetView");Call(recovery,"ReturnHome");
+                var pivot=Value<Vector3>(pipe,"ActivePosition");
+                Assert.That(pivot.x,Is.EqualTo(3.05f).Within(.01f));Assert.That(pivot.y,Is.InRange(1f,1.1f));
+                var bolts=Field<Transform[]>(pipe,"bolts");Assert.Greater(Vector3.Dot(bolts[Value<int>(state,"ActiveBolt")].forward,Vector3.up),.999f);
+                origin.MoveCameraToWorldLocation(new Vector3(2.2f,stance==1?1.15f:1.65f,pivot.z+(stance-1)*.55f));
+                var direct=hand.Direct;var controller=hand.transform.parent;
+                controller.SetPositionAndRotation(grab.transform.position,Quaternion.Euler(0,stance*35,0));
+                direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
+                float deadline=Time.realtimeSinceStartup+6;
+                while(!Value<bool>(socket,"IsSnapped")&&Time.realtimeSinceStartup<deadline)
+                {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.3f,.10f);yield return null;}
+                Assert.True(Value<bool>(socket,"IsSnapped"),hand.Node+" stance "+stance);
                 yield return new WaitForSeconds(.2f);
-                int initialBolt=Value<int>(state,"BoltsDone");
-                var rest=controller.rotation;
-                var peak=Quaternion.AngleAxis(30,rest*Vector3.forward)*rest;
-                for(int crank=0;crank<16&&Value<int>(state,"BoltsDone")==initialBolt;crank++)
+                float earned=Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees");
+                controller.rotation=Quaternion.Euler(60,35,120)*controller.rotation;yield return new WaitForSeconds(.2f);
+                Assert.AreEqual(earned,Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees"),.5f,"Wrist rotation alone repaired bolt");
+                Vector3 rest=Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up).normalized*.20f;
+                controller.position=pivot+rest;yield return new WaitForSeconds(.1f);
+                for(int stroke=0;stroke<4&&Value<int>(state,"BoltsDone")==0;stroke++)
                 {
-                    for(float t=0;t<.35f;t+=Time.deltaTime){controller.rotation=Quaternion.Slerp(rest,peak,t/.35f);yield return null;}
-                    controller.rotation=peak;yield return new WaitForSeconds(.12f);
-                    if(Value<int>(state,"BoltsDone")!=initialBolt)break;
-                    float earned=Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees");
-                    for(float t=0;t<.35f;t+=Time.deltaTime){controller.rotation=Quaternion.Slerp(peak,rest,t/.35f);yield return null;}
-                    controller.rotation=rest;yield return new WaitForSeconds(.12f);
-                    if(Value<int>(state,"BoltsDone")==initialBolt)
-                        Assert.GreaterOrEqual(Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees"),earned-.1f,"Resetting wrist unwound progress for "+hand.Node);
+                    for(float t=0;t<.65f&&Value<int>(state,"BoltsDone")==0;t+=Time.deltaTime)
+                    {
+                        controller.position=pivot+Quaternion.AngleAxis(95*Mathf.Clamp01(t/.6f),Vector3.up)*rest;
+                        yield return null;
+                        if(Value<bool>(socket,"IsSnapped"))Assert.Greater(Vector3.Dot(-grab.transform.forward,Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up).normalized),.98f,"Tool fights hand direction");
+                    }
+                    if(Value<int>(state,"BoltsDone")>0)break;
+                    earned=Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees");
+                    for(float t=0;t<.65f;t+=Time.deltaTime)
+                    {controller.position=pivot+Quaternion.AngleAxis(95*(1-Mathf.Clamp01(t/.6f)),Vector3.up)*rest;yield return null;}
+                    Assert.GreaterOrEqual(Value<int>(state,"TurnsDone")*90+Value<float>(state,"StrokeDegrees"),earned-.5f,"Return stroke unwound bolt");
                 }
-                Assert.Greater(Value<int>(state,"BoltsDone"),initialBolt,"30-degree ratchet strokes did not finish a bolt for "+hand.Node);
-                float progress=Value<float>(state,"StrokeDegrees");controller.position+=Vector3.down*.30f;yield return new WaitForSeconds(.2f);
-                Assert.False(Value<bool>(socket,"IsSnapped"));Assert.GreaterOrEqual(Value<float>(state,"StrokeDegrees"),progress-.1f);
-                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;yield return null;
+                Assert.Greater(Value<int>(state,"BoltsDone"),0,"Arm pulls did not finish bolt");
+                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;
+                yield return new WaitForSeconds(.1f);
+                Assert.False(grab.GetComponent<Rigidbody>().isKinematic,"Released wrench floats");
+                yield return new WaitForSeconds(.8f);
+                Assert.Less(grab.transform.position.y,.5f,"Wrench did not fall to the floor/water");
             }
         }
     }

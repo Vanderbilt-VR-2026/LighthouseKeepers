@@ -12,10 +12,18 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
         Transform head,wrench;WatchPipeRepair pipe;readonly Queue<int> pending=new();
-        int day,progress;bool firstBolt,complete,staticActive;float idle,earlyNext;
+        int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
+        readonly HashSet<int> spoken=new();
+        Transform generator,radio,beacon,panel;
+        LighthouseKeepers.Interaction.INetworkKeeperProximity keepers;
         public static HarborRadio Create(WatchDemoController watch,Transform head,Transform wrench,WatchPipeRepair pipe,Transform cabinet)
         {
             var r=cabinet.gameObject.AddComponent<HarborRadio>();r.watch=watch;r.tuning=watch.State.Immersion;r.head=head;r.wrench=wrench;r.pipe=pipe;
+            r.generator=Object.FindAnyObjectByType<WatchGenerator>().transform;
+            r.radio=Object.FindAnyObjectByType<WatchRadioConsole>().transform;
+            var beaconStation=Object.FindAnyObjectByType<WatchBeaconStation>();r.beacon=beaconStation?beaconStation.transform:Object.FindAnyObjectByType<WatchBeacon>().transform;
+            var powerPanel=Object.FindAnyObjectByType<WatchPowerPanel>();r.panel=powerPanel?powerPanel.transform:r.generator;
+            r.keepers=watch.GetComponent<LighthouseKeepers.Interaction.INetworkKeeperProximity>();
             r.catalog=Resources.Load<RadioLineCatalog>("HarborRadioLines");
             r.noise=MakeNoise();r.click=Resources.Load<AudioClip>("Hands/clunk");
             r.wall=r.Voice(cabinet,"Harbor master wall voice",r.tuning.wallRadioVolume,1,10);
@@ -54,57 +62,81 @@ namespace LighthouseKeepers.WatchDemo
             Age+=Time.deltaTime;
             if(day!=s.Day)
             {
-                day=s.Day;pending.Clear();firstBolt=complete=false;idle=0;progress=Progress();
+                day=s.Day;pending.Clear();spoken.Clear();firstBolt=complete=failed=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
                 Enqueue(day==1?1:day==2?13:day==3?14:15);
                 if(day==1)Enqueue(2);
                 if(day==2)Enqueue(4);
             }
-            if(s.Failed){pending.Clear();wall.Stop();belt.Stop();StopStatic();return;}
-            int current=Progress();if(current!=progress){progress=current;idle=0;}else idle+=Time.deltaTime;
+            if(s.Failed)
+            {
+                if(!failed){failed=true;pending.Clear();spoken.Add(18);Play(18,Serial+1,0);}
+                var loss=catalog?catalog.Line(18):null;if(!loss||Age>loss.length+.2f)StopStatic();return;
+            }
+            int current=Progress(),job=CurrentJob();if(current!=progress||job!=lastJob){progress=current;lastJob=job;idle=0;}else idle+=Time.deltaTime;
             bool holding=watch.WrenchHeld;
             if(day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
-            if(s.Complete&&!complete){complete=true;Enqueue(5);}
-            if(idle>=tuning.idleHintSeconds)
-            {
-                idle=0;
-                int hint=s.Complete?12:s.Engine!=null&&!s.Engine.Running?8:!s.BeaconShining?s.HasPower(PowerCircuit.Beacon)?10:9:!s.Repaired?holding?7:6:11;
-                Enqueue(hint);
-            }
+            if(s.Complete&&!complete){complete=true;Enqueue(s.HasNextDay?5:17);}
+            if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!holding&&!AtStation(job))
+                Enqueue(job);
             var clip=catalog?catalog.Line(Cue):null;
             if(pending.Count>0&&(Cue==0||!clip||Age>clip.length+.6f))
-                while(pending.Count>0){int next=pending.Dequeue();if(Relevant(next)){Play(next,Serial+1,0);break;}}
+                while(pending.Count>0){int next=pending.Dequeue();if(Relevant(next)){spoken.Add(next);Play(next,Serial+1,0);break;}}
             if(clip&&Age>clip.length+.2f)StopStatic();
         }
         bool Relevant(int id)
         {
             var s=watch.State;
-            if(id==2||id==6)return !watch.WrenchHeld&&!s.Repaired;
+            if(id>=7&&id<=12&&(watch.WrenchHeld||AtStation(id)||idle<90||id!=CurrentJob()))return false;
+            if(id==2)return !watch.WrenchHeld&&!s.Repaired;
             if(id==3||id==7)return !s.Repaired;
             if(id==4||id==8)return s.Power==PowerState.Off;
-            if(id==5||id==12)return s.Complete;
+            if(id==5||id==12||id==17)return s.Complete;
             if(id==9)return !s.HasPower(PowerCircuit.Beacon);
             if(id==10)return !s.BeaconShining;
             if(id==11)return !s.IsDone(WatchState.RadioStation);
             if(id==16)return !s.Complete;
             return true;
         }
+        int CurrentJob()
+        {
+            var s=watch.State;
+            return s.Complete?12:s.Engine!=null&&!s.Engine.Running?8:
+                !s.BeaconShining?s.HasPower(PowerCircuit.Beacon)?10:9:!s.Repaired?7:11;
+        }
+        bool AtStation(int job)
+        {
+            Vector3 position=job==7?pipe.ActivePosition:job==8?generator.position:
+                job==9?panel.position:job==10?beacon.position:job==11?radio.position:watch.BedPosition;
+            bool remote=keepers?.NearKeeper(position,1.8f)==true;
+            var delta=head.position-position;
+            return remote||Mathf.Abs(delta.y)<2.5f&&new Vector2(delta.x,delta.z).sqrMagnitude<1.8f*1.8f;
+        }
         int Progress()
-        {var s=watch.State;return s.Pipe.BoltsDone*1000+s.Pipe.TurnsDone*100+s.CompletedTasks*10000+(s.Engine==null?0:s.Engine.Primer*3+s.Engine.Pulls*10)+(s.Radio.Locked?1:0)+s.Radio.CodeProgress;}
-        void Enqueue(int id){if(pending.Count<4&&!pending.Contains(id))pending.Enqueue(id);}
-        public void ResetNight(){if(watch.State.ReadOnly)return;day=0;pending.Clear();Cue=0;Age=0;wall.Stop();belt.Stop();StopStatic();}
-        public void EarlyBed()
-        {if(watch.State.ReadOnly||Time.unscaledTime<earlyNext)return;earlyNext=Time.unscaledTime+8;Enqueue(16);}
+        {
+            var s=watch.State;
+            switch(CurrentJob())
+            {
+                case 7:return s.Pipe.BoltsDone*100000+s.Pipe.TurnsDone*1000+(int)(s.Pipe.StrokeDegrees*2);
+                case 8:return s.Engine==null?0:s.Engine.Primer*1000+s.Engine.Pulls*100+(int)(s.Engine.Fuel*100)+(s.Engine.ChokeClosed?10000:0);
+                case 9:return s.Grid==null?0:s.Grid.SelectedMask+(s.Grid.Tripped?16:0);
+                case 10:return s.Beacon==null?0:(int)(s.Beacon.Alignment*1000)+(s.Beacon.Ignited?10000:0);
+                case 11:return s.Radio.Step*10000+s.Radio.CodeProgress*1000+(int)(s.Radio.FrequencyMHz*100)+(int)(s.Radio.TransmitElapsed*10);
+                default:return 0;
+            }
+        }
+        void Enqueue(int id){if(id!=6&&!spoken.Contains(id)&&pending.Count<4&&!pending.Contains(id))pending.Enqueue(id);}
+        public void ResetNight(){if(watch.State.ReadOnly)return;day=0;pending.Clear();spoken.Clear();Cue=0;Age=0;wall.Stop();belt.Stop();StopStatic();}
+        public void EarlyBed(){if(!watch.State.ReadOnly)Enqueue(16);}
         public void Capture(WatchSnapshot s){s.radioCue=Cue;s.radioSerial=Serial;s.radioAge=Age;}
         public void Apply(WatchSnapshot s)
         {
-            if(watch.State.Failed){pending.Clear();wall.Stop();belt.Stop();StopStatic();return;}
             if(s.radioSerial>Serial)Play(s.radioCue,s.radioSerial,s.radioAge);
             else Age=s.radioAge;
             var clip=catalog?catalog.Line(Cue):null;if(!clip||Age>clip.length+.2f)StopStatic();
         }
         void Play(int id,int serial,float age)
         {
-            Cue=id;Serial=serial;Age=age;
+            Cue=id;Serial=serial;Age=age;quietSince=Time.time+(catalog&&catalog.Line(id)?catalog.Line(id).length:0);
             var clip=catalog?catalog.Line(id):null;
             if(!clip||age>=clip.length)return;
             foreach(var source in new[]{wall,belt}){source.Stop();source.clip=clip;source.time=Mathf.Min(age,clip.length-.01f);source.Play();}

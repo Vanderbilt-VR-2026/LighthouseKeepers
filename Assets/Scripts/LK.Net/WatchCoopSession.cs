@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     // Shared Lab commands and snapshots use Will's existing authenticated Fusion channel.
-    public sealed class WatchCoopSession : MonoBehaviour, ICoopWatchLink
+    public sealed class WatchCoopSession : MonoBehaviour, ICoopWatchLink, LighthouseKeepers.Interaction.INetworkKeeperProximity
     {
         const int HelloKind=40,SnapshotKind=41,CommandKind=42,ResultKind=43;
         const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
@@ -50,6 +50,14 @@ namespace LighthouseKeepers.Net
             debugLine.text=$"us | {crew.SessionName} | {crew.Players.Count}/2 keepers\n"+string.Join(" / ",crew.Players.Select(p=>p.DisplayName));
         }
 #endif
+        public bool NearKeeper(Vector3 point,float radius)
+        {
+            if(!channel||!channel.Runner||!poses)return false;
+            foreach(var player in channel.Runner.ActivePlayers)
+                if(poses.Sample(player.RawEncoded,out var pose))
+                {var delta=pose.Head-point;if(Mathf.Abs(delta.y)<2.5f&&new Vector2(delta.x,delta.z).sqrMagnitude<radius*radius)return true;}
+            return false;
+        }
         public bool Ready
         {
             get

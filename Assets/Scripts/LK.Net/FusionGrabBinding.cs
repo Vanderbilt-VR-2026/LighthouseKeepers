@@ -18,6 +18,8 @@ namespace LighthouseKeepers.Net
         LighthouseKeepers.StormWatch.WatchWrench legacyWrench;
         LighthouseKeepers.StormWatch.WatchControl legacyControl;
         bool wrenchWasEnabled, controlWasEnabled;
+        INetworkReleasedBody releasedBody;
+        bool RestingKinematic => releasedBody?.ReleasedBodyIsKinematic ?? initialKinematic;
         bool initialKinematic, pending, suppress, hasState;
         float requested, nextSend;
         int serial, receivedSequence;
@@ -45,7 +47,7 @@ namespace LighthouseKeepers.Net
             authority=host;Id=id;Path=path;interaction=interactable;body=GetComponent<Rigidbody>();
             // A grip held during scene loading must not survive without a host lease.
             // Let XRI restore the pre-grab body mode before recording that mode.
-            CancelSelection();initialKinematic=body&&body.isKinematic;
+            CancelSelection();initialKinematic=body&&body.isKinematic;releasedBody=GetComponent<INetworkReleasedBody>();
             foreach(var component in GetComponents<MonoBehaviour>())
                 if(component is INetworkPropRelease observer)releaseObservers.Add(observer);
             legacyWrench=GetComponent<LighthouseKeepers.StormWatch.WatchWrench>();
@@ -112,13 +114,13 @@ namespace LighthouseKeepers.Net
         {
             transform.SetPositionAndRotation(position,rotation.normalized);
             if (!body) return;
-            body.position=position;body.rotation=rotation.normalized;body.isKinematic=initialKinematic;
+            foreach(var observer in releaseObservers)observer.OnNetworkReleased();
+            body.position=position;body.rotation=rotation.normalized;body.isKinematic=RestingKinematic;
             if (!body.isKinematic)
             {
                 body.linearVelocity=Vector3.ClampMagnitude(velocity,10);
                 body.angularVelocity=Vector3.ClampMagnitude(angularVelocity,20);
             }
-            foreach(var observer in releaseObservers)observer.OnNetworkReleased();
         }
         public void DropOnHost() => ReleaseOnHost(transform.position,transform.rotation,Vector3.zero,Vector3.zero);
         void PhysicsOwner()
@@ -128,7 +130,7 @@ namespace LighthouseKeepers.Net
             if (legacyWrench) legacyWrench.enabled=wrenchWasEnabled && (Owner==authority.LocalActor || Owner==0 && authority.IsHost);
             if (legacyControl) legacyControl.enabled=controlWasEnabled && (!Selected || Owner==authority.LocalActor);
             if (!body || Selected) return;
-            body.isKinematic=initialKinematic || !authority.IsHost || Owner!=0 && Owner!=authority.LocalActor;
+            body.isKinematic=RestingKinematic || !authority.IsHost || Owner!=0 && Owner!=authority.LocalActor;
         }
         void LateUpdate()
         {
