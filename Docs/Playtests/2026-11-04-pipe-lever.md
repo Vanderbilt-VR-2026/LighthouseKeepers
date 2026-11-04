@@ -11,3 +11,11 @@ Implementation plan: upright bolts on an east-wall pipe; projected hand-position
 Acceptance: actual XRI grabs with both hands and multiple approach positions/heights; wrist rotation alone cannot repair; return/release cannot unwind; host release falls and replicates; radio stays quiet while working. Repeat the same solo replay and live co-op check, inspect requested captures, measure effect cost on Quest or mark it unverified.
 
 The lead clarified the snap direction: **keep it under my hand—no jump**. The lever therefore follows the actual projected hand direction immediately rather than rotating to a preset away-facing pose. The closest wrench-face normal is retained to avoid an unnecessary upside-down flip.
+
+## Follow-up on installed 61df219
+
+The lead reports the arm motion still fights the hand, markings face the wrong way, and the pipe is visibly offset from the wall. This is a failed headset usability check despite passing injected Editor paths. They explicitly request **grip to hold, trigger to lock, release trigger to readjust, then lock again**, preserving all tightening. Asked which motion to keep, they chose **short arm pull around the bolt**. No wrist-roll mode.
+
+Actual Lab shell raycasts (not the lobby) put the east inner wall at x=3.90 at z=0, x=3.80 at z=±0.88 and x=3.677 at z=±1.30. The previous pipe x=3.05 and guessed plates were too far into the room. Mount the segmented run and brackets from actual shell hits. Turn top markings toward the centre and make the pressure dial upright facing the approach.
+
+Source 61df219 before this correction: focused interaction/release tests 7/7; solo Days 1–3 loss/retry through Day 4 passed. Two-Mac guest pipe, host generator, shared sleep through Day 3 and guest fuel passed; a screenshot serialization error interrupted the driver after guest repair, then the remaining run resumed successfully. Host released wrench at (3.276662,0.004997,-0.799122) was dynamic; guest was kinematic at the identical replicated position. Live Mac+Quest acceptance after the redesign is still outstanding.
