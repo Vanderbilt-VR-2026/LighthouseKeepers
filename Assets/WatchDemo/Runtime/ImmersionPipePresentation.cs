@@ -35,10 +35,11 @@ namespace LighthouseKeepers.WatchDemo
             parts.Text("Pressure dial scale","LOW        HIGH",gauge,new Vector3(0,.055f,.035f),.0017f);
             if(state.Immersion.triggerClutch)
             {
-                var plate=M2StationParts.Root("Wrench clutch instructions",transform,pipe.bolts[1].position+new Vector3(-.135f,-.09f,.43f));
+                var plate=M2StationParts.Root("Wrench clutch instructions",transform,pipe.bolts[1].position+new Vector3(-.135f,-.32f,.43f));
                 plate.rotation=Quaternion.LookRotation(Vector3.left,Vector3.up);
                 parts.Part("Riveted clutch plate",plate,Vector3.zero,new Vector3(.48f,.14f,.025f),parts.Dark);
-                parts.Text("Clutch stencil","GRIP: HOLD   TRIGGER: LOCK\nSHORT PULL · RELEASE TRIGGER · RESET",plate,new Vector3(0,0,.014f),.0017f);
+                for(int side=-1;side<=1;side+=2)parts.Part("Clutch plate mounting strap",plate,new Vector3(side*.17f,.105f,-.025f),new Vector3(.025f,.08f,.025f),parts.Metal);
+                parts.Text("Clutch stencil","GRIP: HOLD   TRIGGER: LOCK\nSHORT PULL · RELEASE TRIGGER · RESET",plate,new Vector3(0,0,.014f),.0033f);
             }
             needle=M2StationParts.Root("Pressure gauge needle",gauge,new Vector3(0,-.025f,.039f));
             parts.Part("Pressure pointer",needle,new Vector3(0,.045f,0),new Vector3(.007f,.09f,.006f),parts.Brass);
