@@ -122,6 +122,7 @@ namespace LighthouseKeepers.Net.Tests
             for(int stance=0;stance<3;stance++)
             {
                 Call(state,"Reset",91,false);Call(pipe,"ResetView");Call(recovery,"ReturnHome");
+                yield return null;Assert.False(grab.isSelected,"Previous stance still owns wrench");
                 var pivot=Value<Vector3>(pipe,"ActivePosition");
                 Assert.That(pivot.x,Is.InRange(3.5f,3.9f));Assert.That(pivot.y,Is.InRange(1f,1.1f));
                 var bolts=Field<Transform[]>(pipe,"bolts");Assert.Greater(Vector3.Dot(bolts[Value<int>(state,"ActiveBolt")].forward,Vector3.up),.999f);
@@ -129,6 +130,8 @@ namespace LighthouseKeepers.Net.Tests
                 var direct=hand.Direct;var controller=hand.transform.parent;
                 controller.SetPositionAndRotation(grab.transform.position,Quaternion.Euler(0,stance*25,0));
                 direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);
+                Assert.True(grab.isSelected,"Grip failed: "+hand.Node);Assert.AreSame(direct,grab.interactorsSelecting[0],"Wrong holder");
+                Debug.Log($"CLUTCH_TEST begin hand={hand.Node} stance={stance} controller={controller.position} jaw={jaw.position} active={direct.isActiveAndEnabled} timescale={Time.timeScale}");
                 var face=Quaternion.LookRotation(Quaternion.AngleAxis((stance-1)*20,Vector3.up)*Vector3.right,Vector3.up);
                 for(int align=0;align<2;align++){controller.rotation=face*Quaternion.Inverse(grab.transform.rotation)*controller.rotation;yield return new WaitForSeconds(.25f);}
                 for(int stroke=0;stroke<10&&Value<int>(state,"BoltsDone")==0;stroke++)
@@ -136,7 +139,7 @@ namespace LighthouseKeepers.Net.Tests
                     float before=progress();float deadline=Time.realtimeSinceStartup+5;
                     while(Vector3.Distance(jaw.position,pivot)>.025f&&Time.realtimeSinceStartup<deadline)
                     {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.3f,.08f);yield return null;}
-                    Assert.Less(Vector3.Distance(jaw.position,pivot),.03f,"Visible jaw did not reach bolt before trigger: "+hand.Node+" stance "+stance);
+                    Assert.Less(Vector3.Distance(jaw.position,pivot),.03f,"Visible jaw did not reach bolt before trigger: "+hand.Node+" stance "+stance+" selected="+grab.isSelected+" holder="+(grab.isSelected?grab.interactorsSelecting[0].transform.name:"none")+" controller="+controller.position+" jaw="+jaw.position+" pivot="+pivot+" failed="+Value<bool>(Value<object>(watch,"State"),"Failed"));
                     Assert.False(Value<bool>(socket,"IsSnapped"),"Auto-lock happened without trigger");
                     Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Unlocked readjustment repaired bolt");
                     grab.activated.Invoke(new ActivateEventArgs{interactorObject=direct,interactableObject=grab});

@@ -67,6 +67,9 @@ namespace LighthouseKeepers.WatchDemo
                     grab.movementType=XRBaseInteractable.MovementType.Instantaneous;
                 }
                 bolt = active; controller = tracked; handAtSeat = tracked.position;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                if(tuning.triggerClutch)Debug.Log($"PIPE_CLUTCH locked bolt={bolt} hand={tracked.position} jaw={pipe.jaw.position} target={pipe.SocketPosition(bolt)}");
+#endif
                 wristPrevious = tracked.rotation; angle = 0;
                 Vector3 normal = pipe.bolts[bolt].forward;
                 if (Vector3.Dot(targetPose.rotation * Vector3.up, normal) < 0) normal = -normal;
@@ -122,11 +125,20 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!sourceGrab||!sourceGrab.isSelected)return;
             ClutchHeld=true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"PIPE_CLUTCH pressed jaw={pipe.jaw.position} bolt={watch.Pipe.ActiveBolt} distance={Vector3.Distance(pipe.jaw.position,pipe.ActivePosition):F3}");
+#endif
             // Lock the jaw the player sees at the press, before XRI advances its smoothed carry pose.
             int active=watch.Pipe.ActiveBolt;
             if(tuning.leverPipe&&tuning.triggerClutch&&active>=0&&Vector3.Distance(pipe.jaw.position,pipe.SocketPosition(active))<=tuning.wrenchSnapMetres)requestedBolt=active;
         }
-        void Deactivate(DeactivateEventArgs args){ClutchHeld=false;requestedBolt=-1;Unseat();}
+        void Deactivate(DeactivateEventArgs args)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if(tuning&&tuning.triggerClutch)Debug.Log($"PIPE_CLUTCH released bolts={watch.Pipe.BoltsDone} clicks={watch.Pipe.TurnsDone} degrees={watch.Pipe.StrokeDegrees:F1}");
+#endif
+            ClutchHeld=false;requestedBolt=-1;Unseat();
+        }
         void Released(SelectExitEventArgs args){ClutchHeld=false;requestedBolt=-1;Unseat();}
         public override void OnGrab(XRGrabInteractable grab) {ClutchHeld=false;requestedBolt=-1;Unseat();}
         void Update() { if (pipe && !pipe.wrench.isSelected) Unseat(); }
