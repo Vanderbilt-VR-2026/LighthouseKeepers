@@ -4,6 +4,7 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
  public sealed class MasterSafetyTests {
   [UnityTest] public IEnumerator GalleryIsContinuousAndHouseClutterCannotStepThePlayerUp(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));for(int n=0;n<12;n++)yield return null;
+   foreach(var renderer in Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None).Where(r=>r.name.StartsWith("SM_Wall_House_Side")))Assert.True(renderer.enabled,"Static-batched wall was incorrectly classified as duplicate");
    var guard=GameObject.Find("Continuous gallery perimeter guard");Assert.That(guard,Is.Not.Null);
    // At half-segment increments, a head-height capsule moving outwards must meet the guard.
    for(int n=0;n<128;n++){float a=n*Mathf.PI*2/128;var direction=new Vector3(Mathf.Sin(a),0,Mathf.Cos(a));var from=direction*3.85f+Vector3.up*9.9f;

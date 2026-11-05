@@ -11,11 +11,13 @@ namespace LighthouseKeepers.WatchDemo {
    }
    // House slab and throat slab overlap at the same authored y=0. Offset only the visual.
    foreach(var renderer in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))if(renderer.name=="SM_Floor_Throat_LOD0"||renderer.name=="SM_Floor_Throat") {
-    renderer.transform.position+=Vector3.up*.012f;Changes.Add("Throat floor visual +12 mm: "+renderer.name);
+    // Batched renderers share a combined mesh and ignore individual transform offsets.
+    // Replace this one visible slab while retaining its original collision and shared material.
+    var bounds=renderer.bounds;var slab=GameObject.CreatePrimitive(PrimitiveType.Cube);slab.name="Separated throat floor visual";slab.transform.SetParent(transform,true);slab.transform.position=bounds.center+Vector3.up*.012f;slab.transform.localScale=bounds.size;var collider=slab.GetComponent<Collider>();collider.enabled=false;Destroy(collider);slab.GetComponent<Renderer>().sharedMaterial=renderer.sharedMaterial;renderer.enabled=false;Changes.Add("Throat floor replacement visual +12 mm: "+renderer.name);
    }
    var seen=new Dictionary<string,MeshRenderer>();
    foreach(var renderer in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None)) {
-    if(!renderer.name.StartsWith("SM_"))continue;var filter=renderer.GetComponent<MeshFilter>();if(!filter||!filter.sharedMesh)continue;
+    if(!renderer.enabled||renderer.isPartOfStaticBatch||renderer.GetComponentInParent<LODGroup>()||!renderer.name.StartsWith("SM_"))continue;var filter=renderer.GetComponent<MeshFilter>();if(!filter||!filter.sharedMesh)continue;
     string key=filter.sharedMesh.GetInstanceID()+"/"+renderer.transform.localToWorldMatrix.ToString("F4");if(seen.ContainsKey(key)){renderer.enabled=false;Changes.Add("Exact duplicate renderer disabled: "+renderer.name);}else seen[key]=renderer;
    }
    GalleryGuard();Physics.SyncTransforms();
