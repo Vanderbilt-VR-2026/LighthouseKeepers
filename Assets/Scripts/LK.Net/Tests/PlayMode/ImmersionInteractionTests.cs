@@ -87,7 +87,7 @@ namespace LighthouseKeepers.Net.Tests
             Call(radio,"EarlyBed");pending.Clear(); // Deliberate interaction is still a once-per-night cue.
             Assert.False(Field<System.Collections.Generic.HashSet<int>>(radio,"spoken").Contains(6),"Retired wrench hint played");
         }
-        [UnityTest]public IEnumerator DroppedWrenchStaysNearKeeperThenReturnsAfterTwentySecondsAway()
+        [UnityTest]public IEnumerator DroppedWrenchReturnsAfterEightSecondsEvenBesideKeeper()
         {
             var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");
             var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
@@ -108,8 +108,8 @@ namespace LighthouseKeepers.Net.Tests
             yield return new WaitForSeconds(.3f);
             Assert.AreEqual(0,Field<float>(recovery,"awaySeconds"),.01f,"Nearby keeper did not reset recovery timer");
             Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Dropped tool returned while keeper is beside it");
-            origin.MoveCameraToWorldLocation(new Vector3(0,8.2f,-.3f));
-            yield return new WaitForSeconds(19);Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Recovery happened before 20 seconds away: "+Value<string>(recovery,"LastReturnReason"));
+            // Proximity no longer suppresses a lost/submerged tool recovery.
+            yield return new WaitForSeconds(4);Assert.Greater(Vector3.Distance(home,grab.transform.position),3,"Recovery happened before 8 seconds: "+Value<string>(recovery,"LastReturnReason"));
             yield return new WaitForSeconds(2);Assert.Less(Vector3.Distance(home,grab.transform.position),.01f);Assert.True(grab.GetComponent<Rigidbody>().isKinematic);
             // An out-of-room drop is recovered immediately instead of waiting out the timeout.
             Call(recovery,"OnNetworkReleased");grab.transform.position=new Vector3(4.5f,.2f,0);yield return null;yield return null;

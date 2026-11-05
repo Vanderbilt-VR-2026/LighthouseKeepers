@@ -23,7 +23,8 @@ MonoBehaviour:
   faultMist: 1
   leverReleaseRadius: 0.48
   leverReleaseHeight: 0.22
-  droppedWrenchReturnSeconds: 20
+  droppedWrenchReturnSeconds: 8
+  guaranteedWrenchRecovery: 1
   droppedWrenchKeeperRadius: 1.8
   forgivingGenerator: 1
   atmosphere: 1

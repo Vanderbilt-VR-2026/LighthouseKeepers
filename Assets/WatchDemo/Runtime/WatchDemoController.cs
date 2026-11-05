@@ -27,6 +27,11 @@ namespace LighthouseKeepers.WatchDemo
         WatchState state;
         LighthouseKeepers.Lobby.ICoopWatchLink coop;
         public float WaterHeight=>flood.Height;
+        public float WaterHeightAt(Vector3 position)
+        {
+            if(position.z>=LighthouseKeepers.Core.HouseFloodState.DoorNorthZ)return flood.Height;
+            return state?.HouseFlood!=null&&state.HouseFlood.WetAt(position)?state.HouseFlood.Height:float.NegativeInfinity;
+        }
         public Transform BoardTransform=>board.transform;
         readonly System.Text.StringBuilder boardText = new System.Text.StringBuilder(256);
         float repairProgress;
@@ -89,6 +94,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(state.Immersion.logbook)logbook=ImmersionLogbook.Create(head,transform);
             }
             BeginWatch();
+            if(state.HouseFlood!=null)WatchHouseFlood.Create(this);
             ObjectiveHud.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
             if(state.RemoteReplica){flood.Paused=true;clock.text="WAITING FOR HOST STATE";}
@@ -147,6 +153,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
+            state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
             previousGrip=grip;previousTrigger=trigger;
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.

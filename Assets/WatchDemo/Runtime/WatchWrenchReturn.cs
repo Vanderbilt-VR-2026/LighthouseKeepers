@@ -11,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         public const float ReturnSeconds=8f; // Legacy switch-off behavior.
         XRGrabInteractable grab; Rigidbody body;
-        Vector3 home;Quaternion rotation;float returnAt=-1,awaySeconds;
+        Vector3 home;Quaternion rotation;float returnAt=-1,awaySeconds,droppedSeconds;
         INetworkPropStatus network;INetworkKeeperProximity keepers;
         WatchDemoController watch;Transform head;AudioSource sound;AudioClip clank,splash;
         ParticleSystem entrySplash;
@@ -33,9 +33,9 @@ namespace LighthouseKeepers.WatchDemo
         }
         void OnEnable(){grab.selectEntered.AddListener(Grab);grab.selectExited.AddListener(Drop);}
         void OnDisable(){grab.selectEntered.RemoveListener(Grab);grab.selectExited.RemoveListener(Drop);}
-        void Grab(SelectEnterEventArgs args){released=false;awaySeconds=0;returnAt=-1;}
-        void Drop(SelectExitEventArgs args){released=true;awaySeconds=0;returnAt=Time.time+ReturnSeconds;}
-        public void OnNetworkReleased(){released=true;awaySeconds=0;returnAt=Time.time+ReturnSeconds;previousOwner=0;}
+        void Grab(SelectEnterEventArgs args){released=false;awaySeconds=droppedSeconds=0;returnAt=-1;body.linearDamping=.05f;body.angularDamping=.1f;}
+        void Drop(SelectExitEventArgs args){released=true;awaySeconds=droppedSeconds=0;returnAt=Time.time+ReturnSeconds;}
+        public void OnNetworkReleased(){released=true;awaySeconds=droppedSeconds=0;returnAt=Time.time+ReturnSeconds;previousOwner=0;}
         void LateUpdate()
         {
             if(network==null)network=GetComponent<INetworkPropStatus>();
@@ -44,12 +44,12 @@ namespace LighthouseKeepers.WatchDemo
             if(network!=null)
             {
                 if(network.Owner!=previousOwner)
-                {released=network.Owner==0;awaySeconds=0;returnAt=released?Time.time+ReturnSeconds:-1;previousOwner=network.Owner;}
+                {released=network.Owner==0;awaySeconds=droppedSeconds=0;returnAt=released?Time.time+ReturnSeconds:-1;previousOwner=network.Owner;}
             }
             // Clients hear the same water entry from replicated host position; only the host simulates it.
             if(Physical&&watch)
             {
-                bool underwater=transform.position.y<watch.WaterHeight;
+                bool underwater=transform.position.y<watch.WaterHeightAt(transform.position);
                 if(underwater&&!wet&&released){if(sound&&splash)sound.PlayOneShot(splash,.4f);Splash();}
                 wet=underwater;
             }
@@ -62,11 +62,12 @@ namespace LighthouseKeepers.WatchDemo
             bool near=keepers?.NearKeeper(transform.position,tuning.droppedWrenchKeeperRadius)==true;
             if(head){var d=head.position-transform.position;near|=Mathf.Abs(d.y)<2.5f&&new Vector2(d.x,d.z).sqrMagnitude<tuning.droppedWrenchKeeperRadius*tuning.droppedWrenchKeeperRadius;}
             awaySeconds=near?0:awaySeconds+Time.deltaTime;
+            droppedSeconds+=Time.deltaTime;
             var p=transform.position;
             bool unreachable=!InsidePlayableRooms(p);
-            if(unreachable||awaySeconds>=tuning.droppedWrenchReturnSeconds)
+            if(unreachable||(tuning.guaranteedWrenchRecovery?droppedSeconds:awaySeconds)>=tuning.droppedWrenchReturnSeconds)
             {
-                LastReturnReason=unreachable?"out of playable rooms":"20 seconds away from keepers";
+                LastReturnReason=unreachable?"out of playable rooms":tuning.guaranteedWrenchRecovery?"unheld recovery deadline":"away from keepers";
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"WRENCH_RETURN reason={LastReturnReason} position={p} awaySeconds={awaySeconds:F2}");
 #endif
@@ -92,7 +93,7 @@ namespace LighthouseKeepers.WatchDemo
                 var main=entrySplash.main;main.loop=false;main.playOnAwake=false;main.startLifetime=.35f;main.startSpeed=.65f;main.gravityModifier=1.2f;main.maxParticles=12;
                 var emission=entrySplash.emission;emission.enabled=false;
             }
-            entrySplash.transform.SetPositionAndRotation(new Vector3(transform.position.x,watch.WaterHeight+.01f,transform.position.z),Quaternion.LookRotation(Vector3.up));
+            entrySplash.transform.SetPositionAndRotation(new Vector3(transform.position.x,watch.WaterHeightAt(transform.position)+.01f,transform.position.z),Quaternion.LookRotation(Vector3.up));
             entrySplash.Play();entrySplash.Emit(10);
         }
         void OnCollisionEnter(Collision collision)
@@ -104,7 +105,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(grab.isSelected || network!=null && !network.CanSimulateReleased)return;
             if(!body.isKinematic){body.linearVelocity=Vector3.zero;body.angularVelocity=Vector3.zero;}
-            released=false;awaySeconds=0;wet=false;
+            released=false;awaySeconds=droppedSeconds=0;wet=false;
             body.isKinematic=true;body.position=home;body.rotation=rotation;transform.SetPositionAndRotation(home,rotation);returnAt=-1;
         }
     }

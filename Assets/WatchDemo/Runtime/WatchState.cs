@@ -20,6 +20,7 @@ namespace LighthouseKeepers.WatchDemo
         public PowerGrid Grid {get;}
         public WatchEngineState Engine {get;}
         public BeaconStationState Beacon {get;}
+        public HouseFloodState HouseFlood {get;}
         bool resetting;
         public bool BeaconShining=>Beacon!=null?Beacon.Shining(HasPower(PowerCircuit.Beacon)):HasPower(PowerCircuit.Beacon);
         public bool IgniteBeacon(bool lit)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Beacon.Ignite(lit,HasPower(PowerCircuit.Beacon));
@@ -109,6 +110,7 @@ namespace LighthouseKeepers.WatchDemo
             if (definitions == null || definitions.Length == 0) throw new ArgumentException("No authored watch days");
             days = definitions;
             Tuning=tuning&&tuning.enabledForWatch?tuning:null;
+            if(Tuning&&Tuning.houseDoorwayFlow)HouseFlood=new HouseFloodState(Tuning);
             Immersion=immersion&&immersion.enabledForWatch?immersion:null;
             bool forgiving=Immersion&&Immersion.forgivingPipe;
             Pipe=new PipeRepairState(Resources.Load<PipeRepairProfile>(forgiving?"ImmersionPipeRepair":"PipeRepair"),forgiving);
@@ -146,6 +148,8 @@ namespace LighthouseKeepers.WatchDemo
             Radio.Tick(seconds,!Failed);
             if (wasFailed != Failed) Changed?.Invoke();
         }
+        public void AdvanceHouseFlood(float seconds,float height)
+        {if(!ReadOnly&&!Failed)HouseFlood?.Step(seconds,height,Repaired&&HasPower(PowerCircuit.Pump));}
         public void ObserveWater(double seconds,float height)
         {
             if(!double.IsFinite(seconds)||seconds<0||!float.IsFinite(height))throw new ArgumentOutOfRangeException();
@@ -185,7 +189,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             int done=0;
             for(int i=0;i<Definition.tasks.Length;i++)if(IsDone(Definition.tasks[i].stationId))done|=1<<i;
-            return new WatchSnapshot { day3Stage=day3Stage,day3Crew=balanceCrew,day3GraceUntil=day3GraceUntil,objectiveIndex=ObjectiveIndex,day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
+            return new WatchSnapshot { houseWaterVolume=HouseFlood?.Volume??0,day3Stage=day3Stage,day3Crew=balanceCrew,day3GraceUntil=day3GraceUntil,objectiveIndex=ObjectiveIndex,day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
                 beaconStationEnabled=Beacon!=null,beaconIgnited=Beacon?.Ignited??false,beaconAlignment=Beacon?.Alignment??0,beaconTarget=Beacon?.Target??0,beaconSoot=Beacon?.Soot??0,
                 engineEnabled=Engine!=null,fuel=Engine?.Fuel??0,primer=Engine?.Primer??0,enginePulls=Engine?.Pulls??0,engineClosedPulls=Engine?.ClosedPulls??0,chokeClosed=Engine?.ChokeClosed??false,engineSettled=Engine?.Settled??false,chokeRemaining=Engine?.OpenRemaining??0,engineFloodRemaining=Engine?.FloodRemaining??0,coughSerial=Engine?.CoughSerial??0,
                 gridEnabled=Grid!=null,gridCapacity=Grid?.Capacity??0,gridMask=Grid?.SelectedMask??0,gridTripped=Grid?.Tripped??false,
@@ -212,12 +216,13 @@ namespace LighthouseKeepers.WatchDemo
             day3Stage=snapshot.day3Stage;balanceCrew=snapshot.day3Crew;day3GraceUntil=snapshot.day3GraceUntil;replicaObjective=snapshot.objectiveIndex;index=next;Elapsed=snapshot.elapsed;Power=(PowerState)snapshot.power;StarterPulls=snapshot.starterPulls;
             BeaconDarkElapsed=snapshot.beaconDarkElapsed;BeaconDarkFailed=snapshot.beaconDarkFailed;
             HighWaterElapsed=snapshot.highWaterElapsed;HighWaterFailed=snapshot.highWaterFailed;
+            HouseFlood?.Apply(snapshot.houseWaterVolume);
             faults.Clear();for(int i=0;i<Definition.tasks.Length;i++)if((snapshot.doneMask&(1<<i))==0)faults.Add(Definition.tasks[i].stationId);
             Pipe.ApplyReplica(snapshot);Radio.ApplyReplica(snapshot);Changed?.Invoke();return true;
         }
         void Reset()
         {
-            resetting=true;
+            resetting=true;HouseFlood?.Reset();
             Elapsed = 0; BeaconDarkElapsed=0; BeaconDarkFailed=false; StarterPulls = 0; faults.Clear();
             HighWaterElapsed=0;HighWaterFailed=false;
             foreach (var fault in Definition.startingFaults) faults.Add(fault);

@@ -26,6 +26,10 @@ namespace LighthouseKeepers.Core
         [Range(.1f,1)] public float day3SoloFloodMultiplier = .65f, day3CrewFloodMultiplier = .85f;
         [Range(0,1)] public float day3ArrivalFuel = .3f, day3FailureFuel = .04f;
         [Min(0)] public float day3FuelDrainPerSecond = .0015f;
+        [Header("House doorway flow (prescribed tower level; no change to tower water visuals)")]
+        public bool houseDoorwayFlow = true;
+        [Min(.001f)] public float houseWaterFilmDepth = .012f;
+        [Min(.01f)] public float houseDoorFlowCoefficient = 1.7f;
         [Header("Flood loss")]
         public float failWaterHeightM = .55f;
         [Min(.1f)] public float failWaterSustainSeconds = 3;

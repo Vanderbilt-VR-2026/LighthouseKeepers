@@ -12,7 +12,8 @@ namespace LighthouseKeepers.Core
         public bool leverPipe = true, physicalWrenchDrops = true, faultMist = true;
         [Min(.1f)] public float leverReleaseRadius = .48f;
         [Min(.05f)] public float leverReleaseHeight = .22f;
-        [Min(1)] public float droppedWrenchReturnSeconds = 20;
+        [Min(1)] public float droppedWrenchReturnSeconds = 8;
+        public bool guaranteedWrenchRecovery = true;
         [Min(.1f)] public float droppedWrenchKeeperRadius = 1.8f;
         public bool forgivingGenerator = true, atmosphere = true, logbook = true;
         [Min(.01f)] public float wrenchSnapMetres = .08f;
@@ -45,7 +46,7 @@ namespace LighthouseKeepers.Core
     public static class CrewNetworkVersion
     {
         // One identity for matchmaking, lobby display and the shared payload contract.
-        public const string Matchmaking = "LK-S4-M3-D3BAL1";
-        public const string Snapshot = "LK-Lab-Coop-v8";
+        public const string Matchmaking = "LK-S4-M3-FLOOD1";
+        public const string Snapshot = "LK-Lab-Coop-v9";
     }
 }
