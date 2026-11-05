@@ -1,0 +1,17 @@
+Performing Streamed Install
+Success
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+Stopping: com.lighthousekeepers.game
+Starting: Intent { cmp=com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity }
+
+Running PID: 24601
+11-04 23:24:36.678 24601 24658 I OpenXR_SessionImpl: PostSessionStateChange:[pid: 24601] XR_SESSION_STATE_IDLE -> XR_SESSION_STATE_READY
+11-04 23:24:36.681 24601 24658 I Unity   : [XR] [490183170544] [23:24:36.681][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_IDLE->XR_SESSION_STATE_READY session=3 time=79007886475650
+11-04 23:24:36.877 24601 24658 I OpenXR_SessionImpl: PostSessionStateChange:[pid: 24601] XR_SESSION_STATE_READY -> XR_SESSION_STATE_SYNCHRONIZED
+11-04 23:24:36.879 24601 24658 I Unity   : [XR] [490183170544] [23:24:36.879][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_READY->XR_SESSION_STATE_SYNCHRONIZED session=3 time=79008086141764
+11-04 23:24:36.882 24601 24658 I OpenXR_SessionImpl: PostSessionStateChange:[pid: 24601] XR_SESSION_STATE_VISIBLE -> XR_SESSION_STATE_FOCUSED
+11-04 23:24:36.884 24601 24658 I Unity   : [XR] [490183170544] [23:24:36.884][Info   ] OpenXRSession::HandleSessionStateChangedEvent: state XR_SESSION_STATE_VISIBLE->XR_SESSION_STATE_FOCUSED session=3 time=79008090777910
+11-04 23:24:36.886 24601 24658 I Unity   : [XR] [490183170544] [23:24:36.886][Info   ] XrEventDataSessionStateChanged: XR_SESSION_STATE_IDLE->XR_SESSION_STATE_READY
+11-04 23:24:36.886 24601 24658 I Unity   : [XR] [490183170544] [23:24:36.886][Info   ] XrEventDataSessionStateChanged: XR_SESSION_STATE_READY->XR_SESSION_STATE_SYNCHRONIZED
+11-04 23:24:36.886 24601 24658 I Unity   : [XR] [490183170544] [23:24:36.886][Info   ] XrEventDataSessionStateChanged: XR_SESSION_STATE_VISIBLE->XR_SESSION_STATE_FOCUSED

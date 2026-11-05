@@ -27,3 +27,17 @@ Switches: `ImmersionTuning.guaranteedWrenchRecovery`, `S4Tuning.houseDoorwayFlow
 - Graphics Play Mode: hold underwater >8 s, release nearby, recover after 8 s; doorway/House spread; real XRI three-bolt repair, drainage and bed into Day 2 passed with zero captured errors. See [trace](loop-evidence.txt).
 - Screenshots inspected: [doorway](03-first-flow-doorway.png), [spreading front](04-house-spreading-front.png), [board room flooded](05-house-board-room-flooded.png), [returned wrench](02-recovered-on-bench.png).
 - Headset user is unavailable. Controller feel, held-water repro on hardware and Quest visual/performance acceptance remain pending.
+
+## Live Fusion regression
+
+Two Mac Editors joined room Z2QV3E, readied and loaded the Lab. Remote avatars were visible and local bodies hidden. Native mono voice components reported AEC/noise suppression active; no human listening acceptance was performed.
+
+The guest held the leased wrench underwater for 9.2 s, released it beside the keeper, and received the host's return after the eight-second deadline. House volumes sampled at slightly different network times were 5.150/5.124 m³. The guest then repaired all three bolts through actual injected XRI clutch inputs; both boards showed completion. [Host board](coop-board-host.png), [guest board](coop-board-guest.png), [transport log](coop-events.jsonl), [wet recovery](coop-wet.txt), [pipe trace](coop-pipe.txt).
+
+This is live two-process Fusion evidence, not a new Mac+Quest playtest. The user was unavailable. The prior Day 3 paced win and tuning remain documented in [Day 3 Balance](../AudioPass/Day3Balance.md); this change reran the 23 focused checks and quick Night 1, not the full Days 1–3 graphics suite.
+
+## Android build
+
+Built from `a8e0dbc7dd2e8837edb295929e9505b98f776e22` with Unity 6000.3.23f1 and `MultiplayerBuild.BuildQuest` (exit 0). APK: `Builds/FloodRecovery-a8e0dbc/LighthouseKeepers-FloodRecovery.apk`, 104,983,688 bytes. SHA-256: `6a6698f8b13921a1487d8301f7c80e64ee8219f4fb1cbb81fb50c0697a8af833`.
+
+Installed with `adb install -r` (Success), launched and observed running as PID 24601. No fatal/null-reference/shader error found in the captured process log. This is launch evidence only: no new in-headset gameplay, visual or performance acceptance. [Install/launch](install-launch.txt).
