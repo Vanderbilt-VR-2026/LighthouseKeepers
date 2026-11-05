@@ -34,6 +34,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly||sleeping)return -1;
             switch(action)
             {
+                case CoopAction.StatusRequest:
                 case CoopAction.PAReplay:return immersionWorld&&immersionWorld.Narrator&&immersionWorld.Narrator.RequestReplay()?1:-1;
                 case CoopAction.Bed:
                     if(state.Immersion&&!state.Failed&&immersionWorld&&immersionWorld.Narrator){immersionWorld.Narrator.EarlyBed();return 1;}

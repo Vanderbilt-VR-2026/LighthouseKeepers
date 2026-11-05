@@ -20,6 +20,7 @@ namespace LighthouseKeepers.Net.Tests
   }
   [Test]public void ReplayCommandFitsExistingRateAndRevisionWindow()
   {
+   var statusWindow=new CoopCommandWindow();Assert.True(statusWindow.Accept(2,1,1,1,CoopAction.StatusRequest,0));Assert.False(statusWindow.Accept(0,1,1,1,CoopAction.StatusRequest,0));Assert.False(statusWindow.Accept(2,1,1,1,CoopAction.StatusRequest,0));
    var window=new CoopCommandWindow();Assert.True(window.Accept(1,1,1,1,CoopAction.PAReplay,5));Assert.False(window.Accept(1,1,1,1,CoopAction.PAReplay,5));Assert.False(window.Accept(1,2,0,1,CoopAction.PAReplay,0));
   }
   [Test]public void AllSpokenLinesHaveCaptionsAndMusicNeverRestsDuringCrisis()

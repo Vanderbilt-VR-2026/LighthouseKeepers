@@ -32,7 +32,7 @@ namespace LighthouseKeepers.Editor {
      }
      lines.Add($"Night {day} | {step} | {simulated-start:F1} s including travel/read | elapsed {simulated:F1} | water {water:F3}");
     }
-    bool won=s.Complete&&!s.Failed;pass&=won;lines.Add($"NIGHT {day}: {(won?"PASS":"FAIL")} total={simulated:F1}s spare={s.Duration-s.Elapsed:F1}s water={water:F3} cause={(won?"none":s.FailureMessage)}");
+    bool won=s.Complete&&!s.Failed;if(won){Advance(12*Mathf.Abs(3-floor)+4);d.Tick((float)simulated,0,new Vector3(0,9.9f,0),0,Vector3.zero,held);won=d.First==KeeperStep.Sleep&&!s.Failed;}double spare=s.Duration-s.Elapsed;pass&=won;lines.Add($"NIGHT {day}: {(won?"PASS":"FAIL")} total={simulated:F1}s spare={spare:F1}s water={water:F3} cause={(won?"none":s.FailureMessage)}");if(won){bool slept=s.Sleep();pass&=slept;lines.Add("BED "+day+": "+(slept?"PASS":"FAIL")+" next="+s.Day);}
    }
    Directory.CreateDirectory(Path.GetDirectoryName(path));File.WriteAllLines(path,lines);return new{passed=pass,lines};
   }

@@ -33,7 +33,7 @@ namespace LighthouseKeepers.WatchDemo
     var cap=parts.Part("PRESS TO REPLAY",root,new Vector3(0,-.92f,.045f),new Vector3(.075f,.075f,.035f),parts.Brass,PrimitiveType.Cylinder);cap.transform.localRotation=Quaternion.Euler(90,0,0);
     var collider=cap.AddComponent<BoxCollider>();var button=cap.AddComponent<XRSimpleInteractable>();button.colliders.Clear();button.colliders.Add(collider);buttons[i]=button;int index=i;
     var rest=cap.transform.localPosition;button.selectEntered.AddListener(e=>{cap.transform.localPosition=rest-Vector3.forward*.008f;var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.Pulse(.15f,.05f);Press(index);});button.selectExited.AddListener(e=>cap.transform.localPosition=rest);
-    parts.Text("Replay stencil","REPLAY LAST",root,new Vector3(0,-1.015f,.04f),.0027f);
+    parts.Text("Replay stencil",KeeperStrings.Get("pa.status"),root,new Vector3(0,-1.015f,.04f),.0027f);
     voice[i]=Source(root,"Harbor radio PA voice "+i,.95f);voice[i].gameObject.AddComponent<AudioHighPassFilter>().cutoffFrequency=350;voice[i].gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=3500;voice[i].gameObject.AddComponent<RadioPresence>();
     var reverb=voice[i].gameObject.AddComponent<AudioReverbFilter>();reverb.reverbPreset=AudioReverbPreset.Room;reverb.decayTime=.35f;reverb.room=-1800;reverb.reflectionsLevel=-2200;reverb.reverbLevel=-2200;
     noise[i]=Source(root,"Harbor radio PA hiss "+i,0);noise[i].clip=staticClip;noise[i].loop=true;

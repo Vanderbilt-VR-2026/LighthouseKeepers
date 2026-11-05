@@ -216,6 +216,7 @@ namespace LighthouseKeepers.Net
                 if(!watch.CanSleep)return watch.ApplyCommand(CoopAction.Bed,0,false);
                 beds.Add(actor,true);UpdateStatus();TryBed();return 1;
             }
+            if(c.action==CoopAction.StatusRequest){if(c.value!=0||!poses.Sample(actor,out _))return -1;return watch.ApplyCommand(c.action,0,false);}
             if(c.action==CoopAction.Retry||c.action==CoopAction.Replay)return watch.ApplyCommand(c.action,c.value,c.pressed);
             var target=watch.Target(c.action,c.value);if(!target)return -1;
             if(!poses.NearHand(actor,target.transform.position,c.action==CoopAction.Microphone?1.2f:.85f))return -1;

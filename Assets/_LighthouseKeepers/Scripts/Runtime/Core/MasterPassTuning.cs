@@ -3,7 +3,7 @@ namespace LighthouseKeepers.Core {
  [CreateAssetMenu(menuName="Lighthouse/Master pass tuning")]
  public sealed class MasterPassTuning:ScriptableObject {
   public bool objectiveDirector=true,gripOnlyWrench=true,friendlyGenerator=true;
-  public bool pressureCues=true,stormClock=true,onboarding=true,movement=true,worldSafety=false;
+  public bool pressureCues=true,stormClock=true,onboarding=true,movement=true,worldSafety=true;
   public float walkMultiplier=1.2f,poleSpeed=2,poleAcceleration=4;
   public float guidedFuelTarget=.65f;
   public float nightTwoOutageSeconds=75,firstGeneratorGraceSeconds=120,tutorialFloodCap=.28f,gateTimeoutSeconds=30;

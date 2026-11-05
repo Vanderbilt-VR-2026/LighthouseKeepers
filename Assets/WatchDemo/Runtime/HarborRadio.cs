@@ -12,7 +12,7 @@ namespace LighthouseKeepers.WatchDemo
         PAIntercom intercom;
         public string Subtitle=>catalog&&Age>=(intercom ? .3f : 0)&&catalog.Line(Cue)&&Age<catalog.Line(Cue).length+(intercom ? .3f : 0)?catalog.Caption(Cue):"";
         public Component ReplayButton(int i)=>intercom?intercom.Button(i):null;
-        public bool RequestReplay()=>intercom&&intercom.Replay();
+        public bool RequestReplay(){if(watch.State.RemoteReplica)return watch.State.Coop?.Send(LighthouseKeepers.Lobby.CoopAction.StatusRequest)==true;return intercom&&intercom.Replay();}
         public void ReplayLast(){if(Cue>0)Play(Cue,Serial+1,0);}
         public float SilenceSeconds=>Time.time-quietSince;
         float Extra=>intercom ? .7f : 0;
@@ -158,7 +158,7 @@ namespace LighthouseKeepers.WatchDemo
             else if(!s.BeaconShining&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=30&&(dangerMask&16)==0){id=31;bit=16;}
             else if(!s.BeaconShining&&(dangerMask&8)==0){id=30;bit=8;}
             bool critical=id==29||id==32;
-            if(id>0&&(critical?SilenceSeconds>=0:SilenceSeconds>=s.Master.speechSpacingSeconds)){dangerMask|=bit;Play(id,Serial+1,0);}
+            if(id>0&&(critical?(Cue!=29&&Cue!=32||SilenceSeconds>=0):SilenceSeconds>=s.Master.speechSpacingSeconds)){dangerMask|=bit;Play(id,Serial+1,0);}
             if(Time.time>=nextStatus&&SilenceSeconds>=s.Master.speechSpacingSeconds)StatusUpdate();
             if(s.CompletedTasks>priorTasks){Enqueue(s.Power==PowerState.On&&lastJob==8?21:lastJob==10?22:20);}priorTasks=s.CompletedTasks;
         }
