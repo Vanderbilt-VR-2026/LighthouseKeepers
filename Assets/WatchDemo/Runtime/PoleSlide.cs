@@ -1,0 +1,25 @@
+using UnityEngine;using Unity.XR.CoreUtils;using UnityEngine.XR.Interaction.Toolkit;using UnityEngine.XR.Interaction.Toolkit.Interactables;using UnityEngine.XR.Interaction.Toolkit.Locomotion;using UnityEngine.XR.Interaction.Toolkit.Locomotion.Gravity;using UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement;using LighthouseKeepers.Gameplay.Interaction;
+namespace LighthouseKeepers.WatchDemo {
+ // Two short drops use existing stair voids. Floors are never disabled or teleported through.
+ // Releasing grip brakes to a pause on the pole; regrip continues. Bottom restores ordinary movement.
+ public sealed class PoleSlide:MonoBehaviour {
+  WatchDemoController watch;XROrigin rig;XRSimpleInteractable grab;XRBodyTransformer body;GravityProvider gravity;ContinuousMoveProvider move;readonly XROriginMovement motion=new();
+  Vector3 axis;float top,bottom,speed,stalled,previousY;bool latched,oldGravity,oldMove;BoxCollider gate;AudioSource sound;HandRig hand;
+  public float Top=>top;public float Bottom=>bottom;public bool Latched=>latched;public float Speed=>speed;
+  public static void Create(WatchDemoController w,XROrigin rig){var points=new[]{new Vector3(-2.20f,6.6f,2f),new Vector3(-1.40f,9.9f,1.20f)};foreach(var p in points){if(!Physics.CapsuleCast(p+Vector3.up*.25f,p+Vector3.up*1.5f,.21f,Vector3.down,out var hit,3.8f,~0,QueryTriggerInteraction.Ignore)||hit.distance<2){Debug.LogWarning("Pole shaft blocked at "+p);continue;}var go=new GameObject("Brass descent pole F"+(1+Mathf.RoundToInt(p.y/3.3f)));var c=go.AddComponent<PoleSlide>();c.watch=w;c.rig=rig;c.axis=p;c.top=p.y;c.bottom=hit.point.y+.06f;c.Build();}}
+  void Build(){var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();float height=top-bottom+1.2f;transform.position=axis+Vector3.left*.28f;parts.Part("Brass slide shaft",transform,new Vector3(0,(top+bottom)*.5f+.6f-top,0),new Vector3(.055f,height*.5f,.055f),parts.Brass,PrimitiveType.Cylinder);
+   var trigger=gameObject.AddComponent<BoxCollider>();trigger.isTrigger=true;trigger.center=new Vector3(0,(bottom-top)*.5f+.5f,0);trigger.size=new Vector3(.25f,height,.25f);grab=gameObject.AddComponent<XRSimpleInteractable>();grab.colliders.Add(trigger);grab.selectMode=InteractableSelectMode.Multiple;grab.selectEntered.AddListener(Grab);
+   for(int i=0;i<3;i++){var post=parts.Part("Pole guard post",transform,new Vector3(-.35f,.52f,i==2?.4f:-.4f),new Vector3(.035f,1.04f,.035f),parts.Brass);post.AddComponent<BoxCollider>();}
+   var bar=parts.Part("Pole safety gate",transform,new Vector3(.8f,.8f,0),new Vector3(.05f,.05f,.85f),parts.Brass);gate=bar.AddComponent<BoxCollider>();parts.Part("Pole engraved plate",transform,new Vector3(-.31f,1.02f,-.41f),new Vector3(.35f,.11f,.025f),parts.Dark);parts.Text("Pole grip instruction",KeeperStrings.Get("pole.grip"),transform,new Vector3(-.31f,1.02f,-.427f),.0026f);
+   body=rig.GetComponentInChildren<XRBodyTransformer>();gravity=rig.GetComponentInChildren<GravityProvider>();move=rig.GetComponentInChildren<ContinuousMoveProvider>();sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.loop=true;sound.spatialBlend=1;sound.minDistance=.5f;sound.maxDistance=6;sound.volume=.09f;sound.clip=Resources.Load<AudioClip>("ImmersionAudio/creak");
+  }
+  void Grab(SelectEnterEventArgs e){if(watch.State.Failed||watch.ObjectivePresentationBlocked||!body)return;if(!latched&&Mathf.Abs(rig.transform.position.y-top)>.35f)return;if(!latched){oldGravity=gravity&&gravity.enabled;oldMove=move&&move.enabled;if(gravity)gravity.enabled=false;if(move)move.enabled=false;latched=true;gate.enabled=false;previousY=rig.transform.position.y;stalled=0;}hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.Pulse(.18f,.08f);}
+  void Update(){if(!latched)return;float dt=Time.deltaTime;bool held=grab.isSelected&&!watch.ObjectivePresentationBlocked;speed=Mathf.MoveTowards(speed,held?watch.State.Master.poleSpeed:0,watch.State.Master.poleAcceleration*dt);
+   var p=rig.Camera.transform.position;p.y=rig.transform.position.y;var delta=Vector3.ProjectOnPlane(axis-p,Vector3.up);float vertical=delta.magnitude<.08f?Mathf.Min(speed*dt,Mathf.Max(0,p.y-bottom)):0;motion.motion=(held?Vector3.ClampMagnitude(delta,dt*.7f):Vector3.zero)+Vector3.down*vertical;body.QueueTransformation(motion,100);
+   if(p.y<=bottom+.08f){Finish();return;}if(held&&Mathf.Abs(p.y-previousY)<.0001f&&delta.magnitude<.08f)stalled+=dt;else stalled=0;previousY=p.y;if(stalled>1){Finish();return;}
+   if(speed>.1f){if(sound.clip&&!sound.isPlaying)sound.Play();}else sound.Stop();
+  }
+  void Finish(){latched=false;speed=0;if(gravity)gravity.enabled=oldGravity;if(move)move.enabled=oldMove;if(gate)gate.enabled=true;if(sound)sound.Stop();}
+  void OnDestroy(){if(latched)Finish();if(grab)grab.selectEntered.RemoveListener(Grab);}
+ }
+}

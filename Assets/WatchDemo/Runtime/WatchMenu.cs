@@ -21,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
         Canvas canvas;
         Text status;
         Button retry, replay, leave, close;
-        Button mute;
+        Button mute,turnMode;
         LighthouseKeepers.Lobby.ICrewVoice voice;
         bool previousMenu, exiting;
         int previousTerminal;
@@ -85,6 +85,7 @@ namespace LighthouseKeepers.WatchDemo
                 ((RectTransform)panel.transform).sizeDelta=new Vector2(600,510);
                 mute=Action("ToggleCrewMicrophone",voice.StatusText,-225,()=>{if(voice!=null)voice.ToggleMute();Refresh();});
             }
+            if(watch.State.Master&&watch.State.Master.movement){turnMode=Action("TurnComfortMode",KeeperStrings.Get("turn.snap"),-285,()=>{if(KeeperMovement.Current){KeeperMovement.Current.Toggle();turnMode.GetComponentInChildren<Text>().text=KeeperStrings.Get(KeeperMovement.Current.Smooth?"turn.smooth":"turn.snap");}});((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);}
             WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
             panel.SetActive(false);
         }

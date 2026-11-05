@@ -16,8 +16,8 @@ namespace LighthouseKeepers.WatchDemo
   public static void Attach(GameObject panel,Font font,Material ink,Action refresh)
   {
    var s=AudioPassSettings.Current;if(!s||!s.audioMix)return;
-   var rect=(RectTransform)panel.transform;rect.sizeDelta=new Vector2(600,680);
-   var open=Button(rect,"AudioSettingsButton","SOUND LEVELS",-290,font,ink);
+   var rect=(RectTransform)panel.transform;bool comfort=panel.transform.Find("TurnComfortMode")!=null;rect.sizeDelta=new Vector2(600,comfort?800:680);
+   var open=Button(rect,"AudioSettingsButton","SOUND LEVELS",comfort?-350:-290,font,ink);
    var page=Rect(rect,"Sound settings page",Vector2.zero,rect.sizeDelta);Text(page,"Sound settings title","SOUND LEVELS",new Vector2(0,230),new Vector2(520,60),font,ink);
    string[] keys={"Music","Effects","Radio","VoiceChat"},labels={"MUSIC","EFFECTS","RADIO","VOICE CHAT"};
    for(int i=0;i<4;i++)
