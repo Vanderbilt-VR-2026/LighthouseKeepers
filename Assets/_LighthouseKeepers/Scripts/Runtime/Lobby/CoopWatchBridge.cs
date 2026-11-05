@@ -20,6 +20,10 @@ namespace LighthouseKeepers.Lobby
         bool ApplyState(string json);
         string DescribeState();
     }
+    public interface ICoopKeeperLocations {
+        int LocalActor {get;}
+        void Locations(out int first,out Vector3 firstHead,out int second,out Vector3 secondHead);
+    }
     public interface ICoopBedPresentation { void SetBedMask(int mask); }
     public interface ICoopWrenchClutch
     {

@@ -107,6 +107,7 @@ namespace LighthouseKeepers.WatchDemo
         int CurrentJob()
         {
             var s=watch.State;
+            if(s.Director!=null)return ObjectiveDirector.Hint(s.Director.First);
             return s.Complete?12:s.Engine!=null&&!s.Engine.Running?8:
                 !s.BeaconShining?s.HasPower(PowerCircuit.Beacon)?10:9:!s.Repaired?7:11;
         }

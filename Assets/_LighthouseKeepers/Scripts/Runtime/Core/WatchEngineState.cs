@@ -10,6 +10,7 @@ namespace LighthouseKeepers.Core
         public event Action Changed;
         public bool ReadOnly {get;set;}
         public bool IgnoreExtraPulls {get;set;}
+        public bool Guided {get;set;}
         public float Fuel {get;private set;}
         public int Primer {get;private set;}
         public int Pulls {get;private set;}
@@ -27,7 +28,7 @@ namespace LighthouseKeepers.Core
         public void Reset(float fuel,float consumption,bool running)
         {Fuel=Mathf.Clamp01(fuel);drain=Mathf.Max(0,consumption);Primer=Pulls=ClosedPulls=CoughSerial=0;ChokeClosed=false;Running=Settled=running;OpenRemaining=FloodRemaining=primerWait=crankWait=0;Changed?.Invoke();}
         public bool Prime()
-        {if(ReadOnly||Running||FloodRemaining>0||primerWait>0)return false;primerWait=tuning.primerCooldown;Primer=Math.Min(tuning.primerSqueezes,Primer+1);Changed?.Invoke();return true;}
+        {if(ReadOnly||Running||FloodRemaining>0||primerWait>0||Guided&&Primed)return false;primerWait=tuning.primerCooldown;Primer=Math.Min(tuning.primerSqueezes,Primer+1);Changed?.Invoke();return true;}
         public bool SetChoke(bool closed)
         {
             if(ReadOnly||ChokeClosed==closed)return false;
@@ -60,7 +61,7 @@ namespace LighthouseKeepers.Core
             if(Running)
             {
                 if(drain>0){Fuel=Mathf.Max(0,Fuel-drain*seconds);}
-                if(ChokeClosed){OpenRemaining=Mathf.Max(0,OpenRemaining-seconds);if(OpenRemaining<=0){Stop();CoughSerial++;}}
+                if(ChokeClosed&&!Guided){OpenRemaining=Mathf.Max(0,OpenRemaining-seconds);if(OpenRemaining<=0){Stop();CoughSerial++;}}
                 if(Fuel<=0){Stop();CoughSerial++;}
             }
             if(wasRunning!=Running||notifyAfter<=0){notifyAfter=.2f;Changed?.Invoke();}

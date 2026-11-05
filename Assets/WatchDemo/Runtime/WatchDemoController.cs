@@ -95,6 +95,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             BeginWatch();
             if(state.HouseFlood!=null)WatchHouseFlood.Create(this);
+            InitializeDirector();
             ObjectiveHud.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
             if(state.RemoteReplica){flood.Paused=true;clock.text="WAITING FOR HOST STATE";}
@@ -119,6 +120,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
+            UpdateDirector();
             if(state.Immersion&&state.Immersion.physicalGuidance)
             {
                 int letters=Mathf.Min(16,(int)(state.Elapsed/state.Immersion.chalkLetterSeconds));
@@ -199,6 +201,7 @@ namespace LighthouseKeepers.WatchDemo
         void StateChanged(){shownSecond=-1;RefreshBoard();}
         void RefreshBoard()
         {
+            if(state.Director!=null){DirectorBoard();return;}
             boardText.Clear();
             if(state.NetworkRehearsal)
             {board.text="NETWORK PRACTICE\n\nMove, turn and grab props together.\nObjectives and day clock are paused.\n\nLEFT MENU: Return to lobby";return;}

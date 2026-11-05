@@ -60,7 +60,7 @@ namespace LighthouseKeepers.WatchDemo
   void Refresh()
   {
    var b=State.Beacon;marker.localRotation=Quaternion.Euler(0,0,-135+b.Alignment*270);bool powered=State.HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon);
-   readout.text=!powered?"NO BEACON POWER — BREAKER F2":!b.Ignited?"FLIP IGNITION SWITCH":!b.Aligned?"TURN WHEEL TO GREEN MARK":$"ALIGNED · SOOT {b.Soot*100:0}%";
+   readout.text=State.Director!=null?State.Director.StationInstruction(WatchState.BeaconStation):!powered?"NO BEACON POWER — BREAKER F2":!b.Ignited?"FLIP IGNITION SWITCH":!b.Aligned?"TURN WHEEL TO GREEN MARK":$"ALIGNED · SOOT {b.Soot*100:0}%";
    var colour=b.Aligned?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.5f);lamp.SetPropertyBlock(block);
   }
   void Update()

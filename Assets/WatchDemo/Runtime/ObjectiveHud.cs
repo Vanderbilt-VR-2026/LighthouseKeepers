@@ -8,7 +8,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class ObjectiveHud:MonoBehaviour
  {
   WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick;
-  Text task,label,floor,subtitle;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;Vector3 velocity;Quaternion follow;
+  Text task,label,floor,subtitle,partner;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;Vector3 velocity;Quaternion follow;
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
   public static ObjectiveHud Create(WatchDemoController w,Transform head)
   {var s=AudioPassSettings.Current;if(!s||!s.objectiveHud)return null;var h=w.gameObject.AddComponent<ObjectiveHud>();h.watch=w;h.head=head;h.Build();return h;}
@@ -32,6 +32,7 @@ namespace LighthouseKeepers.WatchDemo
    cueSound=new GameObject("Soft objective completion").AddComponent<AudioSource>();cueSound.transform.SetParent(transform,false);cueSound.playOnAwake=false;cueSound.volume=.08f;cueSound.clip=Resources.Load<AudioClip>("Hands/clunk");
    task=Text("Objective task",new Vector2(15,10),new Vector2(470,50),34,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);
    floor=Text("Relative floor",new Vector2(10,-28),new Vector2(470,25),16,new Color(.76f,.7f,.56f));
+   partner=Text("Partner job",new Vector2(10,-48),new Vector2(470,20),14,new Color(.76f,.7f,.56f));
    subtitle=Text("Harbor subtitle",new Vector2(0,-72),new Vector2(530,85),19,new Color(.79f,.79f,.72f,.82f));subtitle.fontStyle=FontStyle.Italic;
    strike=Rule("Completed objective strike",new Vector2(15,10),new Vector2(460,1));tick=Rule("Completion tick stem",new Vector2(240,13),new Vector2(12,2));tick.localRotation=Quaternion.Euler(0,0,45);var up=Rule("Completion tick sweep",new Vector2(253,18),new Vector2(24,2));up.SetParent(tick,false);up.anchoredPosition=new Vector2(11,4);up.localRotation=Quaternion.Euler(0,0,90);
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
@@ -40,23 +41,25 @@ namespace LighthouseKeepers.WatchDemo
   public void Reveal()=>until=Time.unscaledTime+7;
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   void Set(int value,string text){index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
-  string Title(int value)=>value== -2?"Watch complete":value<0?"Rest in the upstairs bunk":watch.State.Definition.tasks[value].taskText;
+  string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?"Watch complete":value<0?"Rest in the upstairs bunk":watch.State.Definition.tasks[value].taskText;
   void Update()
   {
    var s=watch.State;if(s==null)return;if(!radio)radio=FindAnyObjectByType<HarborRadio>();
-   int current=s.ObjectiveIndex;
+   int current=s.Director!=null?(int)watch.CurrentInstruction:s.ObjectiveIndex;
+   partner.text=s.Director!=null&&watch.PartnerInstruction!=KeeperStep.None?string.Format(KeeperStrings.Get("partner"),KeeperStrings.Get("job."+ObjectiveDirector.Job(watch.PartnerInstruction))):"";
    if(day!=s.Day){day=s.Day;Set(current,Title(current));}
    else if(current!=index&&completeUntil<=0)
    {
-    if(index>=0&&index<s.Definition.tasks.Length&&s.IsDone(s.Definition.tasks[index].stationId)){pending=Title(current);nextIndex=current;completeUntil=Time.unscaledTime+1.2f;if(cueSound.clip)cueSound.Play();Reveal();}
+    if(s.Director!=null&&ObjectiveDirector.Job((KeeperStep)index)==ObjectiveDirector.Job((KeeperStep)current)||s.Director==null&&index>=0&&index<s.Definition.tasks.Length&&s.IsDone(s.Definition.tasks[index].stationId)){pending=Title(current);nextIndex=current;completeUntil=Time.unscaledTime+1.2f;if(cueSound.clip)cueSound.Play();Reveal();}
     else Set(current,Title(current));
    }
+   if(s.Director!=null&&current==index&&Title(current)!=full&&completeUntil<=0)Set(current,Title(current));
    if(completeUntil>0&&Time.unscaledTime>=completeUntil)Set(nextIndex,pending??Title(current));
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
    line.localScale=new Vector3(Mathf.Clamp01((Time.unscaledTime-changed)/.4f),1,1);
-   string station=index>=0&&index<s.Definition.tasks.Length?s.Definition.tasks[index].stationId:"BED";
-   int target=station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
+   string station=s.Director!=null?ObjectiveDirector.Job((KeeperStep)index):index>=0&&index<s.Definition.tasks.Length?s.Definition.tasks[index].stationId:"BED";
+   int target=s.Director!=null?ObjectiveDirector.Floor((KeeperStep)index):station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
    int here=head.position.y<3.4f?1:head.position.y<6.7f?2:head.position.y<10?3:4;
    if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=(target>here?"UP  ":target<here?"DOWN  ":"")+"FLOOR "+target;}
    icon.Set(station);

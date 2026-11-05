@@ -97,15 +97,18 @@ namespace LighthouseKeepers.WatchDemo
             float pulse=.55f+.20f*Mathf.Sin(Time.unscaledTime*Mathf.PI);
             current.SetColor("_EmissionColor",new Color(1,.55f,.08f)*pulse);
             for(int i=0;i<stepLamps.Length;i++)
-            {stepLamps[i].SetPropertyBlock(i<State.Step?stepDone:i==State.Step?current:dark);stepLabels[i].color=i<State.Step?new Color(.3f,1,.4f):i==State.Step?new Color(1,.85f,.35f):new Color(.38f,.4f,.38f);}
+            {if(watch.Director!=null){stepLabels[i].gameObject.SetActive(i==State.Step);stepLamps[i].gameObject.SetActive(i==State.Step);}
+            stepLamps[i].SetPropertyBlock(i<State.Step?stepDone:i==State.Step?current:dark);stepLabels[i].color=i<State.Step?new Color(.3f,1,.4f):i==State.Step?new Color(1,.85f,.35f):new Color(.38f,.4f,.38f);}
             for(int i=0;i<controls.Length;i++)
             {
                 var control=controls[i];bool relevant=control.mainPower&&State.Step==0||control.frequency&&State.Step==1||control.codeColour>=0&&State.Step==2;
+                if(watch.Director!=null)relevant=false;
                 controlHighlights[i].SetPropertyBlock(relevant?current:dark);
                 if(control.codeColour>=0)
                 {var face=control.visual.GetComponentInChildren<Renderer>();var color=face.sharedMaterial.GetColor("_BaseColor");codeBlock.SetColor("_BaseColor",color*(relevant?1:.25f));codeBlock.SetColor("_EmissionColor",relevant?color*pulse:Color.black);face.SetPropertyBlock(codeBlock);}
             }
-            microphoneHighlight.SetPropertyBlock(State.Step==3?current:dark);
+            microphoneHighlight.SetPropertyBlock(watch.Director==null&&State.Step==3?current:dark);
+            if(watch.Director!=null){readout.text=watch.Director.StationInstruction(WatchState.RadioStation);return;}
             if(watch.Failed)readout.text="WATCH LOST\nPRESS TRIGGER TO RETRY";
             else if(!watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio))readout.text=watch.Grid!=null?"NO RADIO POWER\nCHECK BREAKER ON F2":"NO POWER\nSTART GENERATOR ON F2";
             else if(!State.MainOn)readout.text="1  FLIP MAIN POWER";

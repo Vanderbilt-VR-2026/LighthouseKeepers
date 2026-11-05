@@ -1,0 +1,352 @@
+{
+  "entries": [
+    {
+      "key": "step.None",
+      "text": ""
+    },
+    {
+      "key": "step.GrabWrench",
+      "text": "Hold GRIP — collect the wrench"
+    },
+    {
+      "key": "step.BoltA",
+      "text": "Pull bolt A toward you"
+    },
+    {
+      "key": "step.BoltB",
+      "text": "Pull bolt B toward you"
+    },
+    {
+      "key": "step.BoltC",
+      "text": "Pull bolt C toward you"
+    },
+    {
+      "key": "step.Fuel",
+      "text": "Fill the fuel tank"
+    },
+    {
+      "key": "step.Prime",
+      "text": "Squeeze the primer ×{0}"
+    },
+    {
+      "key": "step.CloseChoke",
+      "text": "Close the choke"
+    },
+    {
+      "key": "step.Starter",
+      "text": "Pull the starter ×{0}"
+    },
+    {
+      "key": "step.OpenChoke",
+      "text": "Open the choke"
+    },
+    {
+      "key": "step.ResetBreaker",
+      "text": "Reset the breaker"
+    },
+    {
+      "key": "step.RadioPower",
+      "text": "Switch on the radio"
+    },
+    {
+      "key": "step.RadioTune",
+      "text": "Tune to {0}"
+    },
+    {
+      "key": "step.RadioCode",
+      "text": "Press {0}"
+    },
+    {
+      "key": "step.RadioTransmit",
+      "text": "Hold mic trigger to transmit"
+    },
+    {
+      "key": "step.BeaconLight",
+      "text": "Light the beacon"
+    },
+    {
+      "key": "step.BeaconAlign",
+      "text": "Align the brass marks"
+    },
+    {
+      "key": "step.BeaconWipe",
+      "text": "Wipe the lens"
+    },
+    {
+      "key": "step.Sleep",
+      "text": "Leave tools; sleep upstairs"
+    },
+    {
+      "key": "step.Complete",
+      "text": "All nights survived"
+    },
+    {
+      "key": "step.Lost",
+      "text": "Open the logbook"
+    },
+    {
+      "key": "step.PumpOn",
+      "text": "Switch pump on"
+    },
+    {
+      "key": "step.PumpOff",
+      "text": "Switch pump off"
+    },
+    {
+      "key": "step.BeaconOn",
+      "text": "Switch beacon on"
+    },
+    {
+      "key": "step.BeaconOff",
+      "text": "Switch beacon off"
+    },
+    {
+      "key": "step.RadioOn",
+      "text": "Switch radio on"
+    },
+    {
+      "key": "step.RadioOff",
+      "text": "Switch radio off"
+    },
+    {
+      "key": "step.LightsOn",
+      "text": "Switch lights on"
+    },
+    {
+      "key": "step.LightsOff",
+      "text": "Switch lights off"
+    },
+    {
+      "key": "job.STN_PIPE_LEAK",
+      "text": "Pipe"
+    },
+    {
+      "key": "job.STN_GENERATOR",
+      "text": "Generator"
+    },
+    {
+      "key": "job.STN_RADIO_CONSOLE",
+      "text": "Radio"
+    },
+    {
+      "key": "job.STN_BEACON_CONTROL",
+      "text": "Beacon"
+    },
+    {
+      "key": "job.BED",
+      "text": "Sleep"
+    },
+    {
+      "key": "job.BREAKER",
+      "text": "Power"
+    },
+    {
+      "key": "job.",
+      "text": ""
+    },
+    {
+      "key": "board.goal",
+      "text": "Keep the light. Survive till dawn."
+    },
+    {
+      "key": "board.loop",
+      "text": "Finish jobs. Sleep. Survive three nights."
+    },
+    {
+      "key": "board.loss",
+      "text": "High water or dark beacon: lost."
+    },
+    {
+      "key": "board.night",
+      "text": "NIGHT {0}"
+    },
+    {
+      "key": "partner",
+      "text": "Partner: {0}"
+    },
+    {
+      "key": "floor",
+      "text": "FLOOR {0}"
+    },
+    {
+      "key": "up",
+      "text": "UP "
+    },
+    {
+      "key": "down",
+      "text": "DOWN "
+    },
+    {
+      "key": "wrench.first",
+      "text": "Hold GRIP — approach the bolt"
+    },
+    {
+      "key": "colour.0",
+      "text": "RED"
+    },
+    {
+      "key": "colour.1",
+      "text": "AMBER"
+    },
+    {
+      "key": "colour.2",
+      "text": "BLUE"
+    },
+    {
+      "key": "colour.3",
+      "text": "GREEN"
+    },
+    {
+      "key": "label.Primer label",
+      "text": "PRIMER"
+    },
+    {
+      "key": "label.Choke label",
+      "text": "CHOKE"
+    },
+    {
+      "key": "label.Starter pull label",
+      "text": "STARTER"
+    },
+    {
+      "key": "label.Engine sequence plate",
+      "text": "GENERATOR"
+    },
+    {
+      "key": "label.Generator instruction",
+      "text": ""
+    },
+    {
+      "key": "label.Primer instruction",
+      "text": ""
+    },
+    {
+      "key": "label.Beacon instruction",
+      "text": ""
+    },
+    {
+      "key": "label.Breaker instruction",
+      "text": ""
+    },
+    {
+      "key": "label.Panel heading",
+      "text": "POWER"
+    },
+    {
+      "key": "label.Meter legend",
+      "text": "LOAD / LIMIT"
+    },
+    {
+      "key": "label.Engraved starting order",
+      "text": "GENERATOR"
+    },
+    {
+      "key": "label.Primer plate",
+      "text": "PRIMER"
+    },
+    {
+      "key": "label.Choke plate",
+      "text": "CHOKE"
+    },
+    {
+      "key": "label.Starter plate",
+      "text": "STARTER"
+    },
+    {
+      "key": "label.Fuel filling plate",
+      "text": "FILL"
+    },
+    {
+      "key": "label.Fuel shelf plate",
+      "text": "FUEL"
+    },
+    {
+      "key": "label.Beacon instructions",
+      "text": ""
+    },
+    {
+      "key": "label.Ignition label",
+      "text": "IGNITION"
+    },
+    {
+      "key": "label.Wheel label",
+      "text": "ALIGN"
+    },
+    {
+      "key": "label.Rag instruction",
+      "text": "CLOTH"
+    },
+    {
+      "key": "label.Lens wipe label",
+      "text": "LENS"
+    },
+    {
+      "key": "label.Clutch stencil",
+      "text": ""
+    },
+    {
+      "key": "label.Final choke lamp label",
+      "text": ""
+    },
+    {
+      "key": "label.READOUT_StarterSteps",
+      "text": ""
+    },
+    {
+      "key": "label.READOUT_FuelGauge",
+      "text": ""
+    },
+    {
+      "key": "label.Engine sequence",
+      "text": ""
+    },
+    {
+      "key": "label.Beacon heading",
+      "text": "BEACON"
+    },
+    {
+      "key": "label.Bunk instructions",
+      "text": "GRIP TO REST"
+    },
+    {
+      "key": "label.Lens tag engraving",
+      "text": "LENS"
+    },
+    {
+      "key": "label.Radio header",
+      "text": "COASTAL RADIO"
+    },
+    {
+      "key": "label.Mic label",
+      "text": "MIC"
+    },
+    {
+      "key": "label.Main label",
+      "text": "POWER"
+    },
+    {
+      "key": "label.Solo call card",
+      "text": ""
+    },
+    {
+      "key": "label.Service meter 0",
+      "text": "VOLTS"
+    },
+    {
+      "key": "label.Service meter 1",
+      "text": "SIGNAL"
+    },
+    {
+      "key": "label.Service meter 2",
+      "text": "COAST"
+    },
+    {
+      "key": "label.Meter scale 0",
+      "text": "MODULATION"
+    },
+    {
+      "key": "label.Meter scale 1",
+      "text": "OUTPUT"
+    }
+  ]
+}

@@ -67,7 +67,7 @@ namespace LighthouseKeepers.WatchDemo
             if(watch==null)return;
             var state=watch.Pipe;int index=state.ActiveBolt;
             bool remoteHeld=watch.Coop!=null&&watch.Coop.RemoteHeld(wrench);
-            bool triggerMode=watch.Immersion&&watch.Immersion.leverPipe&&watch.Immersion.triggerClutch;
+            bool triggerMode=watch.Immersion&&watch.Immersion.leverPipe&&watch.Immersion.triggerClutch&&!(watch.Master&&watch.Master.gripOnlyWrench);
             if(triggerMode&&!socket)socket=wrench.GetComponent<ImmersionWrenchSocket>();
             bool locked=socket&&socket.ClutchHeld&&socket.IsSnapped;
             if(triggerMode&&watch.RemoteReplica&&watch.Coop!=null&&(Time.unscaledTime>=nextClutchSend||locked!=previousClutch))

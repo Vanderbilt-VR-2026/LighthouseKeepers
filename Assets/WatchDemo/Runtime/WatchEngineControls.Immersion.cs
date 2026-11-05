@@ -68,7 +68,7 @@ namespace LighthouseKeepers.WatchDemo
             var e=State.Engine;
             if(shownPrimer!=e.Primer||shownStarter!=e.Pulls)
             {if(shownPrimer>=0&&clunk)sound.PlayOneShot(clunk,.12f);shownPrimer=e.Primer;shownStarter=e.Pulls;primerTally.text=$"{e.Primer} / {State.PowerTuning.primerSqueezes}";starterTally.text=$"{e.Pulls} / {State.PowerTuning.starterPulls}";}
-            var col=e.Settled?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",e.Settled?col*.65f:Color.black);finalChokeLamp.SetPropertyBlock(block);
+            var col=e.Settled?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",e.Settled?col*.65f:Color.black);if(State.Director!=null)block.SetColor("_EmissionColor",Color.black);finalChokeLamp.SetPropertyBlock(block);
         }
         void AnimateCounters()
         {

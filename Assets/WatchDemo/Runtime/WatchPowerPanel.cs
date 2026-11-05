@@ -126,7 +126,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<4;i++){controls[i].SetSelected(Grid.Selected((PowerCircuit)i));Lamp(lamps[i],new Color(.06f,.8f,.15f),Grid.Powered((PowerCircuit)i));}
             Lamp(tripLamp,new Color(1,.035f,.015f),Grid.Tripped);
             needle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-65,65,Mathf.Clamp01(Grid.Demand/(Grid.Capacity*1.25f))));
-            readout.text=Grid.Tripped?"TRIPPED\nSWITCH LOADS OFF\nTHEN RESET":!Grid.EngineRunning?"GENERATOR OFF\nSTART ENGINE":$"{Grid.Demand:0.##} / {Grid.Capacity:0.##}\nKEEP BELOW LIMIT";
+            readout.text=watch.State.Director!=null?"":Grid.Tripped?"TRIPPED\nSWITCH LOADS OFF\nTHEN RESET":!Grid.EngineRunning?"GENERATOR OFF\nSTART ENGINE":$"{Grid.Demand:0.##} / {Grid.Capacity:0.##}\nKEEP BELOW LIMIT";
             if(Grid.Tripped&&!wasTripped&&clunk)sound.PlayOneShot(clunk,.65f);wasTripped=Grid.Tripped;
         }
         void OnDestroy(){if(watch&&watch.State!=null)watch.State.Changed-=Refresh;foreach(var m in ownedMaterials)if(m)Destroy(m);}

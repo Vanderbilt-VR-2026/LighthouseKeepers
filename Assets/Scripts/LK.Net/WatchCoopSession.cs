@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     // Shared Lab commands and snapshots use Will's existing authenticated Fusion channel.
-    public sealed class WatchCoopSession : MonoBehaviour, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
+    public sealed class WatchCoopSession : MonoBehaviour, ICoopKeeperLocations, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
     {
         const int HelloKind=40,SnapshotKind=41,CommandKind=42,ResultKind=43;
         const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
@@ -50,6 +50,17 @@ namespace LighthouseKeepers.Net
             debugLine.text=$"us | {crew.SessionName} | {crew.Players.Count}/2 keepers\n"+string.Join(" / ",crew.Players.Select(p=>p.DisplayName));
         }
 #endif
+        public int LocalActor=>channel?channel.LocalActorId:0;
+        public void Locations(out int first,out Vector3 firstHead,out int second,out Vector3 secondHead)
+        {
+            first=second=0;firstHead=secondHead=default;
+            if(detached||!channel||!channel.Runner||!poses)return;
+            foreach(var player in channel.Runner.ActivePlayers)if(poses.Sample(player.RawEncoded,out var pose)) {
+                if(first==0){first=player.RawEncoded;firstHead=pose.Head;}
+                else {second=player.RawEncoded;secondHead=pose.Head;break;}
+            }
+            if(second!=0&&second<first){(first,second)=(second,first);(firstHead,secondHead)=(secondHead,firstHead);}
+        }
         public bool NearKeeper(Vector3 point,float radius)
         {
             if(!channel||!channel.Runner||!poses)return false;
@@ -125,7 +136,7 @@ namespace LighthouseKeepers.Net
         public bool RemoteWrenchKeeper(Component prop,out Vector3 head)
         {
             head=default;
-            if(!RemoteWrenchTrigger(prop)||!CrewPoseStream.Active||!CrewPoseStream.Active.Sample(wrenchActor,out var pose))return false;
+            if(!RemoteHeld(prop)||!CrewPoseStream.Active||!CrewPoseStream.Active.Sample(prop.GetComponent<FusionGrabBinding>().Owner,out var pose))return false;
             head=pose.Head;return true;
         }
         void Update()

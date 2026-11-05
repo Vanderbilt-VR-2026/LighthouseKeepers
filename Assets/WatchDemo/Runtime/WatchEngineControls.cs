@@ -22,6 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         {var root=new GameObject("S4 generator sequence");root.SetActive(false);root.transform.SetParent(generator.transform,false);var c=root.AddComponent<WatchEngineControls>();c.watch=watch;c.Build();root.SetActive(true);return c;}
         public static string Instruction(WatchState state)
         {
+            if(state.Director!=null)return state.Director.StationInstruction(WatchState.GeneratorStation);
             var e=state.Engine;if(state.Failed)return "WATCH ENDED";
             if(!e.IgnoreExtraPulls&&e.FloodRemaining>0)return $"ENGINE FLOODED — WAIT {Mathf.CeilToInt(e.FloodRemaining)} s";
             if(e.Running)return e.ChokeClosed?$"OPEN CHOKE NOW — {Mathf.CeilToInt(e.OpenRemaining)} s":e.LowFuel?"LOW FUEL — REFILL SOON":"ENGINE RUNNING";
@@ -93,7 +94,7 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             var e=State.Engine;
-            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);lamps[i].SetPropertyBlock(block);}
+            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);if(State.Director!=null)block.SetColor("_EmissionColor",Color.black);lamps[i].SetPropertyBlock(block);}
             RefreshPhysicalGuidance();
             gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=$"FUEL {e.Fuel*100:0}%";
             if(e.CoughSerial!=lastCough&&cough)sound.PlayOneShot(cough,.5f);lastCough=e.CoughSerial;
