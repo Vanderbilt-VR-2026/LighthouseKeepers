@@ -8,10 +8,11 @@ namespace LighthouseKeepers.WatchDemo
  {
   WatchDemoController watch;AudioPassSettings settings;AudioSource[] deck;AudioSource stings;
   AudioClip[] clips;AudioClip fixedClip,survivedClip,lostClip;
-  int mode=-1,pending=-1,active,day,tasks;double since,nextChange,lastElapsed;float fadeAge=100,nextSting;int pendingFixed;bool failed,sleeping,lobby;
+  int mode=-1,pending=-1,active,day,tasks;double since,nextChange,lastElapsed;float restGain=1;float fadeAge=100,nextSting;int pendingFixed;bool failed,sleeping,lobby;
   public int Mode=>mode;public double Since=>since;
   public static int Choose(bool fault,float waterFraction,double darkRemaining,bool dark,double timeRemaining)
    =>!fault?0:waterFraction>.7f||dark&&darkRemaining<20||timeRemaining<60?2:fault?1:0;
+  public static bool StormRest(int day,double elapsed,int mode)=>mode!=2&&(elapsed%180)>=140&&(elapsed%180)<140+20+(day*7%21);
   public static AdaptiveMusic Create(WatchDemoController w)
   {
    var s=AudioPassSettings.Current;if(!s||!s.adaptiveMusic)return null;
@@ -45,7 +46,8 @@ namespace LighthouseKeepers.WatchDemo
     if(pending>=0&&s.Elapsed>=nextChange){Transition(pending,nextChange,0);pending=-1;}
    }
    fadeAge+=Time.unscaledDeltaTime;float t=Mathf.Clamp01(fadeAge/settings.crossfadeSeconds);
-   deck[active].volume=settings.musicVolume*Mathf.Sin(t*Mathf.PI*.5f);deck[1-active].volume=settings.musicVolume*Mathf.Cos(t*Mathf.PI*.5f);
+   float restTarget=StormRest(s.Day,s.Elapsed,mode)?0:1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
+   deck[active].volume=rest*settings.musicVolume*Mathf.Sin(t*Mathf.PI*.5f);deck[1-active].volume=rest*settings.musicVolume*Mathf.Cos(t*Mathf.PI*.5f);
    if(t>=1)deck[1-active].Stop();
    if(s.CompletedTasks>tasks)pendingFixed+=s.CompletedTasks-tasks;tasks=s.CompletedTasks;
    if(pendingFixed>0&&Time.unscaledTime>=nextSting&&fixedClip){pendingFixed--;stings.PlayOneShot(fixedClip,settings.stingVolume);nextSting=Time.unscaledTime+fixedClip.length;}

@@ -59,3 +59,17 @@ A two-minute co-op capture is saved locally, along with board/actual-Quest scree
 Device measurements from `1a4a7c5`, mixed live viewpoints/Day 1–2, 583 sampled reports: GPU median 12.09 ms; main-thread marker median 14.10 ms (includes waits); isolated ceiling callback mean about .034 ms. Real-voice cap 24. The MasterDSP marker reports values too small/variable to establish whole-system audio CPU cost. This is not a fixed-view before/after benchmark or proof of sustained 72 fps. Final-build total audio CPU, per-bus playback LUFS/true peaks, and binaural/HRTF remain **NOT VERIFIED**. Standard head-position panning/attenuation is implemented; no spatializer plug-in is installed.
 
 Phase 6 remains deferred. Day assets, day lengths, flood rates, generator rules and beacon loss tuning have not changed in this audio pass.
+
+## Objective, PA and bunk follow-up (before Phase 6)
+
+Focused checks: shared host-chosen objective round-trip plus malformed-index rejection; PA replay command nonce/revision rules; subtitles for all 17 spoken clips; storm-only music rests bypassed in crisis. All passed in the Editor. Quick graphics Night 1 passed with zero runtime errors: physical pipe interactions, drainage and bed transition into Day 2. A separate presentation capture completes the task programmatically to inspect the short completion animation; it is not evidence of a player repair.
+
+The lamps now mount on a timber headboard. Their physical labels say JOBS REMAIN / READY TO REST / RESTING, and a footplate explains warm lamps and waiting for both keepers. The bed, mattress and pillow move together away from the central post. Shared sleep rules are unchanged. Inspected screenshots show the bed clear of the post and the fixtures attached. House PA replay button moved beside the board so it is reachable rather than hidden behind it.
+
+X/Y or left-wrist glance recalls the seven-second tracker; harbor captions use the same style. Six spatial horns replace the belt radio. Replay last message from a physical button; explicit replay is separate from the once-per-night automatic narration rule. The lobby version is LK-S4-M3-PAHUD1 / snapshot v7 because the host-selected objective index is replicated. Both clients need the new APK/source.
+
+The preceding audio-only build 096b833 was installed and launched successfully (SHA-256 04f97bdcb1a6ca36369697b100ba80552b009810da5c0445a8130dc1fd6a2e7f). It does not include this PA/HUD/bunk follow-up. Final follow-up APK and matching-device smoke are recorded below when completed. No Phase 6 work has been performed.
+
+The earlier two-minute co-op capture measured −28.17 LUFS integrated, −3.39 dBTP and 16.30 LU loudness range, with the live routing/codec caveats above. It is a master capture, not per-bus loudness evidence.
+
+Inspected Editor presentation screenshots: [objective and subtitles](media/hud-objective-and-subtitle.png), [completion strike/tick](media/hud-completion-tick.png), [House horn and reachable replay button](media/pa-speaker-house.png), [bunk mounts and clearance](media/bunk-headboard-lamps.png). Final visual-only replay passed, zero errors.

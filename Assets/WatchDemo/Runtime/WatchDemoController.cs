@@ -83,10 +83,12 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Immersion)
             {
                 if(state.Immersion.physicalGuidance){clock.gameObject.SetActive(false);bedPrompt.gameObject.SetActive(false);repairPrompt.gameObject.SetActive(false);}
+                BunkPlacement.Apply(bed);
                 immersionWorld=ImmersionWorld.Create(this,head,bed,board,wrench.transform,pipeRepair,generator,radio,beacon);
                 if(state.Immersion.logbook)logbook=ImmersionLogbook.Create(head,transform);
             }
             BeginWatch();
+            ObjectiveHud.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
             if(state.RemoteReplica){flood.Paused=true;clock.text="WAITING FOR HOST STATE";}
         }

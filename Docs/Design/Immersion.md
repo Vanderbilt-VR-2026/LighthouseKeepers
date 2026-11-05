@@ -37,3 +37,9 @@ New behavior is switched by an immersion tuning asset. Reuse existing XR Interac
 Before gameplay edits: fresh original solo Days 1–3 and Mac-host + Quest-guest join, avatars, two-way voice, shared task and shared bed. Save to `artifacts/immersion/before/`; after repeats under `after/`. Inventory all visible UI before replacement. Capture and inspect House radio, generator plate/tallies, both hands snapping/turning bolts, chalkboard, bunk lamp, win/lose logbook, blackout stairs and lobby network version. Test invalid/repeated inputs, early bed, fail/retry, late join and synchronized cues. Build/install the final APK, push `s4/immersion`, open draft PR, never merge it.
 
 Prefer shared materials and bounded/poolable sound/feedback, no per-frame allocations. Report measured Quest performance separately from Editor behavior. Claim only tests actually performed; list unverified headset comfort/readability and any baseline failures plainly.
+
+## Requested objective / PA exception
+
+The November 4 follow-up explicitly permits one transient objective tracker: upper-left near centre, lazy following at 1.6 m, brass line, task, floor and harbor subtitles. It fades after seven seconds; X/Y or a glance at the left wrist recalls it. Its subtle static backing texture affects only the tracker, never the camera. The host selects the objective from current day tasks; guests consume that index. Full job lists remain on the chalkboard. Snapshot v7 / lobby LK-S4-M3-PAHUD1 prevents mismatched clients.
+
+Bunk lamps are bolted to a timber headboard, with physical keeper/state labels. Warm means ready to rest, brighter means that keeper is resting. The footplate explains that all connected keepers must rest. The bunk and pillow/mattress move together clear of the central structural post; shared-bed voting remains unchanged.

@@ -40,3 +40,11 @@ Master: native safety compressor plus a final four-times interpolated sample cei
 Development Quest logs emit `AUDIO_PERF`: MasterDSP time when the platform exposes that recorder, the isolated ceiling callback's mean CPU milliseconds, and the real-voice cap. `WATCH_PERF` retains GPU/main-thread timing. Unsupported counters must be reported as unverified, never as zero CPU cost. Raw-source/processed-clip LUFS is not a substitute for measured per-bus playback loudness.
 
 Headset feedback follow-up: pitched rain transients sounded like xylophone notes. Window/metal/drip impacts now use damped broadband noise rather than isolated oscillators, at .08–.16 source gain. The demonstration bell is not part of normal gameplay; the test recorder was returned to Microphone and its temporary clip/loop fields cleared. Shared sleep advanced the live crew into Day 2 after Mac Host supplied the second bed vote.
+
+## PA / objective follow-up
+
+Six low-poly brass horns replace the belt receiver: House, F1–F4 and exterior entrance. Speech starts together using the DSP clock; the current room is full level and neighbouring rooms are reduced, with 1.5–12 m spatial rolloff and restrained .35 s reverb. Physical REPLAY LAST buttons use the existing host command/revision/proximity checks (3 s replay cooldown). The House receiver remains decoration.
+
+PA speech uses 350–3500 Hz filters, +3 dB presence at 2.5 kHz, gentle saturation and peak compression. Opening squelch/click .3 s; closing burst/tail .4 s; faint hiss underneath. Crackle/dropout windows come only from measured pauses, never randomly over instructions. PA source .95 versus old receiver .65 plus Radio bus +1.7 dB gives about +5 dB feed gain. VoiceChat still ducks Radio by 3 dB. Radio activity ducks Music by 9 dB and Ambience by 5 dB (50/600 ms); voice alone retains 7/3 dB. Ambience base −6.5 dB reduces rain by 2.5 dB. These are gain settings, not per-bus playback LUFS measurements.
+
+Music has 20–40 s storm-only rests every 180 s, driven by shared day/time. Crisis always bypasses the rest. Two-second rest fades preserve quiet sections. No Day 3 balance changes.

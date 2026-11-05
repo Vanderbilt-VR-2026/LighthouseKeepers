@@ -10,6 +10,7 @@ namespace LighthouseKeepers.WatchDemo
         Light[] bunk=new Light[2];readonly List<Light> stair=new();readonly List<Light> station=new();
         readonly List<AudioSource> faultAudio=new();
         readonly List<(Light light,Renderer lens)> lenses=new();MaterialPropertyBlock lensBlock;
+        readonly TextMesh[] bunkLabels=new TextMesh[2];int shownBedState=-1;
         Font chalk;int bedMask;HarborRadio narrator;
         public HarborRadio Narrator=>narrator;
         public static ImmersionWorld Create(WatchDemoController watch,Transform head,Transform bed,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
@@ -33,17 +34,19 @@ namespace LighthouseKeepers.WatchDemo
             board.color=new Color(.87f,.86f,.74f);board.characterSize*=.90f;
             ImmersionPipePresentation.Create(pipe,watch.State);
             var bedMount=M2StationParts.Root("Bunk physical fittings",transform,Vector3.zero);bedMount.SetPositionAndRotation(bed.position,bed.rotation);
+            var wood=bed.GetComponent<Renderer>().sharedMaterial;
             bed=bedMount;
+            parts.Part("Timber bunk headboard",bed,new Vector3(0,.64f,1.06f),new Vector3(1.14f,1.05f,.07f),wood);
             for(int i=0;i<2;i++)
             {
-                bunk[i]=Fixture(parts,bed,new Vector3(i==0?-.63f:.63f,1.05f,.66f),i==0?"Host bunk lamp":"Guest bunk lamp");
+                bunk[i]=Fixture(parts,bed,new Vector3(i==0?-.35f:.35f,.95f,1.01f),i==0?"Host bunk lamp":"Guest bunk lamp");
                 bunk[i].transform.parent.localRotation=Quaternion.Euler(0,180,0);
-                var label=parts.Text("Bunk lamp keeper "+i,i==0?"KEEPER 1":"KEEPER 2",bunk[i].transform.parent,new Vector3(0,-.075f,.04f),.0025f);
-                parts.Part("Bunk lamp name plate",label.transform,new Vector3(0,0,.007f),new Vector3(.18f,.045f,.012f),parts.Dark);
+                var label=parts.Text("Bunk lamp keeper "+i,i==0?"KEEPER 1":"KEEPER 2",bunk[i].transform.parent,new Vector3(0,-.13f,.04f),.0035f);bunkLabels[i]=label;
+                parts.Part("Bunk lamp name plate",label.transform,new Vector3(0,0,.007f),new Vector3(.25f,.10f,.012f),parts.Dark);
             }
             var bedPlate=M2StationParts.Root("Bunk rest plate",bed,new Vector3(0,.36f,-1.035f));bedPlate.localRotation=Quaternion.Euler(0,180,0);
-            parts.Part("Bunk brass plate",bedPlate,Vector3.zero,new Vector3(.64f,.17f,.02f),parts.Brass);
-            parts.Text("Bunk instructions","JOBS DONE? REST TILL DAWN.\nGRIP TO LIE DOWN",bedPlate,new Vector3(0,0,.012f),.003f).color=new Color(.12f,.08f,.03f);
+            parts.Part("Bunk brass plate",bedPlate,Vector3.zero,new Vector3(.64f,.17f,.02f),parts.Dark);
+            parts.Text("Bunk instructions","WARM LAMPS = READY TO REST\nGRIP THE BUNK. WAIT FOR BOTH KEEPERS.",bedPlate,new Vector3(0,0,.012f),.0035f).color=new Color(.95f,.89f,.7f);
             for(int i=0;i<4;i++)
             {
                 float a=320*Mathf.Deg2Rad,r=i<2?3.48f:2.18f;
@@ -104,7 +107,14 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!watch.State.Immersion.physicalGuidance)return;
             var s=watch.State;float pulse=.28f+.10f*Mathf.Sin(Time.time*2.4f);
-            for(int i=0;i<2;i++)bunk[i].intensity=(bedMask&(1<<i))!=0?.65f:s.Complete&&!s.Failed?.35f:0;
+            bool crew=s.Coop!=null;int bedState=bedMask+(s.Complete?4:0)+(crew?8:0);
+            for(int i=0;i<2;i++)
+            {
+                bool resting=(bedMask&(1<<i))!=0;bool enabled=i==0||crew;
+                bunk[i].intensity=enabled?(resting?.55f:s.Complete&&!s.Failed?.35f:0):0;
+                if(shownBedState!=bedState)bunkLabels[i].text=!enabled?"SOLO WATCH":("KEEPER "+(i+1)+"\n"+(resting?"RESTING":s.Complete?"READY TO REST":"JOBS REMAIN"));
+            }
+            shownBedState=bedState;
             for(int i=0;i<stair.Count;i++)
             {bool fault=i==0?!s.Repaired:i==1?s.Power==PowerState.Off:i==3?!s.BeaconShining||!s.IsDone(WatchState.RadioStation):false;stair[i].intensity=fault?pulse:.18f;}
             for(int i=0;i<station.Count;i++)

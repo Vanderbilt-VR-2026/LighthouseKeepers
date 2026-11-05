@@ -45,7 +45,7 @@ namespace LighthouseKeepers.Core
   {
    if(a.GetComponent<SpeechLeveler>())return "VoiceChat"; // Photon renames its Speaker after linking.
    string n=a.name.ToLowerInvariant();if(n.Contains("remote keeper voice"))return "VoiceChat";
-   foreach(var p in a.GetComponentsInParent<MonoBehaviour>(true))if(p&&p.GetType().Name=="HarborRadio")return "Radio";
+   foreach(var p in a.GetComponentsInParent<MonoBehaviour>(true))if(p&&(p.GetType().Name=="HarborRadio"||p.GetType().Name=="PAIntercom"))return "Radio";
    if(n.Contains("adaptive music"))return "Music";
    if(n.Contains("ambience")||n.Contains("rain")||n.Contains("gust")||n.Contains("ocean")||n.Contains("weather")||n.Contains("window")||n.Contains("heartbeat"))return "Ambience";
    if(n.Contains("pipe")||n.Contains("engine")||n.Contains("generator")||n.Contains("beacon")||n.Contains("radio")||n.Contains("alarm")||n.Contains("breaker")||n.Contains("stings"))return "SFX_Critical";
@@ -74,8 +74,8 @@ namespace LighthouseKeepers.Core
    VoiceActive=localPeak>.012f;RadioActive=false;
    for(int i=meters.Count-1;i>=0;i--){var m=meters[i];if(!m){meters.RemoveAt(i);continue;}if(!m.Active)continue;if(m.Voice)VoiceActive=true;else RadioActive=true;}
    bool duck=VoiceActive||RadioActive;
-   musicDuck=Fade(musicDuck,duck?-7:0,duck,7);worldDuck=Fade(worldDuck,duck?-3:0,duck,3);radioDuck=Fade(radioDuck,VoiceActive?-3:0,VoiceActive,3);
-   Set("VoiceChat",0,gains["VoiceChat"]);Set("Radio",radioDuck,gains["Radio"]);Set("Music",-2+musicDuck,gains["Music"]);Set("Ambience",-4+worldDuck,gains["Effects"]);Set("SFX_Critical",-3,gains["Effects"]);Set("SFX_World",-6,gains["Effects"]);
+   musicDuck=Fade(musicDuck,RadioActive?-9:duck?-7:0,duck,RadioActive?9:7);worldDuck=Fade(worldDuck,RadioActive?-5:duck?-3:0,duck,RadioActive?5:3);radioDuck=Fade(radioDuck,VoiceActive?-3:0,VoiceActive,3);
+   Set("VoiceChat",0,gains["VoiceChat"]);Set("Radio",1.7f+radioDuck,gains["Radio"]);Set("Music",-2+musicDuck,gains["Music"]);Set("Ambience",-6.5f+worldDuck,gains["Effects"]);Set("SFX_Critical",-3,gains["Effects"]);Set("SFX_World",-6,gains["Effects"]);
    if(saveAt>=0&&Time.unscaledTime>=saveAt){PlayerPrefs.Save();saveAt=-1;}
   }
   static float Fade(float v,float target,bool attack,float range)=>Mathf.MoveTowards(v,target,Time.unscaledDeltaTime*range/(attack?.05f:.6f));

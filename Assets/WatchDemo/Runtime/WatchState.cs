@@ -71,6 +71,20 @@ namespace LighthouseKeepers.WatchDemo
         public int StarterPulls { get; private set; }
         public bool Repaired => !faults.Contains(PipeStation);
         public PowerState Power { get; private set; }
+        int replicaObjective;
+        public int ObjectiveIndex
+        {
+            get
+            {
+                if(RemoteReplica)return replicaObjective;
+                if(Complete)return HasNextDay?-1:-2;
+                int first=-2,generator=-1,pipe=-1,beacon=-1;
+                for(int i=0;i<Definition.tasks.Length;i++){var id=Definition.tasks[i].stationId;if(IsDone(id))continue;if(first<0)first=i;if(id==GeneratorStation)generator=i;if(id==PipeStation)pipe=i;if(id==BeaconStation)beacon=i;}
+                if(Power==PowerState.Off&&generator>=0)return generator;
+                if(beacon>=0&&!BeaconShining&&BeaconDarkRemaining<20)return beacon;
+                return pipe>=0?pipe:first;
+            }
+        }
         public bool IsDone(string station) => !faults.Contains(station);
         public int CompletedTasks { get { int n = 0; foreach (var task in Definition.tasks) if (IsDone(task.stationId)) n++; return n; } }
         public bool Complete => CompletedTasks == Definition.tasks.Length;
@@ -154,7 +168,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             int done=0;
             for(int i=0;i<Definition.tasks.Length;i++)if(IsDone(Definition.tasks[i].stationId))done|=1<<i;
-            return new WatchSnapshot { day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
+            return new WatchSnapshot { objectiveIndex=ObjectiveIndex,day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
                 beaconStationEnabled=Beacon!=null,beaconIgnited=Beacon?.Ignited??false,beaconAlignment=Beacon?.Alignment??0,beaconTarget=Beacon?.Target??0,beaconSoot=Beacon?.Soot??0,
                 engineEnabled=Engine!=null,fuel=Engine?.Fuel??0,primer=Engine?.Primer??0,enginePulls=Engine?.Pulls??0,engineClosedPulls=Engine?.ClosedPulls??0,chokeClosed=Engine?.ChokeClosed??false,engineSettled=Engine?.Settled??false,chokeRemaining=Engine?.OpenRemaining??0,engineFloodRemaining=Engine?.FloodRemaining??0,coughSerial=Engine?.CoughSerial??0,
                 gridEnabled=Grid!=null,gridCapacity=Grid?.Capacity??0,gridMask=Grid?.SelectedMask??0,gridTripped=Grid?.Tripped??false,
@@ -172,12 +186,12 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!RemoteReplica || snapshot==null || !snapshot.Valid())return false;
             int next=Array.FindIndex(days,d=>d.day==snapshot.day);
-            if(next<0 || snapshot.elapsed>days[next].dayLengthSeconds || (snapshot.doneMask>>days[next].tasks.Length)!=0)return false;
+            if(next<0 || snapshot.objectiveIndex>=days[next].tasks.Length || snapshot.elapsed>days[next].dayLengthSeconds || (snapshot.doneMask>>days[next].tasks.Length)!=0)return false;
             if(snapshot.gridEnabled!=(Grid!=null)||snapshot.engineEnabled!=(Engine!=null)||snapshot.beaconStationEnabled!=(Beacon!=null))return false;
             if(Grid!=null&&!Grid.ApplyReplica(snapshot.gridCapacity,snapshot.gridMask,snapshot.power==1,snapshot.gridTripped))return false;
             Beacon?.ApplyReplica(snapshot.beaconIgnited,snapshot.beaconAlignment,snapshot.beaconTarget,snapshot.beaconSoot,days[next].beaconSootPerSecond);
             Engine?.ApplyReplica(snapshot.fuel,snapshot.primer,snapshot.enginePulls,snapshot.chokeClosed,snapshot.power==1,snapshot.engineSettled,snapshot.chokeRemaining,snapshot.engineFloodRemaining,snapshot.coughSerial,days[next].fuelDrainPerSecond,snapshot.engineClosedPulls);
-            index=next;Elapsed=snapshot.elapsed;Power=(PowerState)snapshot.power;StarterPulls=snapshot.starterPulls;
+            replicaObjective=snapshot.objectiveIndex;index=next;Elapsed=snapshot.elapsed;Power=(PowerState)snapshot.power;StarterPulls=snapshot.starterPulls;
             BeaconDarkElapsed=snapshot.beaconDarkElapsed;BeaconDarkFailed=snapshot.beaconDarkFailed;
             HighWaterElapsed=snapshot.highWaterElapsed;HighWaterFailed=snapshot.highWaterFailed;
             faults.Clear();for(int i=0;i<Definition.tasks.Length;i++)if((snapshot.doneMask&(1<<i))==0)faults.Add(Definition.tasks[i].stationId);
