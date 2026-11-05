@@ -2,6 +2,10 @@
 
 Branch: `s4/immersion`, draft PR #79. Do not merge. Raw recordings remain outside the build and source files are never modified.
 
+## Latest follow-up — mono voice and Day 3 balance
+
+Phase 6 was subsequently authorized and is now implemented. [Day 3 balance, timing table, screenshots and current verification](Day3Balance.md); [mono voice processing and remaining headset check](VoiceEcho.md). Current network version: **LK-S4-M3-D3BAL1 / v8**. The entries below are historical checkpoints: statements that Phase 6 was deferred apply to those earlier builds. Their headset acceptance does not certify the new build.
+
 ## Before changes — 4 November 2026
 
 Source: `2c6ca0cb71c8763253a72ba73ce78f389ab5a296`; matchmaking `LK-S4-M3-PULL3`.

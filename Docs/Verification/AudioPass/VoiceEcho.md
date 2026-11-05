@@ -6,6 +6,8 @@ WebRTC AEC and noise suppression are enabled. Native Android AEC/AGC/NS are disa
 
 Executed in Unity 6000.3.23f1 on Mac: actual native source and encoded stream are mono; 48 kHz, 48 kbps, 20 ms. The WebRTC processor exists, AEC/NS are on, and the current listener has its output capture. Mute removes the local voice and stops recording/transmission; unmute recreates a mono stream. Host-alone lobby → Lab retains processing and rebinds to the master listener endpoint. Evidence: `artifacts/day3-balance/voice/mac-*.json` and Editor logs.
 
-Quest/native processing and both-direction speech acceptance are pending the matching build. No replicated fields or gameplay behavior changed; the lobby network version remains PAHUD1.
+The voice-only checkpoint did not change replicated fields or gameplay and retained PAHUD1. The subsequent Day 3 work uses D3BAL1/v8; see [Day 3 evidence](Day3Balance.md).
 
 Checkpoint `cca3ed4` built successfully and was installed/launched on the connected Quest. SHA-256 `03d626f02c067ede9cc404a7311450c9a50dd28aa7afc617383cbbbd3c823b74`. The user was unavailable for the headset check, so actual Android capture/AEC and audible speech in both directions remain NOT VERIFIED. Mac native capture, processing, mute/resume and listener handoff passed. Continuing to the authorized balance step with that limitation recorded.
+
+The final two-Mac transport run verified both native captures/DSP configurations as mono with AEC/NS and listener references. Guest→host decoded mono 48 kHz actively; host→guest remote metadata was mono 48 kHz, but its silence sample was not playing. Speech intelligibility and real acoustic echo cancellation in either direction remain a listening check, especially on Quest. No claim that local feedback has been audibly eliminated.

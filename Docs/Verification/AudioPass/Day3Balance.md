@@ -59,3 +59,30 @@ Graphics Play Mode **passed, zero runtime errors**: pipe complete at 102.83 s; g
 [Arrival / pipe objective](day3-balance/arrival.png) · [4/4 complete](day3-balance/complete.png) · [Night 3 survived](day3-balance/survived.png). [Focused results](day3-balance/focused.txt) · [Graphics run](day3-balance/solo.txt) · [Walking measurement](day3-balance/walk.txt).
 
 Headset usability, two-way listening on the new mono build, and a new human solo/co-op first-timer timing remain **NOT VERIFIED**: the player explicitly became unavailable. The earlier accepted Mac+Quest tests belong to the previous build.
+
+
+## Live transport smoke (two Mac Editors)
+
+Matching source on both Editors joined room XSEX8T (us), both readied and loaded Day 3. Both remote grey avatars/tan hands were visible, own avatars hidden, and remote cameras/listeners disabled. Guest repaired all three bolts through real XRI, lease and host-command paths; both boards checked the pipe and entered outage stage 2. Host then poured fuel, primed, choked, pulled and opened the choke; both clients entered stage 3 with generator checked and power on. Snapshot/clock/grace remained host-owned. The live automated crew sequence took about **40.1 s** for guest pipe (including grab/lease, drop/regrip and capture overhead) and **22.8 s** for host fuel/start controls; these are measured expert automation times. Upper-floor crew timing remains the scheduling estimate above. This passed over live Fusion transport; it is **not** the requested physical Mac+Quest listening acceptance or a full co-op first-timer timing run.
+
+Both Mac native recorders reported mono, active WebRTC processor, AEC/NS enabled and an active listener capture. Guest→host had an active decoded mono 48 kHz stream. Host→guest advertised mono 48 kHz after mute/resume, but its no-speech sample reported IsPlaying=false; no audible two-way voice acceptance is claimed. Both were muted after probing. A diagnostic script initially referenced `RemoteVoice.Info`; correcting it to this package's `RemoteVoice.VoiceInfo` fixed the probe without production changes.
+
+[Host sees guest](day3-balance/network-02-avatar-host.png) · [Guest sees host](day3-balance/network-02-avatar-guest.png) · [Guest repair on host board](day3-balance/network-03-guest-pipe-shared-host.png) · [Same guest board](day3-balance/network-03-guest-pipe-shared-guest.png).
+
+Screenshot inspection caught an ambiguous grace instruction after engine restart. Follow-up `f6d7ffe` says LIGHT AND ALIGN F4 once power is on, and hides grace once the beacon shines. A focused presentation check passed using programmatically prepared state (not claimed as another physical task run); all 19 focused checks passed again. [Corrected instruction](day3-balance/network-grace-instruction-corrected.png). The earlier physical/network results used the same rules, before this wording-only fix.
+
+
+## Delivery
+
+Final APK source **f6d7ffe**. Unity 6000.3.23f1 Android IL2CPP/ARM64 build succeeded; `adb install -r` returned Success and the activity launched with a live process. No destructive uninstall was needed. The process reached OpenXR FOCUSED with no fatal/null-reference/missing-method signatures in the captured launch log. The unworn-device screencap was black, so it is not visual lobby or gameplay acceptance.
+
+- Local APK: `Builds/Day3Balance-f6d7ffe/LighthouseKeepers-Day3Balance.apk`
+- Bytes: 104976040
+- SHA-256: `192acdcf9d3ca3a82d56ed5d41c06aa920d6dcaf52775e98560316f370fbc49f`
+- Lobby network version: `LK-S4-M3-D3BAL1` — both clients must match.
+
+WORKS: 19 focused checks; paced solo Day 3 win with 79.92 seconds spare and next-day sleep; two-Mac live join/avatars, guest pipe and host generator replication; mono/DSP setup on both Macs; Android build/install/launch.
+
+NOT VERIFIED: Android native mic/AEC runtime; audible two-way voice/feedback on the new build; physical Mac+Quest smoke; human first-timer Day 3 pacing; a complete new co-op Day 3/bed run and Quest performance cost. User explicitly unavailable; prior headset passes are not reused as evidence for this build. Upper-floor co-op task timing remains modelled. No full-suite rerun beyond the requested focused checks.
+
+When available: wear headphones on Mac, run this same network version on both clients, exchange a sentence each way, toggle MIC MUTED in each direction, and try DEV PLAY DAY 3 solo. Repair the pipe first; after the outage refuel/prime/choke/pull/open, allocate beacon/radio power, align the beacon, broadcast, then rest. The goal is a reasonable first attempt with roughly a minute to spare; report actual completion time for further tuning.
