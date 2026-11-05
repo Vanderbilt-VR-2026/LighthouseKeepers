@@ -39,3 +39,9 @@ Prepared three whole-bar streaming Vorbis loops and three 3.5-second stings. Cri
 ## Phase 4 — layered rain
 
 Focused tests passed for exterior/interior/roof streaming clips, four impact types, House/F4/outside zone classification and partial doorway blending. Quick solo Night 1 passed, zero captured errors. Three raw rain files remain untouched; normalized and crossfaded Vorbis copies are shipped. Original synthesized impacts/gusts, source credits, gains, filters and timing are in `Docs/Design/AudioMix.md`. The <400 ms impacts use RMS/peak levelling because integrated LUFS is undefined at that duration. No flood visuals or avatar code changed. Headset listening is pending the final build.
+
+## Phase 5 — voice-first mix
+
+Focused mixer/ceiling checks passed; quiet samples pass unchanged. The first Night 1 check caught Unity's prohibition on a scripted filter sharing a GameObject with both an AudioListener and AudioSource. The fix separates the listener onto a zero-offset child of the same tracked head, without moving the camera/source/hands. The corrected quick Night 1 passed with zero errors. Four-slider UI was exercised in Play Mode: Music changed to .43 and restored to the original 1.0; returning to the logbook worked. Six buses, priorities, attack/release, AGC, saved sliders and the 24-real-voice cap are documented in `Docs/Design/AudioMix.md`. A final focused check passed after adding developer audio telemetry.
+
+Final APK, device performance, listening acceptance and one Mac+Quest smoke check are pending. Phase 6 has not started; all day assets and difficulty tuning are unchanged. No additional position matrix or full-suite reruns were performed after the user's reduced-verification instruction.

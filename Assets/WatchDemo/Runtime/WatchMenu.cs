@@ -85,6 +85,7 @@ namespace LighthouseKeepers.WatchDemo
                 ((RectTransform)panel.transform).sizeDelta=new Vector2(600,510);
                 mute=Action("ToggleCrewMicrophone",voice.StatusText,-225,()=>{if(voice!=null)voice.ToggleMute();Refresh();});
             }
+            WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
             panel.SetActive(false);
         }
 

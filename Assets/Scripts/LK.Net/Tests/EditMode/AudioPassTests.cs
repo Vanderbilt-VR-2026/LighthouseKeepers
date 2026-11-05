@@ -39,5 +39,14 @@ namespace LighthouseKeepers.Net.Tests
             Assert.Greater(((Vector3)f.Invoke(null,new object[]{new Vector3(8,1.65f,0)})).x,.99f);
             var door=(Vector3)f.Invoke(null,new object[]{new Vector3(0,1.65f,-4.4f)});Assert.That(door.x,Is.InRange(.1f,.9f));Assert.That(door.x+door.y+door.z,Is.EqualTo(1).Within(.001f));
         }
+        [Test] public void Phase5MixerHasSixBusesAndCeilingKeepsQuietAudioUnchanged()
+        {
+            var m=Resources.Load<UnityEngine.Audio.AudioMixer>("KeeperAudio");Assert.NotNull(m);
+            foreach(var n in new[]{"VoiceChat","Radio","SFX_Critical","SFX_World","Ambience","Music"})Assert.AreEqual(1,m.FindMatchingGroups(n).Length,n);
+            var loud=new float[2048];for(int i=0;i<loud.Length;i++)loud[i]=Mathf.Sin(i*.4f)*2;
+            Assert.LessOrEqual(LighthouseKeepers.Core.AudioCeiling.Limit(loud,2),.842f);
+            var quiet=new float[2048];for(int i=0;i<quiet.Length;i++)quiet[i]=Mathf.Sin(i*.4f)*.01f;var copy=(float[])quiet.Clone();
+            LighthouseKeepers.Core.AudioCeiling.Limit(quiet,2);CollectionAssert.AreEqual(copy,quiet);
+        }
     }
 }

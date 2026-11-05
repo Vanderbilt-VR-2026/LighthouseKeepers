@@ -37,6 +37,7 @@ namespace LighthouseKeepers.Net
             PrimaryRecorder=go.AddComponent<Recorder>();PrimaryRecorder.RecordingEnabled=false;PrimaryRecorder.TransmitEnabled=false;
             PrimaryRecorder.UserData=channel.LocalActorId;PrimaryRecorder.VoiceDetection=false;
             PrimaryRecorder.StopRecordingWhenPaused=true;PrimaryRecorder.Bitrate=24000;
+            go.AddComponent<CrewAudioActivity>().Recorder=PrimaryRecorder;
             base.Start();AddRecorder(PrimaryRecorder);channel.Runner.AddCallbacks(this);
             AutoConnectAndJoin=true;StartCoroutine(ConnectWhenRoomReady());
             StartCoroutine(RequestMicrophone());
@@ -87,6 +88,7 @@ namespace LighthouseKeepers.Net
             var audio=go.AddComponent<AudioSource>();audio.playOnAwake=false;audio.spatialBlend=1;audio.dopplerLevel=0;
             audio.rolloffMode=AudioRolloffMode.Linear;audio.minDistance=tuning.voiceNearM;audio.maxDistance=tuning.voiceFarM;audio.volume=tuning.voiceVolume;
             var follow=go.AddComponent<CrewVoiceHead>();follow.Actor=actor;
+            KeeperAudioMix.Route(audio,"VoiceChat");
             var speaker=go.AddComponent<Speaker>();speaker.OnRemoteVoiceRemoveAction=s=>{if(s)Destroy(s.gameObject);};return speaker;
         }
         protected override void OnDestroy()

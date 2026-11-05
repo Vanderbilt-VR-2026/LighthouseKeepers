@@ -17,3 +17,24 @@ Four pooled spatial impact emitters: outdoors 2–5 events/second, indoors 1–2
 ## Controls and verification
 
 `AudioPassSettings` exposes separate music and layered-rain switches. Software checks are recorded in `Docs/Verification/AudioPass/README.md`. Headset mix acceptance, final co-op smoke test, master capture and device CPU cost are pending the final build. Audio sources' loudness measurements are not measurements of the complete headset mix.
+
+## Final mixer
+
+| Bus | Base gain | Priority | Speech duck |
+|---|---:|---:|---:|
+| VoiceChat | 0 dB | 0 | — |
+| Radio | 0 dB | 10 | −3 dB while a keeper speaks |
+| SFX_Critical | −3 dB | 40 | — |
+| SFX_World | −6 dB | 90 | — |
+| Ambience | −4 dB | 140 | −3 dB during voice/radio |
+| Music | −2 dB | 200 | −7 dB during voice/radio |
+
+With normalized source references, music's .23 source gain places it about 11 dB below the .65 wall-radio anchor. Exterior rain is about 4 dB below Radio, interior about 7.2 dB, roof about 5.5 dB. These are calibrated gain targets, not measured per-bus playback LUFS. Radio band-pass 300–3400 Hz and light distortion remain in-engine; belt radio is quieter and fades in with distance from the wall set.
+
+Voice chat retains Photon open-mic permissions and head-position spatialization. A post-decode speech leveler targets .09 RMS with gain .5–6, a .002 silence gate, .8 peak protection and 50 ms reduction / 600 ms recovery. The existing .85 source gain puts normal voice close to the Radio reference. Local microphone activity and remote decoded speech both drive ducking; no microphone capture is enabled in solo.
+
+Ducking traverses its full dB range in 50 ms attack / 600 ms release. Four local, saved sliders are under Watch Menu → SOUND LEVELS: Music, Effects (world/critical/ambience), Radio, Voice Chat. Saving is debounced 500 ms. Bus routing scans only around scene startup; late voice sources register directly. Exactly 24 real voices and 64 virtual slots; priority preserves voice and guidance over beds/music.
+
+Master: native safety compressor plus a final four-times interpolated sample ceiling at −1.5 dBFS (margin toward the requested ≤−1 dBTP output). The listener has a dedicated child at the identical tracked-head pose because Unity cannot attach a scripted master filter to a GameObject containing both a listener and a source. There is one active listener; cameras, controllers, hands and avatars retain their transforms. Quiet data below the ceiling passes unchanged. Exported-capture true peak is measured separately; the interpolator is not a claim of an ITU-certified limiter.
+
+Development Quest logs emit `AUDIO_PERF`: MasterDSP time when the platform exposes that recorder, the isolated ceiling callback's mean CPU milliseconds, and the real-voice cap. `WATCH_PERF` retains GPU/main-thread timing. Unsupported counters must be reported as unverified, never as zero CPU cost. Raw-source/processed-clip LUFS is not a substitute for measured per-bus playback loudness.
