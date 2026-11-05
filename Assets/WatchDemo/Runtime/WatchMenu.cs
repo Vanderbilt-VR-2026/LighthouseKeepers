@@ -73,12 +73,12 @@ namespace LighthouseKeepers.WatchDemo
             panel.GetComponent<GraphicRaycaster>().blockingObjects = GraphicRaycaster.BlockingObjects.None;
             panel.GetComponent<Image>().color = new Color(.035f, .06f, .065f, .98f);
             if(Book){inkMaterial=new Material(Resources.Load<Shader>("ImmersionLogbook"));ImmersionLogbook.Decorate(panel,inkMaterial,out paper,out paperSprite);canvas.overrideSorting=true;canvas.sortingOrder=100;}
-            Label("Title", Book?"KEEPER'S LOG":"KEEPER WATCH", 170, Book?55:42, Book?28:32);
+            Label("Title", Book?KeeperStrings.Get("menu.log"):KeeperStrings.Get("menu.watch"), 170, Book?55:42, Book?28:32);
             status = Label("Status", "", 100, 84, 23);
-            retry = Action("RetryWatchDay", Book?"TRY THE NIGHT AGAIN":"RETRY THIS DAY", 10, () => watch.RetryDay());
-            replay = Action("ReplayWatchFromDayOne", "REPLAY FROM DAY 1", 10, () => watch.ReplayFromDayOne());
-            leave = Action("ReturnWatchToLobby", "RETURN TO LOBBY", -70, ReturnToLobby);
-            close = Action("CloseWatchMenu", Book?"CLOSE LOGBOOK":"CLOSE MENU", -150, Close);
+            retry = Action("RetryWatchDay", Book?KeeperStrings.Get("menu.retry_night"):KeeperStrings.Get("menu.retry_day"), 10, () => watch.RetryDay());
+            replay = Action("ReplayWatchFromDayOne", KeeperStrings.Get("menu.replay"), 10, () => watch.ReplayFromDayOne());
+            leave = Action("ReturnWatchToLobby", KeeperStrings.Get("menu.lobby"), -70, ReturnToLobby);
+            close = Action("CloseWatchMenu", Book?KeeperStrings.Get("menu.close_log"):KeeperStrings.Get("menu.close"), -150, Close);
             voice=LighthouseKeepers.Lobby.CrewVoiceBridge.Current;
             if(voice!=null)
             {
@@ -153,11 +153,11 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             var state = watch.State;
-            status.text = state.Failed ? state.FailureMessage + "\nRetry keeps this day." :
-                state.Complete && !state.HasNextDay ? "ALL WATCHES COMPLETE\nReplay resets the full watch to Day 1." :
-                "DAY " + state.Day + "\nThe watch continues while this menu is open.";
+            status.text = state.Failed ? state.FailureMessage + KeeperStrings.Get("menu.retry_hint") :
+                state.Complete && !state.HasNextDay ? KeeperStrings.Get("menu.complete") :
+                string.Format(KeeperStrings.Get("menu.day_status"),state.Day);
             if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
-            else if(Book)status.text=state.Failed?(state.HighWaterFailed?"The sea took the tower.\nWe could not hold back the water.":state.BeaconDarkFailed?"The light went dark.\nThe Mary Ellen hit the rocks.":"Dawn came before our work was done.\nThe watch was lost."):state.Complete&&!state.HasNextDay?"The ships made harbor.\nOur watch is done.":"NIGHT "+state.Day+"\nKeep the light. Survive till dawn.";
+            else if(Book)status.text=state.Failed?(state.HighWaterFailed?KeeperStrings.Get("menu.old_flood"):state.BeaconDarkFailed?KeeperStrings.Get("menu.old_beacon"):KeeperStrings.Get("menu.old_time")):state.Complete&&!state.HasNextDay?KeeperStrings.Get("menu.survived"):string.Format(KeeperStrings.Get("menu.night_status"),state.Day);
             retry.gameObject.SetActive(!state.NetworkRehearsal && state.Failed);
             close.gameObject.SetActive(!Book||!state.Failed);
             replay.gameObject.SetActive(!state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
@@ -166,9 +166,9 @@ namespace LighthouseKeepers.WatchDemo
         public void ReturnToLobby()
         {
             if (exiting) return;
-            if (!Application.CanStreamedLevelBeLoaded(LobbyScene)) { status.text = "Lobby is missing from this build."; return; }
+            if (!Application.CanStreamedLevelBeLoaded(LobbyScene)) { status.text = KeeperStrings.Get("menu.missing_lobby"); return; }
             exiting = true; retry.interactable = replay.interactable = leave.interactable = close.interactable = false;
-            status.text = "Closing crew connection…";
+            status.text = KeeperStrings.Get("menu.closing");
             StartCoroutine(Leave());
         }
         IEnumerator Leave()
@@ -189,7 +189,7 @@ namespace LighthouseKeepers.WatchDemo
                 if (Time.realtimeSinceStartup >= deadline)
                 {
                     exiting = false; retry.interactable = replay.interactable = leave.interactable = close.interactable = true;
-                    status.text = "Crew connection did not close. Try Return to lobby again.";
+                    status.text = KeeperStrings.Get("menu.close_failed");
                     yield break;
                 }
                 yield return null;

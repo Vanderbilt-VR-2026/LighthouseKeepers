@@ -11,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;Transform head;WatchPipeRepair pipe;WatchEngineControls engine;WatchRadioConsole radio;WatchBeaconStation beacon;WatchPowerPanel panel;
         readonly Dictionary<KeeperStep,Transform> targets=new();readonly Dictionary<Transform,Fitting> fittings=new();
         readonly List<(TextMesh text,string key)> labels=new();AudioSource sound;AudioClip click,positive;float untouched,nextTick;int stamp,lastDay;KeeperStep previous;Material material;MaterialPropertyBlock block;
-        sealed class Fitting { public Transform cap;public Renderer renderer;public bool completed; }
+        sealed class Fitting { public Transform cap;public Renderer renderer;public bool completed,tool;public Color restColour; }
         public static void Create(WatchDemoController w,Transform head)
         {if(w.State.Director==null)return;var v=w.gameObject.AddComponent<DirectorPresentation>();v.watch=w;v.head=head;}
         void Start()
@@ -37,7 +37,7 @@ namespace LighthouseKeepers.WatchDemo
             // Tools and bolt flanges already have a physical surface: illuminate that, never a floating bead.
             if(target==pipe.wrench.transform||System.Array.IndexOf(pipe.bolts,target)>=0) {
                 var renderer=target==pipe.wrench.transform?pipe.wrench.GetComponentInChildren<Renderer>():pipe.indicators[System.Array.IndexOf(pipe.bolts,target)];
-                found=new Fitting{renderer=renderer};fittings.Add(target,found);return found;
+                found=new Fitting{renderer=renderer,tool=target==pipe.wrench.transform,restColour=renderer.sharedMaterial.GetColor("_BaseColor")};fittings.Add(target,found);return found;
             }
             var go=GameObject.CreatePrimitive(PrimitiveType.Cylinder);go.name="Riveted control indicator";var c=go.GetComponent<Collider>();c.enabled=false;Destroy(c);go.transform.SetParent(target,false);go.transform.localPosition=new Vector3(0,.07f,.015f);var scale=target.lossyScale;go.transform.localScale=new Vector3(.028f/Mathf.Max(.001f,Mathf.Abs(scale.x)),.008f/Mathf.Max(.001f,Mathf.Abs(scale.y)),.028f/Mathf.Max(.001f,Mathf.Abs(scale.z)));go.transform.position=target.position+target.forward*.018f;
             var r=go.GetComponent<Renderer>();r.sharedMaterial=material;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -67,7 +67,7 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var pair in fittings)
             {
                 bool active=!state.Failed&&(pair.Key==target||pair.Key==other||pair.Key==engine.Filler&&(current==KeeperStep.Fuel||partner==KeeperStep.Fuel));var f=pair.Value;var colour=active?new Color(.95f,.63f,.22f):f.completed?new Color(.12f,.5f,.2f):new Color(.11f,.10f,.07f);
-                block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",active?colour*pulse:f.completed?colour*.12f:Color.black);f.renderer.SetPropertyBlock(block);
+                block.Clear();block.SetColor("_BaseColor",f.tool?f.restColour:colour);block.SetColor("_EmissionColor",active?colour*(f.tool?pulse*1.6f:pulse):f.completed&&!f.tool?colour*.12f:Color.black);f.renderer.SetPropertyBlock(block);
                 if(f.cap)f.cap.localRotation=Quaternion.Slerp(f.cap.localRotation,Quaternion.Euler(0,0,f.completed?45:0),1-Mathf.Exp(-10*Time.deltaTime));
             }
             if(target&&untouched>=state.Master.idleTickSeconds&&Time.time>=nextTick&&!watch.ObjectivePresentationBlocked){nextTick=Time.time+4;sound.transform.position=target.position;if(click)sound.PlayOneShot(click,.14f);}

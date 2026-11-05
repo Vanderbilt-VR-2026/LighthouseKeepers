@@ -29,6 +29,8 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             input=new XRInputValueReader<Vector2>("Environment traversal regression",XRInputValueReader.InputSourceMode.ManualValue);
             rig.GetComponentInChildren<ContinuousMoveProvider>().leftHandMoveInput=input;
             for(int i=0;i<72;i++)yield return null;
+            // No pickup is performed in this locomotion-only test; exercise the tutorial door timeout.
+            if(GameObject.Find("Tutorial threshold gate"))for(int i=0;i<72*31;i++)yield return null;
             Assert.That(rig.GetComponentInChildren<GravityProvider>().isGrounded,Is.True,"Rig must recognize new shell floor collision.");
             // Test-only reflection reads the editor's parsed source data without adding
             // an Editor assembly dependency to player presentation code.

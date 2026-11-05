@@ -1,48 +1,54 @@
-# Sprint 4 master pass — checkpoint
+# Sprint 4 master pass — Part B checkpoint
 
-Branch `s4/master`, based on main / PR #79 merge `5dc5e56`. Do not merge. Preserve unrelated untracked `Docs/Verification/Immersion/pipe-lever/` in the local worktree.
+Branch `s4/master`, draft PR #81, based on PR #79 merge `5dc5e56`. Do not merge. Current network version **LK-S4-MASTER-B6**, snapshot v14. Both crew clients must update. Preserve unrelated local `Docs/Verification/Immersion/pipe-lever/`.
 
-## Done
+## Completed implementation checkpoints
 
-- 0–1: design pillars/guardrails recorded in `Pillars.md`.
-- A1: tagged exact PR #79 merge as `sprint4-m1`, built and published **Sprint 4 — Milestone 1 (Immersion + Audio)**. APK SHA-256 `f2c0e07762ae8db2f19bde140b719b8f3e607f758604c4bba45a9a84811d4872`.
-- Release: https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint4-m1
-- Main download row and pillars: docs PR #80, awaiting human approval/merge. Sprint 1/2/3 rows retained. Merged `s4/immersion` branch deleted; merge/tag preserve its history.
-- A2: `s4/master` created; draft PR #81: https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/81. Team playtest recorded before gameplay changes.
-- Baseline recorded and committed under `Docs/Verification/S4Master/before/`: EditMode 262/262; PlayMode 34/61 (27 named failures before any gameplay edits); graphics Nights 1–3 PASS, paced Day 3 79.96 s spare; two-Mac join/avatars/mono voice plumbing/guest task/shared sleep/rejoin PASS. No human listening acceptance.
-- Public release download verified against its SHA-256. B1 foundation implemented: director, central instruction table, grip-only auto-snap, friendly generator, single-step equipment cues. B2–B6 and final Part B regression remain in progress; C and D are not complete.
+- A: exact merge tagged `sprint4-m1`, APK published: https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint4-m1. SHA-256 `f2c0e07762ae8db2f19bde140b719b8f3e607f758604c4bba45a9a84811d4872`. README docs PR #80; no main merge performed by this agent.
+- B1: host-owned Objective Director, short central instruction table, nearest-job crew assignments/partner line, current-control cues, grip-only automatic wrench snap, forgiving guided generator sequence.
+- B2: wrist timepiece, waterline markings, host danger history, HUD danger strip, PA/controller status request, danger TTS and near-miss logbook note.
+- B3: replicated four-stage storm drives rain, wind/thunder, ocean displacement, lamp motion, small ceiling dust/rattle, music; no skybox/body changes.
+- B4: no-fail Night 1, pickup/30-second door gate, three-beat arrival explanation, fixed pipe/bunk slates, next-job/wake guidance; Night 2 outage at 75 s and 120 s learning grace. Instruction-driven rules bot includes travel assumptions, bed approach and sleep. Solo Night 3 450 s, modeled 345.2 s work/return, 104.8 s spare (30.4% headroom). Crew budget unchanged.
+- B5: walking 1.6→1.92 m/s, default snap retained, opt-in smooth turn saved; bunk clears F3 route. Two tested pole drops F4→F3→F2 use existing stair openings; F2→House stays stairs because the next stair flight blocks full-body clearance for a third shaft. Release pauses; regrip continues; landing restores locomotion.
+- B6: low House rocks nonblocking; throat visual separated 12 mm; exact duplicate shell renderers suppressed; continuous gallery guard with combined visible rails. New gallery capsule-sweep and bunk-clearance regression.
 
-## Next, in order
+## Evidence / acceptance limits
 
-Baseline is complete; **continue B2 next**. Read `B1-ImplementationPlan.md`, `MasterPassRemaining.md`, the full user brief and the 27 baseline failures before changing code. Retain every passing baseline test. The live room is closed; create a fresh room for after checks. No device dependency blocks B1.
+Before: `Docs/Verification/S4Master/before/` (262 EditMode passes; 34 PlayMode passes and 27 pre-existing failures; graphics Nights 1–3 and two-Mac crew passed). Current results: `Docs/Verification/S4Master/part-b/`; raw runs `artifacts/s4-master/part-b/verified/`.
 
-B1 objective director/string table/single-step cues and assignments; B2 pressure/status; B3 storm clock; B4 onboarding and instruction-driven bot; B5 routes/pole; B6 collisions/walls/labels/panels. Commit and push each completed step. Rerun baseline at each part boundary. Then branch `s4/visuals` from master for C1–C6, separate draft PR. Finish D evidence/report.
+Final suite/network/build results are being collected. Graphics Nights 1–3 and the updated Night 1 readability replay pass. Four focused PlayMode checks pass (grip-only both-hand/three-position repair, delayed-outage starter, F3 traversal, gallery safety). Controlled Day 2 fixed-text comparison: 244→121 words, 50.4% reduction; not a whole-game localization audit. Rules-bot timings are **simulated, not human measurements**. Mac voice transport/DSP facts are not listening acceptance.
 
-## Reproduction commands (local Mac)
+Still needs acceptance or fuller coverage: exhaustive edge walking on every exterior route; all-scene coplanar triangle audit; complete migration of legacy menu/readout strings; composite time/water/beacon status sentence (current request reports the most urgent channel); total first-appearance voice repetition audit. Practical upper-floor pole drops are implemented, not a continuous House-to-lantern shaft.
 
-The `before` directories contain completed evidence. **Before rerunning, copy the wrappers and change output roots to a fresh `after-PART` directory**; do not reuse old `result.json` files as new passes. `launch_coop.py` waits for the full-suite summary and runs the two-Mac smoke only after the solo Day 3 result passes. Original harnesses are intentionally local ignored artifacts. Capture/commit new evidence separately.
+## Continue after this chunk
+
+Review final results and remaining acceptance gaps before Part C. User will say “continue”; do not start Part C in the Part B turn. Then create `s4/visuals` from `s4/master` for C1–C6 and a separate draft PR. `MasterPassRemaining.md` retains the visual requirements. Will owns skybox and avatar body.
+
+## Exact local commands
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-python3 artifacts/s4-master/sync_tests.py
-python3 artifacts/s4-master/full_tests.py
-python3 artifacts/s4-master/solo_before.py
-python3 artifacts/s4-master/launch_coop.py
-# Build exact tagged milestone (do not run on changed master and mislabel it):
-# git checkout --detach sprint4-m1; python3 artifacts/s4-master/release/build.py
+# Preserve completed outputs: choose a NEW output root in these wrappers before rerunning.
+python3 artifacts/s4-master/part-b/sync_tests.py
+python3 artifacts/s4-master/part-b/full_tests.py
+python3 artifacts/s4-master/part-b/solo_after.py
+python3 artifacts/s4-master/part-b/launch_coop.py
+# Latest build wrapper, after closing the primary Editor:
+python3 artifacts/s4-master/part-b/build.py
 ```
 
-Unity is `/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity`. Build entry: `LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest`, output set with `LK_APK_OUTPUT`. Never run batch Unity against a project already open in an Editor. The second checkout is `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Build`; its overlaid source/patch is saved by the sync harness, not a clean branch checkout.
+Unity 6000.3.23f1: `/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity`. Build method `LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest`; set `LK_APK_OUTPUT`. Never batch-open a GUI-open project. Secondary worktree `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Build` contains overlaid source; sync harness preserves its prior patch. Do not reset it.
 
 ## DEVICE CHECKS PENDING — NOT VERIFIED
 
-Quest unavailable by user instruction; do not block Editor work or APK builds.
+Quest is unavailable; builds proceed, installs deliberately skipped.
 
-- Install latest completed APK when connected (currently milestone release `Builds/Sprint4-M1/LighthouseKeepers-Sprint4-M1.apk`).
-- Per-floor/outside/peak-storm GPU ≤11 ms, CPU main ≤9 ms, 72 fps; draw calls/triangles/audio voices; water GPU ≤2 ms.
-- Bolt turning/clockwise sinking, grip-only auto-snap, both hands, held-underwater recovery and readable fixed labels on device.
-- Mac+Quest join/avatars, audible voice with echo processing, shared task, split objective/partner line, pole visibility, shared sleep and rejoin (new systems only after implementation).
-- Wall visibility sweep and doorway/ledge/collider sweep on device.
-- Comfort, text/station readability and first-timer Nights 1–3 timing; no Editor result substitutes for these.
+- Install latest **Part B** APK (path/hash/source will be in `Docs/Verification/S4Master/part-b/build-result.json`), not the unchanged milestone release.
+- GPU ≤11 ms, CPU main ≤9 ms, sustained 72 fps; per-floor/outside/peak storm draws ≤150/eye, visible triangles ≤300k, audio voices ≤24. No device budget claim from Editor.
+- Grip-only wrench snap, clockwise bolt turn/sink, release/regrab, water recovery, both hands; fixed chalk labels readable.
+- First-time Night 1→3: one understandable instruction, generator controls, slates at wake, PA audible on stairs, clear warning/lose/retry and shared sleep.
+- Pole reach, gates, comfort, safe release/landing; physical stairs and new bunk placement. No forced rotation.
+- Mac+Quest join/avatars, audible two-way voice with echo processing, guest shared task, split objective/partner line, remote pole movement, shared sleep/rejoin.
+- Doorway/wall visibility sweep, head-height bumps, gallery edge safety on device.
 
-ADB: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb devices`. Install with `adb -s SERIAL install -r APK`; launch `adb -s SERIAL shell am start -S -n com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`. Check serial/authorization first. Both co-op clients must match **LK-S4-MASTER-B1** until a new protocol is implemented.
+ADB path `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb`. Check `devices`, then `-s SERIAL install -r APK`; launch `com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.

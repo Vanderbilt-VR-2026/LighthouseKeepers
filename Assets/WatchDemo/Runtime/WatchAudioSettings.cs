@@ -17,9 +17,9 @@ namespace LighthouseKeepers.WatchDemo
   {
    var s=AudioPassSettings.Current;if(!s||!s.audioMix)return;
    var rect=(RectTransform)panel.transform;bool comfort=panel.transform.Find("TurnComfortMode")!=null;rect.sizeDelta=new Vector2(600,comfort?800:680);
-   var open=Button(rect,"AudioSettingsButton","SOUND LEVELS",comfort?-350:-290,font,ink);
-   var page=Rect(rect,"Sound settings page",Vector2.zero,rect.sizeDelta);Text(page,"Sound settings title","SOUND LEVELS",new Vector2(0,230),new Vector2(520,60),font,ink);
-   string[] keys={"Music","Effects","Radio","VoiceChat"},labels={"MUSIC","EFFECTS","RADIO","VOICE CHAT"};
+   var open=Button(rect,"AudioSettingsButton",KeeperStrings.Get("menu.sound"),comfort?-350:-290,font,ink);
+   var page=Rect(rect,"Sound settings page",Vector2.zero,rect.sizeDelta);Text(page,"Sound settings title",KeeperStrings.Get("menu.sound"),new Vector2(0,230),new Vector2(520,60),font,ink);
+   string[] keys={"Music","Effects","Radio","VoiceChat"},labels={KeeperStrings.Get("menu.music"),KeeperStrings.Get("menu.effects"),KeeperStrings.Get("menu.radio"),KeeperStrings.Get("menu.voice")};
    for(int i=0;i<4;i++)
    {
     string key=keys[i];float y=130-i*90;
@@ -30,7 +30,7 @@ namespace LighthouseKeepers.WatchDemo
     var value=Text(page,key+" value",Mathf.RoundToInt(slider.value*100)+"%",new Vector2(220,y),new Vector2(90,50),font,ink);
     slider.onValueChanged.AddListener(v=>{KeeperAudioMix.SetGain(key,v);value.text=Mathf.RoundToInt(v*100)+"%";});
    }
-   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings","BACK",-245,font,ink);
+   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings",KeeperStrings.Get("menu.back"),-245,font,ink);
    open.onClick.AddListener(()=>{states.Clear();foreach(Transform t in rect)if(t!=page){states[t.gameObject]=t.gameObject.activeSelf;t.gameObject.SetActive(false);}page.gameObject.SetActive(true);});
    back.onClick.AddListener(()=>{foreach(var pair in states)if(pair.Key)pair.Key.SetActive(pair.Value);page.gameObject.SetActive(false);refresh();});page.gameObject.SetActive(false);
   }

@@ -1,6 +1,6 @@
-# B1 continuation plan — not implemented
+# B1 implementation plan — historical checklist
 
-The release and before baseline are complete. No production B1 code has been applied. Uncompiled sketches in `artifacts/s4-master/b1/` are exploratory only; do not copy them into Assets as a finished feature. They omit wiring, string migration, validity checks and tests.
+The director, crew assignments, central instruction table, grip-only wrench and equipment cues are now implemented on `s4/master`. See `Next.md` and the Part B verification report for current evidence and remaining acceptance gaps. Do not reapply the old exploratory sketches in artifacts. The checklist below records the original design; it is not an assertion that every audit is complete.
 
 ## Integrate through existing boundaries
 

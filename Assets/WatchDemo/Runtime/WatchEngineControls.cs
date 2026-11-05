@@ -121,7 +121,7 @@ namespace LighthouseKeepers.WatchDemo
         {grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-.014f);right=Palm(.014f);interaction.selectEntered.AddListener(Select);interaction.activated.AddListener(Squeeze);}
         Transform Palm(float x){var t=M2StationParts.Root(x<0?"Left palm":"Right palm",visual,new Vector3(x,.012f,choke?.16f:.085f));t.localRotation=Quaternion.Euler(0,180,0);return t;}
         void Select(SelectEnterEventArgs e){if(choke)owner.Act(true);}
-        void Squeeze(ActivateEventArgs e){if(!choke){owner.Act(false);squeezed=Time.time+.18f;if(grip.HoldingHand)grip.HoldingHand.Pulse(.35f,.06f);}}
+        void Squeeze(ActivateEventArgs e){if(!choke&&!(owner.State.Engine.Guided&&owner.State.Engine.Primed)){owner.Act(false);squeezed=Time.time+.18f;if(grip.HoldingHand)grip.HoldingHand.Pulse(.35f,.06f);}}
         void Update()
         {if(choke)visual.localRotation=Quaternion.Slerp(visual.localRotation,Quaternion.Euler(owner.State.Engine.ChokeClosed?-30:30,0,0),1-Mathf.Exp(-20*Time.deltaTime));else visual.localScale=Vector3.one*(Time.time<squeezed?.75f:1);var hand=grip.HoldingHand;if(hand)hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);}
         void OnDestroy(){if(interaction){interaction.selectEntered.RemoveListener(Select);interaction.activated.RemoveListener(Squeeze);}}

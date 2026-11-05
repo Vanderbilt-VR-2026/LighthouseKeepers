@@ -3,7 +3,7 @@ namespace LighthouseKeepers.WatchDemo {
  public sealed class OnboardingPresentation:MonoBehaviour {
   WatchDemoController watch;Transform head,bed;WatchPipeRepair pipe;TextMesh bunkSlate,pipeSlate;Transform gate;BoxCollider gateCollider;bool opened;int night;
   public static void Create(WatchDemoController w,Transform h,Transform b,WatchPipeRepair p){var c=w.gameObject.AddComponent<OnboardingPresentation>();c.watch=w;c.head=h;c.bed=b;c.pipe=p;c.Build();}
-  void Build(){var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();bunkSlate=Slate(parts,"Bunk job slate",bed.position+new Vector3(0,.8f,1.11f),bed.rotation*Quaternion.Euler(0,180,0));pipeSlate=Slate(parts,"Pipe room job slate",pipe.bolts[1].position+new Vector3(.09f,.5f,.45f),Quaternion.LookRotation(Vector3.left));
+  void Build(){var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();bunkSlate=Slate(parts,"Bunk job slate",bed.position+bed.rotation*new Vector3(0,.54f,1.01f),bed.rotation*Quaternion.Euler(0,180,0));pipeSlate=Slate(parts,"Pipe room job slate",pipe.bolts[1].position+new Vector3(.09f,.5f,.45f),Quaternion.LookRotation(Vector3.left));
    // Small latch door only spans the existing House-to-tower threshold. No forced player movement.
    gate=M2StationParts.Root("Tutorial threshold gate",transform,new Vector3(-.68f,0,-4.43f));var leaf=parts.Part("Timber tutorial door",gate,new Vector3(.68f,1.05f,0),new Vector3(1.36f,2.1f,.045f),parts.Dark);gateCollider=leaf.AddComponent<BoxCollider>();
   }

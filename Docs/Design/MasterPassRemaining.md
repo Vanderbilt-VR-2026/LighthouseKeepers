@@ -1,38 +1,8 @@
 # Remaining master-pass acceptance checklist
 
-This is a continuation checklist, **not a completion report**. The user's 5 November master-pass request is authoritative. B1 is detailed in `B1-ImplementationPlan.md`. Finish/test/commit/push each numbered step before starting the next; no merges. Preserve offline solo, shared host-owned state, rejoin, accepted hands/tool gestures and audio. Keep new features switchable; new snapshot fields require a lobby protocol bump. Repeat the before baseline at part boundaries; preserve every previously passing test.
+Part B implementation and its remaining acceptance gaps are checkpointed on `s4/master` / PR #81. Read `Next.md` and `Docs/Verification/S4Master/part-b/README.md` for actual results and gaps; this file is not evidence of completion. The user's latest no-fail Night 1 and grip-only instructions supersede the original trigger/early-failure behavior. Latest first-timer headroom target is 30–40%, not the older fixed 60–90-second spare window.
 
-## B2 — pressure and status
-
-- Wristwatch: large readable time-to-dawn digits; glancing also recalls objective. Last two minutes: crisis score, distant bell/foghorn each minute.
-- F1 painted waterline marks KNEE / GENERATOR LINE; increasing water sound; harbor warnings at 50/75/90% of loss height.
-- Dark beacon: darker exterior without changing skybox, approaching horn closer each 10 s, dying ember in lamp glass; voice at 30 s and 10 s remaining.
-- Slim icon + fill danger strip only in danger (water/lamp/clock), under the objective.
-- X/Y or PA button requests a one-sentence status; automatic about every two minutes if no other speech. Danger preempts lower priority. At least eight seconds between lines unless critical.
-- TTS placeholders via existing single-take import/filter pipeline, documented under RadioLines “Status + danger”: “Three hours to dawn”, “Two hours”, “One hour”, “Almost dawn, hold on”; “Water's at your knees, keeper.”, “It's reaching the generator!”, “You're going under, keeper!”; “Your light's out — there are ships out there!”, “Thirty seconds, keeper!”, “Ten seconds!”; acknowledgements “Good.”, “That'll hold.”, “There she goes.”, “Light's burning.”
-- Loss: sound specific to water or ship impact, dying lights/storm, fade, one-line logbook reason and retry/lobby choices. Near miss: if danger exceeded 80% during a won night, logbook says “Close call, keeper.” Host owns that history.
-
-## B3 — storm clock
-
-One host-owned StormDirector, one replicated stage. Time/danger choose the worse of Heavy Rain, Gale, Tempest, Peak. Peak in last two minutes/near-loss. Fixing the most urgent fault calms one stage. Rain, gusts, window rattle, thunder, wave height, lamp sway, ceiling dust and music read it. Tempest lightning intervals 15–30 s; comfort-safe brightness/frequency; no skybox changes.
-
-## B4 — onboarding
-
-- Night 1: arrival PA, only wrench guidance glow, HUD “Grab the wrench”; tower door opens after pickup or 30 s. No loss until player reaches the pipe; early danger gives a spoken soft warning.
-- Wrench → hiss/pipe → one bolt at a time → drain + acknowledgement → “Get some sleep” → stair lights/F3 bunk lamp → sleep. Never show completion panels.
-- Night 2 generator outage after 60–90 s; B1 single-step tutorial. Night 3 introduces radio/beacon, retains staged balance and re-verifies 60–90 s spare solo.
-- Voice teaches each verb once; repeat encounters use glow/HUD, voice only after 60 s idle.
-- Instruction-only first-timer bot follows the current director/control, wins Nights 1–3 solo. Record actual per-step times including travel in `Docs/Playtests/telemetry-firsttimer.md`; distinguish automation from humans.
-
-## B5 — movement
-
-- Walk speed +20%, smooth stairs, unchanged snap turn; optional smooth turn in Watch Menu.
-- Brass fireman's pole with railed/gated floor openings, practical F4→F3→F2→House descent. Engraved “GRIP TO SLIDE”. Either hand, downward only, approximately 2 m/s with eased start/stop, release/bottom stops, no rotation/spikes. Metal squeal + haptic. Existing keeper pose replication must show the slide to the partner.
-- Audit/shorten unnecessary routes while preserving clearance and falls protection.
-
-## B6 — fixes and Part B gate
-
-Remove blocking collider/rock under House desk; small decorative props don't collide with player. Diagnose/remove doorway duplicate geometry; scan coplanar overlaps across scenes. Bolts visibly clockwise/sinking; labels remain fixed children. Automated edge walk for floors/stairs/landings/gallery/outside; close ledge holes with colliders/railings and add regressions. Remove remaining completion panels. Baseline replay/full pass-set comparison/two-Mac check, screenshot inspection, APK. Quest-specific acceptance remains pending until available.
+Before Part C, resolve any new regression identified by the final Part B checks. Remaining Part B coverage: device readability/comfort/performance, full exterior edge walking and all-scene coplanar audit, remaining legacy string migration, composite spoken status and repetition audit. F4→F3→F2 pole descents work in Editor; F2→House remains stairs because no safe full-body shaft fits beside the next flight. Do not claim exhaustive validation from the targeted gallery sweep.
 
 ## Part C — branch s4/visuals from completed master, separate draft PR
 
