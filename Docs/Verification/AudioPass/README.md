@@ -75,3 +75,21 @@ The earlier two-minute co-op capture measured −28.17 LUFS integrated, −3.39 
 Inspected Editor presentation screenshots: [objective and subtitles](media/hud-objective-and-subtitle.png), [completion strike/tick](media/hud-completion-tick.png), [House horn and reachable replay button](media/pa-speaker-house.png), [bunk mounts and clearance](media/bunk-headboard-lamps.png). Final visual-only replay passed, zero errors.
 
 A sleep-page screenshot caught the tracker remaining visible over the logbook. The presentation gate now hides it during sleep, failure and the deliberately opened Watch Menu. This changes only tracker visibility; sleep/menu/failure rules are untouched.
+
+## Installed PA/HUD build
+
+Source `9f407c3`: repository `MultiplayerBuild.BuildQuest` succeeded, adb install −r succeeded, and Android launch succeeded on Quest serial 2G0YC1ZG32048T. APK `Builds/AudioPass-9f407c3/LighthouseKeepers-AudioPass.apk` (104,967,928 bytes), SHA-256 `c6762397b7b8b05ca7c3076bfd4b2a3a8c10d83a1a57308b0323cc5b38198afa`. This includes the sleep/menu/failure tracker gate. Matching final live Mac+Quest acceptance is pending.
+
+Final 9f407c3 focused tests passed again. The final presentation replay asserts that tracker alpha is zero during sleep; transition to Day 2 passed with zero runtime errors. Inspected [clear sleep logbook](media/sleep-logbook-clear.png). Fresh matching-build Mac host VZRQZA is online in region us; headset smoke result is pending user participation.
+
+## Final matching Mac + Quest smoke — PASS
+
+Both 9f407c3 clients joined VZRQZA, region us, and loaded the Lab with two avatars. User confirmed: “In the House; avatar and announcement clear” and “Clear speech; Mac hears me; pipe done.” Host observed guest bolt counts 0 → 1 → 2 → 3, completed board task, and shared objective changing to rest. Mac Host then voted for bed; the existing both-keepers rule remains in place. No final shared-bed claim until the guest sleeps.
+
+Inspected [Editor remote avatar](media/final-coop-avatar-editor.png), [host board after guest repair](media/final-coop-board-complete.png), and [actual Quest pipe view](media/final-quest-pipe.png). Quest logs show mic permission granted, 48 kHz / 48 kbps / 20 ms voice in us, and persistent VoiceChat routing after the Speaker rename. Startup logged “Voice client is busy” and a few frames arriving before voice-info initialization; speakers subsequently initialized and user-confirmed voice passed. No ongoing Photon connection failure was observed.
+
+Final worn-headset acceptance: avatar, announcement clarity, return voice and shared task **PASS**. Exact HUD angular comfort/stereo legibility, each PA replay button/floor reverb, final full audio CPU/per-bus loudness and the new physical bunk labels remain **NOT VERIFIED** by the wearer. No extra position matrix/full suites, and no Phase 6 balance work.
+
+Shared sleep subsequently **passed**: the guest bed vote registered first. The automated Mac movement/sleep call initially queued a vote before its replicated pose reached the bunk, so host proximity validation rejected it. Resending the Mac vote after pose convergence started the existing shared transition. Host and actual Quest log both report Day 2 (Quest guest sequence 1453, day=2). This was test-driver coordination, not a missing bunk collider; no production sleep-rule change was made.
+
+User reported feedback while MIC MUTED. Device telemetry shows MIC MUTED; the Mac has no remote Speaker after the Quest stops recording, confirming outgoing Quest voice is removed. Mac was immediately muted too; its Recorder reports TransmitEnabled=false, RecordingEnabled=false, DebugEchoMode=false. Acoustic-feedback confirmation is pending; do not claim the feedback complaint resolved.
