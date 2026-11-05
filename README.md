@@ -6,6 +6,7 @@ VR lighthouse survival for **Meta Quest 3**.
 
 | Sprint | Open the submission | What is included |
 | --- | --- | --- |
+| **Sprint 4 — M1** | **[Download Quest APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint4-m1/LighthouseKeepers-Sprint4-M1.apk)** | Immersion + audio milestone · [release notes](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint4-m1) |
 | **Sprint 3** | **[Sprint 3 submission](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-3)** | Playable APK + submission video |
 | **Sprint 2** | **[Sprint 2 resubmission](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-2)** | Playable APK resubmission |
 | **Sprint 1** | **[Sprint 1](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-1)** | Original environment + APK |
@@ -24,10 +25,10 @@ The keeper lobby is the first scene: a physical crew ledger introduces the role 
 
 Equipment uses direct grabbing and physical turning/pulling. This milestone replaces detached instructions with mounted plates, chalk, gauges, practical lights and sound, and gives the wrench a forgiving snap onto a bolt. Menu rays remain for deliberate lobby/logbook actions. Current tan hands, controller alignment and finger blending are preserved; held tools retain their established grip poses.
 
-These are the choices being implemented on `s4/immersion`. [Design rules](Docs/Design/Immersion.md) · [Professor playtest](Docs/Playtests/2026-11-03-professor.md) · [Radio script](Docs/Design/RadioLines.md).
+These choices shipped in Sprint 4 Milestone 1. [Design rules](Docs/Design/Immersion.md) · [Professor playtest](Docs/Playtests/2026-11-03-professor.md) · [Radio script](Docs/Design/RadioLines.md).
 
 ## Project history
 
-Only four branches are kept: **main**, **sprint-1**, **sprint-2**, **sprint-3**. Previous branch histories are saved under archive tags.
+Submission branches **sprint-1**, **sprint-2** and **sprint-3** preserve hand-ins. Active Sprint 4 work uses separate review branches; previous branch histories are saved under archive tags.
 
 [Browse the archive](Docs/Archives/Branches-2026-11-03.md) · [All releases](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases)
