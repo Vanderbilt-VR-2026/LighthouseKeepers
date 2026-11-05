@@ -65,7 +65,7 @@ namespace LighthouseKeepers.WatchDemo
    subtitle.text=Time.unscaledTime-captionAt<.7f?caption:"";
    var colour=subtitle.color;colour.a=.82f*Mathf.Clamp01(1-(Time.unscaledTime-captionAt)/.7f);subtitle.color=colour;
    if(radio&&cue!=radio.Serial){cue=radio.Serial;Reveal();}
-   group.alpha=Mathf.Clamp01((until-Time.unscaledTime)/.8f);
+   group.alpha=watch.ObjectivePresentationBlocked?0:Mathf.Clamp01((until-Time.unscaledTime)/.8f);
    var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=x||y;if(pressed&&!buttons)Reveal();buttons=pressed;
    bool looking=wrist&&Vector3.Distance(head.position,wrist.position)<1.1f&&Vector3.Dot(head.forward,(wrist.position-head.position).normalized)>.94f;if(looking&&!glance)Reveal();glance=looking;
    follow=Quaternion.Slerp(follow,Quaternion.LookRotation(head.forward,Vector3.up),1-Mathf.Exp(-Time.unscaledDeltaTime/ .45f));var desired=head.position+follow*new Vector3(-.28f,.34f,1.6f);root.position=Vector3.SmoothDamp(root.position,desired,ref velocity,.20f,20,Time.unscaledDeltaTime);root.rotation=follow;

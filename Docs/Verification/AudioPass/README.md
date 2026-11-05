@@ -73,3 +73,5 @@ The preceding audio-only build 096b833 was installed and launched successfully (
 The earlier two-minute co-op capture measured −28.17 LUFS integrated, −3.39 dBTP and 16.30 LU loudness range, with the live routing/codec caveats above. It is a master capture, not per-bus loudness evidence.
 
 Inspected Editor presentation screenshots: [objective and subtitles](media/hud-objective-and-subtitle.png), [completion strike/tick](media/hud-completion-tick.png), [House horn and reachable replay button](media/pa-speaker-house.png), [bunk mounts and clearance](media/bunk-headboard-lamps.png). Final visual-only replay passed, zero errors.
+
+A sleep-page screenshot caught the tracker remaining visible over the logbook. The presentation gate now hides it during sleep, failure and the deliberately opened Watch Menu. This changes only tracker visibility; sleep/menu/failure rules are untouched.

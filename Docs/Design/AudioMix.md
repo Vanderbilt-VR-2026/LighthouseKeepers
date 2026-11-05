@@ -23,13 +23,13 @@ Four pooled spatial impact emitters: outdoors 2–5 events/second, indoors 1–2
 | Bus | Base gain | Priority | Speech duck |
 |---|---:|---:|---:|
 | VoiceChat | 0 dB | 0 | — |
-| Radio | 0 dB | 10 | −3 dB while a keeper speaks |
+| Radio | +1.7 dB | 10 | −3 dB while a keeper speaks |
 | SFX_Critical | −3 dB | 40 | — |
 | SFX_World | −6 dB | 90 | — |
-| Ambience | −4 dB | 140 | −3 dB during voice/radio |
-| Music | −2 dB | 200 | −7 dB during voice/radio |
+| Ambience | −6.5 dB | 140 | −5 dB during radio; −3 dB during voice alone |
+| Music | −2 dB | 200 | −9 dB during radio; −7 dB during voice alone |
 
-With normalized source references, music's .23 source gain places it about 11 dB below the .65 wall-radio anchor. Exterior rain is about 4 dB below Radio, interior about 7.2 dB, roof about 5.5 dB. These are calibrated gain targets, not measured per-bus playback LUFS. Radio band-pass 300–3400 Hz and light distortion remain in-engine; belt radio fades in with distance from the wall set. Its new .65 source gain compensates for the recorded storm; belt distance rolloff makes it roughly 3 dB quieter than a nearby wall receiver.
+With normalized source references, music's .23 source gain sits below the PA's .95 speech feed. PA level is about 5 dB above the prior .65 receiver (3.3 dB source increase plus 1.7 dB bus gain). Rain is 2.5 dB below its earlier calibration. These are calibrated gain targets, not measured per-bus playback LUFS. The final PA filter/mix settings are listed below; the old belt receiver is disabled when PA speakers are enabled.
 
 Voice chat retains Photon open-mic permissions and head-position spatialization. The final codec is mono 48 kHz / 48 kbps Opus with 20 ms packets (previously 24 kHz / 24 kbps / 40 ms). Photon renames linked Speaker objects; a persistent speech component now identifies the VoiceChat bus across scene changes instead of relying on the object name. There is no binaural/HRTF plug-in configured: current 3D audio is head-position panning and distance attenuation. A post-decode speech leveler targets .09 RMS with gain .5–6, a .002 silence gate, .8 peak protection and 50 ms reduction / 600 ms recovery. The existing .85 source gain puts normal voice close to the Radio reference. Local microphone activity and remote decoded speech both drive ducking; no microphone capture is enabled in solo.
 

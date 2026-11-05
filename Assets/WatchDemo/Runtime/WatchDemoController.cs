@@ -32,6 +32,7 @@ namespace LighthouseKeepers.WatchDemo
         float repairProgress;
         int shownSecond=-1,shownChalkLetters=-1;
         bool sleeping,previousGrip,previousTrigger;
+        public bool ObjectivePresentationBlocked=>sleeping||(state!=null&&state.Failed)||(menu&&menu.IsOpen);
         Quaternion originalWrenchRotation;
         Material fadeMaterial;
         WrenchHaptics wrenchHaptics;
