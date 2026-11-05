@@ -29,5 +29,15 @@ namespace LighthouseKeepers.Net.Tests
             Assert.AreEqual(2,choose.Invoke(null,new object[]{true,.1f,10d,true,200d}));
             Assert.AreEqual(2,choose.Invoke(null,new object[]{true,.1f,90d,false,50d}));
         }
+        [Test] public void Phase4RainZonesAndSourceClipsAreDistinct()
+        {
+            foreach(var n in new[]{"exterior","interior","roof"}){var c=Resources.Load<AudioClip>("AudioPass/rain_"+n);Assert.NotNull(c);Assert.Greater(c.length,300);Assert.AreEqual(AudioClipLoadType.Streaming,c.loadType);}
+            foreach(var n in new[]{"window","metal","puddle","drip"})Assert.NotNull(Resources.Load<AudioClip>("AudioPass/impact_"+n));
+            var t=System.Type.GetType("LighthouseKeepers.WatchDemo.RainSoundscape, Assembly-CSharp",true);var f=t.GetMethod("Weights");
+            Assert.Greater(((Vector3)f.Invoke(null,new object[]{new Vector3(0,1.65f,-8)})).y,.99f);
+            Assert.Greater(((Vector3)f.Invoke(null,new object[]{new Vector3(0,11.4f,0)})).z,.99f);
+            Assert.Greater(((Vector3)f.Invoke(null,new object[]{new Vector3(8,1.65f,0)})).x,.99f);
+            var door=(Vector3)f.Invoke(null,new object[]{new Vector3(0,1.65f,-4.4f)});Assert.That(door.x,Is.InRange(.1f,.9f));Assert.That(door.x+door.y+door.z,Is.EqualTo(1).Within(.001f));
+        }
     }
 }

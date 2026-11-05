@@ -10,7 +10,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Initialize(WatchDemoController w,Transform h)
         {
             watch=w;head=h;hands=FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None);
-            wind=Source("Storm through window",new Vector3(2.5f,5,-.5f));wind.clip=Resources.Load<AudioClip>("ImmersionAudio/wind");wind.loop=true;wind.volume=w.State.Immersion.atmosphereVolume*.5f;wind.Play();
+            wind=Source("Storm through window",new Vector3(2.5f,5,-.5f));wind.clip=Resources.Load<AudioClip>("ImmersionAudio/wind");wind.loop=true;wind.volume=w.State.Immersion.atmosphereVolume*.5f;if(!(AudioPassSettings.Current&&AudioPassSettings.Current.layeredRain))wind.Play();
             events=Source("Tower creaks and distant weather",new Vector3(0,6,0));events.volume=w.State.Immersion.atmosphereVolume;
             thunder=Resources.Load<AudioClip>("ImmersionAudio/thunder");creak=Resources.Load<AudioClip>("ImmersionAudio/creak");horn=Resources.Load<AudioClip>("ImmersionAudio/foghorn");drip=Resources.Load<AudioClip>("ImmersionAudio/drip");
             var go=new GameObject("Gentle lightning through windows");go.transform.SetParent(transform,false);go.transform.position=new Vector3(8,7,-8);
@@ -36,10 +36,10 @@ namespace LighthouseKeepers.WatchDemo
             if(Time.time<nextEvent)return;nextEvent=Time.time+14+(eventNumber%3)*4;
             var clip=eventNumber%4==0?creak:eventNumber%4==1?horn:eventNumber%4==2?drip:thunder;
             events.transform.position=head.position+new Vector3(eventNumber%2==0?3:-3,1.5f,2);
-            if(clip)events.PlayOneShot(clip,.7f);
+            if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,.7f);}
             if(eventNumber%4==3){flashAge=0;foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
             eventNumber++;
         }
-        void PlayThunder(){if(thunder)events.PlayOneShot(thunder,.8f);foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
+        void PlayThunder(){if(thunder){events.clip=thunder;events.PlayDelayed(1.2f);}foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
     }
 }

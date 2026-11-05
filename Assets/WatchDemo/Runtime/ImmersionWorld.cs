@@ -22,6 +22,7 @@ namespace LighthouseKeepers.WatchDemo
             if(watch.State.Immersion.radioNarration)p.narrator=HarborRadio.Create(watch,head,wrench,pipe,cabinet);
             if(watch.State.Immersion.faultMist)FaultVapour.Create(watch,pipe,generator);
             if(watch.State.Immersion.atmosphere)p.gameObject.AddComponent<ImmersionAtmosphere>().Initialize(watch,head);
+            RainSoundscape.Create(watch,head);
             return p;
         }
         void Build(Transform head,TextMesh board,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)

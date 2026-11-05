@@ -6,7 +6,10 @@ from scipy.signal import resample_poly
 from process_radio_takes import ff,decode,save,measure,ROOT
 OUT=ROOT/'Assets/Audio/Resources/AudioPass';OUT.mkdir(parents=True,exist_ok=True)
 def normalize(source,dest):
- m=measure(source);f='loudnorm=I=-18:TP=-1.2:LRA=7:measured_I={input_i}:measured_TP={input_tp}:measured_LRA={input_lra}:measured_thresh={input_thresh}:offset={target_offset}:linear=true'.format(**m)
+ m=measure(source)
+ if m['input_i']=='-inf':
+  a=decode(source);gain=min(.10/max(1e-8,float(np.sqrt(np.mean(a*a)))) ,.50/max(1e-8,float(np.max(np.abs(a)))));ff(['-v','error','-i',str(source),'-af',f'volume={gain}','-ac','1','-ar','44100',str(dest)]);return
+ f='loudnorm=I=-18:TP=-1.2:LRA=7:measured_I={input_i}:measured_TP={input_tp}:measured_LRA={input_lra}:measured_thresh={input_thresh}:offset={target_offset}:linear=true'.format(**m)
  ff(['-v','error','-i',str(source),'-af',f,'-ac','1','-ar','44100',str(dest)])
 def loop_samples(a,start,seconds,fade=.15):
  n=round(seconds*44100);d=round(fade*44100);s=round(start*44100);x=a[s:s+n+d];assert len(x)==n+d

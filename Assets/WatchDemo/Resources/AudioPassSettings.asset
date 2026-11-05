@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: AudioPassSettings
   m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Core.AudioPassSettings
   adaptiveMusic: 1
+  layeredRain: 1
   crossfadeSeconds: 2
   barSeconds:
   - 3.3436735
@@ -21,3 +22,5 @@ MonoBehaviour:
   musicVolume: 0.23
   lobbyVolume: 0.025
   stingVolume: 0.45
+  rainGains: {x: 0.65, y: 0.45, z: 0.55}
+  zoneFadeSeconds: 1.5

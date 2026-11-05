@@ -35,3 +35,7 @@ The user reduced subsequent verification to focused phase tests plus one quick s
 ## Phase 3 — music and short stings
 
 Prepared three whole-bar streaming Vorbis loops and three 3.5-second stings. Crisis starts at 82.477 s; alternate sting candidates remain gitignored. Beat grid and chosen cuts: `Docs/Design/Music.md`. Focused tests cover clip presence/streaming, danger selection, short stings and invalid replicated music state. Quick Night 1 passed with zero captured errors. The host chooses mode/transition epoch; guests consume it from snapshot v6. Lobby network version is now `LK-S4-M3-AUDIO1`; earlier APKs cannot join this version. No Day 3 gameplay or difficulty values changed.
+
+## Phase 4 — layered rain
+
+Focused tests passed for exterior/interior/roof streaming clips, four impact types, House/F4/outside zone classification and partial doorway blending. Quick solo Night 1 passed, zero captured errors. Three raw rain files remain untouched; normalized and crossfaded Vorbis copies are shipped. Original synthesized impacts/gusts, source credits, gains, filters and timing are in `Docs/Design/AudioMix.md`. The <400 ms impacts use RMS/peak levelling because integrated LUFS is undefined at that duration. No flood visuals or avatar code changed. Headset listening is pending the final build.
