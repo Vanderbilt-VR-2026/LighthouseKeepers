@@ -28,6 +28,17 @@ MonoBehaviour:
   unpoweredRiseMPerSecond: 0.006
   drainMPerSecond: 0.012
   slipRetainedFraction: 0.5
+  day3Balance: 1
+  day3SoloSeconds: 390
+  day3CrewSeconds: 330
+  day3GeneratorFailureSeconds: 75
+  day3SoloBeaconGraceSeconds: 90
+  day3CrewBeaconGraceSeconds: 60
+  day3SoloFloodMultiplier: 0.65
+  day3CrewFloodMultiplier: 0.85
+  day3ArrivalFuel: 0.3
+  day3FailureFuel: 0.04
+  day3FuelDrainPerSecond: 0.0015
   failWaterHeightM: 0.55
   failWaterSustainSeconds: 3
   emergencyMinimum: 0.115

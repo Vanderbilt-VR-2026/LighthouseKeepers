@@ -96,7 +96,7 @@ namespace LighthouseKeepers.WatchDemo
         void BeginWatch()
         {
             if(coop!=null&&!state.RemoteReplica)Revision++;
-            flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond;flood.SurgePerMetre=.1f;flood.ResumeFlood();
+            flood.ResetFlood();flood.SetHeight(.02f);flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.FloodRiseMultiplier;flood.SurgePerMetre=.1f;flood.ResumeFlood();
             if(generator)generator.ResetInteraction();
             if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();
             if(beaconStation&&!state.RemoteReplica)beaconStation.ResetProps();
@@ -143,7 +143,7 @@ namespace LighthouseKeepers.WatchDemo
             if(!state.Failed)
             {
                 flood.Paused=state.Repaired;
-                flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.Pipe.InflowFraction;
+                flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.Pipe.InflowFraction*state.FloodRiseMultiplier;
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
@@ -205,13 +205,14 @@ namespace LighthouseKeepers.WatchDemo
             }
             else boardText.Append("KEEPER WATCH — DAY ").Append(state.Day).Append("\n\n");
             foreach(var task in state.Definition.tasks)
-                boardText.Append(state.IsDone(task.stationId)?(state.Immersion?"✓ ":"[X] "):(state.Immersion?"○ ":"[ ] ")).Append(task.taskText).Append('\n');
+                boardText.Append(state.IsDone(task.stationId)?(state.Immersion?"✓ ":"[X] "):(state.Immersion?"○ ":"[ ] ")).Append(task.taskText).Append(state.IsPending(task.stationId)?" — LATER":"").Append('\n');
             if(!state.Repaired)boardText.Append("Pipe: ").Append(state.Pipe.BoltsDone).Append("/3 bolts\n");
             if(state.Grid!=null)
             {boardText.Append("POWER: ").Append(state.Grid.Demand.ToString("0.##")).Append('/').Append(state.Grid.Capacity.ToString("0.##")).Append(state.Grid.Tripped?" — TRIPPED: RESET F2":!state.Grid.EngineRunning?" — ENGINE OFF":" — ");
                 if(!state.Grid.Tripped&&state.Grid.EngineRunning)for(int i=0;i<4;i++)if(state.Grid.Selected((PowerCircuit)i))boardText.Append(((PowerCircuit)i).ToString().ToUpperInvariant()).Append(' ');
                 boardText.Append('\n');}
-            if(!state.BeaconShining&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
+            if(state.BeaconGraceRemaining>0&&!state.Failed)boardText.Append("OUTAGE GRACE: ").Append(Mathf.CeilToInt((float)state.BeaconGraceRemaining)).Append(" s — RESTORE POWER\n");
+            else if(!state.BeaconShining&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
             boardText.Append('\n');
             if(state.Failed)boardText.Append(state.FailureMessage).Append(state.Immersion?"\nOpen the logbook to try again.":"\nTrigger to retry this day / Menu for retry or lobby");
             else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE\nMenu: Replay from Day 1 or Return to lobby");
