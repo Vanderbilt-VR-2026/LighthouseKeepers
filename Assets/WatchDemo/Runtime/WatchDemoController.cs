@@ -96,6 +96,7 @@ namespace LighthouseKeepers.WatchDemo
             BeginWatch();
             if(state.HouseFlood!=null)WatchHouseFlood.Create(this);
             InitializeDirector();
+            if(state.PressureEnabled)PressurePresentation.Create(this,head);
             ObjectiveHud.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
             if(state.RemoteReplica){flood.Paused=true;clock.text="WAITING FOR HOST STATE";}

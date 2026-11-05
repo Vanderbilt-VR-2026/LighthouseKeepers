@@ -43,7 +43,7 @@ namespace LighthouseKeepers.WatchDemo
   AudioSource Source(Transform parent,string name,float volume)
   {var go=new GameObject(name);go.transform.SetParent(parent,false);var a=go.AddComponent<AudioSource>();a.playOnAwake=false;a.spatialBlend=1;a.dopplerLevel=0;a.minDistance=1.5f;a.maxDistance=12;a.rolloffMode=AudioRolloffMode.Linear;a.volume=volume;a.priority=10;return a;}
   void Press(int index){if(watch.State.RemoteReplica)watch.State.Coop?.Send(CoopAction.PAReplay,index);else Replay();}
-  public bool Replay(){if(Time.unscaledTime<nextReplay||program.Cue==0)return false;nextReplay=Time.unscaledTime+3;program.ReplayLast();return true;}
+  public bool Replay(){if(Time.unscaledTime<nextReplay||program.Cue==0)return false;nextReplay=Time.unscaledTime+3;if(watch.State.PressureEnabled)return program.StatusUpdate();program.ReplayLast();return true;}
   public void Play(int id,AudioClip value,float offset,int serial)
   {
    clip=value;variant=serial;line=id;age=offset;active=true;closing=false;double start=AudioSettings.dspTime+System.Math.Max(0,.3-offset);

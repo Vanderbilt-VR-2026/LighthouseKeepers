@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo
 {
  public sealed class ObjectiveHud:MonoBehaviour
  {
-  WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick;
+  WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick,danger;Text dangerText;
   Text task,label,floor,subtitle,partner;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;Vector3 velocity;Quaternion follow;
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
   public static ObjectiveHud Create(WatchDemoController w,Transform head)
@@ -36,6 +36,7 @@ namespace LighthouseKeepers.WatchDemo
    subtitle=Text("Harbor subtitle",new Vector2(0,-72),new Vector2(530,85),19,new Color(.79f,.79f,.72f,.82f));subtitle.fontStyle=FontStyle.Italic;
    strike=Rule("Completed objective strike",new Vector2(15,10),new Vector2(460,1));tick=Rule("Completion tick stem",new Vector2(240,13),new Vector2(12,2));tick.localRotation=Quaternion.Euler(0,0,45);var up=Rule("Completion tick sweep",new Vector2(253,18),new Vector2(24,2));up.SetParent(tick,false);up.anchoredPosition=new Vector2(11,4);up.localRotation=Quaternion.Euler(0,0,90);
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
+   danger=Rule("Danger fill",new Vector2(-220,-110),new Vector2(440,3));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-126),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
    follow=Quaternion.LookRotation(head.forward,Vector3.up);root.SetPositionAndRotation(head.position+follow*new Vector3(-.28f,.34f,1.6f),follow);Reveal();
   }
   public void Reveal()=>until=Time.unscaledTime+7;
@@ -68,8 +69,10 @@ namespace LighthouseKeepers.WatchDemo
    subtitle.text=Time.unscaledTime-captionAt<.7f?caption:"";
    var colour=subtitle.color;colour.a=.82f*Mathf.Clamp01(1-(Time.unscaledTime-captionAt)/.7f);subtitle.color=colour;
    if(radio&&cue!=radio.Serial){cue=radio.Serial;Reveal();}
+   bool unsafeNow=s.PressureEnabled&&!s.Complete&&s.Danger>=.5f;
+   danger.gameObject.SetActive(unsafeNow);dangerText.gameObject.SetActive(unsafeNow);if(unsafeNow){danger.localScale=new Vector3(s.Danger,1,1);dangerText.text=KeeperStrings.Get(s.DangerKey);until=Mathf.Max(until,Time.unscaledTime+.5f);}
    group.alpha=watch.ObjectivePresentationBlocked?0:Mathf.Clamp01((until-Time.unscaledTime)/.8f);
-   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=x||y;if(pressed&&!buttons)Reveal();buttons=pressed;
+   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=x||y;if(pressed&&!buttons){Reveal();if(s.PressureEnabled&&radio)radio.RequestReplay();}buttons=pressed;
    bool looking=wrist&&Vector3.Distance(head.position,wrist.position)<1.1f&&Vector3.Dot(head.forward,(wrist.position-head.position).normalized)>.94f;if(looking&&!glance)Reveal();glance=looking;
    follow=Quaternion.Slerp(follow,Quaternion.LookRotation(head.forward,Vector3.up),1-Mathf.Exp(-Time.unscaledDeltaTime/ .45f));var desired=head.position+follow*new Vector3(-.28f,.34f,1.6f);root.position=Vector3.SmoothDamp(root.position,desired,ref velocity,.20f,20,Time.unscaledDeltaTime);root.rotation=follow;
   }

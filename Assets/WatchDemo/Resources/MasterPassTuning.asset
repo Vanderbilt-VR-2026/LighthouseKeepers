@@ -8,7 +8,7 @@ MonoBehaviour:
   objectiveDirector: 1
   gripOnlyWrench: 1
   friendlyGenerator: 1
-  pressureCues: 0
+  pressureCues: 1
   stormClock: 0
   onboarding: 0
   movement: 0
@@ -16,3 +16,5 @@ MonoBehaviour:
   guidancePulseSeconds: 1.2
   idleTickSeconds: 10
   assignmentSeconds: 5
+  speechSpacingSeconds: 8
+  statusIntervalSeconds: 120

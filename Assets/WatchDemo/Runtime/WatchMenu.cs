@@ -155,7 +155,8 @@ namespace LighthouseKeepers.WatchDemo
             status.text = state.Failed ? state.FailureMessage + "\nRetry keeps this day." :
                 state.Complete && !state.HasNextDay ? "ALL WATCHES COMPLETE\nReplay resets the full watch to Day 1." :
                 "DAY " + state.Day + "\nThe watch continues while this menu is open.";
-            if(Book)status.text=state.Failed?(state.HighWaterFailed?"The sea took the tower.\nWe could not hold back the water.":state.BeaconDarkFailed?"The light went dark.\nThe Mary Ellen hit the rocks.":"Dawn came before our work was done.\nThe watch was lost."):state.Complete&&!state.HasNextDay?"The ships made harbor.\nOur watch is done.":"NIGHT "+state.Day+"\nKeep the light. Survive till dawn.";
+            if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
+            else if(Book)status.text=state.Failed?(state.HighWaterFailed?"The sea took the tower.\nWe could not hold back the water.":state.BeaconDarkFailed?"The light went dark.\nThe Mary Ellen hit the rocks.":"Dawn came before our work was done.\nThe watch was lost."):state.Complete&&!state.HasNextDay?"The ships made harbor.\nOur watch is done.":"NIGHT "+state.Day+"\nKeep the light. Survive till dawn.";
             retry.gameObject.SetActive(!state.NetworkRehearsal && state.Failed);
             close.gameObject.SetActive(!Book||!state.Failed);
             replay.gameObject.SetActive(!state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
