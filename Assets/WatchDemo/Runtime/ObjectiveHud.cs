@@ -30,13 +30,13 @@ namespace LighthouseKeepers.WatchDemo
    label=Text("Objective small caps",new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text="O B J E C T I V E";
    icon=Rect(root,"Objective line icon",new Vector2(-240,10),new Vector2(40,42)).gameObject.AddComponent<ObjectiveLineIcon>();icon.color=new Color(.76f,.62f,.36f);icon.material=material;icon.raycastTarget=false;
    cueSound=new GameObject("Soft objective completion").AddComponent<AudioSource>();cueSound.transform.SetParent(transform,false);cueSound.playOnAwake=false;cueSound.volume=.08f;cueSound.clip=Resources.Load<AudioClip>("Hands/clunk");
-   task=Text("Objective task",new Vector2(15,10),new Vector2(470,50),34,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);
+   task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);
    floor=Text("Relative floor",new Vector2(10,-28),new Vector2(470,25),16,new Color(.76f,.7f,.56f));
    partner=Text("Partner job",new Vector2(10,-48),new Vector2(470,20),14,new Color(.76f,.7f,.56f));
    subtitle=Text("Harbor subtitle",new Vector2(0,-72),new Vector2(530,85),19,new Color(.79f,.79f,.72f,.82f));subtitle.fontStyle=FontStyle.Italic;
    strike=Rule("Completed objective strike",new Vector2(15,10),new Vector2(460,1));tick=Rule("Completion tick stem",new Vector2(240,13),new Vector2(12,2));tick.localRotation=Quaternion.Euler(0,0,45);var up=Rule("Completion tick sweep",new Vector2(253,18),new Vector2(24,2));up.SetParent(tick,false);up.anchoredPosition=new Vector2(11,4);up.localRotation=Quaternion.Euler(0,0,90);
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
-   danger=Rule("Danger fill",new Vector2(-220,-110),new Vector2(440,3));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-126),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
+   danger=Rule("Danger fill",new Vector2(-220,-110),new Vector2(440,6));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-126),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
    follow=Quaternion.LookRotation(head.forward,Vector3.up);root.SetPositionAndRotation(head.position+follow*new Vector3(-.28f,.34f,1.6f),follow);Reveal();
   }
   public void Reveal()=>until=Time.unscaledTime+7;

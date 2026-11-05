@@ -6,7 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class ImmersionAtmosphere : MonoBehaviour
     {
         WatchDemoController watch;Transform head;AudioSource wind,events,heartbeat;Light lightning,dawn;HandRig[] hands;
-        AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100;int eventNumber,day;bool waking;bool failed;
+        AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100,nextMasterStrike;int eventNumber,day;bool waking;bool failed;
         public void Initialize(WatchDemoController w,Transform h)
         {
             watch=w;head=h;hands=FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None);
@@ -33,10 +33,12 @@ namespace LighthouseKeepers.WatchDemo
             flashAge+=Time.deltaTime;
             // One broad 1.4-second envelope, never repeated rapidly. No hard flashes or camera shake.
             lightning.intensity=flashAge<1.4f?.35f*Mathf.Sin(flashAge/1.4f*Mathf.PI):0;
-            if(Time.time<nextEvent)return;nextEvent=Time.time+14+(eventNumber%3)*4;
+            int stage=watch.State.Storm?.Stage??1;
+            if(watch.State.Storm!=null&&stage>=3&&Time.time>=nextMasterStrike){nextMasterStrike=Time.time+(stage==4?15:22);flashAge=0;PlayThunder();}
+            if(Time.time<nextEvent)return;nextEvent=Time.time+(watch.State.Storm!=null?Mathf.Lerp(24,8,(stage-1)/3f):14)+(eventNumber%3)*4;
             var clip=eventNumber%4==0?creak:eventNumber%4==1?horn:eventNumber%4==2?drip:thunder;
             events.transform.position=head.position+new Vector3(eventNumber%2==0?3:-3,1.5f,2);
-            if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,.7f);}
+            if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,.5f+.1f*stage);}
             if(eventNumber%4==3){flashAge=0;foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
             eventNumber++;
         }

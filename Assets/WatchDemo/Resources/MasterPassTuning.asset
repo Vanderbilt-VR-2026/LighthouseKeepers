@@ -9,7 +9,7 @@ MonoBehaviour:
   gripOnlyWrench: 1
   friendlyGenerator: 1
   pressureCues: 1
-  stormClock: 0
+  stormClock: 1
   onboarding: 0
   movement: 0
   worldSafety: 0
@@ -18,3 +18,4 @@ MonoBehaviour:
   assignmentSeconds: 5
   speechSpacingSeconds: 8
   statusIntervalSeconds: 120
+  stormRecoverySeconds: 20
