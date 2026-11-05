@@ -35,3 +35,28 @@ B6: House floor-level rock collision disabled; throat floor visual separated 12 
 Current protocol is **LK-S4-MASTER-B6 / v14**. Earlier sections record incremental checkpoints, not the final build. The full initial final-suite run passed 270 EditMode tests. It exposed two obsolete PlayMode expectations: requiring trigger-lock and assuming Night 2 immediately starts powerless. Updated tests retain physical interaction assertions, now require automatic grip snap/free-spin return and advance to the scheduled outage. Four focused PlayMode checks pass, including the previously failing F3 route and new gallery safety check. Full comparison and two-Mac results follow below.
 
 The wrench keeps its steel base material after pickup; only its arrival cue pulses emission. Bunk slate mounts relative to the headboard, waterline marks have physical horizontal stripes, extra guided primer squeezes are silent. Watch Menu/audio-setting captions now use the strings table. Controlled Day 2 fixed-text comparison is 244→121 words (50.4%); this does not claim every legacy dynamic string is migrated. Graphics Nights 1–3 pass; a subsequent Night 1 readability replay passes with zero errors. House arrival and grip-only bolt screenshots were inspected.
+
+## Final two-Mac crew check
+
+Live room **7C8GV4**, region us: both clients joined/readied/entered the Lab, saw the other avatar with own avatar hidden and no remote cameras/listeners. Both reported mono recorder, AEC/noise suppression, DSP and reference enabled. Guest repaired all three bolts using grip-only input; both boards agreed. Both gripped the bunk and advanced into Night 2. Guest returned to lobby and rejoined the active Night 2. Result and events are attached; screenshots were inspected. Driver trace labels still say “host” internally, but the action ran on the secondary **guest** Editor and host/guest snapshots independently confirmed it.
+
+No human listening, Mac+Quest, split-objective positioning or remote pole animation acceptance is claimed by that smoke run. Nearest-job assignment has focused rules coverage; pole interaction has local graphics coverage. The headless/Editor evidence does not establish Quest budgets.
+
+### Device budget status
+
+| Budget | Target | Result |
+|---|---:|---|
+| Refresh | 72 fps sustained | NOT VERIFIED |
+| GPU | ≤11 ms | NOT VERIFIED |
+| CPU main | ≤9 ms | NOT VERIFIED |
+| Draw calls | ~150/eye | NOT VERIFIED |
+| Visible triangles | ≤300k | NOT VERIFIED |
+| Audio voices | ≤24 | NOT VERIFIED on device |
+
+See [ten-step headset checklist](headset-checklist.md), [tuning](tuning.md), and [Next.md](../../../Design/Next.md). Part C was not started.
+
+## Final complete-suite comparison and APK
+
+EditMode **270/270 pass**. PlayMode **37/62 pass, 25 fail**, all 25 already failing in the baseline; **zero new failing tests**. The prior 27 failures dropped by two (authored shell traversal and crew spawn/hand validation); the new safety test passes. Individual failures and before/after names are in `full-suite-final.json` and `suite-comparison.json`. This is not an all-green suite. Some inherited failures still assert legacy scenes or old behavior; they were not disabled.
+
+APK source `66b9351`, successful build, SHA-256 `7b7a358adc8a9d2c9b0d0c9d23ee2d6e0b189e0b731af768fabf05eea1683bae`; see `build-result.json`. No install was performed. Final evidence/docs commits do not change the built gameplay source.

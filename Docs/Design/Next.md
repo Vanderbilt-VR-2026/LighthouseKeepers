@@ -14,9 +14,9 @@ Branch `s4/master`, draft PR #81, based on PR #79 merge `5dc5e56`. Do not merge.
 
 ## Evidence / acceptance limits
 
-Before: `Docs/Verification/S4Master/before/` (262 EditMode passes; 34 PlayMode passes and 27 pre-existing failures; graphics Nights 1–3 and two-Mac crew passed). Current results: `Docs/Verification/S4Master/part-b/`; raw runs `artifacts/s4-master/part-b/verified/`.
+Before: `Docs/Verification/S4Master/before/` (262 EditMode passes; 34 PlayMode passes and 27 pre-existing failures; graphics Nights 1–3 and two-Mac crew passed). Current results: `Docs/Verification/S4Master/part-b/`; raw graphics/network runs `artifacts/s4-master/part-b/verified/`, final suites `artifacts/s4-master/part-b/final-full/`.
 
-Final suite/network/build results are being collected. Graphics Nights 1–3 and the updated Night 1 readability replay pass. Four focused PlayMode checks pass (grip-only both-hand/three-position repair, delayed-outage starter, F3 traversal, gallery safety). Controlled Day 2 fixed-text comparison: 244→121 words, 50.4% reduction; not a whole-game localization audit. Rules-bot timings are **simulated, not human measurements**. Mac voice transport/DSP facts are not listening acceptance.
+Final comparison: EditMode 270/270 passes; PlayMode 37/62 passes, 25 inherited failures, zero new failures (baseline 34/61 with 27 failures); two-Mac join/avatar/mono DSP/guest task/shared bed/rejoin passes; Android build succeeds from `66b9351`. Graphics Nights 1–3 and the updated Night 1 readability replay pass. Four focused PlayMode checks pass (grip-only both-hand/three-position repair, delayed-outage starter, F3 traversal, gallery safety). Controlled Day 2 fixed-text comparison: 244→121 words, 50.4% reduction; not a whole-game localization audit. Rules-bot timings are **simulated, not human measurements**. Mac voice transport/DSP facts are not listening acceptance.
 
 Still needs acceptance or fuller coverage: exhaustive edge walking on every exterior route; all-scene coplanar triangle audit; complete migration of legacy menu/readout strings; composite time/water/beacon status sentence (current request reports the most urgent channel); total first-appearance voice repetition audit. Practical upper-floor pole drops are implemented, not a continuous House-to-lantern shaft.
 
@@ -41,9 +41,9 @@ Unity 6000.3.23f1: `/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Content
 
 ## DEVICE CHECKS PENDING — NOT VERIFIED
 
-Quest is unavailable; builds proceed, installs deliberately skipped.
+Installs are deliberately skipped under this turn’s instruction. ADB detected one Quest near the end of the run; no installation or device test was performed.
 
-- Install latest **Part B** APK (path/hash/source will be in `Docs/Verification/S4Master/part-b/build-result.json`), not the unchanged milestone release.
+- Install latest **Part B** APK (path/hash/source are in `Docs/Verification/S4Master/part-b/build-result.json`), not the unchanged milestone release.
 - GPU ≤11 ms, CPU main ≤9 ms, sustained 72 fps; per-floor/outside/peak storm draws ≤150/eye, visible triangles ≤300k, audio voices ≤24. No device budget claim from Editor.
 - Grip-only wrench snap, clockwise bolt turn/sink, release/regrab, water recovery, both hands; fixed chalk labels readable.
 - First-time Night 1→3: one understandable instruction, generator controls, slates at wake, PA audible on stairs, clear warning/lose/retry and shared sleep.
@@ -52,3 +52,5 @@ Quest is unavailable; builds proceed, installs deliberately skipped.
 - Doorway/wall visibility sweep, head-height bumps, gallery edge safety on device.
 
 ADB path `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb`. Check `devices`, then `-s SERIAL install -r APK`; launch `com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
+
+Latest APK: `Builds/LighthouseKeepers-S4-PartB.apk` (105,637,300 bytes), source `66b9351`, SHA-256 `7b7a358adc8a9d2c9b0d0c9d23ee2d6e0b189e0b731af768fabf05eea1683bae`. Local pre-existing/generated XR-ray width delta in `LK_QuestPlayer.prefab` was preserved separately for the exact-source build and restored afterward; it is not part of this PR.

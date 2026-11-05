@@ -1,0 +1,37 @@
+{
+  "EditMode": {
+    "before": {
+      "total": "262",
+      "passed": "262",
+      "failed": "0",
+      "duration": "15.5471322"
+    },
+    "after": {
+      "total": "270",
+      "passed": "270",
+      "failed": "0",
+      "duration": "14.7948112"
+    },
+    "newFailures": [],
+    "resolvedFailures": []
+  },
+  "PlayMode": {
+    "before": {
+      "total": "61",
+      "passed": "34",
+      "failed": "27",
+      "duration": "667.4583474"
+    },
+    "after": {
+      "total": "62",
+      "passed": "37",
+      "failed": "25",
+      "duration": "690.8225399"
+    },
+    "newFailures": [],
+    "resolvedFailures": [
+      "LighthouseKeepers.Net.Tests.CoopAppearanceTests.BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes",
+      "LighthouseKeepers.Presentation.Environment.Tests.ShellTraversalTests.ExistingRigWalksAuthoredHouseToGalleryRoute"
+    ]
+  }
+}

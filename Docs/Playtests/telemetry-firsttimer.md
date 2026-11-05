@@ -8,9 +8,9 @@ The first simulation exposed a guidance bug: the fuel instruction ended at the m
 |---|---:|---:|---:|---:|
 | 1 | 118 s | 315 s with failure | No failure | Tutorial |
 | 2 | 167 s | 315 s; immediate outage | 315 s; outage at 75 s + 120 s beacon grace | Deliberately generous first generator lesson |
-| 3 solo | 345.2 s | 3118 s | 450 s | 30.4% above modeled task time |
-| 3 crew | Not remeasured here | 330 s | 330 s | Mac-only integration pending |
+| 3 solo | 345.2 s | 390 s | 450 s | 30.4% above modeled task time |
+| 3 crew | Not remeasured here | 330 s | 330 s | Night 1 shared-task/bed/rejoin integration passed; crew Night 3 timing not remeasured |
 
 Night 3's previous 60–90-second spare target is superseded here by the latest request for 30–40% first-timer headroom: the modeled spare is now 104.8 seconds. No flood rise or co-op timer tightening was introduced. Night 2 was not shortened merely to meet the headroom percentage; reducing its working tutorial budget would conflict with the request to stop punishing learners. All changed values are in the existing S4Tuning asset or the new master-pass feature/tutoring tuning asset.
 
-Per-step trace: `artifacts/s4-master/part-b/firsttimer.txt`. Quest reach, travel time, grip usability and human first-timer results remain NOT VERIFIED. The bot does not prove a novice can find every control; the final headset checklist must cover that.
+Per-step trace: `artifacts/s4-master/part-b/firsttimer-final.txt`. Quest reach, travel time, grip usability and human first-timer results remain NOT VERIFIED. The bot does not prove a novice can find every control; the final headset checklist must cover that.
