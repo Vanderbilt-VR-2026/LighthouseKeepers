@@ -37,6 +37,7 @@ namespace LighthouseKeepers.Net
             PrimaryRecorder=go.AddComponent<Recorder>();PrimaryRecorder.RecordingEnabled=false;PrimaryRecorder.TransmitEnabled=false;
             PrimaryRecorder.UserData=channel.LocalActorId;PrimaryRecorder.VoiceDetection=false;
             PrimaryRecorder.StopRecordingWhenPaused=true;PrimaryRecorder.SamplingRate=POpusCodec.Enums.SamplingRate.Sampling48000;PrimaryRecorder.FrameDuration=Photon.Voice.OpusCodec.FrameDuration.Frame20ms;PrimaryRecorder.Bitrate=48000;
+            CrewVoiceProcessing.Configure(PrimaryRecorder);
             go.AddComponent<CrewAudioActivity>().Recorder=PrimaryRecorder;
             base.Start();AddRecorder(PrimaryRecorder);channel.Runner.AddCallbacks(this);
             AutoConnectAndJoin=true;StartCoroutine(ConnectWhenRoomReady());
@@ -75,6 +76,7 @@ namespace LighthouseKeepers.Net
         {
             if(!permission){StartCoroutine(RequestMicrophone());return;}
             Muted=!Muted;ApplyMute();
+            Debug.Log($"CREW_VOICE mute={Muted} recording={PrimaryRecorder.RecordingEnabled} transmit={PrimaryRecorder.TransmitEnabled}");
         }
         void ApplyMute()
         {

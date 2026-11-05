@@ -48,3 +48,7 @@ Six low-poly brass horns replace the belt receiver: House, F1–F4 and exterior 
 PA speech uses 350–3500 Hz filters, +3 dB presence at 2.5 kHz, gentle saturation and peak compression. Opening squelch/click .3 s; closing burst/tail .4 s; faint hiss underneath. Crackle/dropout windows come only from measured pauses, never randomly over instructions. PA source .95 versus old receiver .65 plus Radio bus +1.7 dB gives about +5 dB feed gain. VoiceChat still ducks Radio by 3 dB. Radio activity ducks Music by 9 dB and Ambience by 5 dB (50/600 ms); voice alone retains 7/3 dB. Ambience base −6.5 dB reduces rain by 2.5 dB. These are gain settings, not per-bus playback LUFS measurements.
 
 Music has 20–40 s storm-only rests every 180 s, driven by shared day/time. Crisis always bypasses the rest. Two-second rest fades preserve quiet sections. No Day 3 balance changes.
+
+## Crew echo cancellation
+
+Crew voice uses Photon native mono capture (48 kHz Opus / 48 kbps / 20 ms), with WebRTC AEC and noise suppression ON. Native Android AEC/AGC/NS are off to avoid stacked processing; received-speech gain control is retained. Output remains spatial stereo. The DSP output reference follows the active listener across lobby/Lab changes. See [execution evidence](../Verification/AudioPass/VoiceEcho.md).
