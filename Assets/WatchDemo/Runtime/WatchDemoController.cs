@@ -211,7 +211,7 @@ namespace LighthouseKeepers.WatchDemo
             {boardText.Append("POWER: ").Append(state.Grid.Demand.ToString("0.##")).Append('/').Append(state.Grid.Capacity.ToString("0.##")).Append(state.Grid.Tripped?" — TRIPPED: RESET F2":!state.Grid.EngineRunning?" — ENGINE OFF":" — ");
                 if(!state.Grid.Tripped&&state.Grid.EngineRunning)for(int i=0;i<4;i++)if(state.Grid.Selected((PowerCircuit)i))boardText.Append(((PowerCircuit)i).ToString().ToUpperInvariant()).Append(' ');
                 boardText.Append('\n');}
-            if(state.BeaconGraceRemaining>0&&!state.Failed)boardText.Append("OUTAGE GRACE: ").Append(Mathf.CeilToInt((float)state.BeaconGraceRemaining)).Append(" s — RESTORE POWER\n");
+            if(!state.BeaconShining&&state.BeaconGraceRemaining>0&&!state.Failed)boardText.Append("BEACON GRACE: ").Append(Mathf.CeilToInt((float)state.BeaconGraceRemaining)).Append(state.Power==PowerState.Off?" s — RESTORE POWER\n":" s — LIGHT AND ALIGN F4\n");
             else if(!state.BeaconShining&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append("BEACON DARK: ").Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(" s TO LOSS\n");
             boardText.Append('\n');
             if(state.Failed)boardText.Append(state.FailureMessage).Append(state.Immersion?"\nOpen the logbook to try again.":"\nTrigger to retry this day / Menu for retry or lobby");
