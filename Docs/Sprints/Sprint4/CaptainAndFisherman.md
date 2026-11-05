@@ -2,7 +2,9 @@
 
 The multiplayer view now has two artist-assigned appearance slots. The host-authored roster selects **Captain** for the host and **Fisherman** for guests, including a guest who reconnects with a new actor ID. Role does not depend on the keeper name, roster order, player number or the viewing device being host.
 
-No captain or fisherman artwork is bundled by this change. Empty or invalid model slots retain the existing grey fallback. The slots are on `CrewAvatarView` in `Assets/Prefabs/Network/Resources/PF_PlayerRig.prefab`. Both participants need a build containing the same assigned artwork. No new avatar SDK, role-selection packets or network behaviour are introduced.
+Basic original captain and fisherman models are now bundled and assigned: `Assets/Prefabs/Avatars/PF_BasicCaptain.prefab` and `PF_BasicFisherman.prefab`. The captain wears a navy coat and white peaked cap; the fisherman wears a yellow oilskin coat and hood. They are modular head/coat placeholders, with the existing tracked gloves supplying the hands. They do not include articulated arms, legs or a humanoid skeleton. See [basic model source and checks](../../../../Tools/Avatars/README.md).
+
+Replace the slots on `CrewAvatarView` in `Assets/Prefabs/Network/Resources/PF_PlayerRig.prefab` with your final artwork when ready. Empty or invalid model slots retain the existing grey fallback. Both participants need a build containing the same assigned artwork. No new avatar SDK, role-selection packets or network behaviour are introduced.
 
 ## Tools and places to look
 
@@ -53,5 +55,5 @@ The view retains current nameplates, head/wrist pose application, torso yaw smoo
 
 - Five selected portable NUnit tests passed for host identity independent of player number/order, rejoining guest identity, misleading display names, missing roster entries and empty IDs. These exercise role selection, not Unity rendering or Fusion traffic.
 - C# syntax checks passed on all five changed/new scripts with release and Editor/development symbols; repository hygiene and reference/meta checks passed. Unity API compilation is not established by syntax checking.
-- Actual model creation/selection, prefab assignment, Unity import/rendering, shared-session validation, APK building and Quest profiling remain pending. The official Unity Editor download endpoint remains blocked in this machine.
+- Basic model creation, default prefab assignment and an offline Blender preview are complete; the final artist models are still to be selected/created. Unity import/rendering, shared-session validation, APK building and Quest profiling remain pending. The official Unity Editor download endpoint remains blocked in this machine. Blender preview lighting does not establish Unity/Quest appearance.
 - After assigning models, test turning, leaning, crouching, close hand interactions, coat/head intersection, local visibility, both eyes, guest rejoin, swapped hosting roles and target-headset performance. For a full humanoid, additionally verify its Animator/IK/locomotion integration rather than assuming auto-rigging provides it.
