@@ -1,0 +1,133 @@
+{
+  "EditMode": {
+    "source": "5dc5e567d8e64f154e2ff294a82886080801cecb",
+    "exit": 0,
+    "counts": {
+      "total": "262",
+      "passed": "262",
+      "failed": "0",
+      "duration": "15.5471322"
+    },
+    "failures": []
+  },
+  "PlayMode": {
+    "source": "5dc5e567d8e64f154e2ff294a82886080801cecb",
+    "exit": 2,
+    "counts": {
+      "total": "61",
+      "passed": "34",
+      "failed": "27",
+      "duration": "667.4583474"
+    },
+    "failures": [
+      {
+        "name": "LighthouseKeepers.Presentation.Environment.Tests.EnvironmentPresentationTests.LabUsesOnePlayerAndLightingUpdatesAllocateNoManagedMemory",
+        "message": "  Expected: in range (0.22,0.462)\n  But was:  1.0f\n"
+      },
+      {
+        "name": "LighthouseKeepers.Presentation.Environment.Tests.ShellTraversalTests.ExistingRigWalksAuthoredHouseToGalleryRoute",
+        "message": "RT-F3-TRANSFER stuck at (1.40, 6.61, -0.96) targeting (1.40, 6.60, 0.00)"
+      },
+      {
+        "name": "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.RepairFirstWaitsForPowerAndThreeRealPullsRestorePump",
+        "message": "  Expected: 1\n  But was:  0\n"
+      },
+      {
+        "name": "LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests.GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead",
+        "message": "  Physical wrist twist must advance the active coupling\n  Expected: 1\n  But was:  0\n"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.CoopAppearanceTests.BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes",
+        "message": "Unhandled log message: '[Error] Coroutine couldn't be started because the the game object 'Grab wrench \u2014 grip to hold' is inactive!'. Use UnityEngine.TestTools.LogAssert.Expect"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.RadioHintsWaitNinetySecondsStayQuietAtStationsAndPlayOnce",
+        "message": "  Hint while already at the generator\n  Expected: 1\n  But was:  2\n"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults",
+        "message": "  Expected: 72.0d +/- 0.01d\n  But was:  96.000001430511475d\n"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss",
+        "message": "  Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.FailedRetryButtonKeepsDayAndClearsPartialWork",
+        "message": "  Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TerminalReplayButtonResetsToDayOneWithoutMovingTrackedTransforms",
+        "message": "  Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TrackedRaysReachReplayRetryAndReturnWithNearbyWall",
+        "message": "System.NullReferenceException : Object reference not set to an instance of an object"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast",
+        "message": "  Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority",
+        "message": "Unhandled log message: '[Error] Scene 'LK_Bootstrap' couldn't be loaded because it has not been added to the active build profile or shared scene list or the AssetBundle has not been loaded.\nTo add a scene to the active build profile or shared scene list use the menu File->Build Profiles'. Use UnityEngine.TestTools.LogAssert.Expect"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir",
+        "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps",
+        "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops",
+        "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond",
+        "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings",
+        "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections",
+        "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate",
+        "message": "SetUp :   Expected: True\n  But was:  False\n"
+      }
+    ]
+  }
+}
