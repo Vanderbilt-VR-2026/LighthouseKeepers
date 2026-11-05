@@ -98,7 +98,9 @@ namespace LighthouseKeepers.WatchDemo
                 var pivot = pipe.SocketPosition(bolt);
                 var normal = pipe.bolts[bolt].forward;
                 var radial = Vector3.ProjectOnPlane(tracked.position - pivot, normal);
-                if (radial.sqrMagnitude > .0016f)
+                // Controller-to-palm offsets can put the tracked origin inside four centimetres.
+                // Only the singular centre needs a dead zone; otherwise follow the arm.
+                if (radial.sqrMagnitude > .0001f)
                     seatedRotation = Quaternion.LookRotation(-radial.normalized, leverNormal);
                 targetPose.rotation = seatedRotation;
                 targetPose.position = pivot - seatedRotation * Vector3.Scale(jawLocal, localScale);

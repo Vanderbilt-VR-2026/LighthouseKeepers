@@ -116,11 +116,11 @@ namespace LighthouseKeepers.WatchDemo
             }
             shownBedState=bedState;
             for(int i=0;i<stair.Count;i++)
-            {bool fault=i==0?!s.Repaired:i==1?s.Power==PowerState.Off:i==3?!s.BeaconShining||!s.IsDone(WatchState.RadioStation):false;stair[i].intensity=fault?pulse:.18f;}
+            {bool fault=i==0?!s.Repaired:i==1?s.Power==PowerState.Off:i==3?!s.BeaconShining||!s.IsDone(WatchState.RadioStation):false;if(s.Director!=null)fault=ObjectiveDirector.Floor(watch.CurrentInstruction)==i+1||watch.PartnerInstruction!=KeeperStep.None&&ObjectiveDirector.Floor(watch.PartnerInstruction)==i+1;stair[i].intensity=fault?pulse:.18f;}
             for(int i=0;i<station.Count;i++)
             {
                 bool fault=i==0?s.Power==PowerState.Off:i==1?!s.IsDone(WatchState.RadioStation):!s.BeaconShining;
-                station[i].intensity=fault?pulse:.25f;
+                if(s.Director!=null){string job=i==0?WatchState.GeneratorStation:i==1?WatchState.RadioStation:WatchState.BeaconStation;station[i].intensity=ObjectiveDirector.Job(watch.CurrentInstruction)==job||ObjectiveDirector.Job(watch.PartnerInstruction)==job?pulse:0;}else station[i].intensity=fault?pulse:.25f;
                 var a=faultAudio[i];if(!a.clip)continue;
                 if(i==0){if(fault&&!s.Failed&&Time.time>=nextCough){a.Play();nextCough=Time.time+9;}continue;}
                 if(fault&&!s.Failed){if(!a.isPlaying)a.Play();}else if(a.isPlaying)a.Stop();

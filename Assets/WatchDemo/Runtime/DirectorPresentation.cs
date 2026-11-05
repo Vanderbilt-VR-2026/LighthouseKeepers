@@ -20,7 +20,7 @@ namespace LighthouseKeepers.WatchDemo
             material=new Material(pipe.indicators[0].sharedMaterial){name="Director control lamp"};material.EnableKeyword("_EMISSION");block=new MaterialPropertyBlock();
             Add(KeeperStep.GrabWrench,pipe.wrench.transform);
             for(int i=0;i<3;i++)Add((KeeperStep)((int)KeeperStep.BoltA+i),pipe.bolts[i]);
-            Add(KeeperStep.Fuel,engine.FuelCan.transform);FittingFor(engine.Filler);Add(KeeperStep.Prime,engine.Primer.transform);Add(KeeperStep.CloseChoke,engine.Choke.transform);Add(KeeperStep.OpenChoke,engine.Choke.transform);Add(KeeperStep.Starter,FindAnyObjectByType<WatchGenerator>().Starter.transform);
+            Add(KeeperStep.CheckFuel,engine.Filler);Add(KeeperStep.Fuel,engine.FuelCan.transform);FittingFor(engine.Filler);Add(KeeperStep.Prime,engine.Primer.transform);Add(KeeperStep.CloseChoke,engine.Choke.transform);Add(KeeperStep.OpenChoke,engine.Choke.transform);Add(KeeperStep.Starter,FindAnyObjectByType<WatchGenerator>().Starter.transform);
             for(int i=0;i<4;i++){Add((KeeperStep)((int)KeeperStep.PumpOff+i),panel.Control(i).transform);Add((KeeperStep)((int)KeeperStep.PumpOn+i),panel.Control(i).transform);}
             Add(KeeperStep.ResetBreaker,panel.ResetControl.transform);
             foreach(var control in radio.controls){if(control.mainPower)Add(KeeperStep.RadioPower,control.transform);if(control.frequency)Add(KeeperStep.RadioTune,control.transform);}

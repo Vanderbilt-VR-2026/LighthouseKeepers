@@ -10,7 +10,7 @@ MonoBehaviour:
   friendlyGenerator: 1
   pressureCues: 1
   stormClock: 1
-  onboarding: 0
+  onboarding: 1
   movement: 0
   worldSafety: 0
   guidancePulseSeconds: 1.2
@@ -19,3 +19,8 @@ MonoBehaviour:
   speechSpacingSeconds: 8
   statusIntervalSeconds: 120
   stormRecoverySeconds: 20
+  nightTwoOutageSeconds: 75
+  firstGeneratorGraceSeconds: 120
+  tutorialFloodCap: 0.28
+  gateTimeoutSeconds: 30
+  guidedFuelTarget: 0.65

@@ -51,7 +51,7 @@ namespace LighthouseKeepers.Net.Tests
   }
   [Test]public void SoloAndCrewHaveSeparateBudgetsAndGuestCannotAdvanceStages()
   {
-   var solo=New();var host=New(3,true);Assert.AreEqual(390,Get<double>(solo,"Duration"));Assert.AreEqual(330,Get<double>(host,"Duration"));Assert.AreEqual(.65f,Get<float>(solo,"FloodRiseMultiplier"));Assert.AreEqual(.85f,Get<float>(host,"FloodRiseMultiplier"));
+   var solo=New();var host=New(3,true);Assert.AreEqual(435,Get<double>(solo,"Duration"));Assert.AreEqual(330,Get<double>(host,"Duration"));Assert.AreEqual(.65f,Get<float>(solo,"FloodRiseMultiplier"));Assert.AreEqual(.85f,Get<float>(host,"FloodRiseMultiplier"));
    var guest=New();Call(guest,"SetRemoteReplica",true);Tick(host,80);var snap=Call(host,"Capture",.2f);Assert.True((bool)Call(guest,"ApplyRemote",snap));Assert.AreEqual(Get<int>(host,"Day3Stage"),Get<int>(guest,"Day3Stage"));Assert.AreEqual(Get<double>(host,"Duration"),Get<double>(guest,"Duration"));Assert.AreEqual(Get<double>(host,"BeaconGraceRemaining"),Get<double>(guest,"BeaconGraceRemaining"));
    Tick(guest,100);Call(guest,"CompleteRepair");Call(guest,"Retry");Assert.AreEqual(80,Get<double>(guest,"Elapsed"));Assert.False(Get<bool>(guest,"Repaired"));
    StartEngine(host);Assert.True((bool)Call(guest,"ApplyRemote",Call(host,"Capture",.2f)));Assert.AreEqual(3,Get<int>(guest,"Day3Stage"));Assert.AreEqual(Get<int>(host,"ObjectiveIndex"),Get<int>(guest,"ObjectiveIndex"));

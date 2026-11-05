@@ -19,6 +19,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
         Transform head,wrench;WatchPipeRepair pipe;readonly Queue<int> pending=new();
+        bool gripTaught;string announcedJob;
         int dangerMask,priorTasks;float nextStatus;
         int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
         readonly HashSet<int> spoken=new();
@@ -72,9 +73,8 @@ namespace LighthouseKeepers.WatchDemo
             if(day!=s.Day)
             {
                 day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();spoken.Clear();firstBolt=complete=failed=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
-                Enqueue(day==1?1:day==2?13:day==3?14:15);
-                if(day==1)Enqueue(2);
-                if(day==2)Enqueue(4);
+                if(s.Master&&s.Master.onboarding){announcedJob=null;if(day==1){Enqueue(1);Enqueue(34);Enqueue(35);}else Enqueue(37);}
+                else {Enqueue(day==1?1:day==2?13:day==3?14:15);if(day==1)Enqueue(2);if(day==2)Enqueue(4);}
             }
             if(s.Failed)
             {
@@ -82,9 +82,14 @@ namespace LighthouseKeepers.WatchDemo
                 var loss=catalog?catalog.Line(18):null;if(!loss||Age>loss.length+Extra+.2f)StopStatic();return;
             }
             if(s.PressureEnabled)PressureCues();
+            if(s.Director!=null&&s.Master.onboarding){
+                var jobName=ObjectiveDirector.Job(s.Director.First);
+                if(announcedJob!=jobName){if(announcedJob!=null){if(announcedJob==WatchState.PipeStation&&s.Repaired)Enqueue(36);Enqueue(jobName==WatchState.GeneratorStation?38:jobName==WatchState.RadioStation?39:jobName==WatchState.BeaconStation?40:jobName=="BREAKER"?41:jobName=="BED"?42:37);}announcedJob=jobName;}
+                if(watch.WrenchHeld&&!gripTaught){gripTaught=true;Enqueue(33);}
+            }
             int current=Progress(),job=CurrentJob();if(current!=progress||job!=lastJob){progress=current;lastJob=job;idle=0;}else idle+=Time.deltaTime;
             bool holding=watch.WrenchHeld;
-            if(day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
+            if(!(s.Master&&s.Master.onboarding)&&day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
             if(s.Complete&&!complete){complete=true;Enqueue(s.HasNextDay?5:17);}
             if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!holding&&!AtStation(job))
                 Enqueue(job);
@@ -96,6 +101,7 @@ namespace LighthouseKeepers.WatchDemo
         bool Relevant(int id)
         {
             var s=watch.State;
+            if(id>=37&&id<=42){var job=watch.State.Director?.First??KeeperStep.None;return id==(ObjectiveDirector.Job(job)==WatchState.PipeStation?37:ObjectiveDirector.Job(job)==WatchState.GeneratorStation?38:ObjectiveDirector.Job(job)==WatchState.RadioStation?39:ObjectiveDirector.Job(job)==WatchState.BeaconStation?40:ObjectiveDirector.Job(job)=="BREAKER"?41:42);}
             if(id>=7&&id<=12&&(watch.WrenchHeld||AtStation(id)||idle<90||id!=CurrentJob()))return false;
             if(id==2)return !watch.WrenchHeld&&!s.Repaired;
             if(id==3||id==7)return !s.Repaired;

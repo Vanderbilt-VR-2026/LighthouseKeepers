@@ -3,7 +3,7 @@ using UnityEngine;
 using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo
 {
-    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost }
+    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel }
     // Sole instruction policy. The host assigns jobs; presentation never invents a next action.
     public sealed class ObjectiveDirector
     {
@@ -18,7 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         public ObjectiveDirector(WatchState owner){state=owner;}
         public KeeperStep ForActor(int actor)=>actorB!=0&&actor==actorB?Second:First;
         public KeeperStep Partner(int actor)=>actorB==0?KeeperStep.None:actor==actorB?First:Second;
-        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.Lost;
+        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.CheckFuel;
         public void Apply(int first,int second,int a,int b)
         {if(!state.ReadOnly)return;First=(KeeperStep)first;Second=(KeeperStep)second;actorA=a;actorB=b;}
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=0;jobA=jobB=-1;assignmentUntil=0;}
@@ -39,7 +39,7 @@ namespace LighthouseKeepers.WatchDemo
                 }
                 jobA=a;jobB=b;assignmentUntil=now+state.Master.assignmentSeconds;
             }
-            First=Step(jobA,wrenchHeld);Second=actorB!=0?Step(jobB,wrenchHeld):KeeperStep.None;
+            First=jobA<0&&state.GeneratorTutorial&&!state.NightTwoOutage?KeeperStep.CheckFuel:Step(jobA,wrenchHeld);Second=actorB!=0?Step(jobB,wrenchHeld):KeeperStep.None;
         }
         bool Available(int i)=>i>=0&&i<state.Definition.tasks.Length&&!state.IsDone(state.Definition.tasks[i].stationId)&&!state.IsPending(state.Definition.tasks[i].stationId)&&(state.Power==PowerState.On||state.Definition.tasks[i].stationId==WatchState.PipeStation||state.Definition.tasks[i].stationId==WatchState.GeneratorStation);
         float Cost(int i,Vector3 head)
@@ -57,7 +57,7 @@ namespace LighthouseKeepers.WatchDemo
             var e=state.Engine;
             if(e==null)return KeeperStep.Starter;
             if(e.Running)return e.ChokeClosed?KeeperStep.OpenChoke:KeeperStep.None;
-            if(!e.EnoughFuel)return KeeperStep.Fuel;
+            if(!e.EnoughFuel||state.Master.onboarding&&e.Fuel<state.Master.guidedFuelTarget)return KeeperStep.Fuel;
             if(!e.Primed)return KeeperStep.Prime;
             if(!e.ChokeClosed)return KeeperStep.CloseChoke;
             return KeeperStep.Starter;
@@ -92,7 +92,7 @@ namespace LighthouseKeepers.WatchDemo
         public static string Job(KeeperStep step)
         {
             if(step>=KeeperStep.GrabWrench&&step<=KeeperStep.BoltC)return WatchState.PipeStation;
-            if(step>=KeeperStep.Fuel&&step<=KeeperStep.OpenChoke)return WatchState.GeneratorStation;
+            if(step==KeeperStep.CheckFuel||step>=KeeperStep.Fuel&&step<=KeeperStep.OpenChoke)return WatchState.GeneratorStation;
             if(step>=KeeperStep.PumpOff&&step<=KeeperStep.ResetBreaker)return "BREAKER";
             if(step>=KeeperStep.RadioPower&&step<=KeeperStep.RadioTransmit)return WatchState.RadioStation;
             if(step>=KeeperStep.BeaconLight&&step<=KeeperStep.BeaconWipe)return WatchState.BeaconStation;

@@ -58,7 +58,7 @@ namespace LighthouseKeepers.WatchDemo
    float dips=1;var pauses=catalog.Pauses(line);float speech=age-.3f;
    if(Mathf.Abs(speech-pauses.x)<.035f||(variant%2==0&&Mathf.Abs(speech-pauses.y)<.035f)){dips=.6f;hiss+=.018f;}
    int room=head.position.z< -10.3f||new Vector2(head.position.x,head.position.z).magnitude>13?5:head.position.z< -4.3f?0:head.position.y<3.4f?1:head.position.y<6.7f?2:head.position.y<10?3:4;
-   for(int i=0;i<voice.Length;i++){float target=i==room?1:.08f;roomGains[i]=Mathf.MoveTowards(roomGains[i],target,Time.deltaTime*3);voice[i].volume=.95f*dips*roomGains[i];}foreach(var s in noise)s.volume=hiss;
+   for(int i=0;i<voice.Length;i++){float transition=Mathf.Abs(head.position.y/3.3f-Mathf.Round(head.position.y/3.3f));bool stairBlend=head.position.z> -4.3f&&transition<.18f;float target=i==room?1:stairBlend&&i>0&&i<5&&Mathf.Abs(i-room)==1?.45f:.08f;roomGains[i]=Mathf.MoveTowards(roomGains[i],target,Time.deltaTime*3);voice[i].volume=.95f*dips*roomGains[i];}foreach(var s in noise)s.volume=hiss;
    if(age>end+.4f)Stop();
   }
   static Mesh Horn()

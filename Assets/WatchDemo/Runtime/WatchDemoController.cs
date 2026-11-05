@@ -98,6 +98,7 @@ namespace LighthouseKeepers.WatchDemo
             InitializeDirector();
             if(state.PressureEnabled)PressurePresentation.Create(this,head);
             if(state.Storm!=null)StormPresentation.Create(this);
+            if(state.Master&&state.Master.onboarding)OnboardingPresentation.Create(this,head,bed,pipeRepair);
             ObjectiveHud.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text="NETWORK PRACTICE · OBJECTIVES PAUSED";}
             if(state.RemoteReplica){flood.Paused=true;clock.text="WAITING FOR HOST STATE";}
@@ -137,6 +138,7 @@ namespace LighthouseKeepers.WatchDemo
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
             bool grip=lg||rg,trigger=lt||rt;
             state.Tick(Time.deltaTime);
+            if(state.Tutorial&&flood.Height>state.Master.tutorialFloodCap)flood.SetHeight(state.Master.tutorialFloodCap);
             state.ObserveWater(Time.deltaTime,flood.Height);
             int second=(int)state.Elapsed;if(second!=shownSecond){shownSecond=second;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=state.Failed?state.FailureMessage+"\nTRIGGER TO RETRY":$"D{state.Day}   {remaining/60:00}:{remaining%60:00}   {state.CompletedTasks}/{state.Definition.tasks.Length} TASKS";RefreshBoard();}
             bool nearBed=Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)<1.8f;
