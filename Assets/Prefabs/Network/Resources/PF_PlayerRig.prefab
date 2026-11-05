@@ -66,6 +66,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewAvatarView
   leftHandVisual: {fileID: 0}
   rightHandVisual: {fileID: 0}
+  captainModel: {fileID: 0}
+  fishermanModel: {fileID: 0}
   oilskinMaterial: {fileID: 0}
   LeftPoseChanged:
     m_PersistentCalls:
