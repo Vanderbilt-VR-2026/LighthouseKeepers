@@ -42,6 +42,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchBeaconStation beaconStation;
         int sleepDay,bedMask;
         ImmersionWorld immersionWorld;
+        AdaptiveMusic adaptiveMusic;
         ImmersionLogbook logbook;
         public bool WrenchHeld=>wrench.isSelected||coop?.RemoteHeld(wrench)==true;
         public void SetBedMask(int value){bedMask=value;if(immersionWorld)immersionWorld.SetBeds(value);}
@@ -51,7 +52,7 @@ namespace LighthouseKeepers.WatchDemo
         public string CaptureState()
         {
             var value=state.Capture(flood.Height);value.revision=Revision;value.sleeping=sleeping;value.fade=currentFade;
-            value.beds=crewBeds;value.keepers=crewKeepers;value.notice=crewNotice;value.sleepDay=sleepDay;value.bedMask=bedMask;if(immersionWorld&&immersionWorld.Narrator)immersionWorld.Narrator.Capture(value);return JsonUtility.ToJson(value);
+            value.beds=crewBeds;value.keepers=crewKeepers;value.notice=crewNotice;value.sleepDay=sleepDay;value.bedMask=bedMask;if(immersionWorld&&immersionWorld.Narrator)immersionWorld.Narrator.Capture(value);if(adaptiveMusic)adaptiveMusic.Capture(value);return JsonUtility.ToJson(value);
         }
         public bool ApplyState(string json)=>ApplyHostSnapshot(JsonUtility.FromJson<WatchSnapshot>(json));
         public string DescribeState()=>$"day={state.Day} elapsed={state.Elapsed:F2} water={flood.Height:F4} power={state.Power} tasks={state.CompletedTasks}";
@@ -65,6 +66,7 @@ namespace LighthouseKeepers.WatchDemo
             {poweredLeakRiseMPerSecond=state.Tuning.poweredRiseMPerSecond;unpoweredLeakRiseMPerSecond=state.Tuning.unpoweredRiseMPerSecond;repairedDrainMPerSecond=state.Tuning.drainMPerSecond;}
             coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);state.Coop=coop;
             state.Changed += StateChanged;
+            adaptiveMusic=AdaptiveMusic.Create(this);
             if (generator) generator.Bind(state);
             if(emergencyLighting)emergencyLighting.Bind(state);
             if(radio)radio.Bind(state);
@@ -172,6 +174,7 @@ namespace LighthouseKeepers.WatchDemo
             {Revision=snapshot.revision;if(generator)generator.ResetInteraction();
             if(engineControls&&!state.RemoteReplica)engineControls.ResetProps();
             if(beaconStation&&!state.RemoteReplica)beaconStation.ResetProps();if(pipeRepair)pipeRepair.ResetView();if(radio)radio.ResetReplicaInteraction();whoosh.Play();if(menu)menu.Close();}
+            if(adaptiveMusic)adaptiveMusic.Apply(snapshot);
             SetBedMask(snapshot.bedMask);if(immersionWorld&&immersionWorld.Narrator)immersionWorld.Narrator.Apply(snapshot);
             sleeping=snapshot.sleeping;sleepDay=snapshot.sleepDay;replicaFadeTarget=snapshot.fade;
             if(s4Presentation)s4Presentation.Night(sleeping,sleepDay,snapshot.fade);
@@ -220,7 +223,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(state.Tuning&&state.Tuning.nightSequence)
             {
-                sleeping=true;sleepDay=state.Day;bedPrompt.text="";
+                sleeping=true;if(adaptiveMusic)adaptiveMusic.Survived();sleepDay=state.Day;bedPrompt.text="";
                 var tuning=state.Tuning;
                 for(float t=0;t<tuning.fadeOutSeconds;t+=Time.deltaTime){SetFade(t/tuning.fadeOutSeconds);yield return null;}SetFade(1);
                 yield return new WaitForSeconds(tuning.nightHoldSeconds);
@@ -228,7 +231,7 @@ namespace LighthouseKeepers.WatchDemo
                 for(float t=0;t<tuning.fadeInSeconds;t+=Time.deltaTime){SetFade(1-t/tuning.fadeInSeconds);yield return null;}
                 sleeping=false;sleepDay=0;SetFade(0);yield break;
             }
-            sleeping=true;bedPrompt.text="";
+            sleeping=true;if(adaptiveMusic)adaptiveMusic.Survived();bedPrompt.text="";
             for(float t=0;t<1;t+=Time.deltaTime){SetFade(t);yield return null;}SetFade(1);
             yield return new WaitForSeconds(.2f);state.Sleep();BeginWatch();
             for(float t=0;t<.8f;t+=Time.deltaTime){SetFade(1-t/.8f);yield return null;}SetFade(0);sleeping=false;

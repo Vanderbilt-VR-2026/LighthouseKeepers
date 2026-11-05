@@ -31,3 +31,7 @@ The user reduced subsequent verification to focused phase tests plus one quick s
 ## Phase 2 — recorded radio
 
 17 selected single takes replace TTS with existing GUIDs preserved. Focused clip test passed: 17 mono 44.1 kHz clips, each 1–10 seconds. Offline measurements: two-pass normalization about −18 LUFS; every true peak ≤ −1 dBTP. All three alternatives per line remain gitignored. Chosen takes, reasons, lengths, loudness and switching instructions are in `Docs/Design/RadioLines.md` and `Tools/S4/radio_takes.json`. The importer rejects ≥10-second multi-take inputs. Quick solo Night 1 passed, zero captured errors (`artifacts/audio-pass/phase2/solo/`).
+
+## Phase 3 — music and short stings
+
+Prepared three whole-bar streaming Vorbis loops and three 3.5-second stings. Crisis starts at 82.477 s; alternate sting candidates remain gitignored. Beat grid and chosen cuts: `Docs/Design/Music.md`. Focused tests cover clip presence/streaming, danger selection, short stings and invalid replicated music state. Quick Night 1 passed with zero captured errors. The host chooses mode/transition epoch; guests consume it from snapshot v6. Lobby network version is now `LK-S4-M3-AUDIO1`; earlier APKs cannot join this version. No Day 3 gameplay or difficulty values changed.
