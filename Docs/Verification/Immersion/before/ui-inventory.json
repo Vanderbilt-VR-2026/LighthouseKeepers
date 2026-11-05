@@ -1,0 +1,659 @@
+[
+  {
+    "path": "Watch demo/Watch action menu",
+    "kind": "Canvas",
+    "active": false,
+    "text": "",
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  {
+    "path": "Watch demo/Watch action menu/RetryWatchDay/Label",
+    "kind": "Text",
+    "active": false,
+    "text": "RETRY THIS DAY",
+    "x": 0.0,
+    "y": 0.0150000006,
+    "z": 0.0
+  },
+  {
+    "path": "Watch demo/Watch action menu/CloseWatchMenu/Label",
+    "kind": "Text",
+    "active": false,
+    "text": "CLOSE MENU",
+    "x": 0.0,
+    "y": -0.225000009,
+    "z": 0.0
+  },
+  {
+    "path": "Watch demo/Watch action menu/Title",
+    "kind": "Text",
+    "active": false,
+    "text": "KEEPER WATCH",
+    "x": 0.0,
+    "y": 0.255,
+    "z": 0.0
+  },
+  {
+    "path": "Watch demo/Watch action menu/ToggleCrewMicrophone/Label",
+    "kind": "Text",
+    "active": false,
+    "text": "MIC ON \u00b7 Joined",
+    "x": 0.0,
+    "y": -0.3375,
+    "z": 0.0
+  },
+  {
+    "path": "Watch demo/Watch action menu/ReplayWatchFromDayOne/Label",
+    "kind": "Text",
+    "active": false,
+    "text": "REPLAY FROM DAY 1",
+    "x": 0.0,
+    "y": 0.0150000006,
+    "z": 0.0
+  },
+  {
+    "path": "Watch demo/Watch action menu/Status",
+    "kind": "Text",
+    "active": false,
+    "text": "",
+    "x": 0.0,
+    "y": 0.15,
+    "z": 0.0
+  },
+  {
+    "path": "PF_PlayerRig(Clone)/Keeper appearance/Keeper name",
+    "kind": "TextMeshPro",
+    "active": false,
+    "text": null,
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  {
+    "path": "PF_PlayerRig(Clone)/Keeper appearance/Keeper name",
+    "kind": "TextMeshPro",
+    "active": true,
+    "text": "Keeper",
+    "x": -0.5225662,
+    "y": 1.533369,
+    "z": -7.44852161
+  },
+  {
+    "path": "Watch demo/Watch action menu/ReturnWatchToLobby/Label",
+    "kind": "Text",
+    "active": false,
+    "text": "RETURN TO LOBBY",
+    "x": 0.0,
+    "y": -0.105000004,
+    "z": 0.0
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/DIESEL inscription/Inscription",
+    "kind": "TextMeshPro",
+    "active": true,
+    "text": "DIESEL",
+    "x": 0.398006856,
+    "y": 4.4,
+    "z": 2.83767939
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/Primer label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "PRIMER\nGRIP + TRIGGER",
+    "x": 0.281382263,
+    "y": 4.18,
+    "z": 2.59561586
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/FUEL",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "FUEL",
+    "x": 0.306570768,
+    "y": 4.7,
+    "z": 2.65098333
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Circuit label 0",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "PUMP",
+    "x": 2.70556355,
+    "y": 4.67,
+    "z": 1.873827
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Band scale 3",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "157.5",
+    "x": -0.01000005,
+    "y": 11.3189993,
+    "z": 2.1009
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Radio header",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "KEEPER COASTAL  /  STORM TRANSMITTER",
+    "x": -0.5,
+    "y": 11.606,
+    "z": 2.131
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/Fuel level",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "FUEL 100%",
+    "x": 0.06855667,
+    "y": 4.54,
+    "z": 2.9218142
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Main label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "MAIN\nPOWER",
+    "x": 0.137000024,
+    "y": 11.1439991,
+    "z": 2.12399983
+  },
+  {
+    "path": "Existing player \u2014 unmodified source prefab/Camera Offset/Main Camera/Watch camera HUD/Watch readout",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "D1   01:26   0/1 TASKS",
+    "x": -0.7135285,
+    "y": 1.38999987,
+    "z": -8.269529
+  },
+  {
+    "path": "Existing player \u2014 unmodified source prefab/Camera Offset/Main Camera/Local crew debug readout",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "us | 3DAALN | 2/2 keepers\nMac Host / Keeper",
+    "x": -0.72388804,
+    "y": 1.3499999,
+    "z": -8.318444
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Mic label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "MIC / HOLD TRIGGER",
+    "x": -1.046,
+    "y": 10.549,
+    "z": 2.124
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Lock label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "LOCK",
+    "x": -0.703,
+    "y": 11.5604992,
+    "z": 2.124
+  },
+  {
+    "path": "Shell F4/STN_BEACON_CONTROL/S4 beacon station/Wheel label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "2 ALIGN",
+    "x": 1.74274623,
+    "y": 10.8099995,
+    "z": 1.72178245
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Code label 0",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "RED",
+    "x": -0.752000034,
+    "y": 10.8849993,
+    "z": 2.124
+  },
+  {
+    "path": "STN_PIPE_REPAIR/Coupling B/Coupling marker",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "B",
+    "x": 0.68,
+    "y": 1.0548507,
+    "z": -0.0994028449
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/3 CODE",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "3 CODE",
+    "x": -0.311,
+    "y": 11.7599993,
+    "z": 2.11559987
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Radio readout",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "1  FLIP MAIN POWER",
+    "x": -0.864,
+    "y": 11.186,
+    "z": 2.1023
+  },
+  {
+    "path": "Powered lighthouse beacon/Lens wipe label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "WIPE PRISM RINGS",
+    "x": 0.0,
+    "y": 10.62,
+    "z": 0.46
+  },
+  {
+    "path": "Shell F4/STN_BEACON_CONTROL/S4 beacon station/Beacon heading",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "BEACON CONTROL",
+    "x": 1.64527225,
+    "y": 11.5499992,
+    "z": 1.82665765
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Service meter 0",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "VOLTS\n220",
+    "x": -0.612,
+    "y": 10.745,
+    "z": 2.0911
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/TX label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "TX",
+    "x": -1.004,
+    "y": 11.5604992,
+    "z": 2.124
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/2 TUNE",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "2 TUNE",
+    "x": -0.689,
+    "y": 11.7599993,
+    "z": 2.11559987
+  },
+  {
+    "path": "CodeSource/Solo call card",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "SOLO CALL CODE\nRED > BLUE > AMBER > GREEN",
+    "x": -0.5,
+    "y": 10.4509993,
+    "z": 2.061
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Band scale 2",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "157.0",
+    "x": -0.164000034,
+    "y": 11.3189993,
+    "z": 2.1009
+  },
+  {
+    "path": "Shell F4/STN_BEACON_CONTROL/S4 beacon station/Ignition label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "1 LIGHT IT",
+    "x": 1.42901266,
+    "y": 10.95,
+    "z": 1.95366871
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Circuit label 3",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "LIGHTS",
+    "x": 2.97556353,
+    "y": 4.67,
+    "z": 1.40617311
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/Choke label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "CHOKE\nCLOSED / OPEN",
+    "x": 1.054123,
+    "y": 4.18,
+    "z": 2.38856053
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Service meter 1",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "SIGNAL\nREADY",
+    "x": -0.85,
+    "y": 10.745,
+    "z": 2.0911
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Meter scale 1",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "-20  -10  0  +3\nOUTPUT",
+    "x": -1.06699991,
+    "y": 11.438,
+    "z": 2.1058
+  },
+  {
+    "path": "Watch demo/Repair feedback",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "",
+    "x": 0.8,
+    "y": 1.43,
+    "z": -0.08
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Meter legend",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "LOAD         OVER",
+    "x": 2.81458259,
+    "y": 4.89,
+    "z": 1.625
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/CHOKE",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "CHOKE",
+    "x": 0.8088522,
+    "y": 4.7,
+    "z": 2.51639748
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/FUEL_CAN/Fuel can label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "FUEL",
+    "x": -0.142271638,
+    "y": 3.54,
+    "z": 3.41001558
+  },
+  {
+    "path": "STN_PIPE_REPAIR/Coupling A/Coupling marker",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "A",
+    "x": -0.24,
+    "y": 0.82,
+    "z": -0.049999997
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/4 TRANSMIT",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "4 TRANSMIT",
+    "x": 0.06700003,
+    "y": 11.7599993,
+    "z": 2.11559987
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/Starter pull label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "4 STARTER\nGRIP + PULL",
+    "x": 0.5987508,
+    "y": 4.27999973,
+    "z": 2.42775536
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Band scale 4",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "158.0",
+    "x": 0.144,
+    "y": 11.3189993,
+    "z": 2.1009
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Band scale 1",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "156.5",
+    "x": -0.318000019,
+    "y": 11.3189993,
+    "z": 2.1009
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Meter scale 0",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "-20  -10  0  +3\nMODULATION",
+    "x": -0.766000032,
+    "y": 11.438,
+    "z": 2.1058
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Code label 1",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "AMBER",
+    "x": -0.892,
+    "y": 10.8849993,
+    "z": 2.124
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Service meter 2",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "COAST\nCH 16",
+    "x": -1.088,
+    "y": 10.745,
+    "z": 2.0911
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Circuit label 1",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "BEACON",
+    "x": 2.79556346,
+    "y": 4.67,
+    "z": 1.71794224
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Gain label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "GAIN",
+    "x": -0.514,
+    "y": 10.934,
+    "z": 2.12399983
+  },
+  {
+    "path": "Watch demo/House wall briefing board/Watch checklist",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "KEEPER WATCH \u2014 DAY 1\n\n[ ] Repair the pipe\nPipe: 0/3 bolts\nPOWER: 3.25/3.25 \u2014 PUMP BEACON RADIO LIGHTS \n\nPIPE F1 / POWER F2 / RADIO + BEACON F4\nFinish tasks, then sleep in F3\nLEFT MENU: Return to lobby (Editor: Esc)",
+    "x": -3.36000037,
+    "y": 1.94,
+    "z": -9.2
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Circuit label 2",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "RADIO",
+    "x": 2.88556337,
+    "y": 4.67,
+    "z": 1.56205773
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/Starter instruction",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "ENGINE RUNNING",
+    "x": 0.7195165,
+    "y": 4.87,
+    "z": 2.68527341
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Code label 2",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "BLUE",
+    "x": -1.03200006,
+    "y": 10.8849993,
+    "z": 2.124
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Trim label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "TRIM",
+    "x": -0.339000016,
+    "y": 10.934,
+    "z": 2.12399983
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/RUNNING",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "RUNNING",
+    "x": 1.05999291,
+    "y": 4.7,
+    "z": 2.44910431
+  },
+  {
+    "path": "STN_PIPE_REPAIR/Coupling C/Coupling marker",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "C",
+    "x": 1.52880442,
+    "y": 1.35344052,
+    "z": 0.0299906582
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/1 POWER",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "1 POWER",
+    "x": -1.06699991,
+    "y": 11.7599993,
+    "z": 2.1156
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Band scale 0",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "156.0",
+    "x": -0.472000033,
+    "y": 11.3189993,
+    "z": 2.1009
+  },
+  {
+    "path": "Shell F4/STN_BEACON_CONTROL/S4 beacon station/Rag instruction",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "3 WIPE LENS\nWITH CLOTH",
+    "x": 1.41754115,
+    "y": 10.54,
+    "z": 1.93728566
+  },
+  {
+    "path": "Shell F4/STN_BEACON_CONTROL/S4 beacon station/Beacon instructions",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "ALIGNED \u00b7 SOOT 0%",
+    "x": 1.6395365,
+    "y": 11.4299994,
+    "z": 1.81846619
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Breaker instruction",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "3.25 / 3.25\nKEEP BELOW LIMIT",
+    "x": 2.860743,
+    "y": 4.27999973,
+    "z": 1.5650481
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/Filler label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "FILL",
+    "x": 1.17974317,
+    "y": 4.79,
+    "z": 2.93465543
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Reset label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "RESET",
+    "x": 2.708243,
+    "y": 4.11,
+    "z": 1.82918584
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR_PANEL/S4 breaker panel/Panel heading",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "POWER DISTRIBUTION",
+    "x": 2.84922361,
+    "y": 5.02,
+    "z": 1.645
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Code label 3",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "GREEN",
+    "x": -1.17199993,
+    "y": 10.8849993,
+    "z": 2.124
+  },
+  {
+    "path": "STN_RADIO_CONSOLE/Tune label",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "TUNE",
+    "x": -0.150000036,
+    "y": 10.934,
+    "z": 2.12399983
+  },
+  {
+    "path": "Existing player \u2014 unmodified source prefab/Camera Offset/Main Camera/Night survived readout",
+    "kind": "TextMesh",
+    "active": false,
+    "text": "",
+    "x": -0.833699048,
+    "y": 1.68999994,
+    "z": -8.836944
+  },
+  {
+    "path": "Shell F2/STN_GENERATOR/S4 generator sequence/PRIMED",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "PRIMED",
+    "x": 0.5577115,
+    "y": 4.7,
+    "z": 2.58369017
+  },
+  {
+    "path": "Watch demo/Sleep prompt",
+    "kind": "TextMesh",
+    "active": true,
+    "text": "",
+    "x": 0.0,
+    "y": 8.15,
+    "z": -0.5
+  }
+]

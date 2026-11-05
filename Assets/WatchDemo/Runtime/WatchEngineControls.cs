@@ -7,7 +7,7 @@ using LighthouseKeepers.Lobby;
 using LighthouseKeepers.Gameplay.Interaction;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed class WatchEngineControls : MonoBehaviour
+    public sealed partial class WatchEngineControls : MonoBehaviour
     {
         WatchDemoController watch;M2StationParts parts;MaterialPropertyBlock block;
         readonly Renderer[] lamps=new Renderer[4];
@@ -23,7 +23,7 @@ namespace LighthouseKeepers.WatchDemo
         public static string Instruction(WatchState state)
         {
             var e=state.Engine;if(state.Failed)return "WATCH ENDED";
-            if(e.FloodRemaining>0)return $"ENGINE FLOODED — WAIT {Mathf.CeilToInt(e.FloodRemaining)} s";
+            if(!e.IgnoreExtraPulls&&e.FloodRemaining>0)return $"ENGINE FLOODED — WAIT {Mathf.CeilToInt(e.FloodRemaining)} s";
             if(e.Running)return e.ChokeClosed?$"OPEN CHOKE NOW — {Mathf.CeilToInt(e.OpenRemaining)} s":e.LowFuel?"LOW FUEL — REFILL SOON":"ENGINE RUNNING";
             if(!e.EnoughFuel)return "1 FUEL — TILT RED CAN OVER FILLER";
             if(!e.Primed)return $"2 PRIME — GRIP BULB + SQUEEZE TRIGGER {e.Primer}/{state.PowerTuning.primerSqueezes}";
@@ -53,6 +53,7 @@ namespace LighthouseKeepers.WatchDemo
             FuelCan=M2CarryProp.Create(parts,transform,"FUEL_CAN",new Vector3(1.02f,.24f,.20f),false);
             sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.4f;sound.maxDistance=12;
             cough=Resources.Load<AudioClip>("S4Audio/cough");clunk=Resources.Load<AudioClip>("S4Audio/breaker");
+            if(State.Immersion&&State.Immersion.physicalGuidance)BuildPhysicalGuidance();
             watch.State.Changed+=Refresh;Refresh();
         }
         void ExposeStarter()
@@ -92,18 +93,20 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             var e=State.Engine;
-            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed:i==2?e.ChokeClosed:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);lamps[i].SetPropertyBlock(block);}
+            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);lamps[i].SetPropertyBlock(block);}
+            RefreshPhysicalGuidance();
             gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=$"FUEL {e.Fuel*100:0}%";
             if(e.CoughSerial!=lastCough&&cough)sound.PlayOneShot(cough,.5f);lastCough=e.CoughSerial;
         }
         void Update()
         {
+            AnimateCounters();
             starterCord.SetPosition(0,transform.TransformPoint(starterCordMount));starterCord.SetPosition(1,starterHandle.position-starterHandle.forward*.025f);
             if(State.Engine.LowFuel&&State.Engine.Running&&Time.time>=nextWarning){nextWarning=Time.time+8;if(cough)sound.PlayOneShot(cough,.2f);}
-            if(State.ReadOnly||State.Failed)return;
             bool held=FuelCan.Grab.isSelected||State.Coop?.RemoteHeld(FuelCan.Grab)==true;
-            if(held&&Vector3.Distance(FuelCan.Tip.position,Filler.position)<.20f&&Vector3.Dot(FuelCan.transform.up,Vector3.up)<.35f)
-                State.PourFuel(Time.deltaTime);
+            bool pouring=CanPour(held);
+            ShowPour(pouring);
+            if(!State.ReadOnly&&!State.Failed&&pouring)State.PourFuel(Time.deltaTime);
         }
         public void ResetProps(){if(!FuelCan.Grab.isSelected&&State.Coop?.RemoteHeld(FuelCan.Grab)!=true)FuelCan.ResetHome();lastCough=State.Engine.CoughSerial;}
         void OnDestroy(){if(watch&&watch.State!=null)watch.State.Changed-=Refresh;}

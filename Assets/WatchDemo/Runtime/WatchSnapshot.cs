@@ -4,13 +4,18 @@ namespace LighthouseKeepers.WatchDemo
     // Complete host-owned rules and presentation state; guest commands travel separately.
     [Serializable] public sealed class WatchSnapshot
     {
-        public const string Protocol="LK-Lab-Coop-v2";
+        public const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
         public string protocol=Protocol,world;
         public int sequence,day,power,doneMask,starterPulls,bolts,activeBolt,turns,codeProgress;
         public double elapsed,beaconDarkElapsed;
         public double highWaterElapsed;
         public bool highWaterFailed;
-        public int sleepDay;
+        public int sleepDay,radioCue,radioSerial,bedMask;
+        public float radioAge;
+        public float houseWaterVolume;
+        public int day3Stage; public bool day3Crew; public double day3GraceUntil;
+        public int objectiveIndex;
+        public int musicMode;public double musicSince;
         public bool beaconStationEnabled,beaconIgnited;
         public float beaconAlignment,beaconTarget,beaconSoot;
         public bool engineEnabled,chokeClosed,engineSettled;
@@ -27,7 +32,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool sleeping,touching,radioHeld,radioTrigger;
         public string notice;
         static bool Unit(float value)=>float.IsFinite(value)&&value>=0&&value<=1;
-        public bool Valid() => (!beaconStationEnabled||Unit(beaconAlignment)&&Unit(beaconTarget)&&Unit(beaconSoot))&& (!engineEnabled||float.IsFinite(fuel)&&fuel>=0&&fuel<=1&&primer>=0&&primer<=20&&enginePulls>=0&&enginePulls<=20&&engineClosedPulls>=0&&engineClosedPulls<=20&&float.IsFinite(chokeRemaining)&&chokeRemaining>=0&&chokeRemaining<=60&&float.IsFinite(engineFloodRemaining)&&engineFloodRemaining>=0&&engineFloodRemaining<=60&&coughSerial>=0)&& (!gridEnabled||LighthouseKeepers.Core.PowerGrid.ValidState(gridCapacity,gridMask)) && protocol==Protocol && revision>=0 && beds>=0 && beds<=2 && keepers>=0 && keepers<=2 &&
+        public bool Valid() => float.IsFinite(houseWaterVolume)&&houseWaterVolume>=0&&houseWaterVolume<=500&& day3Stage>=0&&day3Stage<=3&&double.IsFinite(day3GraceUntil)&&day3GraceUntil>=0&& objectiveIndex>=-2&&objectiveIndex<=30&& musicMode>=0&&musicMode<=2&&double.IsFinite(musicSince)&&musicSince>=0&&musicSince<=elapsed+.1&& radioCue>=0&&radioCue<=18&&radioSerial>=0&&float.IsFinite(radioAge)&&radioAge>=0&&bedMask>=0&&bedMask<=3&& (!beaconStationEnabled||Unit(beaconAlignment)&&Unit(beaconTarget)&&Unit(beaconSoot))&& (!engineEnabled||float.IsFinite(fuel)&&fuel>=0&&fuel<=1&&primer>=0&&primer<=20&&enginePulls>=0&&enginePulls<=20&&engineClosedPulls>=0&&engineClosedPulls<=20&&float.IsFinite(chokeRemaining)&&chokeRemaining>=0&&chokeRemaining<=60&&float.IsFinite(engineFloodRemaining)&&engineFloodRemaining>=0&&engineFloodRemaining<=60&&coughSerial>=0)&& (!gridEnabled||LighthouseKeepers.Core.PowerGrid.ValidState(gridCapacity,gridMask)) && protocol==Protocol && revision>=0 && beds>=0 && beds<=2 && keepers>=0 && keepers<=2 &&
             (notice==null||notice.Length<=160) && float.IsFinite(fade)&&fade>=0&&fade<=1 &&
             order0>=0&&order0<=2&&order1>=0&&order1<=2&&order2>=0&&order2<=2&&order0!=order1&&order0!=order2&&order1!=order2 &&
             float.IsFinite(seat)&&seat>=0&&float.IsFinite(direction)&&Math.Abs(direction)<=1&&float.IsFinite(returned)&&returned>=0 && day>0 && power>=0 && power<=1 && doneMask>=0 &&

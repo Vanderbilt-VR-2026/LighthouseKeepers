@@ -6,8 +6,12 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class PipeRepairState
     {
         public readonly PipeRepairProfile Profile;
+        public bool Forgiving {get;}
         public float RetainedPartialProgress { get; set; }
         public bool ReadOnly {get;set;}
+        // In this mode input is already classified: positive = toward keeper,
+        // negative = free return. Never choose the direction from initial jitter.
+        public bool PullTowardTightens {get;set;}
         public event Action Changed,QuarterTurn,Completed;
         readonly int[] order={0,1,2};
         public int BoltsDone{get;private set;}
@@ -18,14 +22,24 @@ namespace LighthouseKeepers.WatchDemo
         public float SeatElapsed{get;private set;}
         public bool NeedsReturn{get;private set;}
         public bool Complete=>BoltsDone==3;
-        public bool NeedsSeal=>ActiveBolt==2&&SealElapsed<Profile.sealSeconds;
-        public float InflowFraction=>1-BoltsDone/3f;
+        public bool NeedsSeal=>!Forgiving&&ActiveBolt==2&&SealElapsed<Profile.sealSeconds;
+        public float InflowFraction
+        {
+            get
+            {
+                if(!Forgiving)return 1-BoltsDone/3f;
+                float total=0,done=0;
+                for(int i=0;i<3;i++){total+=Profile.quarterTurns[order[i]];if(i<BoltsDone)done+=Profile.quarterTurns[order[i]];}
+                return Complete?0:Mathf.Clamp01(1-(done+TurnsDone+StrokeDegrees/Profile.quarterTurnDegrees)/total);
+            }
+        }
         bool touching;float direction,returned;
         public int Order(int index)=>order[index];
         public float Direction=>direction;
         public float Returned=>returned;
         public bool Touching=>touching;
-        public PipeRepairState(PipeRepairProfile profile){Profile=profile?profile:throw new ArgumentNullException(nameof(profile));RetainedPartialProgress=profile.retainedPartialProgress;}
+        public PipeRepairState(PipeRepairProfile profile):this(profile,false){}
+        public PipeRepairState(PipeRepairProfile profile,bool forgiving){Profile=profile?profile:throw new ArgumentNullException(nameof(profile));Forgiving=forgiving;RetainedPartialProgress=profile.retainedPartialProgress;}
         public void Reset(int seed,bool repaired=false)
         {
             for(int i=0;i<3;i++)order[i]=i;
@@ -49,21 +63,26 @@ namespace LighthouseKeepers.WatchDemo
             if(ReadOnly||Complete||!canWork)return;
             if(!contact)
             {
-                if(touching){StrokeDegrees*=RetainedPartialProgress;if(NeedsSeal)SealElapsed*=RetainedPartialProgress;NeedsReturn=false;SeatElapsed=0;Changed?.Invoke();}
+                if(touching){if(!Forgiving){StrokeDegrees*=RetainedPartialProgress;if(NeedsSeal)SealElapsed*=RetainedPartialProgress;}NeedsReturn=false;SeatElapsed=0;Changed?.Invoke();}
                 touching=false;return;
             }
             touching=true;SeatElapsed+=seconds;if(SeatElapsed<Profile.seatSeconds)return;
             if(NeedsSeal){SealElapsed=steady?Mathf.Min(Profile.sealSeconds,SealElapsed+seconds):0;return;}
             float delta=Mathf.Clamp(twistDegrees,-Profile.maximumDegreesPerSecond*seconds,Profile.maximumDegreesPerSecond*seconds);
             if(Mathf.Abs(delta)<.01f)return;
-            if(direction==0)direction=Mathf.Sign(delta);
+            if(PullTowardTightens)direction=1;
+            else if(direction==0)direction=Mathf.Sign(delta);
             if(NeedsReturn){returned=Mathf.Max(0,returned-delta*direction);if(returned>=Profile.returnDegrees){NeedsReturn=false;returned=0;Changed?.Invoke();}return;}
-            StrokeDegrees=Mathf.Clamp(StrokeDegrees+delta*direction,0,Profile.quarterTurnDegrees);
+            // The socket still follows the wrist on the return stroke, but the bolt's
+            // ratchet holds every degree already earned (including an unfinished click).
+            float tightening=delta*direction;
+            if(Forgiving&&tightening<0)return;
+            StrokeDegrees=Mathf.Clamp(StrokeDegrees+tightening,0,Profile.quarterTurnDegrees);
             if(StrokeDegrees<Profile.quarterTurnDegrees)return;
             TurnsDone++;StrokeDegrees=0;QuarterTurn?.Invoke();
             if(TurnsDone>=Profile.quarterTurns[ActiveBolt])
             {BoltsDone++;ResetBolt();Changed?.Invoke();if(Complete)Completed?.Invoke();}
-            else{NeedsReturn=true;returned=0;Changed?.Invoke();}
+            else{NeedsReturn=!Forgiving;returned=0;Changed?.Invoke();}
         }
     }
 }

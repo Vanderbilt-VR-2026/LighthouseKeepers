@@ -4,6 +4,18 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class CoopCommandWindowTests
     {
+        [Test] public void EveryDeclaredActionIncludingWrenchClutchAcceptsFreshInputAndRejectsReplay()
+        {
+            var window=new CoopCommandWindow();int sequence=0;
+            foreach(CoopAction action in System.Enum.GetValues(typeof(CoopAction)))
+            {
+                ++sequence;
+                Assert.True(window.Accept(1,sequence,2,2,action,0),"Rejected declared action "+action);
+                Assert.False(window.Accept(1,sequence,2,2,action,0),"Accepted replay "+action);
+            }
+            Assert.False(window.Accept(1,sequence+1,1,2,CoopAction.WrenchClutch,0),"Stale-day clutch");
+            Assert.True(window.Accept(1,sequence+1,2,2,CoopAction.WrenchClutch,0),"Rejected fresh clutch after stale input");
+        }
         [Test] public void RejectsOldDayReplayInvalidActorAndNonfiniteInputWithoutConsumingValidSequence()
         {
             var window=new CoopCommandWindow();

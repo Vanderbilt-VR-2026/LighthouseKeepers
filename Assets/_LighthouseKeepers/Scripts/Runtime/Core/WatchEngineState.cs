@@ -9,6 +9,7 @@ namespace LighthouseKeepers.Core
         float primerWait, crankWait, drain, notifyAfter;
         public event Action Changed;
         public bool ReadOnly {get;set;}
+        public bool IgnoreExtraPulls {get;set;}
         public float Fuel {get;private set;}
         public int Primer {get;private set;}
         public int Pulls {get;private set;}
@@ -38,9 +39,10 @@ namespace LighthouseKeepers.Core
         }
         public bool Pull()
         {
+            if(IgnoreExtraPulls && Running)return false;
             if(ReadOnly||FloodRemaining>0||crankWait>0||Running&&!ChokeClosed)return false;
             crankWait=tuning.crankCooldown;
-            if(ChokeClosed&&++ClosedPulls>=tuning.floodAtPulls){Stop();FloodRemaining=tuning.engineFloodSeconds;CoughSerial++;Changed?.Invoke();return true;}
+            if(!IgnoreExtraPulls&&ChokeClosed&&++ClosedPulls>=tuning.floodAtPulls){Stop();FloodRemaining=tuning.engineFloodSeconds;CoughSerial++;Changed?.Invoke();return true;}
             if(!EnoughFuel||!Primed||!ChokeClosed){CoughSerial++;Changed?.Invoke();return true;}
             Pulls++;
             if(!Running&&Pulls>=tuning.starterPulls){Running=true;OpenRemaining=tuning.chokeOpenSeconds;}

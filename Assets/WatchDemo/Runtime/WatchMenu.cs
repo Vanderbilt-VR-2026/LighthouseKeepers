@@ -25,6 +25,10 @@ namespace LighthouseKeepers.WatchDemo
         LighthouseKeepers.Lobby.ICrewVoice voice;
         bool previousMenu, exiting;
         int previousTerminal;
+        float revealAt;
+        Material inkMaterial;Texture2D paper;Sprite paperSprite;
+        bool Book=>watch&&watch.State.Immersion&&watch.State.Immersion.logbook;
+        Font InkFont=>Book?Resources.Load<Font>("Fonts/Kalam-Regular"):Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         public bool IsOpen => panel && panel.activeSelf;
 
         public void Initialize(WatchDemoController controller, Transform trackedHead)
@@ -68,18 +72,20 @@ namespace LighthouseKeepers.WatchDemo
             tracked.checkFor3DOcclusion = tracked.checkFor2DOcclusion = false;
             panel.GetComponent<GraphicRaycaster>().blockingObjects = GraphicRaycaster.BlockingObjects.None;
             panel.GetComponent<Image>().color = new Color(.035f, .06f, .065f, .98f);
-            Label("Title", "KEEPER WATCH", 170, 42, 32);
+            if(Book){inkMaterial=new Material(Resources.Load<Shader>("ImmersionLogbook"));ImmersionLogbook.Decorate(panel,inkMaterial,out paper,out paperSprite);canvas.overrideSorting=true;canvas.sortingOrder=100;}
+            Label("Title", Book?"KEEPER'S LOG":"KEEPER WATCH", 170, Book?55:42, Book?28:32);
             status = Label("Status", "", 100, 84, 23);
-            retry = Action("RetryWatchDay", "RETRY THIS DAY", 10, () => watch.RetryDay());
+            retry = Action("RetryWatchDay", Book?"TRY THE NIGHT AGAIN":"RETRY THIS DAY", 10, () => watch.RetryDay());
             replay = Action("ReplayWatchFromDayOne", "REPLAY FROM DAY 1", 10, () => watch.ReplayFromDayOne());
             leave = Action("ReturnWatchToLobby", "RETURN TO LOBBY", -70, ReturnToLobby);
-            close = Action("CloseWatchMenu", "CLOSE MENU", -150, Close);
+            close = Action("CloseWatchMenu", Book?"CLOSE LOGBOOK":"CLOSE MENU", -150, Close);
             voice=LighthouseKeepers.Lobby.CrewVoiceBridge.Current;
             if(voice!=null)
             {
                 ((RectTransform)panel.transform).sizeDelta=new Vector2(600,510);
                 mute=Action("ToggleCrewMicrophone",voice.StatusText,-225,()=>{if(voice!=null)voice.ToggleMute();Refresh();});
             }
+            WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
             panel.SetActive(false);
         }
 
@@ -87,8 +93,8 @@ namespace LighthouseKeepers.WatchDemo
         {
             var rect = Rect(name, new Vector2(0, y), new Vector2(550, height));
             var label = rect.gameObject.AddComponent<Text>();
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); label.fontSize = size;
-            label.text = text; label.color = new Color(.95f, .91f, .79f); label.alignment = TextAnchor.MiddleCenter;
+            label.font = InkFont; label.fontSize = size;
+            label.text = text; label.color = Book?new Color(.15f,.095f,.055f):new Color(.95f, .91f, .79f);if(Book)label.material=inkMaterial; label.alignment = TextAnchor.MiddleCenter;
             label.raycastTarget = false; label.horizontalOverflow = HorizontalWrapMode.Wrap;
             return label;
         }
@@ -101,17 +107,18 @@ namespace LighthouseKeepers.WatchDemo
         Button Action(string name, string caption, float y, UnityEngine.Events.UnityAction action)
         {
             var rect = Rect(name, new Vector2(0, y), new Vector2(520, 62));
-            var image = rect.gameObject.AddComponent<Image>(); image.color = new Color(.17f, .27f, .27f);
+            var image = rect.gameObject.AddComponent<Image>(); image.color = Book?new Color(.55f,.42f,.27f,.12f):new Color(.17f, .27f, .27f);if(Book)image.material=inkMaterial;
             var button = rect.gameObject.AddComponent<Button>(); button.targetGraphic = image; button.onClick.AddListener(action);
             var text = new GameObject("Label", typeof(RectTransform), typeof(Text)).GetComponent<Text>();
             text.rectTransform.SetParent(rect, false); text.rectTransform.sizeDelta = rect.sizeDelta;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); text.fontSize = 26; text.text = caption;
-            text.alignment = TextAnchor.MiddleCenter; text.color = Color.white; text.raycastTarget = false;
+            text.font = InkFont; text.fontSize = 26; text.text = caption;
+            text.alignment = TextAnchor.MiddleCenter; text.color = Book?new Color(.16f,.08f,.045f):Color.white;if(Book)text.material=inkMaterial; text.raycastTarget = false;
             return button;
         }
 
         void Update()
         {
+            if(revealAt>0&&Time.unscaledTime>=revealAt){revealAt=0;if(watch.State.Failed)Open();}
             InputDevices.GetDeviceAtXRNode(XRNode.LeftHand).TryGetFeatureValue(UnityEngine.XR.CommonUsages.menuButton, out bool pressed);
             bool keyboard = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
             if ((pressed && !previousMenu) || keyboard) { if (IsOpen) Close(); else Open(); }
@@ -139,7 +146,7 @@ namespace LighthouseKeepers.WatchDemo
             int terminal = watch.State.Failed ? 1 : watch.State.Complete && !watch.State.HasNextDay ? 2 : 0;
             bool becameTerminal = terminal != 0 && terminal != previousTerminal;
             previousTerminal = terminal;
-            if (becameTerminal) Open();
+            if (becameTerminal){if(Book&&watch.State.Failed)revealAt=Time.unscaledTime+1.05f;else Open();}
             else if (IsOpen && !exiting) Refresh();
         }
         void Refresh()
@@ -148,7 +155,9 @@ namespace LighthouseKeepers.WatchDemo
             status.text = state.Failed ? state.FailureMessage + "\nRetry keeps this day." :
                 state.Complete && !state.HasNextDay ? "ALL WATCHES COMPLETE\nReplay resets the full watch to Day 1." :
                 "DAY " + state.Day + "\nThe watch continues while this menu is open.";
+            if(Book)status.text=state.Failed?(state.HighWaterFailed?"The sea took the tower.\nWe could not hold back the water.":state.BeaconDarkFailed?"The light went dark.\nThe Mary Ellen hit the rocks.":"Dawn came before our work was done.\nThe watch was lost."):state.Complete&&!state.HasNextDay?"The ships made harbor.\nOur watch is done.":"NIGHT "+state.Day+"\nKeep the light. Survive till dawn.";
             retry.gameObject.SetActive(!state.NetworkRehearsal && state.Failed);
+            close.gameObject.SetActive(!Book||!state.Failed);
             replay.gameObject.SetActive(!state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
         }
 
@@ -194,6 +203,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if (watch && watch.State != null) watch.State.Changed -= StateChanged;
             if (ownedEventSystem) Destroy(ownedEventSystem);
+            if(inkMaterial)Destroy(inkMaterial);if(paperSprite)Destroy(paperSprite);if(paper)Destroy(paper);
         }
     }
 }

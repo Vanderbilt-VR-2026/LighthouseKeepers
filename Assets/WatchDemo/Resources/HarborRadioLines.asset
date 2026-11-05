@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aebde70bd3b134fd2a9a6dde866a6e0c, type: 3}
+  m_Name: HarborRadioLines
+  m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.WatchDemo.RadioLineCatalog
+  lines:
+  - {fileID: 8300000, guid: 60606595eeada4ad5aa784d17aa7fd5b, type: 3}
+  - {fileID: 8300000, guid: 9b5ea2c1ba50845d48ed71d54d58ac95, type: 3}
+  - {fileID: 8300000, guid: 756f9f384b4684a19bc1a37c791539d9, type: 3}
+  - {fileID: 8300000, guid: 50b9e46b93f264ef78f426d7ab3b59e5, type: 3}
+  - {fileID: 8300000, guid: b13e892f268a44b5b8e9327a4f710d0d, type: 3}
+  - {fileID: 0}
+  - {fileID: 8300000, guid: 0e7665b5209964e49a06bb4da82ebdfd, type: 3}
+  - {fileID: 8300000, guid: f9d6d73776efb45cd9787d2476f26ab0, type: 3}
+  - {fileID: 8300000, guid: 63b3dbb88990440369876510a6c3ed67, type: 3}
+  - {fileID: 8300000, guid: de9e387bfe55041cc9ebf0ae88b5e3f1, type: 3}
+  - {fileID: 8300000, guid: 657068343ba5644f8a82a0d55f2d726a, type: 3}
+  - {fileID: 8300000, guid: 3603ac94868dc42ec87db5045b308428, type: 3}
+  - {fileID: 8300000, guid: 9f9ebadc15a9b4bc7ae3d0f4c0470f12, type: 3}
+  - {fileID: 8300000, guid: 640b1d19794c64951b86f8dc5f1177bf, type: 3}
+  - {fileID: 8300000, guid: 752d556700703475ca04b1bd0080635d, type: 3}
+  - {fileID: 8300000, guid: 17153542b18f24b4a8bd9672b7b47f53, type: 3}
+  - {fileID: 8300000, guid: 81e772b0745647d58a5b798e513529d9, type: 3}
+  - {fileID: 8300000, guid: a8f35c8101a4442ab848a0e3ff8f3e1c, type: 3}
+  subtitles:
+  - "Keeper, you hear me? Storm's right on top of you. Keep that light burning till dawn. Lose the light, or let the water take the tower, and we're all done for."
+  - "There's a pipe giving out downstairs. Grab the wrench off the bench."
+  - "Get it on the bolt and pull it toward you. Push it back, pull again."
+  - "Generator's dead. Read the plate on the side. Prime it, choke it, pull."
+  - "That'll hold. Get to your bunk, keeper. You'll need it."
+  - ""
+  - "Follow the hiss, keeper. Wrench on the bolt. Pull."
+  - "The plate on the generator. Fuel, prime three, choke, pull three, choke down."
+  - "Check the breakers. You can't run everything at once."
+  - "Get up to the lantern. Light it, then turn the wheel till the marks line up."
+  - "Four steps on the radio. Power, tune, code, then hold the mic."
+  - "Work's done. Bunk's on the third floor."
+  - "We saw your light last night. Another front's coming in. Generator's down again."
+  - "Fuel's running low. Line up the lantern and send the storm warning."
+  - "Still with us, keeper? Check the board. It's going to be a long one."
+  - "Not yet. There's still work to do."
+  - "We see your light, keeper. Every ship made it through. Get some rest."
+  - "Keeper? Keeper, do you read? ...Keeper?"
+  pauseCenters:
+  - {x: 3.1, y: 1.35}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: 1.72, y: 3.46}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: 4.82, y: 6.0200000000000005}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: 4.03, y: 1.47}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}
+  - {x: -10.0, y: -10.0}

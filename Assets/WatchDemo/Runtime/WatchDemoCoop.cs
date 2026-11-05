@@ -14,6 +14,7 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.PAReplay)return value==(int)value&&immersionWorld&&immersionWorld.Narrator?immersionWorld.Narrator.ReplayButton((int)value):null;
             if(action==CoopAction.GridCircuit)return powerPanel?powerPanel.Control((int)value):null;
             if(action==CoopAction.GridReset)return powerPanel?powerPanel.ResetControl:null;
             if(action==CoopAction.BeaconIgnition)return beaconStation?beaconStation.Ignition:null;
@@ -22,6 +23,7 @@ namespace LighthouseKeepers.WatchDemo
             if(action==CoopAction.EngineChoke)return engineControls?engineControls.Choke:null;
             if(action==CoopAction.Starter)return generator.Starter;
             if(action==CoopAction.Microphone)return radio.microphone;
+            if(action==CoopAction.WrenchClutch)return wrench;
             foreach(var control in radio.controls)
                 if(action==CoopAction.RadioPower&&control.mainPower||action==CoopAction.RadioTune&&control.frequency||
                     action==CoopAction.RadioCode&&value>=0&&value<=3&&value==(int)value&&control.codeColour==(int)value)return control;
@@ -32,6 +34,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly||sleeping)return -1;
             switch(action)
             {
+                case CoopAction.PAReplay:return immersionWorld&&immersionWorld.Narrator&&immersionWorld.Narrator.RequestReplay()?1:-1;
+                case CoopAction.Bed:
+                    if(state.Immersion&&!state.Failed&&immersionWorld&&immersionWorld.Narrator){immersionWorld.Narrator.EarlyBed();return 1;}
+                    return -1;
                 case CoopAction.GridCircuit:
                     if(!float.IsFinite(value)||value!=(int)value||value<0||value>3)return -1;
                     return state.SetCircuit((int)value,pressed)?1:-1;
@@ -77,7 +83,7 @@ namespace LighthouseKeepers.WatchDemo
             bool grip=lg||rg,trigger=lt||rt,near=Vector3.Distance(head.position,BedPosition)<1.8f;
             bedPrompt.text=near?(CanSleep?SleepPrompt+" TOGETHER":"Finish the board tasks before resting"):"";
             if(near){var direction=bedPrompt.transform.position-head.position;direction.y=0;if(direction.sqrMagnitude>.01f)bedPrompt.transform.rotation=Quaternion.LookRotation(direction);}
-            if((!menu||!menu.IsOpen)&&state.Failed&&trigger&&!previousTrigger)RetryDay();
+            if(!state.Immersion&&(!menu||!menu.IsOpen)&&state.Failed&&trigger&&!previousTrigger)RetryDay();
             else if((!menu||!menu.IsOpen)&&near&&grip&&!previousGrip)TrySleep();
             previousGrip=grip;previousTrigger=trigger;
         }

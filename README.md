@@ -18,6 +18,14 @@ You are on **main**, the latest game source, including co-op and the S4 power sy
 
 [Build in Unity](Docs/DEVELOPMENT.md) · [Play together on two Quests](Docs/TwoQuestSetup.md) · [Team design](Docs/DesignDocument.md)
 
+## Design — S4-M3
+
+The keeper lobby is the first scene: a physical crew ledger introduces the role and a clear choice between solo and joining a friend. The intended next beat is House arrival, the harbor master on a wall radio, tonight’s jobs on the chalkboard, then the wrench on the bench.
+
+Equipment uses direct grabbing and physical turning/pulling. This milestone replaces detached instructions with mounted plates, chalk, gauges, practical lights and sound, and gives the wrench a forgiving snap onto a bolt. Menu rays remain for deliberate lobby/logbook actions. Current tan hands, controller alignment and finger blending are preserved; held tools retain their established grip poses.
+
+These are the choices being implemented on `s4/immersion`. [Design rules](Docs/Design/Immersion.md) · [Professor playtest](Docs/Playtests/2026-11-03-professor.md) · [Radio script](Docs/Design/RadioLines.md).
+
 ## Project history
 
 Only four branches are kept: **main**, **sprint-1**, **sprint-2**, **sprint-3**. Previous branch histories are saved under archive tags.

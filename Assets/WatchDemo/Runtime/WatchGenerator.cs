@@ -26,7 +26,9 @@ namespace LighthouseKeepers.WatchDemo
         public void Bind(WatchState value)
         {
             if (state != null) state.Changed -= Refresh;
-            state = value; state.Changed += Refresh; ResetInteraction();
+            state = value; state.Changed += Refresh;
+            if(state.Immersion&&state.Immersion.physicalGuidance)prompt.gameObject.SetActive(false);
+            ResetInteraction();
         }
         void Awake()
         {

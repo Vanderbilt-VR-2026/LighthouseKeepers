@@ -21,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
         void Changed()
         {
             if(watch.Beacon!=null){float angle=watch.Beacon.Alignment;rotor.Rotate(Vector3.up,(angle-previousAlignment)*270,Space.Self);previousAlignment=angle;}
-            brightness=watch.Beacon?.Brightness??1;bool next=watch.BeaconShining;if(initialized&&powered==next){if(watch.Beacon!=null)Apply(powered);return;}
+            brightness=watch.Beacon?.Brightness??1;bool next=watch.BeaconShining&&(!watch.Immersion||!watch.Failed);if(initialized&&powered==next){if(watch.Beacon!=null)Apply(powered);return;}
             powered=next;Apply(powered);
             audioSource.PlayOneShot(powered?powerUp:powerDown,.35f);
             if(!powered)speed=0;

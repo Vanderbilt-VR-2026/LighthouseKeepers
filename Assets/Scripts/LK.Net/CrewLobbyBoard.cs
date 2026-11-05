@@ -87,6 +87,7 @@ namespace LighthouseKeepers.Net
             {LighthouseKeepers.StormWatch.WatchDayLaunch.RequestedDay=3;transport.PlaySolo();});
             root.Find("DevStartDay3").GetComponentInChildren<TMP_Text>().text="DEV: PLAY DAY 3";
 #endif
+            Label(root,"NetworkVersion",new Vector2(0,270),new Vector2(1100,30),18).text="NETWORK VERSION: "+LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking+" · Both keepers need the same version";
             BuildKeypad(root);
             Refresh();
         }

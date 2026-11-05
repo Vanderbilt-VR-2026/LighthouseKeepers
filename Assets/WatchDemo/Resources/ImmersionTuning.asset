@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be76a323f4443e788ac5c8e0b3a1a97, type: 3}
+  m_Name: ImmersionTuning
+  m_EditorClassIdentifier: LighthouseKeepers.Runtime::LighthouseKeepers.Core.ImmersionTuning
+  enabledForWatch: 1
+  physicalGuidance: 1
+  radioNarration: 1
+  forgivingPipe: 1
+  triggerClutch: 1
+  pullTowardTightens: 1
+  leverPipe: 1
+  physicalWrenchDrops: 1
+  faultMist: 1
+  leverReleaseRadius: 0.48
+  leverReleaseHeight: 0.22
+  droppedWrenchReturnSeconds: 8
+  guaranteedWrenchRecovery: 1
+  droppedWrenchKeeperRadius: 1.8
+  forgivingGenerator: 1
+  atmosphere: 1
+  logbook: 1
+  wrenchSnapMetres: 0.08
+  wrenchReleaseMetres: 0.18
+  idleHintSeconds: 90
+  wallRadioVolume: 0.65
+  beltRadioVolume: 0.65
+  fuelFillRadius: 0.25
+  fuelPourTiltDegrees: 60
+  interiorLightMultiplier: 0.6
+  atmosphereVolume: 0.12
+  dawnWashSeconds: 6
+  dawnWashIntensity: 0.22
+  chalkLetterSeconds: 0.16

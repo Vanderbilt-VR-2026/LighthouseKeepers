@@ -1,0 +1,1451 @@
+{
+  "EditMode": [
+    {
+      "test": "LighthouseKeepers.Tests.CrewSessionPolicyTests.BootstrapPermitsOneKeeperForDebugging(\"LK_StormWatch\",False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.CrewSessionPolicyTests.BootstrapPermitsOneKeeperForDebugging(\"LK_Bootstrap\",False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.CrewSessionPolicyTests.BootstrapPermitsOneKeeperForDebugging(\"LK_NetworkLobby\",False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.CrewSessionPolicyTests.BootstrapPermitsOneKeeperForDebugging(null,False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.BriefSubmersionIsRecoverableButSustainedSubmersionFails",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.CustomThresholdsDriveRepairFailureAndRecovery",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.InvalidThresholdsCannotCreateAnUnwinnableWatch(0)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.InvalidThresholdsCannotCreateAnUnwinnableWatch(-1)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.InvalidThresholdsCannotCreateAnUnwinnableWatch(float.NaN)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.InvalidThresholdsCannotCreateAnUnwinnableWatch(float.PositiveInfinity)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.LandingCannotSkipRepairAndRecoveryRequiresStayingSafe",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.PartialTurnsSurviveReleaseAndSealedValvesCannotBeFarmed",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.UnbracedAndWrongValveCannotCompleteRepair",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchRulesTests.UnderwaterArrivalCannotWinAndResetClearsTheWholeAttempt",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FootstepCadenceTests.CadenceDependsOnDistanceAtDifferentFrameRates(30)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FootstepCadenceTests.CadenceDependsOnDistanceAtDifferentFrameRates(72)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FootstepCadenceTests.CadenceDependsOnDistanceAtDifferentFrameRates(120)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FootstepCadenceTests.FallingTeleportingAndPausingResetPartialStride",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FootstepCadenceTests.StandingOrPushingIntoWallDoesNotProduceSteps",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.BuildContainsOnlyTheTwoShipScenes",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.CrewAllowsReadyHostDebugEntryIntoBootstrap",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.DangerStagesEscalateAsWaterNearsHead",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.DaysBecomeMeasurablyMoreIntense",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.FloodClampsAndResetPauses",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.FloodSurgeAcceleratesWithHeight",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.FloodTimeEstimateIntegratesSurge",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.SurfaceToneTracksNormalizedHeight",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FoundationTests.ThresholdFiresOnlyOnCrossingAndSupportsReset",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.BadSnapshotsLeaveExistingRosterUntouched",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.CapacityAndLeaveRejoinAreEnforced",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.ExplicitWatchAdmissionRestoresVacantSlotWithoutRestartingOrUnreadyingHost",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.LateJoinSnapshotContainsCurrentNamesAndReadyStates",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.MalformedOversizedAndWrongVersionPacketsAreRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.NamesAndRoomNamesHaveBoundedInput",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.OlderSnapshotsDoNotResurrectDisconnectedPlayers",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.ReorderedReadyRequestsDoNotRestoreOldState",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.SenderIdentityControlsOnlyItsOwnRow",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyTests.StartRequiresMinimumCrewAndEveryReadyPlayer",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.ActiveHeldUpdatesKeepLeaseAliveAndStalledOwnerExpires",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.AnotherPlayerCannotUpdateOrReleaseOwnedProp",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.DisconnectReleasesEveryPropOwnedByThatPlayer",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.OldPacketsCannotMoveOrReleaseANewGrab",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.OwnerCanReleaseAndAnotherPlayerCanGrab",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.RegisterPreservesALeaseAndResetStartsANewSession",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.TwoPlayersCannotOwnTheSameProp",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.GrabAuthorityTests.UnknownPropsAndInvalidPlayersAreRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.IntegratedAssetTests.OceanHasBoundedGeometryAndCompiles",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.IntegratedAssetTests.SoundtrackUsesStreaming",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.IntegratedAssetTests.VendorPropVariantsUseUrp",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyPolishTests.ExplicitTransportTakesPrecedenceAndUnsubscribesOnDestroy",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyPolishTests.HeadAboveMaximumFloodNeverHasSubmersionCountdown",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyPolishTests.LocalPracticeSceneExplicitlyBindsSimulation",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyPolishTests.MinimumCrewCannotExceedCapacity",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyPolishTests.ReadyAndLeaveHintsFollowLocalPracticeState",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.HostCreatesSingleHostRoster",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.HostKicksGuestButNotSelf",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.JoinLeaveFiresConnectionEvents",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.LobbyConfigDefaultsAreSane",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.ReadyToggleMarksLocalReady",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.SecondHostOrJoinWhileOnlineFails",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.SimulatedPlayersClampedToMax",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyTests.StartRequiresOnlineHostAndAllReady",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseHouseTests.BoardMountSurvivesReauthoringWithNormalAndWallGap",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseHouseTests.CameraHasOnlyCleanReadoutAndInactiveSleepFadeWithoutNoiseVolumes",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseHouseTests.HouseHasWoodBenchAndSingleMeshWrenchRestingAtColliderContact",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseTests.BuildScenesAndPlayerPrefabsHaveNoVignetteAndExactlyTwoSprint3Hands",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseTests.ExactShipManifestHasNoOtherScenesEvenDisabled",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseTests.NoVolumeProfileContainsVignette",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseTests.RestoredLabDoesNotRequireSessionCFixturesUnlessExplicitlyMarked",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseTests.RuntimeHandsUseTanLitMaterialWithPreloadedShaderVariants",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.OneLighthouseTests.ShipGuardRunsAfterUrpAndRemovesItsRecreatedVignette",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerFootstepAssetTests.DevGymHasTheSameGroundDetectionAndFootsteps",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerFootstepAssetTests.SharedPlayerHasGroundDetectionAndPlayerMixerFootsteps",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SessionLobbyManagerTests.AsyncErrorsReachTheBoardAndCanBeCancelled",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SessionLobbyManagerTests.NetworkLaunchUsesTransportAndRecoversFromFailure",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SessionLobbyManagerTests.PendingConnectionBlocksDuplicateConnectsAndStart",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.NormalCrewCannotUseSoloSelectorsOrRepairAlone",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.SelectingAnotherSoloTestClearsFailureAndRecordedCode",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.SoloGeneratorCanRecoverWithoutSimultaneousPumpSupport",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.SoloLaunchRequestIsConsumedOnceAndCanBeCancelled",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.SoloRefugeContinuesWithOnlyLocalKeeperPresent",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.SoloRelayNeedsRadioVisitThenAllowsOneKeeperToFinish",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.SoloStartsAndRepairsWithoutCreatingASecondKeeper",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.SoloWatchRulesTests.SoloStillRequiresNearStationAndRealPumpEffort",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.AbandoningPumpCostsOnlyUnfinishedStepAndReleaseAvoidsSetback",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.BeaconRequiresRadioPartnerAndBothSurvivorsAtTop",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.BlackoutMakesPumpEffectiveAndRestorationRequiresCompletedGenerator",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.DisconnectPausesFloodAndElapsedTime",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.FarAwayActionsCannotOperateStations",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.FirstRepairOpensRouteAndVisiblyDrainsWater",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.InvalidTuningFailsBeforeTheWatchBegins",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.LifelineNeedsAimCatchAndPullThenRestoresPartner",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.MissedRescueFailsAndRetryClearsAllSharedState",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.NeedsTwoConnectedKeepersAndDistinctJobs",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.RetryDoesNotReplayRetainedRemoteCommands",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.SuppliesAreOneSharedChoiceAndRequireRegrouping",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchRulesTests.WrongBeaconSwitchResetsCurrentStepPreservingCompletedSwitches",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WalkthroughGeometryTests.CommunicationsHasClearStandingRouteAroundShaft",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WalkthroughGeometryTests.EveryStairFlightHasSupportAndStandingHeadroom",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WalkthroughGeometryTests.EveryUpperFloorHasSupportedStairExit",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WalkthroughGeometryTests.FloorSlabsHaveThicknessWithoutChangingTheirTopElevation",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WalkthroughGeometryTests.PipeAssemblyFacesRoomAtThreeQuarterScaleAndWheelsHaveBackFaces",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WalkthroughGeometryTests.StairRampIsCollisionOnlyAndRetainsComfortableWidth",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WeatherCoverageTests.BalconyCoverageIncludesEveryDirection",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.WeatherCoverageTests.TowerHouseAndOverhangRejectExteriorRain",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.RadioStateTests.EmergencyPulseIsContinuousNonBlackAndHalfHertz",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.RadioStateTests.MicAndTriggerMustBothRemainHeldForThreeSeconds(False,True)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.RadioStateTests.MicAndTriggerMustBothRemainHeldForThreeSeconds(True,False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.RadioStateTests.OutOfStepControlsDoNotUndoAcceptedProgress",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.RadioStateTests.PowerAndOneContinuousSecondWithinToleranceAreRequired",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.RadioStateTests.TimeoutBlocksTransmissionAndPowerLossCancelsHold",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.RadioStateTests.WrongSymbolResetsOnlyCodeAndRepeatAfterAcceptanceIsIgnored",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.ArtScaleAndOrientationTest",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.ContractRetainsFifteenStationsAndSixteenLegacyAliases",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.GeometryClearanceAgainstImportedColliders",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.LandingsFollowWallWithFullRevealAndClearWidth",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.RenderersBelongToAtMostOneLodGroup",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.ShellScenesContainNoPlayerOrGameplayComponents",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.StairGoingRiserAndWidthMeetApprovedBands",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.StationPolishTests.ContactLossRetainsCompletedClicksAndOnlyPartOfUnfinishedStroke",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.StationPolishTests.ContinuousDarkDeadlineLatchesFailureAndRetryResetsSameDay(2,90)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.StationPolishTests.ContinuousDarkDeadlineLatchesFailureAndRetryResetsSameDay(3,75)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.StationPolishTests.NormalQuickQuarterTurnCountsWithoutForcingArtificiallySlowWrists",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.StationPolishTests.SealRequiresContinuousSteadinessAndOrderVariesAcrossSeeds",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.StationPolishTests.StationaryWrenchAndJitterCannotRepairButSixFullTurnsFinishThreeDistinctBolts",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.StationPolishTests.TimelyGeneratorStopsDarkCountdownAndDayOneHasNoBeaconLoss",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.WatchStateTests.DayTwoAllowsEitherOrderAndRequiresBothBeforeSleep(True)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.WatchStateTests.DayTwoAllowsEitherOrderAndRequiresBothBeforeSleep(False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.WatchStateTests.NewAssetIsDiscoveredWithoutCodeOrManualCatalogEdit",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.WatchStateTests.RetryClearsTimeoutAndPartialPullsWithoutAdvancingDay",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Editor.Environment.Tests.WatchStateTests.SevenMinuteDayDeadline",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.BeaconStationTests.GuestContinuingAloneRetainsCurrentDaySootRate",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.BeaconStationTests.PowerIgnitionAndAlignmentAreAllRequired",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.BeaconStationTests.ReplicaAndInvalidAlignmentCannotMutateState",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.BeaconStationTests.SootDimsAndMovementCleansButStationaryRagDoesNot",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CoopBedVotesTests.DisconnectRemovesVoteAndRemainingKeeperCanContinueAlone",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CoopBedVotesTests.EveryConnectedKeeperMustVoteAndDuplicateCannotReplacePartner",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CoopCommandWindowTests.RejectsOldDayReplayInvalidActorAndNonfiniteInputWithoutConsumingValidSequence",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CoopLaunchTests.FlagGatesTwoKeeperLabAndStillRejectsThirdKeeper",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.CodeNormalizes(\" abc234 \",\"ABC234\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.CodeNormalizes(\"XY9Z87\",\"XY9Z87\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.CorruptPosesAndStaleSequencesAreRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.DifferentActorsAtTheSameStationCannotPass",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.DisconnectAndForgedReleaseCannotTransferAStation",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.DistinctFreshHoldsPassAndReleaseOrTimeoutClosesGate",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.ExpiredLeaseCannotMoveANewOwnersProp",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.GeneratedCodesCanBeEnteredOnTheOtherDevice",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.InvalidCodesAreRejected(null)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.InvalidCodesAreRejected(\"\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.InvalidCodesAreRejected(\"ABC12\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.InvalidCodesAreRejected(\"ABC1234\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.InvalidCodesAreRejected(\"ABC 23\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.InvalidCodesAreRejected(\"AB0I23\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.PoseInterpolationHoldsBoundedHistoryAndHidesStalledPlayers",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.PosePacketHasOnlyThreeTransformsAndCompactHandStates",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.ReadinessMustIncludeBothPlayersAndStaleReadyCannotReappear",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.TwoControllersFromOnePlayerNeverPassTheRealGate",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.UnreplicatedLabBlocksCrewLaunchButKeepsSoloAndHistoricalRoutes(\"LK_Lab_Environment\",0,False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.UnreplicatedLabBlocksCrewLaunchButKeepsSoloAndHistoricalRoutes(\"LK_Lab_Environment\",1,False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.UnreplicatedLabBlocksCrewLaunchButKeepsSoloAndHistoricalRoutes(\"LK_Lab_Environment\",2,True)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.UnreplicatedLabBlocksCrewLaunchButKeepsSoloAndHistoricalRoutes(\"LK_Lab_Environment\",3,True)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.UnreplicatedLabBlocksCrewLaunchButKeepsSoloAndHistoricalRoutes(\"LK_Bootstrap\",2,False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.UnreplicatedLabBlocksCrewLaunchButKeepsSoloAndHistoricalRoutes(\"LK_StormWatch\",2,False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewPolicyTests.WrapperAndRawTransportBothRejectTwoReadyKeepersWithoutChangingRoster",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.AmbiguousHierarchyPathsFailClosed",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.DifferentObjectSetsCannotAcquireEachOthersIds",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.MissingOrMalformedFingerprintsCannotConfirmARegistry(null)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.MissingOrMalformedFingerprintsCannotConfirmARegistry(\"\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.MissingOrMalformedFingerprintsCannotConfirmARegistry(\"invalid\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabRegistryLayoutTests.ObjectDiscoveryOrderDoesNotChangeTheAgreedLayout",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.LatencyGateModelTests.EightyMillisecondRttOnePercentLossKeepsFreshDistinctHolds",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.LatencyGateModelTests.SimultaneousRequestsAtEightyMillisecondsGrantExactlyOneOwner",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.CongestionKeepsLatestPosePerActorAndPropWithoutOverwritingPartner",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.TruncatedOversizedAndNonSampleTrafficIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.VisualMayHoldLastPoseWhileGameplayRejectsTheStaleHand",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkPracticeTests.AReadyPacketCannotEnablePracticeMode",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkPracticeTests.CancellingOrResettingClearsPracticeMode",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkPracticeTests.FourReadyKeepersCanEnterPracticeAndTheSnapshotCarriesTheMode",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkPracticeTests.NormalCoopStillNeedsSharedObjectivesWhilePracticeMayOpenTheLab",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkPracticeTests.PracticeDoesNotBypassReadinessOrPermitAFifthKeeper",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.PowerGridTests.DayOneCapacityPowersAllLoadsAndEngineRestartCannotClearTrippedBreaker",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.PowerGridTests.ReplicaRejectsLocalCommandsAndImpossibleOrNonfiniteHostStates",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.PowerGridTests.TwoBigLoadsAndLightsFitButThirdTripsEveryCircuitUntilSafeReset",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.S4TuningTests.OutagePulseIsSmoothBoundedAndHasOnePeakPerTwoSeconds",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchEngineTests.ClosedChokeDeadlineStallsAndExcessPullsFloodForEightSeconds",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchEngineTests.ClosedChokeFloodsEvenWhenPullsWereUnprimed",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchEngineTests.GuestContinuingAloneRetainsCurrentDayFuelConsumption",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchEngineTests.LowFuelCannotStartPourIsBoundedAndRunningEngineCanRunDry",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchEngineTests.ReadOnlyGuestCannotChangeFuelOrEngineAndDayOneNeverDrains",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchEngineTests.WrongOrderCoughsThenThreePrimersClosedChokeAndThreePullsRequireOpening",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.QuestManifestTests.RejectsUnsupportedOrMissingLaunchActivityWithoutMutating",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.QuestManifestTests.RepairsFlatManifestAndLeavesOtherActivityAlone(\"com.unity3d.player.UnityPlayerActivity\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.QuestManifestTests.RepairsFlatManifestAndLeavesOtherActivityAlone(\"com.unity3d.player.UnityPlayerGameActivity\")",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.QuestManifestTests.RepairsWrongValuesAndRefreshesConfiguredDevices",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.WrongSceneOrderIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.WrongEntryIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.LegacyWorldReplacementIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.ExtraWorldIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.DuplicateLobbyIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.EmptyManifestIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.NullManifestIsRejected",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.LobbyOnlyOptionsAreRejectedEvenWhenGlobalSceneSettingsAreCorrect",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.ShipSceneManifestTests.ShipManifestContainsExactlyLobbyThenExistingLab",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.FloodBalanceTests.DryIdleRunFailsBetweenThreeAndAHalfAndFourAndAHalfMinutes",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.FloodBalanceTests.MaximumLegalManualPumpingBuysTimeButNeverBeatsLeakOver120Seconds",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.FloodBalanceTests.RecoverableVolumePowerLeakGridCanReachNegativeNetRate",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.FloodBalanceTests.RepairedLeakAndElectricPumpRecoverFromFailHeightInUnder90Seconds",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.InteractionEventBridgeTests.SharedEventsEnqueueCommandsWithActorIdsAndDisposeUnsubscribes",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.GameplayLayersKeepNetworkingInsideApprovedAdapters",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.OnlyExplicitTransportAdaptersAreApproved(\"LK.Net\",True)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.OnlyExplicitTransportAdaptersAreApproved(\"LK.Networking\",True)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.OnlyExplicitTransportAdaptersAreApproved(\"LK.StormWatch.Networking\",True)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.OnlyExplicitTransportAdaptersAreApproved(\"LK.Net.Gameplay\",False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.OnlyExplicitTransportAdaptersAreApproved(\"LK.Core.Simulation\",False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.OnlyExplicitTransportAdaptersAreApproved(\"LighthouseKeepers.Runtime\",False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.OnlyExplicitTransportAdaptersAreApproved(\"Assembly-CSharp\",False)",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.SimulationCoreHasNoUnityOrNetworkingAssemblyReferences",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.AccumulatorEmitsExactlyTenTicksPerSecondAndPreservesRemainder",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.BeginDayPreservesFloodAndFuelWhileResetRunRestoresDryStart",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.CrossingMidTickDoesNotCountAnEntireTickTowardFailure",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.DryStrokeCannotBankWaterRemovalAndVolumeNeverGoesNegative",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.FailEtaDoesNotTreatOneStrokeAsContinuousPumping",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.FailRequiresThreeSecondsAndDroppingBelowResetsTimer",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.FloodedAndMissingPlinthRejectGeneratorWithReadableReason",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.FuelExhaustionCutsPowerAndRejectsAnotherStart",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.InvalidInputsAreRejectedWithoutPoisoningVolume",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.PowerLossStopsElectricPumpWithoutAutomaticRestart",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.PumpCooldownCannotBeBypassedByAlternatingActorsOrQueuedSpam",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.RepairAtSafeHeightSucceedsAndFailedRunRequiresReset",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.ReplicaCannotMutateOrAdvanceSimulation",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.VolumeHasNoHeightCeilingOrHeightDependentEasing",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.WaterCrossingPlinthImmediatelyCutsPowerAtNextSnapshot",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.Simulation.SimulationHostTests.WorldHeightUsesInjectedFloorOriginAndMeasuredPlinth",
+      "result": "Passed",
+      "message": null
+    }
+  ],
+  "PlayMode": [
+    {
+      "test": "LighthouseKeepers.Presentation.Environment.Tests.EnvironmentLobbyFlowTests.OriginalLobbyStartLoadsHouseWithOneGroundedPlayer",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Presentation.Environment.Tests.EnvironmentPresentationTests.LabUsesOnePlayerAndLightingUpdatesAllocateNoManagedMemory",
+      "result": "Failed",
+      "message": "  Expected: in range (0.22,0.462)\n  But was:  1.0f\n"
+    },
+    {
+      "test": "LighthouseKeepers.Presentation.Environment.Tests.ShellTraversalTests.ExistingRigWalksAuthoredHouseToGalleryRoute",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.RepairFirstWaitsForPowerAndThreeRealPullsRestorePump",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests.GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead",
+      "result": "Failed",
+      "message": "  Expected: 2\n  But was:  1\n"
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CoopAppearanceTests.BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes",
+      "result": "Failed",
+      "message": "Unhandled log message: '[Error] Coroutine couldn't be started because the the game object 'Grab wrench \u2014 grip to hold' is inactive!'. Use UnityEngine.TestTools.LogAssert.Expect"
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CoopAppearanceTests.RemoteGloveSurvivesDestructionOfTheLobbyRigResources",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewLobbyBoardTests.AlphanumericPadReceivesFirstTrackedHitAndDoesNotCoverSolo",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.CrewLobbyBoardTests.ExistingAlphanumericPadSupportsSixCharactersAndBackspaceWithoutKeyboard",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.DisconnectClearsRemoteOwnerAndNotifiesTheEightSecondReturnExactlyOnce",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.HostReceivesReleaseMomentumAndCapsExtremeThrows",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.ReleasePacketPreservesMomentumAndWorldGeneration",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkPracticeFreezeTests.PracticeCannotAdvanceToAnotherDayEvenAfterATaskWasCompleted",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkPracticeFreezeTests.PracticeDoesNotAdvanceTheClockOrAcceptIndependentRepairAndRadioProgress",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkRigTests.PlayerPrefabSpawnsOnRealOfflineRunnerWithoutAnotherCamera",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.NetworkRigTests.TwoInteractorChildrenResolveOneActor",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.ReleaseSoloOverrideTests.DayShortcutHasNoMutableRequestInRelease",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.ReleaseSoloOverrideTests.ReleaseBuildCannotEnableSoloOverride",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.SoloLobbyFlowTests.SoloButtonClosesAnExistingRunnerBeforeOpeningPractice",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.SoloLobbyFlowTests.SoloButtonLoadsLabWithoutHostingAndReturnsToLobby",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.FailedRetryButtonKeepsDayAndClearsPartialWork",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.MenuReturnClosesExistingCrewRunnerBeforeLobbyArrival",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.OfflineMenuReturnButtonLoadsLobbyWithXrUiAvailable",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TerminalReplayButtonResetsToDayOneWithoutMovingTrackedTransforms",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TrackedRaysReachReplayRetryAndReturnWithNearbyWall",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchReplicaTests.CompleteSnapshotFitsExistingReliableChannelAndRejectsCorruptPipePermutation",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchReplicaTests.HostDayPowerAndTaskStateAppliesToReadOnlyGuestWhileGuestCannotAdvanceAnything",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchReplicaTests.HostLossContinuationPreservesTheEntirePipeOrderAndUnfinishedRatchet",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Net.Tests.WatchReplicaTests.SoloRejectsRemoteWritesAndReplicaRejectsMalformedOrUnknownDay",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority",
+      "result": "Failed",
+      "message": "Unhandled log message: '[Error] Scene 'LK_Bootstrap' couldn't be loaded because it has not been added to the active build profile or shared scene list or the AssetBundle has not been loaded.\nTo add a scene to the active build profile or shared scene list use the menu File->Build Profiles'. Use UnityEngine.TestTools.LogAssert.Expect"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.DefaultLobbyUsesPhotonInsteadOfLocalSimulation",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.OfflineFusionSessionLoadsLabAndSurvivesBoardUnload",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.PhotonPeersShareRosterReadyLateJoinKickAndDisconnect",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.ReadyCrewRemainsInLobbyUntilLabSharedStateIsImplemented",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.TwoReadyKeepersLaunchLabAndHostStateCrossesExistingRunner",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyControllerEntryTests.HistoricalSceneRetainsItsReadinessAndLaunchRules",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyControllerEntryTests.HostAloneKeepsReadyGateAndCanEnterLabForDebugging",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.LobbyControllerEntryTests.TwoReadyKeepersStayConnectedButCannotEnterUnreplicatedLab",
+      "result": "Passed",
+      "message": null
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir",
+      "result": "Failed",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps",
+      "result": "Failed",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops",
+      "result": "Failed",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond",
+      "result": "Failed",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings",
+      "result": "Failed",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections",
+      "result": "Failed",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    },
+    {
+      "test": "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate",
+      "result": "Failed",
+      "message": "SetUp :   Expected: True\n  But was:  False\n"
+    }
+  ]
+}

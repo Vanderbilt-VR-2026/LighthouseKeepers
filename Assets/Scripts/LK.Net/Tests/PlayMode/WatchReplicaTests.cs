@@ -52,7 +52,7 @@ namespace LighthouseKeepers.Net.Tests
         static void StepPipe(object pipe)
         {Call(pipe,"Observe",.1f,Get<bool>(pipe,"NeedsReturn")?-7f:7f,true,true,true);}
         [Serializable] sealed class Wire
-        {public string protocol="LK-Lab-Coop-v2",world=new string('a',32),nonce=new string('b',32),state;public int sequence=100000;}
+        {public string protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot,world=new string('a',32),nonce=new string('b',32),state;public int sequence=100000;}
         [Test] public void CompleteSnapshotFitsExistingReliableChannelAndRejectsCorruptPipePermutation()
         {
             var host=Watch();var guest=Watch();Call(guest,"SetRemoteReplica",true);

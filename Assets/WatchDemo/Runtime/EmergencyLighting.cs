@@ -64,7 +64,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void StateChanged()
         {
-            bool next=state.HasPower(PowerCircuit.Lights);if(next==power&&initialized&&state.Elapsed>0)return;power=next;
+            bool next=state.HasPower(PowerCircuit.Lights)&&(!state.Immersion||!state.Failed);if(next==power&&initialized&&state.Elapsed>0)return;power=next;
             if(!power){outageStart=Time.unscaledTime;alarm.volume=tuning&&tuning.soundPass?tuning.alarmVolume:.09f;}
             if(power)alarm.Stop();else if(!alarm.isPlaying)alarm.Play();
         }
@@ -80,7 +80,8 @@ namespace LighthouseKeepers.WatchDemo
             bool blackout=tuning&&tuning.blackout;
             float pulse=blackout?tuning.EmergencyPulse(Time.unscaledTime):PulseAt(Time.unscaledTime,cycleSeconds);
             var tint=blackout?tuning.emergencyTint:new Color(1,.82f,.68f,1);
-            var illumination=Color.Lerp(tint*pulse,Color.white,Mathf.SmoothStep(0,1,warm));
+            float atmosphere=state.Immersion&&state.Immersion.atmosphere?state.Immersion.interiorLightMultiplier:1;
+            var illumination=Color.Lerp(tint*pulse,Color.white*atmosphere,Mathf.SmoothStep(0,1,warm));
             for(int i=0;i<materials.Count;i++)
             {
                 var colour=baseColours[i]*illumination;colour.a=baseColours[i].a;materials[i].SetColor("_BaseColor",colour);
@@ -88,13 +89,13 @@ namespace LighthouseKeepers.WatchDemo
                 {
                     var e=emissions[i];float strength=Mathf.Max(e.r,Mathf.Max(e.g,e.b));
                     var emergency=blackout?tint*strength*pulse+baseColours[i]*.003f:new Color(1,.78f,.58f)*strength*pulse+baseColours[i]*(.025f+.025f*pulse);
-                    materials[i].SetColor("_EmissionColor",Color.Lerp(emergency,e,warm));
+                    materials[i].SetColor("_EmissionColor",Color.Lerp(emergency,e*atmosphere,warm));
                 }
             }
             for(int i=0;i<interiorLights.Length;i++)
             {
                 var light=interiorLights[i];light.color=Color.Lerp(blackout?tint:Color.Lerp(normalLightColours[i],new Color(1,.48f,.25f),.25f),normalLightColours[i],warm);
-                light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,1,warm);
+                light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,atmosphere,warm);
             }
             foreach(var guide in guides)guide.intensity=tuning.guideLampIntensity*(1-warm)*(blackout?pulse/Mathf.Max(.01f,tuning.emergencyMaximum):1);
         }

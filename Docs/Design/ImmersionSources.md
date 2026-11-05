@@ -1,0 +1,8 @@
+# Immersion asset sources
+
+- Harbor-master script: original lead-written lines and original bridge/hint lines in [RadioLines.md](RadioLines.md). Placeholder speech generated locally with macOS `say -v Daniel -r 145 -o voice.aiff '<line>'`, then `afconvert -f WAVE -d LEI16@24000 -c 1 voice.aiff keeper_name.wav`. No game dialogue or sampled actor performance was used. Plain WAV recordings are in `Assets/Audio/Radio`; their catalog references survive replacement at the same paths with their `.meta` files preserved.
+- Radio processing: Unity high-pass 300 Hz, low-pass 3400 Hz, distortion 0.08. Seeded original static/crackle generated in `HarborRadio.MakeNoise`; existing original `Hands/clunk` supplies the squelch transient. Wall source is spatial; the quieter local belt receiver fades in away from the wall set. Photon Voice remains independent.
+- Additional ambience: original deterministic synthesized wind, thunder, creak, foghorn, drip and motor tones in `Assets/WatchDemo/Resources/ImmersionAudio`. No third-party audio samples. Generation script is preserved in this directory.
+- Existing pipe hiss, water, ratchet, starter, footsteps, bed storm and day bell are reused from the accepted S4 sound pass; their original source documentation remains applicable.
+- Chalk/ink typeface: **Kalam Regular**, Google Fonts repository, `https://github.com/google/fonts/tree/main/ofl/kalam`. SIL Open Font License and copyright notice are preserved alongside the font in `Assets/WatchDemo/Resources/Fonts/OFL.txt`.
+- Paper wear, stitched binding, plates, tally windows, fittings and radio cabinet are generated geometry/textures. No image generation or replacement of William's avatars or water materials.

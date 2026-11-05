@@ -36,11 +36,20 @@ namespace LighthouseKeepers.Net
             var go=new GameObject("Crew microphone (permission gated)");go.transform.SetParent(transform,false);
             PrimaryRecorder=go.AddComponent<Recorder>();PrimaryRecorder.RecordingEnabled=false;PrimaryRecorder.TransmitEnabled=false;
             PrimaryRecorder.UserData=channel.LocalActorId;PrimaryRecorder.VoiceDetection=false;
-            PrimaryRecorder.StopRecordingWhenPaused=true;PrimaryRecorder.Bitrate=24000;
+            PrimaryRecorder.StopRecordingWhenPaused=true;PrimaryRecorder.SamplingRate=POpusCodec.Enums.SamplingRate.Sampling48000;PrimaryRecorder.FrameDuration=Photon.Voice.OpusCodec.FrameDuration.Frame20ms;PrimaryRecorder.Bitrate=48000;
+            CrewVoiceProcessing.Configure(PrimaryRecorder);
+            go.AddComponent<CrewAudioActivity>().Recorder=PrimaryRecorder;
             base.Start();AddRecorder(PrimaryRecorder);channel.Runner.AddCallbacks(this);
-            AutoConnectAndJoin=true;ConnectAndJoinRoom();
+            AutoConnectAndJoin=true;StartCoroutine(ConnectWhenRoomReady());
             StartCoroutine(RequestMicrophone());
-            Debug.Log("CREW_VOICE joined crew; permission before capture; region="+Settings.FixedRegion);
+            Debug.Log("CREW_VOICE prepared; permission before capture; region="+Settings.FixedRegion+" rate="+PrimaryRecorder.SamplingRate+" bitrate="+PrimaryRecorder.Bitrate+" packet="+PrimaryRecorder.FrameDuration);
+        }
+        IEnumerator ConnectWhenRoomReady()
+        {
+            // Fusion may invalidate SessionInfo during shutdown before transport IsOnline
+            // changes. Let Photon follow a valid room, never force-connect a departed leader.
+            while(channel&&channel.Connected&&!LeaderInRoom)yield return null;
+            if(channel&&channel.Connected&&LeaderInRoom)LeaderStateChanged(Photon.Realtime.ClientState.Joined);
         }
         IEnumerator RequestMicrophone()
         {
@@ -67,6 +76,7 @@ namespace LighthouseKeepers.Net
         {
             if(!permission){StartCoroutine(RequestMicrophone());return;}
             Muted=!Muted;ApplyMute();
+            Debug.Log($"CREW_VOICE mute={Muted} recording={PrimaryRecorder.RecordingEnabled} transmit={PrimaryRecorder.TransmitEnabled}");
         }
         void ApplyMute()
         {
@@ -80,6 +90,7 @@ namespace LighthouseKeepers.Net
             var audio=go.AddComponent<AudioSource>();audio.playOnAwake=false;audio.spatialBlend=1;audio.dopplerLevel=0;
             audio.rolloffMode=AudioRolloffMode.Linear;audio.minDistance=tuning.voiceNearM;audio.maxDistance=tuning.voiceFarM;audio.volume=tuning.voiceVolume;
             var follow=go.AddComponent<CrewVoiceHead>();follow.Actor=actor;
+            KeeperAudioMix.Route(audio,"VoiceChat");
             var speaker=go.AddComponent<Speaker>();speaker.OnRemoteVoiceRemoveAction=s=>{if(s)Destroy(s.gameObject);};return speaker;
         }
         protected override void OnDestroy()

@@ -11,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class WatchDeviceMetrics : MonoBehaviour
     {
         readonly List<XRDisplaySubsystem> displays = new();
-        ProfilerRecorder draws, allocations, mainThread;
+        ProfilerRecorder draws, allocations, mainThread, audioDsp;
         string scene;
         float start, next;
         float maxFrameMs;
@@ -25,6 +25,7 @@ namespace LighthouseKeepers.WatchDemo
             extended=LighthouseKeepers.Core.S4Tuning.Current;
             SubsystemManager.GetSubsystems(displays);
             mainThread=ProfilerRecorder.StartNew(ProfilerCategory.Internal,"Main Thread");
+            try{audioDsp=ProfilerRecorder.StartNew(ProfilerCategory.Audio,"MasterDSP");}catch(System.Exception){Debug.LogWarning("AUDIO_PERF MasterDSP counter unavailable");}
             draws=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Draw Calls Count");
             allocations=ProfilerRecorder.StartNew(ProfilerCategory.Memory,"GC Allocated In Frame");
         }
@@ -49,10 +50,12 @@ namespace LighthouseKeepers.WatchDemo
                     var watch=FindAnyObjectByType<WatchDemoController>();var voice=LighthouseKeepers.Lobby.CrewVoiceBridge.Current;
                     Debug.Log($"S4_PERF day={(watch?watch.State.Day:0)} fps={count/(elapsed-next):F1} max_frame_ms={maxFrameMs:F2} voice={(voice!=null?voice.StatusText:"OFF")} focus={Application.isFocused}");
                 }
+                var ceiling=FindAnyObjectByType<LighthouseKeepers.Core.AudioCeiling>();
+                Debug.Log($"AUDIO_PERF dsp_valid={audioDsp.Valid} dsp_ms={(audioDsp.Valid?audioDsp.LastValue/1000000.0:-1):F4} ceiling_ms={(ceiling?ceiling.MeanCpuMs:-1):F4} real_voice_cap={AudioSettings.GetConfiguration().numRealVoices}");
                 next=elapsed;gpu=cpu=0;count=0;maxFrameMs=0;break;
             }
         }
-        void OnDestroy(){draws.Dispose();allocations.Dispose();mainThread.Dispose();}
+        void OnDestroy(){draws.Dispose();allocations.Dispose();mainThread.Dispose();audioDsp.Dispose();}
     }
 }
 #endif
