@@ -29,7 +29,7 @@ Four pooled spatial impact emitters: outdoors 2–5 events/second, indoors 1–2
 | Ambience | −4 dB | 140 | −3 dB during voice/radio |
 | Music | −2 dB | 200 | −7 dB during voice/radio |
 
-With normalized source references, music's .23 source gain places it about 11 dB below the .65 wall-radio anchor. Exterior rain is about 4 dB below Radio, interior about 7.2 dB, roof about 5.5 dB. These are calibrated gain targets, not measured per-bus playback LUFS. Radio band-pass 300–3400 Hz and light distortion remain in-engine; belt radio is quieter and fades in with distance from the wall set.
+With normalized source references, music's .23 source gain places it about 11 dB below the .65 wall-radio anchor. Exterior rain is about 4 dB below Radio, interior about 7.2 dB, roof about 5.5 dB. These are calibrated gain targets, not measured per-bus playback LUFS. Radio band-pass 300–3400 Hz and light distortion remain in-engine; belt radio fades in with distance from the wall set. Its new .65 source gain compensates for the recorded storm; belt distance rolloff makes it roughly 3 dB quieter than a nearby wall receiver.
 
 Voice chat retains Photon open-mic permissions and head-position spatialization. A post-decode speech leveler targets .09 RMS with gain .5–6, a .002 silence gate, .8 peak protection and 50 ms reduction / 600 ms recovery. The existing .85 source gain puts normal voice close to the Radio reference. Local microphone activity and remote decoded speech both drive ducking; no microphone capture is enabled in solo.
 

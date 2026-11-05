@@ -27,7 +27,7 @@ namespace LighthouseKeepers.WatchDemo
   AudioSource Source(string name){var g=new GameObject(name);g.transform.SetParent(transform,false);var a=g.AddComponent<AudioSource>();a.playOnAwake=false;a.spatialBlend=0;return a;}
   void Update()
   {
-   if(lobby)return;
+   if(lobby){if(!deck[0].isPlaying&&deck[0].clip)deck[0].Play();return;}
    var s=watch.State;if(s==null)return;
    if(day!=s.Day||s.Elapsed<lastElapsed-.01){day=s.Day;tasks=s.CompletedTasks;failed=sleeping=false;pendingFixed=0;pending=-1;mode=-1;}
    lastElapsed=s.Elapsed;

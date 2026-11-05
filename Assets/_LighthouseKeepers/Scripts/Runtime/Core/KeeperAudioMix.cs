@@ -32,6 +32,7 @@ namespace LighthouseKeepers.Core
   void Assign(AudioSource source,string bus)
   {
    if(!source||!groups.TryGetValue(bus,out var group))return;
+   if(SceneManager.GetActiveScene().name=="LK_NetworkLobby"&&source.clip&&source.clip.name.StartsWith("Placeholder_"))source.Stop();
    source.outputAudioMixerGroup=group;source.priority=bus=="VoiceChat"?0:bus=="Radio"?10:bus=="SFX_Critical"?40:bus=="SFX_World"?90:bus=="Ambience"?140:200;
    if(!routed.Add(source.GetInstanceID()))return;
    if(bus=="VoiceChat"&&!source.GetComponent<SpeechLeveler>())source.gameObject.AddComponent<SpeechLeveler>();
@@ -42,7 +43,7 @@ namespace LighthouseKeepers.Core
    string n=a.name.ToLowerInvariant();if(n.Contains("remote keeper voice"))return "VoiceChat";
    foreach(var p in a.GetComponentsInParent<MonoBehaviour>(true))if(p&&p.GetType().Name=="HarborRadio")return "Radio";
    if(n.Contains("adaptive music"))return "Music";
-   if(n.Contains("rain")||n.Contains("gust")||n.Contains("ocean")||n.Contains("weather")||n.Contains("window")||n.Contains("heartbeat"))return "Ambience";
+   if(n.Contains("ambience")||n.Contains("rain")||n.Contains("gust")||n.Contains("ocean")||n.Contains("weather")||n.Contains("window")||n.Contains("heartbeat"))return "Ambience";
    if(n.Contains("pipe")||n.Contains("engine")||n.Contains("generator")||n.Contains("beacon")||n.Contains("radio")||n.Contains("alarm")||n.Contains("breaker")||n.Contains("stings"))return "SFX_Critical";
    return "SFX_World";
   }
