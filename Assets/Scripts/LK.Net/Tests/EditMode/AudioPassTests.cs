@@ -39,6 +39,10 @@ namespace LighthouseKeepers.Net.Tests
             Assert.Greater(((Vector3)f.Invoke(null,new object[]{new Vector3(8,1.65f,0)})).x,.99f);
             var door=(Vector3)f.Invoke(null,new object[]{new Vector3(0,1.65f,-4.4f)});Assert.That(door.x,Is.InRange(.1f,.9f));Assert.That(door.x+door.y+door.z,Is.EqualTo(1).Within(.001f));
         }
+        [Test] public void Phase5VoiceIdentitySurvivesPhotonSpeakerRename()
+        {
+            var g=new GameObject("Remote keeper voice 2");try{var a=g.AddComponent<AudioSource>();g.AddComponent<LighthouseKeepers.Core.SpeechLeveler>();g.name="Remote p#2 v#1";var method=typeof(LighthouseKeepers.Core.KeeperAudioMix).GetMethod("Classify",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic);Assert.AreEqual("VoiceChat",method.Invoke(null,new object[]{a}));}finally{Object.DestroyImmediate(g);}
+        }
         [Test] public void Phase5MixerHasSixBusesAndCeilingKeepsQuietAudioUnchanged()
         {
             var m=Resources.Load<UnityEngine.Audio.AudioMixer>("KeeperAudio");Assert.NotNull(m);

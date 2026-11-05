@@ -36,12 +36,12 @@ namespace LighthouseKeepers.Net
             var go=new GameObject("Crew microphone (permission gated)");go.transform.SetParent(transform,false);
             PrimaryRecorder=go.AddComponent<Recorder>();PrimaryRecorder.RecordingEnabled=false;PrimaryRecorder.TransmitEnabled=false;
             PrimaryRecorder.UserData=channel.LocalActorId;PrimaryRecorder.VoiceDetection=false;
-            PrimaryRecorder.StopRecordingWhenPaused=true;PrimaryRecorder.Bitrate=24000;
+            PrimaryRecorder.StopRecordingWhenPaused=true;PrimaryRecorder.SamplingRate=POpusCodec.Enums.SamplingRate.Sampling48000;PrimaryRecorder.FrameDuration=Photon.Voice.OpusCodec.FrameDuration.Frame20ms;PrimaryRecorder.Bitrate=48000;
             go.AddComponent<CrewAudioActivity>().Recorder=PrimaryRecorder;
             base.Start();AddRecorder(PrimaryRecorder);channel.Runner.AddCallbacks(this);
             AutoConnectAndJoin=true;StartCoroutine(ConnectWhenRoomReady());
             StartCoroutine(RequestMicrophone());
-            Debug.Log("CREW_VOICE prepared; permission before capture; region="+Settings.FixedRegion);
+            Debug.Log("CREW_VOICE prepared; permission before capture; region="+Settings.FixedRegion+" rate="+PrimaryRecorder.SamplingRate+" bitrate="+PrimaryRecorder.Bitrate+" packet="+PrimaryRecorder.FrameDuration);
         }
         IEnumerator ConnectWhenRoomReady()
         {

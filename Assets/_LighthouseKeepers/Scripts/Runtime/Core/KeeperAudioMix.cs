@@ -35,11 +35,15 @@ namespace LighthouseKeepers.Core
    if(SceneManager.GetActiveScene().name=="LK_NetworkLobby"&&source.clip&&source.clip.name.StartsWith("Placeholder_"))source.Stop();
    source.outputAudioMixerGroup=group;source.priority=bus=="VoiceChat"?0:bus=="Radio"?10:bus=="SFX_Critical"?40:bus=="SFX_World"?90:bus=="Ambience"?140:200;
    if(!routed.Add(source.GetInstanceID()))return;
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+   if(bus=="VoiceChat")Debug.Log("AUDIO_VOICE_ROUTE name="+source.name+" group=VoiceChat priority="+source.priority);
+#endif
    if(bus=="VoiceChat"&&!source.GetComponent<SpeechLeveler>())source.gameObject.AddComponent<SpeechLeveler>();
    if(bus=="VoiceChat"||bus=="Radio"){var meter=source.GetComponent<AudioSignalMeter>();if(!meter)meter=source.gameObject.AddComponent<AudioSignalMeter>();meter.Source=source;meter.Voice=bus=="VoiceChat";if(!meters.Contains(meter))meters.Add(meter);}
   }
   static string Classify(AudioSource a)
   {
+   if(a.GetComponent<SpeechLeveler>())return "VoiceChat"; // Photon renames its Speaker after linking.
    string n=a.name.ToLowerInvariant();if(n.Contains("remote keeper voice"))return "VoiceChat";
    foreach(var p in a.GetComponentsInParent<MonoBehaviour>(true))if(p&&p.GetType().Name=="HarborRadio")return "Radio";
    if(n.Contains("adaptive music"))return "Music";

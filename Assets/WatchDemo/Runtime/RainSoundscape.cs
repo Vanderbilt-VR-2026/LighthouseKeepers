@@ -47,7 +47,7 @@ namespace LighthouseKeepers.WatchDemo
    int kind=head.position.y>9.7f?1:blend.x>.5f?2:blend.z>.5f?1:Random.value<.7f?0:3;Vector3 position=head.position;
    if(kind==0){float distance=float.MaxValue;foreach(var w in windows){float d=(w-head.position).sqrMagnitude;if(d<distance){distance=d;position=w;}}if(head.position.z< -4)position=new Vector3(head.position.x<0?-3.6f:3.6f,2,-8.6f);}
    else{var offset=Random.insideUnitCircle.normalized*Random.Range(1,3);position+=new Vector3(offset.x,kind==1?1.2f:kind==2?-1.4f:1.5f,offset.y);}
-   a.transform.position=position;a.clip=impacts[kind];a.pitch=Random.Range(.85f,1.15f);a.volume=Random.Range(.12f,.23f);if(a.clip)a.Play();
+   a.transform.position=position;a.clip=impacts[kind];a.pitch=Random.Range(.85f,1.15f);a.volume=Random.Range(.08f,.16f);if(a.clip)a.Play();
   }
   void OnDestroy(){var legacy=FindAnyObjectByType<LighthouseKeepers.Presentation.Environment.ShellWeatherPresentation>();if(legacy)legacy.ExternalStormAudio=false;}
  }
