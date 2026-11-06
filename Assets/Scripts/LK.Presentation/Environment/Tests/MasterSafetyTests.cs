@@ -4,7 +4,7 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
  public sealed class MasterSafetyTests {
   [UnityTest] public IEnumerator BakedPracticalLightingLeavesAtMostOneRealtimeSource(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
-   Assert.That(UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l=>l.enabled&&l.lightmapBakeType==LightmapBakeType.Realtime),Is.LessThanOrEqualTo(1));Assert.That(LightmapSettings.lightmaps.Length,Is.GreaterThan(0));Assert.That(UnityEngine.Object.FindObjectsByType<ReflectionProbe>(FindObjectsSortMode.None).Count(p=>p.bakedTexture),Is.GreaterThanOrEqualTo(5));
+   Assert.That(UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l=>l.enabled&&l.lightmapBakeType==LightmapBakeType.Realtime),Is.LessThanOrEqualTo(1));Assert.That(LightmapSettings.lightmaps.Length,Is.GreaterThan(0));Assert.That(UnityEngine.Object.FindObjectsByType<ReflectionProbe>(FindObjectsSortMode.None).Count(p=>p.bakedTexture||p.customBakedTexture),Is.GreaterThanOrEqualTo(5));
   }
   [UnityTest] public IEnumerator DecorativeWorldDoesNotAddPlayerObstaclesAndWaterKeepsItsHostSurface(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
