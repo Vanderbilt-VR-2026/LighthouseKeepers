@@ -75,7 +75,7 @@ namespace LighthouseKeepers.WatchDemo
         public double BeaconDarkLimit=>Definition.beaconDarkLimitSeconds*(Tuning&&Tuning.difficulty?Tuning.beaconLimitMultiplier:1);
         public double BeaconDarkRemaining=>Math.Max(0,BeaconDarkLimit-BeaconDarkElapsed)+BeaconGraceRemaining;
         public bool BeaconDarkFailed {get;private set;}
-        public string FailureMessage=>HighWaterFailed?"WATCH LOST — LIGHTHOUSE FLOODED":BeaconDarkFailed?"WATCH LOST — BEACON DARK":"WATCH ENDED — TIME EXPIRED";
+        public string FailureMessage=>HighWaterFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.1"):BeaconDarkFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.2"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.3");
         int repairSeed=System.Environment.TickCount;
         public DayDefinition Definition => days[index];
         public int Day => Definition.day;

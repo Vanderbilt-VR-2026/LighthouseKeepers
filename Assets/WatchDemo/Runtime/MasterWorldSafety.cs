@@ -28,6 +28,16 @@ namespace LighthouseKeepers.WatchDemo {
    }
    railMesh=new Mesh{name="Single draw gallery safety rails"};railMesh.CombineMeshes(combine.ToArray(),true,true);var go=new GameObject("Gallery brass safety rails");go.transform.SetParent(root.transform,false);go.AddComponent<MeshFilter>().sharedMesh=railMesh;var r=go.AddComponent<MeshRenderer>();r.sharedMaterial=parts.Metal;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;Changes.Add("64 overlapping perimeter collision segments; one combined visible railing mesh");
   }
+  void Start(){
+   // Surveyed with a 0.25 m floor grid and full-height outward capsule sweeps.
+   // Keep the stair route itself open; guard only the unsupported sides of its arrival cut-outs.
+   var samples=new[]{(new Vector3(-2.05f,6.6f,2.45f),Vector3.back),(new Vector3(-2.05f,6.6f,2.7f),Vector3.back),(new Vector3(-1.55f,9.9f,1.95f),Vector3.back),(new Vector3(-1.3f,9.9f,1.7f),Vector3.left),(new Vector3(-1.3f,9.9f,1.7f),Vector3.back)};
+   var parts=GetComponent<M2StationParts>()??gameObject.AddComponent<M2StationParts>();parts.Initialize();
+   foreach(var sample in samples){var t=M2StationParts.Root("Surveyed stair opening guard",transform,Vector3.zero);t.position=sample.Item1+sample.Item2*.44f+Vector3.up*.55f;t.rotation=Quaternion.LookRotation(sample.Item2);var c=t.gameObject.AddComponent<BoxCollider>();c.size=new Vector3(.52f,1.1f,.04f);
+    foreach(float y in new[]{-.35f,.45f})parts.Part("Fixed brass guard rail",t,new Vector3(0,y,0),new Vector3(.52f,.035f,.035f),parts.Metal);
+    parts.Part("Fixed guard upright",t,new Vector3(.23f,0,0),new Vector3(.035f,1.1f,.035f),parts.Metal);
+   }Physics.SyncTransforms();
+  }
   void OnDestroy(){if(railMesh)Destroy(railMesh);foreach(var m in pieces)if(m)Destroy(m);}
  }
 }

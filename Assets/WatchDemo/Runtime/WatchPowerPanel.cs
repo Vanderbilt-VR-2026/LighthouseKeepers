@@ -74,13 +74,13 @@ namespace LighthouseKeepers.WatchDemo
             Part("Recessed control face",transform,new Vector3(0,1.28f,.18f),new Vector3(.72f,.97f,.025f),face);
             for(int x=-1;x<=1;x+=2)for(int y=-1;y<=1;y+=2)
                 Part("Cabinet screw",transform,new Vector3(x*.345f,1.28f+y*.45f,.202f),Vector3.one*.025f,brass,PrimitiveType.Sphere);
-            Label("Panel heading","POWER DISTRIBUTION",new Vector3(0,1.72f,.21f),.0045f);
+            Label("Panel heading",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPowerPanel.4"),new Vector3(0,1.72f,.21f),.0045f);
             Part("Load meter surround",transform,new Vector3(0,1.54f,.205f),new Vector3(.59f,.23f,.035f),brass);
             Part("Load meter glass face",transform,new Vector3(0,1.54f,.227f),new Vector3(.55f,.19f,.012f),cream);
             Part("Overload red zone",transform,new Vector3(-.145f,1.525f,.237f),new Vector3(.08f,.07f,.006f),red);
             needle=Root("Load needle pivot",transform,new Vector3(0,1.465f,.247f));
             Part("Load needle",needle,new Vector3(0,.07f,0),new Vector3(.008f,.14f,.008f),face);
-            Label("Meter legend","LOAD         OVER",new Vector3(0,1.59f,.25f),.0035f);
+            Label("Meter legend",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPowerPanel.5"),new Vector3(0,1.59f,.25f),.0035f);
             for(int i=0;i<4;i++)
             {
                 float x=.27f-i*.18f;
@@ -89,7 +89,7 @@ namespace LighthouseKeepers.WatchDemo
                 controls[i]=MakeControl("SWITCH_"+((PowerCircuit)i).ToString().ToUpperInvariant(),new Vector3(x,1.18f,.22f),i,false);
             }
             reset=MakeControl("RESET breaker lever",new Vector3(.23f,.92f,.22f),-1,true);
-            Label("Reset label","RESET",new Vector3(.23f,.81f,.24f),.004f);
+            Label("Reset label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPowerPanel.6"),new Vector3(.23f,.81f,.24f),.004f);
             tripLamp=Part("Tripped lamp",transform,new Vector3(-.25f,.93f,.23f),new Vector3(.07f,.05f,.025f),red).GetComponent<Renderer>();
             readout=Label("Breaker instruction","",new Vector3(-.075f,.98f,.24f),.0031f);
             sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.4f;sound.maxDistance=10;
@@ -126,7 +126,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<4;i++){controls[i].SetSelected(Grid.Selected((PowerCircuit)i));Lamp(lamps[i],new Color(.06f,.8f,.15f),Grid.Powered((PowerCircuit)i));}
             Lamp(tripLamp,new Color(1,.035f,.015f),Grid.Tripped);
             needle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-65,65,Mathf.Clamp01(Grid.Demand/(Grid.Capacity*1.25f))));
-            readout.text=watch.State.Director!=null?"":Grid.Tripped?"TRIPPED\nSWITCH LOADS OFF\nTHEN RESET":!Grid.EngineRunning?"GENERATOR OFF\nSTART ENGINE":$"{Grid.Demand:0.##} / {Grid.Capacity:0.##}\nKEEP BELOW LIMIT";
+            readout.text=watch.State.Director!=null?"":Grid.Tripped?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPowerPanel.1"):!Grid.EngineRunning?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPowerPanel.2"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPowerPanel.3"),Grid.Demand,Grid.Capacity);
             if(Grid.Tripped&&!wasTripped&&clunk)sound.PlayOneShot(clunk,.65f);wasTripped=Grid.Tripped;
         }
         void OnDestroy(){if(watch&&watch.State!=null)watch.State.Changed-=Refresh;foreach(var m in ownedMaterials)if(m)Destroy(m);}

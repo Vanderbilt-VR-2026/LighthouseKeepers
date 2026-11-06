@@ -18,7 +18,7 @@ namespace LighthouseKeepers.Net
         public bool Muted {get;private set;}
         public bool MicrophoneAllowed=>permission;
         public override bool AlwaysUsePrimaryRecorder=>true;
-        public string StatusText=>!permission?permissionStatus:Muted?"MIC MUTED":"MIC ON · "+ClientState;
+        public string StatusText=>!permission?permissionStatus:Muted?LighthouseKeepers.Core.PlayerStrings.Get("legacy.CrewVoiceSession.1"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.CrewVoiceSession.2")+ClientState;
 
         public static void Ensure(NetworkRunner runner,FusionMessageChannel channel)
         {
@@ -69,7 +69,7 @@ namespace LighthouseKeepers.Net
             if(!Application.HasUserAuthorization(UserAuthorization.Microphone))yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
             permission=Application.HasUserAuthorization(UserAuthorization.Microphone);
 #endif
-            requesting=false;permissionStatus=permission?"Microphone allowed":"MIC PERMISSION DENIED · tap to retry";
+            requesting=false;permissionStatus=permission?LighthouseKeepers.Core.PlayerStrings.Get("voice.allowed"):LighthouseKeepers.Core.PlayerStrings.Get("voice.denied");
             ApplyMute();Debug.Log("CREW_VOICE microphone permission="+permission);
         }
         public void ToggleMute()

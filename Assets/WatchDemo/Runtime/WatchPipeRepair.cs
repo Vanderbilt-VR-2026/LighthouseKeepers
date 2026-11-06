@@ -105,7 +105,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             else if(!InContact||degrees*state.Direction>0)returnClickDegrees=0;
             state.Observe(Time.deltaTime,degrees,InContact,steady,!watch.Failed);
-            if(watch.Failed){if(!failureShown){Changed();prompt.text="WATCH LOST — PRESS TRIGGER TO RETRY";failureShown=true;}return;}
+            if(watch.Failed){if(!failureShown){Changed();prompt.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPipeRepair.1");failureShown=true;}return;}
             if(watch.Immersion&&watch.Immersion.physicalGuidance)return;
             if(Time.unscaledTime<nextText)return;nextText=Time.unscaledTime+.1f;
             if(state.Complete){prompt.text="PIPE SEALED  3/3";return;}
@@ -113,8 +113,8 @@ namespace LighthouseKeepers.WatchDemo
             var facing=prompt.transform.position-head.position;if(facing.sqrMagnitude>.01f)prompt.transform.rotation=Quaternion.LookRotation(facing);
             if(Vector3.Distance(head.position,bolts[index].position)>3){prompt.text="";return;}
             string name=((char)('A'+index)).ToString();
-            string instruction=!InContact?"SEAT WRENCH JAW ON GLOWING BOLT":state.NeedsSeal?$"HOLD STEADY  {Mathf.CeilToInt(state.Profile.sealSeconds-state.SealElapsed)}s":state.NeedsReturn?"RETURN WRIST / REGRIP":$"TURN WRIST  {state.TurnsDone}/{state.Profile.quarterTurns[index]} CLICKS";
-            prompt.text=$"COUPLING {name}  /  PIPE {state.BoltsDone}/3\n{instruction}";
+            string instruction=!InContact?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPipeRepair.3"):state.NeedsSeal?$"HOLD STEADY  {Mathf.CeilToInt(state.Profile.sealSeconds-state.SealElapsed)}s":state.NeedsReturn?"RETURN WRIST / REGRIP":$"TURN WRIST  {state.TurnsDone}/{state.Profile.quarterTurns[index]} CLICKS";
+            prompt.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPipeRepair.2"),name,state.BoltsDone,instruction);
         }
         // atan2 preserves sub-degree motion at high Editor frame rates; acos(w) in
         // ToAngleAxis rounds tiny rotations to zero and made slow turns inconsistent.

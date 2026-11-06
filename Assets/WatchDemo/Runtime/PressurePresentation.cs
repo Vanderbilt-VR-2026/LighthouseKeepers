@@ -13,7 +13,7 @@ namespace LighthouseKeepers.WatchDemo {
    }
    horn=new GameObject("Approaching ship horn").AddComponent<AudioSource>();horn.transform.SetParent(transform,false);horn.transform.position=new Vector3(10,3,0);horn.playOnAwake=false;horn.spatialBlend=1;horn.minDistance=3;horn.maxDistance=30;horn.clip=Resources.Load<AudioClip>("ImmersionAudio/foghorn");KeeperAudioMix.Route(horn,"SFX_Critical");
   }
-  void Update(){var s=watch.State;if(clock){int left=Mathf.Max(0,(int)(s.Duration-s.Elapsed));if(left!=shownSecond||shownTutorial!=s.Tutorial){shownSecond=left;shownTutorial=s.Tutorial;clock.text=s.Tutorial?KeeperStrings.Get("watch.training"):$"{left/60:00}:{left%60:00}";}}
+  void Update(){var s=watch.State;if(clock){int left=Mathf.Max(0,(int)(s.Duration-s.Elapsed));if(left!=shownSecond||shownTutorial!=s.Tutorial){shownSecond=left;shownTutorial=s.Tutorial;clock.text=s.Tutorial?KeeperStrings.Get("watch.training"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.PressurePresentation.1"),left/60,left%60);}}
    if(s.Failed||s.Complete)return;
    int m=(int)((s.Duration-s.Elapsed)/60);bool toll=m<2&&m!=minute;minute=m;
    if(toll||!s.BeaconShining&&Time.time>=nextHorn){nextHorn=Time.time+10;horn.transform.position=head.position+Vector3.right*Mathf.Lerp(22,5,s.BeaconDanger);horn.volume=Mathf.Lerp(.08f,.25f,s.BeaconDanger);if(horn.clip)horn.Play();}

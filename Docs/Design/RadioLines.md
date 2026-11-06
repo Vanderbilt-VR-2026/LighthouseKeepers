@@ -85,3 +85,7 @@ Original teammate recordings are unchanged. The following **offline macOS Daniel
 | `keeper_next_power.wav` | Check the breakers beside the generator. |
 | `keeper_next_sleep.wav` | Jobs done. Grip your bunk upstairs. |
 | `keeper_soft_warning.wav` | Follow the hiss, keeper. Take your time with the wrench. |
+
+## Composite status — Part C preparation
+
+Host chooses one sentence containing water, time-to-dawn and beacon status. IDs 44–75 encode 4 time buckets × 4 water bands × 2 beacon states; no new snapshot field. The expanded cue vocabulary requires LK-S4-VISUALS-C0 / v15 on both clients. Each file `keeper_status_T_W_B.wav` is one plain Daniel TTS take, mono 44.1 kHz, -18 LUFS/-1 dBTP processing; the normal PA filter remains. Replace using the same import pipeline. Captions and filenames live in KeeperStrings.json. Queued requests refresh their state when played, rather than announcing stale conditions.

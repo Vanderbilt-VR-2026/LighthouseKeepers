@@ -723,6 +723,846 @@
     {
       "key": "menu.back",
       "text": "BACK"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.1",
+      "text": "WATCH LOST\nPRESS TRIGGER TO RETRY"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.2",
+      "text": "NO RADIO POWER\nCHECK BREAKER ON F2"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.3",
+      "text": "NO POWER\nSTART GENERATOR ON F2"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.4",
+      "text": "1  FLIP MAIN POWER"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.5",
+      "text": "COPY, KEEPER\nWARNING RECEIVED"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.6",
+      "text": "TRANSMITTING  {0:F1}s\nKEEP TRIGGER HELD"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.7",
+      "text": "2  TURN DIAL TO {0:F1}\n{1:F2} MHz  /  HOLD TO LOCK"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.8",
+      "text": "3  ENTER CALL CARD CODE\n{0}/{1} BUTTONS"
+    },
+    {
+      "key": "legacy.WatchRadioConsole.9",
+      "text": "4  GRAB MIC + HOLD TRIGGER\nSEND FOR 3 SECONDS"
+    },
+    {
+      "key": "legacy.ImmersionWorld.1",
+      "text": "SOLO WATCH"
+    },
+    {
+      "key": "legacy.ImmersionWorld.2",
+      "text": "KEEPER "
+    },
+    {
+      "key": "legacy.ImmersionWorld.3",
+      "text": "RESTING"
+    },
+    {
+      "key": "legacy.ImmersionWorld.4",
+      "text": "READY TO REST"
+    },
+    {
+      "key": "legacy.ImmersionWorld.5",
+      "text": "JOBS REMAIN"
+    },
+    {
+      "key": "legacy.WatchGenerator.1",
+      "text": "ENGINE RUNNING"
+    },
+    {
+      "key": "legacy.WatchGenerator.2",
+      "text": "POWER ON"
+    },
+    {
+      "key": "legacy.WatchGenerator.3",
+      "text": "WATCH ENDED"
+    },
+    {
+      "key": "legacy.WatchGenerator.4",
+      "text": "PULL STARTER  {0}/{1}\nGRAB + PULL TOWARD YOU"
+    },
+    {
+      "key": "legacy.S4WatchPresentation.1",
+      "text": "NIGHT "
+    },
+    {
+      "key": "legacy.S4WatchPresentation.2",
+      "text": " SURVIVED"
+    },
+    {
+      "key": "legacy.ImmersionLogbook.1",
+      "text": "KEEPER'S LOG\n\nNIGHT "
+    },
+    {
+      "key": "legacy.ImmersionLogbook.2",
+      "text": " — SURVIVED\n\nDawn. Another watch awaits."
+    },
+    {
+      "key": "legacy.ObjectiveHud.1",
+      "text": "Objective small caps"
+    },
+    {
+      "key": "legacy.ObjectiveHud.2",
+      "text": "O B J E C T I V E"
+    },
+    {
+      "key": "legacy.ObjectiveHud.3",
+      "text": "UP  "
+    },
+    {
+      "key": "legacy.ObjectiveHud.4",
+      "text": "DOWN  "
+    },
+    {
+      "key": "legacy.ObjectiveHud.5",
+      "text": "FLOOR "
+    },
+    {
+      "key": "legacy.WatchDemoController.1",
+      "text": "NETWORK PRACTICE · OBJECTIVES PAUSED"
+    },
+    {
+      "key": "legacy.WatchDemoController.2",
+      "text": "WAITING FOR HOST STATE"
+    },
+    {
+      "key": "legacy.WatchDemoController.3",
+      "text": "WAITING FOR KEEPER"
+    },
+    {
+      "key": "legacy.WatchDemoController.4",
+      "text": "\nTRIGGER TO RETRY"
+    },
+    {
+      "key": "legacy.WatchDemoController.5",
+      "text": "D{0}   {1:00}:{2:00}   {3}/{4} TASKS"
+    },
+    {
+      "key": "legacy.WatchDemoController.6",
+      "text": "ALL WATCHES COMPLETE"
+    },
+    {
+      "key": "legacy.WatchDemoController.7",
+      "text": "Finish the board tasks before resting"
+    },
+    {
+      "key": "legacy.WatchDemoController.8",
+      "text": "NETWORK PRACTICE\n\nMove, turn and grab props together.\nObjectives and day clock are paused.\n\nLEFT MENU: Return to lobby"
+    },
+    {
+      "key": "legacy.WatchDemoController.9",
+      "text": "Keep the light. Survive till dawn.\n"
+    },
+    {
+      "key": "legacy.WatchDemoController.10",
+      "text": "<color=#FFFFFF00>"
+    },
+    {
+      "key": "legacy.WatchDemoController.11",
+      "text": " — DAWN IN "
+    },
+    {
+      "key": "legacy.WatchDemoController.12",
+      "text": "KEEPER WATCH — DAY "
+    },
+    {
+      "key": "legacy.WatchDemoController.13",
+      "text": "\n\n"
+    },
+    {
+      "key": "legacy.WatchDemoController.14",
+      "text": "[X] "
+    },
+    {
+      "key": "legacy.WatchDemoController.15",
+      "text": " — LATER"
+    },
+    {
+      "key": "legacy.WatchDemoController.16",
+      "text": "Pipe: "
+    },
+    {
+      "key": "legacy.WatchDemoController.17",
+      "text": "POWER: "
+    },
+    {
+      "key": "legacy.WatchDemoController.18",
+      "text": " — TRIPPED: RESET F2"
+    },
+    {
+      "key": "legacy.WatchDemoController.19",
+      "text": " — ENGINE OFF"
+    },
+    {
+      "key": "legacy.WatchDemoController.20",
+      "text": "BEACON GRACE: "
+    },
+    {
+      "key": "legacy.WatchDemoController.21",
+      "text": " s — RESTORE POWER\n"
+    },
+    {
+      "key": "legacy.WatchDemoController.22",
+      "text": " s — LIGHT AND ALIGN F4\n"
+    },
+    {
+      "key": "legacy.WatchDemoController.23",
+      "text": "BEACON DARK: "
+    },
+    {
+      "key": "legacy.WatchDemoController.24",
+      "text": " s TO LOSS\n"
+    },
+    {
+      "key": "legacy.WatchDemoController.25",
+      "text": "\nOpen the logbook to try again."
+    },
+    {
+      "key": "legacy.WatchDemoController.26",
+      "text": "GO TO BED — THIRD FLOOR"
+    },
+    {
+      "key": "legacy.WatchDemoController.27",
+      "text": "ALL WATCHES COMPLETE\nMenu: Replay from Day 1 or Return to lobby"
+    },
+    {
+      "key": "legacy.WatchDemoController.28",
+      "text": "\nLEFT MENU: Return to lobby (Editor: Esc)"
+    },
+    {
+      "key": "legacy.WatchDemoController.29",
+      "text": "\nWaiting for other keeper ("
+    },
+    {
+      "key": "legacy.WatchDemoController.30",
+      "text": " in bed)"
+    },
+    {
+      "key": "legacy.WatchDemoController.31",
+      "text": "\nWater too high or light dark too long = lost."
+    },
+    {
+      "key": "legacy.WatchDemoController.32",
+      "text": "PRESS F TO SLEEP"
+    },
+    {
+      "key": "legacy.WatchDemoController.33",
+      "text": "PRESS GRIP TO SLEEP"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.1",
+      "text": "{0} / {1}"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.2",
+      "text": "{0} / {1}"
+    },
+    {
+      "key": "legacy.PressurePresentation.1",
+      "text": "{0:00}:{1:00}"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.1",
+      "text": "NO BEACON POWER — BREAKER F2"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.2",
+      "text": "FLIP IGNITION SWITCH"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.3",
+      "text": "TURN WHEEL TO GREEN MARK"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.4",
+      "text": "ALIGNED · SOOT {0:0}%"
+    },
+    {
+      "key": "legacy.WatchDemoCoop.1",
+      "text": " TOGETHER"
+    },
+    {
+      "key": "legacy.WatchDemoCoop.2",
+      "text": "Finish the board tasks before resting"
+    },
+    {
+      "key": "legacy.WatchState.1",
+      "text": "WATCH LOST — LIGHTHOUSE FLOODED"
+    },
+    {
+      "key": "legacy.WatchState.2",
+      "text": "WATCH LOST — BEACON DARK"
+    },
+    {
+      "key": "legacy.WatchState.3",
+      "text": "WATCH ENDED — TIME EXPIRED"
+    },
+    {
+      "key": "legacy.WatchDemoController.Director.1",
+      "text": "\n\n"
+    },
+    {
+      "key": "legacy.WatchPipeRepair.1",
+      "text": "WATCH LOST — PRESS TRIGGER TO RETRY"
+    },
+    {
+      "key": "legacy.WatchPipeRepair.2",
+      "text": "COUPLING {0}  /  PIPE {1}/3\n{2}"
+    },
+    {
+      "key": "legacy.WatchPowerPanel.1",
+      "text": "TRIPPED\nSWITCH LOADS OFF\nTHEN RESET"
+    },
+    {
+      "key": "legacy.WatchPowerPanel.2",
+      "text": "GENERATOR OFF\nSTART ENGINE"
+    },
+    {
+      "key": "legacy.WatchPowerPanel.3",
+      "text": "{0:0.##} / {1:0.##}\nKEEP BELOW LIMIT"
+    },
+    {
+      "key": "legacy.WatchEngineControls.3",
+      "text": "WATCH ENDED"
+    },
+    {
+      "key": "legacy.WatchEngineControls.4",
+      "text": "ENGINE FLOODED — WAIT {0} s"
+    },
+    {
+      "key": "legacy.WatchEngineControls.5",
+      "text": "1 FUEL — TILT RED CAN OVER FILLER"
+    },
+    {
+      "key": "legacy.WatchEngineControls.6",
+      "text": "2 PRIME — GRIP BULB + SQUEEZE TRIGGER {0}/{1}"
+    },
+    {
+      "key": "legacy.WatchEngineControls.7",
+      "text": "3 CHOKE — GRIP LEVER TO CLOSE"
+    },
+    {
+      "key": "legacy.WatchEngineControls.8",
+      "text": "4 START — PULL {0}/{1} · THEN OPEN CHOKE"
+    },
+    {
+      "key": "legacy.WatchEngineControls.9",
+      "text": "FUEL {0:0}%"
+    },
+    {
+      "key": "legacy.CrewVoiceSession.1",
+      "text": "MIC MUTED"
+    },
+    {
+      "key": "legacy.CrewVoiceSession.2",
+      "text": "MIC ON · "
+    },
+    {
+      "key": "radio.44",
+      "text": "Keeper — water's low, three hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.44",
+      "text": "keeper_status_0_0_0"
+    },
+    {
+      "key": "radio.45",
+      "text": "Keeper — water's low, three hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.45",
+      "text": "keeper_status_0_0_1"
+    },
+    {
+      "key": "radio.46",
+      "text": "Keeper — water's at your knees, three hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.46",
+      "text": "keeper_status_0_1_0"
+    },
+    {
+      "key": "radio.47",
+      "text": "Keeper — water's at your knees, three hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.47",
+      "text": "keeper_status_0_1_1"
+    },
+    {
+      "key": "radio.48",
+      "text": "Keeper — water's reaching the generator, three hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.48",
+      "text": "keeper_status_0_2_0"
+    },
+    {
+      "key": "radio.49",
+      "text": "Keeper — water's reaching the generator, three hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.49",
+      "text": "keeper_status_0_2_1"
+    },
+    {
+      "key": "radio.50",
+      "text": "Keeper — water's taking the tower, three hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.50",
+      "text": "keeper_status_0_3_0"
+    },
+    {
+      "key": "radio.51",
+      "text": "Keeper — water's taking the tower, three hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.51",
+      "text": "keeper_status_0_3_1"
+    },
+    {
+      "key": "radio.52",
+      "text": "Keeper — water's low, two hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.52",
+      "text": "keeper_status_1_0_0"
+    },
+    {
+      "key": "radio.53",
+      "text": "Keeper — water's low, two hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.53",
+      "text": "keeper_status_1_0_1"
+    },
+    {
+      "key": "radio.54",
+      "text": "Keeper — water's at your knees, two hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.54",
+      "text": "keeper_status_1_1_0"
+    },
+    {
+      "key": "radio.55",
+      "text": "Keeper — water's at your knees, two hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.55",
+      "text": "keeper_status_1_1_1"
+    },
+    {
+      "key": "radio.56",
+      "text": "Keeper — water's reaching the generator, two hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.56",
+      "text": "keeper_status_1_2_0"
+    },
+    {
+      "key": "radio.57",
+      "text": "Keeper — water's reaching the generator, two hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.57",
+      "text": "keeper_status_1_2_1"
+    },
+    {
+      "key": "radio.58",
+      "text": "Keeper — water's taking the tower, two hours to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.58",
+      "text": "keeper_status_1_3_0"
+    },
+    {
+      "key": "radio.59",
+      "text": "Keeper — water's taking the tower, two hours to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.59",
+      "text": "keeper_status_1_3_1"
+    },
+    {
+      "key": "radio.60",
+      "text": "Keeper — water's low, one hour to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.60",
+      "text": "keeper_status_2_0_0"
+    },
+    {
+      "key": "radio.61",
+      "text": "Keeper — water's low, one hour to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.61",
+      "text": "keeper_status_2_0_1"
+    },
+    {
+      "key": "radio.62",
+      "text": "Keeper — water's at your knees, one hour to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.62",
+      "text": "keeper_status_2_1_0"
+    },
+    {
+      "key": "radio.63",
+      "text": "Keeper — water's at your knees, one hour to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.63",
+      "text": "keeper_status_2_1_1"
+    },
+    {
+      "key": "radio.64",
+      "text": "Keeper — water's reaching the generator, one hour to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.64",
+      "text": "keeper_status_2_2_0"
+    },
+    {
+      "key": "radio.65",
+      "text": "Keeper — water's reaching the generator, one hour to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.65",
+      "text": "keeper_status_2_2_1"
+    },
+    {
+      "key": "radio.66",
+      "text": "Keeper — water's taking the tower, one hour to dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.66",
+      "text": "keeper_status_2_3_0"
+    },
+    {
+      "key": "radio.67",
+      "text": "Keeper — water's taking the tower, one hour to dawn, the light's out."
+    },
+    {
+      "key": "radio.file.67",
+      "text": "keeper_status_2_3_1"
+    },
+    {
+      "key": "radio.68",
+      "text": "Keeper — water's low, almost dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.68",
+      "text": "keeper_status_3_0_0"
+    },
+    {
+      "key": "radio.69",
+      "text": "Keeper — water's low, almost dawn, the light's out."
+    },
+    {
+      "key": "radio.file.69",
+      "text": "keeper_status_3_0_1"
+    },
+    {
+      "key": "radio.70",
+      "text": "Keeper — water's at your knees, almost dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.70",
+      "text": "keeper_status_3_1_0"
+    },
+    {
+      "key": "radio.71",
+      "text": "Keeper — water's at your knees, almost dawn, the light's out."
+    },
+    {
+      "key": "radio.file.71",
+      "text": "keeper_status_3_1_1"
+    },
+    {
+      "key": "radio.72",
+      "text": "Keeper — water's reaching the generator, almost dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.72",
+      "text": "keeper_status_3_2_0"
+    },
+    {
+      "key": "radio.73",
+      "text": "Keeper — water's reaching the generator, almost dawn, the light's out."
+    },
+    {
+      "key": "radio.file.73",
+      "text": "keeper_status_3_2_1"
+    },
+    {
+      "key": "radio.74",
+      "text": "Keeper — water's taking the tower, almost dawn, the light's burning."
+    },
+    {
+      "key": "radio.file.74",
+      "text": "keeper_status_3_3_0"
+    },
+    {
+      "key": "radio.75",
+      "text": "Keeper — water's taking the tower, almost dawn, the light's out."
+    },
+    {
+      "key": "radio.file.75",
+      "text": "keeper_status_3_3_1"
+    },
+    {
+      "key": "legacy.FaultVapour.1",
+      "text": "16 GPU vapour quads"
+    },
+    {
+      "key": "legacy.ImmersionWorld.6",
+      "text": "KEEPER 1"
+    },
+    {
+      "key": "legacy.ImmersionWorld.7",
+      "text": "WARM LAMPS = READY TO REST\nGRIP THE BUNK. WAIT FOR BOTH KEEPERS."
+    },
+    {
+      "key": "legacy.ImmersionWorld.8",
+      "text": "WIPE GLASS\nWITH CLOTH"
+    },
+    {
+      "key": "legacy.ImmersionWorld.9",
+      "text": "ALIGN MARKS ▲"
+    },
+    {
+      "key": "legacy.ImmersionWorld.10",
+      "text": "HARBOR CONTROL"
+    },
+    {
+      "key": "legacy.ImmersionWorld.11",
+      "text": "House briefing radio lamp"
+    },
+    {
+      "key": "legacy.ImmersionWorld.12",
+      "text": "Warm practical light"
+    },
+    {
+      "key": "legacy.WatchDemoController.35",
+      "text": "NIGHT "
+    },
+    {
+      "key": "legacy.WatchDemoController.36",
+      "text": "/3 bolts\n"
+    },
+    {
+      "key": "legacy.WatchDemoController.37",
+      "text": "\nTrigger to retry this day / Menu for retry or lobby"
+    },
+    {
+      "key": "legacy.WatchDemoController.38",
+      "text": "PIPE F1 / POWER F2 / RADIO + BEACON F4\nFinish tasks, then sleep in F3"
+    },
+    {
+      "key": "legacy.WatchDemoController.39",
+      "text": "PIPE F1 / GENERATOR F2 / RADIO F4\nFinish tasks, then sleep in F3"
+    },
+    {
+      "key": "legacy.OnboardingPresentation.1",
+      "text": " chalk"
+    },
+    {
+      "key": "legacy.PAIntercom.1",
+      "text": "Lighthouse brass PA system"
+    },
+    {
+      "key": "legacy.PAIntercom.2",
+      "text": "Low-poly brass PA horn"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.3",
+      "text": "1 FUEL   2 PRIME ×3   3 CHOKE ▲\n4 PULL ×3   5 CHOKE ▼"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.4",
+      "text": "2 PRIME\nGRIP + SQUEEZE"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.5",
+      "text": "3 CLOSE ▲\n5 OPEN ▼"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.6",
+      "text": "4 PULL\nTOWARD YOU"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.7",
+      "text": "RED CAN → FILL\nTIP SPOUT DOWN"
+    },
+    {
+      "key": "legacy.WatchEngineControls.Immersion.8",
+      "text": "FUEL\nGRAB HANDLE"
+    },
+    {
+      "key": "legacy.PressurePresentation.2",
+      "text": "Watch brass case"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.5",
+      "text": "BEACON CONTROL"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.6",
+      "text": "1 LIGHT IT"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.7",
+      "text": "2 ALIGN"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.8",
+      "text": "3 WIPE LENS\nWITH CLOTH"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.9",
+      "text": "WIPE PRISM RINGS"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.10",
+      "text": "Left palm"
+    },
+    {
+      "key": "legacy.WatchBeaconStation.11",
+      "text": "Right palm"
+    },
+    {
+      "key": "legacy.WatchHouseFlood.1",
+      "text": "Doorway flowing sheet"
+    },
+    {
+      "key": "legacy.WatchHouseFlood.2",
+      "text": "House spreading front"
+    },
+    {
+      "key": "legacy.ImmersionPipePresentation.1",
+      "text": "LOW        HIGH"
+    },
+    {
+      "key": "legacy.ImmersionPipePresentation.2",
+      "text": "GRIP: HOLD   TRIGGER: LOCK\nPULL TOWARD YOU · RELEASE TO RESET"
+    },
+    {
+      "key": "legacy.PoleSlide.1",
+      "text": "Pole engraved plate"
+    },
+    {
+      "key": "legacy.M2CarryProp.1",
+      "text": "FUEL"
+    },
+    {
+      "key": "legacy.M2CarryProp.2",
+      "text": "Working tip"
+    },
+    {
+      "key": "legacy.HarborRadio.1",
+      "text": "Radio static and squelch"
+    },
+    {
+      "key": "legacy.HarborRadio.2",
+      "text": "Original radio static crackle"
+    },
+    {
+      "key": "legacy.HarborRadio.3",
+      "text": "BREAKER"
+    },
+    {
+      "key": "legacy.WatchPipeRepair.3",
+      "text": "SEAT WRENCH JAW ON GLOWING BOLT"
+    },
+    {
+      "key": "legacy.M2StationParts.1",
+      "text": "M2 "
+    },
+    {
+      "key": "legacy.WatchPowerPanel.4",
+      "text": "POWER DISTRIBUTION"
+    },
+    {
+      "key": "legacy.WatchPowerPanel.5",
+      "text": "LOAD         OVER"
+    },
+    {
+      "key": "legacy.WatchPowerPanel.6",
+      "text": "RESET"
+    },
+    {
+      "key": "legacy.WatchEngineControls.16",
+      "text": "PRIMER\nGRIP + TRIGGER"
+    },
+    {
+      "key": "legacy.WatchEngineControls.17",
+      "text": "CHOKE\nCLOSED / OPEN"
+    },
+    {
+      "key": "legacy.WatchEngineControls.18",
+      "text": "FILL"
+    },
+    {
+      "key": "legacy.WatchEngineControls.19",
+      "text": "4 STARTER\nGRIP + PULL"
+    },
+    {
+      "key": "legacy.WatchEngineControls.20",
+      "text": "Left palm"
+    },
+    {
+      "key": "legacy.WatchEngineControls.21",
+      "text": "Right palm"
+    },
+    {
+      "key": "code.heading",
+      "text": "SOLO CALL CODE\n"
+    },
+    {
+      "key": "engine.low",
+      "text": "LOW FUEL — REFILL SOON"
+    },
+    {
+      "key": "engine.running",
+      "text": "ENGINE RUNNING"
+    },
+    {
+      "key": "hud.complete",
+      "text": "Watch complete"
+    },
+    {
+      "key": "hud.rest",
+      "text": "Rest in the upstairs bunk"
+    },
+    {
+      "key": "voice.allowed",
+      "text": "Microphone allowed"
+    },
+    {
+      "key": "voice.denied",
+      "text": "MIC PERMISSION DENIED · tap to retry"
+    },
+    {
+      "key": "engine.open.deadline",
+      "text": "OPEN CHOKE NOW — {0} s"
     }
   ]
 }

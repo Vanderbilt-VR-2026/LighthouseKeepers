@@ -24,7 +24,7 @@ namespace LighthouseKeepers.WatchDemo
                 for(int x=-1;x<=1;x+=2)parts.Part("Handle side "+x,t,new Vector3(x*.09f,.245f,0),new Vector3(.035f,.12f,.035f),parts.Red);
                 parts.Part("Carry bar",t,new Vector3(0,.30f,0),new Vector3(.20f,.035f,.035f),parts.Metal);
                 parts.Part("Pour spout",t,new Vector3(.1f,.235f,.055f),new Vector3(.035f,.12f,.035f),parts.Brass);
-                parts.Text("Fuel can label","FUEL",t,new Vector3(0,0,.083f),.005f);
+                parts.Text("Fuel can label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.M2CarryProp.1"),t,new Vector3(0,0,.083f),.005f);
             }
             var body=t.gameObject.AddComponent<Rigidbody>();body.mass=rag?.15f:1.2f;body.isKinematic=true;body.interpolation=RigidbodyInterpolation.Interpolate;
             var col=t.gameObject.AddComponent<BoxCollider>();col.size=size;

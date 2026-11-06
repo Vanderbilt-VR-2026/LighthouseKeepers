@@ -27,7 +27,7 @@ namespace LighthouseKeepers.WatchDemo
    for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.30f*edge*(.96f+(float)random.NextDouble()*.08f));}
    backing.SetPixels(data);backing.Apply();var bg=Rect(root,"Subtle gradient backing",Vector2.zero,root.sizeDelta).gameObject.AddComponent<RawImage>();bg.texture=backing;bg.material=material;bg.raycastTarget=false;
    line=Rule("Brass accent",new Vector2(-265,76),new Vector2(480,1.4f));line.pivot=new Vector2(0,.5f);
-   label=Text("Objective small caps",new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text="O B J E C T I V E";
+   label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.2");
    icon=Rect(root,"Objective line icon",new Vector2(-240,10),new Vector2(40,42)).gameObject.AddComponent<ObjectiveLineIcon>();icon.color=new Color(.76f,.62f,.36f);icon.material=material;icon.raycastTarget=false;
    cueSound=new GameObject("Soft objective completion").AddComponent<AudioSource>();cueSound.transform.SetParent(transform,false);cueSound.playOnAwake=false;cueSound.volume=.08f;cueSound.clip=Resources.Load<AudioClip>("Hands/clunk");
    task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);
@@ -42,7 +42,7 @@ namespace LighthouseKeepers.WatchDemo
   public void Reveal()=>until=Time.unscaledTime+7;
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   void Set(int value,string text){index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
-  string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?"Watch complete":value<0?"Rest in the upstairs bunk":watch.State.Definition.tasks[value].taskText;
+  string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
   void Update()
   {
    var s=watch.State;if(s==null)return;if(!radio)radio=FindAnyObjectByType<HarborRadio>();
@@ -62,7 +62,7 @@ namespace LighthouseKeepers.WatchDemo
    string station=s.Director!=null?ObjectiveDirector.Job((KeeperStep)index):index>=0&&index<s.Definition.tasks.Length?s.Definition.tasks[index].stationId:"BED";
    int target=s.Director!=null?ObjectiveDirector.Floor((KeeperStep)index):station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
    int here=head.position.y<3.4f?1:head.position.y<6.7f?2:head.position.y<10?3:4;
-   if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=(target>here?"UP  ":target<here?"DOWN  ":"")+"FLOOR "+target;}
+   if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=(target>here?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.3"):target<here?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.4"):"")+LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.5")+target;}
    icon.Set(station);
    string words=radio?radio.Subtitle:"";
    if(words.Length>0){caption=words;captionAt=Time.unscaledTime;until=Mathf.Max(until,Time.unscaledTime+.7f);}

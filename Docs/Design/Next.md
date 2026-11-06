@@ -1,6 +1,6 @@
 # Sprint 4 master pass — Part B checkpoint
 
-Branch `s4/master`, draft PR #81, based on PR #79 merge `5dc5e56`. Do not merge. Current network version **LK-S4-MASTER-B6**, snapshot v14. Both crew clients must update. Preserve unrelated local `Docs/Verification/Immersion/pipe-lever/`.
+Branch `s4/master`, draft PR #81, based on PR #79 merge `5dc5e56`. Do not merge. Current network version **LK-S4-VISUALS-C0**, snapshot v15. Both crew clients must update. Preserve unrelated local `Docs/Verification/Immersion/pipe-lever/`.
 
 ## Completed implementation checkpoints
 
@@ -54,3 +54,5 @@ Installs are deliberately skipped under this turn’s instruction. ADB detected 
 ADB path `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb`. Check `devices`, then `-s SERIAL install -r APK`; launch `com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity`.
 
 Latest APK: `Builds/LighthouseKeepers-S4-PartB.apk` (105,637,300 bytes), source `66b9351`, SHA-256 `7b7a358adc8a9d2c9b0d0c9d23ee2d6e0b189e0b731af768fabf05eea1683bae`. Local pre-existing/generated XR-ray width delta in `LK_QuestPlayer.prefab` was preserved separately for the exact-source build and restored afterward; it is not part of this PR.
+
+Part B follow-up: composite status, shared legacy strings and Lab floor-edge audit implemented. Evidence: Docs/Verification/S4Master/part-c/b-leftovers.md. Continuing C0–C6 on s4/visuals; device checks remain pending.

@@ -109,14 +109,14 @@ namespace LighthouseKeepers.WatchDemo
             }
             microphoneHighlight.SetPropertyBlock(watch.Director==null&&State.Step==3?current:dark);
             if(watch.Director!=null){readout.text=watch.Director.StationInstruction(WatchState.RadioStation);return;}
-            if(watch.Failed)readout.text="WATCH LOST\nPRESS TRIGGER TO RETRY";
-            else if(!watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio))readout.text=watch.Grid!=null?"NO RADIO POWER\nCHECK BREAKER ON F2":"NO POWER\nSTART GENERATOR ON F2";
-            else if(!State.MainOn)readout.text="1  FLIP MAIN POWER";
-            else if(State.Completed)readout.text="COPY, KEEPER\nWARNING RECEIVED";
-            else if(sending)readout.text=$"TRANSMITTING  {State.TransmitElapsed:F1}s\nKEEP TRIGGER HELD";
-            else if(State.Step==1)readout.text=$"2  TURN DIAL TO {program.targetMHz:F1}\n{State.FrequencyMHz:F2} MHz  /  HOLD TO LOCK";
-            else if(State.Step==2)readout.text=$"3  ENTER CALL CARD CODE\n{State.CodeProgress}/{program.callCode.Length} BUTTONS";
-            else readout.text="4  GRAB MIC + HOLD TRIGGER\nSEND FOR 3 SECONDS";
+            if(watch.Failed)readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.1");
+            else if(!watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio))readout.text=watch.Grid!=null?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.2"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.3");
+            else if(!State.MainOn)readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.4");
+            else if(State.Completed)readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.5");
+            else if(sending)readout.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.6"),State.TransmitElapsed);
+            else if(State.Step==1)readout.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.7"),program.targetMHz,State.FrequencyMHz);
+            else if(State.Step==2)readout.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.8"),State.CodeProgress,program.callCode.Length);
+            else readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.9");
         }
         void OnDestroy(){if(watch!=null){watch.Changed-=Changed;watch.Radio.BroadcastCompleted-=Complete;}}
     }

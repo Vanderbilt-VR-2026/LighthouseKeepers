@@ -17,15 +17,15 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var name in new[]{"Generator sequence panel","Starter pull label","Primer label","Choke label","Filler label"})
             {var t=transform.Find(name);if(t)t.gameObject.SetActive(false);}
             parts.Part("Riveted starting instructions",transform,new Vector3(0,1.53f,.88f),new Vector3(1.18f,.23f,.035f),parts.Brass);
-            parts.Text("Engraved starting order","1 FUEL   2 PRIME ×3   3 CHOKE ▲\n4 PULL ×3   5 CHOKE ▼",transform,new Vector3(0,1.53f,.901f),.0085f).color=Color.black;
+            parts.Text("Engraved starting order",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.3"),transform,new Vector3(0,1.53f,.901f),.0085f).color=Color.black;
             for(int x=-1;x<=1;x+=2)for(int y=-1;y<=1;y+=2)
                 parts.Part("Plate rivet",transform,new Vector3(x*.56f,1.53f+y*.085f,.907f),Vector3.one*.016f,parts.Metal,PrimitiveType.Sphere);
             // Existing four lamps still show fuel, priming, choke and running; fifth confirms reopening.
             finalChokeLamp=parts.Part("Choke reopened lamp",transform,new Vector3(-.54f,1.33f,.90f),new Vector3(.065f,.035f,.025f),parts.Green).GetComponent<Renderer>();
             parts.Text("Final choke lamp label","5",transform,new Vector3(-.54f,1.40f,.90f),.0032f);
-            MountedLabel("Primer plate","2 PRIME\nGRIP + SQUEEZE",new Vector3(.4f,.88f,.91f),new Vector2(.30f,.13f));
-            MountedLabel("Choke plate","3 CLOSE ▲\n5 OPEN ▼",new Vector3(-.4f,.88f,.91f),new Vector2(.30f,.13f));
-            MountedLabel("Starter plate","4 PULL\nTOWARD YOU",new Vector3(.05f,.93f,1.04f),new Vector2(.31f,.13f));
+            MountedLabel("Primer plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.4"),new Vector3(.4f,.88f,.91f),new Vector2(.30f,.13f));
+            MountedLabel("Choke plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.5"),new Vector3(-.4f,.88f,.91f),new Vector2(.30f,.13f));
+            MountedLabel("Starter plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.6"),new Vector3(.05f,.93f,1.04f),new Vector2(.31f,.13f));
             parts.Part("Primer mounting plate",Primer.transform,new Vector3(0,0,-.035f),new Vector3(.13f,.16f,.08f),parts.Metal);
             var collar=parts.Part("Primer retaining collar",Primer.transform,new Vector3(0,0,.008f),new Vector3(.10f,.026f,.10f),parts.Brass,PrimitiveType.Cylinder);
             collar.transform.localRotation=Quaternion.Euler(90,0,0);
@@ -38,13 +38,13 @@ namespace LighthouseKeepers.WatchDemo
             parts.Part("Filler neck bracket",Filler,new Vector3(0,-.16f,-.09f),new Vector3(.19f,.04f,.25f),parts.Dark);
             // Dark mouth inside a brass rim makes the receiving opening legible from standing height.
             parts.Part("Open filler mouth",Filler,new Vector3(0,.026f,0),new Vector3(.085f,.004f,.085f),parts.Dark,PrimitiveType.Cylinder);
-            MountedLabel("Fuel filling plate","RED CAN → FILL\nTIP SPOUT DOWN",new Vector3(.69f,.84f,1.02f),new Vector2(.35f,.13f));
+            MountedLabel("Fuel filling plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.7"),new Vector3(.69f,.84f,1.02f),new Vector2(.35f,.13f));
             var home=new Vector3(-.78f,.70f,1.28f);
             FuelCan.SetHome(transform.TransformPoint(home),transform.rotation);
             var shelf=parts.Part("Fuel can service shelf",transform,home-new Vector3(0,.21f,0),new Vector3(.36f,.04f,.27f),parts.Metal);
             var support=shelf.AddComponent<BoxCollider>();support.size=Vector3.one;
             parts.Part("Fuel shelf support",transform,new Vector3(home.x,.25f,home.z),new Vector3(.045f,.48f,.045f),parts.Metal);
-            MountedLabel("Fuel shelf plate","FUEL\nGRAB HANDLE",new Vector3(home.x,.39f,home.z+.14f),new Vector2(.34f,.12f));
+            MountedLabel("Fuel shelf plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.8"),new Vector3(home.x,.39f,home.z+.14f),new Vector2(.34f,.12f));
             fuelStream=new GameObject("Fuel stream into filler").AddComponent<LineRenderer>();fuelStream.transform.SetParent(transform,false);
             fuelStream.sharedMaterial=parts.Brass;fuelStream.positionCount=2;fuelStream.widthMultiplier=.012f;fuelStream.useWorldSpace=true;fuelStream.enabled=false;
             pourSound=Filler.gameObject.AddComponent<AudioSource>();pourSound.playOnAwake=false;pourSound.loop=true;pourSound.spatialBlend=1;pourSound.minDistance=.3f;pourSound.maxDistance=4;pourSound.volume=.12f;pourSound.clip=Resources.Load<AudioClip>("S4Audio/water");
@@ -67,7 +67,7 @@ namespace LighthouseKeepers.WatchDemo
             if(!physicalGuidance)return;
             var e=State.Engine;
             if(shownPrimer!=e.Primer||shownStarter!=e.Pulls)
-            {if(shownPrimer>=0&&clunk)sound.PlayOneShot(clunk,.12f);shownPrimer=e.Primer;shownStarter=e.Pulls;primerTally.text=$"{e.Primer} / {State.PowerTuning.primerSqueezes}";starterTally.text=$"{e.Pulls} / {State.PowerTuning.starterPulls}";}
+            {if(shownPrimer>=0&&clunk)sound.PlayOneShot(clunk,.12f);shownPrimer=e.Primer;shownStarter=e.Pulls;primerTally.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.1"),e.Primer,State.PowerTuning.primerSqueezes);starterTally.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.2"),e.Pulls,State.PowerTuning.starterPulls);}
             var col=e.Settled?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",e.Settled?col*.65f:Color.black);if(State.Director!=null)block.SetColor("_EmissionColor",Color.black);finalChokeLamp.SetPropertyBlock(block);
         }
         void AnimateCounters()
