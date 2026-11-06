@@ -33,7 +33,7 @@ namespace LighthouseKeepers.WatchDemo
     var cap=parts.Part("PRESS TO REPLAY",root,new Vector3(0,-.92f,.045f),new Vector3(.075f,.075f,.035f),parts.Brass,PrimitiveType.Cylinder);cap.transform.localRotation=Quaternion.Euler(90,0,0);
     var collider=cap.AddComponent<BoxCollider>();var button=cap.AddComponent<XRSimpleInteractable>();button.colliders.Clear();button.colliders.Add(collider);buttons[i]=button;int index=i;
     var rest=cap.transform.localPosition;button.selectEntered.AddListener(e=>{cap.transform.localPosition=rest-Vector3.forward*.008f;var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.Pulse(.15f,.05f);Press(index);});button.selectExited.AddListener(e=>cap.transform.localPosition=rest);
-    parts.Text("Replay stencil","REPLAY LAST",root,new Vector3(0,-1.015f,.04f),.0027f);
+    parts.Text("Replay stencil",KeeperStrings.Get("pa.status"),root,new Vector3(0,-1.015f,.04f),.0027f);
     voice[i]=Source(root,"Harbor radio PA voice "+i,.95f);voice[i].gameObject.AddComponent<AudioHighPassFilter>().cutoffFrequency=350;voice[i].gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=3500;voice[i].gameObject.AddComponent<RadioPresence>();
     var reverb=voice[i].gameObject.AddComponent<AudioReverbFilter>();reverb.reverbPreset=AudioReverbPreset.Room;reverb.decayTime=.35f;reverb.room=-1800;reverb.reflectionsLevel=-2200;reverb.reverbLevel=-2200;
     noise[i]=Source(root,"Harbor radio PA hiss "+i,0);noise[i].clip=staticClip;noise[i].loop=true;
@@ -43,7 +43,7 @@ namespace LighthouseKeepers.WatchDemo
   AudioSource Source(Transform parent,string name,float volume)
   {var go=new GameObject(name);go.transform.SetParent(parent,false);var a=go.AddComponent<AudioSource>();a.playOnAwake=false;a.spatialBlend=1;a.dopplerLevel=0;a.minDistance=1.5f;a.maxDistance=12;a.rolloffMode=AudioRolloffMode.Linear;a.volume=volume;a.priority=10;return a;}
   void Press(int index){if(watch.State.RemoteReplica)watch.State.Coop?.Send(CoopAction.PAReplay,index);else Replay();}
-  public bool Replay(){if(Time.unscaledTime<nextReplay||program.Cue==0)return false;nextReplay=Time.unscaledTime+3;program.ReplayLast();return true;}
+  public bool Replay(){if(Time.unscaledTime<nextReplay||program.Cue==0)return false;nextReplay=Time.unscaledTime+3;if(watch.State.PressureEnabled)return program.StatusUpdate();program.ReplayLast();return true;}
   public void Play(int id,AudioClip value,float offset,int serial)
   {
    clip=value;variant=serial;line=id;age=offset;active=true;closing=false;double start=AudioSettings.dspTime+System.Math.Max(0,.3-offset);
@@ -58,7 +58,7 @@ namespace LighthouseKeepers.WatchDemo
    float dips=1;var pauses=catalog.Pauses(line);float speech=age-.3f;
    if(Mathf.Abs(speech-pauses.x)<.035f||(variant%2==0&&Mathf.Abs(speech-pauses.y)<.035f)){dips=.6f;hiss+=.018f;}
    int room=head.position.z< -10.3f||new Vector2(head.position.x,head.position.z).magnitude>13?5:head.position.z< -4.3f?0:head.position.y<3.4f?1:head.position.y<6.7f?2:head.position.y<10?3:4;
-   for(int i=0;i<voice.Length;i++){float target=i==room?1:.08f;roomGains[i]=Mathf.MoveTowards(roomGains[i],target,Time.deltaTime*3);voice[i].volume=.95f*dips*roomGains[i];}foreach(var s in noise)s.volume=hiss;
+   for(int i=0;i<voice.Length;i++){float transition=Mathf.Abs(head.position.y/3.3f-Mathf.Round(head.position.y/3.3f));bool stairBlend=head.position.z> -4.3f&&transition<.18f;float target=i==room?1:stairBlend&&i>0&&i<5&&Mathf.Abs(i-room)==1?.45f:.08f;roomGains[i]=Mathf.MoveTowards(roomGains[i],target,Time.deltaTime*3);voice[i].volume=.95f*dips*roomGains[i];}foreach(var s in noise)s.volume=hiss;
    if(age>end+.4f)Stop();
   }
   static Mesh Horn()

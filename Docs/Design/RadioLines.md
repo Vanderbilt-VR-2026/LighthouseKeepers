@@ -53,3 +53,39 @@ Teammate recordings replace TTS. Automatic selection uses clipping, edge noise a
 | `keeper_wrench` | 2 | 4.20 | -18.0 | -3.2 |
 
 Selection reason for each row: unclipped, cleanly bounded take with a middle-length preference and measured edge-noise penalty. Change that line’s `take` (1–3) in `Tools/S4/radio_takes.json`, then rerun `Tools/S4/process_radio_takes.py` with the source folder. All alternatives are in gitignored `Recordings/Radio/takes/`. These take files can also be copied individually into `Recordings/Radio/` for the Unity import menu; never import a three-take source as a finished line.
+
+## Status + danger — master pass placeholders
+
+Original teammate recordings are unchanged. The following **offline macOS Daniel TTS placeholders** are mono 44.1 kHz, normalized to -18 LUFS / -1 dBTP, with the existing PA radio filtering. Replace WAVs at `Assets/Audio/Radio/Resources/MasterRadio/` with same-named teammate recordings; captions live in the central KeeperStrings table. One file is one take.
+
+| File | Line |
+|---|---|
+| `keeper_good.wav` | Good. |
+| `keeper_holds.wav` | That will hold. |
+| `keeper_engine_caught.wav` | There she goes. |
+| `keeper_light_burning.wav` | Light is burning. |
+| `keeper_time_three.wav` | Three hours to dawn. |
+| `keeper_time_two.wav` | Two hours to dawn. |
+| `keeper_time_one.wav` | One hour to dawn. |
+| `keeper_time_almost.wav` | Almost dawn. Hold on. |
+| `keeper_water_knee.wav` | Water is at your knees, keeper. |
+| `keeper_water_generator.wav` | It is reaching the generator! |
+| `keeper_water_critical.wav` | You are going under, keeper! |
+| `keeper_light_out.wav` | Your light is out. There are ships out there! |
+| `keeper_light_thirty.wav` | Thirty seconds, keeper! |
+| `keeper_light_ten.wav` | Ten seconds! |
+| `keeper_grip_only.wav` | Hold grip to take the wrench. Bring its head to the bolt, then pull toward you. |
+| `keeper_loop_jobs.wav` | Repair tonight's jobs. Sleep upstairs when they are done. |
+| `keeper_loop_win.wav` | Three nights. Keep the light burning and the water down. Bring every ship home. |
+| `keeper_leave_wrench.wav` | Leave the wrench, keeper. Follow the lamps to your next job. |
+| `keeper_next_pipe.wav` | The pipe needs you. Take the wrench downstairs. |
+| `keeper_next_generator.wav` | Next, the generator. Follow the lamps upstairs. |
+| `keeper_next_radio.wav` | Head to the radio. Send the storm warning. |
+| `keeper_next_beacon.wav` | Up to the lantern, keeper. Light it and line up the marks. |
+| `keeper_next_power.wav` | Check the breakers beside the generator. |
+| `keeper_next_sleep.wav` | Jobs done. Grip your bunk upstairs. |
+| `keeper_soft_warning.wav` | Follow the hiss, keeper. Take your time with the wrench. |
+
+## Composite status — Part C preparation
+
+Host chooses one sentence containing water, time-to-dawn and beacon status. IDs 44–75 encode 4 time buckets × 4 water bands × 2 beacon states; no new snapshot field. The expanded cue vocabulary requires LK-S4-VISUALS-C0 / v15 on both clients. Each file `keeper_status_T_W_B.wav` is one plain Daniel TTS take, mono 44.1 kHz, -18 LUFS/-1 dBTP processing; the normal PA filter remains. Replace using the same import pipeline. Captions and filenames live in KeeperStrings.json. Queued requests refresh their state when played, rather than announcing stale conditions.

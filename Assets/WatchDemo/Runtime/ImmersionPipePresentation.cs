@@ -32,14 +32,14 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Immersion.leverPipe)gauge.SetPositionAndRotation(pipe.bolts[1].position+new Vector3(-.135f,.16f,.43f),Quaternion.LookRotation(Vector3.left,Vector3.up));
             var rim=parts.Part("Gauge brass surround",gauge,Vector3.zero,new Vector3(.20f,.025f,.20f),parts.Brass,PrimitiveType.Cylinder);rim.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Part("Gauge dial face",gauge,new Vector3(0,0,.026f),new Vector3(.16f,.16f,.012f),parts.Dark);
-            parts.Text("Pressure dial scale","LOW        HIGH",gauge,new Vector3(0,.055f,.035f),.0017f);
-            if(state.Immersion.triggerClutch)
+            parts.Text("Pressure dial scale",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionPipePresentation.1"),gauge,new Vector3(0,.055f,.035f),.0017f);
+            if(state.Immersion.triggerClutch&&!(state.Master&&state.Master.gripOnlyWrench))
             {
                 var plate=M2StationParts.Root("Wrench clutch instructions",transform,pipe.bolts[1].position+new Vector3(-.135f,-.32f,.43f));
                 plate.rotation=Quaternion.LookRotation(Vector3.left,Vector3.up);
                 parts.Part("Riveted clutch plate",plate,Vector3.zero,new Vector3(.48f,.14f,.025f),parts.Dark);
                 for(int side=-1;side<=1;side+=2)parts.Part("Clutch plate mounting strap",plate,new Vector3(side*.17f,.105f,-.025f),new Vector3(.025f,.08f,.025f),parts.Metal);
-                parts.Text("Clutch stencil","GRIP: HOLD   TRIGGER: LOCK\nPULL TOWARD YOU · RELEASE TO RESET",plate,new Vector3(0,0,.014f),.0033f);
+                parts.Text("Clutch stencil",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionPipePresentation.2"),plate,new Vector3(0,0,.014f),.0033f);
             }
             needle=M2StationParts.Root("Pressure gauge needle",gauge,new Vector3(0,-.025f,.039f));
             parts.Part("Pressure pointer",needle,new Vector3(0,.045f,0),new Vector3(.007f,.09f,.006f),parts.Brass);
@@ -56,7 +56,7 @@ namespace LighthouseKeepers.WatchDemo
                 bolts[i].localRotation=Quaternion.Euler(0,0,(state.Immersion.leverPipe?0:45)+turns*p.Profile.quarterTurnDegrees*(p.PullTowardTightens||p.Direction==0?1:p.Direction));
                 bolts[i].localPosition=rests[i]-Vector3.forward*(.022f*turns/p.Profile.quarterTurns[i]);
                 int mark=done?2:active?1:0;if(chalkState[i]!=mark){chalkState[i]=mark;chalk[i].text=done?((char)('A'+i))+" ✓":active?((char)('A'+i))+" ↻":((char)('A'+i)).ToString();}
-                bulbs[i].intensity=done?.18f:active?.45f+.12f*Mathf.Sin(Time.time*2.4f):.12f;
+                bulbs[i].intensity=state.Director!=null?(active?.32f+.08f*Mathf.Sin(Time.time*Mathf.PI*2/state.Master.guidancePulseSeconds):0):done?.18f:active?.45f+.12f*Mathf.Sin(Time.time*2.4f):.12f;
             }
             needle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(60,-60,p.InflowFraction));
             pipe.leakAudio.transform.position=pipe.ActivePosition;

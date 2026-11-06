@@ -1,0 +1,18 @@
+PASS walk speed 1.6 -> 1.92
+PASS smooth turn opt-in
+PASS snap restored
+PASS two safe existing stair-void poles
+before grip y=6.6 top=6.6
+latchedPos=(-1.99, 6.60, 2.21) axis=(-2.20, 6.60, 2.00)
+path hit Existing player — unmodified source prefab Center: (-1.99, 7.46, 2.21), Extents: (0.22, 0.83, 0.22)
+PASS pole grip latched 6.6
+PASS release pauses safely
+PASS descent reaches landing 6.6 actual=3.760693 bottom=3.680833
+PASS bottom cannot begin upward ride
+before grip y=9.9 top=9.9
+latchedPos=(-1.40, 9.90, 1.50) axis=(-1.40, 9.90, 1.20)
+path hit Existing player — unmodified source prefab Center: (-1.40, 10.76, 1.50), Extents: (0.22, 0.82, 0.22)
+PASS pole grip latched 9.9
+PASS release pauses safely
+PASS descent reaches landing 9.9 actual=6.967084 bottom=6.889167
+PASS bottom cannot begin upward ride

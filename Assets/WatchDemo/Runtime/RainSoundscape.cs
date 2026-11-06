@@ -5,6 +5,7 @@ namespace LighthouseKeepers.WatchDemo
  // Head-based audio zones only. No flood or avatar visuals are accessed.
  public sealed class RainSoundscape:MonoBehaviour
  {
+  WatchDemoController watch;
   AudioPassSettings settings;Transform head;AudioSource[] beds,pool;AudioSource wind;AudioLowPassFilter windFilter;AudioClip[] impacts;Vector3 blend;
   readonly Vector3[] windows=new Vector3[16];float nextImpact,nextGust,gustStart=-100,gustLength=6;int cursor;
   public static Vector3 Weights(Vector3 p)
@@ -20,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
   public static void Create(WatchDemoController watch,Transform head)
   {
    var s=AudioPassSettings.Current;if(!s||!s.layeredRain)return;
-   var rain=watch.gameObject.AddComponent<RainSoundscape>();rain.settings=s;rain.head=head;rain.Setup();
+   var rain=watch.gameObject.AddComponent<RainSoundscape>();rain.watch=watch;rain.settings=s;rain.head=head;rain.Setup();
   }
   AudioSource Source(string name,bool spatial)
   {var g=new GameObject(name);g.transform.SetParent(transform,false);var a=g.AddComponent<AudioSource>();a.playOnAwake=false;a.spatialBlend=spatial?1:0;a.dopplerLevel=0;a.rolloffMode=AudioRolloffMode.Linear;a.minDistance=1;a.maxDistance=8;a.priority=130;return a;}
@@ -39,9 +40,10 @@ namespace LighthouseKeepers.WatchDemo
   void Update()
   {
    var wanted=Weights(head.position);blend=Vector3.MoveTowards(blend,wanted,Time.deltaTime*Mathf.Sqrt(2)/settings.zoneFadeSeconds);float total=blend.x+blend.y+blend.z;if(total>0)blend/=total;
-   beds[0].volume=settings.rainGains.x*blend.x;beds[1].volume=settings.rainGains.y*blend.y;beds[2].volume=settings.rainGains.z*blend.z;
+   float storm=watch.State.Storm!=null?Mathf.Lerp(.75f,1.2f,(watch.State.Storm.Stage-1)/3f):1;
+   beds[0].volume=settings.rainGains.x*blend.x*storm;beds[1].volume=settings.rainGains.y*blend.y*storm;beds[2].volume=settings.rainGains.z*blend.z*storm;
    if(Time.time>=nextGust){gustStart=Time.time;gustLength=Random.Range(5,9);nextGust=Time.time+Random.Range(15,40);}
-   float gust=Mathf.Sin(Mathf.Clamp01((Time.time-gustStart)/gustLength)*Mathf.PI);wind.volume=(.025f+.10f*gust)*(.35f+.65f*(blend.x+blend.z));wind.transform.position=head.position+new Vector3(2,1,0);windFilter.cutoffFrequency=Mathf.Lerp(1200,7000,blend.x+blend.z);
+   float gust=Mathf.Sin(Mathf.Clamp01((Time.time-gustStart)/gustLength)*Mathf.PI);wind.volume=(.025f+.10f*gust)*(.35f+.65f*(blend.x+blend.z))*storm;wind.transform.position=head.position+new Vector3(2,1,0);windFilter.cutoffFrequency=Mathf.Lerp(1200,7000,blend.x+blend.z);
    if(Time.time<nextImpact)return;nextImpact=Time.time+Random.Range(.2f,.5f)*(blend.x>.5f?1:2);
    var a=pool[cursor++%pool.Length];if(a.isPlaying)return;
    int kind=head.position.y>9.7f?1:blend.x>.5f?2:blend.z>.5f?1:Random.value<.7f?0:3;Vector3 position=head.position;

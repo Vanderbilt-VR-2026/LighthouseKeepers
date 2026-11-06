@@ -15,7 +15,7 @@ namespace LighthouseKeepers.WatchDemo
             var original=GameObject.Find("Visible first-floor flood").GetComponent<Renderer>().sharedMaterial;
             view.material=new Material(Resources.Load<Shader>("DoorwayWater")){name="House receiving water"};
             view.material.SetColor("_BaseColor",original.HasProperty("_BaseColor")?original.GetColor("_BaseColor"):new Color(.14f,.28f,.30f));
-            view.door=view.Patch("Doorway flowing sheet",out view.doorRenderer);view.room=view.Patch("House spreading front",out view.roomRenderer);return view;
+            view.door=view.Patch(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchHouseFlood.1"),out view.doorRenderer);view.room=view.Patch(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchHouseFlood.2"),out view.roomRenderer);return view;
         }
         Mesh Patch(string name,out MeshRenderer renderer)
         {

@@ -152,9 +152,7 @@ namespace LighthouseKeepers.Net.Tests
                     while(Vector3.Distance(jaw.position,pivot)>.025f&&Time.realtimeSinceStartup<deadline)
                     {controller.position+=Vector3.ClampMagnitude((pivot-jaw.position)*.5f,.04f);yield return new WaitForSeconds(.06f);}
                     Assert.Less(Vector3.Distance(jaw.position,pivot),.03f,"Visible jaw did not reach bolt before trigger: "+hand.Node+" stance "+stance+" selected="+grab.isSelected+" holder="+(grab.isSelected?grab.interactorsSelecting[0].transform.name:"none")+" controller="+controller.position+" jaw="+jaw.position+" pivot="+pivot+" failed="+Value<bool>(Value<object>(watch,"State"),"Failed"));
-                    Assert.False(Value<bool>(socket,"IsSnapped"),"Auto-lock happened without trigger");
-                    Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Unlocked readjustment repaired bolt");
-                    grab.activated.Invoke(new ActivateEventArgs{interactorObject=direct,interactableObject=grab});
+                    Assert.True(Value<bool>(socket,"IsSnapped"),"Grip-only approach must snap without any trigger input");
                     yield return new WaitForSeconds(.12f);
                     Assert.Less(controller.position.x,pivot.x,"Test hand must approach from the room, not through the wall");
                     Assert.True(Value<bool>(socket,"IsSnapped"),hand.Node+" stance "+stance+" trigger failed to lock: held="+Value<bool>(socket,"ClutchHeld")+" selected="+grab.isSelected+" distance="+Vector3.Distance(jaw.position,pivot)+" stroke="+stroke);
@@ -163,8 +161,13 @@ namespace LighthouseKeepers.Net.Tests
                         before=progress();var original=controller.rotation;controller.rotation=Quaternion.Euler(60,35,120)*controller.rotation;yield return new WaitForSeconds(.15f);
                         Assert.That(progress(),Is.EqualTo(before).Within(.5f),"Wrist rotation alone repaired bolt");controller.rotation=original;
                     }
-                    var rest=Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up);float height=controller.position.y-pivot.y;
+                    // Auto-snap preserves the hand's position. Set an actual off-centre arm pose,
+                    // rather than assuming the old clutch's wrist-facing setup also positions the arm.
                     var toward=Vector3.ProjectOnPlane(origin.Camera.transform.position-pivot,Vector3.up).normalized;
+                    float height=controller.position.y-pivot.y;
+                    float radius=Mathf.Clamp(Vector3.ProjectOnPlane(controller.position-pivot,Vector3.up).magnitude,.12f,.24f);
+                    var rest=Quaternion.AngleAxis(hand.Node==UnityEngine.XR.XRNode.LeftHand?45:-45,Vector3.up)*toward*radius;
+                    controller.position=pivot+rest+Vector3.up*height;yield return new WaitForSeconds(.2f);before=progress();
                     float pullSign=Vector3.Dot(Quaternion.AngleAxis(1,Vector3.up)*rest-rest,toward)>=0?1:-1;
                     for(float t=0;t<.35f&&Value<int>(state,"BoltsDone")==0;t+=Time.deltaTime)
                     {
@@ -174,10 +177,10 @@ namespace LighthouseKeepers.Net.Tests
                     }
                     if(Value<int>(state,"BoltsDone")>0)break;
                     float earned=progress();Assert.Greater(earned,before+5,"Small arm stroke did not accumulate");
-                    grab.deactivated.Invoke(new DeactivateEventArgs{interactorObject=direct,interactableObject=grab});yield return new WaitForSeconds(.1f);
-                    Assert.False(Value<bool>(socket,"IsSnapped"),"Trigger release did not free wrench");
+                    yield return new WaitForSeconds(.1f);
+                    Assert.True(Value<bool>(socket,"IsSnapped"),"Grip-only ratchet should remain seated for the return stroke");
                     controller.position=pivot+rest+Vector3.up*height;yield return new WaitForSeconds(.2f);
-                    Assert.That(progress(),Is.EqualTo(earned).Within(.5f),"Trigger release/readjust lost or added progress");
+                    Assert.That(progress(),Is.EqualTo(earned).Within(.5f),"Free-spin return lost or added progress");
                 }
                 Assert.Greater(Value<int>(state,"BoltsDone"),0,"Repeated small clutched pulls did not finish bolt");
                 grab.deactivated.Invoke(new DeactivateEventArgs{interactorObject=direct,interactableObject=grab});

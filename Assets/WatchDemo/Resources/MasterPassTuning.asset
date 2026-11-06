@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de346bb2aae44987894a2f00a81409d7, type: 3}
+  m_Name: MasterPassTuning
+  objectiveDirector: 1
+  gripOnlyWrench: 1
+  friendlyGenerator: 1
+  pressureCues: 1
+  stormClock: 1
+  onboarding: 1
+  movement: 1
+  worldSafety: 1
+  guidancePulseSeconds: 1.2
+  idleTickSeconds: 10
+  assignmentSeconds: 5
+  speechSpacingSeconds: 8
+  statusIntervalSeconds: 120
+  stormRecoverySeconds: 20
+  nightTwoOutageSeconds: 75
+  firstGeneratorGraceSeconds: 120
+  tutorialFloodCap: 0.28
+  gateTimeoutSeconds: 30
+  guidedFuelTarget: 0.65
+  walkMultiplier: 1.2
+  poleSpeed: 2
+  poleAcceleration: 4

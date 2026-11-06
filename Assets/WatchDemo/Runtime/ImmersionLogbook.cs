@@ -39,7 +39,8 @@ namespace LighthouseKeepers.WatchDemo
             {
                 Vector3 forward=Vector3.ProjectOnPlane(head.forward,Vector3.up).normalized;if(forward.sqrMagnitude<.5f)forward=Vector3.forward;
                 page.transform.SetPositionAndRotation(head.position+forward*.95f-Vector3.up*.08f,Quaternion.LookRotation(forward));
-                ink.text="KEEPER'S LOG\n\nNIGHT "+day+" — SURVIVED\n\nDawn. Another watch awaits.";
+                ink.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionLogbook.1")+day+LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionLogbook.2");
+                var watch=GetComponent<WatchDemoController>();if(watch&&watch.State.PressureEnabled&&(watch.State.PeakDanger>.8f||watch.State.PreviousCloseCall))ink.text+="\n"+KeeperStrings.Get("log.close");
             }
             showing=show;page.SetActive(show);
         }

@@ -35,6 +35,8 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
                 yield return null;yield return null;
                 var watch=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Single(c=>c.GetType().Name=="WatchDemoController");
                 var state=Get(watch,"State");var engine=Get(state,"Engine");Assert.That(engine,Is.Not.Null);
+                // The new tutorial begins powered; test the same unprimed pull after its scheduled outage.
+                if((bool)Get(state,"GeneratorTutorial")){Call(state,"Tick",75d);yield return null;}
                 var generator=GameObject.Find("STN_GENERATOR").transform;
                 var starter=GameObject.Find("GRIP_StarterHandle").GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="GeneratorRestart");
                 var bar=starter.transform.Find("Control grip");var barSize=bar.GetComponent<MeshFilter>().sharedMesh.bounds.size;

@@ -22,13 +22,14 @@ namespace LighthouseKeepers.WatchDemo
         {var root=new GameObject("S4 generator sequence");root.SetActive(false);root.transform.SetParent(generator.transform,false);var c=root.AddComponent<WatchEngineControls>();c.watch=watch;c.Build();root.SetActive(true);return c;}
         public static string Instruction(WatchState state)
         {
-            var e=state.Engine;if(state.Failed)return "WATCH ENDED";
-            if(!e.IgnoreExtraPulls&&e.FloodRemaining>0)return $"ENGINE FLOODED — WAIT {Mathf.CeilToInt(e.FloodRemaining)} s";
-            if(e.Running)return e.ChokeClosed?$"OPEN CHOKE NOW — {Mathf.CeilToInt(e.OpenRemaining)} s":e.LowFuel?"LOW FUEL — REFILL SOON":"ENGINE RUNNING";
-            if(!e.EnoughFuel)return "1 FUEL — TILT RED CAN OVER FILLER";
-            if(!e.Primed)return $"2 PRIME — GRIP BULB + SQUEEZE TRIGGER {e.Primer}/{state.PowerTuning.primerSqueezes}";
-            if(!e.ChokeClosed)return "3 CHOKE — GRIP LEVER TO CLOSE";
-            return $"4 START — PULL {e.Pulls}/{state.PowerTuning.starterPulls} · THEN OPEN CHOKE";
+            if(state.Director!=null)return state.Director.StationInstruction(WatchState.GeneratorStation);
+            var e=state.Engine;if(state.Failed)return LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.3");
+            if(!e.IgnoreExtraPulls&&e.FloodRemaining>0)return string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.4"),Mathf.CeilToInt(e.FloodRemaining));
+            if(e.Running)return e.ChokeClosed?string.Format(KeeperStrings.Get("engine.open.deadline"),Mathf.CeilToInt(e.OpenRemaining)):e.LowFuel?KeeperStrings.Get("engine.low"):KeeperStrings.Get("engine.running");
+            if(!e.EnoughFuel)return LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.5");
+            if(!e.Primed)return string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.6"),e.Primer,state.PowerTuning.primerSqueezes);
+            if(!e.ChokeClosed)return LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.7");
+            return string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.8"),e.Pulls,state.PowerTuning.starterPulls);
         }
         void Build()
         {
@@ -41,11 +42,11 @@ namespace LighthouseKeepers.WatchDemo
             ExposeStarter();
             Primer=Control("GRIP_PrimerBulb",new Vector3(.40f,1.06f,.88f),false);
             Choke=Control("GRIP_ChokeControl",new Vector3(-.40f,1.06f,.88f),true);
-            parts.Text("Primer label","PRIMER\nGRIP + TRIGGER",transform,new Vector3(.4f,.88f,.96f),.0028f);
-            parts.Text("Choke label","CHOKE\nCLOSED / OPEN",transform,new Vector3(-.4f,.88f,.96f),.0028f);
+            parts.Text("Primer label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.16"),transform,new Vector3(.4f,.88f,.96f),.0028f);
+            parts.Text("Choke label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.17"),transform,new Vector3(-.4f,.88f,.96f),.0028f);
             Filler=M2StationParts.Root("FUEL_FILLER",transform,new Vector3(-.38f,1.43f,.28f));
             parts.Part("Filler collar",Filler,Vector3.zero,new Vector3(.13f,.025f,.13f),parts.Brass,PrimitiveType.Cylinder);
-            parts.Text("Filler label","FILL",transform,new Vector3(-.38f,1.49f,.40f),.003f);
+            parts.Text("Filler label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.18"),transform,new Vector3(-.38f,1.49f,.40f),.003f);
             parts.Part("Fuel gauge face",transform,new Vector3(.69f,1.34f,.67f),new Vector3(.20f,.23f,.04f),parts.Dark);
             gaugeNeedle=M2StationParts.Root("Fuel gauge needle pivot",transform,new Vector3(.69f,1.30f,.697f));
             parts.Part("Fuel gauge needle",gaugeNeedle,new Vector3(0,.05f,0),new Vector3(.007f,.10f,.007f),parts.Brass);
@@ -73,7 +74,7 @@ namespace LighthouseKeepers.WatchDemo
             var oldStem=starterHandle.Find("Control stem");if(oldStem)oldStem.gameObject.SetActive(false);
             var housing=parts.Part("Starter recoil housing",transform,new Vector3(.05f,1.15f,.91f),new Vector3(.13f,.06f,.13f),parts.Dark,PrimitiveType.Cylinder);
             housing.transform.localRotation=Quaternion.Euler(90,0,0);
-            parts.Text("Starter pull label","4 STARTER\nGRIP + PULL",transform,new Vector3(.05f,.98f,1.04f),.0032f);
+            parts.Text("Starter pull label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.19"),transform,new Vector3(.05f,.98f,1.04f),.0032f);
             starterCordMount=new Vector3(.05f,1.15f,.97f);
             starterCord=new GameObject("Starter recoil cord").AddComponent<LineRenderer>();starterCord.transform.SetParent(transform,false);
             starterCord.positionCount=2;starterCord.useWorldSpace=true;starterCord.widthMultiplier=.009f;starterCord.sharedMaterial=parts.Metal;
@@ -93,9 +94,9 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             var e=State.Engine;
-            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);lamps[i].SetPropertyBlock(block);}
+            for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);if(State.Director!=null)block.SetColor("_EmissionColor",Color.black);lamps[i].SetPropertyBlock(block);}
             RefreshPhysicalGuidance();
-            gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=$"FUEL {e.Fuel*100:0}%";
+            gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.9"),e.Fuel*100);
             if(e.CoughSerial!=lastCough&&cough)sound.PlayOneShot(cough,.5f);lastCough=e.CoughSerial;
         }
         void Update()
@@ -118,9 +119,9 @@ namespace LighthouseKeepers.WatchDemo
         public void Initialize(WatchEngineControls parent,bool lever,Transform model){owner=parent;choke=lever;visual=model;}
         void Awake()
         {grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-.014f);right=Palm(.014f);interaction.selectEntered.AddListener(Select);interaction.activated.AddListener(Squeeze);}
-        Transform Palm(float x){var t=M2StationParts.Root(x<0?"Left palm":"Right palm",visual,new Vector3(x,.012f,choke?.16f:.085f));t.localRotation=Quaternion.Euler(0,180,0);return t;}
+        Transform Palm(float x){var t=M2StationParts.Root(x<0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.20"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.21"),visual,new Vector3(x,.012f,choke?.16f:.085f));t.localRotation=Quaternion.Euler(0,180,0);return t;}
         void Select(SelectEnterEventArgs e){if(choke)owner.Act(true);}
-        void Squeeze(ActivateEventArgs e){if(!choke){owner.Act(false);squeezed=Time.time+.18f;if(grip.HoldingHand)grip.HoldingHand.Pulse(.35f,.06f);}}
+        void Squeeze(ActivateEventArgs e){if(!choke&&!(owner.State.Engine.Guided&&owner.State.Engine.Primed)){owner.Act(false);squeezed=Time.time+.18f;if(grip.HoldingHand)grip.HoldingHand.Pulse(.35f,.06f);}}
         void Update()
         {if(choke)visual.localRotation=Quaternion.Slerp(visual.localRotation,Quaternion.Euler(owner.State.Engine.ChokeClosed?-30:30,0,0),1-Mathf.Exp(-20*Time.deltaTime));else visual.localScale=Vector3.one*(Time.time<squeezed?.75f:1);var hand=grip.HoldingHand;if(hand)hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);}
         void OnDestroy(){if(interaction){interaction.selectEntered.RemoveListener(Select);interaction.activated.RemoveListener(Squeeze);}}
