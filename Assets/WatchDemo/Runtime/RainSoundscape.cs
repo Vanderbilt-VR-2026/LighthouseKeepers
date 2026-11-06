@@ -41,6 +41,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    var wanted=Weights(head.position);blend=Vector3.MoveTowards(blend,wanted,Time.deltaTime*Mathf.Sqrt(2)/settings.zoneFadeSeconds);float total=blend.x+blend.y+blend.z;if(total>0)blend/=total;
    float storm=watch.State.Storm!=null?Mathf.Lerp(.75f,1.2f,(watch.State.Storm.Stage-1)/3f):1;
+   if(LighthouseKeepers.Core.VisualPassSettings.Current&&LighthouseKeepers.Core.VisualPassSettings.Current.water)storm*=Mathf.Lerp(.65f,1.1f,Mathf.Clamp01((watch.State.Day-1)*.5f));
    beds[0].volume=settings.rainGains.x*blend.x*storm;beds[1].volume=settings.rainGains.y*blend.y*storm;beds[2].volume=settings.rainGains.z*blend.z*storm;
    if(Time.time>=nextGust){gustStart=Time.time;gustLength=Random.Range(5,9);nextGust=Time.time+Random.Range(15,40);}
    float gust=Mathf.Sin(Mathf.Clamp01((Time.time-gustStart)/gustLength)*Mathf.PI);wind.volume=(.025f+.10f*gust)*(.35f+.65f*(blend.x+blend.z))*storm;wind.transform.position=head.position+new Vector3(2,1,0);windFilter.cutoffFrequency=Mathf.Lerp(1200,7000,blend.x+blend.z);

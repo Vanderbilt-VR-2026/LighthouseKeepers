@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo {
   }
   void LateUpdate(){int stage=watch.State.Storm.Stage;float strength=(stage-1)/3f;if(stage>=2&&Time.time>nextRattle){nextRattle=Time.time+Random.Range(15f,30f);rattle.transform.position=head.position+Vector3.up*.8f+Vector3.right*1.2f;rattle.volume=.04f*stage;if(rattle.clip)rattle.Play();if(stage>=3&&head.position.y<11.5f&&head.position.z> -10.3f&&new Vector2(head.position.x,head.position.z).magnitude<11)dust.Emit(12);}foreach(var lamp in lamps)if(lamp.t)lamp.t.localRotation=lamp.rest*Quaternion.Euler(0,0,Mathf.Sin((float)watch.State.Elapsed*1.3f)*strength*2);
    if(sea){sea.GetPropertyBlock(block);block.SetFloat("_StormAmplitude",Mathf.Lerp(.08f,.3f,strength));sea.SetPropertyBlock(block);}
-   if(rain){var e=rain.emission;e.rateOverTime=originalRain*Mathf.Lerp(.8f,1.15f,strength);}if(ocean)ocean.volume=originalOcean*Mathf.Lerp(.65f,1.2f,strength);
+   if(rain){var e=rain.emission;e.rateOverTime=originalRain*Mathf.Lerp(.8f,1.15f,strength)*(VisualPassSettings.Current&&VisualPassSettings.Current.water?Mathf.Lerp(.30f,1.05f,Mathf.Clamp01((watch.State.Day-1)*.5f)):1);}if(ocean)ocean.volume=originalOcean*Mathf.Lerp(.65f,1.2f,strength);
   }
  void OnDestroy(){if(dustMaterial)Destroy(dustMaterial);}
  }
