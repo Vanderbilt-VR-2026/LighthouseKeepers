@@ -1,0 +1,17 @@
+{
+  "fullRun": {
+    "total": "65",
+    "passed": "39",
+    "failed": "26",
+    "duration": "656.3163168"
+  },
+  "orderedRerun": {
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests.GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead": "Failed",
+    "LighthouseKeepers.Net.Tests.CoopAppearanceTests.BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes": "Passed",
+    "LighthouseKeepers.Net.Tests.CoopAppearanceTests.RemoteGloveSurvivesDestructionOfTheLobbyRigResources": "Passed"
+  },
+  "effectiveCasesPassed": 40,
+  "effectiveCasesFailed": 25,
+  "previouslyPassingNowFailing": [],
+  "note": "Full run plus ordered targeted rerun after test-only selection cleanup. The old wrist-roll assertion remains an inherited failure; gameplay was not changed to satisfy it."
+}

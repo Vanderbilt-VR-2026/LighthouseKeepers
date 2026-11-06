@@ -51,7 +51,7 @@ namespace LighthouseKeepers.WatchDemo
         AdaptiveMusic adaptiveMusic;
         ImmersionLogbook logbook;
         public bool WrenchHeld=>wrench.isSelected||coop?.RemoteHeld(wrench)==true;
-        public void SetBedMask(int value){bedMask=value;if(immersionWorld)immersionWorld.SetBeds(value);}
+        public void SetBedMask(int value){if(value!=bedMask&&value!=0)GetComponent<WorldAudioGaps>()?.BunkChanged();bedMask=value;if(immersionWorld)immersionWorld.SetBeds(value);}
 
         public Component Owner=>this;
         public void SetNetworkMode(bool practice,bool replica){state.SetNetworkRehearsal(practice);state.SetRemoteReplica(replica);}
@@ -102,6 +102,13 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Master&&state.Master.worldSafety)MasterWorldSafety.Create(this);
             if(state.Master&&state.Master.movement)KeeperMovement.Create(this);
             ObjectiveHud.Create(this,head);
+            QuestRenderQuality.Create(this);
+            WorldLabelRaster.Create(this);
+            PracticalAtmosphere.Create(this);
+            WorldWaterPresentation.Create(this);
+            CoastlinePresentation.Create(this);
+            StoryDressing.Create(this);
+            WorldAudioGaps.Create(this);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
         }

@@ -78,7 +78,7 @@ namespace LighthouseKeepers.WatchDemo
    var go=new GameObject("Visible outside beacon sweep");go.transform.SetParent(beacon.beam.transform,false);
    const int n=24;var vertices=new Vector3[n*2];var colours=new Color[n*2];var indices=new int[n*6];
    for(int i=0;i<n;i++){float a=i*Mathf.PI*2/n;var radial=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);vertices[i*2]=radial*.12f;vertices[i*2+1]=radial*4+Vector3.forward*24;colours[i*2]=Color.white;colours[i*2+1]=new Color(1,1,1,.02f);int k=i*6,next=(i+1)%n*2;indices[k]=i*2;indices[k+1]=next;indices[k+2]=i*2+1;indices[k+3]=i*2+1;indices[k+4]=next;indices[k+5]=next+1;}
-   beamMesh=new Mesh{name="Beacon cone 24 segments"};beamMesh.vertices=vertices;beamMesh.colors=colours;beamMesh.triangles=indices;beamMesh.RecalculateBounds();go.AddComponent<MeshFilter>().sharedMesh=beamMesh;var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=beamMaterial;renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;renderer.receiveShadows=false;beacon.SetVisibleBeam(renderer);
+   beamMesh=new Mesh{name="Beacon cone 24 segments"};beamMesh.vertices=vertices;beamMesh.colors=colours;beamMesh.triangles=indices;beamMesh.RecalculateNormals();beamMesh.RecalculateBounds();go.AddComponent<MeshFilter>().sharedMesh=beamMesh;var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=beamMaterial;renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;renderer.receiveShadows=false;beacon.SetVisibleBeam(renderer);
   }
   void OnDestroy(){if(watch&&State!=null)State.Changed-=Refresh;if(beamMesh)Destroy(beamMesh);if(beamMaterial)Destroy(beamMaterial);}
  }

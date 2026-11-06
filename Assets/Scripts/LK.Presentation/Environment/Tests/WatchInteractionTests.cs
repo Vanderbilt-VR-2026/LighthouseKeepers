@@ -64,6 +64,15 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             t.GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(c,head);
             manager.SelectExit((IXRSelectInteractor)hand,(IXRSelectInteractable)wrench);UnityEngine.Object.Destroy(hand.gameObject);UnityEngine.Object.Destroy(testHead.gameObject);
         }
+        [UnityTearDown] public IEnumerator ReleaseTestGrabBeforeSceneUnload()
+        {
+            // Assertions above may intentionally fail against newer input verbs. Never leave
+            // their synthetic hand holding a prop for the next test's scene teardown.
+            var go=GameObject.Find("Test direct hand");
+            if(go){var hand=go.GetComponent<XRDirectInteractor>();if(hand&&hand.interactionManager)
+                foreach(var item in hand.interactablesSelected.ToArray())hand.interactionManager.SelectExit((IXRSelectInteractor)hand,item);
+                yield return new WaitForSecondsRealtime(.1f);UnityEngine.Object.Destroy(go);yield return null;}
+        }
         [TearDown] public void Restore(){Time.captureDeltaTime=previous;}
     }
 }
