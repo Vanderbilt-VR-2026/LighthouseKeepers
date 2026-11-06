@@ -2,6 +2,10 @@
 using System;using System.Collections;using System.Linq;using NUnit.Framework;using UnityEditor.SceneManagement;using UnityEngine;using UnityEngine.SceneManagement;using UnityEngine.TestTools;
 namespace LighthouseKeepers.Presentation.Environment.Tests {
  public sealed class MasterSafetyTests {
+  [UnityTest] public IEnumerator BakedPracticalLightingLeavesAtMostOneRealtimeSource(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   Assert.That(UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l=>l.enabled&&l.lightmapBakeType==LightmapBakeType.Realtime),Is.LessThanOrEqualTo(1));Assert.That(LightmapSettings.lightmaps.Length,Is.GreaterThan(0));Assert.That(UnityEngine.Object.FindObjectsByType<ReflectionProbe>(FindObjectsSortMode.None).Count(p=>p.bakedTexture),Is.GreaterThanOrEqualTo(5));
+  }
   [UnityTest] public IEnumerator EveryWalkableFloorBoundaryHasSupportOrGuard(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));for(int n=0;n<15;n++)yield return null;
    var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("WalkableEdgeAudit")).First(t=>t!=null);
