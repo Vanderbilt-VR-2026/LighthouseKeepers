@@ -41,7 +41,7 @@ namespace LighthouseKeepers.WatchDemo
             {
                 bunk[i]=Fixture(parts,bed,new Vector3(i==0?-.35f:.35f,.95f,1.01f),i==0?"Host bunk lamp":"Guest bunk lamp");
                 bunk[i].transform.parent.localRotation=Quaternion.Euler(0,180,0);
-                var label=parts.Text("Bunk lamp keeper "+i,i==0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.6"):"KEEPER 2",bunk[i].transform.parent,new Vector3(0,-.13f,.04f),.0035f);bunkLabels[i]=label;
+                var label=parts.Text("Bunk lamp keeper "+i,i==0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.6"):KeeperStrings.Get("bunk.keeperTwo"),bunk[i].transform.parent,new Vector3(0,-.13f,.04f),.0035f);bunkLabels[i]=label;
                 parts.Part("Bunk lamp name plate",label.transform,new Vector3(0,0,.007f),new Vector3(.25f,.10f,.012f),parts.Dark);
             }
             var bedPlate=M2StationParts.Root("Bunk rest plate",bed,new Vector3(0,.36f,-1.035f));bedPlate.localRotation=Quaternion.Euler(0,180,0);

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo
 {
     // Shared small material palette and simple physical fittings for the switched stations.
@@ -10,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Initialize()
         {Metal=Mat("steel",new Color(.4f,.43f,.4f),.7f);Dark=Mat("instrument enamel",new Color(.045f,.075f,.07f),.3f);Brass=Mat("brass",new Color(.65f,.38f,.09f),.7f);Red=Mat("fuel red",new Color(.65f,.035f,.025f),.2f);Green=Mat("status green",new Color(.05f,.7f,.1f),.1f);}
         Material Mat(string name,Color colour,float metal)
-        {var template=Object.FindFirstObjectByType<WatchGenerator>().GetComponentInChildren<Renderer>().sharedMaterial;var m=new Material(template){name="M2 "+name};m.SetColor("_BaseColor",colour);m.SetFloat("_Metallic",metal);m.SetFloat("_Smoothness",.4f);m.EnableKeyword("_EMISSION");m.SetColor("_EmissionColor",colour*.14f);owned.Add(m);return m;}
+        {var template=Object.FindFirstObjectByType<WatchGenerator>().GetComponentInChildren<Renderer>().sharedMaterial;if(VisualPassSettings.Current&&VisualPassSettings.Current.materials&&(name=="steel"||name=="brass")){var p=Resources.Load<Material>("VisualMaterials/"+(name=="brass"?"Brass":"Iron"));if(p)template=p;}var m=new Material(template){name="M2 "+name};m.SetColor("_BaseColor",colour);m.SetFloat("_Metallic",metal);m.SetFloat("_Smoothness",.4f);m.EnableKeyword("_EMISSION");m.SetColor("_EmissionColor",colour*.14f);owned.Add(m);return m;}
         public static Transform Root(string name,Transform parent,Vector3 position)
         {var t=new GameObject(name).transform;t.SetParent(parent,false);t.localPosition=position;return t;}
         public GameObject Part(string name,Transform parent,Vector3 pos,Vector3 scale,Material material,PrimitiveType shape=PrimitiveType.Cube)

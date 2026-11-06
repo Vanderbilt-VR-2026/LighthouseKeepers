@@ -6,6 +6,12 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
    Assert.That(UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l=>l.enabled&&l.lightmapBakeType==LightmapBakeType.Realtime),Is.LessThanOrEqualTo(1));Assert.That(LightmapSettings.lightmaps.Length,Is.GreaterThan(0));Assert.That(UnityEngine.Object.FindObjectsByType<ReflectionProbe>(FindObjectsSortMode.None).Count(p=>p.bakedTexture),Is.GreaterThanOrEqualTo(5));
   }
+  [UnityTest] public IEnumerator DecorativeWorldDoesNotAddPlayerObstaclesAndWaterKeepsItsHostSurface(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   foreach(var name in new[]{"Previous keeper open logbook","Oilskin on wall hook","Wall stowed supply crate","Old stove and kettle","Wet rocky coastline and eastern inlet"}){var go=GameObject.Find(name);Assert.That(go,Is.Not.Null,name);Assert.False(go.GetComponentsInChildren<Collider>().Any(c=>c.enabled&&!c.isTrigger),name+" blocks the player");}
+   var flood=GameObject.Find("Visible first-floor flood");Assert.That(flood.GetComponent<Renderer>().sharedMaterial.shader.name,Is.EqualTo("LighthouseKeepers/StormWater"));Assert.That(flood.GetComponent<MeshFilter>().sharedMesh.vertexCount,Is.EqualTo(65),"Flood simulation plane remains unchanged");
+   foreach(var skin in UnityEngine.Object.FindObjectsByType<SkinnedMeshRenderer>(FindObjectsSortMode.None).Where(s=>s.name=="Skinned glove"))Assert.That(skin.lightProbeUsage,Is.EqualTo(UnityEngine.Rendering.LightProbeUsage.BlendProbes));
+  }
   [UnityTest] public IEnumerator EveryWalkableFloorBoundaryHasSupportOrGuard(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));for(int n=0;n<15;n++)yield return null;
    var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("WalkableEdgeAudit")).First(t=>t!=null);
