@@ -80398,6 +80398,14 @@ PrefabInstance:
       propertyPath: far clip plane
       value: 350
       objectReference: {fileID: 0}
+    - target: {fileID: 4294862672521277607, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
+      propertyPath: near clip plane
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294862672521277607, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
+      propertyPath: m_OcclusionCulling
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4474210465249826954, guid: c0fd10b66cbec44ff8f9dcdc4ca99ccd, type: 3}
       propertyPath: m_Enabled
       value: 0
