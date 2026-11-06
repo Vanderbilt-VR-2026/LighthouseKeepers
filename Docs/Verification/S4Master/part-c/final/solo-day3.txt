@@ -1,0 +1,13 @@
+START paced solo Day 3; physical XRI plus explicitly budgeted read/navigation waits: elapsed=0.028s realtime=8.046 day=3 repaired=False water=0.02003m
+day-three physical bolt 1 complete; inflow=0.6666667: elapsed=53.772s realtime=61.969 day=3 repaired=False water=0.08539m
+Released wrench: position=(3.19, 0.01, -0.05) kinematic=False water=0.1010287: elapsed=72.530s realtime=80.820 day=3 repaired=False water=0.10103m
+day-three physical bolt 2 complete; inflow=0.3333333: elapsed=79.982s realtime=88.182 day=3 repaired=False water=0.11185m
+day-three physical bolt 0 complete; inflow=0: elapsed=104.264s realtime=112.454 day=3 repaired=True water=0.13891m
+PIPE finished: elapsed=104.278s realtime=112.563 day=3 repaired=True water=0.13891m
+Three actual generator XRI pulls: elapsed=170.897s realtime=179.097 day=3 repaired=True water=0.10874m
+GENERATOR settled; beacon and radio now required: elapsed=171.439s realtime=179.629 day=3 repaired=True water=0.10224m
+BEACON shining: elapsed=246.588s realtime=254.778 day=3 repaired=True water=0.10224m
+RADIO complete; board 4/4: elapsed=291.600s realtime=299.790 day=3 repaired=True water=0.10224m
+SOLO DAY3 SPARE=138.40 seconds
+BED passed next day: elapsed=0.569s realtime=324.822 day=4 repaired=False water=0.02899m
+PASS: paced automated first-timer scenario; actual XRI mechanics. Navigation waits budget separately measured locomotion; not a human usability or live co-op acceptance.
