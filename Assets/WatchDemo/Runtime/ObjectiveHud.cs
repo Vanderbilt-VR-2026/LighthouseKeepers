@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.XR;
 using LighthouseKeepers.Core;
 using LighthouseKeepers.Gameplay.Interaction;
@@ -7,15 +8,15 @@ namespace LighthouseKeepers.WatchDemo
 {
  public sealed class ObjectiveHud:MonoBehaviour
  {
-  WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick,danger;Text dangerText;
-  Text task,label,floor,subtitle,partner;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;Vector3 velocity;Quaternion follow;
+  WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick,danger;TMP_Text dangerText;
+  TMP_Text task,label,floor,subtitle,partner;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;Vector3 velocity;Quaternion follow;
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
   public static ObjectiveHud Create(WatchDemoController w,Transform head)
   {var s=AudioPassSettings.Current;if(!s||!s.objectiveHud)return null;var h=w.gameObject.AddComponent<ObjectiveHud>();h.watch=w;h.head=head;h.Build();return h;}
   static RectTransform Rect(Transform parent,string name,Vector2 p,Vector2 size)
   {var r=new GameObject(name,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(parent,false);r.anchoredPosition=p;r.sizeDelta=size;return r;}
-  Text Text(string name,Vector2 p,Vector2 size,int pixels,Color c)
-  {var t=Rect(root,name,p,size).gameObject.AddComponent<Text>();t.font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");t.fontSize=pixels;t.color=c;t.alignment=TextAnchor.MiddleLeft;t.raycastTarget=false;t.material=fontMaterial;return t;}
+  TMP_Text Text(string name,Vector2 p,Vector2 size,int pixels,Color c)
+  {var t=Rect(root,name,p,size).gameObject.AddComponent<TextMeshProUGUI>();t.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");t.fontSize=pixels;t.color=c;t.alignment=TextAlignmentOptions.MidlineLeft;t.raycastTarget=false;t.enableAutoSizing=false;t.textWrappingMode=TextWrappingModes.Normal;t.extraPadding=true;return t;}
   RectTransform Rule(string name,Vector2 p,Vector2 size)
   {var r=Rect(root,name,p,size);var image=r.gameObject.AddComponent<Image>();image.color=new Color(.74f,.58f,.3f,.8f);image.material=material;image.raycastTarget=false;return r;}
   void Build()
@@ -23,8 +24,8 @@ namespace LighthouseKeepers.WatchDemo
    var go=new GameObject("Transient objective tracker",typeof(RectTransform),typeof(Canvas),typeof(CanvasGroup));root=go.GetComponent<RectTransform>();root.SetParent(transform,false);root.localScale=Vector3.one*.001f;root.sizeDelta=new Vector2(600,210);
    var canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.WorldSpace;canvas.worldCamera=head.GetComponent<Camera>();canvas.sortingOrder=1000;group=go.GetComponent<CanvasGroup>();group.blocksRaycasts=false;group.interactable=false;
    material=new Material(Resources.Load<Shader>("ObjectiveOverlay"));fontMaterial=new Material(material);fontMaterial.SetFloat("_AlphaOnly",1);
-   backing=new Texture2D(64,32,TextureFormat.RGBA32,false);var data=new Color[64*32];var random=new System.Random(41);
-   for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.30f*edge*(.96f+(float)random.NextDouble()*.08f));}
+   backing=new Texture2D(64,32,TextureFormat.RGBA32,true);var data=new Color[64*32];var random=new System.Random(41);
+   for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.30f*edge);}
    backing.SetPixels(data);backing.Apply();var bg=Rect(root,"Subtle gradient backing",Vector2.zero,root.sizeDelta).gameObject.AddComponent<RawImage>();bg.texture=backing;bg.material=material;bg.raycastTarget=false;
    line=Rule("Brass accent",new Vector2(-265,76),new Vector2(480,1.4f));line.pivot=new Vector2(0,.5f);
    label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.2");
@@ -33,7 +34,7 @@ namespace LighthouseKeepers.WatchDemo
    task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);
    floor=Text("Relative floor",new Vector2(10,-28),new Vector2(470,25),16,new Color(.76f,.7f,.56f));
    partner=Text("Partner job",new Vector2(10,-48),new Vector2(470,20),14,new Color(.76f,.7f,.56f));
-   subtitle=Text("Harbor subtitle",new Vector2(0,-72),new Vector2(530,85),19,new Color(.79f,.79f,.72f,.82f));subtitle.fontStyle=FontStyle.Italic;
+   subtitle=Text("Harbor subtitle",new Vector2(0,-72),new Vector2(530,85),19,new Color(.79f,.79f,.72f,.82f));subtitle.fontStyle=FontStyles.Italic;
    strike=Rule("Completed objective strike",new Vector2(15,10),new Vector2(460,1));tick=Rule("Completion tick stem",new Vector2(240,13),new Vector2(12,2));tick.localRotation=Quaternion.Euler(0,0,45);var up=Rule("Completion tick sweep",new Vector2(253,18),new Vector2(24,2));up.SetParent(tick,false);up.anchoredPosition=new Vector2(11,4);up.localRotation=Quaternion.Euler(0,0,90);
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
    danger=Rule("Danger fill",new Vector2(-220,-110),new Vector2(440,6));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-126),new Vector2(440,20),14,new Color(.95f,.72f,.37f));

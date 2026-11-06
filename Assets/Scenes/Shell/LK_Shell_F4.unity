@@ -613,6 +613,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1106212446544966861, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 95249f1d9df584dad9e4102575804ab9, type: 2}
+    - target: {fileID: 1397059038610677208, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 6b80683cd3ae84394bf546b63aa48c20, type: 2}
+    - target: {fileID: 3035093259479200755, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: f99841fca524740a6ac5095b333e9ca8, type: 2}
     - target: {fileID: 8783384930254076490, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Name
       value: PF_Shell_F4

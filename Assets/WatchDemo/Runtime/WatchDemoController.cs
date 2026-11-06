@@ -102,6 +102,8 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Master&&state.Master.worldSafety)MasterWorldSafety.Create(this);
             if(state.Master&&state.Master.movement)KeeperMovement.Create(this);
             ObjectiveHud.Create(this,head);
+            QuestRenderQuality.Create(this);
+            WorldLabelRaster.Create(this);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
         }
