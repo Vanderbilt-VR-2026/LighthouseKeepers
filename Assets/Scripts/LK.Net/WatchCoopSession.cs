@@ -50,6 +50,7 @@ namespace LighthouseKeepers.Net
             debugLine.text=$"us | {crew.SessionName} | {crew.Players.Count}/2 keepers\n"+string.Join(" / ",crew.Players.Select(p=>p.DisplayName));
         }
 #endif
+        public ICoopRadioView ConnectedView=>watch as ICoopRadioView;
         public ICoopPressureView PressureView=>watch as ICoopPressureView;
         public int LocalActor=>channel?channel.LocalActorId:0;
         public void Locations(out int first,out Vector3 firstHead,out int second,out Vector3 secondHead)
@@ -220,15 +221,17 @@ namespace LighthouseKeepers.Net
             }
             if(c.action==CoopAction.StatusRequest){if(c.value!=0||!poses.Sample(actor,out _))return -1;return watch.ApplyCommand(c.action,0,false);}
             if(c.action==CoopAction.Retry||c.action==CoopAction.Replay)return watch.ApplyCommand(c.action,c.value,c.pressed);
+            if(c.action==CoopAction.HandheldRadio&&!c.pressed)return c.value==(int)c.value&&ConnectedView?.RadioCommand(actor,(int)c.value,false)==true?1:-1;
             if(c.action==CoopAction.PressureValve&&!c.pressed)return PressureView?.PressureCommand(actor,false)==true?1:-1;
             var target=watch.Target(c.action,c.value);if(!target)return -1;
             if(!poses.NearHand(actor,target.transform.position,c.action==CoopAction.Microphone?1.2f:.85f))return -1;
             if(c.action==CoopAction.PressureValve)return c.value==0&&PressureView?.PressureCommand(actor,c.pressed)==true?1:-1;
-            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch)
+            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch||c.action==CoopAction.HandheldRadio)
             {
                 var binding=target.GetComponent<FusionGrabBinding>();
                 if(!binding||!props.HasFreshLease(actor,binding.Id))return -1;
             }
+            if(c.action==CoopAction.HandheldRadio)return c.value==(int)c.value&&ConnectedView?.RadioCommand(actor,(int)c.value,c.pressed)==true?1:-1;
             if(c.action==CoopAction.Starter)
             {
                 if(lastPull.TryGetValue(actor,out var time)&&Time.unscaledTime-time<.25f)return -1;
@@ -236,7 +239,7 @@ namespace LighthouseKeepers.Net
             }
             if(c.action==CoopAction.Microphone)
             {micActor=actor;micSeen=Time.unscaledTime;micPressed=c.pressed;return 1;}
-            if(c.action==CoopAction.WrenchClutch)
+            if(c.action==CoopAction.WrenchClutch||c.action==CoopAction.HandheldRadio)
             {wrenchActor=actor;wrenchSeen=Time.unscaledTime;wrenchPressed=c.pressed;return 1;}
             return watch.ApplyCommand(c.action,c.value,c.pressed);
         }
@@ -257,7 +260,7 @@ namespace LighthouseKeepers.Net
         }
         void Left(int actor)
         {
-            PressureView?.PressureActorLeft(actor);
+            PressureView?.PressureActorLeft(actor);ConnectedView?.RadioActorLeft(actor);
             nonces.Remove(actor);acknowledged.Remove(actor);commands.Remove(actor);beds.Remove(actor);lastPull.Remove(actor);rateStart.Remove(actor);rateCount.Remove(actor);
             if(micActor==actor){micActor=0;micPressed=false;}
             if(wrenchActor==actor){wrenchActor=0;wrenchPressed=false;}

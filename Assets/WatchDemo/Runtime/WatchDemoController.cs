@@ -7,7 +7,7 @@ using LighthouseKeepers.Flood;
 using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation, LighthouseKeepers.Lobby.ICoopPressureView
+    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation, LighthouseKeepers.Lobby.ICoopPressureView, LighthouseKeepers.Lobby.ICoopRadioView
     {
         [SerializeField] FloodController flood;
         [SerializeField] Transform head,repairPoint,bed,wrenchVisual;
@@ -96,6 +96,7 @@ namespace LighthouseKeepers.WatchDemo
             BeginWatch();
             if(state.HouseFlood!=null)WatchHouseFlood.Create(this);
             pressureValve=WatchPressureValve.Create(this);
+            CreateCrewRadios();
             InitializeDirector();
             if(state.PressureEnabled)PressurePresentation.Create(this,head);
             if(state.Storm!=null)StormPresentation.Create(this);
@@ -134,6 +135,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
+            UpdateCrewRadios();
             UpdateDirector();
             if(state.Immersion&&state.Immersion.physicalGuidance)
             {
