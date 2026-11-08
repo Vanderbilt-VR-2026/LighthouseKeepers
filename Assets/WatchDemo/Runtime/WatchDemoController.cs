@@ -7,7 +7,7 @@ using LighthouseKeepers.Flood;
 using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation
+    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation, LighthouseKeepers.Lobby.ICoopPressureView
     {
         [SerializeField] FloodController flood;
         [SerializeField] Transform head,repairPoint,bed,wrenchVisual;
@@ -95,6 +95,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             BeginWatch();
             if(state.HouseFlood!=null)WatchHouseFlood.Create(this);
+            pressureValve=WatchPressureValve.Create(this);
             InitializeDirector();
             if(state.PressureEnabled)PressurePresentation.Create(this,head);
             if(state.Storm!=null)StormPresentation.Create(this);
@@ -165,7 +166,7 @@ namespace LighthouseKeepers.WatchDemo
             if(!state.Failed)
             {
                 flood.Paused=state.Repaired;
-                flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.Pipe.InflowFraction*state.FloodRiseMultiplier;
+                flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.LeakStrength*state.FloodRiseMultiplier;
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }

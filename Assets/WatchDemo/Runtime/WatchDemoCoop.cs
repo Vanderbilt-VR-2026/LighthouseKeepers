@@ -6,6 +6,10 @@ namespace LighthouseKeepers.WatchDemo
     // Crew-only adapter. Solo station, clock, flood and sleep implementations remain in their original paths.
     public sealed partial class WatchDemoController
     {
+        WatchPressureValve pressureValve;
+        public bool PressureCommand(int actor,bool held)=>state.Pressure!=null&&!state.ReadOnly&&!sleeping&&!state.Failed&&!state.Repaired&&(state.Pressure.CrewRequired?state.Pressure.Hold(actor,held):held&&state.Pressure.Clamp());
+        public void PressureWorker(int actor){if(!state.ReadOnly)state.PipeWorkerActor=actor;}
+        public void PressureActorLeft(int actor){state.Pressure?.Hold(actor,false);}
         public int Revision {get;private set;}
         public bool CanSleep=>state!=null&&!sleeping&&!state.Failed&&state.Complete&&state.HasNextDay;
         public Vector3 BedPosition=>bed.position+Vector3.up*1.3f;
@@ -14,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.PressureValve)return pressureValve?pressureValve.Grip:null;
             if(action==CoopAction.PAReplay)return value==(int)value&&immersionWorld&&immersionWorld.Narrator?immersionWorld.Narrator.ReplayButton((int)value):null;
             if(action==CoopAction.GridCircuit)return powerPanel?powerPanel.Control((int)value):null;
             if(action==CoopAction.GridReset)return powerPanel?powerPanel.ResetControl:null;
@@ -66,7 +71,7 @@ namespace LighthouseKeepers.WatchDemo
         public void CrewStatus(int beds,int keepers,string notice)
         {
             if(crewBeds==beds&&crewKeepers==keepers&&crewNotice==notice)return;
-            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;RefreshBoard();
+            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;state.Pressure?.SetCrew(keepers>1);RefreshBoard();
         }
         public void ContinueAlone(string notice)
         {

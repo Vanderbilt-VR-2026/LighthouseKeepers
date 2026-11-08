@@ -9,6 +9,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool Forgiving {get;}
         public float RetainedPartialProgress { get; set; }
         public bool ReadOnly {get;set;}
+        public Func<bool> CanTighten {get;set;}
         // In this mode input is already classified: positive = toward keeper,
         // negative = free return. Never choose the direction from initial jitter.
         public bool PullTowardTightens {get;set;}
@@ -60,7 +61,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Observe(float seconds,float twistDegrees,bool contact,bool steady,bool canWork)
         {
             if(!float.IsFinite(seconds)||seconds<0||!float.IsFinite(twistDegrees))throw new ArgumentOutOfRangeException();
-            if(ReadOnly||Complete||!canWork)return;
+            if(ReadOnly||Complete||!canWork||CanTighten!=null&&!CanTighten())return;
             if(!contact)
             {
                 if(touching){if(!Forgiving){StrokeDegrees*=RetainedPartialProgress;if(NeedsSeal)SealElapsed*=RetainedPartialProgress;}NeedsReturn=false;SeatElapsed=0;Changed?.Invoke();}

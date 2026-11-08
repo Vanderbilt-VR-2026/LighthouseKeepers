@@ -58,7 +58,7 @@ namespace LighthouseKeepers.WatchDemo
                 int mark=done?2:active?1:0;if(chalkState[i]!=mark){chalkState[i]=mark;chalk[i].text=done?((char)('A'+i))+" ✓":active?((char)('A'+i))+" ↻":((char)('A'+i)).ToString();}
                 bulbs[i].intensity=state.Director!=null?(active?.32f+.08f*Mathf.Sin(Time.time*Mathf.PI*2/state.Master.guidancePulseSeconds):0):done?.18f:active?.45f+.12f*Mathf.Sin(Time.time*2.4f):.12f;
             }
-            needle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(60,-60,p.InflowFraction*(state.Connected&&state.Connected.dependencies&&state.HasPower(LighthouseKeepers.Core.PowerCircuit.Pump)?.65f:1)));
+            needle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(60,-60,state.LeakStrength*(state.Connected&&state.Connected.dependencies&&state.HasPower(LighthouseKeepers.Core.PowerCircuit.Pump)?.65f:1)));
             pipe.leakAudio.transform.position=pipe.ActivePosition;
         }
     }

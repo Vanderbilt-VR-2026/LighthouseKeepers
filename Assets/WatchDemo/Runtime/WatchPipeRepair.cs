@@ -28,10 +28,11 @@ namespace LighthouseKeepers.WatchDemo
             return bolts[index].TransformPoint(new Vector3(0,0,.033f-.022f*fraction));
         }
         public Vector3 ActivePosition=>SocketPosition(watch!=null&&watch.Pipe.ActiveBolt>=0?watch.Pipe.ActiveBolt:0);
+        public Transform PipeIndexForGuide()=>watch!=null&&watch.Pipe.ActiveBolt>=0?bolts[watch.Pipe.ActiveBolt]:null;
         void Awake(){haptics=wrench.GetComponent<WrenchHaptics>();active=Block(new Color(1,.58f,.12f),1);done=Block(new Color(.1f,.65f,.2f),.3f);idle=Block(new Color(.2f,.25f,.27f),0);}
         static MaterialPropertyBlock Block(Color c,float glow){var p=new MaterialPropertyBlock();p.SetColor("_BaseColor",c);p.SetColor("_EmissionColor",c*glow);return p;}
         public void Bind(WatchState state)
-        {watch=state;if(state.Immersion&&state.Immersion.leverPipe)PipeWallLayout.Apply(this);watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;
+        {watch=state;if(state.Immersion&&state.Immersion.leverPipe)PipeWallLayout.Apply(this);watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;if(watch.Pressure!=null)watch.Pressure.Changed+=Changed;
             if(state.Immersion&&state.Immersion.forgivingPipe&&!wrench.GetComponent<ImmersionWrenchSocket>())
             {
                 // XRI adds its ordinary follow transformer lazily only when the list is empty.
@@ -55,11 +56,11 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<3;i++)
             {
                 indicators[i].SetPropertyBlock(finished[i]?done:i==lastBolt?active:idle);
-                var emission=sprays[i].emission;emission.rateOverTime=watch.Pipe.Profile.sprayParticlesPerSecond*watch.Pipe.InflowFraction;
+                var emission=sprays[i].emission;emission.rateOverTime=watch.Pipe.Profile.sprayParticlesPerSecond*watch.LeakStrength;
                 if(i==lastBolt&&!watch.Failed){if(!sprays[i].isPlaying)sprays[i].Play();}
                 else sprays[i].Stop(true,ParticleSystemStopBehavior.StopEmitting);
             }
-            leakAudio.volume=.25f*watch.Pipe.InflowFraction;
+            leakAudio.volume=.25f*watch.LeakStrength;
             if(watch.Pipe.Complete||watch.Failed)leakAudio.Stop();else if(!leakAudio.isPlaying)leakAudio.Play();
         }
         void Update()
@@ -135,6 +136,6 @@ namespace LighthouseKeepers.WatchDemo
             if(Mathf.Abs(toward)<.000001f)return 0;
             return Mathf.Abs(degrees)*Mathf.Sign(toward);
         }
-        void OnDestroy(){if(watch!=null){watch.Pipe.QuarterTurn-=TickFeedback;watch.Pipe.Completed-=CompleteFeedback;watch.Pipe.Changed-=Changed;}}
+        void OnDestroy(){if(watch!=null){watch.Pipe.QuarterTurn-=TickFeedback;watch.Pipe.Completed-=CompleteFeedback;watch.Pipe.Changed-=Changed;if(watch.Pressure!=null)watch.Pressure.Changed-=Changed;}}
     }
 }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 namespace LighthouseKeepers.Lobby
 {
-    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest }
+    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest, PressureValve }
     public interface ICoopWatchView
     {
         Component Owner {get;}
@@ -23,6 +23,12 @@ namespace LighthouseKeepers.Lobby
     public interface ICoopKeeperLocations {
         int LocalActor {get;}
         void Locations(out int first,out Vector3 firstHead,out int second,out Vector3 secondHead);
+    }
+    public interface ICoopPressureView
+    {
+        bool PressureCommand(int actor,bool held);
+        void PressureWorker(int actor);
+        void PressureActorLeft(int actor);
     }
     public interface ICoopBedPresentation { void SetBedMask(int mask); }
     public interface ICoopWrenchClutch
