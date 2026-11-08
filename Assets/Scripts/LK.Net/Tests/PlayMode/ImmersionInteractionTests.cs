@@ -119,6 +119,10 @@ namespace LighthouseKeepers.Net.Tests
         {
             var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");var jaw=Field<Transform>(pipe,"jaw");
             var state=Value<object>(Value<object>(watch,"State"),"Pipe");
+            // This test isolates arm motion; the accepted solo clamp is its prerequisite.
+            // The separate pressure-valve tests exercise physical grip and crew release/expiry.
+            var pressure=Value<LighthouseKeepers.Core.PressureValveState>(Value<object>(watch,"State"),"Pressure");
+            if(pressure!=null)Assert.True(pressure.Clamp(),"Solo pressure prerequisite");
             var socket=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="ImmersionWrenchSocket");
             var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
             var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
