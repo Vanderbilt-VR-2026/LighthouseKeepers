@@ -1,3 +1,9 @@
+## Part E update — 2026-11-07
+
+Connected dependency guidance, the host-owned pressure-valve/solo-clamp puzzle, proximity voice and two handheld radios are implemented on `s4/connected`, stacked draft PR #83 over #82. Graphics solo Nights 1–3 and the two-Mac crew check (both valve roles, radio routing/mute, shared sleep and rejoin) pass. See [Part E verification](../Verification/S4Connected/final/README.md) for exact full-suite/targeted-rerun accounting and build provenance. Quest installation, human listening/comfort and device profiling remain pending; execute [TwoHeadsetSession.md](TwoHeadsetSession.md). No additional mandatory co-op station puzzles were implemented.
+
+---
+
 # Master pass — remaining acceptance after Part C
 
 Implementation checkpoints and exact commands are in `Next.md`. C0–C6 have received their implementation/art pass on `s4/visuals` / draft PR #82, stacked on Part B PR #81. Neither PR is merged by the agent. Actual final test/APK evidence belongs in `Docs/Verification/S4Master/part-c/final/`.

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.3010753">
+  <test-suite type="TestSuite" id="1104" name="Lighthouse Keepers" fullname="Lighthouse Keepers" runstate="Runnable" testcasecount="65" result="Passed" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.301075" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1065" name="LK.Net.PlayModeTests.dll" fullname="/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Build/Library/ScriptAssemblies/LK.Net.PlayModeTests.dll" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.293701" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13852" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1066" name="LighthouseKeepers" fullname="LighthouseKeepers" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.292985" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1067" name="Net" fullname="LighthouseKeepers.Net" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.292489" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1068" name="Tests" fullname="LighthouseKeepers.Net.Tests" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.291917" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1032" name="ImmersionInteractionTests" fullname="LighthouseKeepers.Net.Tests.ImmersionInteractionTests" classname="LighthouseKeepers.Net.Tests.ImmersionInteractionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.289765" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1036" name="WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops" fullname="LighthouseKeepers.Net.Tests.ImmersionInteractionTests.WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops" methodname="WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops" classname="LighthouseKeepers.Net.Tests.ImmersionInteractionTests" runstate="Runnable" seed="1140462038" result="Passed" start-time="2026-11-08 01:34:55Z" end-time="2026-11-08 01:35:55Z" duration="59.255276" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[HAND_DIAG awake RightHand device= tracked=False grip=(0.00, 0.00, 0.00) controllerLocal=(0.00, 0.00, 0.00) gripCorrection=(0.00, 0.00, 0.00) measured=False rootLocal=(0.00, 0.00, 0.00) visualLocal=(0.00, 0.00, 0.00) fingerInController=(0.00, 0.00, 1.00) pipeline=EditorPreviewPipeline (UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset) graphics=Metal
+HAND_LIGHT awake RightHand probeUsage=Off center=(-0.89, 1.35, -8.40)
+HAND_DIAG RightHand renderer=Pinch_Pointer_LOD0 type=SkinnedMeshRenderer enabled=False active=True material=FresnelHighlight shader=Shader Graphs/Unlit_Fresnel supported=True base=RGBA(0.753, 0.753, 0.753, 0.333) color=none propertyBlock=False keywords=_RECEIVE_SHADOWS_OFF
+HAND_DIAG RightHand renderer=LineVisual type=LineRenderer enabled=False active=True material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG RightHand renderer=Teleport Interactor type=LineRenderer enabled=True active=True material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG RightHand renderer=Bumper type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Button_Home type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Controller_Base type=MeshRenderer enabled=False active=True material=Controller_White shader=Universal Render Pipeline/Lit supported=True base=RGBA(1.000, 1.000, 1.000, 1.000) color=RGBA(1.000, 1.000, 1.000, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=TouchPad type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Trigger type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Button_A type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Button_B type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=ThumbStick type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=ThumbStick_Base type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Stylized floating glove type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG RightHand renderer=Glove thumb type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG RightHand renderer=Skinned glove type=SkinnedMeshRenderer enabled=True active=True material=M_Glove shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.776, 0.557, 0.416, 1.000) color=RGBA(0.776, 0.557, 0.416, 1.000) propertyBlock=False keywords=_ENVIRONMENTREFLECTIONS_OFF,_SPECULARHIGHLIGHTS_OFF
+HAND_DIAG awake LeftHand device= tracked=False grip=(0.00, 0.00, 0.00) controllerLocal=(0.00, 0.00, 0.00) gripCorrection=(0.00, 0.00, 0.00) measured=False rootLocal=(0.00, 0.00, 0.00) visualLocal=(0.00, 0.00, 0.00) fingerInController=(0.00, 0.00, 1.00) pipeline=EditorPreviewPipeline (UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset) graphics=Metal
+HAND_LIGHT awake LeftHand probeUsage=Off center=(-0.89, 1.35, -8.40)
+HAND_DIAG LeftHand renderer=Pinch_Pointer_LOD0 type=SkinnedMeshRenderer enabled=False active=True material=FresnelHighlight shader=Shader Graphs/Unlit_Fresnel supported=True base=RGBA(0.753, 0.753, 0.753, 0.333) color=none propertyBlock=False keywords=_RECEIVE_SHADOWS_OFF
+HAND_DIAG LeftHand renderer=LineVisual type=LineRenderer enabled=False active=True material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG LeftHand renderer=Teleport Interactor type=LineRenderer enabled=True active=True material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG LeftHand renderer=Bumper type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Button_Home type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Controller_Base type=MeshRenderer enabled=False active=True material=Controller_White shader=Universal Render Pipeline/Lit supported=True base=RGBA(1.000, 1.000, 1.000, 1.000) color=RGBA(1.000, 1.000, 1.000, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=TouchPad type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Trigger type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Button_A type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Button_B type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=ThumbStick type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=ThumbStick_Base type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Stylized floating glove type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG LeftHand renderer=Glove thumb type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG LeftHand renderer=Skinned glove type=SkinnedMeshRenderer enabled=True active=True material=M_Glove shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.776, 0.557, 0.416, 1.000) color=RGBA(0.776, 0.557, 0.416, 1.000) propertyBlock=False keywords=_ENVIRONMENTREFLECTIONS_OFF,_SPECULARHIGHLIGHTS_OFF
+WATCH_DAY day=3 power=On tasks=4 duration=450
+CLUTCH_TEST begin hand=RightHand stance=0 controller=(-3.02, 0.89, -8.40) jaw=(-3.11, 0.95, -8.33) active=True timescale=1
+WATCH_HEIGHT requested=Floor actual=Unknown origin=(2.85, 0.00, 0.45) offset=(0.00, 0.00, 0.00) headLocal=(0.00, 1.65, 0.00) headWorld=(2.85, 1.65, 0.45)
+HAND_DIAG settled RightHand device= tracked=False grip=(0.00, 0.00, 0.00) controllerLocal=(353.72, 174.43, 65.75) gripCorrection=(300.00, 0.00, 0.00) measured=False rootLocal=(0.00, 0.00, 0.00) visualLocal=(15.00, 0.00, 295.00) fingerInController=(0.00, -0.26, 0.97) pipeline=EditorPreviewPipeline (UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset) graphics=Metal
+HAND_LIGHT settled RightHand probeUsage=Off center=(3.52, 1.05, 0.73)
+HAND_DIAG RightHand renderer=Pinch_Pointer_LOD0 type=SkinnedMeshRenderer enabled=False active=True material=FresnelHighlight shader=Shader Graphs/Unlit_Fresnel supported=True base=RGBA(0.753, 0.753, 0.753, 0.333) color=none propertyBlock=True keywords=_RECEIVE_SHADOWS_OFF
+HAND_DIAG RightHand renderer=LineVisual type=LineRenderer enabled=False active=True material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG RightHand renderer=Teleport Interactor type=LineRenderer enabled=True active=False material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG RightHand renderer=Bumper type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Button_Home type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Controller_Base type=MeshRenderer enabled=False active=True material=Controller_White shader=Universal Render Pipeline/Lit supported=True base=RGBA(1.000, 1.000, 1.000, 1.000) color=RGBA(1.000, 1.000, 1.000, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=TouchPad type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Trigger type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Button_A type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Button_B type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=ThumbStick type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=ThumbStick_Base type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG RightHand renderer=Stylized floating glove type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG RightHand renderer=Glove thumb type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG RightHand renderer=Skinned glove type=SkinnedMeshRenderer enabled=True active=True material=M_Glove shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.776, 0.557, 0.416, 1.000) color=RGBA(0.776, 0.557, 0.416, 1.000) propertyBlock=False keywords=_ENVIRONMENTREFLECTIONS_OFF,_SPECULARHIGHLIGHTS_OFF
+HAND_DIAG settled LeftHand device= tracked=False grip=(0.00, 0.00, 0.00) controllerLocal=(0.00, 0.00, 0.00) gripCorrection=(300.00, 0.00, 0.00) measured=False rootLocal=(0.00, 0.00, 0.00) visualLocal=(15.00, 0.00, 65.00) fingerInController=(0.00, -0.26, 0.97) pipeline=EditorPreviewPipeline (UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset) graphics=Metal
+HAND_LIGHT settled LeftHand probeUsage=Off center=(2.86, -0.04, 0.48)
+HAND_DIAG LeftHand renderer=Pinch_Pointer_LOD0 type=SkinnedMeshRenderer enabled=False active=True material=FresnelHighlight shader=Shader Graphs/Unlit_Fresnel supported=True base=RGBA(0.753, 0.753, 0.753, 0.333) color=none propertyBlock=True keywords=_RECEIVE_SHADOWS_OFF
+HAND_DIAG LeftHand renderer=LineVisual type=LineRenderer enabled=False active=True material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG LeftHand renderer=Teleport Interactor type=LineRenderer enabled=True active=False material=Default-Line shader=Legacy Shaders/Particles/Alpha Blended Premultiply supported=True base=none color=none propertyBlock=True keywords=
+HAND_DIAG LeftHand renderer=Bumper type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Button_Home type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Controller_Base type=MeshRenderer enabled=False active=True material=Controller_White shader=Universal Render Pipeline/Lit supported=True base=RGBA(1.000, 1.000, 1.000, 1.000) color=RGBA(1.000, 1.000, 1.000, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=TouchPad type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Trigger type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Button_A type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Button_B type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=ThumbStick type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=ThumbStick_Base type=MeshRenderer enabled=False active=True material=Controller_Grey shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.753, 0.753, 0.753, 1.000) color=RGBA(0.753, 0.753, 0.753, 1.000) propertyBlock=False keywords=_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Stylized floating glove type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG LeftHand renderer=Glove thumb type=MeshRenderer enabled=False active=True material=LK_Hands shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.460, 0.560, 0.520, 1.000) color=RGBA(0.460, 0.560, 0.520, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG LeftHand renderer=Skinned glove type=SkinnedMeshRenderer enabled=True active=True material=M_Glove shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.776, 0.557, 0.416, 1.000) color=RGBA(0.776, 0.557, 0.416, 1.000) propertyBlock=False keywords=_ENVIRONMENTREFLECTIONS_OFF,_SPECULARHIGHLIGHTS_OFF
+HAND_DIAG LeftHand renderer=Watch brass case type=MeshRenderer enabled=True active=True material=M2 brass shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.650, 0.380, 0.090, 1.000) color=RGBA(0.750, 0.480, 0.150, 1.000) propertyBlock=False keywords=_EMISSION,_METALLICSPECGLOSSMAP,_NORMALMAP,_OCCLUSIONMAP
+HAND_DIAG LeftHand renderer=Watch dark dial type=MeshRenderer enabled=True active=True material=M2 instrument enamel shader=Universal Render Pipeline/Lit supported=True base=RGBA(0.045, 0.075, 0.070, 1.000) color=RGBA(0.655, 0.635, 0.584, 1.000) propertyBlock=False keywords=_EMISSION
+HAND_DIAG LeftHand renderer=Time to dawn type=MeshRenderer enabled=True active=True material=Font Material shader=GUI/Text Shader supported=True base=none color=RGBA(1.000, 1.000, 1.000, 1.000) propertyBlock=False keywords=
+PIPE_CLUTCH locked bolt=2 hand=(3.56, 1.10, 0.75) jaw=(3.59, 1.05, 0.85) target=(3.67, 1.05, 0.85)
+PIPE_CLUTCH released bolts=1 clicks=0 degrees=0.0
+CLUTCH_TEST begin hand=RightHand stance=1 controller=(-3.02, 0.89, -8.40) jaw=(-3.07, 0.95, -8.30) active=True timescale=1
+PIPE_CLUTCH locked bolt=2 hand=(3.49, 1.10, 0.79) jaw=(3.55, 1.05, 0.85) target=(3.67, 1.05, 0.85)
+PIPE_CLUTCH released bolts=1 clicks=0 degrees=0.0
+CLUTCH_TEST begin hand=RightHand stance=2 controller=(-3.02, 0.89, -8.40) jaw=(-3.02, 0.95, -8.29) active=True timescale=1
+PIPE_CLUTCH locked bolt=2 hand=(3.47, 1.10, 0.84) jaw=(3.55, 1.05, 0.85) target=(3.67, 1.05, 0.85)
+PIPE_CLUTCH released bolts=1 clicks=0 degrees=0.0
+CLUTCH_TEST begin hand=LeftHand stance=0 controller=(-3.02, 0.89, -8.40) jaw=(-2.93, 0.95, -8.33) active=True timescale=1
+PIPE_CLUTCH locked bolt=2 hand=(3.47, 1.10, 0.86) jaw=(3.55, 1.05, 0.85) target=(3.67, 1.05, 0.85)
+PIPE_CLUTCH released bolts=1 clicks=0 degrees=0.0
+CLUTCH_TEST begin hand=LeftHand stance=1 controller=(-3.02, 0.89, -8.40) jaw=(-2.91, 0.95, -8.37) active=True timescale=1
+PIPE_CLUTCH locked bolt=2 hand=(3.49, 1.10, 0.91) jaw=(3.55, 1.05, 0.85) target=(3.67, 1.05, 0.85)
+PIPE_CLUTCH released bolts=1 clicks=0 degrees=0.0
+CLUTCH_TEST begin hand=LeftHand stance=2 controller=(-3.02, 0.89, -8.40) jaw=(-2.91, 0.95, -8.42) active=True timescale=1
+PIPE_CLUTCH locked bolt=2 hand=(3.52, 1.10, 0.96) jaw=(3.55, 1.05, 0.85) target=(3.67, 1.05, 0.85)
+PIPE_CLUTCH released bolts=1 clicks=0 degrees=0.0
+Saving results to: /Users/aneeshvasamreddy/Library/Application Support/Lighthouse Keepers Team/Lighthouse Keepers/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

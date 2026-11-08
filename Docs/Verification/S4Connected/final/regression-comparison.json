@@ -1,0 +1,39 @@
+{
+  "EditMode": "280/280",
+  "fullPlayMode": "39/65; 25 inherited failures plus missing clamp prerequisite in wrench test",
+  "targetedRerun": {
+    "total": "1",
+    "passed": "1",
+    "failed": "0",
+    "duration": "59.3010753"
+  },
+  "effectivePlayMode": "40/65; same 25 inherited failures",
+  "newUnresolvedFailures": [],
+  "inheritedFailures": [
+    "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.RadioHintsWaitNinetySecondsStayQuietAtStationsAndPlayOnce",
+    "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults",
+    "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss",
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.FailedRetryButtonKeepsDayAndClearsPartialWork",
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TerminalReplayButtonResetsToDayOneWithoutMovingTrackedTransforms",
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TrackedRaysReachReplayRetryAndReturnWithNearbyWall",
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast",
+    "LighthouseKeepers.Presentation.Environment.Tests.EnvironmentPresentationTests.LabUsesOnePlayerAndLightingUpdatesAllocateNoManagedMemory",
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.RepairFirstWaitsForPowerAndThreeRealPullsRestorePump",
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests.GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead",
+    "LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority",
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding",
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry",
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction",
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve",
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning",
+    "LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir",
+    "LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps",
+    "LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops",
+    "LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond",
+    "LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings",
+    "LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections",
+    "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput",
+    "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart",
+    "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate"
+  ]
+}
