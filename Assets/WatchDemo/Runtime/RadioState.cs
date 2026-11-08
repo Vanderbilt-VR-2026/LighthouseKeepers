@@ -7,6 +7,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         public readonly RadioProgram Program;
         public bool ReadOnly {get;set;}
+        public Func<bool> BroadcastReady {get;set;}
         public event Action BroadcastCompleted;
         public bool MainOn {get;private set;}
         public bool Locked {get;private set;}
@@ -20,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool Trigger=>trigger;
         public int Step=>Completed?4:!MainOn?0:!Locked?1:!CodeAccepted?2:3;
         public bool CodeAccepted=>CodeProgress==Program.callCode.Length;
-        public bool Transmitting=>held&&trigger&&power&&MainOn&&Locked&&CodeAccepted&&!Completed;
+        public bool Transmitting=>held&&trigger&&power&&MainOn&&Locked&&CodeAccepted&&!Completed&&(BroadcastReady?.Invoke()??true);
         public RadioState(RadioProgram program){Program=program?program:throw new ArgumentNullException(nameof(program));Reset(false);}
         public void ApplyReplica(WatchSnapshot s)
         {

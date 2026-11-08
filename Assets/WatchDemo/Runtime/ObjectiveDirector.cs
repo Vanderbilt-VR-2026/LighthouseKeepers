@@ -68,11 +68,18 @@ namespace LighthouseKeepers.WatchDemo
             if(state.IsDone(id)||state.IsPending(id))return KeeperStep.None;
             if(id==WatchState.PipeStation)return !held?KeeperStep.GrabWrench:state.Pipe.ActiveBolt>=0?(KeeperStep)((int)KeeperStep.BoltA+state.Pipe.ActiveBolt):KeeperStep.None;
             if(id==WatchState.GeneratorStation)return EngineStep();
+            if(id==WatchState.RadioStation&&state.Connected&&state.Connected.dependencies&&!state.BeaconShining)return BeaconStep();
             var circuit=id==WatchState.RadioStation?PowerCircuit.Radio:PowerCircuit.Beacon;
             if(state.Power==PowerState.Off)return EngineStep();
             if(!state.HasPower(circuit))return BreakerStep(circuit);
             if(id==WatchState.RadioStation)
                 return state.Radio.Completed?KeeperStep.None:state.Radio.Step==0?KeeperStep.RadioPower:state.Radio.Step==1?KeeperStep.RadioTune:state.Radio.Step==2?KeeperStep.RadioCode:KeeperStep.RadioTransmit;
+            return BeaconStep();
+        }
+        KeeperStep BeaconStep()
+        {
+            if(state.Power==PowerState.Off)return EngineStep();
+            if(!state.HasPower(PowerCircuit.Beacon))return BreakerStep(PowerCircuit.Beacon);
             var beacon=state.Beacon;
             return beacon==null?KeeperStep.None:!beacon.Ignited?KeeperStep.BeaconLight:!beacon.Aligned?KeeperStep.BeaconAlign:beacon.Soot>.5f?KeeperStep.BeaconWipe:KeeperStep.None;
         }

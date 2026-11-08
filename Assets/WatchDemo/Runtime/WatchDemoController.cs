@@ -109,6 +109,7 @@ namespace LighthouseKeepers.WatchDemo
             CoastlinePresentation.Create(this);
             StoryDressing.Create(this);
             WorldAudioGaps.Create(this);
+            ConnectedMachinePresentation.Create(this);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
         }

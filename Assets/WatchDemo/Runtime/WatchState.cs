@@ -18,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         public S4M2Tuning PowerTuning {get;}
         public ImmersionTuning Immersion {get;}
         public MasterPassTuning Master {get;}
+        public ConnectedTasksTuning Connected {get;}
         public ObjectiveDirector Director {get;}
         public StormDirector Storm {get;}
         public PowerGrid Grid {get;}
@@ -116,6 +117,7 @@ namespace LighthouseKeepers.WatchDemo
             if(Tuning&&Tuning.houseDoorwayFlow)HouseFlood=new HouseFloodState(Tuning);
             Immersion=immersion&&immersion.enabledForWatch?immersion:null;
             Master=Immersion?MasterPassTuning.Current:null;
+            var connected=Master?ConnectedTasksTuning.Current:null;Connected=connected&&connected.enabledForWatch?connected:null;
             if(Master&&Master.objectiveDirector)Director=new ObjectiveDirector(this);
             if(Master&&Master.stormClock)Storm=new StormDirector(this);
             bool forgiving=Immersion&&Immersion.forgivingPipe;
@@ -124,6 +126,7 @@ namespace LighthouseKeepers.WatchDemo
             if(Tuning&&Tuning.difficulty)Pipe.RetainedPartialProgress=Tuning.slipRetainedFraction;
             Pipe.Changed+=()=>Changed?.Invoke();Pipe.Completed+=()=>CompleteRepair();
             Radio=new RadioState(Resources.Load<RadioProgram>("StormRadio"));
+            Radio.BroadcastReady=()=>!Connected||!Connected.dependencies||BeaconShining;
             Radio.BroadcastCompleted+=()=>{if(faults.Remove(RadioStation))Changed?.Invoke();};
             PowerTuning=powerTuning&&powerTuning.enabledForWatch?powerTuning:null;
             if(PowerTuning&&PowerTuning.powerGrid){Grid=new PowerGrid(PowerTuning.pumpLoad,PowerTuning.beaconLoad,PowerTuning.radioLoad,PowerTuning.lightsLoad);Grid.Changed+=GridChanged;}
