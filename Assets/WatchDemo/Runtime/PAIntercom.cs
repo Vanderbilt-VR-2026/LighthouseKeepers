@@ -35,8 +35,8 @@ namespace LighthouseKeepers.WatchDemo
     var collider=cap.AddComponent<BoxCollider>();var button=cap.AddComponent<XRSimpleInteractable>();button.colliders.Clear();button.colliders.Add(collider);buttons[i]=button;int index=i;
     var rest=cap.transform.localPosition;button.selectEntered.AddListener(e=>{cap.transform.localPosition=rest-Vector3.forward*.008f;var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.Pulse(.15f,.05f);Press(index);});button.selectExited.AddListener(e=>cap.transform.localPosition=rest);
     parts.Text("Replay stencil",KeeperStrings.Get("pa.status"),root,new Vector3(0,-1.015f,.04f),.0027f);
-    voice[i]=Source(root,"Harbor radio PA voice "+i,.95f);voice[i].gameObject.AddComponent<AudioHighPassFilter>().cutoffFrequency=350;voice[i].gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=3500;voice[i].gameObject.AddComponent<RadioPresence>();
-    var reverb=voice[i].gameObject.AddComponent<AudioReverbFilter>();reverb.reverbPreset=AudioReverbPreset.Room;reverb.decayTime=.35f;reverb.room=-1800;reverb.reflectionsLevel=-2200;reverb.reverbLevel=-2200;
+    voice[i]=Source(root,"Harbor radio PA voice "+i,.95f);voice[i].gameObject.AddComponent<AudioHighPassFilter>().cutoffFrequency=250;voice[i].gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=4500;voice[i].gameObject.AddComponent<RadioPresence>();
+    var reverb=voice[i].gameObject.AddComponent<AudioReverbFilter>();reverb.reverbPreset=AudioReverbPreset.Room;reverb.decayTime=.22f;reverb.room=-1800;reverb.reflectionsLevel=-2600;reverb.reverbLevel=-2600;
     noise[i]=Source(root,"Harbor radio PA hiss "+i,0);noise[i].clip=staticClip;noise[i].loop=true;
     KeeperAudioMix.Route(voice[i],"Radio");KeeperAudioMix.Route(noise[i],"Radio");
    }
@@ -55,11 +55,11 @@ namespace LighthouseKeepers.WatchDemo
   {
    if(!active||!clip)return;age+=Time.deltaTime;
    float end=.3f+clip.length;if(age>=end&&!closing){closing=true;if(click)foreach(var s in noise)s.PlayOneShot(click,.12f);}
-   float hiss=age<.3f?Mathf.Lerp(.11f,.02f,age/.3f):age<end?.008f:Mathf.Lerp(.045f,0,Mathf.Clamp01((age-end)/.4f));
+   float hiss=age<.3f?Mathf.Lerp(.11f,.02f,age/.3f):age<end?.003f:Mathf.Lerp(.045f,0,Mathf.Clamp01((age-end)/.4f));
    float dips=1;var pauses=catalog.Pauses(line);float speech=age-.3f;
    if(Mathf.Abs(speech-pauses.x)<.035f||(variant%2==0&&Mathf.Abs(speech-pauses.y)<.035f)){dips=.6f;hiss+=.018f;}
    int room=head.position.z< -10.3f||new Vector2(head.position.x,head.position.z).magnitude>13?5:head.position.z< -4.3f?0:head.position.y<3.4f?1:head.position.y<6.7f?2:head.position.y<10?3:4;
-   for(int i=0;i<voice.Length;i++){float transition=Mathf.Abs(head.position.y/3.3f-Mathf.Round(head.position.y/3.3f));bool stairBlend=head.position.z> -4.3f&&transition<.18f;float target=i==room?1:stairBlend&&i>0&&i<5&&Mathf.Abs(i-room)==1?.45f:.08f;roomGains[i]=Mathf.MoveTowards(roomGains[i],target,Time.deltaTime*3);voice[i].volume=.95f*dips*roomGains[i];}foreach(var s in noise)s.volume=hiss;
+   for(int i=0;i<voice.Length;i++){float transition=Mathf.Abs(head.position.y/3.3f-Mathf.Round(head.position.y/3.3f));bool stairBlend=head.position.z> -4.3f&&transition<.18f;float target=i==room?1:stairBlend&&i>0&&i<5&&Mathf.Abs(i-room)==1?.45f:.08f;roomGains[i]=Mathf.MoveTowards(roomGains[i],target,Time.deltaTime*3);voice[i].volume=.95f*dips*roomGains[i];noise[i].volume=hiss*roomGains[i];}
    if(age>end+.4f)Stop();
   }
   static Mesh Horn()
@@ -68,12 +68,12 @@ namespace LighthouseKeepers.WatchDemo
   }
   void OnDestroy(){if(horn)Destroy(horn);if(hornMaterial)Destroy(hornMaterial);}
  }
- // Gentle +3 dB presence EQ and soft peak compression, on PA speech only.
+ // Gentle +1 dB presence (recordings already have +2.5 dB) EQ and soft peak compression, on PA speech only.
  public sealed class RadioPresence:MonoBehaviour
  {
   double b0,b1,b2,a1,a2;readonly double[] z1=new double[8],z2=new double[8];
-  void Awake(){double a=System.Math.Pow(10,3d/40),w=2*System.Math.PI*2500/AudioSettings.outputSampleRate,alpha=System.Math.Sin(w)/(2*.8);double d=1+alpha/a;b0=(1+alpha*a)/d;b1=-2*System.Math.Cos(w)/d;b2=(1-alpha*a)/d;a1=b1;a2=(1-alpha/a)/d;}
+  void Awake(){double a=System.Math.Pow(10,1d/40),w=2*System.Math.PI*2500/AudioSettings.outputSampleRate,alpha=System.Math.Sin(w)/(2*.8);double d=1+alpha/a;b0=(1+alpha*a)/d;b1=-2*System.Math.Cos(w)/d;b2=(1-alpha*a)/d;a1=b1;a2=(1-alpha/a)/d;}
   void OnAudioFilterRead(float[] data,int channels)
-  {for(int i=0;i<data.Length;i++){int c=i%channels;double x=data[i],y=b0*x+z1[c];z1[c]=b1*x-a1*y+z2[c];z2[c]=b2*x-a2*y;double level=System.Math.Abs(y);if(level>.55)y=System.Math.Sign(y)*(.55+(level-.55)*.5);data[i]=(float)(System.Math.Tanh(y*1.08)/1.08);}}
+  {for(int i=0;i<data.Length;i++){int c=i%channels;double x=data[i],y=b0*x+z1[c];z1[c]=b1*x-a1*y+z2[c];z2[c]=b2*x-a2*y;double level=System.Math.Abs(y);if(level>.55)y=System.Math.Sign(y)*(.55+(level-.55)*.5);data[i]=(float)(System.Math.Tanh(y*1.02)/1.02);}}
  }
 }

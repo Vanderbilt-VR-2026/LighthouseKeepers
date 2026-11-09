@@ -53,11 +53,11 @@ namespace LighthouseKeepers.WatchDemo
         {
             var go=new GameObject(name);go.transform.SetParent(parent,false);
             var s=go.AddComponent<AudioSource>();s.playOnAwake=false;s.spatialBlend=1;s.dopplerLevel=0;s.volume=volume;s.minDistance=near;s.maxDistance=far;s.rolloffMode=AudioRolloffMode.Linear;
-            go.AddComponent<AudioHighPassFilter>().cutoffFrequency=300;go.AddComponent<AudioLowPassFilter>().cutoffFrequency=3400;go.AddComponent<AudioDistortionFilter>().distortionLevel=.08f;return s;
+            go.AddComponent<AudioHighPassFilter>().cutoffFrequency=250;go.AddComponent<AudioLowPassFilter>().cutoffFrequency=4500;go.AddComponent<AudioDistortionFilter>().distortionLevel=.025f;return s;
         }
         AudioSource Static(Transform parent)
         {
-            var s=Voice(parent,LighthouseKeepers.Core.PlayerStrings.Get("legacy.HarborRadio.1"),.015f,.4f,7);s.clip=noise;s.loop=true;return s;
+            var s=Voice(parent,LighthouseKeepers.Core.PlayerStrings.Get("legacy.HarborRadio.1"),.006f,.4f,7);s.clip=noise;s.loop=true;return s;
         }
         static AudioClip MakeNoise()
         {
@@ -71,7 +71,7 @@ namespace LighthouseKeepers.WatchDemo
             var yaw=Quaternion.Euler(0,head.eulerAngles.y,0);belt.transform.parent.SetPositionAndRotation(head.position+Vector3.down*.75f+yaw*new Vector3(.18f,0,.02f),yaw);
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
             belt.volume=intercom?0:tuning.beltRadioVolume*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
-            beltNoise.volume=.007f*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
+            beltNoise.volume=.003f*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
             if(s.RemoteReplica)return;
             Age+=Time.deltaTime;
             if(day!=s.Day)
