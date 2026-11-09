@@ -60,6 +60,9 @@ namespace LighthouseKeepers.Net.Tests
             snapshot.GetType().GetField("notice").SetValue(snapshot,new string('x',160));
             var packet=UnityEngine.JsonUtility.ToJson(new Wire{state=UnityEngine.JsonUtility.ToJson(snapshot)});
             Assert.LessOrEqual(System.Text.Encoding.UTF8.GetByteCount(packet),FusionMessageChannel.MaxBytes);
+            var batch=new LatestSampleBatch();batch.Put(41,0,System.Text.Encoding.UTF8.GetBytes(packet));
+            Assert.AreEqual(1,batch.Count);Assert.True(LatestSampleBatch.TryUnpack(batch.Pack(1),out _,out var samples));
+            Assert.AreEqual(packet,System.Text.Encoding.UTF8.GetString(samples[0].Data));
             snapshot.GetType().GetField("order1").SetValue(snapshot,snapshot.GetType().GetField("order0").GetValue(snapshot));
             Assert.IsFalse((bool)Call(guest,"ApplyRemote",snapshot));
             Assert.AreEqual(0d,Get<double>(guest,"Elapsed"));

@@ -8,13 +8,14 @@ namespace LighthouseKeepers.Net
     // under congestion instead of queueing an ever-growing history of old poses.
     public sealed class LatestSampleBatch
     {
+        public const int MaxPayloadBytes=4096;
         public readonly struct Sample
         {public readonly int Kind;public readonly byte[] Data;public Sample(int kind,byte[] data){Kind=kind;Data=data;}}
         readonly Dictionary<long,Sample> pending=new();
         public int Count=>pending.Count;
         public void Put(int kind,int slot,byte[] data)
         {
-            if(data==null||data.Length==0||data.Length>2048||slot<0)return;
+            if(data==null||data.Length==0||data.Length>MaxPayloadBytes||slot<0)return;
             if(kind!=10&&kind!=11&&kind!=20&&kind!=21&&kind!=41)return;
             long key=((long)kind<<32)|(uint)slot;
             if(pending.Count>=32&&!pending.ContainsKey(key))return;
@@ -34,7 +35,7 @@ namespace LighthouseKeepers.Net
         public static bool TryUnpack(byte[] data,out int sequence,out List<Sample> samples)
         {
             sequence=0;samples=new List<Sample>();
-            if(data==null||data.Length==0||data.Length>2048)return false;
+            if(data==null||data.Length==0||data.Length>MaxPayloadBytes)return false;
             try
             {
                 using var input=new MemoryStream(data);using var zip=new DeflateStream(input,CompressionMode.Decompress);
@@ -44,7 +45,7 @@ namespace LighthouseKeepers.Net
                 for(int i=0;i<count;i++)
                 {
                     int kind=reader.ReadInt32(),size=reader.ReadInt32();total+=size;
-                    if(size<1||size>2048||total>16384||(kind!=10&&kind!=11&&kind!=20&&kind!=21&&kind!=41))return false;
+                    if(size<1||size>MaxPayloadBytes||total>16384||(kind!=10&&kind!=11&&kind!=20&&kind!=21&&kind!=41))return false;
                     var bytes=reader.ReadBytes(size);if(bytes.Length!=size)return false;samples.Add(new Sample(kind,bytes));
                 }
                 return reader.BaseStream.ReadByte()==-1;

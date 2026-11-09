@@ -15,7 +15,7 @@ namespace LighthouseKeepers.Net
     {
         const int Channel = 0x4C4B5333;
         // v18 carries the integrated host-owned grace state. Keep a bounded 4 KiB envelope.
-        public const int MaxBytes = 4096;
+        public const int MaxBytes = LatestSampleBatch.MaxPayloadBytes;
         FusionLobbyTransport transport;
         NetworkRunner runner;
         ActorIdentity localActor;
