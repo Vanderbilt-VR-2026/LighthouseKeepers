@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class ObjectiveHud:MonoBehaviour
  {
   WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick,danger;TMP_Text dangerText;
-  TMP_Text task,label,floor,subtitle,partner;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;float built;bool wakePending,nagging;string note="";float noteUntil;
+  TMP_Text task,label,floor,subtitle,partner,speakerTag;Image subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;float built;bool wakePending,nagging;string note="";float noteUntil;
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
 
   public static string WatchGateCaption=>string.Format(PlayerStrings.Get("integrated.watchGate"),Mathf.CeilToInt(MasterPassTuning.Current?MasterPassTuning.Current.watchStartGraceSeconds:45));
@@ -47,10 +47,12 @@ namespace LighthouseKeepers.WatchDemo
    task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);
    floor=Text("Relative floor",new Vector2(10,-28),new Vector2(470,25),16,new Color(.76f,.7f,.56f));
    partner=Text("Partner job",new Vector2(10,-48),new Vector2(470,20),14,new Color(.76f,.7f,.56f));
-   subtitle=Text("Harbor subtitle",new Vector2(0,-99),new Vector2(530,70),19,new Color(.79f,.79f,.72f,.82f));subtitle.fontStyle=FontStyles.Italic;
+   subtitleBacking=Rect(root,"Subtitle soft backing",new Vector2(0,-126),new Vector2(850,145)).gameObject.AddComponent<Image>();subtitleBacking.color=new Color(.012f,.018f,.023f,.8f);subtitleBacking.material=material;subtitleBacking.raycastTarget=false;
+   speakerTag=Text("Subtitle speaker",new Vector2(0,-78),new Vector2(800,25),16,new Color(.84f,.73f,.51f));
+   subtitle=Text("Harbor subtitle",new Vector2(0,-137),new Vector2(800,84),24,Color.white);subtitle.overflowMode=TextOverflowModes.Page;subtitle.margin=new Vector4(0,0,0,0);
    strike=Rule("Completed objective strike",new Vector2(15,10),new Vector2(460,1));tick=Rule("Completion tick stem",new Vector2(240,13),new Vector2(12,2));tick.localRotation=Quaternion.Euler(0,0,45);var up=Rule("Completion tick sweep",new Vector2(253,18),new Vector2(24,2));up.SetParent(tick,false);up.anchoredPosition=new Vector2(11,4);up.localRotation=Quaternion.Euler(0,0,90);
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
-   danger=Rule("Danger fill",new Vector2(-220,-148),new Vector2(440,6));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-167),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
+   danger=Rule("Danger fill",new Vector2(-220,-216),new Vector2(440,6));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-238),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
    built=Time.unscaledTime;Reveal(7,true);
   }
   public void Reveal()=>Reveal(7,true);
@@ -82,11 +84,23 @@ namespace LighthouseKeepers.WatchDemo
    int here=FloorAt(head.position.y);
    if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=FloorDirection(target,here);}
    icon.Set(station);
-   string words=radio?radio.Subtitle:"";
-   if(words.Length>0){caption=words;captionAt=Time.unscaledTime;until=Mathf.Max(until,Time.unscaledTime+.7f);}
-   bool spoken=caption.Length>0&&Time.unscaledTime-captionAt<.7f;
-   subtitle.text=spoken?caption:Time.unscaledTime<noteUntil?note:s.WatchStartHeld?WatchGateCaption:"";
-   var colour=subtitle.color;colour.a=spoken?.82f*Mathf.Clamp01(1-(Time.unscaledTime-captionAt)/.7f):.82f;subtitle.color=colour;
+   bool showVoice=HarborSubtitleSettings.Enabled&&radio&&radio.SubtitleAlpha>0;
+   string words=showVoice?radio.Subtitle:"";
+   string display=showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld?WatchGateCaption:"";
+   int size=HarborSubtitleSettings.Large?34:28;
+   if(subtitle.text!=display||subtitle.fontSize!=size){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.05f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
+   int visible=showVoice?radio.SubtitleCharacters:display.Length;
+   int page=1;
+   // Paginate long recordings into two readable lines rather than shrinking or clipping text.
+   var info=subtitle.textInfo;
+   for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
+   subtitle.pageToDisplay=page;subtitle.maxVisibleCharacters=visible;
+   float alpha=showVoice?radio.SubtitleAlpha:1;
+   bool urgent=showVoice&&radio.DangerSubtitle;
+   subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);
+   speakerTag.text=showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
+   subtitleBacking.gameObject.SetActive(display.Length>0);subtitleBacking.color=new Color(.012f,.018f,.023f,.8f*alpha);
+   if(showVoice)until=Mathf.Max(until,Time.unscaledTime+.9f);
    if(radio&&cue!=radio.Serial){cue=radio.Serial;Reveal();}
    bool unsafeNow=s.PressureEnabled&&!s.Complete&&s.Danger>=.5f;
    danger.gameObject.SetActive(unsafeNow);dangerText.gameObject.SetActive(unsafeNow);if(unsafeNow){danger.localScale=new Vector3(s.Danger,1,1);dangerText.text=KeeperStrings.Get(s.DangerKey);until=Mathf.Max(until,Time.unscaledTime+.5f);}

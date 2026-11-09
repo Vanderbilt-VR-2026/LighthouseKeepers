@@ -30,7 +30,11 @@ namespace LighthouseKeepers.WatchDemo
     var value=Text(page,key+" value",Mathf.RoundToInt(slider.value*100)+"%",new Vector2(220,y),new Vector2(90,50),font,ink);
     slider.onValueChanged.AddListener(v=>{KeeperAudioMix.SetGain(key,v);value.text=Mathf.RoundToInt(v*100)+"%";});
    }
-   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings",KeeperStrings.Get("menu.back"),-245,font,ink);
+   var captions=Button(page,"SubtitleToggle","",-230,font,ink);var size=Button(page,"SubtitleSize","",-285,font,ink);
+   void Labels(){captions.GetComponentInChildren<Text>().text=KeeperStrings.Get(HarborSubtitleSettings.Enabled?"menu.subtitlesOn":"menu.subtitlesOff");size.GetComponentInChildren<Text>().text=KeeperStrings.Get(HarborSubtitleSettings.Large?"menu.subtitleLarge":"menu.subtitleNormal");}
+   captions.onClick.AddListener(()=>{HarborSubtitleSettings.Enabled=!HarborSubtitleSettings.Enabled;Labels();});size.onClick.AddListener(()=>{HarborSubtitleSettings.Large=!HarborSubtitleSettings.Large;Labels();});Labels();
+   page.sizeDelta=new Vector2(600,800);
+   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings",KeeperStrings.Get("menu.back"),-350,font,ink);
    open.onClick.AddListener(()=>{states.Clear();foreach(Transform t in rect)if(t!=page){states[t.gameObject]=t.gameObject.activeSelf;t.gameObject.SetActive(false);}page.gameObject.SetActive(true);});
    back.onClick.AddListener(()=>{foreach(var pair in states)if(pair.Key)pair.Key.SetActive(pair.Value);page.gameObject.SetActive(false);refresh();});page.gameObject.SetActive(false);
   }

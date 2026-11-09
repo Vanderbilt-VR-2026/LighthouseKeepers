@@ -10,7 +10,11 @@ namespace LighthouseKeepers.WatchDemo
         public int Serial {get;private set;}
         public float Age {get;private set;}
         PAIntercom intercom;
-        public string Subtitle=>catalog&&Age>=(intercom ? .3f : 0)&&catalog.Line(Cue)&&Age<catalog.Line(Cue).length+(intercom ? .3f : 0)?catalog.Caption(Cue):"";
+        public float SpeechAge=>Age-(intercom ? .3f : 0);
+        public float SubtitleAlpha=>catalog&&catalog.Line(Cue)&&SpeechAge>=0?Mathf.Clamp01((catalog.Line(Cue).length+1.85f-SpeechAge)/.35f):0;
+        public string Subtitle=>SubtitleAlpha>0?catalog.Caption(Cue):"";
+        public int SubtitleCharacters=>HarborVoiceTiming.Get(Cue)?.VisibleCharacters(SpeechAge)??Mathf.CeilToInt(Subtitle.Length*Mathf.Clamp01(SpeechAge/Mathf.Max(.1f,catalog&&catalog.Line(Cue)?catalog.Line(Cue).length:1)));
+        public bool DangerSubtitle=>Cue==18||Cue>=27&&Cue<=32||Cue==83||Cue>=87&&Cue<=89;
         public Component ReplayButton(int i)=>intercom?intercom.Button(i):null;
         public bool RequestReplay(){if(watch.State.RemoteReplica)return watch.State.Coop?.Send(LighthouseKeepers.Lobby.CoopAction.StatusRequest)==true;return intercom&&intercom.Replay();}
         public void ReplayLast(){if(Cue>0)Play(Cue,Serial+1,0);}
