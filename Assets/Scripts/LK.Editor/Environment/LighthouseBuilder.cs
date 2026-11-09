@@ -59,6 +59,16 @@ namespace LighthouseKeepers.Editor.Environment
             if(key=="Glass") {m.SetFloat("_Surface",1);m.SetFloat("_SrcBlend",(int)BlendMode.SrcAlpha);m.SetFloat("_DstBlend",(int)BlendMode.OneMinusSrcAlpha);m.SetFloat("_ZWrite",0);m.SetColor("_BaseColor",new Color(c.r,c.g,c.b,.13f));m.SetFloat("_Smoothness",.9f);m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");m.renderQueue=3000;}
             EditorUtility.SetDirty(m);return m;
         }
+        // Millimetre offsets that separate coplanar shell faces (playtest z-fighting). Applied on every
+        // rebuild so regenerating the prefabs keeps them; renderers are static-batched, so runtime moves would not.
+        public static Vector3 CoplanarNudge(string name)
+        {
+            if(name=="SM_Floor_Throat"||name=="SM_Floor_Porch")return new Vector3(0,-.004f,0);
+            if(name=="SM_Reveal_F1_0_Frame_1")return new Vector3(.003f,0,0);
+            if(name=="SM_Reveal_F1_0_Frame_N1")return new Vector3(-.003f,0,0);
+            if(name.StartsWith("SM_Landing_",StringComparison.Ordinal))return new Vector3(0,.003f,0);
+            return Vector3.zero;
+        }
         static void MakePrefab(ShellAsset entry)
         {
             if(!string.Equals(Hash(entry.path),entry.sha256,StringComparison.OrdinalIgnoreCase))throw new Exception("FBX does not match tracked manifest: "+entry.path);
@@ -91,6 +101,7 @@ namespace LighthouseKeepers.Editor.Environment
                 renderer.scaleInLightmap=1f;
                 if(t.name.Contains("_LOD1")||t.name.Contains("_LOD2"))renderer.enabled=false;
             }
+            foreach(var t in root.GetComponentsInChildren<Transform>(true))t.localPosition+=CoplanarNudge(t.name);
             var rocks=root.GetComponentsInChildren<MeshRenderer>(true).Where(r=>r.name.StartsWith("SM_Rock_Island_LOD")).OrderBy(r=>r.name).ToArray();
             if(rocks.Length==3){var g=new GameObject("Island LOD");g.transform.SetParent(root.transform,false);foreach(var r in rocks){r.enabled=true;r.transform.SetParent(g.transform,true);}var lod=g.AddComponent<LODGroup>();lod.SetLODs(new[]{new LOD(.15f,new Renderer[]{rocks[0]}),new LOD(.06f,new Renderer[]{rocks[1]}),new LOD(.01f,new Renderer[]{rocks[2]})});lod.RecalculateBounds();}
             PrefabUtility.SaveAsPrefabAsset(root,"Assets/Prefabs/Environment/PF_Shell_"+entry.scene+".prefab");UnityEngine.Object.DestroyImmediate(root);
