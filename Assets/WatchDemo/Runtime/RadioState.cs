@@ -9,6 +9,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool ReadOnly {get;set;}
         public Func<bool> BroadcastReady {get;set;}
         public event Action BroadcastCompleted;
+        public event Action CodeRejected;
         public bool MainOn {get;private set;}
         public bool Locked {get;private set;}
         public bool Completed {get;private set;}
@@ -53,7 +54,7 @@ namespace LighthouseKeepers.WatchDemo
         public int PressCode(int colour)
         {
             if(ReadOnly||!power||!MainOn||!Locked||Completed||CodeAccepted)return -1;
-            if(colour!=Program.callCode[CodeProgress]){CodeProgress=0;TransmitElapsed=0;return 0;}
+            if(colour!=Program.callCode[CodeProgress]){CodeProgress=0;TransmitElapsed=0;CodeRejected?.Invoke();return 0;}
             CodeProgress++;return 1;
         }
         public void SetMicrophone(bool isHeld,bool isTriggered){if(ReadOnly)return;held=isHeld;trigger=isTriggered;if(!held||!trigger)TransmitElapsed=0;}

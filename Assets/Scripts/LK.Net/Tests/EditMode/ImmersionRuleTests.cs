@@ -71,7 +71,7 @@ namespace LighthouseKeepers.Net.Tests
         {
             var watch=Activator.CreateInstance(Type("WatchState"));var snapshot=Call(watch,"Capture",.02f);
             Assert.True((bool)Call(snapshot,"Valid"));
-            foreach(var invalid in new[]{("radioCue",(object)99),("radioAge",(object)float.NaN),("bedMask",(object)4)})
+            foreach(var invalid in new[]{("radioCue",(object)102),("radioAge",(object)float.NaN),("bedMask",(object)4)})
             {var field=snapshot.GetType().GetField(invalid.Item1);var saved=field.GetValue(snapshot);field.SetValue(snapshot,invalid.Item2);Assert.False((bool)Call(snapshot,"Valid"));field.SetValue(snapshot,saved);}
         }
         [TestCase(-60f)] [TestCase(0f)] [TestCase(60f)] [TestCase(180f)]

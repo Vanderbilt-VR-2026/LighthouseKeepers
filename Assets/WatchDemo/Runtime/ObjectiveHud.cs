@@ -73,8 +73,8 @@ namespace LighthouseKeepers.WatchDemo
    if(s.Director!=null&&current==index&&Title(current)!=full&&completeUntil<=0)Set(current,Title(current));
    if(completeUntil>0&&Time.unscaledTime>=completeUntil)Set(nextIndex,pending??Title(current));
    bool nag=!s.Failed&&PromptWrenchDown(s.Repaired,watch.LocalWrenchHeld);
-   if(nag&&!nagging)ShowNote(WrenchDownCaption,7);nagging=nag;
-   if(wakePending&&!watch.Sleeping&&!watch.ObjectivePresentationBlocked){wakePending=false;ShowNote(TonightCaption(Title(current),FloorCaption(current)),10,true);}
+   if(nag&&!nagging&&!radio)ShowNote(WrenchDownCaption,7);nagging=nag;
+   if(wakePending&&!watch.Sleeping&&!watch.ObjectivePresentationBlocked){wakePending=false;if(!radio||HarborRadio.TonightCue(s)==0)ShowNote(TonightCaption(Title(current),FloorCaption(current)),10,true);else Reveal(10,true);}
    if(Time.unscaledTime-built<.5f)Place();
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
@@ -86,7 +86,7 @@ namespace LighthouseKeepers.WatchDemo
    icon.Set(station);
    bool showVoice=HarborSubtitleSettings.Enabled&&radio&&radio.SubtitleAlpha>0;
    string words=showVoice?radio.Subtitle:"";
-   string display=showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld?WatchGateCaption:"";
+   string display=showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
    if(subtitle.text!=display||subtitle.fontSize!=size){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.05f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
    int visible=showVoice?radio.SubtitleCharacters:display.Length;

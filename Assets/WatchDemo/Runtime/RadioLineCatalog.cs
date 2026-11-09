@@ -6,7 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         public AudioClip[] lines;
         readonly System.Collections.Generic.Dictionary<int,AudioClip> extra=new();
-        public const int LastLine=75;
+        public const int LastLine=101;
         public string[] subtitles;
         public Vector2[] pauseCenters;
         public string Caption(int id)=>id>=19&&id<=LastLine?KeeperStrings.Get("radio."+id):subtitles!=null&&id>0&&id<=subtitles.Length?subtitles[id-1]:"";

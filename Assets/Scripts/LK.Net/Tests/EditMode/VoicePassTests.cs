@@ -27,6 +27,27 @@ namespace LighthouseKeepers.Net.Tests
    }
    Assert.AreEqual(1,longCount);
   }
+  [TestCase(76,"pipeOpening")][TestCase(77,"upperJobs")][TestCase(78,"wrenchDown")][TestCase(79,"startGrace")]
+  [TestCase(80,"tonightPair")][TestCase(81,"tonightFull")][TestCase(82,"valvePuzzle")][TestCase(83,"valveReleased")]
+  [TestCase(84,"soloClamp")][TestCase(85,"crewRadios")][TestCase(86,"pole")][TestCase(87,"breakerTripped")]
+  [TestCase(88,"lowFuel")][TestCase(89,"engineStalled")][TestCase(90,"lensSoot")][TestCase(91,"wrongCode")]
+  [TestCase(92,"broadcast")][TestCase(93,"closeCall")]
+  public void SituationalTriggerUsesOncePerNightOrExplicitCooldown(int id,string signal)
+  {
+   var t=Type.GetType("LighthouseKeepers.WatchDemo.HarborCueRules, Assembly-CSharp",true);var rule=Activator.CreateInstance(t);var context=Activator.CreateInstance(t.GetNestedType("Context"));context.GetType().GetField(signal).SetValue(context,true);
+   var output=new System.Collections.Generic.List<int>();Func<int,bool> queue=n=>{output.Add(n);return true;};var observe=t.GetMethod("Observe");var played=t.GetMethod("Played");
+   observe.Invoke(rule,new object[]{context,0f,queue});CollectionAssert.AreEqual(new[]{id},output);played.Invoke(rule,new object[]{id,0f});output.Clear();observe.Invoke(rule,new object[]{context,1f,queue});Assert.IsEmpty(output);
+   float cooldown=(float)t.GetMethod("Cooldown").Invoke(null,new object[]{id});
+   observe.Invoke(rule,new object[]{context,cooldown>0?cooldown-.01f:10000f,queue});Assert.IsEmpty(output);
+   if(cooldown>0){observe.Invoke(rule,new object[]{context,cooldown,queue});CollectionAssert.AreEqual(new[]{id},output);}
+   output.Clear();t.GetMethod("Reset").Invoke(rule,null);observe.Invoke(rule,new object[]{context,0f,queue});CollectionAssert.AreEqual(new[]{id},output);
+   for(int future=94;future<=101;future++)Assert.False((bool)t.GetMethod("Allows").Invoke(rule,new object[]{future,10000f}),"Future P-line accidentally wired");
+  }
+  [Test] public void NewCueDomainIsVersionedAndAllImportedPClipsAreAddressable()
+  {
+   Assert.AreEqual("LK-S5-VOICE1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
+   var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");foreach(var e in Read().entries){Assert.NotNull(catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{e.id}),e.file);Assert.AreEqual(e.caption,catalog.GetType().GetMethod("Caption").Invoke(catalog,new object[]{e.id}));}
+  }
   [Serializable] public class StringEntry {public string key,text;}
   [Serializable] public class StringTable {public StringEntry[] entries;}
   [Test] public void WordRevealNeverRewindsAndFinishesAtAudioEnd()
