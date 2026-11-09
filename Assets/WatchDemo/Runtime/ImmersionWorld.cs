@@ -11,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo
         readonly List<AudioSource> faultAudio=new();
         readonly List<(Light light,Renderer lens)> lenses=new();MaterialPropertyBlock lensBlock;
         readonly TextMesh[] bunkLabels=new TextMesh[2];int shownBedState=-1;
-        Font chalk;int bedMask;HarborRadio narrator;
+        Font chalk;Material boardEnamel;int bedMask;HarborRadio narrator;
         public HarborRadio Narrator=>narrator;
         public static ImmersionWorld Create(WatchDemoController watch,Transform head,Transform bed,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
         {
@@ -30,9 +30,16 @@ namespace LighthouseKeepers.WatchDemo
         void Build(Transform head,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
         {
             var face=GameObject.Find("Wall-mounted checklist white face");
-            if(face){var b=new MaterialPropertyBlock();b.SetColor("_BaseColor",new Color(.025f,.045f,.035f));b.SetColor("_EmissionColor",new Color(.006f,.009f,.007f));face.GetComponent<Renderer>().SetPropertyBlock(b);}
+            if(face)
+            {
+                var renderer=face.GetComponent<Renderer>();
+                boardEnamel=new Material(renderer.sharedMaterial){name="Readable white board enamel"};
+                boardEnamel.EnableKeyword("_EMISSION");renderer.sharedMaterial=boardEnamel;
+                var b=new MaterialPropertyBlock();b.SetColor("_BaseColor",new Color(.94f,.94f,.91f));
+                b.SetColor("_EmissionColor",new Color(.55f,.55f,.52f));renderer.SetPropertyBlock(b);
+            }
             if(chalk){board.font=chalk;board.GetComponent<Renderer>().sharedMaterial=chalk.material;board.fontStyle=FontStyle.Normal;}
-            board.color=new Color(.87f,.86f,.74f);board.characterSize*=.90f;
+            board.color=new Color(.025f,.025f,.025f);board.characterSize*=.90f;
             ImmersionPipePresentation.Create(pipe,watch.State);
             BenchPlate(wrench);
             var bedMount=M2StationParts.Root("Bunk physical fittings",transform,Vector3.zero);bedMount.SetPositionAndRotation(bed.position,bed.rotation);
@@ -51,10 +58,9 @@ namespace LighthouseKeepers.WatchDemo
             parts.Text("Bunk instructions",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.7"),bedPlate,new Vector3(0,0,.012f),.0035f).color=new Color(.95f,.89f,.7f);
             for(int i=0;i<4;i++)
             {
-                float a=320*Mathf.Deg2Rad,r=i<2?3.48f:2.18f;
-                var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,new Vector3(Mathf.Sin(a)*r,i*3.3f+1.1f,Mathf.Cos(a)*r));
-                t.localRotation=Quaternion.LookRotation(new Vector3(-t.localPosition.x,0,-t.localPosition.z));
-                parts.Part("Stair lamp mounting post",t,new Vector3(0,-.55f,-.04f),new Vector3(.025f,1.1f,.025f),parts.Metal);
+                var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,Vector3.zero);
+                WallFixtureMount.Place(t,i*3.3f+2.15f,i==3?315:320,false);
+                parts.Part("Stair lamp wall bracket",t,new Vector3(0,0,-.012f),new Vector3(.17f,.23f,.025f),parts.Metal);
                 stair.Add(Fixture(parts,t,Vector3.zero,"Shielded stair lamp"));
             }
             station.Add(Fixture(parts,generator.transform,new Vector3(0,1.9f,.55f),"Generator fault service lamp"));
@@ -81,6 +87,7 @@ namespace LighthouseKeepers.WatchDemo
                 parts.Part("Rag instruction plate",t,new Vector3(.25f,.64f,.207f),new Vector3(.29f,.13f,.025f),parts.Dark);
             }
         }
+        void OnDestroy(){if(boardEnamel)Destroy(boardEnamel);}
         // World-fixed brass plate behind the wrench's bench rest, read from the House side (+X); never billboards.
         void BenchPlate(Transform wrench)
         {

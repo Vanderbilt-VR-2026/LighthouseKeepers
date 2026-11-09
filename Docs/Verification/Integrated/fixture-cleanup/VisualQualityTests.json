@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "duration": 16.83,
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Editor.Environment.Tests.VisualQualityTests.AndroidPipelineUsesMeasuredTwoSampleFallbackAndExplicitScale",
+      "Status": "Passed",
+      "Duration": 0.0030155,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Editor.Environment.Tests.VisualQualityTests.AuthoredSceneSurfacesDoNotFightForTheSamePlane",
+      "Status": "Passed",
+      "Duration": 16.8256281,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

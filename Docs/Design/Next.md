@@ -2,12 +2,12 @@
 
 This branch reconciles #81–#84. Do not merge or close those PRs. Network **LK-S5-INTEGRATED1 / snapshot 18**; both clients need the same APK. Selected exterior: Eli’s ocean, mountain coast and opt-in sky, per the lead. Our newer interior, narration/PA, pole, connected power and valve puzzle remain. See [Reconcile-PR84.md](Reconcile-PR84.md).
 
-Current evidence: 305/305 EditMode; full PlayMode plus focused reruns preserve every pass from both baselines (47 pass, 24 inherited common failures in the aggregate). Graphics Nights1–3 and live two-Mac valve/radios/sleep/rejoin pass. Integrated Android validation is next; do not label the older comparison APK as integrated. Draft PR85 supersedes81–84 without closing them.
+Current evidence: 305/305 EditMode; full PlayMode plus focused reruns preserve every pass from both baselines (47 pass, 24 inherited common failures in the aggregate). Graphics Nights1–3 and live two-Mac valve/radios/sleep/rejoin pass. Integrated APK built from3b74d40 and installed on the authorized Quest. Hash and exact path are in Docs/Verification/Integrated/build-result.json. Headset checks are underway. Draft PR85 supersedes81–84 without closing them.
 
 ## DEVICE CHECKS PENDING — integrated
 
-- Install the newly built `Builds/LighthouseKeepers-Integrated.apk`; confirm `LK-S5-INTEGRATED1` in lobby.
-- Profile House, F1, F2, F4, gallery sea and strongest storm at 72 Hz: GPU ≤11 ms, CPU work ≤9 ms, draws/triangles/voices. Current setting: scale1.0, MSAA4, fixed foveation0.5. Keep pacing wait time separate from CPU work.
+- Installed `Builds/LighthouseKeepers-Integrated.apk` from3b74d40. Confirm `LK-S5-INTEGRATED1` in lobby during the human check.
+- Profile House, F1, F2, F4, gallery sea and strongest storm at 72 Hz: GPU ≤11 ms, CPU work ≤9 ms, draws/triangles/voices. Next cleanup build: scale1.0, MSAA2, fixed foveation0.5; installed3b74d40 still uses MSAA4. Device samples exceeded11ms, so the authorized2× fallback needs a matching-view check. Keep pacing wait time separate from CPU work.
 - Continuous wall/doorway sweep; no head pop at bench, centre aisle, F1, dropped wrench or disabled Support foot. F3/F4 edges blocked.
 - Solo valve clamp → grip-only wrench snap → visible clockwise turn; drop/recovery; tracker fixed until recall; grace understandable; glass stereo sorting/text clarity.
 - F4 enclosed rooftop rain → exposed gallery louder exterior rain; F1 outside unchanged. Recorded/new placeholder announcements audible.

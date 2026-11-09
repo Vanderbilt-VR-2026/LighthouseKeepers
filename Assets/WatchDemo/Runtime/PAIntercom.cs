@@ -20,10 +20,11 @@ namespace LighthouseKeepers.WatchDemo
    for(int i=0;i<6;i++)
    {
     var root=new GameObject("Brass PA speaker "+i).transform;root.SetParent(transform,false);root.SetPositionAndRotation(positions[i],Quaternion.LookRotation(i==5?Vector3.back:Vector3.right));
-    if(i<5)
+    if(i>0&&i<5)WallFixtureMount.Place(root,positions[i].y,225,true);
+    else if(i==0)
     {
-     var origin=new Vector3(0,positions[i].y,i==0?positions[i].z:0);
-     float nearest=100;foreach(var hit in Physics.RaycastAll(origin,Vector3.left,5,~0,QueryTriggerInteraction.Ignore))if(hit.collider.name.StartsWith("UCX_")&&hit.collider.name.Contains("Wall")&&hit.distance<nearest){nearest=hit.distance;root.SetPositionAndRotation(hit.point+hit.normal*.012f,Quaternion.LookRotation(hit.normal));}
+     foreach(var hit in Physics.RaycastAll(new Vector3(0,positions[i].y,positions[i].z),Vector3.left,5,~0,QueryTriggerInteraction.Ignore))
+      if(hit.collider.name.StartsWith("UCX_")&&hit.collider.name.Contains("Wall")){root.SetPositionAndRotation(hit.point+hit.normal*.025f,Quaternion.LookRotation(hit.normal));break;}
     }
     parts.Part("Riveted PA wall mount",root,Vector3.zero,new Vector3(.3f,.38f,.035f),parts.Metal);
     var cone=new GameObject("Brass horn bell",typeof(MeshFilter),typeof(MeshRenderer));cone.transform.SetParent(root,false);cone.transform.localPosition=new Vector3(0,0,.04f);cone.GetComponent<MeshFilter>().sharedMesh=horn;cone.GetComponent<MeshRenderer>().sharedMaterial=hornMaterial;

@@ -9,6 +9,19 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    Assert.That(W(new Vector3(0,1.7f,-7.3f)).y,Is.GreaterThan(.99f));Assert.That(W(new Vector3(6,1.7f,0)).x,Is.GreaterThan(.99f));
    for(float r=2;r<4.3f;r+=.05f){var w=W(new Vector3(r,11.5f,0));Assert.That(w.x+w.y+w.z,Is.EqualTo(1).Within(.001f));Assert.That(Mathf.Min(w.x,w.y,w.z),Is.GreaterThanOrEqualTo(0));}
   }
+  [UnityTest]public IEnumerator FixturesClearStairRailsAndHouseClutterIsRemoved(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var renderers=UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None).Where(r=>r.enabled).ToArray();
+   var rails=renderers.Where(r=>r.name.StartsWith("SM_Rail_")).ToArray();
+   var fixtures=renderers.Where(r=>r.name=="Brass horn bell"||r.name=="Frosted service lamp"||r.name=="Caged practical bulb"||r.name.StartsWith("SM_Lamp_")||r.name.StartsWith("SM_EmergencyLamp_")).ToArray();
+   Assert.Greater(fixtures.Length,20);Assert.AreEqual(6,fixtures.Count(r=>r.name=="Brass horn bell"));
+   foreach(var fixture in fixtures)foreach(var rail in rails){var bounds=rail.bounds;bounds.Expand(.04f);Assert.False(bounds.Intersects(fixture.bounds),fixture.name+" intersects "+rail.name);}
+   foreach(var name in new[]{"SM_Rock_Outcrop_7","SM_Rock_Outcrop_8","SM_Rock_Outcrop_9"})Assert.False(GameObject.Find(name).GetComponent<Renderer>().enabled,name);
+   foreach(var name in new[]{"Oilskin on wall hook","Wall stowed supply crate","Coiled rope on supply crate","Dropped unlit keeper lantern","Old stove and kettle"})Assert.IsNull(GameObject.Find(name),name);
+   var board=GameObject.Find("Watch checklist").GetComponent<TextMesh>();Assert.Less(board.color.grayscale,.05f);
+   var block=new MaterialPropertyBlock();GameObject.Find("Wall-mounted checklist white face").GetComponent<Renderer>().GetPropertyBlock(block);Assert.Greater(block.GetColor("_BaseColor").grayscale,.9f);
+   foreach(var shaft in renderers.Where(r=>r.name=="Brass slide shaft"))Assert.Less(shaft.sharedMaterial.GetColor("_EmissionColor").maxColorComponent,.001f);
+  }
   [UnityTest]public IEnumerator TrackerIsWorldFixedAndRecallRepositionsIt(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(2);
    var tracker=GameObject.Find("Transient objective tracker").transform;var hud=UnityEngine.Object.FindAnyObjectByType(T("ObjectiveHud"));var head=Camera.main.transform;T("ObjectiveHud").GetMethod("Reveal",Type.EmptyTypes).Invoke(hud,null);var pose=tracker.position;var rotation=tracker.rotation;

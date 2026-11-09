@@ -9,6 +9,7 @@ namespace LighthouseKeepers.WatchDemo {
     var b=collider.bounds;
     if(collider.name.StartsWith("UCX_SM_Rock_Outcrop")&&b.max.y>0&&b.max.y<.2f&&b.center.z< -5&&Mathf.Abs(b.center.x)<3.5f){collider.enabled=false;Changes.Add("Nonblocking House rock: "+collider.name);}
    }
+   foreach(var renderer in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))if(renderer.name=="SM_Rock_Outcrop_7"||renderer.name=="SM_Rock_Outcrop_8"||renderer.name=="SM_Rock_Outcrop_9"||renderer.name=="SM_Lamp_F2_2"||renderer.name=="SM_EmergencyLamp_F2_1"){renderer.enabled=false;Changes.Add("Removed intrusive decoration: "+renderer.name);}
    // Coplanar shell offsets are authored by LighthouseBuilder, before static batching.
    var seen=new Dictionary<string,MeshRenderer>();
    foreach(var renderer in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None)) {
