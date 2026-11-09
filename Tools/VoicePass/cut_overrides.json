@@ -1,0 +1,20 @@
+{
+  "30": {
+    "markerStart": 16.1,
+    "markerEnd": 16.6,
+    "attempt": 2,
+    "reason": "Original says the first line, then 'That's thirty. Again, thirty.' Keep the second complete attempt."
+  },
+  "69": {
+    "markerStart": 59.28,
+    "markerEnd": 60.02,
+    "attempt": 1,
+    "reason": "Full-memo ASR labels this number 79; surrounding ordered numbers and the clamp sentence identify script line 69."
+  },
+  "53": {
+    "markerStart": 165.44,
+    "markerEnd": 166.1,
+    "attempt": 1,
+    "reason": "ASR hears 33 at the ordered line53 slate; the one-hour/high-water/light-out sentence confirms mapping."
+  }
+}
