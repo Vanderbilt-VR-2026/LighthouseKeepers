@@ -78,7 +78,7 @@ namespace LighthouseKeepers.Editor
             preview=new GameObject("M4 evidence camera").AddComponent<Camera>();preview.CopyFrom(Camera.main);preview.enabled=false;preview.tag="Untagged";preview.fieldOfView=65;preview.nearClipPlane=.03f;preview.gameObject.AddComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().requiresDepthOption=UnityEngine.Rendering.Universal.CameraOverrideOption.On;
             var hud=Camera.main.transform.Find("Watch camera HUD");// Keep HUD/fade visible for the requested night evidence.
             var gen=Object.FindFirstObjectByType<WatchGenerator>();
-            
+
             var radio=Object.FindFirstObjectByType<WatchRadioConsole>();
             foreach(var m in rig.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Inputs.XRInputModalityManager>(true))m.enabled=false;
             var hands=rig.GetComponentsInChildren<HandRig>(true);
@@ -234,7 +234,7 @@ namespace LighthouseKeepers.Editor
                 hand.rotation=Quaternion.LookRotation(-(Quaternion.AngleAxis(45,Vector3.up)*Vector3.ProjectOnPlane(rig.Camera.transform.position-pipe.ActivePosition,Vector3.up)),Vector3.up)*Quaternion.Inverse(pipe.wrench.transform.rotation)*hand.rotation;yield return new WaitForSecondsRealtime(.25f);
                 int active=state.ActiveBolt;var axis=pipe.bolts[active].forward;
                 float stop=Time.realtimeSinceStartup+30;
-                
+
                 // Inject the same XRI trigger lifecycle used by the controller.
                 while(state.SeatElapsed<.7f){hand.position+=Vector3.ClampMagnitude((pipe.ActivePosition-pipe.jaw.position)*.2f,.12f);yield return null;Require(Time.realtimeSinceStartup<stop,$"Cannot seat jaw contact={pipe.InContact} jaw={pipe.jaw.position} bolt={pipe.ActivePosition} selected={pipe.wrench.isSelected} snapped={pipe.wrench.GetComponent<ImmersionWrenchSocket>().IsSnapped} seat={state.SeatElapsed} transformers={pipe.wrench.singleGrabTransformersCount}");}
                 float rest=Time.realtimeSinceStartup+(state.NeedsSeal?3.4f:1);
@@ -258,7 +258,7 @@ namespace LighthouseKeepers.Editor
                         if(state.TurnsDone>0&&!turnedShot){turnedShot=true;Capture(preview,prefix+"-wrench-"+direct.GetComponentInParent<HandRig>().Node+"-turned");}
 
                     }
-                    
+
                     yield return new WaitForSecondsRealtime(.2f);
                     if(state.BoltsDone!=bolt)break;
                     hand.position=pivot+leverRest;yield return new WaitForSecondsRealtime(.2f);

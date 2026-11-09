@@ -2,7 +2,7 @@
 
 This branch reconciles #81–#84. Do not merge or close those PRs. Network **LK-S5-INTEGRATED1 / snapshot 18**; both clients need the same APK. Selected exterior: Eli’s ocean, mountain coast and opt-in sky, per the lead. Our newer interior, narration/PA, pole, connected power and valve puzzle remain. See [Reconcile-PR84.md](Reconcile-PR84.md).
 
-Current evidence: 304/304 EditMode; full PlayMode plus focused reruns preserve every pass from both baselines (47 pass, 24 inherited common failures in the aggregate). Graphics Nights 1–2 pass. Night 3, live two-Mac and integrated Android validation are running; do not label the older comparison APK as integrated.
+Current evidence: 305/305 EditMode; full PlayMode plus focused reruns preserve every pass from both baselines (47 pass, 24 inherited common failures in the aggregate). Graphics Nights1–3 and live two-Mac valve/radios/sleep/rejoin pass. Integrated Android validation is next; do not label the older comparison APK as integrated. Draft PR85 supersedes81–84 without closing them.
 
 ## DEVICE CHECKS PENDING — integrated
 
