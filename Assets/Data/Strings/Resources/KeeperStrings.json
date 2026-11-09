@@ -354,7 +354,7 @@
     },
     {
       "key": "radio.20",
-      "text": "That will hold."
+      "text": "That'll do it."
     },
     {
       "key": "radio.21",
@@ -362,7 +362,7 @@
     },
     {
       "key": "radio.22",
-      "text": "Light is burning."
+      "text": "Light's burning."
     },
     {
       "key": "radio.23",
@@ -382,19 +382,19 @@
     },
     {
       "key": "radio.27",
-      "text": "Water is at your knees, keeper."
+      "text": "Water's at your knees, keeper."
     },
     {
       "key": "radio.28",
-      "text": "It is reaching the generator!"
+      "text": "It's reaching the generator!"
     },
     {
       "key": "radio.29",
-      "text": "You are going under, keeper!"
+      "text": "You're going under, keeper!"
     },
     {
       "key": "radio.30",
-      "text": "Your light is out. There are ships out there!"
+      "text": "Your light's out. There are ships out there!"
     },
     {
       "key": "radio.31",
@@ -410,7 +410,7 @@
     },
     {
       "key": "radio.34",
-      "text": "Repair tonight's jobs. Sleep upstairs when they are done."
+      "text": "Fix tonight's jobs. Sleep upstairs when they're done."
     },
     {
       "key": "radio.35",
@@ -1643,6 +1643,214 @@
     {
       "key": "integrated.floorHere",
       "text": "FLOOR {0}"
+    },
+    {
+      "key": "radio.76",
+      "text": "Pipe's gone again, keeper. Get the wrench on it before the water climbs."
+    },
+    {
+      "key": "radio.file.76",
+      "text": "keeper_night_three_pipe"
+    },
+    {
+      "key": "radio.77",
+      "text": "Power's back. Now get that lantern lined up and send the storm warning."
+    },
+    {
+      "key": "radio.file.77",
+      "text": "keeper_night_three_upper_v2"
+    },
+    {
+      "key": "radio.78",
+      "text": "Set the wrench down, keeper. You won't need it up there."
+    },
+    {
+      "key": "radio.file.78",
+      "text": "keeper_set_wrench_down"
+    },
+    {
+      "key": "radio.79",
+      "text": "Take a breath, keeper. The storm's waiting on you, but not for long."
+    },
+    {
+      "key": "radio.file.79",
+      "text": "keeper_start_grace"
+    },
+    {
+      "key": "radio.80",
+      "text": "Tonight it's the pipe and the generator. Pipe first."
+    },
+    {
+      "key": "radio.file.80",
+      "text": "keeper_tonight_pipe_generator"
+    },
+    {
+      "key": "radio.81",
+      "text": "Tonight it's everything, keeper. Pipe, power, lantern and the radio."
+    },
+    {
+      "key": "radio.file.81",
+      "text": "keeper_tonight_full"
+    },
+    {
+      "key": "radio.82",
+      "text": "One of you hold that valve. The other, get on the bolt."
+    },
+    {
+      "key": "radio.file.82",
+      "text": "keeper_valve_hold"
+    },
+    {
+      "key": "radio.84",
+      "text": "Set the clamp on the valve, then work the bolt."
+    },
+    {
+      "key": "radio.file.84",
+      "text": "keeper_clamp_solo"
+    },
+    {
+      "key": "radio.85",
+      "text": "Grab a handset off the bench. You'll hear each other across the floors."
+    },
+    {
+      "key": "radio.file.85",
+      "text": "keeper_radios_tip"
+    },
+    {
+      "key": "radio.86",
+      "text": "Quickest way down is the pole. Grip it and slide."
+    },
+    {
+      "key": "radio.file.86",
+      "text": "keeper_pole_tip"
+    },
+    {
+      "key": "radio.87",
+      "text": "Breaker's tripped. Too much on the line."
+    },
+    {
+      "key": "radio.file.87",
+      "text": "keeper_breaker_tripped"
+    },
+    {
+      "key": "radio.88",
+      "text": "Fuel's low. Top up that tank before she dies."
+    },
+    {
+      "key": "radio.file.88",
+      "text": "keeper_fuel_low"
+    },
+    {
+      "key": "radio.89",
+      "text": "She's stalled. Start her up again."
+    },
+    {
+      "key": "radio.file.89",
+      "text": "keeper_engine_stalled"
+    },
+    {
+      "key": "radio.90",
+      "text": "The lens is fouled with soot. Wipe it clean."
+    },
+    {
+      "key": "radio.file.90",
+      "text": "keeper_lens_fouled"
+    },
+    {
+      "key": "radio.91",
+      "text": "That's not it. Try the code again."
+    },
+    {
+      "key": "radio.file.91",
+      "text": "keeper_radio_wrong_code"
+    },
+    {
+      "key": "radio.92",
+      "text": "Copy, keeper. Warning's out. Good work."
+    },
+    {
+      "key": "radio.file.92",
+      "text": "keeper_radio_received"
+    },
+    {
+      "key": "radio.93",
+      "text": "That was close, keeper. Too close."
+    },
+    {
+      "key": "radio.file.93",
+      "text": "keeper_close_call"
+    },
+    {
+      "key": "radio.94",
+      "text": "Fourth night. The sea's angrier than I've ever heard it. Everything's going to go at once."
+    },
+    {
+      "key": "radio.file.94",
+      "text": "keeper_night_four"
+    },
+    {
+      "key": "radio.95",
+      "text": "Last night, keeper. This is the big one. Hold on till dawn and the boat comes for you."
+    },
+    {
+      "key": "radio.file.95",
+      "text": "keeper_night_five"
+    },
+    {
+      "key": "radio.98",
+      "text": "She's through. You did it, keeper."
+    },
+    {
+      "key": "radio.file.98",
+      "text": "keeper_ship_passed"
+    },
+    {
+      "key": "radio.100",
+      "text": "Boat's coming for you at first light. You held the light, keeper. All five nights."
+    },
+    {
+      "key": "radio.file.100",
+      "text": "keeper_rescue_dawn"
+    },
+    {
+      "key": "radio.83",
+      "text": "Valve slipped! Hold it steady!"
+    },
+    {
+      "key": "radio.file.83",
+      "text": "keeper_valve_slipped"
+    },
+    {
+      "key": "radio.96",
+      "text": "Ship on the horizon! Keep that light steady."
+    },
+    {
+      "key": "radio.file.96",
+      "text": "keeper_ship_sighted"
+    },
+    {
+      "key": "radio.97",
+      "text": "She's close to the rocks. Don't you let that light go out."
+    },
+    {
+      "key": "radio.file.97",
+      "text": "keeper_ship_close"
+    },
+    {
+      "key": "radio.101",
+      "text": "Your partner's in trouble. Get to them!"
+    },
+    {
+      "key": "radio.file.101",
+      "text": "keeper_partner_down"
+    },
+    {
+      "key": "radio.99",
+      "text": "Oh no... she's on the rocks."
+    },
+    {
+      "key": "radio.file.99",
+      "text": "keeper_ship_lost"
     }
   ]
 }

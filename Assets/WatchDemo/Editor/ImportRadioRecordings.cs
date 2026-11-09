@@ -10,9 +10,10 @@ namespace LighthouseKeepers.WatchDemo.Editor
 {
     public static class ImportRadioRecordings
     {
-        static readonly string[] Names={"keeper_arrival","keeper_wrench","keeper_first_bolt","keeper_generator","keeper_all_done","keeper_hint_pipe","keeper_hint_generator","keeper_hint_power","keeper_hint_beacon","keeper_hint_radio","keeper_hint_bed","keeper_night_two","keeper_night_three","keeper_next_night","keeper_early_bed","keeper_win","keeper_lose"};
-        // Mild denoising; trim only the two ends (reverse twice); EBU loudness normalization.
-        public const string Filter="highpass=f=80,afftdn=nr=6:nf=-40,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.04,areverse,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.08,areverse,acompressor=threshold=0.125:ratio=2:attack=10:release=80,loudnorm=I=-18:TP=-1.2:LRA=7";
+        [Serializable] sealed class Mapping { public HarborVoiceEntry[] entries; }
+        static HarborVoiceEntry[] Entries=>JsonUtility.FromJson<Mapping>(File.ReadAllText("Assets/WatchDemo/Resources/HarborVoiceTiming.json")).entries;
+        // Same gentle voice chain as Tools/VoicePass/import_clips.py. Trim ends only, retaining room tone.
+        public const string Filter="highpass=f=80,afftdn=nr=6:nf=-40,deesser=i=0.15:m=0.35:f=0.5,equalizer=f=2800:t=q:w=0.8:g=2.5,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.08,areverse,silenceremove=start_periods=1:start_duration=0.02:start_threshold=-45dB:start_silence=0.08,areverse,acompressor=threshold=0.125:ratio=2:attack=10:release=80,loudnorm=I=-18:TP=-1.5:LRA=7";
         public static string FindFfmpeg()
         {
             var configured=System.Environment.GetEnvironmentVariable("LK_FFMPEG");if(!string.IsNullOrEmpty(configured)&&File.Exists(configured))return configured;
@@ -22,7 +23,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
         }
         // Arguments are passed directly to a process, never evaluated by a shell.
         static string Quote(string value)=>"\""+value.Replace("\\","\\\\").Replace("\"","\\\"")+"\"";
-        public static void Convert(string executable,string source,string destination)
+        public static void Convert(string executable,string source,string destination,bool reportedLongTake=false)
         {
             string temporary=destination+".importing.wav";
             try
@@ -42,7 +43,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
                     {
                         var tag=new string(reader.ReadChars(4));int size=reader.ReadInt32();long end=reader.BaseStream.Position+size;
                         if(tag=="fmt "){reader.ReadInt16();reader.ReadInt16();reader.ReadInt32();bytesPerSecond=reader.ReadInt32();}
-                        if(tag=="data"&&bytesPerSecond>0&&(double)size/bytesPerSecond>=10)
+                        if(tag=="data"&&bytesPerSecond>0&&(double)size/bytesPerSecond>=10&&!reportedLongTake)
                             throw new InvalidDataException("Select one take first (under 10 seconds): "+Path.GetFileName(source)+". Use Tools/S4/process_radio_takes.py for three-take recordings.");
                         reader.BaseStream.Position=end+size%2;
                     }
@@ -62,14 +63,21 @@ namespace LighthouseKeepers.WatchDemo.Editor
                 var groups=files.GroupBy(Path.GetFileNameWithoutExtension,StringComparer.OrdinalIgnoreCase).ToArray();
                 var duplicates=groups.Where(g=>g.Count()>1).Select(g=>g.Key).ToArray();
                 if(duplicates.Length>0)throw new InvalidOperationException("Keep only one take per name before import: "+string.Join(", ",duplicates));
-                int count=0;var ignored=new System.Collections.Generic.List<string>();
+                var mapped=Entries;int count=0;var ignored=new System.Collections.Generic.List<string>();
                 foreach(var file in files)
                 {
-                    var name=Path.GetFileNameWithoutExtension(file).ToLowerInvariant();if(!Names.Contains(name)){ignored.Add(Path.GetFileName(file));continue;}
+                    var name=Path.GetFileNameWithoutExtension(file).ToLowerInvariant();var entry=mapped.FirstOrDefault(e=>Path.GetFileNameWithoutExtension(e.file)==name);if(entry==null){ignored.Add(Path.GetFileName(file));continue;}
                     if(EditorUtility.DisplayCancelableProgressBar("Import radio recordings",name,(float)count/Mathf.Max(1,files.Length)))break;
-                    string destination="Assets/Audio/Radio/"+name+".wav";Convert(executable,file,destination);
+                    string destination=entry.file;Convert(executable,file,destination,entry.longSingleTake);
+                    if(entry.longSingleTake)Debug.LogWarning("Reported long single take: "+name+". Review duration; do not speed speech up.");
+                    // A replacement performance has new timing. Use the even-reveal fallback until aligned.
+                    entry.wordStarts=null;entry.characterEnds=null;
+                    AssetDatabase.ImportAsset(destination,ImportAssetOptions.ForceUpdate);
+                    entry.duration=AssetDatabase.LoadAssetAtPath<AudioClip>(destination).length;
                     AssetDatabase.ImportAsset(destination,ImportAssetOptions.ForceUpdate);count++;
                 }
+                File.WriteAllText("Assets/WatchDemo/Resources/HarborVoiceTiming.json",JsonUtility.ToJson(new Mapping{entries=mapped},true)+"\n");
+                AssetDatabase.ImportAsset("Assets/WatchDemo/Resources/HarborVoiceTiming.json");HarborVoiceTiming.Invalidate();
                 string message=$"Imported {count} radio recordings. Mono 44.1 kHz; trimmed, gently denoised and normalized. Unity references preserved.";
                 if(ignored.Count>0)message+="\nUnrecognized filenames (unchanged): "+string.Join(", ",ignored);
                 Debug.Log(message);EditorUtility.DisplayDialog("Radio recordings",message,"OK");
