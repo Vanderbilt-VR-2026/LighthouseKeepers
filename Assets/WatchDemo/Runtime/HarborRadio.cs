@@ -18,7 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
         Transform head,wrench;WatchPipeRepair pipe;readonly Queue<int> pending=new();
-        int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
+        int day,progress,lastJob;bool firstBolt,complete,staticActive,failed,upperJobsCued;float idle,quietSince;
         readonly HashSet<int> spoken=new();
         Transform generator,radio,beacon,panel;
         LighthouseKeepers.Interaction.INetworkKeeperProximity keepers;
@@ -69,8 +69,8 @@ namespace LighthouseKeepers.WatchDemo
             Age+=Time.deltaTime;
             if(day!=s.Day)
             {
-                day=s.Day;pending.Clear();spoken.Clear();firstBolt=complete=failed=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
-                Enqueue(day==1?1:day==2?13:day==3?14:15);
+                day=s.Day;pending.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
+                Enqueue(OpeningCue(day,s.Day3Balance));
                 if(day==1)Enqueue(2);
                 if(day==2)Enqueue(4);
             }
@@ -82,8 +82,10 @@ namespace LighthouseKeepers.WatchDemo
             int current=Progress(),job=CurrentJob();if(current!=progress||job!=lastJob){progress=current;lastJob=job;idle=0;}else idle+=Time.deltaTime;
             bool holding=watch.WrenchHeld;
             if(day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
+            // Staged Night 3: the lantern/warning line waits until the restarted generator opens those jobs.
+            if(!upperJobsCued&&s.Day3Balance&&s.Day3Stage==3){upperJobsCued=true;Enqueue(UpperJobsCue);}
             if(s.Complete&&!complete){complete=true;Enqueue(s.HasNextDay?5:17);}
-            if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!holding&&!AtStation(job))
+            if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!WrenchSuppressesHints(holding,s.Repaired)&&!AtStation(job))
                 Enqueue(job);
             var clip=catalog?catalog.Line(Cue):null;
             if(pending.Count>0&&(Cue==0||!clip||Age>clip.length+Extra+.6f))
@@ -93,7 +95,8 @@ namespace LighthouseKeepers.WatchDemo
         bool Relevant(int id)
         {
             var s=watch.State;
-            if(id>=7&&id<=12&&(watch.WrenchHeld||AtStation(id)||idle<90||id!=CurrentJob()))return false;
+            if(id>=7&&id<=12&&(WrenchSuppressesHints(watch.WrenchHeld,s.Repaired)||AtStation(id)||idle<90||id!=CurrentJob()))return false;
+            if(id==UpperJobsCue)return !s.Complete&&!s.IsPending(WatchState.BeaconStation)&&!s.IsPending(WatchState.RadioStation);
             if(id==2)return !watch.WrenchHeld&&!s.Repaired;
             if(id==3||id==7)return !s.Repaired;
             if(id==4||id==8)return s.Power==PowerState.Off;
@@ -104,11 +107,25 @@ namespace LighthouseKeepers.WatchDemo
             if(id==16)return !s.Complete;
             return true;
         }
-        int CurrentJob()
+        int CurrentJob()=>JobCue(watch.State);
+        public const int UpperJobsCue=14;
+        // Night 3 stages the pipe first, so its opening line must not send the keeper to the lantern.
+        public static int OpeningCue(int day,bool pipeStagedFirst)=>day==1?1:day==2?13:day==3&&!pipeStagedFirst?UpperJobsCue:15;
+        // A wrench carried before the pipe is fixed means the keeper is on that job; afterwards it must not mute hints.
+        public static bool WrenchSuppressesHints(bool holdingWrench,bool pipeRepaired)=>holdingWrench&&!pipeRepaired;
+        // Idle-hint cue for the job the tracker shows: WatchState.ObjectiveIndex is the one job order.
+        public static int JobCue(WatchState s)
         {
-            var s=watch.State;
-            return s.Complete?12:s.Engine!=null&&!s.Engine.Running?8:
-                !s.BeaconShining?s.HasPower(PowerCircuit.Beacon)?10:9:!s.Repaired?7:11;
+            int index=s.ObjectiveIndex;
+            if(s.Complete||index<0||index>=s.Definition.tasks.Length)return 12;
+            switch(s.Definition.tasks[index].stationId)
+            {
+                case WatchState.PipeStation:return 7;
+                case WatchState.GeneratorStation:return 8;
+                case WatchState.BeaconStation:return s.Grid!=null&&!s.HasPower(PowerCircuit.Beacon)?9:10;
+                case WatchState.RadioStation:return 11;
+                default:return 12;
+            }
         }
         bool AtStation(int job)
         {

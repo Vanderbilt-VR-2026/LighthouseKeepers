@@ -27,6 +27,11 @@ namespace LighthouseKeepers.Core
         [Min(1)] public float dawnWashSeconds = 6;
         [Range(0, .5f)] public float dawnWashIntensity = .22f;
         [Min(.05f)] public float chalkLetterSeconds = .16f;
+        [Header("Solo watch start (crew sessions unchanged)")]
+        [Tooltip("Solo only: the watch clock and flood wait until the keeper starts work (wrench grab or station use) or the grace below elapses.")]
+        public bool soloWatchGate = true;
+        [Tooltip("Seconds. Maximum time a solo night waits for the keeper to start work before the clock and flood begin anyway.")]
+        [Range(0, 120)] public float soloWatchStartGraceSeconds = 45;
         static ImmersionTuning current;
         public static ImmersionTuning Current
         {
@@ -46,7 +51,7 @@ namespace LighthouseKeepers.Core
     public static class CrewNetworkVersion
     {
         // One identity for matchmaking, lobby display and the shared payload contract.
-        public const string Matchmaking = "LK-S4-M3-FLOOD1";
+        public const string Matchmaking = "LK-S5-PT1";
         public const string Snapshot = "LK-Lab-Coop-v9";
     }
 }

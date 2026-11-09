@@ -17,7 +17,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var p=watch.gameObject.AddComponent<ImmersionWorld>();p.watch=watch;p.bed=bed;p.lensBlock=new MaterialPropertyBlock();p.parts=watch.gameObject.AddComponent<M2StationParts>();p.parts.Initialize();
             p.chalk=Resources.Load<Font>("Fonts/Kalam-Regular");
-            if(watch.State.Immersion.physicalGuidance)p.Build(head,board,pipe,generator,radio,beacon);
+            if(watch.State.Immersion.physicalGuidance)p.Build(head,board,wrench,pipe,generator,radio,beacon);
             var cabinet=p.HouseRadio(board);
             foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>()));}
             if(watch.State.Immersion.radioNarration)p.narrator=HarborRadio.Create(watch,head,wrench,pipe,cabinet);
@@ -26,13 +26,15 @@ namespace LighthouseKeepers.WatchDemo
             RainSoundscape.Create(watch,head);
             return p;
         }
-        void Build(Transform head,TextMesh board,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
+        public const string WrenchBenchText="WRENCH — GRIP TO HOLD\nTRIGGER TO LOCK ONTO A BOLT";
+        void Build(Transform head,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
         {
             var face=GameObject.Find("Wall-mounted checklist white face");
             if(face){var b=new MaterialPropertyBlock();b.SetColor("_BaseColor",new Color(.025f,.045f,.035f));b.SetColor("_EmissionColor",new Color(.006f,.009f,.007f));face.GetComponent<Renderer>().SetPropertyBlock(b);}
             if(chalk){board.font=chalk;board.GetComponent<Renderer>().sharedMaterial=chalk.material;board.fontStyle=FontStyle.Normal;}
             board.color=new Color(.87f,.86f,.74f);board.characterSize*=.90f;
             ImmersionPipePresentation.Create(pipe,watch.State);
+            BenchPlate(wrench);
             var bedMount=M2StationParts.Root("Bunk physical fittings",transform,Vector3.zero);bedMount.SetPositionAndRotation(bed.position,bed.rotation);
             var wood=bed.GetComponent<Renderer>().sharedMaterial;
             bed=bedMount;
@@ -78,6 +80,15 @@ namespace LighthouseKeepers.WatchDemo
                 var old=t.Find("Wheel label");if(old)old.gameObject.SetActive(false);
                 parts.Part("Rag instruction plate",t,new Vector3(.25f,.64f,.207f),new Vector3(.29f,.13f,.025f),parts.Dark);
             }
+        }
+        // World-fixed brass plate behind the wrench's bench rest, read from the House side (+X); never billboards.
+        void BenchPlate(Transform wrench)
+        {
+            var plate=M2StationParts.Root("Wrench bench instruction plate",transform,wrench.position+new Vector3(-.30f,.10f,0));
+            plate.rotation=Quaternion.LookRotation(new Vector3(1,.35f,0).normalized,Vector3.up);
+            parts.Part("Bench brass plate",plate,Vector3.zero,new Vector3(.46f,.12f,.015f),parts.Brass);
+            parts.Part("Bench plate stand",plate,new Vector3(0,-.07f,-.02f),new Vector3(.02f,.08f,.02f),parts.Metal);
+            parts.Text("Bench plate engraving",watch.State.Immersion.triggerClutch?WrenchBenchText:"WRENCH — GRIP TO HOLD",plate,new Vector3(0,0,.009f),.0026f).color=new Color(.1f,.07f,.03f);
         }
         Transform HouseRadio(TextMesh board)
         {

@@ -23,13 +23,13 @@ namespace LighthouseKeepers.WatchDemo
         public HouseFloodState HouseFlood {get;}
         bool resetting;
         public bool BeaconShining=>Beacon!=null?Beacon.Shining(HasPower(PowerCircuit.Beacon)):HasPower(PowerCircuit.Beacon);
-        public bool IgniteBeacon(bool lit)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Beacon.Ignite(lit,HasPower(PowerCircuit.Beacon));
-        public bool AlignBeacon(float angle)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Beacon.Align(angle);
-        public void WipeBeacon(float metres){if(!ReadOnly&&!Failed&&!IsPending(BeaconStation))Beacon?.Wipe(metres);}
+        public bool IgniteBeacon(bool lit)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Engaged(Beacon.Ignite(lit,HasPower(PowerCircuit.Beacon)));
+        public bool AlignBeacon(float angle)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Engaged(Beacon.Align(angle));
+        public void WipeBeacon(float metres){if(!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null){EngageWatch();Beacon.Wipe(metres);}}
         void BeaconChanged(){if(resetting)return;if(BeaconShining){BeaconDarkElapsed=0;if(!IsPending(BeaconStation))faults.Remove(BeaconStation);}Changed?.Invoke();}
-        public bool PrimeEngine()=>!ReadOnly&&!Failed&&Engine!=null&&Engine.Prime();
-        public bool SetChoke(bool closed)=>!ReadOnly&&!Failed&&Engine!=null&&Engine.SetChoke(closed);
-        public void PourFuel(float seconds){if(!ReadOnly&&!Failed)Engine?.Pour(seconds);}
+        public bool PrimeEngine()=>!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.Prime());
+        public bool SetChoke(bool closed)=>!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.SetChoke(closed));
+        public void PourFuel(float seconds){if(!ReadOnly&&!Failed&&Engine!=null){if(seconds>0)EngageWatch();Engine.Pour(seconds);}}
         void EngineChanged()
         {
             if(resetting)return;
@@ -48,8 +48,8 @@ namespace LighthouseKeepers.WatchDemo
             Changed?.Invoke();
         }
         public bool HasPower(PowerCircuit circuit)=>Grid!=null?Grid.Powered(circuit):Power==PowerState.On;
-        public bool SetCircuit(int circuit,bool selected)=>!ReadOnly&&!Failed&&Grid!=null&&Grid.SetCircuit((PowerCircuit)circuit,selected);
-        public bool ResetBreaker()=>!ReadOnly&&!Failed&&Grid!=null&&Grid.ResetBreaker();
+        public bool SetCircuit(int circuit,bool selected)=>!ReadOnly&&!Failed&&Grid!=null&&Engaged(Grid.SetCircuit((PowerCircuit)circuit,selected));
+        public bool ResetBreaker()=>!ReadOnly&&!Failed&&Grid!=null&&Engaged(Grid.ResetBreaker());
         void GridChanged(){if(resetting)return;Radio.SetPower(RadioAvailable);BeaconChanged();}
         public double HighWaterElapsed {get;private set;}
         public bool HighWaterFailed {get;private set;}
@@ -116,7 +116,7 @@ namespace LighthouseKeepers.WatchDemo
             Pipe=new PipeRepairState(Resources.Load<PipeRepairProfile>(forgiving?"ImmersionPipeRepair":"PipeRepair"),forgiving);
             Pipe.PullTowardTightens=forgiving&&Immersion.leverPipe&&Immersion.pullTowardTightens;
             if(Tuning&&Tuning.difficulty)Pipe.RetainedPartialProgress=Tuning.slipRetainedFraction;
-            Pipe.Changed+=()=>Changed?.Invoke();Pipe.Completed+=()=>CompleteRepair();
+            Pipe.Changed+=()=>{EngageWatch();Changed?.Invoke();};Pipe.Completed+=()=>CompleteRepair();
             Radio=new RadioState(Resources.Load<RadioProgram>("StormRadio"));
             Radio.BroadcastCompleted+=()=>{if(faults.Remove(RadioStation))Changed?.Invoke();};
             PowerTuning=powerTuning&&powerTuning.enabledForWatch?powerTuning:null;
@@ -160,12 +160,13 @@ namespace LighthouseKeepers.WatchDemo
         public bool CompleteRepair()
         {
             if (ReadOnly || Failed || Repaired) return false;
-            faults.Remove(PipeStation);if(Day3Balance&&day3Stage==1)StartDay3Outage();Changed?.Invoke(); return true;
+            EngageWatch();faults.Remove(PipeStation);if(Day3Balance&&day3Stage==1)StartDay3Outage();Changed?.Invoke(); return true;
         }
         // Called once per full stroke by the constrained interaction, never per frame.
         public bool StarterPulled()
         {
             if(ReadOnly||Failed)return false;
+            EngageWatch();
             if(Engine!=null)return Engine.Pull();
             if (Power == PowerState.On) return false;
             StarterPulls++;
@@ -222,7 +223,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Reset()
         {
-            resetting=true;HouseFlood?.Reset();
+            resetting=true;HouseFlood?.Reset();ResetWatchGate();
             Elapsed = 0; BeaconDarkElapsed=0; BeaconDarkFailed=false; StarterPulls = 0; faults.Clear();
             HighWaterElapsed=0;HighWaterFailed=false;
             foreach (var fault in Definition.startingFaults) faults.Add(fault);

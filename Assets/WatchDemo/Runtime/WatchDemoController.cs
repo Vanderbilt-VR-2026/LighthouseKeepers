@@ -51,6 +51,11 @@ namespace LighthouseKeepers.WatchDemo
         AdaptiveMusic adaptiveMusic;
         ImmersionLogbook logbook;
         public bool WrenchHeld=>wrench.isSelected||coop?.RemoteHeld(wrench)==true;
+        public bool LocalWrenchHeld=>wrench.isSelected;
+        public bool Sleeping=>sleeping;
+        bool shownWatchHeld;
+        // Chalk heading animation keeps writing while a solo watch waits to start.
+        double ChalkSeconds=>state.Elapsed+state.WatchGateElapsed;
         public void SetBedMask(int value){bedMask=value;if(immersionWorld)immersionWorld.SetBeds(value);}
 
         public Component Owner=>this;
@@ -121,7 +126,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(state.Immersion&&state.Immersion.physicalGuidance)
             {
-                int letters=Mathf.Min(16,(int)(state.Elapsed/state.Immersion.chalkLetterSeconds));
+                int letters=Mathf.Min(16,(int)(ChalkSeconds/state.Immersion.chalkLetterSeconds));
                 if(letters!=shownChalkLetters){shownChalkLetters=letters;RefreshBoard();}
             }
             if(state.RemoteReplica){UpdateReplicaInput();return;}
@@ -132,9 +137,13 @@ namespace LighthouseKeepers.WatchDemo
             left.TryGetFeatureValue(CommonUsages.gripButton,out bool lg);right.TryGetFeatureValue(CommonUsages.gripButton,out bool rg);
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
             bool grip=lg||rg,trigger=lt||rt;
-            state.Tick(Time.deltaTime);
+            // Solo start gate: the first wrench grab (or any station use, recorded by WatchState) starts the watch.
+            if(WrenchHeld)state.EngageWatch();
+            bool watchRunning=state.AdvanceWatchGate(Time.deltaTime);
+            if(watchRunning)state.Tick(Time.deltaTime);
             state.ObserveWater(Time.deltaTime,flood.Height);
-            int second=(int)state.Elapsed;if(second!=shownSecond){shownSecond=second;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=state.Failed?state.FailureMessage+"\nTRIGGER TO RETRY":$"D{state.Day}   {remaining/60:00}:{remaining%60:00}   {state.CompletedTasks}/{state.Definition.tasks.Length} TASKS";RefreshBoard();}
+            bool held=state.WatchStartHeld;
+            int second=(int)state.Elapsed;if(second!=shownSecond||held!=shownWatchHeld){shownSecond=second;shownWatchHeld=held;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=state.Failed?state.FailureMessage+"\nTRIGGER TO RETRY":$"D{state.Day}   {remaining/60:00}:{remaining%60:00}   {state.CompletedTasks}/{state.Definition.tasks.Length} TASKS";RefreshBoard();}
             bool nearBed=Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)<1.8f;
             bedPrompt.text=nearBed?(state.Complete?(state.HasNextDay?SleepPrompt:"ALL WATCHES COMPLETE"):"Finish the board tasks before resting"):"";
             if(nearBed){var direction=bedPrompt.transform.position-head.position;direction.y=0;if(direction.sqrMagnitude>.01f)bedPrompt.transform.rotation=Quaternion.LookRotation(direction);}
@@ -148,12 +157,12 @@ namespace LighthouseKeepers.WatchDemo
             // Original Day 1 net rise/drain remains unchanged. Outage disables pumping.
             if(!state.Failed)
             {
-                flood.Paused=state.Repaired;
+                flood.Paused=state.Repaired||!watchRunning;
                 flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.Pipe.InflowFraction*state.FloodRiseMultiplier;
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
-            state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
+            if(watchRunning)state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
             previousGrip=grip;previousTrigger=trigger;
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
@@ -205,7 +214,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Immersion&&state.Immersion.physicalGuidance)
             {
                 string heading="NIGHT "+state.Day;
-                int letters=Mathf.Clamp((int)(state.Elapsed/state.Immersion.chalkLetterSeconds),0,heading.Length);
+                int letters=Mathf.Clamp((int)(ChalkSeconds/state.Immersion.chalkLetterSeconds),0,heading.Length);
                 boardText.Append("Keep the light. Survive till dawn.\n").Append(heading,0,letters);
                 if(letters<heading.Length)boardText.Append("<color=#FFFFFF00>").Append(heading,letters,heading.Length-letters).Append("</color>");
                 boardText.Append(" — DAWN IN ").Append(Mathf.Max(0,(int)(state.Duration-state.Elapsed))/60).Append(':').Append((Mathf.Max(0,(int)(state.Duration-state.Elapsed))%60).ToString("00")).Append("\n");
@@ -225,6 +234,7 @@ namespace LighthouseKeepers.WatchDemo
             else if(state.Complete)boardText.Append(state.HasNextDay?"GO TO BED — THIRD FLOOR":"ALL WATCHES COMPLETE\nMenu: Replay from Day 1 or Return to lobby");
             else boardText.Append(state.Beacon!=null?"PIPE F1 / POWER F2 / RADIO + BEACON F4\nFinish tasks, then sleep in F3":"PIPE F1 / GENERATOR F2 / RADIO F4\nFinish tasks, then sleep in F3");
             if(!state.Immersion&&!state.Failed&&(!state.Complete||state.HasNextDay))boardText.Append("\nLEFT MENU: Return to lobby (Editor: Esc)");
+            if(state.WatchStartHeld)boardText.Append('\n').Append(ObjectiveHud.WatchGateCaption);
             if(crewBeds>0&&!sleeping)boardText.Append("\nWaiting for other keeper (").Append(crewBeds).Append('/').Append(crewKeepers).Append(" in bed)");
             if(!string.IsNullOrEmpty(crewNotice))boardText.Append('\n').Append(crewNotice);
             if(state.Immersion)boardText.Append("\nWater too high or light dark too long = lost.");

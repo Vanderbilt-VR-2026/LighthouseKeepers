@@ -10,6 +10,7 @@ namespace LighthouseKeepers.WatchDemo
         public AudioSource audioSource;
         public AudioClip powerDown,powerUp;
         [Min(.1f)] public float spinUpSeconds=1.5f;
+        [Range(.05f,1),Tooltip("Lens glass opacity; the transparent FresnelAmber material keeps its emission tint.")] public float lensAlpha=.4f;
         public float degreesPerSecond=18;
         WatchState watch;bool powered,initialized;float speed;
         MaterialPropertyBlock block;
@@ -31,7 +32,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             lantern.enabled=beam.enabled=on;
             if(visibleBeam)visibleBeam.enabled=on;
-            block.SetColor("_BaseColor",on?new Color(.8f,.42f,.12f):new Color(.07f,.065f,.05f));
+            block.SetColor("_BaseColor",on?new Color(.8f,.42f,.12f,lensAlpha):new Color(.07f,.065f,.05f,lensAlpha));
             block.SetColor("_EmissionColor",on?new Color(1,.30f,.045f)*(.7f*brightness):Color.black);
             foreach(var lens in lenses)lens.SetPropertyBlock(block);
             if(visibleBeam){block.SetColor("_BaseColor",new Color(1,.55f,.16f,.12f*brightness));visibleBeam.SetPropertyBlock(block);}

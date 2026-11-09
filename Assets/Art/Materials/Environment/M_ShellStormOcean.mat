@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_ShellStormOcean
-  m_Shader: {fileID: 4800000, guid: 874c38fa179e94f15827fdc7fd4c04d3, type: 3}
+  m_Shader: {fileID: 4800000, guid: cd97f4c1c97dd498188e5a73e077b5bd, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,8 +24,32 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _CalmAmplitude: 0.4
+    - _CalmEnd: 240
+    - _CalmStart: 80
+    - _FadeEnd: 315
+    - _FadeStart: 110
+    - _FoamAmount: 0.45
+    - _Relief: 0.7
+    - _RingRatio: 0.06020069
+    - _ShoreAmplitude: 0.06
+    - _ShoreFalloff: 1.6
+    - _ShoreFoam: 0.55
+    - _Steepness: 0.55
+    - _StormGain: 1.1
+    - _WaveAmplitude: 0.32
+    - _WaveLength: 22
+    - _WaveSpeed: 0.85
+    - _WindAzimuth: 250
     m_Colors:
-    - _BaseColor: {r: 0.025, g: 0.089999996, b: 0.11999995, a: 1}
+    - _CrestColor: {r: 0.035, g: 0.09999997, b: 0.10999996, a: 1}
+    - _DeepColor: {r: 0.006, g: 0.02, b: 0.027, a: 1}
+    - _FoamColor: {r: 0.19999996, g: 0.23499995, b: 0.25499997, a: 1}
+    - _HorizonColor: {r: 0.059999965, g: 0.06999998, b: 0.081999965, a: 1}
+    - _IslandCentre: {r: -0.2, g: -3.2, b: 0, a: 0}
+    - _IslandRadii: {r: 7.8, g: 13.7, b: 0, a: 0}
+    - _ReliefDirection: {r: 0.97, g: 0, b: 0.24, a: 0}
+    - _SkyTint: {r: 0.018, g: 0.023, b: 0.03, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

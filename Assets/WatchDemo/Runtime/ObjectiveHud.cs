@@ -8,7 +8,19 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class ObjectiveHud:MonoBehaviour
  {
   WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick;
-  Text task,label,floor,subtitle;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;Vector3 velocity;Quaternion follow;
+  Text task,label,floor,subtitle;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;
+  // Caption-only guidance (no recorded audio yet); shown in the subtitle row when the radio is silent.
+  string note="";float noteUntil,built;bool nagging,wakePending;
+  public const string WatchGateCaption="Storm building — the watch begins when you start work.";
+  public const string WrenchDownCaption="Pipe holding. Set the wrench down — you won't need it tonight.";
+  public static string NextJobCaption(string task,string floor)=>"Done. Next: "+task+" — "+floor+".";
+  public static string TonightCaption(string task,string floor)=>"Tonight: "+task+" — "+floor+".";
+  public static bool PromptWrenchDown(bool pipeRepaired,bool holdingWrench)=>pipeRepaired&&holdingWrench;
+  public static int StationFloor(string station)=>station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
+  public static int FloorAt(float headY)=>headY<3.4f?1:headY<6.7f?2:headY<10?3:4;
+  public static string FloorDirection(int target,int here,string gap="  ")=>(target>here?"UP"+gap:target<here?"DOWN"+gap:"")+"FLOOR "+target;
+  // Tracker distance and height relative to the eyes when it is placed (metres); it stays world-fixed until it fades.
+  const float PlaceDistance=1.6f,PlaceHeight=0;
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
   public static ObjectiveHud Create(WatchDemoController w,Transform head)
   {var s=AudioPassSettings.Current;if(!s||!s.objectiveHud)return null;var h=w.gameObject.AddComponent<ObjectiveHud>();h.watch=w;h.head=head;h.Build();return h;}
@@ -35,9 +47,19 @@ namespace LighthouseKeepers.WatchDemo
    subtitle=Text("Harbor subtitle",new Vector2(0,-72),new Vector2(530,85),19,new Color(.79f,.79f,.72f,.82f));subtitle.fontStyle=FontStyle.Italic;
    strike=Rule("Completed objective strike",new Vector2(15,10),new Vector2(460,1));tick=Rule("Completion tick stem",new Vector2(240,13),new Vector2(12,2));tick.localRotation=Quaternion.Euler(0,0,45);var up=Rule("Completion tick sweep",new Vector2(253,18),new Vector2(24,2));up.SetParent(tick,false);up.anchoredPosition=new Vector2(11,4);up.localRotation=Quaternion.Euler(0,0,90);
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
-   follow=Quaternion.LookRotation(head.forward,Vector3.up);root.SetPositionAndRotation(head.position+follow*new Vector3(-.28f,.34f,1.6f),follow);Reveal();
+   built=Time.unscaledTime;Reveal(7,true);
   }
-  public void Reveal()=>until=Time.unscaledTime+7;
+  public void Reveal()=>Reveal(7);
+  // Placed once when it appears (or on an explicit recall), level and facing the keeper; never follows the head.
+  void Reveal(float seconds,bool place=false){bool hidden=until<=Time.unscaledTime;until=Mathf.Max(until,Time.unscaledTime+seconds);if(hidden||place)Place();}
+  void Place()
+  {
+   var forward=head.forward;forward.y=0;if(forward.sqrMagnitude<1e-4f){forward=head.up;forward.y=0;}if(forward.sqrMagnitude<1e-4f)forward=Vector3.forward;
+   var facing=Quaternion.LookRotation(forward.normalized,Vector3.up);root.SetPositionAndRotation(head.position+facing*new Vector3(0,PlaceHeight,PlaceDistance),facing);
+  }
+  void ShowNote(string text,float seconds,bool place=false){note=text;noteUntil=Time.unscaledTime+seconds;Reveal(seconds,place);}
+  string StationAt(int value)=>value>=0&&value<watch.State.Definition.tasks.Length?watch.State.Definition.tasks[value].stationId:"BED";
+  string FloorCaption(int value)=>FloorDirection(StationFloor(StationAt(value)),FloorAt(head.position.y)," ");
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   void Set(int value,string text){index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
   string Title(int value)=>value== -2?"Watch complete":value<0?"Rest in the upstairs bunk":watch.State.Definition.tasks[value].taskText;
@@ -45,30 +67,39 @@ namespace LighthouseKeepers.WatchDemo
   {
    var s=watch.State;if(s==null)return;if(!radio)radio=FindAnyObjectByType<HarborRadio>();
    int current=s.ObjectiveIndex;
-   if(day!=s.Day){day=s.Day;Set(current,Title(current));}
+   bool nag=!s.Failed&&PromptWrenchDown(s.Repaired,watch.LocalWrenchHeld),nagStart=nag&&!nagging;nagging=nag;
+   if(day!=s.Day){wakePending=day!=0;day=s.Day;Set(current,Title(current));}
    else if(current!=index&&completeUntil<=0)
    {
-    if(index>=0&&index<s.Definition.tasks.Length&&s.IsDone(s.Definition.tasks[index].stationId)){pending=Title(current);nextIndex=current;completeUntil=Time.unscaledTime+1.2f;if(cueSound.clip)cueSound.Play();Reveal();}
+    if(index>=0&&index<s.Definition.tasks.Length&&s.IsDone(s.Definition.tasks[index].stationId))
+    {
+     pending=Title(current);nextIndex=current;completeUntil=Time.unscaledTime+1.2f;if(cueSound.clip)cueSound.Play();Reveal();
+     // A non-final job is done: name the next one and its floor (the radio only speaks after the last job).
+     if(current>=0){var next=NextJobCaption(Title(current),FloorCaption(current));ShowNote(nag?WrenchDownCaption+"\n"+next:next,9);nagStart=false;}
+    }
     else Set(current,Title(current));
    }
    if(completeUntil>0&&Time.unscaledTime>=completeUntil)Set(nextIndex,pending??Title(current));
+   if(nagStart)ShowNote(WrenchDownCaption,8);
+   // Waking in the bunk: show tonight's first job and which way to go, so nobody walks back to the chalkboard.
+   if(wakePending&&!watch.Sleeping&&!watch.ObjectivePresentationBlocked){wakePending=false;ShowNote(TonightCaption(Title(current),FloorCaption(current)),12,true);}
+   if(Time.unscaledTime-built<.5f)Place(); // Let XR tracking settle before the first placement sticks.
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
    line.localScale=new Vector3(Mathf.Clamp01((Time.unscaledTime-changed)/.4f),1,1);
-   string station=index>=0&&index<s.Definition.tasks.Length?s.Definition.tasks[index].stationId:"BED";
-   int target=station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
-   int here=head.position.y<3.4f?1:head.position.y<6.7f?2:head.position.y<10?3:4;
-   if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=(target>here?"UP  ":target<here?"DOWN  ":"")+"FLOOR "+target;}
+   string station=StationAt(index);
+   int target=StationFloor(station),here=FloorAt(head.position.y);
+   if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=FloorDirection(target,here);}
    icon.Set(station);
    string words=radio?radio.Subtitle:"";
-   if(words.Length>0){caption=words;captionAt=Time.unscaledTime;until=Mathf.Max(until,Time.unscaledTime+.7f);}
-   subtitle.text=Time.unscaledTime-captionAt<.7f?caption:"";
-   var colour=subtitle.color;colour.a=.82f*Mathf.Clamp01(1-(Time.unscaledTime-captionAt)/.7f);subtitle.color=colour;
+   if(words.Length>0){caption=words;captionAt=Time.unscaledTime;Reveal(.7f);}
+   bool spoken=Time.unscaledTime-captionAt<.7f;
+   subtitle.text=spoken?caption:Time.unscaledTime<noteUntil?note:s.WatchStartHeld?WatchGateCaption:"";
+   var colour=subtitle.color;colour.a=spoken?.82f*Mathf.Clamp01(1-(Time.unscaledTime-captionAt)/.7f):.82f;subtitle.color=colour;
    if(radio&&cue!=radio.Serial){cue=radio.Serial;Reveal();}
    group.alpha=watch.ObjectivePresentationBlocked?0:Mathf.Clamp01((until-Time.unscaledTime)/.8f);
-   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=x||y;if(pressed&&!buttons)Reveal();buttons=pressed;
-   bool looking=wrist&&Vector3.Distance(head.position,wrist.position)<1.1f&&Vector3.Dot(head.forward,(wrist.position-head.position).normalized)>.94f;if(looking&&!glance)Reveal();glance=looking;
-   follow=Quaternion.Slerp(follow,Quaternion.LookRotation(head.forward,Vector3.up),1-Mathf.Exp(-Time.unscaledDeltaTime/ .45f));var desired=head.position+follow*new Vector3(-.28f,.34f,1.6f);root.position=Vector3.SmoothDamp(root.position,desired,ref velocity,.20f,20,Time.unscaledDeltaTime);root.rotation=follow;
+   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=x||y;if(pressed&&!buttons)Reveal(7,true);buttons=pressed;
+   bool looking=wrist&&Vector3.Distance(head.position,wrist.position)<1.1f&&Vector3.Dot(head.forward,(wrist.position-head.position).normalized)>.94f;if(looking&&!glance)Reveal(7,true);glance=looking;
   }
   void OnDestroy(){if(material)Destroy(material);if(fontMaterial)Destroy(fontMaterial);if(backing)Destroy(backing);}
  }

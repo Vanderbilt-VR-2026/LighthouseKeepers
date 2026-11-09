@@ -49,6 +49,7 @@ namespace LighthouseKeepers.Net.Tests
             var view=Find("WatchDemoController");var state=Get<object>(view,"State");
             Call(state,"CompleteRepair");Assert.IsTrue((bool)Call(state,"Sleep"));
             Assert.AreEqual(2,Get<int>(state,"Day"));Assert.AreEqual(72,Get<double>(state,"BeaconDarkLimit"),.01);
+            Call(state,"EngageWatch"); // Release the solo start gate so the scene clock keeps ticking.
             Call(state,"Tick",Get<double>(state,"BeaconDarkRemaining")-.1);Assert.IsFalse(Get<bool>(state,"Failed"));
             yield return new WaitForSeconds(.15f);Assert.IsTrue(Get<bool>(state,"BeaconDarkFailed"));
             Assert.IsTrue(Get<bool>(Find("WatchMenu"),"IsOpen"));

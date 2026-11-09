@@ -56,7 +56,7 @@ namespace LighthouseKeepers.Editor.Environment
             ColorUtility.TryParseHtmlString(hex,out var c);m.SetColor("_BaseColor",c);m.SetFloat("_Smoothness",key=="Metal"?.38f:.18f);m.SetFloat("_Metallic",key=="Metal"||key=="Brass"?.65f:0);
             m.enableInstancing=true;
             if(key=="Lamp"||key=="Emergency") {m.EnableKeyword("_EMISSION");m.SetColor("_EmissionColor",c*2);m.globalIlluminationFlags=MaterialGlobalIlluminationFlags.BakedEmissive;}
-            if(key=="Glass") {m.SetFloat("_Surface",1);m.SetFloat("_SrcBlend",(int)BlendMode.SrcAlpha);m.SetFloat("_DstBlend",(int)BlendMode.OneMinusSrcAlpha);m.SetFloat("_ZWrite",0);m.SetColor("_BaseColor",new Color(c.r,c.g,c.b,.13f));m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");m.renderQueue=3000;}
+            if(key=="Glass") {m.SetFloat("_Surface",1);m.SetFloat("_SrcBlend",(int)BlendMode.SrcAlpha);m.SetFloat("_DstBlend",(int)BlendMode.OneMinusSrcAlpha);m.SetFloat("_ZWrite",0);m.SetColor("_BaseColor",new Color(c.r,c.g,c.b,.13f));m.SetFloat("_Smoothness",.9f);m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");m.renderQueue=3000;}
             EditorUtility.SetDirty(m);return m;
         }
         static void MakePrefab(ShellAsset entry)

@@ -74,16 +74,26 @@ namespace LighthouseKeepers.Net.Tests
             Action<float> idle=seconds=>{set("idle",seconds);set("quietSince",-100f);set("<Age>k__BackingField",1000f);};
             origin.MoveCameraToWorldLocation(new Vector3(0,1.65f,-8));
             int serial=Value<int>(radio,"Serial");idle(89);tick();Assert.AreEqual(serial,Value<int>(radio,"Serial"),"Early hint");
-            var generator=Find("WatchGenerator");origin.MoveCameraToWorldLocation(generator.transform.position+Vector3.up*1.6f);
-            idle(91);tick();Assert.AreEqual(serial,Value<int>(radio,"Serial"),"Hint while already at the generator");
+            // Staged Night 3 opens on the pipe: the hint follows the tracker's job order (WatchState.ObjectiveIndex).
+            var state=Value<object>(watch,"State");var jobCue=radio.GetType().GetMethod("JobCue");
+            Assert.AreEqual(7,(int)jobCue.Invoke(null,new[]{state}),"Night 3 hint job is not the staged pipe");
+            var pipe=Find("WatchPipeRepair");origin.MoveCameraToWorldLocation(Value<Vector3>(pipe,"ActivePosition")+Vector3.up*.3f);
+            idle(91);tick();Assert.AreEqual(serial,Value<int>(radio,"Serial"),"Hint while already at the pipe");
             origin.MoveCameraToWorldLocation(new Vector3(0,1.65f,-8));
-            var pipe=Find("WatchPipeRepair");var wrench=Field<XRGrabInteractable>(pipe,"wrench");var hand=hands[0];
+            var wrench=Field<XRGrabInteractable>(pipe,"wrench");var hand=hands[0];
             hand.transform.parent.position=wrench.transform.position;hand.Direct.selectInput.manualPerformed=true;
             hand.Direct.StartManualInteraction((IXRSelectInteractable)wrench);yield return null;
-            idle(91);tick();Assert.AreEqual(serial,Value<int>(radio,"Serial"),"Hint while carrying the wrench");
+            idle(91);tick();Assert.AreEqual(serial,Value<int>(radio,"Serial"),"Hint while carrying the wrench to an unrepaired pipe");
             hand.Direct.EndManualInteraction();hand.Direct.selectInput.manualPerformed=false;yield return null;
-            idle(91);tick();Assert.AreEqual(8,Value<int>(radio,"Cue"),"Idle generator hint not delivered");
+            idle(91);tick();Assert.AreEqual(7,Value<int>(radio,"Cue"),"Idle pipe hint not delivered");
             serial=Value<int>(radio,"Serial");idle(200);tick();Assert.AreEqual(serial,Value<int>(radio,"Serial"),"Hint repeated in same night");
+            // After the repair the generator fails; a keeper still carrying the wrench must still hear the next hint.
+            Call(state,"CompleteRepair");tick();Assert.AreEqual(8,(int)jobCue.Invoke(null,new[]{state}));
+            hand.transform.parent.position=wrench.transform.position;hand.Direct.selectInput.manualPerformed=true;
+            hand.Direct.StartManualInteraction((IXRSelectInteractable)wrench);yield return null;Assert.True(Value<bool>(watch,"WrenchHeld"));
+            origin.MoveCameraToWorldLocation(new Vector3(0,1.65f,-8));
+            idle(91);tick();Assert.AreEqual(8,Value<int>(radio,"Cue"),"Carried wrench muted the generator hint after the repair");
+            hand.Direct.EndManualInteraction();hand.Direct.selectInput.manualPerformed=false;yield return null;
             Call(radio,"EarlyBed");pending.Clear(); // Deliberate interaction is still a once-per-night cue.
             Assert.False(Field<System.Collections.Generic.HashSet<int>>(radio,"spoken").Contains(6),"Retired wrench hint played");
         }

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5e3261af1def4daf94b5d6ba03c3f88, type: 3}
+  m_Name: CrewVoiceAcoustics
+  m_EditorClassIdentifier: LK.Net::LighthouseKeepers.Net.CrewVoiceAcousticsSettings
+  floorHeightM: 3.3
+  floorThresholdOffsetM: 0.1
+  floorCount: 4
+  houseNorthEdgeZ: -4.3
+  oneFloorGain: 0.22
+  oneFloorCutoffHz: 550
+  twoFloorsGain: 0
+  twoFloorsCutoffHz: 300
+  houseDoorGain: 0.55
+  houseDoorCutoffHz: 2200
+  clearCutoffHz: 22000
+  occlusionFadeSeconds: 0.35
+  handheldRadios: 1
+  requireBothHolding: 1
+  radioWhenProximityBelow: 0.3
+  radioVolume: 0.8
+  radioSpatialBlend: 0.3
+  radioLowCutHz: 300
+  radioHighCutHz: 3400
+  radioCrushRateHz: 8000
+  radioBits: 7
+  radioDrive: 2.2
+  radioHiss: 0.01
+  squelchOpenRms: 0.02
+  squelchCloseRms: 0.01
+  squelchHangSeconds: 0.35
+  squelchVolume: 0.45
+  radioFadeSeconds: 0.15

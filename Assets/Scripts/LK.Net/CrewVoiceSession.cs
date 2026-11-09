@@ -91,6 +91,7 @@ namespace LighthouseKeepers.Net
             audio.rolloffMode=AudioRolloffMode.Linear;audio.minDistance=tuning.voiceNearM;audio.maxDistance=tuning.voiceFarM;audio.volume=tuning.voiceVolume;
             var follow=go.AddComponent<CrewVoiceHead>();follow.Actor=actor;
             KeeperAudioMix.Route(audio,"VoiceChat");
+            CrewVoiceSpatializer.Attach(audio,actor,tuning); // floor occlusion + handheld radio path (receive side only)
             var speaker=go.AddComponent<Speaker>();speaker.OnRemoteVoiceRemoveAction=s=>{if(s)Destroy(s.gameObject);};return speaker;
         }
         protected override void OnDestroy()
@@ -104,10 +105,12 @@ namespace LighthouseKeepers.Net
     sealed class CrewVoiceHead:MonoBehaviour
     {
         public int Actor;
+        public bool HasPose {get;private set;}
         void LateUpdate()
         {
             var poses=CrewPoseStream.Active;
-            if(poses&&poses.SampleVisual(Actor,out var pose))transform.position=pose.Head;
+            if(poses&&poses.SampleVisual(Actor,out var pose)){transform.position=pose.Head;HasPose=true;}
+            else HasPose=false;
         }
     }
 }
