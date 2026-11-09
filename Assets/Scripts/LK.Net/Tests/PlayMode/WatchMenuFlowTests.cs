@@ -142,6 +142,7 @@ namespace LighthouseKeepers.Net.Tests
             Assert.AreEqual(1, Object.FindObjectsByType<EventSystem>(FindObjectsSortMode.None).Length);
             Assert.IsTrue(Object.FindAnyObjectByType<XRUIInputModule>().isActiveAndEnabled);
             Assert.IsEmpty(Object.FindObjectsByType<NetworkRunner>(FindObjectsSortMode.None));
+            Call(State, "EngageWatch"); // The solo start gate is released by starting work; then the menu must not pause it.
             double elapsed = Value<double>(State, "Elapsed");
             yield return new WaitForSeconds(.1f);
             Assert.Greater(Value<double>(State, "Elapsed"), elapsed, "Watch Menu must not pause the timed challenge.");

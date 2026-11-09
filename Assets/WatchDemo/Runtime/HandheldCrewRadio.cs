@@ -25,14 +25,14 @@ namespace LighthouseKeepers.WatchDemo
         void Build()
         {
             var p=gameObject.AddComponent<M2StationParts>();p.Initialize();block=new MaterialPropertyBlock();
-            float y=index==0?1.2f:11.1f;var wall=PipeWallLayout.WallSurface(-1.8f,out var normal);
-            if(index==1){float nearest=10;foreach(var hit in Physics.RaycastAll(new Vector3(0,y,-1.8f),Vector3.right,5,~0,QueryTriggerInteraction.Ignore))if(hit.collider.name.Contains("Wall")&&hit.distance<nearest){nearest=hit.distance;wall=hit.point;normal=hit.normal;}}
-            wall.y=y;transform.SetPositionAndRotation(wall+normal*.12f,Quaternion.LookRotation(normal));home=transform.position;homeRotation=transform.rotation;
-            // The dock stays on the wall when its radio is carried.
-            var dock=M2StationParts.Root("Crew radio dock "+index,watch.transform,home-normal*.08f);dock.rotation=transform.rotation;
-            p.Part("Radio wall shelf",dock,new Vector3(0,-.12f,.03f),new Vector3(.20f,.035f,.18f),p.Metal);
-            p.Part("Radio dock back",dock,new Vector3(0,.02f,-.04f),new Vector3(.20f,.34f,.025f),p.Dark);
-            p.Text("Radio dock stencil",PlayerStrings.Get("connected.radio"),dock,new Vector3(0,.15f,-.025f),.0025f);
+            // Eli's House bench placement, using our existing authenticated grab/transmit route.
+            Vector3 spot=new Vector3(-2.90f,.88f,-9.07f);
+            var top=GameObject.Find("Wrench table top");
+            if(!top)top=GameObject.Find("Desk top");
+            var surface=top?top.GetComponent<Renderer>():null;
+            if(surface){var b=surface.bounds;spot=new Vector3(b.center.x+.12f,b.max.y,b.min.z+.14f);}
+            transform.SetPositionAndRotation(spot+new Vector3(0,.10f,index*.18f),Quaternion.Euler(0,90,0));
+            home=transform.position;homeRotation=transform.rotation;
             p.Part("Handheld enamel body",transform,Vector3.zero,new Vector3(.075f,.18f,.055f),p.Dark);
             for(int i=0;i<5;i++)p.Part("Speaker grille",transform,new Vector3(0,.035f-i*.012f,.03f),new Vector3(.05f,.003f,.004f),p.Metal);
             p.Part("Rubber aerial",transform,new Vector3(-.025f,.155f,0),new Vector3(.009f,.14f,.009f),p.Dark);

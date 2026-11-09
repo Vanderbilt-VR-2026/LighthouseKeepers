@@ -8,7 +8,7 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
   }
   [UnityTest] public IEnumerator DecorativeWorldDoesNotAddPlayerObstaclesAndWaterKeepsItsHostSurface(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
-   foreach(var name in new[]{"Previous keeper open logbook","Oilskin on wall hook","Wall stowed supply crate","Old stove and kettle","Wet rocky coastline and eastern inlet"}){var go=GameObject.Find(name);Assert.That(go,Is.Not.Null,name);Assert.False(go.GetComponentsInChildren<Collider>().Any(c=>c.enabled&&!c.isTrigger),name+" blocks the player");}
+   foreach(var name in new[]{"Previous keeper open logbook","Oilskin on wall hook","Wall stowed supply crate","Old stove and kettle","Distant coast and inlet"}){var go=GameObject.Find(name);Assert.That(go,Is.Not.Null,name);Assert.False(go.GetComponentsInChildren<Collider>().Any(c=>c.enabled&&!c.isTrigger),name+" blocks the player");}
    var flood=GameObject.Find("Visible first-floor flood");Assert.That(flood.GetComponent<Renderer>().sharedMaterial.shader.name,Is.EqualTo("LighthouseKeepers/StormWater"));Assert.That(flood.GetComponent<MeshFilter>().sharedMesh.vertexCount,Is.EqualTo(65),"Flood simulation plane remains unchanged");
    foreach(var skin in UnityEngine.Object.FindObjectsByType<SkinnedMeshRenderer>(FindObjectsSortMode.None).Where(s=>s.name=="Skinned glove"))Assert.That(skin.lightProbeUsage,Is.EqualTo(UnityEngine.Rendering.LightProbeUsage.BlendProbes));
   }

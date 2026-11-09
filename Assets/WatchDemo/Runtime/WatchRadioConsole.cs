@@ -48,13 +48,13 @@ namespace LighthouseKeepers.WatchDemo
         public bool ToggleMain()
         {
             if(watch.RemoteReplica&&watch.Coop!=null)return watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.RadioPower);
-            bool changed=State.ToggleMain();nextReadout=0;return changed;
+            bool changed=State.ToggleMain();if(changed)watch.EngageWatch();nextReadout=0;return changed;
         }
         public void Tune(float normalized)
         {
             if(watch.RemoteReplica&&watch.Coop!=null)
             {if(Time.unscaledTime>=nextTune){nextTune=Time.unscaledTime+.05f;watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.RadioTune,normalized);}return;}
-            State.Tune(Mathf.Lerp(program.minimumMHz,program.maximumMHz,normalized));
+            if(State.Step==1&&float.IsFinite(normalized))watch.EngageWatch();State.Tune(Mathf.Lerp(program.minimumMHz,program.maximumMHz,normalized));
         }
         public void CodeResult(int result){if(result==0)effects.PlayOneShot(buzzer,.35f);nextReadout=0;}
         public void Press(RadioControl control)

@@ -7,6 +7,7 @@ namespace LighthouseKeepers.Core
     {
         public bool enabledForWatch = true;
         public bool physicalGuidance = true, radioNarration = true, forgivingPipe = true;
+        // Legacy clutch is used only when MasterPassTuning.gripOnlyWrench is disabled.
         public bool triggerClutch = true;
         public bool pullTowardTightens = true;
         public bool leverPipe = true, physicalWrenchDrops = true, faultMist = true;
@@ -46,7 +47,7 @@ namespace LighthouseKeepers.Core
     public static class CrewNetworkVersion
     {
         // One identity for matchmaking, lobby display and the shared payload contract.
-        public const string Matchmaking = "LK-S4-CONNECTED2";
-        public const string Snapshot = "LK-Lab-Coop-v17";
+        public const string Matchmaking = "LK-S5-INTEGRATED1";
+        public const string Snapshot = "LK-Lab-Coop-v18";
     }
 }

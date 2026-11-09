@@ -8,7 +8,7 @@ namespace LighthouseKeepers.WatchDemo {
    gate=M2StationParts.Root("Tutorial threshold gate",transform,new Vector3(-.68f,0,-4.43f));var leaf=parts.Part("Timber tutorial door",gate,new Vector3(.68f,1.05f,0),new Vector3(1.36f,2.1f,.045f),parts.Dark);gateCollider=leaf.AddComponent<BoxCollider>();
   }
   TextMesh Slate(M2StationParts parts,string name,Vector3 pos,Quaternion rot){var t=M2StationParts.Root(name,transform,Vector3.zero);t.SetPositionAndRotation(pos,rot);parts.Part(name+" backing",t,Vector3.zero,new Vector3(.62f,.20f,.025f),parts.Dark);return parts.Text(name+LighthouseKeepers.Core.PlayerStrings.Get("legacy.OnboardingPresentation.1"),"",t,new Vector3(0,0,.014f),.004f);}
-  void Update(){var s=watch.State;if(night!=s.Day){night=s.Day;opened=!s.Tutorial;}if(watch.WrenchHeld||s.Elapsed>=s.Master.gateTimeoutSeconds)opened=true;
+  void Update(){var s=watch.State;if(night!=s.Day){night=s.Day;opened=!s.Tutorial;}if(watch.WrenchHeld||s.Elapsed+s.WatchGateElapsed>=s.Master.gateTimeoutSeconds)opened=true;
    gateCollider.enabled=!opened;gate.localRotation=Quaternion.Slerp(gate.localRotation,Quaternion.Euler(0,opened?-90:0,0),1-Mathf.Exp(-4*Time.deltaTime));
    string text=s.Director.Instruction(watch.CurrentInstruction);bunkSlate.text=text;pipeSlate.text=text;
   }

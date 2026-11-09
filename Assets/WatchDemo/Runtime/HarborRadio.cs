@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
         Transform head,wrench;WatchPipeRepair pipe;readonly Queue<int> pending=new();
-        bool gripTaught;string announcedJob;
+        bool gripTaught,upperJobsCued;string announcedJob;
         int dangerMask,priorTasks;float nextStatus;
         int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
         readonly HashSet<int> spoken=new();
@@ -72,9 +72,9 @@ namespace LighthouseKeepers.WatchDemo
             Age+=Time.deltaTime;
             if(day!=s.Day)
             {
-                day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();spoken.Clear();firstBolt=complete=failed=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
+                day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
                 if(s.Master&&s.Master.onboarding){announcedJob=null;if(day==1){Enqueue(1);Enqueue(34);Enqueue(35);}else Enqueue(37);}
-                else {Enqueue(day==1?1:day==2?13:day==3?14:15);if(day==1)Enqueue(2);if(day==2)Enqueue(4);}
+                else {Enqueue(OpeningCue(day,s.Day3Balance));if(day==1)Enqueue(2);if(day==2)Enqueue(4);}
             }
             if(s.Failed)
             {
@@ -90,8 +90,9 @@ namespace LighthouseKeepers.WatchDemo
             int current=Progress(),job=CurrentJob();if(current!=progress||job!=lastJob){progress=current;lastJob=job;idle=0;}else idle+=Time.deltaTime;
             bool holding=watch.WrenchHeld;
             if(!(s.Master&&s.Master.onboarding)&&day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
+            if(!upperJobsCued&&s.Day3Balance&&s.Day3Stage==3){upperJobsCued=true;Enqueue(UpperJobsCue);}
             if(s.Complete&&!complete){complete=true;Enqueue(s.HasNextDay?5:17);}
-            if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!holding&&!AtStation(job))
+            if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!WrenchSuppressesHints(holding,s.Repaired)&&!AtStation(job))
                 Enqueue(job);
             var clip=catalog?catalog.Line(Cue):null;
             if(pending.Count>0&&(Cue==0||!clip||Age>clip.length+Extra+(s.PressureEnabled?s.Master.speechSpacingSeconds:.6f)))
@@ -102,7 +103,8 @@ namespace LighthouseKeepers.WatchDemo
         {
             var s=watch.State;
             if(id>=37&&id<=42){var job=watch.State.Director?.First??KeeperStep.None;return id==(ObjectiveDirector.Job(job)==WatchState.PipeStation?37:ObjectiveDirector.Job(job)==WatchState.GeneratorStation?38:ObjectiveDirector.Job(job)==WatchState.RadioStation?39:ObjectiveDirector.Job(job)==WatchState.BeaconStation?40:ObjectiveDirector.Job(job)==LighthouseKeepers.Core.PlayerStrings.Get("legacy.HarborRadio.3")?41:42);}
-            if(id>=7&&id<=12&&(watch.WrenchHeld||AtStation(id)||idle<90||id!=CurrentJob()))return false;
+            if(id>=7&&id<=12&&(WrenchSuppressesHints(watch.WrenchHeld,s.Repaired)||AtStation(id)||idle<90||id!=CurrentJob()))return false;
+            if(id==UpperJobsCue)return !s.Complete&&!s.IsPending(WatchState.BeaconStation)&&!s.IsPending(WatchState.RadioStation);
             if(id==2)return !watch.WrenchHeld&&!s.Repaired;
             if(id==3||id==7)return !s.Repaired;
             if(id==4||id==8)return s.Power==PowerState.Off;
@@ -113,9 +115,12 @@ namespace LighthouseKeepers.WatchDemo
             if(id==16)return !s.Complete;
             return true;
         }
-        int CurrentJob()
+        public const int UpperJobsCue=14;
+        public static int OpeningCue(int day,bool pipeStagedFirst)=>day==1?1:day==2?13:day==3&&!pipeStagedFirst?UpperJobsCue:15;
+        public static bool WrenchSuppressesHints(bool holding,bool repaired)=>holding&&!repaired;
+        int CurrentJob()=>JobCue(watch.State);
+        public static int JobCue(WatchState s)
         {
-            var s=watch.State;
             if(s.Director!=null)return ObjectiveDirector.Hint(s.Director.First);
             return s.Complete?12:s.Engine!=null&&!s.Engine.Running?8:
                 !s.BeaconShining?s.HasPower(PowerCircuit.Beacon)?10:9:!s.Repaired?7:11;

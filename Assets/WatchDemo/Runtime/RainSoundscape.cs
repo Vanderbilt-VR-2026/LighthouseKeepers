@@ -11,7 +11,8 @@ namespace LighthouseKeepers.WatchDemo
   public static Vector3 Weights(Vector3 p)
   {
    float house=BoxWeight(p,new Vector3(0,2.1f,-7.3f),new Vector3(7.9f,4.2f,6));
-   float tower=Mathf.Clamp01((4.4f-new Vector2(p.x,p.z).magnitude)/.6f)*Mathf.Clamp01((14.8f-p.y)/.6f);
+   float radius=p.y>=9.7f?3.05f:4.4f;
+   float tower=Mathf.Clamp01((radius-new Vector2(p.x,p.z).magnitude)/(p.y>=9.7f?.35f:.6f))*Mathf.Clamp01((14.8f-p.y)/.6f);
    float inside=Mathf.Max(house,tower);float roof=Mathf.Clamp01((p.y-9.7f)/.7f)*Mathf.Clamp01((3.3f-new Vector2(p.x,p.z).magnitude)/.6f)*inside;
    if(Mathf.Abs(p.x)<1&&Mathf.Abs(p.z+4.4f)<.65f&&p.y<3.3f)inside=Mathf.Min(inside,.65f);
    return new Vector3(1-inside,inside-roof,roof);
@@ -29,7 +30,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    var legacy=FindAnyObjectByType<LighthouseKeepers.Presentation.Environment.ShellWeatherPresentation>();if(legacy)legacy.ExternalStormAudio=true;
    beds=new AudioSource[3];string[] names={"exterior","interior","roof"};
-   for(int i=0;i<3;i++){beds[i]=Source("Rain bed "+names[i],false);beds[i].clip=Resources.Load<AudioClip>("AudioPass/rain_"+names[i]);beds[i].loop=true;beds[i].volume=0;beds[i].gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=i==1?2800:i==2?9000:16000;if(beds[i].clip)beds[i].Play();}
+   for(int i=0;i<3;i++){beds[i]=Source("Rain bed "+names[i],false);beds[i].clip=Resources.Load<AudioClip>("AudioPass/rain_"+names[i]);beds[i].loop=true;beds[i].volume=0;beds[i].gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=i==1?6500:i==2?9000:16000;if(beds[i].clip)beds[i].Play();}
    impacts=new AudioClip[4];names=new[]{"window","metal","puddle","drip"};for(int i=0;i<4;i++)impacts[i]=Resources.Load<AudioClip>("AudioPass/impact_"+names[i]);
    pool=new AudioSource[4];for(int i=0;i<pool.Length;i++)pool[i]=Source("Rain impact "+i,true);
    wind=Source("Storm gust through gaps",true);wind.clip=Resources.Load<AudioClip>("AudioPass/wind");wind.loop=true;windFilter=wind.gameObject.AddComponent<AudioLowPassFilter>();if(wind.clip)wind.Play();nextGust=Time.time+15;

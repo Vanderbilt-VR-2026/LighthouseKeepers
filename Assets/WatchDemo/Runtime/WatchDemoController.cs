@@ -50,6 +50,10 @@ namespace LighthouseKeepers.WatchDemo
         ImmersionWorld immersionWorld;
         AdaptiveMusic adaptiveMusic;
         ImmersionLogbook logbook;
+        public bool LocalWrenchHeld=>wrench.isSelected;
+        public bool Sleeping=>sleeping;
+        bool shownWatchHeld;
+        double ChalkSeconds=>state.Elapsed+state.WatchGateElapsed;
         public bool WrenchHeld=>wrench.isSelected||coop?.RemoteHeld(wrench)==true;
         public void SetBedMask(int value){if(value!=bedMask&&value!=0)GetComponent<WorldAudioGaps>()?.BunkChanged();bedMask=value;if(immersionWorld)immersionWorld.SetBeds(value);}
 
@@ -108,7 +112,7 @@ namespace LighthouseKeepers.WatchDemo
             WorldLabelRaster.Create(this);
             PracticalAtmosphere.Create(this);
             WorldWaterPresentation.Create(this);
-            CoastlinePresentation.Create(this);
+            // Exterior sea/coast comes from Eli's StormSeascape; no second coastline.
             StoryDressing.Create(this);
             WorldAudioGaps.Create(this);
             ConnectedMachinePresentation.Create(this);
@@ -139,7 +143,7 @@ namespace LighthouseKeepers.WatchDemo
             UpdateDirector();
             if(state.Immersion&&state.Immersion.physicalGuidance)
             {
-                int letters=Mathf.Min(16,(int)(state.Elapsed/state.Immersion.chalkLetterSeconds));
+                int letters=Mathf.Min(16,(int)(ChalkSeconds/state.Immersion.chalkLetterSeconds));
                 if(letters!=shownChalkLetters){shownChalkLetters=letters;RefreshBoard();}
             }
             if(state.RemoteReplica){UpdateReplicaInput();return;}
@@ -150,10 +154,13 @@ namespace LighthouseKeepers.WatchDemo
             left.TryGetFeatureValue(CommonUsages.gripButton,out bool lg);right.TryGetFeatureValue(CommonUsages.gripButton,out bool rg);
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
             bool grip=lg||rg,trigger=lt||rt;
-            state.Tick(Time.deltaTime);
+            if(WrenchHeld)state.EngageWatch();
+            if(state.Director!=null){state.OfferStationGrace(state.Director.First);state.OfferStationGrace(state.Director.Second);}
+            bool watchRunning=state.AdvanceWatchGate(Time.deltaTime);
+            if(watchRunning)state.Tick(Time.deltaTime);
             if(state.Tutorial&&flood.Height>state.Master.tutorialFloodCap)flood.SetHeight(state.Master.tutorialFloodCap);
             state.ObserveWater(Time.deltaTime,flood.Height);
-            int second=(int)state.Elapsed;if(second!=shownSecond){shownSecond=second;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=state.Failed?state.FailureMessage+LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.4"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.5"),state.Day,remaining/60,remaining%60,state.CompletedTasks,state.Definition.tasks.Length);RefreshBoard();}
+            int second=(int)state.Elapsed;if(second!=shownSecond||shownWatchHeld!=state.WatchStartHeld){shownSecond=second;shownWatchHeld=state.WatchStartHeld;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=state.Failed?state.FailureMessage+LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.4"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.5"),state.Day,remaining/60,remaining%60,state.CompletedTasks,state.Definition.tasks.Length);RefreshBoard();}
             bool nearBed=Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)<1.8f;
             bedPrompt.text=nearBed?(state.Complete?(state.HasNextDay?SleepPrompt:LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.6")):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.7")):"";
             if(nearBed){var direction=bedPrompt.transform.position-head.position;direction.y=0;if(direction.sqrMagnitude>.01f)bedPrompt.transform.rotation=Quaternion.LookRotation(direction);}
@@ -167,12 +174,12 @@ namespace LighthouseKeepers.WatchDemo
             // Original Day 1 net rise/drain remains unchanged. Outage disables pumping.
             if(!state.Failed)
             {
-                flood.Paused=state.Repaired;
+                flood.Paused=state.Repaired||!watchRunning;
                 flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.LeakStrength*state.FloodRiseMultiplier;
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
-            state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
+            if(watchRunning)state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
             previousGrip=grip;previousTrigger=trigger;
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
@@ -225,7 +232,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Immersion&&state.Immersion.physicalGuidance)
             {
                 string heading=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.35")+state.Day;
-                int letters=Mathf.Clamp((int)(state.Elapsed/state.Immersion.chalkLetterSeconds),0,heading.Length);
+                int letters=Mathf.Clamp((int)(ChalkSeconds/state.Immersion.chalkLetterSeconds),0,heading.Length);
                 boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.9")).Append(heading,0,letters);
                 if(letters<heading.Length)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.10")).Append(heading,letters,heading.Length-letters).Append("</color>");
                 boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.11")).Append(Mathf.Max(0,(int)(state.Duration-state.Elapsed))/60).Append(':').Append((Mathf.Max(0,(int)(state.Duration-state.Elapsed))%60).ToString("00")).Append("\n");

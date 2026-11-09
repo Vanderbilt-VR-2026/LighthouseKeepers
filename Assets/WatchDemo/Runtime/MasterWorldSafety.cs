@@ -9,12 +9,7 @@ namespace LighthouseKeepers.WatchDemo {
     var b=collider.bounds;
     if(collider.name.StartsWith("UCX_SM_Rock_Outcrop")&&b.max.y>0&&b.max.y<.2f&&b.center.z< -5&&Mathf.Abs(b.center.x)<3.5f){collider.enabled=false;Changes.Add("Nonblocking House rock: "+collider.name);}
    }
-   // House slab and throat slab overlap at the same authored y=0. Offset only the visual.
-   foreach(var renderer in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))if(renderer.name=="SM_Floor_Throat_LOD0"||renderer.name=="SM_Floor_Throat") {
-    // Batched renderers share a combined mesh and ignore individual transform offsets.
-    // Replace this one visible slab while retaining its original collision and shared material.
-    var bounds=renderer.bounds;var slab=GameObject.CreatePrimitive(PrimitiveType.Cube);slab.name="Separated throat floor visual";slab.transform.SetParent(transform,true);slab.transform.position=bounds.center+Vector3.up*.012f;slab.transform.localScale=bounds.size;var collider=slab.GetComponent<Collider>();collider.enabled=false;Destroy(collider);slab.GetComponent<Renderer>().sharedMaterial=renderer.sharedMaterial;renderer.enabled=false;Changes.Add("Throat floor replacement visual +12 mm: "+renderer.name);
-   }
+   // Coplanar shell offsets are authored by LighthouseBuilder, before static batching.
    var seen=new Dictionary<string,MeshRenderer>();
    foreach(var renderer in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None)) {
     if(!renderer.enabled||renderer.isPartOfStaticBatch||renderer.GetComponentInParent<LODGroup>()||!renderer.name.StartsWith("SM_"))continue;var filter=renderer.GetComponent<MeshFilter>();if(!filter||!filter.sharedMesh)continue;

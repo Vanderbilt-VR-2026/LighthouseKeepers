@@ -47,7 +47,7 @@ namespace LighthouseKeepers.Net.Tests
   {
    var s=New();Tick(s,75);Tick(s,90);Assert.Zero(Get<double>(s,"BeaconDarkElapsed"));Tick(s,119);Assert.False(Get<bool>(s,"Failed"));Tick(s,1.01);Assert.True(Get<bool>(s,"BeaconDarkFailed"));
    Call(s,"Retry");Assert.False(Get<bool>(s,"Failed"));Assert.AreEqual(1,Get<int>(s,"Day3Stage"));Assert.Zero(Get<double>(s,"BeaconGraceRemaining"));Assert.True(Get<bool>(s,"BeaconShining"));
-   Call(s,"ObserveWater",3.1d,.56f);Assert.True(Get<bool>(s,"HighWaterFailed"));
+   Call(s,"ObserveWater",3.1d,.56f);Assert.False(Get<bool>(s,"HighWaterFailed"),"Retry start grace protects a keeper before work begins");Call(s,"EngageWatch");Call(s,"ObserveWater",3.1d,.56f);Assert.True(Get<bool>(s,"HighWaterFailed"));
   }
   [Test]public void SoloAndCrewHaveSeparateBudgetsAndGuestCannotAdvanceStages()
   {
