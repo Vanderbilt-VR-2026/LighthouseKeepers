@@ -49,9 +49,9 @@ Step3: branch s4/integrated from main, merge our stack, then #84; no main merge.
 
 Device measurements below are whole-build comparisons; resolution differs. Final integrated performance still requires measurement.
 
-## Live comparison notes (in progress)
+## Live comparison notes
 
-The lead saw our new interior textures and reported the sea clipping in/out, with both placeholder and recorded voices. Eli’s unchanged build then showed the older interior and a preferred ocean/mountain background without the observed sea clipping. The apparent restart was the agent installing the second APK, not a game crash. Initial black adb captures were inconclusive and must not be treated as a startup failure; subsequent logs confirm our Lab rendered. Our first route was interrupted and needs remaining views repeated. Both builds passed EditMode (ours280/280, Eli284/284); PlayMode suites are still running.
+The lead saw our new interior textures and reported the sea clipping in/out, with both placeholder and recorded voices. Eli’s unchanged build then showed the older interior and a preferred ocean/mountain background without the observed sea clipping. The apparent restart was the agent installing the second APK, not a game crash. Initial black adb captures were inconclusive and must not be treated as a startup failure; subsequent logs confirm our Lab rendered. Our first route was interrupted; the lead repeated it later. Both complete test baselines are recorded below.
 
 Lead follow-up: explicitly prefers Eli’s ocean/water and mountain background. Keep that exterior selection, validate cost in the integrated build, and retain our interior/guidance/audio additions. The gallery incorrectly selects muffled rain while the lantern interior selects the rooftop layer correctly. `RainSoundscape.Weights` uses a4.4m tower radius on every floor, misclassifying the exposed F4 gallery as interior; fix its height-specific enclosure boundary and test lantern→gallery in every direction. Lead also dislikes the muffled layer’s quality and still sees mesh clipping in PR84. New status/tutorial lines are absent from PR84 as expected; integration must preserve ours.
 
@@ -72,7 +72,7 @@ The lead selected Eli’s ocean, mountain coastline and sky. Integrated uses one
 
 Routes included F1 and gallery on both APKs, but movement/focus left insufficient matched stationary samples in several views. Do not fill those cells using nearby floor samples. Raw logs, poses, screenshots and parser are in `artifacts/reconcile/device-*`. Pacing time from Unity Main Thread includes waits and is not CPU work time. Integrated adds the OpenXR app CPU metric and starts at scale1.0 with4x MSAA, pending its own target-device test. The resolution change means this table does not isolate ocean or sky cost.
 
-## Integration in progress
+## Integrated decisions and regression results
 
 New network version `LK-S5-INTEGRATED1`, snapshot18. Both clients must update. Gate engagement, gate elapsed time, first-station grace deadline, taught-station mask and retry mask are host-owned snapshot fields. Active grace values live in MasterPassTuning: start45s, generic first station60s, generator120s, Day3 solo90s/crew60s. Night1 remains no-fail. Timing/flood balance otherwise stays unchanged.
 
@@ -86,3 +86,7 @@ The shell builder now carries the12 reviewed Lab visual-mesh corrections as well
 The first focused PlayMode pass verified gallery/lantern/House rain weights, world-fixed tracker recall, exactly two bench radios, one ocean renderer, no active Support foot collision, rock/wrench collision safety, floor-edge coverage and both-hand wrench arm motion. Remaining traversal/narration checks are being rerun after the targeted fixes.
 
 Latest regression results: all304 EditMode tests pass. Of21 focused PlayMode tests,20 now pass after the final3/3 shell/glass rerun; the remaining SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast failure existed in both unchanged baselines. The House-to-gallery route, idle-hint policy and bounded full snapshot tests now pass. Graphics solo/co-op and integrated Quest acceptance remain pending.
+
+The merged PlayMode result set overlays focused reruns on the full run: 47 passing cases,24 failures shared by both original baselines, and **zero missing baseline passes**. This is an aggregate, not a claim that a fresh full suite is all green. `artifacts/reconcile/integrated-rerun/aggregate.json` records the source run for each case.
+
+Graphics Nights1–2 pass through physical clamp, both-hand bolts, dropped-wrench recovery, generator startup and shared presentation transitions. The first replay exposed a dawn wash tied only to the paused simulation clock; it now advances through start grace and the replay passes. The72-view Editor wall sweep completed and its contact sheet was inspected. Views inside/near pillars are occluded; still captures cannot certify continuous-motion Quest flicker or stereo glass sorting.
