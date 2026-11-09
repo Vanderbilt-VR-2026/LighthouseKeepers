@@ -14,7 +14,7 @@ The72-view rendered wall sweep was inspected as a contact sheet. It covers House
 
 ## Device comparison limitations
 
-The lead selected Eli’s exterior after playing both. [Raw comparison summary](device-comparison.json) includes render settings and stationary-sample limitations. Our captured F4 view at scale1.25 exceeded budget (25.97ms median GPU); Eli’s strongest-night gallery at scale1.0 was9.26ms median and72fps. Different views/resolution prevent isolating ocean-only cost. Integrated uses scale1.0,4xMSAA and fixed foveation0.5, pending its own device profile.
+The lead selected Eli’s exterior after playing both. [Raw comparison summary](device-comparison.json) includes render settings and stationary-sample limitations. Our captured F4 view at scale1.25 exceeded budget (25.97ms median GPU); Eli’s strongest-night gallery at scale1.0 was9.26ms median and72fps. Different views/resolution prevent isolating ocean-only cost. The first integrated installation used scale1.0,4xMSAA and fixed foveation0.5. Its observed stair/F3 samples exceeded11ms. The cleanup APK uses the authorized2x fallback; matching-view profiling remains pending.
 
 ## Local reproduction
 
@@ -39,3 +39,7 @@ The generator capture is from the first Night3 run: its tasks completed, but the
 ![Shared repaired pipe](03-guest-task-shared-host.jpg)
 ![Both reach Night2](04-shared-day-two-host.jpg)
 ![Reversed valve roles](06-reversed-roles-shared-host.jpg)
+
+## House and stair cleanup
+
+[d3d6f6f cleanup and screenshots](fixture-cleanup.md): white board/black writing, removal of intrusive House props and rail-safe wall fixtures. Seven focused checks pass. [Latest APK source/hash](build-result.json) is the cleanup build; [earlier installation receipt](install-3b74d40.txt) is explicitly the preceding3b74d40 build, not proof the cleanup is installed.

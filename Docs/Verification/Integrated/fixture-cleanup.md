@@ -11,3 +11,9 @@ Validation: 4 integrated presentation checks, House-to-gallery traversal, 2 rend
 Performance: the previous installed4×MSAA build exceeded the11ms GPU target in observed views (including roughly12ms atF3 and17–18ms on moving stair views). Next build uses the authorized2×MSAA fallback at scale1.0. No claimed improvement until measured on Quest in matching views.
 
 Pending user feedback: preferred treatment of tracked hands crossing walls, and whether the left-wrist NIGHT square is attached correctly or floating. Neither hand tracking/rotation nor wristwatch behavior was changed by this cleanup.
+
+Fresh post-cleanup graphics replay: solo Nights1–3 pass with zero logged errors. The Night3 board screenshot shows all four task ticks in black on the white face before sleep.
+
+![White board with completed Night3 jobs](fixture-cleanup/night3-whiteboard-complete.png)
+
+Fresh two-Mac live Fusion replay passes join/avatars, both valve roles, preserved progress on release, shared repair, radio/proximity routing, mute, sleep, host-alone clamp and active-watch rejoin. These are transport/mechanics checks, not a substitute for human Quest listening or comfort.
