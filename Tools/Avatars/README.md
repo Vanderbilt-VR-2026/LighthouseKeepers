@@ -1,9 +1,11 @@
 # Basic captain and fisherman models
 
-These original temporary upper-body models are assigned to `PF_PlayerRig` through the existing `CrewAvatarModel` slots:
+These original temporary upper-body models are available for `PF_PlayerRig` through the existing `CrewAvatarModel` slots:
 
 - `Assets/Prefabs/Avatars/PF_BasicCaptain.prefab`: navy coat, white peaked cap, brass badge/buttons and epaulettes.
 - `Assets/Prefabs/Avatars/PF_BasicFisherman.prefab`: yellow oilskin coat, hood with lining, storm flap and pockets.
+
+The host still defaults to the basic captain. The guest now defaults to the [reference-inspired textured fisherman](ReferenceFisherman.md); the basic fisherman is retained as an alternative.
 
 Each prefab contains separate head/body anchors, two static mesh renderers and references to shared URP/Lit materials. They have no colliders, cameras, listeners, animator, network identity, articulated arms or legs. The existing multiplayer view controls their head and torso; its existing tracked gloves supply the hands. No full-body rig or IK result is claimed.
 
@@ -36,7 +38,7 @@ python3 Docs/validate_repository.py
 
 Actual checks performed: Blender generated and rendered both models; the standalone mesh validator checks finite packed vertex data/normals, triangle winding, nondegenerate triangles, index/submesh ranges and bounds. It also resolves the model/script/material references and both default network assignments. The captain is 3,361 triangles; the fisherman is 3,300 triangles. Each currently has nine material slots across its two meshes; draw calls and lighting cost require measurement rather than inference from polygon counts.
 
-`BasicKeeperModelTests` adds three Unity Edit Mode cases for actual mesh import/readability, valid model anchors, material/submesh alignment and default role-model assignment. These have **not run here**. C# syntax, source/meta pairing, GUID uniqueness, repository hygiene and whitespace were checked. Unity import, graphics execution, shared-session behaviour, fresh APK and target-headset performance are still unverified in this environment.
+`BasicKeeperModelTests` covers actual mesh import/readability, valid model anchors, material/submesh alignment and valid distinct role-model assignment, including the newer textured fisherman. These Unity cases have **not run here**. C# syntax, source/meta pairing, GUID uniqueness, repository hygiene and whitespace were checked. Unity import, graphics execution, shared-session behaviour, fresh APK and target-headset performance are still unverified in this environment.
 
 ## Try and replace
 

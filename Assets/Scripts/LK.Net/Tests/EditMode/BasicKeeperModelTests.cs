@@ -6,9 +6,10 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class BasicKeeperModelTests
     {
-        [TestCase("PF_BasicCaptain")]
-        [TestCase("PF_BasicFisherman")]
-        public void BundledModelImportsWithValidAnchorsAndReadableGeometry(string name)
+        [TestCase("PF_BasicCaptain",10000)]
+        [TestCase("PF_BasicFisherman",10000)]
+        [TestCase("PF_ReferenceFisherman",20000)]
+        public void BundledModelImportsWithValidAnchorsAndReadableGeometry(string name,int triangleLimit)
         {
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Prefabs/Avatars/{name}.prefab");
             Assert.NotNull(prefab);
@@ -25,11 +26,18 @@ namespace LighthouseKeepers.Net.Tests
                 Assert.AreEqual(mesh.subMeshCount,materials.Length);
                 foreach(var material in materials){Assert.NotNull(material);Assert.NotNull(material.shader);}
                 Assert.AreEqual(mesh.vertexCount,mesh.normals.Length);
+                if(name=="PF_ReferenceFisherman")
+                {
+                    Assert.AreEqual(mesh.vertexCount,mesh.uv.Length);
+                    Assert.AreEqual(mesh.vertexCount,mesh.tangents.Length);
+                    foreach(var material in materials)
+                    {Assert.NotNull(material.GetTexture("_BaseMap"));Assert.NotNull(material.GetTexture("_BumpMap"));}
+                }
                 foreach(var vertex in mesh.vertices)
                     Assert.IsTrue(float.IsFinite(vertex.x)&&float.IsFinite(vertex.y)&&float.IsFinite(vertex.z));
                 for(int i=0;i<mesh.subMeshCount;i++)triangles+=mesh.GetIndexCount(i)/3;
             }
-            Assert.That(triangles,Is.GreaterThan(0).And.LessThan(10000));
+            Assert.That(triangles,Is.GreaterThan(0).And.LessThan(triangleLimit));
         }
 
         [Test] public void NetworkAvatarDefaultsProvideValidDistinctModelsForBothRoles()

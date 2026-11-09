@@ -57,10 +57,15 @@ if __name__ == "__main__":
     network = (ROOT/"Assets/Prefabs/Network/Resources/PF_PlayerRig.prefab").read_text()
     scripts = guid(ROOT/"Assets/Scripts/LK.Net/CrewAvatarModel.cs")
     material_guids = {guid(p) for p in ART.glob('*.mat')}
+    appearances={guid(p):p for p in (ROOT/'Assets').rglob('*.prefab')}
     for name,field in [('PF_BasicCaptain','captainModel'),('PF_BasicFisherman','fishermanModel')]:
         path = ROOT/'Assets/Prefabs/Avatars'/(name+'.prefab')
         text = path.read_text()
-        assert f'{field}: {{fileID: 1000, guid: {guid(path)}, type: 3}}' in network, field
+        # Final artist replacements are allowed; require an assigned role model,
+        # while still checking the bundled basic prefab itself below.
+        selected=re.search(field+r': \{fileID: [1-9]\d*, guid: ([a-f0-9]{32}), type: 3\}',network)
+        assert selected and selected[1] in appearances,field
+        assert f'guid: {scripts}' in appearances[selected[1]].read_text(),field
         assert f'guid: {scripts}' in text and 'head: {fileID: 4001}' in text and 'body: {fileID: 4002}' in text, path
         assert text.count('\nMeshRenderer:') == 2 and text.count('\nMeshFilter:') == 2, path
         assert text.count('m_Father: {fileID: 4000}') == 2, path
@@ -71,4 +76,4 @@ if __name__ == "__main__":
             mesh = ART/(name+'_'+part+'.asset')
             assert len(actual) == meshes[mesh][1] and set(actual) <= material_guids, path
             assert f'guid: {guid(mesh)}' in text, path
-    print('PASS: both models are assigned; anchor, mesh, material and script references resolve. Unity import/rendering remains a separate check.')
+    print('PASS: both role slots resolve; bundled basic anchor, mesh, material and script references resolve. Unity import/rendering remains a separate check.')

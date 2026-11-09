@@ -255,12 +255,14 @@ def coat(captain):
     return parts
 
 
-def native_mesh(name, objects):
+def native_mesh(name, objects, textured=False):
     """Export evaluated Blender triangles using the project's Unity 6 mesh format."""
     groups = {}
     for obj in objects:
         data = obj.data
         data.calc_loop_triangles()
+        if textured:
+            data.calc_tangents()
         world = obj.matrix_world
         normal_matrix = world.to_3x3().inverted().transposed()
         for tri in data.loop_triangles:
@@ -270,7 +272,17 @@ def native_mesh(name, objects):
                 position = world @ data.vertices[data.loops[loop].vertex_index].co
                 normal = (normal_matrix @ data.corner_normals[loop].vector).normalized()
                 # Quantize harmless float noise from Blender's threaded normal evaluation.
-                dest.append(tuple(0.0 if abs(v)<.000005 else round(v,5) for v in (*unity(position), *unity(normal))))
+                values = (*unity(position), *unity(normal))
+                if textured:
+                    tangent = (world.to_3x3() @ data.loops[loop].tangent).normalized()
+                    if tangent.length_squared < .5:
+                        # Tiny UV islands can yield a zero Mikk tangent. Keep the
+                        # vertex basis valid without moving or dropping geometry.
+                        axis = Vector((0,0,1)) if abs(normal.z)<.9 else Vector((0,1,0))
+                        tangent = axis.cross(normal).normalized()
+                    uv = data.uv_layers.active.data[loop].uv
+                    values += (*unity(tangent),data.loops[loop].bitangent_sign,uv.x,uv.y)
+                dest.append(tuple(0.0 if abs(v)<.000005 else round(v,5) for v in values))
     vertices, submeshes, materials = [], [], []
     for colour, points in sorted(groups.items()):
         # Blender/BMesh can enumerate faces in a different order between processes.
@@ -284,7 +296,7 @@ def native_mesh(name, objects):
         submeshes.append((first,len(points),[(a+b)/2 for a,b in zip(lo,hi)],[(b-a)/2 for a,b in zip(lo,hi)]))
         materials.append(colour)
     assert len(vertices)<65536
-    packed=b"".join(struct.pack("<6f",*v) for v in vertices)
+    packed=b"".join(struct.pack("<12f" if textured else "<6f",*v) for v in vertices)
     indices=struct.pack("<"+"H"*len(vertices),*range(len(vertices)))
     template=(ROOT/"Assets/WatchDemo/Radio/ConsoleBody0.asset").read_text()
     text=template.replace("m_Name: ConsoleBody0","m_Name: "+name)
@@ -305,7 +317,9 @@ def native_mesh(name, objects):
     text=re.sub(r"  m_IndexBuffer: [a-f0-9]+","  m_IndexBuffer: "+indices.hex(),text,count=1)
     vertex=f"  m_VertexData:\n    serializedVersion: 3\n    m_VertexCount: {len(vertices)}\n    m_Channels:\n"
     for i in range(14):
-        vertex+=f"    - stream: 0\n      offset: {12 if i==1 else 0}\n      format: 0\n      dimension: {3 if i<2 else 0}\n"
+        dimension = 3 if i<2 else 4 if textured and i==2 else 2 if textured and i==4 else 0
+        offset = 12 if i==1 else 24 if textured and i==2 else 40 if textured and i==4 else 0
+        vertex+=f"    - stream: 0\n      offset: {offset}\n      format: 0\n      dimension: {dimension}\n"
     vertex+=f"    m_DataSize: {len(packed)}\n    _typelessdata: {packed.hex()}\n"
     text=re.sub(r"  m_VertexData:.*?(?=  m_CompressedMesh:)",vertex,text,count=1,flags=re.S)
     lo=[min(v[i] for v in vertices) for i in range(3)];hi=[max(v[i] for v in vertices) for i in range(3)]
@@ -332,7 +346,7 @@ def transform(file, owner, position, parent, children=()):
     return value+f"  m_Father: {{fileID: {parent}}}\n  m_LocalEulerAnglesHint: {{x: 0, y: 0, z: 0}}\n"
 
 
-def prefab(name, head, body):
+def prefab(name, head, body, eye_height=1.62):
     value="%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n"
     value+=gameobject(1000,name,(4000,114000))+transform(4000,1000,(0,0,0),0,(4001,4002))
     value+=f"""--- !u!114 &114000
@@ -353,7 +367,7 @@ MonoBehaviour:
   leftHand: {{fileID: 0}}
   rightHand: {{fileID: 0}}
 """
-    for i,label,data,y in [(1,"HeadAnchor",head,1.62),(2,"BodyAnchor",body,1.14)]:
+    for i,label,data,y in [(1,"HeadAnchor",head,eye_height),(2,"BodyAnchor",body,eye_height-.48)]:
         path,materials=data
         value+=gameobject(1000+i,label,(4000+i,3300+i,2300+i))+transform(4000+i,1000+i,(0,y,0),4000)
         value+=f"--- !u!33 &{3300+i}\nMeshFilter:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {{fileID: 0}}\n  m_PrefabInstance: {{fileID: 0}}\n  m_PrefabAsset: {{fileID: 0}}\n  m_GameObject: {{fileID: {1000+i}}}\n  m_Mesh: {{fileID: 4300000, guid: {guid(path)}, type: 2}}\n"
