@@ -27,7 +27,7 @@ namespace LighthouseKeepers.WatchDemo
             if(watch.State.Failed!=failed){failed=watch.State.Failed;if(failed){heartbeat.Play();if(watch.State.HighWaterFailed){var roar=Resources.Load<AudioClip>("S4Audio/water");if(roar)events.PlayOneShot(roar,1);}}else heartbeat.Stop();}
             if(day!=watch.State.Day){waking=day>0&&watch.State.Day>day;day=watch.State.Day;flashAge=0;PlayThunder();}
             // Existing host day/time drives both views. A brief recovery wash, never permanent daylight.
-            float dawnPhase=(float)watch.State.Elapsed/watch.State.Immersion.dawnWashSeconds;
+            float dawnPhase=(float)(watch.State.Elapsed+watch.State.WatchGateElapsed)/watch.State.Immersion.dawnWashSeconds;
             dawn.enabled=waking&&!failed&&dawnPhase<1;
             dawn.intensity=dawn.enabled?watch.State.Immersion.dawnWashIntensity*Mathf.Sin(Mathf.Clamp01(dawnPhase)*Mathf.PI):0;
             flashAge+=Time.deltaTime;
