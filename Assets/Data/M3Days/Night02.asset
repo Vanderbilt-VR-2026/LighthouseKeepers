@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b81574ef45454cb42e9138d88f4e6b, type: 3}
+  m_Name: Night02
+  m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
+  day: 2
+  dayLengthSeconds: 315
+  beaconDarkLimitSeconds: 120
+  powerCapacity: 2.5
+  initialCircuitMask: 11
+  fuelDrainPerSecond: 0.0015
+  beaconInitiallyLit: 1
+  beaconInitialAlignment: 0.5
+  beaconTargetAlignment: 0.5
+  beaconInitialSoot: 0
+  beaconSootPerSecond: 0
+  tasks:
+  - stationId: STN_GENERATOR
+    taskText: Restart the generator
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  startingFaults:
+  - STN_GENERATOR
+  - STN_PIPE_LEAK
+  requiredKeepers: 1
+  briefingHeading: "Day 2 \u2014 The generator"
+  briefingText: The pump is running. Check the building and listen for trouble. If
+    power fails, restore the generator on the second floor.
+  briefingVoice: {fileID: 0}
+  faultObjectivePrefix: Restart the generator on the second floor.
+  objectives:
+  - text: Inspect the lighthouse while the pumps run
+    predicates: 05000000
+    incidentId: generator-fault
+  - text: Check the fuel gauge
+    predicates: 06000000
+    incidentId: generator-fault
+  - text: "Prime the generator \u2014 three strokes"
+    predicates: 07000000
+    incidentId: generator-fault
+  - text: Set the choke to Closed
+    predicates: 08000000
+    incidentId: generator-fault
+  - text: Pull the starter handle
+    predicates: 09000000
+    incidentId: generator-fault
+  - text: Clear the water
+    predicates: 0300000009000000
+    incidentId: generator-fault
+  - text: Go to bed
+    predicates: 04000000
+    incidentId: 
+  incidents:
+  - id: generator-fault
+    atSeconds: 45
+    kind: 1
+  successCondition: 0
+  failCondition: 0
+  requiresPartnerIsolation: 0
+  primerStrokes: 3
+  crankCooldownSeconds: 2
+  chokeReleaseSeconds: 10
+  isolationFreshnessSeconds: 0.3
+  initialFuelFraction: 0.8
+  scenario:
+    id: night-2
+    nameKey: m3.night2
+    configured: 1
+    demo: 0
+    noFail: 0
+    finaleFaultPileup: 0
+    timingApproved: 0
+    stormBaseStage: 1
+    peakStormAfterFraction: 1
+    soloSeconds: 315
+    crewSeconds: 315
+    soloFloodMultiplier: 1
+    crewFloodMultiplier: 1
+    openingSeconds: 45
+    reliefSeconds: 15
+    startGraceSeconds: 45
+    firstStationGraceSeconds: 60
+    openingCue: 13
+    tonightCue: 80
+    faults:
+    - id: leak
+      stationId: STN_PIPE_LEAK
+      afterStationId: 
+      gate: 0
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    - id: outage
+      stationId: STN_GENERATOR
+      afterStationId: STN_PIPE_LEAK
+      gate: 0
+      atSeconds: 75
+      graceSeconds: 60
+      repeat: 0
+    stations:
+    - stationId: STN_PIPE_LEAK
+      activeSteps:
+      - clamp
+      - tighten
+      crewVariant: 0
+      informationSite: F1
+      soloLocalInformation: 1
+    - stationId: STN_GENERATOR
+      activeSteps:
+      - fuel
+      - prime
+      - choke-close
+      - starter
+      - choke-open
+      - breakers
+      crewVariant: 2
+      informationSite: House
+      soloLocalInformation: 1
+    ships:
+    - id: blackout-passage
+      nameKey: m3.ship.maryEllen
+      sightedAtSeconds: 175
+      approachSeconds: 75
+      windowSeconds: 55
+      darkGraceSeconds: 30
+      broadcastExtensionSeconds: 0
+      safePreview: 0
+      largeFinale: 0
+    cues:
+    - eventId: ship-sighted
+      cue: 96
+    - eventId: ship-close
+      cue: 97
+    - eventId: ship-passed
+      cue: 98
+    - eventId: ship-wrecked
+      cue: 99
+    - eventId: rescue
+      cue: 100

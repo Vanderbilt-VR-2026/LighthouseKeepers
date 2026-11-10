@@ -1,0 +1,187 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b81574ef45454cb42e9138d88f4e6b, type: 3}
+  m_Name: Night03
+  m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
+  day: 3
+  dayLengthSeconds: 450
+  beaconDarkLimitSeconds: 150
+  powerCapacity: 2.5
+  initialCircuitMask: 11
+  fuelDrainPerSecond: 0.0025
+  beaconInitiallyLit: 0
+  beaconInitialAlignment: 0.18
+  beaconTargetAlignment: 0.5
+  beaconInitialSoot: 0.3
+  beaconSootPerSecond: 0.001
+  tasks:
+  - stationId: STN_GENERATOR
+    taskText: Refuel and restart the generator
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  - stationId: STN_RADIO_CONSOLE
+    taskText: Broadcast the storm warning.
+  - stationId: STN_BEACON_CONTROL
+    taskText: Light and align the beacon
+  startingFaults:
+  - STN_GENERATOR
+  - STN_PIPE_LEAK
+  - STN_RADIO_CONSOLE
+  - STN_BEACON_CONTROL
+  requiredKeepers: 2
+  briefingHeading: "Day 3 \u2014 Two keepers"
+  briefingText: One keeper holds and corrects the isolation valve on F2. The other
+    repairs the pipe on F1. Call out the safe pressure band.
+  briefingVoice: {fileID: 0}
+  faultObjectivePrefix: 
+  objectives:
+  - text: Bring both keepers to the task
+    predicates: 0a000000
+    incidentId: 
+  - text: Take the wrench from the bench
+    predicates: 00000000
+    incidentId: 
+  - text: Hold the F2 isolation valve while your partner repairs on F1
+    predicates: 020000000b000000
+    incidentId: rupture
+  - text: Clear the water
+    predicates: 03000000
+    incidentId: rupture
+  - text: Go to bed
+    predicates: 04000000
+    incidentId: 
+  incidents:
+  - id: rupture
+    atSeconds: 15
+    kind: 0
+  successCondition: 0
+  failCondition: 0
+  requiresPartnerIsolation: 1
+  primerStrokes: 3
+  crankCooldownSeconds: 2
+  chokeReleaseSeconds: 10
+  isolationFreshnessSeconds: 0.3
+  initialFuelFraction: 0.04
+  scenario:
+    id: night-3
+    nameKey: m3.night3
+    configured: 1
+    demo: 0
+    noFail: 0
+    finaleFaultPileup: 0
+    timingApproved: 0
+    stormBaseStage: 2
+    peakStormAfterFraction: 1
+    soloSeconds: 450
+    crewSeconds: 330
+    soloFloodMultiplier: 0.65
+    crewFloodMultiplier: 0.85
+    openingSeconds: 45
+    reliefSeconds: 15
+    startGraceSeconds: 45
+    firstStationGraceSeconds: 60
+    openingCue: 76
+    tonightCue: 81
+    faults:
+    - id: leak
+      stationId: STN_PIPE_LEAK
+      afterStationId: 
+      gate: 0
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    - id: outage
+      stationId: STN_GENERATOR
+      afterStationId: STN_PIPE_LEAK
+      gate: 1
+      atSeconds: 75
+      graceSeconds: 60
+      repeat: 0
+    - id: beacon
+      stationId: STN_BEACON_CONTROL
+      afterStationId: 
+      gate: 2
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    - id: broadcast
+      stationId: STN_RADIO_CONSOLE
+      afterStationId: 
+      gate: 2
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    stations:
+    - stationId: STN_PIPE_LEAK
+      activeSteps:
+      - clamp
+      - tighten
+      crewVariant: 1
+      informationSite: F1
+      soloLocalInformation: 1
+    - stationId: STN_GENERATOR
+      activeSteps:
+      - fuel
+      - prime
+      - choke-close
+      - starter
+      - choke-open
+      - breakers
+      crewVariant: 0
+      informationSite: House
+      soloLocalInformation: 1
+    - stationId: STN_RADIO_CONSOLE
+      activeSteps:
+      - power
+      - tune
+      - code
+      - transmit
+      crewVariant: 3
+      informationSite: House
+      soloLocalInformation: 1
+    - stationId: STN_BEACON_CONTROL
+      activeSteps:
+      - ignite
+      - align
+      crewVariant: 0
+      informationSite: F4 radio
+      soloLocalInformation: 1
+    ships:
+    - id: first-passage
+      nameKey: m3.ship.northStar
+      sightedAtSeconds: 90
+      approachSeconds: 75
+      windowSeconds: 45
+      darkGraceSeconds: 30
+      broadcastExtensionSeconds: 0
+      safePreview: 0
+      largeFinale: 0
+    - id: warned-passage
+      nameKey: m3.ship.maryEllen
+      sightedAtSeconds: 210
+      approachSeconds: 60
+      windowSeconds: 45
+      darkGraceSeconds: 30
+      broadcastExtensionSeconds: 15
+      safePreview: 0
+      largeFinale: 0
+    cues:
+    - eventId: ship-sighted
+      cue: 96
+    - eventId: ship-close
+      cue: 97
+    - eventId: ship-passed
+      cue: 98
+    - eventId: ship-wrecked
+      cue: 99
+    - eventId: rescue
+      cue: 100
