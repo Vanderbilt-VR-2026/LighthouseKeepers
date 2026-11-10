@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LighthouseKeepers.Net
 {
-    /// <summary>Artist-supplied modular VR appearance; the existing view drives its anchors.</summary>
+    /// <summary>Visual appearance adapter for modular anchors or a baked full-body VR skin.</summary>
     [DisallowMultipleComponent]
     public sealed class CrewAvatarModel : MonoBehaviour
     {
@@ -18,6 +18,9 @@ namespace LighthouseKeepers.Net
         [SerializeField, Tooltip("Optional independent wrist anchor. Leave empty to retain the existing tracked glove.")]
         Transform rightHand;
 
+        [SerializeField, Tooltip("Optional full-body adapter. When assigned it replaces modular head/body/wrist anchors.")]
+        CrewHumanoidAvatar fullBody;
+        public CrewHumanoidAvatar FullBody => fullBody;
         public Transform Head => head;
         public Transform Body => body;
         public Transform LeftHand => leftHand;
@@ -28,10 +31,13 @@ namespace LighthouseKeepers.Net
         public bool TryValidate(out string error)
         {
             error = null;
-            if (!Inside(head) || !Inside(body))
+            if (fullBody && (fullBody.transform != transform && !fullBody.transform.IsChildOf(transform)))
+                error = "Full-body adapter must be inside this appearance prefab.";
+            else if (fullBody && !fullBody.TryValidate(out error)) return false;
+            else if (!fullBody && (!Inside(head) || !Inside(body)))
                 error = "Assign head and body anchors inside the model prefab, below its root.";
-            else if (head == body || head.IsChildOf(body) || body.IsChildOf(head))
-                error = "Head and body must be separate branches. A full humanoid skeleton needs a dedicated IK adapter.";
+            else if (!fullBody && (head == body || head.IsChildOf(body) || body.IsChildOf(head)))
+                error = "Head and body must be separate branches. Assign the full-body adapter for a skinned humanoid.";
             else if (leftHand && (!Inside(leftHand) || leftHand == head || leftHand == body) ||
                      rightHand && (!Inside(rightHand) || rightHand == head || rightHand == body) ||
                      leftHand && leftHand == rightHand)
@@ -50,11 +56,14 @@ namespace LighthouseKeepers.Net
             return error == null;
         }
 
-        public void PrepareVisualOnly()
+        public bool PrepareVisualOnly(out string error)
         {
+            error = null;
+            if (fullBody && !fullBody.TryInitialize(out error)) return false;
             foreach (var collider in GetComponentsInChildren<Collider>(true)) collider.enabled = false;
             foreach (var body in GetComponentsInChildren<Rigidbody>(true))
             { body.isKinematic = true; body.detectCollisions = false; }
+            return true;
         }
 
         [ContextMenu("Validate avatar model")]

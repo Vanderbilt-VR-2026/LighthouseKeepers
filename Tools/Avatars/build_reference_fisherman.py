@@ -588,4 +588,7 @@ if __name__ == "__main__":
     M.prefab("PF_ReferenceFisherman",M.native_mesh("Fisherman_Head",[head],True),M.native_mesh("Fisherman_Coat",[body],True),EYES)
     rig=skeleton();facts=rig_checks(obj,rig)
     (OUT/"model-checks.json").write_text(json.dumps(facts,indent=2));print("RIG CHECKS",facts,flush=True)
+    skin_spec=importlib.util.spec_from_file_location("keeper_skin",HERE/"export_fisherman_skin.py")
+    skin_module=importlib.util.module_from_spec(skin_spec);skin_spec.loader.exec_module(skin_module)
+    skin_module.export_skin(obj,rig)
     exports(obj,rig,images);studio(obj,rig)

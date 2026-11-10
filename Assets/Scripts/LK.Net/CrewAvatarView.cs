@@ -89,14 +89,18 @@ namespace LighthouseKeepers.Net
                 if (template && template.TryValidate(out error))
                 {
                     customModel = Instantiate(prefab, visuals.transform, false).GetComponent<CrewAvatarModel>();
-                    customModel.PrepareVisualOnly();
-                    customModel.gameObject.SetActive(true);
+                    if (customModel.PrepareVisualOnly(out error)) customModel.gameObject.SetActive(true);
+                    else
+                    {
+                        Debug.LogWarning($"{role} appearance could not initialize: {error} Keeping the fallback avatar.",this);
+                        customModel.gameObject.SetActive(false); Destroy(customModel.gameObject); customModel=null;
+                    }
                 }
                 else Debug.LogWarning($"{role} appearance is invalid: {error} Keeping the fallback avatar.", this);
             }
             head.gameObject.SetActive(!customModel); coat.gameObject.SetActive(!customModel);
-            left.gameObject.SetActive(!customModel || !customModel.LeftHand);
-            right.gameObject.SetActive(!customModel || !customModel.RightHand);
+            left.gameObject.SetActive(!customModel || !customModel.FullBody && !customModel.LeftHand);
+            right.gameObject.SetActive(!customModel || !customModel.FullBody && !customModel.RightHand);
         }
         void LateUpdate()
         {
@@ -106,6 +110,19 @@ namespace LighthouseKeepers.Net
             visuals.SetActive(visible);
             if (!visible || !stream.SampleVisual(identity.InputAuthority.RawEncoded,out var pose)) return;
             RefreshAppearance(stream, identity.InputAuthority.RawEncoded);
+            if (customModel && customModel.FullBody) customModel.FullBody.ApplyPose(pose,Time.unscaledDeltaTime);
+            else ApplyModularPose(pose);
+            LeftPoseChanged.Invoke(pose.LeftPose,pose.LeftGrip,pose.LeftTrigger);
+            RightPoseChanged.Invoke(pose.RightPose,pose.RightGrip,pose.RightTrigger);
+            if (!observer) observer = Camera.main;
+            if (!observer) return;
+            nameplate.transform.position = pose.Head + Vector3.up*.35f;
+            nameplate.transform.rotation = observer.transform.rotation;
+            nameplate.alpha = Mathf.Clamp01(7-Vector3.Distance(observer.transform.position,pose.Head));
+            if (Time.unscaledTime >= nextName) { nextName = Time.unscaledTime + 1; nameplate.text = stream.NameFor(identity.InputAuthority.RawEncoded); }
+        }
+        void ApplyModularPose(KeeperPoseFrame pose)
+        {
             var trackedHead = customModel ? customModel.Head : head;
             var body = customModel ? customModel.Body : coat;
             var trackedLeft = customModel && customModel.LeftHand ? customModel.LeftHand : left;
@@ -120,14 +137,6 @@ namespace LighthouseKeepers.Net
             trackedHead.SetPositionAndRotation(pose.Head,pose.HeadRotation);
             trackedLeft.SetPositionAndRotation(pose.Left,pose.LeftRotation); trackedRight.SetPositionAndRotation(pose.Right,pose.RightRotation);
             bodyPlaced = true;
-            LeftPoseChanged.Invoke(pose.LeftPose,pose.LeftGrip,pose.LeftTrigger);
-            RightPoseChanged.Invoke(pose.RightPose,pose.RightGrip,pose.RightTrigger);
-            if (!observer) observer = Camera.main;
-            if (!observer) return;
-            nameplate.transform.position = pose.Head + Vector3.up*.35f;
-            nameplate.transform.rotation = observer.transform.rotation;
-            nameplate.alpha = Mathf.Clamp01(7-Vector3.Distance(observer.transform.position,pose.Head));
-            if (Time.unscaledTime >= nextName) { nextName = Time.unscaledTime + 1; nameplate.text = stream.NameFor(identity.InputAuthority.RawEncoded); }
         }
         void OnDestroy() { if (fallback) Destroy(fallback); }
     }
