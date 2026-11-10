@@ -40,7 +40,7 @@ namespace LighthouseKeepers.WatchDemo
    var canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.WorldSpace;canvas.worldCamera=head.GetComponent<Camera>();canvas.sortingOrder=1000;group=go.GetComponent<CanvasGroup>();group.blocksRaycasts=false;group.interactable=false;
    material=new Material(Resources.Load<Shader>("ObjectiveOverlay"));fontMaterial=new Material(Resources.Load<Material>("HarborSubtitleSdf"));
    backing=new Texture2D(64,32,TextureFormat.RGBA32,true);var data=new Color[64*32];var random=new System.Random(41);
-   for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.30f*edge);}
+   for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.60f*edge);}
    backing.SetPixels(data);backing.Apply();var bg=Rect(root,"Subtle gradient backing",Vector2.zero,root.sizeDelta).gameObject.AddComponent<RawImage>();bg.texture=backing;bg.material=material;bg.raycastTarget=false;
    line=Rule("Brass accent",new Vector2(-265,76),new Vector2(480,1.4f));line.pivot=new Vector2(0,.5f);
    label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.2");
@@ -64,12 +64,19 @@ namespace LighthouseKeepers.WatchDemo
    built=Time.unscaledTime;Reveal(ObjectiveHudSettings.Duration,true);
   }
   public void Reveal()=>Reveal(ObjectiveHudSettings.Duration,true);
+  void ConfigureSubtitle(bool remembered)
+  {
+   int size=HarborSubtitleSettings.Large?34:28;
+   subtitle.enableAutoSizing=remembered;subtitle.fontSizeMin=22;subtitle.fontSizeMax=size;
+   subtitle.overflowMode=remembered?TextOverflowModes.Ellipsis:TextOverflowModes.Page;subtitle.maxVisibleLines=remembered?2:99999;
+   subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.6f);
+  }
   public void RecallNow()
   {
    int current=watch.State.Director!=null?(int)watch.CurrentInstruction:watch.State.ObjectiveIndex;
    Reveal();changed=Time.unscaledTime-1;completeUntil=0;index=current;full=Title(current);typed=full.Length;task.text=full;line.localScale=Vector3.one;
    objectiveGroup.alpha=1;group.alpha=watch.ObjectivePresentationBlocked?0:1;
-   if(radio&&!string.IsNullOrEmpty(radio.LastCaption)){subtitle.text=radio.LastCaption;subtitle.maxVisibleCharacters=int.MaxValue;speakerTag.text=KeeperStrings.Get("subtitle.speaker");subtitle.alpha=speakerTag.alpha=1;subtitleBacking.gameObject.SetActive(true);}
+   if(radio&&!string.IsNullOrEmpty(radio.LastCaption)){ConfigureSubtitle(true);subtitle.text=radio.LastCaption;subtitle.pageToDisplay=1;subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();speakerTag.text=KeeperStrings.Get("subtitle.speaker");subtitle.alpha=speakerTag.alpha=1;subtitleBacking.gameObject.SetActive(true);}
   }
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   public static bool RecallTeachingDue(int night,int previous,int current)=>night==1&&previous!=int.MinValue&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BTaught",0)==0;
@@ -111,15 +118,15 @@ namespace LighthouseKeepers.WatchDemo
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
    string display=remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
-   subtitle.enableAutoSizing=remembered;subtitle.fontSizeMin=22;subtitle.fontSizeMax=size;
-   if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.05f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
+   ConfigureSubtitle(remembered);
+   if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.6f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
    int visible=remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
    int page=1;
    // Paginate long recordings into two readable lines rather than shrinking or clipping text.
    var info=subtitle.textInfo;
    for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
    subtitle.pageToDisplay=remembered?1:page;subtitle.maxVisibleCharacters=visible;
-   float alpha=remembered?1:showVoice?radio.SubtitleAlpha:1;
+   float alpha=remembered?Mathf.Clamp01((recall.Until-Time.unscaledTime)/.8f):showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;
    subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);
    speakerTag.text=remembered||showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;

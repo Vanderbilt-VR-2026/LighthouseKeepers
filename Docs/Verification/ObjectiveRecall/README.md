@@ -13,3 +13,7 @@ Input audit: the Lab rig uses XRI input actions. B has no active Lab action. The
 4. X/Y still reveal the objective and request the existing status update; a fresh wrist glance still reveals it. B uses local state and local playback only. No command schema, game state, snapshot or network version changed. Rendered co-op isolation is checked in step 6.
 
 5. The first actual Night 1 objective transition shows “Press B to see your objective” for five seconds, caption only. It is remembered per device and does not repeat on retry. Four focused tests pass, including saved teaching state. Live narration remains independent of this brief reminder.
+
+6. Render review corrected the two-line subtitle height and the 3D wrist font scale. Both screenshots were inspected. A scene-level PlayMode check passes: full objective/caption on the recall frame, two complete caption lines, lazy follow, automatic expiry, local replay leaving host cue/serial unchanged, and visible wrist lettering. Full-suite and live transport results follow below.
+
+Editor output is muted automatically at initialization and every Play Mode transition, including separate/virtual Editor instances. The run helper also sets `EditorUtility.audioMasterMute = true` before tests. This does not change player/build audio. Per the latest request, installation must NOT launch the Quest app.
