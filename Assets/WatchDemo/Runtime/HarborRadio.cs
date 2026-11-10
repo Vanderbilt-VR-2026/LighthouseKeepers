@@ -93,7 +93,7 @@ namespace LighthouseKeepers.WatchDemo
             {
                 day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();queuedAt.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
                 ResetSituationalLines();ordinaryBurstCount=0;announcedJob=null;
-                int tonight=TonightCue(s);int opening=day==2&&tonight==80?80:OpeningCue(day,s.Day3Balance);
+                int tonight=s.Campaign?s.Scenario.tonightCue:TonightCue(s);int opening=s.Campaign?s.Scenario.openingCue:day==2&&tonight==80?80:OpeningCue(day,s.Day3Balance);
                 Enqueue(opening);if(s.WatchStartHeld)Enqueue(79);
                 if(day>1&&tonight>0&&tonight!=opening&&!(day==3&&s.Day3Balance))Enqueue(tonight);
                 if(s.Master&&s.Master.onboarding){/* Arrival covers stakes; board and current objective carry the loop. No queued lecture. */}

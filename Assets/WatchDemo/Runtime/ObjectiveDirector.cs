@@ -62,6 +62,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var e=state.Engine;
             if(e==null)return KeeperStep.Starter;
+            if(state.Campaign&&state.FuelJobPending)return KeeperStep.Fuel;
             if(e.Running)return e.ChokeClosed?KeeperStep.OpenChoke:KeeperStep.None;
             if(!e.EnoughFuel||state.Master.onboarding&&e.Fuel<state.Master.guidedFuelTarget)return KeeperStep.Fuel;
             if(!e.Primed)return KeeperStep.Prime;

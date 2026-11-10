@@ -12,7 +12,7 @@ Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 wa
 - Base follow-ups implement intermediate pole exits, remove the bedroom cage, retain a flush safety hatch, and remove floating dotted rain panes.
 - Base regression is complete and copied to `artifacts/m3/before/`: 351 EditMode passes; full PlayMode plus the corrected hatch rerun preserves 48 passing cases, the same 24 inherited failures and 3 skips; graphics Nights 1–3 and live two-Mac valve/radio/sleep/rejoin pass. Source a9d5f2d. PR #85 is Ready for review, not merged.
 - **A1 complete:** optional night schema, five assets plus demo, disabled catalog, editor authoring and three focused passing tests. See [M3-Data.md](M3-Data.md). No five-night gameplay is active yet; timings remain unapproved.
-- Next implementation: A2/A3 host schedule consumption, followed by A4 measured timing; physical doors are still pending. Do not call the ship/gameplay complete.
+- **A2/A3 runtime scheduling implemented:** host-owned one-shot fault gates, opening/recovery breaks, low-fuel event, authored durations/flood/grace/storm/opening cues and retry/replica validation. Campaign catalog remains OFF. Focused checks: M3 16/16, legacy Day3 6/6, voice 23/23. Next: A4 instruction-following timing, graphics baseline and ship implementation. Physical doors are still pending.
 
 ## Ordered implementation queue
 
@@ -37,7 +37,7 @@ F1. P19–P25 triggers and existing word timing/priority/spacing; P18 close-call
 F2. Original/CC0 ship and dawn sounds with sources; ship danger music, pass resolve, hopeful dawn.
 G. Full regression, solo bot 1–5/demo, duo 3/5, ship outcomes/save/continue/version tests; inspect screenshots; Quest profile/install/Night1/demo; final timings and ten-step headset checklist.
 
-Commit and push each numbered step. Recheck solo/crew at each part boundary. Bump the network version for new replicated state; current base is **LK-S5-VOICE1 / v19**. Keep raw evidence out of claims until checked.
+Commit and push each numbered step. Recheck solo/crew at each part boundary. Bump the network version for new replicated state; current branch is **LK-M3-NIGHTS1 / v20** (new schedule snapshot fields; both crew clients must update). Keep raw evidence out of claims until checked.
 
 ## DEVICE CHECKS PENDING
 

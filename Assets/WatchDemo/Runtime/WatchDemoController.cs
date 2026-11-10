@@ -71,7 +71,9 @@ namespace LighthouseKeepers.WatchDemo
         void Start()
         {
             var powerTuning=S4M2Tuning.Current;
-            state = new WatchState(Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current);
+            var campaign=Resources.Load<FiveNightCatalog>("M3Campaign");
+            var definitions=campaign&&campaign.enabled?campaign.nights:Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days;
+            state = new WatchState(definitions, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current);
             if(state.Tuning&&state.Tuning.difficulty)
             {poweredLeakRiseMPerSecond=state.Tuning.poweredRiseMPerSecond;unpoweredLeakRiseMPerSecond=state.Tuning.unpoweredRiseMPerSecond;repairedDrainMPerSecond=state.Tuning.drainMPerSecond;}
             coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);state.Coop=coop;

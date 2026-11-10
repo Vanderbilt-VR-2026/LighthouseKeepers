@@ -51,6 +51,8 @@ namespace LighthouseKeepers.Core
         }
         public void Pour(float seconds)
         {if(ReadOnly||!float.IsFinite(seconds)||seconds<=0||Fuel>=1)return;Fuel=Mathf.Min(1,Fuel+tuning.fuelPourPerSecond*Mathf.Min(seconds,.1f));}
+        public void SetFuel(float amount)
+        {if(ReadOnly||!float.IsFinite(amount))return;Fuel=Mathf.Clamp01(amount);if(Fuel<=0)Stop();Changed?.Invoke();}
         void Stop(){Running=Settled=false;OpenRemaining=0;Primer=Pulls=ClosedPulls=0;}
         public void Tick(float seconds)
         {

@@ -42,7 +42,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
             if(n>=2||demo)faults.Add(Fault("outage",WatchState.GeneratorStation,75,n>=3?NightEventGate.ClockOrJobComplete:NightEventGate.Clock,WatchState.PipeStation));
             if(n>=3||demo)faults.Add(Fault("beacon",WatchState.BeaconStation,0,NightEventGate.PowerRestored));
             if(n>=3&&!demo)faults.Add(Fault("broadcast",WatchState.RadioStation,0,NightEventGate.PowerRestored));
-            if(n>=4)faults.Add(Fault("fuel-low",WatchState.GeneratorStation,170,repeat:true));
+            if(n>=4){var low=Fault("fuel-low",WatchState.GeneratorStation,170,repeat:true);low.kind=NightFaultKind.LowFuel;low.fuelFraction=.1f;faults.Add(low);}
             if(n==5){faults.Add(Fault("final-outage",WatchState.GeneratorStation,225,repeat:true));faults.Add(Fault("final-rupture",WatchState.PipeStation,225,repeat:true));}
             p.faults=faults.ToArray();
             p.ships=demo?new[]{Ship("demo-passage","m3.ship.maryEllen",210,75,55)}:

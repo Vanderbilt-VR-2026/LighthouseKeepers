@@ -1,0 +1,125 @@
+{
+  "status": "completed",
+  "duration": 0.07,
+  "summary": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.ExistingSoloCatalogHasNotBeenReplacedOrGivenCampaignSchedules",
+      "Status": "Passed",
+      "Duration": 0.0095122,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.FiveNightsAndDemoHaveCompleteValidDataWithoutEnablingTheCampaign",
+      "Status": "Passed",
+      "Duration": 0.009596,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.InvalidShipWindowsAndUnknownDependenciesAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0003247,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.OnlyExplicitFinaleAllowsCoincidentRepeatFaults",
+      "Status": "Passed",
+      "Duration": 0.0017047,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.OpeningReliefAndPowerRestorationGateTheJobs",
+      "Status": "Passed",
+      "Duration": 0.0007967,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.PowerInitiallyOnDoesNotUnlockUpperJobsAndTimedFailureWorks",
+      "Status": "Passed",
+      "Duration": 0.0003503,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.SnapshotPreservesOneShotEventsAndRejectsInvalidBounds",
+      "Status": "Passed",
+      "Duration": 0.0007063,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(1)",
+      "Status": "Passed",
+      "Duration": 0.0096807,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(2)",
+      "Status": "Passed",
+      "Duration": 0.0011218,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(3)",
+      "Status": "Passed",
+      "Duration": 0.0011982,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(4)",
+      "Status": "Passed",
+      "Duration": 0.0010626,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(5)",
+      "Status": "Passed",
+      "Duration": 0.0010263,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.CrewSnapshotAndRetryCarryScheduleAndGuestsCannotFireEvents",
+      "Status": "Passed",
+      "Duration": 0.0041807,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.DemoConsumesItsOwnDataAndNightOneCannotLose",
+      "Status": "Passed",
+      "Duration": 0.0050103,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.LowFuelEventDoesNotRestartEngineAndCannotCompleteBeforeRefilling",
+      "Status": "Passed",
+      "Duration": 0.0037621,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.PipeCompletionWaitsForOpeningThenEngineThenUpperJobsWithBreathers",
+      "Status": "Passed",
+      "Duration": 0.0014241,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

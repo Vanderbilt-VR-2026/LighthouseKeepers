@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace LighthouseKeepers.Core.Progression
 {
+    public enum NightFaultKind { StationFailure=0, LowFuel=1 }
     public enum NightEventGate { Clock=0, ClockOrJobComplete=1, PowerRestored=2, JobComplete=3 }
     public enum NightCrewVariant { Local=0, HoldValve=1, RelayGenerator=2, RelayRadioCode=3, RelayBeaconBearing=4 }
     [Serializable] public sealed class NightFault
     {
         public string id,stationId,afterStationId;
         public NightEventGate gate;
+        public NightFaultKind kind;
+        [Range(0,1)] public float fuelFraction=.1f;
         [Min(0)] public float atSeconds,graceSeconds;
         public bool repeat;
     }
@@ -46,6 +49,9 @@ namespace LighthouseKeepers.Core.Progression
         [Min(30)] public float soloSeconds=450,crewSeconds=330;
         [Range(.1f,2)] public float soloFloodMultiplier=.65f,crewFloodMultiplier=.85f;
         [Min(0)] public float openingSeconds=45,reliefSeconds=15,startGraceSeconds=45,firstStationGraceSeconds=60;
+        [Min(10)] public float faultSpacingSeconds=12;
+        [Range(0,1)] public float arrivalFuelFraction=.8f;
+        [Range(0,1)] public float refillTargetFraction=.35f;
         public int openingCue,tonightCue;
         public NightFault[] faults=Array.Empty<NightFault>();
         public NightStationRule[] stations=Array.Empty<NightStationRule>();
@@ -68,9 +74,12 @@ namespace LighthouseKeepers.Core.Progression
                 else foreach(var step in s.activeSteps)if(string.IsNullOrWhiteSpace(step))yield return "Empty step id.";
                 if(s.crewVariant!=NightCrewVariant.Local&&string.IsNullOrWhiteSpace(s.informationSite))yield return "Crew role needs an information site.";
             }
+            if(!Nonnegative(faultSpacingSeconds)||faultSpacingSeconds<10||!Nonnegative(arrivalFuelFraction)||arrivalFuelFraction>1||!Nonnegative(refillTargetFraction)||refillTargetFraction>1)yield return "Invalid fault spacing or arrival fuel.";
+            if(faults!=null&&faults.Length>30)yield return "At most 30 fault events can be replicated.";
             var ids=new HashSet<string>();
             foreach(var f in faults??Array.Empty<NightFault>()){
                 if(f==null||string.IsNullOrWhiteSpace(f.id)||!ids.Add(f.id)){yield return "Missing/duplicate fault event.";continue;}
+                if(!Enum.IsDefined(typeof(NightEventGate),f.gate)||!Enum.IsDefined(typeof(NightFaultKind),f.kind)||!Nonnegative(f.fuelFraction)||f.fuelFraction>1)yield return "Invalid fault kind or fuel: "+f.id;
                 if(!stationIds.Contains(f.stationId))yield return "Fault station is not active: "+f.id;
                 if(float.IsNaN(f.atSeconds)||float.IsInfinity(f.atSeconds)||f.atSeconds<0||!Nonnegative(f.graceSeconds))yield return "Fault timing is invalid: "+f.id;
                 if((f.gate==NightEventGate.JobComplete||f.gate==NightEventGate.ClockOrJobComplete)&&!stationIds.Contains(f.afterStationId))yield return "Fault dependency is not active: "+f.id;

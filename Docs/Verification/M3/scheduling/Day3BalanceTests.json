@@ -1,0 +1,55 @@
+{
+  "status": "completed",
+  "duration": 0.02,
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.Day3BalanceTests.BadStagesGraceAndOldProtocolAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0049109,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.Day3BalanceTests.DaysOneAndTwoAndDisabledDayThreeKeepTheirExistingRules",
+      "Status": "Passed",
+      "Duration": 0.0030669,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.Day3BalanceTests.GraceIsFiniteSloppyRunLosesAndRetryRestoresPipeFirst",
+      "Status": "Passed",
+      "Duration": 0.0007525,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.Day3BalanceTests.PipeFirstPendingJobsDoNotTickOrAllowSleep",
+      "Status": "Passed",
+      "Duration": 0.0007572,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.Day3BalanceTests.SoloAndCrewHaveSeparateBudgetsAndGuestCannotAdvanceStages",
+      "Status": "Passed",
+      "Duration": 0.0010495,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.Day3BalanceTests.TimedOutageAndEarlyRepairActivateExactlyOnceThenUpperJobsWaitForChokeOpen",
+      "Status": "Passed",
+      "Duration": 0.0008321,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

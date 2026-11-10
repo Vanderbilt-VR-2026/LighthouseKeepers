@@ -121,6 +121,8 @@ MonoBehaviour:
       graceSeconds: 60
       repeat: 0
     - id: fuel-low
+      kind: 1
+      fuelFraction: 0.1
       stationId: STN_GENERATOR
       afterStationId: 
       gate: 0
