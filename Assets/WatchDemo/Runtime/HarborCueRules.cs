@@ -6,6 +6,9 @@ namespace LighthouseKeepers.WatchDemo
     {
         readonly bool[] played=new bool[102];readonly float[] next=new float[102];
         public void Reset(){Array.Clear(played,0,played.Length);Array.Clear(next,0,next.Length);}
+        public static bool Transition(int id)=>id==5||id==17||id>=37&&id<=42||id==77||id==78||id==92||id==93;
+        public static bool CanSpeak(int burst,float silence,bool transition,float recovery,float spacing)=>silence>=(burst>=2?recovery:transition?1f:spacing);
+        public static bool InstructionExpires(int id)=>id==2||id==3||id==4||id>=7&&id<=12||id>=33&&id<=42||id==77||id==78||id>=82&&id<=91;
         public static float Cooldown(int id)=>id==83?20:id==91?15:0;
         public bool Allows(int id,float now)=>id>=76&&id<=93&&(Cooldown(id)>0?now>=next[id]:!played[id]);
         public void Played(int id,float now){if(id<76||id>93)return;played[id]=true;next[id]=now+Cooldown(id);}

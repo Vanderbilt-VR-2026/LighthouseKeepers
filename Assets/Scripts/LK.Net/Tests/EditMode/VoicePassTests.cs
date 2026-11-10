@@ -48,6 +48,13 @@ namespace LighthouseKeepers.Net.Tests
    Assert.AreEqual("LK-S5-VOICE1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
    var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");foreach(var e in Read().entries){Assert.NotNull(catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{e.id}),e.file);Assert.AreEqual(e.caption,catalog.GetType().GetMethod("Caption").Invoke(catalog,new object[]{e.id}));}
   }
+  [Test] public void ObjectiveTransitionsAllowTwoLinesThenRequireAQuietStretch()
+  {
+   var t=Type.GetType("LighthouseKeepers.WatchDemo.HarborCueRules, Assembly-CSharp",true);var can=t.GetMethod("CanSpeak");
+   bool Allowed(int n,float quiet,bool transition)=>(bool)can.Invoke(null,new object[]{n,quiet,transition,20f,8f});
+   Assert.True(Allowed(1,1.1f,true));Assert.False(Allowed(1,.5f,true));Assert.False(Allowed(1,1.1f,false));
+   Assert.False(Allowed(2,19f,true));Assert.False(Allowed(2,19f,false));Assert.True(Allowed(2,20f,true));
+  }
   [Test] public void SubtitleSdfRendersAboveItsDarkBackingAndKeepsAtlasReference()
   {
    var material=Resources.Load<Material>("HarborSubtitleSdf");Assert.NotNull(material);Assert.AreEqual("TextMeshPro/Mobile/Distance Field Overlay",material.shader.name);Assert.Greater(material.renderQueue,4000);Assert.NotNull(material.mainTexture);

@@ -126,3 +126,5 @@ P1–P18 obey once-per-night gates, except P8/P16 use 20/15-second cooldowns mea
 | 91 | P22 / 97 | `keeper_ship_close` | She's close to the rocks. Don't you let that light go out. | Imported only; future milestone, no runtime trigger |
 | 92 | P26 / 101 | `keeper_partner_down` | Your partner's in trouble. Get to them! | Imported only; future milestone, no runtime trigger |
 | 93 | P24 / 99 | `keeper_ship_lost` | Oh no... she's on the rocks. | Imported only; future milestone, no runtime trigger |
+
+The November 9 headset timing revision is authoritative: see [trigger and quiet-period rules](../Audio/triggers.md#headset-feedback-timing-and-quiet-november-9). At most two ordinary lines play back-to-back, followed by 20 seconds of quiet; stale instructions expire and location-sensitive tips wait until relevant.

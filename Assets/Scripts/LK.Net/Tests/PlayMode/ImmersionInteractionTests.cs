@@ -41,6 +41,48 @@ namespace LighthouseKeepers.Net.Tests
             System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",oldM2);System.Environment.SetEnvironmentVariable("LK_IMMERSION_DISABLED",oldImmersion);SoloWatchSession.Cancel();WatchDayLaunch.RequestedDay=1;
             yield return null;
         }
+        [UnityTest] public IEnumerator PoleRealGripOpensOnlyLocalGuardAndReachesBothLandings()
+        {
+            var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();var capsule=origin.GetComponent<CharacterController>();
+            foreach(var b in origin.GetComponents<MonoBehaviour>())if(b.GetType().Name=="DesktopPreview")b.enabled=false;
+            var poles=Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Where(c=>c.GetType().Name=="PoleSlide").OrderBy(c=>Value<float>(c,"Top")).ToArray();Assert.AreEqual(2,poles.Length);
+            foreach(var hand in hands){hand.enabled=false;var direct=hand.Direct;direct.enabled=true;
+            foreach(var pole in poles){
+                float top=Value<float>(pole,"Top"),bottom=Value<float>(pole,"Bottom");var axis=pole.transform.position+Vector3.right*.28f;
+                var stand=axis+(top<8?new Vector3(.39f,0,.39f):Vector3.forward*.55f);origin.MoveCameraToWorldLocation(stand+Vector3.up*1.65f);
+                direct.selectInput.QueueManualState(false,0,false,true);hand.transform.parent.position+=pole.transform.position+Vector3.up*.8f-direct.transform.position;
+                Physics.SyncTransforms();yield return new WaitForSeconds(.5f);
+                var target=pole.GetComponent<XRSimpleInteractable>();
+                TestContext.WriteLine("direct="+direct.enabled+" active="+direct.gameObject.activeInHierarchy+" at="+direct.transform.position+" shaft="+target.colliders.First(c=>c).bounds+" hovered="+string.Join(",",direct.interactablesHovered.Select(x=>x.transform.name))+" overlap="+string.Join(",",Physics.OverlapSphere(direct.transform.position,.08f).Select(x=>x.name)));
+                Assert.True(direct.interactablesHovered.Contains(target),"Shaft cannot be reached by real direct hover: "+hand.Node+" F"+top);
+                direct.selectInput.QueueManualState(true,1,true,false);yield return new WaitForSeconds(.25f);Assert.True(Value<bool>(pole,"Latched"),"Grip did not latch");
+                var opened=Field<System.Collections.Generic.List<Collider>>(pole,"openedGuards").ToArray();Assert.Greater(opened.Length,0,"No reconciled entrance guard opened");
+                foreach(var g in opened){Assert.True(g.enabled,"Guard removed for everyone");Assert.True(Physics.GetIgnoreCollision(capsule,g));}
+                direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.65f);Assert.True(Value<bool>(pole,"Latched"));Assert.Less(Value<float>(pole,"Speed"),.01f);
+                hand.transform.parent.position+=pole.transform.position+Vector3.up*(origin.transform.position.y-top+.8f)-direct.transform.position;yield return new WaitForSeconds(.1f);
+                direct.selectInput.QueueManualState(true,1,true,false);float end=Time.time+6;while(Value<bool>(pole,"Latched")&&Time.time<end)yield return null;
+                Assert.False(Value<bool>(pole,"Latched"),"Descent blocked");Assert.AreEqual(bottom,origin.transform.position.y,.3f,"Did not reach landing");
+                foreach(var g in opened)Assert.False(Physics.GetIgnoreCollision(capsule,g),"Fall protection not restored");
+                direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.1f);
+            }}
+        }
+        [UnityTest] public IEnumerator NarrationDropsOldInstructionsAndLimitsBackToBackAnnouncements()
+        {
+            var radio=Find("HarborRadio");yield return null;radio.enabled=false;
+            var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+            Action<string,object> set=(n,v)=>radio.GetType().GetField(n,flags).SetValue(radio,v);
+            var pending=Field<System.Collections.Generic.List<int>>(radio,"pending");pending.Clear();
+            set("dangerMask",63);set("nextStatus",float.PositiveInfinity);
+            var rules=Field<object>(radio,"cueRules");for(int id=76;id<=93;id++)Call(rules,"Played",id,Time.time+10000);
+            var add=radio.GetType().GetMethod("AddPending",flags);var prune=radio.GetType().GetMethod("PruneInstructions",flags);var tick=radio.GetType().GetMethod("Update",flags);
+            add.Invoke(radio,new object[]{38});prune.Invoke(radio,null);Assert.False(pending.Contains(38),"Generator instructions persisted while pipe is current");
+            add.Invoke(radio,new object[]{37});Field<System.Collections.Generic.Dictionary<int,float>>(radio,"queuedAt")[37]=Time.time-21;prune.Invoke(radio,null);Assert.False(pending.Contains(37),"Stale instruction did not expire");
+            // After two lines, a requested early-bed response waits for a quiet stretch.
+            add.Invoke(radio,new object[]{16});var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");var clip=(AudioClip)catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{Value<int>(radio,"Cue")});
+            int serial=Value<int>(radio,"Serial");set("ordinaryBurstCount",2);set("<Age>k__BackingField",clip.length+.7f+19);tick.Invoke(radio,null);Assert.AreEqual(serial,Value<int>(radio,"Serial"));
+            set("<Age>k__BackingField",clip.length+.7f+21);tick.Invoke(radio,null);Assert.AreEqual(16,Value<int>(radio,"Cue"));Assert.AreEqual(serial+1,Value<int>(radio,"Serial"));
+            foreach(var t in Object.FindObjectsByType<TMPro.TMP_Text>(FindObjectsSortMode.None).Where(t=>t.transform.root==watch.transform.root&&t.GetComponentInParent<Canvas>()?.name=="Transient objective tracker"))Assert.AreEqual("TextMeshPro/Mobile/Distance Field Overlay",t.fontSharedMaterial.shader.name,t.name+" can clip behind walls/backing");
+        }
         [UnityTest]public IEnumerator FuelHandleGrabsWithEitherHandUprightDoesNotPourTiltRaisesHostFuel()
         {
             var controls=Find("WatchEngineControls");var can=Value<Component>(controls,"FuelCan");var grab=Value<XRGrabInteractable>(can,"Grab");var filler=Value<Transform>(controls,"Filler");var tip=Value<Transform>(can,"Tip");

@@ -29,7 +29,7 @@ namespace LighthouseKeepers.WatchDemo
   static RectTransform Rect(Transform parent,string name,Vector2 p,Vector2 size)
   {var r=new GameObject(name,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(parent,false);r.anchoredPosition=p;r.sizeDelta=size;return r;}
   TMP_Text Text(string name,Vector2 p,Vector2 size,int pixels,Color c)
-  {var t=Rect(root,name,p,size).gameObject.AddComponent<TextMeshProUGUI>();t.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");t.fontSize=pixels;t.color=c;t.alignment=TextAlignmentOptions.MidlineLeft;t.raycastTarget=false;t.enableAutoSizing=false;t.textWrappingMode=TextWrappingModes.Normal;t.extraPadding=true;return t;}
+  {var t=Rect(root,name,p,size).gameObject.AddComponent<TextMeshProUGUI>();t.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");t.fontSharedMaterial=fontMaterial;t.fontSize=pixels;t.color=c;t.alignment=TextAlignmentOptions.MidlineLeft;t.raycastTarget=false;t.enableAutoSizing=false;t.textWrappingMode=TextWrappingModes.Normal;t.extraPadding=true;return t;}
   RectTransform Rule(string name,Vector2 p,Vector2 size)
   {var r=Rect(root,name,p,size);var image=r.gameObject.AddComponent<Image>();image.color=new Color(.74f,.58f,.3f,.8f);image.material=material;image.raycastTarget=false;return r;}
   void Build()

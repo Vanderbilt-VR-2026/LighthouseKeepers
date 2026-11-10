@@ -13,6 +13,8 @@ namespace LighthouseKeepers.Core {
   public float day3SoloBeaconGraceSeconds=90,day3CrewBeaconGraceSeconds=60;
   public float stormRecoverySeconds=20;
   public float speechSpacingSeconds=8,statusIntervalSeconds=120;
+  [Header("Harbor narration: quiet time after speech, stale instruction expiry")]
+  public float narrationQuietSeconds=20,instructionLifetimeSeconds=20;
   public float guidancePulseSeconds=1.2f,idleTickSeconds=10,assignmentSeconds=5;
   public static MasterPassTuning Current=>Resources.Load<MasterPassTuning>("MasterPassTuning");
  }

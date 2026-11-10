@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo
  {
   readonly HarborCueRules cueRules=new();Func<int,bool> queueSituational;
   int priorValve;bool engineWasRunning,wrongCodePending,broadcastReplyPending,stallPending;
-  float nightStarted;PoleSlide[] poles;
+  PoleSlide[] poles;
   void InitializeSituationalLines()
   {
    queueSituational=QueueSituational;
@@ -18,12 +18,12 @@ namespace LighthouseKeepers.WatchDemo
   void ResetSituationalLines()
   {
    cueRules.Reset();priorValve=watch.State.Pressure?.Holder??0;engineWasRunning=watch.State.Engine?.Running??false;
-   wrongCodePending=broadcastReplyPending=stallPending=false;nightStarted=Time.time;poles=FindObjectsByType<PoleSlide>(FindObjectsSortMode.None);
+   wrongCodePending=broadcastReplyPending=stallPending=false;poles=FindObjectsByType<PoleSlide>(FindObjectsSortMode.None);
   }
   bool QueueSituational(int id)
   {
    if(!cueRules.Allows(id,Time.time)||pending.Contains(id)||pending.Count>=16)return false;
-   pending.Add(id);return true;
+   AddPending(id);return true;
   }
   public static int TonightCue(WatchState s)
   {
@@ -31,21 +31,24 @@ namespace LighthouseKeepers.WatchDemo
    foreach(var task in s.Definition.tasks){pipe|=task.stationId==WatchState.PipeStation;generator|=task.stationId==WatchState.GeneratorStation;beacon|=task.stationId==WatchState.BeaconStation;radio|=task.stationId==WatchState.RadioStation;}
    return HarborCueRules.Tonight(pipe,generator,beacon,radio,s.Definition.tasks.Length);
   }
-  static bool InHouse(Vector3 p)=>p.z< -4.3f&&p.z> -10.5f&&Mathf.Abs(p.x)<4.5f&&p.y<3.4f;
-  bool AtPoleFloor(Vector3 p){if(poles==null)return false;foreach(var pole in poles)if(pole&&ObjectiveHud.FloorAt(p.y)==ObjectiveHud.FloorAt(pole.transform.position.y+1.6f))return true;return false;}
+  bool KeepersSeparated()
+  {if(watch.State.Coop is not ICoopKeeperLocations locations)return false;locations.Locations(out _,out var a,out int second,out var b);return second>0&&Mathf.Abs(a.y-b.y)>=6.6f;}
+  bool AtUsefulPole(Vector3 p,KeeperStep step)
+  {if(poles==null||ObjectiveDirector.Floor(step)>=ObjectiveHud.FloorAt(p.y)||step==KeeperStep.None)return false;foreach(var pole in poles)if(pole&&ObjectiveHud.FloorAt(p.y)==ObjectiveHud.FloorAt(pole.Top+1.6f)&&Vector2.Distance(new Vector2(p.x,p.z),new Vector2(pole.transform.position.x,pole.transform.position.z))<1.8f)return true;return false;}
+  bool UsefulPoleNearby()
+  {var s=watch.State;var a=head.position;var b=a;int actor=0,other=0;if(s.Coop is ICoopKeeperLocations locations)locations.Locations(out actor,out a,out other,out b);return AtUsefulPole(a,s.Director?.ForActor(actor)??KeeperStep.None)||other>0&&AtUsefulPole(b,s.Director?.ForActor(other)??KeeperStep.None);}
   void ObserveSituationalLines()
   {
-   var s=watch.State;bool crew=s.Pressure?.CrewRequired==true;var a=head.position;var b=a;int second=0;
-   if(s.Coop is ICoopKeeperLocations locations)locations.Locations(out _,out a,out second,out b);
+   var s=watch.State;bool crew=s.Pressure?.CrewRequired==true;
    int holder=s.Pressure?.Holder??0;bool running=s.Engine?.Running??false;
    if(engineWasRunning&&!running)stallPending=true;
    var c=new HarborCueRules.Context{
     wrenchDown=s.Repaired&&watch.WrenchHeld,
-    valvePuzzle=crew&&!s.Repaired,
-    valveReleased=crew&&!s.Repaired&&priorValve>0&&holder==0,
-    soloClamp=s.Pressure!=null&&!crew&&!s.Pressure.Clamped&&!s.Repaired,
-    crewRadios=second>0&&((Time.time-nightStarted<45&&InHouse(a)&&InHouse(b))||Mathf.Abs(a.y-b.y)>=6.6f),
-    pole=AtPoleFloor(a)||second>0&&AtPoleFloor(b),
+    valvePuzzle=crew&&!s.Repaired&&AtStation(7),
+    valveReleased=crew&&!s.Repaired&&(s.Pipe.BoltsDone>0||s.Pipe.TurnsDone>0||s.Pipe.StrokeDegrees>0)&&priorValve>0&&holder==0,
+    soloClamp=s.Pressure!=null&&!crew&&!s.Pressure.Clamped&&!s.Repaired&&watch.WrenchHeld&&AtStation(7),
+    crewRadios=KeepersSeparated(),
+    pole=UsefulPoleNearby(),
     breakerTripped=s.Grid?.Tripped==true,
     lowFuel=s.Engine?.LowFuel==true&&!s.IsPending(WatchState.GeneratorStation),
     engineStalled=stallPending&&!running,

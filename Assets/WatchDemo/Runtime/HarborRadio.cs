@@ -22,10 +22,10 @@ namespace LighthouseKeepers.WatchDemo
         float Extra=>intercom ? .7f : 0;
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
-        Transform head,wrench;WatchPipeRepair pipe;readonly List<int> pending=new();
+        Transform head,wrench;WatchPipeRepair pipe;readonly List<int> pending=new();readonly Dictionary<int,float> queuedAt=new();
         bool gripTaught,upperJobsCued;string announcedJob;
         int dangerMask,priorTasks;float nextStatus;
-        int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
+        int ordinaryBurstCount;int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
         readonly HashSet<int> spoken=new();
         Transform generator,radio,beacon,panel;
         LighthouseKeepers.Interaction.INetworkKeeperProximity keepers;
@@ -76,12 +76,12 @@ namespace LighthouseKeepers.WatchDemo
             Age+=Time.deltaTime;
             if(day!=s.Day)
             {
-                day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
-                ResetSituationalLines();announcedJob=null;
+                day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();queuedAt.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
+                ResetSituationalLines();ordinaryBurstCount=0;announcedJob=null;
                 int tonight=TonightCue(s);int opening=day==2&&tonight==80?80:OpeningCue(day,s.Day3Balance);
                 Enqueue(opening);if(s.WatchStartHeld)Enqueue(79);
-                if(day>1&&tonight>0&&tonight!=opening)Enqueue(tonight);
-                if(s.Master&&s.Master.onboarding){if(day==1){Enqueue(34);Enqueue(35);}}
+                if(day>1&&tonight>0&&tonight!=opening&&!(day==3&&s.Day3Balance))Enqueue(tonight);
+                if(s.Master&&s.Master.onboarding){/* Arrival covers stakes; board and current objective carry the loop. No queued lecture. */}
                 else {if(day==1)Enqueue(2);if(day==2)Enqueue(4);}
             }
             if(s.Failed)
@@ -89,37 +89,41 @@ namespace LighthouseKeepers.WatchDemo
                 if(!failed){failed=true;pending.Clear();spoken.Add(18);Play(18,Serial+1,0);}
                 var loss=catalog?catalog.Line(18):null;if(!loss||Age>loss.length+Extra+.2f)StopStatic();return;
             }
-            ObserveSituationalLines();
+            PruneInstructions();ObserveSituationalLines();
             if(s.PressureEnabled)PressureCues();
             if(s.Director!=null&&s.Master.onboarding){
                 var jobName=ObjectiveDirector.Job(s.Director.First);
-                if(announcedJob!=jobName){if(announcedJob!=null){if(announcedJob==WatchState.PipeStation&&s.Repaired&&watch.WrenchHeld)Enqueue(78);Enqueue(jobName==WatchState.GeneratorStation?38:jobName==WatchState.RadioStation?39:jobName==WatchState.BeaconStation?40:jobName==LighthouseKeepers.Core.PlayerStrings.Get("legacy.HarborRadio.3")?41:jobName=="BED"?42:37);}announcedJob=jobName;}
-                if(watch.WrenchHeld&&!gripTaught){gripTaught=true;Enqueue(33);}
+                if(announcedJob!=jobName){if(announcedJob!=null&&!s.Complete){if(announcedJob==WatchState.PipeStation&&s.Repaired&&watch.WrenchHeld)Enqueue(78);else Enqueue(jobName==WatchState.GeneratorStation?38:jobName==WatchState.RadioStation?39:jobName==WatchState.BeaconStation?40:jobName==LighthouseKeepers.Core.PlayerStrings.Get("legacy.HarborRadio.3")?41:37);}announcedJob=jobName;}
+                if(day==1&&!watch.WrenchHeld&&!s.Repaired&&!gripTaught&&idle>=10&&Vector3.Distance(head.position,wrench.position)<2){gripTaught=true;Enqueue(33);}
             }
             int current=Progress(),job=CurrentJob();if(current!=progress||job!=lastJob){progress=current;lastJob=job;idle=0;}else idle+=Time.deltaTime;
             bool holding=watch.WrenchHeld;
             if(!(s.Master&&s.Master.onboarding)&&day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
             if(!upperJobsCued&&s.Day3Balance&&s.Day3Stage==3){upperJobsCued=true;Enqueue(UpperJobsCue);}
-            if(s.Complete&&!complete){complete=true;if(s.PeakDanger>.8f)Enqueue(93);Enqueue(s.HasNextDay?5:17);}
+            if(s.Complete&&!complete){complete=true;pending.RemoveAll(id=>id!=92&&id!=78);if(s.PeakDanger>.8f)Enqueue(93);
+                if(!s.HasNextDay)Enqueue(17);else if(watch.WrenchHeld)Enqueue(78);else if(!broadcastReplyPending)Enqueue(5);}
             if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!WrenchSuppressesHints(holding,s.Repaired)&&!AtStation(job))
                 Enqueue(job);
             var clip=catalog?catalog.Line(Cue):null;
-            if(pending.Count>0&&(Cue==0||!clip||Age>clip.length+Extra+(s.PressureEnabled?s.Master.speechSpacingSeconds:.6f)))
+            if(pending.Count>0&&CanPlayQueued(pending[NextPendingIndex()]))
                 while(pending.Count>0){int next=TakeNext();if(Relevant(next)&&(next<76||cueRules.Allows(next,Time.time))){if(next>=44&&next<=75)next=CompositeStatusCue(s);spoken.Add(next);Play(next,Serial+1,0);break;}}
             if(clip&&Age>clip.length+Extra+.2f)StopStatic();
         }
         bool Relevant(int id)
         {
             var s=watch.State;
+            if(id==33)return !watch.WrenchHeld&&!s.Repaired;
             if(id==78)return s.Repaired&&watch.WrenchHeld;
             if(id==79)return s.WatchStartHeld;
-            if(id==82)return s.Pressure?.CrewRequired==true&&!s.Repaired;
+            if(id==82)return s.Pressure?.CrewRequired==true&&!s.Repaired&&AtStation(7);
             if(id==83)return s.Pressure?.CrewRequired==true&&!s.Repaired&&s.Pressure.Holder==0;
-            if(id==84)return s.Pressure!=null&&!s.Pressure.CrewRequired&&!s.Pressure.Clamped&&!s.Repaired;
+            if(id==84)return s.Pressure!=null&&!s.Pressure.CrewRequired&&!s.Pressure.Clamped&&!s.Repaired&&watch.WrenchHeld&&AtStation(7);
+            if(id==85)return KeepersSeparated();
+            if(id==86)return UsefulPoleNearby();
             if(id==87)return s.Grid?.Tripped==true;
-            if(id==88)return s.Engine?.LowFuel==true;
+            if(id==88)return s.Engine?.LowFuel==true&&!s.IsPending(WatchState.GeneratorStation);
             if(id==89)return s.Engine!=null&&!s.Engine.Running;
-            if(id==90)return s.Beacon!=null&&s.Beacon.Soot>.5f;
+            if(id==90)return s.Director!=null&&(s.Director.First==KeeperStep.BeaconWipe||s.Director.Second==KeeperStep.BeaconWipe);
             if(id==91)return !s.Radio.CodeAccepted&&!s.Radio.Completed;
             if(id>=37&&id<=42){var job=watch.State.Director?.First??KeeperStep.None;return id==(ObjectiveDirector.Job(job)==WatchState.PipeStation?37:ObjectiveDirector.Job(job)==WatchState.GeneratorStation?38:ObjectiveDirector.Job(job)==WatchState.RadioStation?39:ObjectiveDirector.Job(job)==WatchState.BeaconStation?40:ObjectiveDirector.Job(job)==LighthouseKeepers.Core.PlayerStrings.Get("legacy.HarborRadio.3")?41:42);}
             if(id>=7&&id<=12&&(WrenchSuppressesHints(watch.WrenchHeld,s.Repaired)||AtStation(id)||idle<90||id!=CurrentJob()))return false;
@@ -170,7 +174,7 @@ namespace LighthouseKeepers.WatchDemo
             var s=watch.State;
             nextStatus=Time.time+s.Master.statusIntervalSeconds;
             int id=CompositeStatusCue(s);
-            if(SilenceSeconds>=s.Master.speechSpacingSeconds){Play(id,Serial+1,0);return true;}if(pending.Count<16&&!pending.Contains(id))pending.Add(id);return true;
+            if(SilenceSeconds>=s.Master.speechSpacingSeconds){Play(id,Serial+1,0);return true;}if(pending.Count<16&&!pending.Contains(id))AddPending(id);return true;
         }
         public static int CompositeStatusCue(WatchState s) {
             int time=s.Tutorial?0:s.Duration-s.Elapsed>180?0:s.Duration-s.Elapsed>120?1:s.Duration-s.Elapsed>60?2:3;
@@ -189,13 +193,23 @@ namespace LighthouseKeepers.WatchDemo
             bool critical=id==29||id==32;
             if(id>0&&(critical?(Cue!=29&&Cue!=32||SilenceSeconds>=0):SilenceSeconds>=s.Master.speechSpacingSeconds)){dangerMask|=bit;Play(id,Serial+1,0);}
             if(Time.time>=nextStatus&&SilenceSeconds>=s.Master.speechSpacingSeconds)StatusUpdate();
-            if(s.CompletedTasks>priorTasks&&!(s.Radio.Completed&&lastJob==11)){Enqueue(s.Power==PowerState.On&&lastJob==8?21:lastJob==10?22:20);}priorTasks=s.CompletedTasks;
+            if(s.CompletedTasks>priorTasks&&!(s.Master&&s.Master.onboarding)&&!(s.Radio.Completed&&lastJob==11)){Enqueue(s.Power==PowerState.On&&lastJob==8?21:lastJob==10?22:20);}priorTasks=s.CompletedTasks;
         }
-        void Enqueue(int id){if(id>=76){QueueSituational(id);return;}if(id!=6&&!spoken.Contains(id)&&pending.Count<16&&!pending.Contains(id))pending.Add(id);}
-        int TakeNext(){int index=0; // Keep arrival first, then grace; situational guidance precedes background tutorial prose.
+        void Enqueue(int id){if(id>=76){QueueSituational(id);return;}if(id!=6&&!spoken.Contains(id)&&pending.Count<16&&!pending.Contains(id))AddPending(id);}
+        void AddPending(int id){pending.Add(id);queuedAt[id]=Time.time;}
+        void PruneInstructions(){float lifetime=watch.State.Master?watch.State.Master.instructionLifetimeSeconds:20;for(int i=pending.Count-1;i>=0;i--){int id=pending[i];if(!Relevant(id)||(HarborCueRules.InstructionExpires(id)&&queuedAt.TryGetValue(id,out float at)&&Time.time-at>lifetime)){pending.RemoveAt(i);queuedAt.Remove(id);}}}
+        bool CanPlayQueued(int id)
+        {
+            if(Cue==0)return true;
+            var clip=catalog?catalog.Line(Cue):null;float silence=Age-(clip?clip.length:0)-Extra;
+            float recovery=watch.State.Master?watch.State.Master.narrationQuietSeconds:20f;
+            return HarborCueRules.CanSpeak(ordinaryBurstCount,silence,HarborCueRules.Transition(id),recovery,watch.State.Master?watch.State.Master.speechSpacingSeconds:8f);
+        }
+        int NextPendingIndex(){int index=0; // Keep arrival first, then grace; situational guidance precedes background tutorial prose.
             if(Cue!=0&&pending[0]!=79){int priority=pending.FindIndex(id=>id>=76&&id<=93);if(priority>=0)index=priority;}
-            int id=pending[index];pending.RemoveAt(index);return id;}
-        public void ResetNight(){if(watch.State.ReadOnly)return;day=0;pending.Clear();spoken.Clear();Cue=0;Age=0;wall.Stop();belt.Stop();if(intercom)intercom.Stop();StopStatic();}
+            return index;}
+        int TakeNext(){int index=NextPendingIndex();int id=pending[index];pending.RemoveAt(index);return id;}
+        public void ResetNight(){if(watch.State.ReadOnly)return;day=0;ordinaryBurstCount=0;pending.Clear();queuedAt.Clear();spoken.Clear();Cue=0;Age=0;wall.Stop();belt.Stop();if(intercom)intercom.Stop();StopStatic();}
         public void EarlyBed(){if(!watch.State.ReadOnly)Enqueue(16);}
         public void Capture(WatchSnapshot s){s.radioCue=Cue;s.radioSerial=Serial;s.radioAge=Age;}
         public void Apply(WatchSnapshot s)
@@ -206,7 +220,11 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Play(int id,int serial,float age)
         {
-            if(!watch.State.RemoteReplica)cueRules.Played(id,Time.time);
+            if(!watch.State.RemoteReplica){
+                cueRules.Played(id,Time.time);
+                if(SilenceSeconds>=(watch.State.Master?watch.State.Master.narrationQuietSeconds:20f))ordinaryBurstCount=0;
+                if(!HarborCueRules.Danger(id))ordinaryBurstCount++;
+            }
             Debug.Log($"[HarborVoice] {(watch.State.RemoteReplica?"guest":"host")} night={watch.State.Day} time={Time.time:F2} cue={id} serial={serial} age={age:F2} previous={Cue} remaining={Mathf.Max(0,(catalog&&catalog.Line(Cue)?catalog.Line(Cue).length:0)+Extra-Age):F2}");
             Cue=id;Serial=serial;Age=age;quietSince=Time.time+(catalog&&catalog.Line(id)?catalog.Line(id).length+Extra:0);
             var clip=catalog?catalog.Line(id):null;
