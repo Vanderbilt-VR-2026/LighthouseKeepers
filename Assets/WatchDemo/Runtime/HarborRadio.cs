@@ -152,6 +152,10 @@ namespace LighthouseKeepers.WatchDemo
         {
             Vector3 position=job==7?pipe.ActivePosition:job==8?generator.position:
                 job==9?panel.position:job==10?beacon.position:job==11?radio.position:watch.BedPosition;
+            return NearStationPoint(position)||job==7&&pressureValve&&NearStationPoint(pressureValve.position);
+        }
+        bool NearStationPoint(Vector3 position)
+        {
             bool remote=keepers?.NearKeeper(position,1.8f)==true;
             var delta=head.position-position;
             return remote||Mathf.Abs(delta.y)<2.5f&&new Vector2(delta.x,delta.z).sqrMagnitude<1.8f*1.8f;

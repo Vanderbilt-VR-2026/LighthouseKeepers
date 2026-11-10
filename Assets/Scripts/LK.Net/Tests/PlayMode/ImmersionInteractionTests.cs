@@ -72,6 +72,11 @@ namespace LighthouseKeepers.Net.Tests
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
             Action<string,object> set=(n,v)=>radio.GetType().GetField(n,flags).SetValue(radio,v);
             var pending=Field<System.Collections.Generic.List<int>>(radio,"pending");pending.Clear();
+            var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();var valve=Find("WatchPressureValve");
+            origin.MoveCameraToWorldLocation(valve.transform.position+Vector3.up*.6f);
+            Assert.True((bool)radio.GetType().GetMethod("AtStation",flags).Invoke(radio,new object[]{7}),"Valve keeper excluded from pipe station proximity");
+            origin.MoveCameraToWorldLocation(new Vector3(0,1.65f,-8));
+            Assert.False((bool)radio.GetType().GetMethod("AtStation",flags).Invoke(radio,new object[]{7}),"House incorrectly counts as pipe station");
             set("dangerMask",63);set("nextStatus",float.PositiveInfinity);
             var rules=Field<object>(radio,"cueRules");for(int id=76;id<=93;id++)Call(rules,"Played",id,Time.time+10000);
             var add=radio.GetType().GetMethod("AddPending",flags);var prune=radio.GetType().GetMethod("PruneInstructions",flags);var tick=radio.GetType().GetMethod("Update",flags);

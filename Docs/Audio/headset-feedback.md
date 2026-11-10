@@ -9,3 +9,5 @@ The lead confirmed the imported voice is clear and each clip contains one take. 
 Verification evidence will be recorded in verification.md. Editor traversal is not headset comfort acceptance.
 
 Focused verification: normal XRI hover/grip (no forced selection), both hands on both poles, release/pause/regrip, landing and guard restoration passed. Context-expiry/two-line burst-limit and existing 90-second idle-hint tests passed.
+
+The live two-Mac voice replay then caught a proximity error: the valve keeper can be over 3 metres from the randomly active end bolt. Pipe narration now recognizes both the active coupling and the separate pressure-valve position, instead of silently omitting the co-op valve instruction. A focused location test passes at the valve and rejects the House.

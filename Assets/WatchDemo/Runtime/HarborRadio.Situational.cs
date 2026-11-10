@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo
  {
   readonly HarborCueRules cueRules=new();Func<int,bool> queueSituational;
   int priorValve;bool engineWasRunning,wrongCodePending,broadcastReplyPending,stallPending;
-  PoleSlide[] poles;
+  PoleSlide[] poles;Transform pressureValve;
   void InitializeSituationalLines()
   {
    queueSituational=QueueSituational;
@@ -18,7 +18,7 @@ namespace LighthouseKeepers.WatchDemo
   void ResetSituationalLines()
   {
    cueRules.Reset();priorValve=watch.State.Pressure?.Holder??0;engineWasRunning=watch.State.Engine?.Running??false;
-   wrongCodePending=broadcastReplyPending=stallPending=false;poles=FindObjectsByType<PoleSlide>(FindObjectsSortMode.None);
+   wrongCodePending=broadcastReplyPending=stallPending=false;poles=FindObjectsByType<PoleSlide>(FindObjectsSortMode.None);var valve=watch.GetComponentInChildren<WatchPressureValve>();pressureValve=valve?valve.transform:null;
   }
   bool QueueSituational(int id)
   {
