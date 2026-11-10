@@ -49,6 +49,9 @@ namespace LighthouseKeepers.Net.Tests
             foreach(var hand in hands){hand.enabled=false;var direct=hand.Direct;direct.enabled=true;
             foreach(var pole in poles){
                 float top=Value<float>(pole,"Top"),bottom=Value<float>(pole,"Bottom");var axis=pole.transform.position+Vector3.right*.28f;
+                var approach=(top<8?new Vector3(.39f,0,.39f):Vector3.forward*.55f).normalized;
+                var plate=pole.GetComponentsInChildren<TextMesh>().Single(t=>t.name=="Pole grip instruction");
+                Assert.Greater(Vector3.Dot(plate.transform.right,Vector3.Cross(Vector3.up,-approach)),.99f,"Plate reads backwards from the landing");
                 var stand=axis+(top<8?new Vector3(.39f,0,.39f):Vector3.forward*.55f);origin.MoveCameraToWorldLocation(stand+Vector3.up*1.65f);
                 direct.selectInput.QueueManualState(false,0,false,true);hand.transform.parent.position+=pole.transform.position+Vector3.up*.8f-direct.transform.position;
                 Physics.SyncTransforms();yield return new WaitForSeconds(.5f);

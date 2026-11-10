@@ -31,7 +31,7 @@ namespace LighthouseKeepers.WatchDemo {
    var bar=parts.Part("Pole safety gate",gateHinge,new Vector3(.32f,0,0),new Vector3(.64f,.035f,.035f),parts.Dark);
    gate=bar.AddComponent<BoxCollider>();
    var plate=parts.Part("Pole engraved plate",gateHinge,new Vector3(.32f,-.10f,.025f),new Vector3(.30f,.10f,.018f),parts.Dark);
-   parts.Text("Pole grip instruction",KeeperStrings.Get("pole.grip"),gateHinge,new Vector3(.32f,-.10f,.036f),.0024f).transform.localRotation=Quaternion.identity;
+   parts.Text("Pole grip instruction",KeeperStrings.Get("pole.grip"),gateHinge,new Vector3(.32f,-.10f,.036f),.0024f);
    capsule=rig.GetComponentInChildren<CharacterController>();
    body=rig.GetComponentInChildren<XRBodyTransformer>();gravity=rig.GetComponentInChildren<GravityProvider>();move=rig.GetComponentInChildren<ContinuousMoveProvider>();sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.loop=true;sound.spatialBlend=1;sound.minDistance=.5f;sound.maxDistance=6;sound.volume=.09f;sound.clip=Resources.Load<AudioClip>("ImmersionAudio/creak");
   }
