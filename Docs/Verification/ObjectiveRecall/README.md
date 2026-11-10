@@ -9,3 +9,5 @@ Input audit: the Lab rig uses XRI input actions. B has no active Lab action. The
 2. B tap/hold reveals immediately, a tap lasts five seconds, and a double tap within 350 ms replays the last line locally (three-second replay debounce). The local radio history retains three cues. The shared host cue/serial and other keeper's audio are not changed. Three focused state/history/placement tests pass; live rendered checks follow step 6.
 
 3. The left watch face now always carries the current local Objective Director instruction below its time readout. Hands and watch mounting pose are unchanged. Compilation and focused tests pass; tiny physical text still needs a worn-headset readability check.
+
+4. X/Y still reveal the objective and request the existing status update; a fresh wrist glance still reveals it. B uses local state and local playback only. No command schema, game state, snapshot or network version changed. Rendered co-op isolation is checked in step 6.

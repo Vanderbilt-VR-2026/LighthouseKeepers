@@ -63,6 +63,13 @@ namespace LighthouseKeepers.WatchDemo
    built=Time.unscaledTime;Reveal(ObjectiveHudSettings.Duration,true);
   }
   public void Reveal()=>Reveal(ObjectiveHudSettings.Duration,true);
+  public void RecallNow()
+  {
+   int current=watch.State.Director!=null?(int)watch.CurrentInstruction:watch.State.ObjectiveIndex;
+   Reveal();changed=Time.unscaledTime-1;completeUntil=0;index=current;full=Title(current);typed=full.Length;task.text=full;line.localScale=Vector3.one;
+   objectiveGroup.alpha=1;group.alpha=watch.ObjectivePresentationBlocked?0:1;
+   if(radio&&!string.IsNullOrEmpty(radio.LastCaption)){subtitle.text=radio.LastCaption;subtitle.maxVisibleCharacters=int.MaxValue;speakerTag.text=KeeperStrings.Get("subtitle.speaker");subtitle.alpha=speakerTag.alpha=1;subtitleBacking.gameObject.SetActive(true);}
+  }
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   void Set(int value,string text){index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
   string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
@@ -85,7 +92,7 @@ namespace LighthouseKeepers.WatchDemo
    if(Time.unscaledTime-built<.5f)Place();
    InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.secondaryButton,out bool b);
    int recallPress=recall.Input(b,Time.unscaledTime);
-   if(recallPress>0){Reveal();changed=Time.unscaledTime-1;completeUntil=0;index=current;full=Title(current);typed=-1;if(recallPress==2&&radio)radio.ReplayLastLocally();}
+   if(recallPress>0){RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
    bool recalling=recall.Visible(Time.unscaledTime);
    if(recalling){until=Mathf.Max(until,recall.Until);changed=Time.unscaledTime-1;}
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
