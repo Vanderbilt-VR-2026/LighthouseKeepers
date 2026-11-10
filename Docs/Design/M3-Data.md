@@ -2,7 +2,7 @@
 
 The five campaign `DayDefinition` assets and demo are in `Assets/Data/M3Days/`. `M3Campaign.asset` references them. Its enable switch is **off**. The current watch still loads its unchanged catalog: this checkpoint does not yet make five nights playable or spawn ships.
 
-Each day has an optional `NightScenario`: stable ID/name key, solo/crew duration and flood modifiers, no-fail/grace/pacing, storm stage/peak fraction, active station steps and information sites, fault events with conditions, ship approach/window/grace/preview/finale data, opening/tonight cues and event cues. Existing day consumers retain their behavior. The new model has no transport dependency or replicated state; network version remains LK-S5-VOICE1 / v19 until runtime state is added.
+Each day has an optional `NightScenario`: stable ID/name key, solo/crew duration and flood modifiers, no-fail/grace/pacing, storm stage/peak fraction, active station steps and information sites, fault events with conditions, ship approach/window/grace/preview/finale data, opening/tonight cues and event cues. Existing day consumers retain their behavior. At A1 this was data only. A2/A3 now supplies the host scheduler and replicated runtime state described below; the current branch uses LK-M3-NIGHTS1 / v20.
 
 `Lighthouse Keepers/M3/Create missing night data` creates missing assets without overwriting existing day edits. The original catalogs are untouched. Titles and ship names are in KeeperStrings. Demo is a separate reference using the same types, not a sixth progression night.
 
@@ -20,7 +20,7 @@ Every profile has `timingApproved = false`. Ship slots are authoring examples th
 
 ## Remaining integration
 
-A2/A3 must consume the schedules through the existing host-owned watch and Objective Director, replace night-number branching for campaign mode, preserve legacy behavior when disabled, and synchronize progress with a version bump. A4 records real bot timings. B supplies actual ship rules/art; C–G supply the finale, progression, split information, sound and delivery checks. Doors and any budget-approved mirror remain separate pending work.
+A2/A3 consumes the schedules through the existing host-owned watch and Objective Director, preserving the legacy path when disabled. Initial A4 task-model timings are in `Docs/Playtests/telemetry-m3.md`; ship-inclusive timing remains pending. B supplies actual ship rules/art; C–G supply the finale, progression, split information, sound and delivery checks. Doors and any budget-approved mirror remain separate pending work.
 
 Verification: three focused tests pass for all six assets, unchanged legacy catalogs, and rejection of invalid passage/dependency data. Unity compilation passed in the second Editor. Base solo/co-op regression evidence is recorded under `artifacts/m3/before/`; no claim of five-night runtime execution is made.
 

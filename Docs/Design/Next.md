@@ -4,7 +4,7 @@ Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 wa
 
 ## Done / current
 
-- Job 1 class-playtest fix from PR #85 is merged through d432c20. New recall build 573cf72 passed focused checks, full suites with documented reruns, Night 1 and two-Mac smoke. M3 adds no runtime changes beyond that fix yet. Runtime scheduling, ships, doors and mirror remain next.
+- Job 1 class-playtest fix from PR #85 is merged through d432c20. New recall build 573cf72 passed focused checks, full suites with documented reruns, Night 1 and two-Mac smoke. M3 now adds switched host scheduling and a task-timing bot; the normal three-night catalog remains selected. Ships, doors and mirror are not implemented yet.
 - Editor audio stays muted. Do not launch the Quest app unless the lead asks. USB is currently absent; install the built recall APK when it returns, without launching.
 
 - North star, per-night tension graphs, reuse boundaries and verification gates: [M3-FiveNights.md](M3-FiveNights.md).
@@ -14,12 +14,23 @@ Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 wa
 - **A1 complete:** optional night schema, five assets plus demo, disabled catalog, editor authoring and three focused passing tests. See [M3-Data.md](M3-Data.md). No five-night gameplay is active yet; timings remain unapproved.
 - **A2/A3 runtime scheduling implemented:** host-owned one-shot fault gates, opening/recovery breaks, low-fuel event, authored durations/flood/grace/storm/opening cues and retry/replica validation. Campaign catalog remains OFF. Focused checks: M3 16/16, legacy Day3 6/6, voice 23/23. Initial A4 instruction-only task timing now passes all 12 solo/duo profiles; see telemetry-m3.md. Campaign remains OFF until ship-inclusive pacing and regression gates pass. Next: graphics/crew baseline, then B1 ship. Physical doors are still pending.
 
+## Latest verified checkpoint (2026-11-10)
+
+Runtime commits: `31cff1a` schedules, `b3bb144` task-model timing/guidance. Full EditMode 371/371; PlayMode 49 pass / 24 inherited fail / 3 skip, no lost passing cases. Graphics legacy Nights 1–3 and live two-Mac join/avatars/mono-AEC setup/recall/shared valve-pipe/shared sleep pass. Evidence: `Docs/Verification/M3/scheduling/`. Editors muted throughout. First Night 3 capture timed out loading; only its harness allowance changed before a passing rerun.
+
+APK: `/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-M3-b3bb144.apk` (133795458 bytes), SHA-256 `d6c4cafb1f974afad160c30b35ec32c3a26e6a5581769810498bce17026cdb9f`. Campaign OFF, network `LK-M3-NIGHTS1` / v20. USB absent, not installed or launched. A4 final approval still waits for ship-inclusive timings.
+
+Next: the lead's added diegetic wiring pass (`M3-PowerWiring.md`), then ship implementation/ship-inclusive A4 timing, doors + mirror, remaining M3 parts. Do not turn on the campaign yet. The original Editor source is restored after the smoke; guest Editor retains the tested M3 overlay and is stopped. Preserve the original worktree's unrelated prefab ray-width edit.
+
+Raw runners: `artifacts/m3/a2/run.py` (focused tests + guest overlay), `bot.py`, `graphics.py`, `graphics-retry.py`, `full.py`, `overlay-root.py`, `restore-root.py`, `crew.py`, `build.py`. Use fresh evidence destinations when rerunning. `overlay-root.py` backs up only candidate paths before temporarily testing them in the original Editor. Do not run `a1-check.py`: it copies guest-authored assets back into this worktree.
+
 ## Ordered implementation queue
 
 A1. DONE (data only). Extend day data for five nights: duration, storm stage, faults/conditions, active stations, ships, crew roles, solo modifiers, grace and radio/opening cues. Preserve accepted legacy behavior behind the feature switch.
 A2. Arc: Leak (safe preview), Blackout (one consequential ship), Warning (two ships/broadcast extension), Everything Breaks (fuel/power/soot), Long Night (late repeated failures and large ship).
 A3. Data schedules: 30–60 s opening, 10–20 s relief, no ten-second fault pileup except finale.
 A4. Initial task-only model DONE for 12 profiles; Nights 3–5 reach requested spare-time ranges after modeled bed travel. Ship-inclusive pacing and final approval PENDING. Nights 1–2 retain inherited budgets until ships are included. See `Docs/Playtests/telemetry-m3.md`; these are model execution times, not human measurements.
+NEW next after Part A verification: extend `ConnectedMachinePresentation` with the diegetic wiring pass described in `M3-PowerWiring.md`; complete before Part C. Existing circuits only, no new network fields.
 B1. Quest steamer art (8–12k triangles, 1–2 materials), emissive lights, mesh searchlight, ≤150 smoke particles, storm bow spray, distant light LOD.
 B2. Host ship approach/window/pass/wreck rules; warning 60–90 s ahead, named ships, beacon grace/loss only near passage. Test pass, recovery and wreck.
 B3. Shared passage payoff: horn/voice/music/storm relief for both keepers, visible from gallery/windows.
