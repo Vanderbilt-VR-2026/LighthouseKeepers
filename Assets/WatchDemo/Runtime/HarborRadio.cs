@@ -10,11 +10,25 @@ namespace LighthouseKeepers.WatchDemo
         public int Serial {get;private set;}
         public float Age {get;private set;}
         PAIntercom intercom;
-        public float SpeechAge=>Age-(intercom ? .3f : 0);
-        public float SubtitleAlpha=>catalog&&catalog.Line(Cue)&&SpeechAge>=0?Mathf.Clamp01((catalog.Line(Cue).length+1.85f-SpeechAge)/.35f):0;
-        public string Subtitle=>SubtitleAlpha>0?catalog.Caption(Cue):"";
-        public int SubtitleCharacters=>HarborVoiceTiming.Get(Cue)?.VisibleCharacters(SpeechAge)??Mathf.CeilToInt(Subtitle.Length*Mathf.Clamp01(SpeechAge/Mathf.Max(.1f,catalog&&catalog.Line(Cue)?catalog.Line(Cue).length:1)));
-        public bool DangerSubtitle=>HarborCueRules.Danger(Cue);
+        readonly HarborRecallHistory recallHistory=new();
+        int localReplayCue;float localReplayAge,nextLocalReplay;
+        public System.Collections.Generic.IReadOnlyList<int> RecentCues=>recallHistory.Cues;
+        public string LastCaption=>catalog&&recallHistory.Latest>0?catalog.Caption(recallHistory.Latest):"";
+        public int SubtitleCue=>localReplayCue>0?localReplayCue:Cue;
+        public float SpeechAge=>(localReplayCue>0?localReplayAge:Age)-(intercom ? .3f : 0);
+        public bool ReplayLastLocally()
+        {
+            int id=recallHistory.Latest;var clip=catalog?catalog.Line(id):null;
+            if(!clip||Time.unscaledTime<nextLocalReplay)return false;
+            nextLocalReplay=Time.unscaledTime+3;localReplayCue=id;localReplayAge=0;
+            if(intercom)intercom.Play(id,clip,0,Serial);
+            else{foreach(var source in new[]{wall,belt}){source.Stop();source.clip=clip;source.time=0;source.Play();}wallNoise.Play();beltNoise.Play();staticActive=true;}
+            return true;
+        }
+        public float SubtitleAlpha=>catalog&&catalog.Line(SubtitleCue)&&SpeechAge>=0?Mathf.Clamp01((catalog.Line(SubtitleCue).length+1.85f-SpeechAge)/.35f):0;
+        public string Subtitle=>SubtitleAlpha>0?catalog.Caption(SubtitleCue):"";
+        public int SubtitleCharacters=>HarborVoiceTiming.Get(SubtitleCue)?.VisibleCharacters(SpeechAge)??Mathf.CeilToInt(Subtitle.Length*Mathf.Clamp01(SpeechAge/Mathf.Max(.1f,catalog&&catalog.Line(SubtitleCue)?catalog.Line(SubtitleCue).length:1)));
+        public bool DangerSubtitle=>HarborCueRules.Danger(SubtitleCue);
         public Component ReplayButton(int i)=>intercom?intercom.Button(i):null;
         public bool RequestReplay(){if(watch.State.RemoteReplica)return watch.State.Coop?.Send(LighthouseKeepers.Lobby.CoopAction.StatusRequest)==true;return intercom&&intercom.Replay();}
         public void ReplayLast(){if(Cue>0)Play(Cue,Serial+1,0);}
@@ -68,6 +82,7 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             var s=watch.State;
+            if(localReplayCue>0){localReplayAge+=Time.deltaTime;var localClip=catalog.Line(localReplayCue);if(!localClip||localReplayAge>localClip.length+2.2f){localReplayCue=0;StopStatic();}}
             var yaw=Quaternion.Euler(0,head.eulerAngles.y,0);belt.transform.parent.SetPositionAndRotation(head.position+Vector3.down*.75f+yaw*new Vector3(.18f,0,.02f),yaw);
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
             belt.volume=intercom?0:tuning.beltRadioVolume*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
@@ -224,6 +239,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Play(int id,int serial,float age)
         {
+            localReplayCue=0;recallHistory.Remember(id);
             if(!watch.State.RemoteReplica){
                 cueRules.Played(id,Time.time);
                 if(SilenceSeconds>=(watch.State.Master?watch.State.Master.narrationQuietSeconds:20f))ordinaryBurstCount=0;

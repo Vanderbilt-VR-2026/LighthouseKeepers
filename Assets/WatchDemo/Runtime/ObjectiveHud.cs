@@ -10,6 +10,7 @@ namespace LighthouseKeepers.WatchDemo
  {
   WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group,objectiveGroup;RectTransform root,line,strike,tick,danger;TMP_Text dangerText;
   TMP_Text task,label,floor,subtitle,partner,speakerTag;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
+  readonly ObjectiveRecallState recall=new();
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
 
   public static string WatchGateCaption=>string.Format(PlayerStrings.Get("integrated.watchGate"),Mathf.CeilToInt(MasterPassTuning.Current?MasterPassTuning.Current.watchStartGraceSeconds:45));
@@ -82,6 +83,11 @@ namespace LighthouseKeepers.WatchDemo
    if(nag&&!nagging&&!radio)ShowNote(WrenchDownCaption,7);nagging=nag;
    if(wakePending&&!watch.Sleeping&&!watch.ObjectivePresentationBlocked){wakePending=false;if(!radio||HarborRadio.TonightCue(s)==0)ShowNote(TonightCaption(Title(current),FloorCaption(current)),5,true);else Reveal(5,true);}
    if(Time.unscaledTime-built<.5f)Place();
+   InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.secondaryButton,out bool b);
+   int recallPress=recall.Input(b,Time.unscaledTime);
+   if(recallPress>0){Reveal();changed=Time.unscaledTime-1;completeUntil=0;index=current;full=Title(current);typed=-1;if(recallPress==2&&radio)radio.ReplayLastLocally();}
+   bool recalling=recall.Visible(Time.unscaledTime);
+   if(recalling){until=Mathf.Max(until,recall.Until);changed=Time.unscaledTime-1;}
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
    line.localScale=new Vector3(Mathf.Clamp01((Time.unscaledTime-changed)/.4f),1,1);
@@ -91,20 +97,21 @@ namespace LighthouseKeepers.WatchDemo
    if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=FloorDirection(target,here);}
    icon.Set(station);
    bool showVoice=HarborSubtitleSettings.Enabled&&radio&&radio.SubtitleAlpha>0;
-   string words=showVoice?radio.Subtitle:"";
-   string display=showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
+   bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);
+   string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
+   string display=remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
    if(subtitle.text!=display||subtitle.fontSize!=size){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.05f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
-   int visible=showVoice?radio.SubtitleCharacters:display.Length;
+   int visible=remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
    int page=1;
    // Paginate long recordings into two readable lines rather than shrinking or clipping text.
    var info=subtitle.textInfo;
    for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
    subtitle.pageToDisplay=page;subtitle.maxVisibleCharacters=visible;
-   float alpha=showVoice?radio.SubtitleAlpha:1;
+   float alpha=remembered?1:showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;
    subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);
-   speakerTag.text=showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
+   speakerTag.text=remembered||showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
    subtitleBacking.gameObject.SetActive(display.Length>0);subtitleBacking.color=new Color(.012f,.018f,.023f,.8f*alpha);
 
    bool unsafeNow=s.PressureEnabled&&!s.Complete&&s.Danger>=.5f;
