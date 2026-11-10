@@ -17,6 +17,19 @@ namespace LighthouseKeepers.WatchDemo.Editor
         static Transform parent;
         static void Set(UnityEngine.Object o,string field,UnityEngine.Object value){var s=new SerializedObject(o);s.FindProperty(field).objectReferenceValue=value;s.ApplyModifiedPropertiesWithoutUndo();}
         static Material Mat(string name,Color color){var p=Root+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(p);if(!m){m=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,p);}m.color=color;return m;}
+        static Material FloodMaterial()
+        {
+            // Retain the authored shader/settings instead of resetting the water to blue unlit.
+            var material=AssetDatabase.LoadAssetAtPath<Material>(Root+"FloodWater.mat");
+            if(material)return material;
+            var shader=AssetDatabase.LoadAssetAtPath<Shader>(Root+"FloodWater.shader");
+            var ripple=AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_LighthouseKeepers/Art/Textures/LK_Water_Wear.png");
+            if(!shader||!ripple)throw new InvalidOperationException("The flood water shader and ripple texture must be imported before building the Lab.");
+            material=new Material(shader){name="FloodWater",enableInstancing=true};
+            material.SetTexture("_RippleMap",ripple);
+            AssetDatabase.CreateAsset(material,Root+"FloodWater.mat");
+            return material;
+        }
         static GameObject Part(string name,PrimitiveType type,Vector3 position,Vector3 scale,Material mat,bool collision=true)
         {var o=GameObject.CreatePrimitive(type);o.name=name;o.transform.SetParent(parent,false);o.transform.localPosition=position;o.transform.localScale=scale;o.GetComponent<Renderer>().sharedMaterial=mat;if(!collision)UnityEngine.Object.DestroyImmediate(o.GetComponent<Collider>());return o;}
         static TextMesh Text(string name,string value,Vector3 position,float size,Transform root=null,int fontSize=28,TextAnchor anchor=TextAnchor.UpperCenter,TextAlignment alignment=TextAlignment.Center,FontStyle style=FontStyle.Normal)
@@ -62,7 +75,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
             var flood=new GameObject("Eli flood authority — local watch").AddComponent<FloodController>();flood.transform.SetParent(parent);
             string profilePath=Root+"WatchFlood.asset";var profile=AssetDatabase.LoadAssetAtPath<FloodProfile>(profilePath);if(!profile){profile=ScriptableObject.CreateInstance<FloodProfile>();AssetDatabase.CreateAsset(profile,profilePath);}
             var fp=new SerializedObject(profile);fp.FindProperty("minimumHeight").floatValue=-.03f;fp.FindProperty("maximumHeight").floatValue=.65f;fp.FindProperty("riseMetresPerSecond").floatValue=.0015f;fp.FindProperty("surgePerMetre").floatValue=.1f;fp.ApplyModifiedPropertiesWithoutUndo();Set(flood,"profile",profile);Set(controller,"flood",flood);
-            var water=new GameObject("Visible first-floor flood");water.transform.SetParent(parent);water.transform.localPosition=new Vector3(0,.02f,0);var mesh=new Mesh{name="First floor water disc"};var v=new Vector3[65];var tri=new int[64*3];for(int i=0;i<64;i++){float a=i*Mathf.PI*2/64;v[i+1]=new Vector3(Mathf.Cos(a)*3.83f,0,Mathf.Sin(a)*3.83f);tri[i*3]=0;tri[i*3+1]=(i+1)%64+1;tri[i*3+2]=i+1;}mesh.vertices=v;mesh.triangles=tri;mesh.RecalculateNormals();SaveMesh(mesh,Root+"WaterDisc.asset");water.AddComponent<MeshFilter>().sharedMesh=AssetDatabase.LoadAssetAtPath<Mesh>(Root+"WaterDisc.asset");var waterMaterial=Mat("FloodWater",new Color(.14f,.28f,.30f));waterMaterial.shader=Shader.Find("Universal Render Pipeline/Unlit");water.AddComponent<MeshRenderer>().sharedMaterial=waterMaterial;water.AddComponent<FloodSurface>();
+            var water=new GameObject("Visible first-floor flood");water.transform.SetParent(parent);water.transform.localPosition=new Vector3(0,.02f,0);var mesh=new Mesh{name="First floor water disc"};var v=new Vector3[65];var tri=new int[64*3];for(int i=0;i<64;i++){float a=i*Mathf.PI*2/64;v[i+1]=new Vector3(Mathf.Cos(a)*3.83f,0,Mathf.Sin(a)*3.83f);tri[i*3]=0;tri[i*3+1]=(i+1)%64+1;tri[i*3+2]=i+1;}mesh.vertices=v;mesh.triangles=tri;mesh.RecalculateNormals();SaveMesh(mesh,Root+"WaterDisc.asset");water.AddComponent<MeshFilter>().sharedMesh=AssetDatabase.LoadAssetAtPath<Mesh>(Root+"WaterDisc.asset");water.AddComponent<MeshRenderer>().sharedMaterial=FloodMaterial();water.AddComponent<FloodSurface>();
             // A wall-mounted whiteboard is readable from the house spawn; its desk sits directly in front without blocking the tower throat.
             var boardFramePosition=new Vector3(-2.20f,1.68f,-7.50f);
             Part("Wall-mounted checklist brown frame",PrimitiveType.Cube,boardFramePosition,new Vector3(1.95f,1.22f,.10f),wood);

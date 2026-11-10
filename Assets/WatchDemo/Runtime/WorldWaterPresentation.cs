@@ -3,9 +3,11 @@ namespace LighthouseKeepers.WatchDemo {
  [DefaultExecutionOrder(1700)]public sealed class WorldWaterPresentation:MonoBehaviour {
   WatchPipeRepair pipe;Transform jet;Material jetMaterial,dropletMaterial;WatchDemoController watch;Transform head;Material flood,seepMaterial;Renderer water;readonly List<Renderer> puddles=new();readonly List<Transform> contacts=new();readonly List<Transform> drift=new();MaterialPropertyBlock block;float nextRipple;int ripple;float nextSplash;AudioSource wash;ParticleSystem spray;
   public static void Create(WatchDemoController w){if(!VisualPassSettings.Current||!VisualPassSettings.Current.water)return;var p=w.gameObject.AddComponent<WorldWaterPresentation>();p.watch=w;}
-  void Start(){head=Camera.main.transform;block=new MaterialPropertyBlock();flood=new Material(Resources.Load<Shader>("StormWater")){name="Flood dual ripple water"};flood.SetTexture("_NormalMap",Resources.Load<Texture2D>("WaterRippleNormal"));flood.SetColor("_BaseColor",new Color(.035f,.095f,.10f));
-
-   var w=GameObject.Find("Visible first-floor flood");if(w){water=w.GetComponent<Renderer>();water.sharedMaterial=flood;}foreach(var r in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))if(r.transform.parent&&r.transform.parent.name=="House flood through tower doorway")r.sharedMaterial=flood;
+  void Start(){head=Camera.main.transform;block=new MaterialPropertyBlock();// The scene's authored flood material is Will's lit ripple surface. Do not replace it
+   // with the earlier visual-pass shader at runtime; House flood and puddles share this copy.
+   var w=GameObject.Find("Visible first-floor flood");water=w.GetComponent<Renderer>();
+   flood=new Material(water.sharedMaterial){name="Integrated interior flood ripples"};water.sharedMaterial=flood;
+   foreach(var r in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))if(r.transform.parent&&r.transform.parent.name=="House flood through tower doorway")r.sharedMaterial=flood;
    foreach(var hand in FindObjectsByType<HandRig>(FindObjectsSortMode.None))contacts.Add(hand.transform);contacts.Add(head);var tool=FindAnyObjectByType<WatchWrenchReturn>();if(tool)contacts.Add(tool.transform);
    for(int n=0;n<5;n++){var go=GameObject.CreatePrimitive(PrimitiveType.Cube);go.name="Nonblocking waterborne timber";go.transform.SetParent(transform,false);go.transform.position=new Vector3(Mathf.Sin(n*1.8f)*2.7f,0,Mathf.Cos(n*1.8f)*2.7f);go.transform.localScale=new Vector3(.24f,.035f,.10f);var c=go.GetComponent<Collider>();c.enabled=false;Destroy(c);go.GetComponent<Renderer>().sharedMaterial=Resources.Load<Material>("VisualMaterials/Wood");drift.Add(go.transform);}
    // Small patches spread through the entrance before the established volumetric House flood.
@@ -17,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo {
   }
 
   void LateUpdate(){var s=watch.State;if(jet&&pipe){float strength=s.LeakStrength;jet.gameObject.SetActive(!s.Repaired&&strength>.01f);var start=pipe.ActivePosition+Vector3.up*.06f;var end=start+Vector3.down*.65f+Vector3.left*.18f;jet.position=(start+end)*.5f;jet.rotation=Quaternion.LookRotation(Vector3.forward, (start-end).normalized);jet.localScale=new Vector3(.025f+strength*.04f,.3f+strength*.5f,1);}
-float night=Mathf.Clamp01((s.Day-1)*.5f);float severity=Mathf.Max(night*.65f,(s.Storm.Stage-1)/3f);flood.SetFloat("_Night",s.Day);
+float night=Mathf.Clamp01((s.Day-1)*.5f);float severity=Mathf.Max(night*.65f,(s.Storm.Stage-1)/3f);if(flood.HasProperty("_Night"))flood.SetFloat("_Night",s.Day);
    seepMaterial.SetFloat("_Wetness",Mathf.Lerp(.12f,.85f,night));float seep=Mathf.Clamp01((float)s.Elapsed/120)*Mathf.Lerp(.12f,1,night);foreach(var p in puddles){p.enabled=seep>.02f&&watch.WaterHeight<.015f;p.transform.localScale=new Vector3(.12f+seep*.35f,.002f,.14f+seep*.45f);}
    for(int n=0;n<drift.Count;n++){var d=drift[n];d.gameObject.SetActive(watch.WaterHeight>.035f);var pos=d.position;pos.y=watch.WaterHeight+.015f+Mathf.Sin(Time.time*.6f+n)*.006f;d.position=pos;d.rotation=Quaternion.Euler(Mathf.Sin(Time.time+n)*3,n*67,Mathf.Cos(Time.time*.8f+n)*3);}
    if(Time.time>=nextRipple){nextRipple=Time.time+.18f;foreach(var t in contacts)if(t){var p=t.position;if(t==head)p.y-=1.6f;if(Mathf.Abs(p.y-watch.WaterHeight)<.10f&&new Vector2(p.x,p.z).magnitude<3.9f){Shader.SetGlobalVector("_KeeperRipple"+(ripple++%4),new Vector4(p.x,p.z,Time.time,.22f));break;}}}
