@@ -8,6 +8,7 @@ namespace LighthouseKeepers.WatchDemo
   bool advancingSchedule;
   public NightScenario Scenario=>Definition.scenario?.configured==true?Definition.scenario:null;
   public bool Campaign=>Scenario!=null;
+  public bool RequiresCrewValve=>!Campaign||Array.Exists(Scenario.stations,s=>s.stationId==PipeStation&&s.crewVariant==NightCrewVariant.HoldValve);
   public int CampaignFaultMask=>schedule?.FiredMask??0;
   public double CampaignReliefRemaining=>schedule==null?0:Math.Max(0,schedule.ReliefUntil-Elapsed);
   double CampaignGraceRemaining=>schedule==null?0:Math.Max(0,schedule.GraceUntil-Elapsed);
@@ -15,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    get
    {
-    if(schedule==null||Engine==null)return false;
+    if(schedule==null||Engine==null||IsDone(GeneratorStation))return false;
     for(int i=Scenario.faults.Length-1;i>=0;i--)if(schedule.Fired(i)&&Scenario.faults[i].stationId==GeneratorStation)
      return Scenario.faults[i].kind==NightFaultKind.LowFuel&&Engine.Fuel<Scenario.refillTargetFraction;
     return false;

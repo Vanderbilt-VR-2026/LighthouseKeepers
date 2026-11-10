@@ -17,7 +17,7 @@ MonoBehaviour:
   beaconDarkLimitSeconds: 150
   powerCapacity: 2.5
   initialCircuitMask: 11
-  fuelDrainPerSecond: 0.0025
+  fuelDrainPerSecond: 0.0015
   beaconInitiallyLit: 0
   beaconInitialAlignment: 0.18
   beaconTargetAlignment: 0.5
@@ -81,14 +81,15 @@ MonoBehaviour:
     timingApproved: 0
     stormBaseStage: 3
     peakStormAfterFraction: 1
-    soloSeconds: 450
-    crewSeconds: 450
+    soloSeconds: 540
+    crewSeconds: 510
     soloFloodMultiplier: 0.65
     crewFloodMultiplier: 0.85
     openingSeconds: 45
     reliefSeconds: 15
     startGraceSeconds: 45
     firstStationGraceSeconds: 60
+    refillTargetFraction: 0.65
     openingCue: 94
     tonightCue: 81
     faults:
@@ -122,7 +123,7 @@ MonoBehaviour:
       repeat: 0
     - id: fuel-low
       kind: 1
-      fuelFraction: 0.1
+      fuelFraction: 0.18
       stationId: STN_GENERATOR
       afterStationId: 
       gate: 0
@@ -145,6 +146,7 @@ MonoBehaviour:
       - starter
       - choke-open
       - breakers
+      - refill
       crewVariant: 0
       informationSite: House
       soloLocalInformation: 1

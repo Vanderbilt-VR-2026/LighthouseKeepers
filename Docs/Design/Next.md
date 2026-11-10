@@ -12,14 +12,14 @@ Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 wa
 - Base follow-ups implement intermediate pole exits, remove the bedroom cage, retain a flush safety hatch, and remove floating dotted rain panes.
 - Base regression is complete and copied to `artifacts/m3/before/`: 351 EditMode passes; full PlayMode plus the corrected hatch rerun preserves 48 passing cases, the same 24 inherited failures and 3 skips; graphics Nights 1–3 and live two-Mac valve/radio/sleep/rejoin pass. Source a9d5f2d. PR #85 is Ready for review, not merged.
 - **A1 complete:** optional night schema, five assets plus demo, disabled catalog, editor authoring and three focused passing tests. See [M3-Data.md](M3-Data.md). No five-night gameplay is active yet; timings remain unapproved.
-- **A2/A3 runtime scheduling implemented:** host-owned one-shot fault gates, opening/recovery breaks, low-fuel event, authored durations/flood/grace/storm/opening cues and retry/replica validation. Campaign catalog remains OFF. Focused checks: M3 16/16, legacy Day3 6/6, voice 23/23. Next: A4 instruction-following timing, graphics baseline and ship implementation. Physical doors are still pending.
+- **A2/A3 runtime scheduling implemented:** host-owned one-shot fault gates, opening/recovery breaks, low-fuel event, authored durations/flood/grace/storm/opening cues and retry/replica validation. Campaign catalog remains OFF. Focused checks: M3 16/16, legacy Day3 6/6, voice 23/23. Initial A4 instruction-only task timing now passes all 12 solo/duo profiles; see telemetry-m3.md. Campaign remains OFF until ship-inclusive pacing and regression gates pass. Next: graphics/crew baseline, then B1 ship. Physical doors are still pending.
 
 ## Ordered implementation queue
 
 A1. DONE (data only). Extend day data for five nights: duration, storm stage, faults/conditions, active stations, ships, crew roles, solo modifiers, grace and radio/opening cues. Preserve accepted legacy behavior behind the feature switch.
 A2. Arc: Leak (safe preview), Blackout (one consequential ship), Warning (two ships/broadcast extension), Everything Breaks (fuel/power/soot), Long Night (late repeated failures and large ship).
 A3. Data schedules: 30–60 s opening, 10–20 s relief, no ten-second fault pileup except finale.
-A4. Measure instruction-following solo/two-player bots; tune 25–35% spare on Nights 1–3, 15–25% on 4–5. Record `Docs/Playtests/telemetry-m3.md`; do not label estimates measured.
+A4. Initial task-only model DONE for 12 profiles; Nights 3–5 reach requested spare-time ranges after modeled bed travel. Ship-inclusive pacing and final approval PENDING. Nights 1–2 retain inherited budgets until ships are included. See `Docs/Playtests/telemetry-m3.md`; these are model execution times, not human measurements.
 B1. Quest steamer art (8–12k triangles, 1–2 materials), emissive lights, mesh searchlight, ≤150 smoke particles, storm bow spray, distant light LOD.
 B2. Host ship approach/window/pass/wreck rules; warning 60–90 s ahead, named ships, beacon grace/loss only near passage. Test pass, recovery and wreck.
 B3. Shared passage payoff: horn/voice/music/storm relief for both keepers, visible from gallery/windows.

@@ -28,10 +28,10 @@ namespace LighthouseKeepers.WatchDemo
             bool roster=actorA!=firstActor||actorB!=secondActor;actorA=firstActor;actorB=secondActor;
             if(state.Failed){First=Second=KeeperStep.Lost;return;}
             if(state.Complete){First=state.HasNextDay?KeeperStep.Sleep:KeeperStep.Complete;Second=actorB!=0?First:KeeperStep.None;return;}
-            if(actorB!=0&&state.Pressure?.CrewRequired==true&&!state.Repaired&&(state.Power==PowerState.On||state.IsPending(WatchState.GeneratorStation)))
+            if(actorB!=0&&state.Pressure?.CrewRequired==true&&!state.Repaired&&(!state.Campaign||state.BeaconShining||state.IsPending(WatchState.BeaconStation))&&(state.Power==PowerState.On&&(!state.Campaign||state.Engine==null||state.Engine.Settled)||state.IsPending(WatchState.GeneratorStation)))
             {
                 int holder=state.Pressure.Holder;
-                if(holder!=actorA&&holder!=actorB){int worker=state.PipeWorkerActor;var valve=StationPosition!=null?StationPosition("STN_PRESSURE_VALVE"):new Vector3(2.7f,1,2.5f);holder=worker==actorA?actorB:worker==actorB?actorA:Vector3.Distance(firstHead,valve)<=Vector3.Distance(secondHead,valve)?actorA:actorB;}
+                if(holder!=actorA&&holder!=actorB||state.Campaign&&holder==state.PipeWorkerActor){int worker=state.PipeWorkerActor;var valve=StationPosition!=null?StationPosition("STN_PRESSURE_VALVE"):new Vector3(2.7f,1,2.5f);holder=worker==actorA?actorB:worker==actorB?actorA:Vector3.Distance(firstHead,valve)<=Vector3.Distance(secondHead,valve)?actorA:actorB;}
                 First=holder==actorA?KeeperStep.HoldValve:PipeStep(wrenchHeld);Second=holder==actorB?KeeperStep.HoldValve:PipeStep(wrenchHeld);return;
             }
             if(roster||now>=assignmentUntil||!Available(jobA)||actorB!=0&&!Available(jobB))
@@ -53,7 +53,7 @@ namespace LighthouseKeepers.WatchDemo
             string id=state.Definition.tasks[i].stationId;float floor=id==WatchState.PipeStation?1:id==WatchState.GeneratorStation?2:4;
             var point=StationPosition!=null?StationPosition(id):new Vector3(0,(floor-1)*3.3f+1.6f,0);
             float cost=Vector3.Distance(head,point);
-            if(id==WatchState.GeneratorStation&&state.Power==PowerState.Off)cost-=45;
+            if(id==WatchState.GeneratorStation&&(state.Power==PowerState.Off||state.Campaign&&state.Engine!=null&&(!state.Engine.Settled||state.FuelJobPending)))cost-=45;
             if(id==WatchState.BeaconStation&&!state.BeaconShining)cost-=state.BeaconDarkRemaining<30?65:15;
             if(id==WatchState.PipeStation)cost-=12;
             return cost;

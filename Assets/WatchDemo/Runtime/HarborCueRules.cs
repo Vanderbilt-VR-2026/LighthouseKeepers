@@ -11,7 +11,8 @@ namespace LighthouseKeepers.WatchDemo
         public static bool InstructionExpires(int id)=>id==2||id==3||id==4||id>=7&&id<=12||id>=33&&id<=42||id==77||id==78||id>=82&&id<=91;
         public static float Cooldown(int id)=>id==83?20:id==91?15:0;
         public bool Allows(int id,float now)=>id>=76&&id<=93&&(Cooldown(id)>0?now>=next[id]:!played[id]);
-        public void Played(int id,float now){if(id<76||id>93)return;played[id]=true;next[id]=now+Cooldown(id);}
+        public bool AllowsCampaign(int id)=>id>=94&&id<=100&&!played[id];
+        public void Played(int id,float now){if(id<76||id>100)return;played[id]=true;next[id]=now+Cooldown(id);}
         public static bool Danger(int id)=>id==18||id>=27&&id<=32||id==83||id>=87&&id<=89;
         public static int Tonight(bool pipe,bool generator,bool beacon,bool radio,int count)=>pipe&&generator&&beacon&&radio&&count==4?81:pipe&&generator&&count==2?80:0;
         public struct Context

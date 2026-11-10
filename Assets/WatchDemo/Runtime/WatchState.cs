@@ -34,7 +34,7 @@ namespace LighthouseKeepers.WatchDemo
         void BeaconChanged(){if(resetting)return;if(BeaconShining){BeaconDarkElapsed=0;if(!IsPending(BeaconStation))FinishJob(BeaconStation);}Changed?.Invoke();}
         public bool PrimeEngine()=>!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.Prime());
         public bool SetChoke(bool closed)=>!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.SetChoke(closed));
-        public void PourFuel(float seconds){if(!ReadOnly&&!Failed&&Engine!=null){float before=Engine.Fuel;Engine.Pour(seconds);if(Engine.Fuel>before)EngageWatch();}}
+        public void PourFuel(float seconds){if(!ReadOnly&&!Failed&&Engine!=null){float before=Engine.Fuel;Engine.Pour(seconds);if(Engine.Fuel>before)EngageWatch();if(Campaign&&Engine.Settled&&!IsPending(GeneratorStation)&&!FuelJobPending)FinishJob(GeneratorStation);}}
         void EngineChanged()
         {
             if(resetting)return;

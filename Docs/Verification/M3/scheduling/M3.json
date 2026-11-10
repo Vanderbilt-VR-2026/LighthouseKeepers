@@ -1,6 +1,6 @@
 {
   "status": "completed",
-  "duration": 0.07,
+  "duration": 0.08,
   "summary": {
     "total": 16,
     "passed": 16,
@@ -12,112 +12,112 @@
     {
       "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.ExistingSoloCatalogHasNotBeenReplacedOrGivenCampaignSchedules",
       "Status": "Passed",
-      "Duration": 0.0095122,
+      "Duration": 0.0101055,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.FiveNightsAndDemoHaveCompleteValidDataWithoutEnablingTheCampaign",
       "Status": "Passed",
-      "Duration": 0.009596,
+      "Duration": 0.0119205,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.InvalidShipWindowsAndUnknownDependenciesAreRejected",
       "Status": "Passed",
-      "Duration": 0.0003247,
+      "Duration": 0.0003874,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.OnlyExplicitFinaleAllowsCoincidentRepeatFaults",
       "Status": "Passed",
-      "Duration": 0.0017047,
+      "Duration": 0.0006979,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.OpeningReliefAndPowerRestorationGateTheJobs",
       "Status": "Passed",
-      "Duration": 0.0007967,
+      "Duration": 0.0006788,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.PowerInitiallyOnDoesNotUnlockUpperJobsAndTimedFailureWorks",
       "Status": "Passed",
-      "Duration": 0.0003503,
+      "Duration": 0.0002578,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Tests.M3.M3ScheduleTests.SnapshotPreservesOneShotEventsAndRejectsInvalidBounds",
       "Status": "Passed",
-      "Duration": 0.0007063,
+      "Duration": 0.0006346,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(1)",
       "Status": "Passed",
-      "Duration": 0.0096807,
+      "Duration": 0.0100875,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(2)",
       "Status": "Passed",
-      "Duration": 0.0011218,
+      "Duration": 0.001022,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(3)",
       "Status": "Passed",
-      "Duration": 0.0011982,
+      "Duration": 0.0010202,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(4)",
       "Status": "Passed",
-      "Duration": 0.0010626,
+      "Duration": 0.0010324,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(5)",
       "Status": "Passed",
-      "Duration": 0.0010263,
+      "Duration": 0.0012694,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.CrewSnapshotAndRetryCarryScheduleAndGuestsCannotFireEvents",
       "Status": "Passed",
-      "Duration": 0.0041807,
+      "Duration": 0.0049155,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.DemoConsumesItsOwnDataAndNightOneCannotLose",
       "Status": "Passed",
-      "Duration": 0.0050103,
+      "Duration": 0.0059991,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.LowFuelEventDoesNotRestartEngineAndCannotCompleteBeforeRefilling",
       "Status": "Passed",
-      "Duration": 0.0037621,
+      "Duration": 0.0041923,
       "Message": null,
       "StackTrace": null
     },
     {
       "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.PipeCompletionWaitsForOpeningThenEngineThenUpperJobsWithBreathers",
       "Status": "Passed",
-      "Duration": 0.0014241,
+      "Duration": 0.0015025,
       "Message": null,
       "StackTrace": null
     }

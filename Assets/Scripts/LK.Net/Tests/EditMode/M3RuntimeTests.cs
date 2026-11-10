@@ -45,7 +45,7 @@ namespace LighthouseKeepers.Net.Tests
   [Test] public void CrewSnapshotAndRetryCarryScheduleAndGuestsCannotFireEvents()
   {
    var h=New(3,true);Tick(h,80);var g=New();Call(g,"SetRemoteReplica",true);
-   Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(Get<int>(h,"CampaignFaultMask"),Get<int>(g,"CampaignFaultMask"));Assert.AreEqual(330,Get<double>(g,"Duration"));
+   Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(Get<int>(h,"CampaignFaultMask"),Get<int>(g,"CampaignFaultMask"));Assert.AreEqual(510,Get<double>(g,"Duration"));
    Tick(g,100);Call(g,"CompleteRepair");Assert.AreEqual(80,Get<double>(g,"Elapsed"));Assert.False(Get<bool>(g,"Repaired"));
    foreach(var field in new[]{"nightFaultMask","nightGraceUntil","campaignEnabled"})
    {var snap=Call(h,"Capture",.1f);var f=snap.GetType().GetField(field);f.SetValue(snap,field=="nightFaultMask"?(object)int.MaxValue:field=="campaignEnabled"?false:(object)999d);Assert.False((bool)Call(g,"ApplyRemote",snap));}

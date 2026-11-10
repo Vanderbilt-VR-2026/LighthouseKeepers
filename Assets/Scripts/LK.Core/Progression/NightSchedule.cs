@@ -33,6 +33,7 @@ namespace LighthouseKeepers.Core.Progression
                 // Initial leak is the tutorial's immediate job; later faults respect the calm opening.
                 bool initial=f.gate==NightEventGate.Clock&&f.atSeconds==0;
                 bool finale=data.finaleFaultPileup&&f.repeat&&f.kind==NightFaultKind.StationFailure;
+                if(f.kind==NightFaultKind.LowFuel&&!powerRestored)continue;
                 if(!ready||!initial&&(now<data.openingSeconds||now<ReliefUntil||!finale&&now<NextFaultAt))continue;
                 FiredMask|=1<<i;GraceUntil=Math.Max(GraceUntil,now+f.graceSeconds);
                 if(!initial)NextFaultAt=now+data.faultSpacingSeconds;
