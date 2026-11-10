@@ -38,7 +38,7 @@ Commit and push each numbered step. Recheck solo/crew at each part boundary. Bum
 
 ## DEVICE CHECKS PENDING
 
-- Install latest merge-candidate APK; accept F2/F3 release exits, bedroom flush hatch and F1 actual glazing.
+- Merge-candidate APK a9d5f2d is installed and launched. Human acceptance remains pending for F2/F3 release exits, bedroom flush hatch and F1 actual glazing; the M3 data-only checkpoint is not in that APK.
 - See Will’s Captain/fisherman across peers; inspect head, hands, arms, crouch and own-body hiding.
 - Two-way mono/AEC speech, near/far/handheld routing, valve roles, shared task/bed and rejoin.
 - 72 Hz: GPU ≤11 ms, CPU work ≤9 ms, per-floor/sea/peak-storm measurements; no locked-frame-rate claim yet.
