@@ -7,3 +7,5 @@ PR #85 / s4/integrated. Network LK-S5-VOICE1 remains unchanged: these are local 
 Input audit: the Lab rig uses XRI input actions. B has no active Lab action. The unused InputSystem_Actions template has a generic secondary-button Jump binding, but no scene/prefab references it; authored Jump locomotion is disabled. X/Y and wrist recall remain available.
 
 2. B tap/hold reveals immediately, a tap lasts five seconds, and a double tap within 350 ms replays the last line locally (three-second replay debounce). The local radio history retains three cues. The shared host cue/serial and other keeper's audio are not changed. Three focused state/history/placement tests pass; live rendered checks follow step 6.
+
+3. The left watch face now always carries the current local Objective Director instruction below its time readout. Hands and watch mounting pose are unchanged. Compilation and focused tests pass; tiny physical text still needs a worn-headset readability check.
