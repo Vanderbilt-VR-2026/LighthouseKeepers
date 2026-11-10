@@ -33,8 +33,12 @@ namespace LighthouseKeepers.WatchDemo
    var captions=Button(page,"SubtitleToggle","",-230,font,ink);var size=Button(page,"SubtitleSize","",-285,font,ink);
    void Labels(){captions.GetComponentInChildren<Text>().text=KeeperStrings.Get(HarborSubtitleSettings.Enabled?"menu.subtitlesOn":"menu.subtitlesOff");size.GetComponentInChildren<Text>().text=KeeperStrings.Get(HarborSubtitleSettings.Large?"menu.subtitleLarge":"menu.subtitleNormal");}
    captions.onClick.AddListener(()=>{HarborSubtitleSettings.Enabled=!HarborSubtitleSettings.Enabled;Labels();});size.onClick.AddListener(()=>{HarborSubtitleSettings.Large=!HarborSubtitleSettings.Large;Labels();});Labels();
-   page.sizeDelta=new Vector2(600,800);
-   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings",KeeperStrings.Get("menu.back"),-350,font,ink);
+   page.sizeDelta=new Vector2(600,920);
+   Text(page,"Objective height label",KeeperStrings.Get("menu.objectiveHeight"),new Vector2(-155,-350),new Vector2(230,50),font,ink);
+   var heightRect=Rect(page,"ObjectiveHeight",new Vector2(105,-350),new Vector2(220,34));var heightTrack=heightRect.gameObject.AddComponent<Image>();heightTrack.color=new Color(.25f,.17f,.1f,.2f);
+   var heightArea=Rect(heightRect,"Handle area",Vector2.zero,new Vector2(196,34));var heightHandle=Rect(heightArea,"Handle",Vector2.zero,new Vector2(24,42));heightHandle.gameObject.AddComponent<Image>().color=new Color(.27f,.17f,.08f);
+   var height=heightRect.gameObject.AddComponent<Slider>();height.targetGraphic=heightTrack;height.handleRect=heightHandle;height.minValue=-20;height.maxValue=-5;height.SetValueWithoutNotify(ObjectiveHudSettings.Height);height.onValueChanged.AddListener(v=>ObjectiveHudSettings.Height=v);
+   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings",KeeperStrings.Get("menu.back"),-420,font,ink);
    open.onClick.AddListener(()=>{states.Clear();foreach(Transform t in rect)if(t!=page){states[t.gameObject]=t.gameObject.activeSelf;t.gameObject.SetActive(false);}page.gameObject.SetActive(true);});
    back.onClick.AddListener(()=>{foreach(var pair in states)if(pair.Key)pair.Key.SetActive(pair.Value);page.gameObject.SetActive(false);refresh();});page.gameObject.SetActive(false);
   }

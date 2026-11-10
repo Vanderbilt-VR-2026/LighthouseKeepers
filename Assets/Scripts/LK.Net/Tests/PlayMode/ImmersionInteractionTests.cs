@@ -41,6 +41,22 @@ namespace LighthouseKeepers.Net.Tests
             System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",oldM2);System.Environment.SetEnvironmentVariable("LK_IMMERSION_DISABLED",oldImmersion);SoloWatchSession.Cancel();WatchDayLaunch.RequestedDay=1;
             yield return null;
         }
+        [UnityTest] public IEnumerator ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio()
+        {
+            var hud=Find("ObjectiveHud");var radio=Find("HarborRadio");yield return null;
+            radio.enabled=false;
+            radio.GetType().GetMethod("Play",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(radio,new object[]{1,100,100f});
+            int serial=Value<int>(radio,"Serial"),cue=Value<int>(radio,"Cue");
+            Call(hud,"RecallNow");
+            var group=Field<CanvasGroup>(hud,"objectiveGroup");var task=Field<TMPro.TMP_Text>(hud,"task");var subtitle=Field<TMPro.TMP_Text>(hud,"subtitle");
+            Assert.AreEqual(1,group.alpha,"Recall waits for a fade");Assert.AreEqual(Field<string>(hud,"full"),task.text,"Recall types instead of showing full objective");Assert.AreEqual(Value<string>(radio,"LastCaption"),subtitle.text,"Last line missing on same frame");Assert.False(subtitle.isTextTruncated,"Recall cuts off the last line");Assert.LessOrEqual(subtitle.textInfo.lineCount,2);
+            Assert.True((bool)Call(radio,"ReplayLastLocally"));Assert.AreEqual(serial,Value<int>(radio,"Serial"));Assert.AreEqual(cue,Value<int>(radio,"Cue"));Assert.False((bool)Call(radio,"ReplayLastLocally"),"Repeated double taps bypass replay cooldown");
+            var root=Field<RectTransform>(hud,"root");var head=Field<Transform>(hud,"head");
+            Assert.That(Vector3.Distance(head.position,root.position),Is.EqualTo(1.5f).Within(.01f));Assert.Less(head.InverseTransformPoint(root.position).y,-.25f);
+            float before=Quaternion.Angle(root.rotation,head.rotation);head.rotation=Quaternion.AngleAxis(35,Vector3.up)*head.rotation;var rotation=root.rotation;yield return null;Assert.Less(Quaternion.Angle(rotation,root.rotation),30,"Follow snapped");
+            yield return new WaitForSecondsRealtime(5.2f);Assert.AreEqual(0,group.alpha,"Objective became always-on during radio speech");
+            var face=GameObject.Find("Wrist current objective").GetComponent<TMPro.TMP_Text>();Assert.IsNotEmpty(face.text);Assert.True(face.gameObject.activeInHierarchy);face.ForceMeshUpdate();Assert.Greater(face.renderedWidth*Mathf.Abs(face.transform.lossyScale.x),.025f,"Watch objective is microscopic");Assert.Greater(Vector3.Dot(face.transform.forward,GameObject.Find("Time to dawn").transform.forward),.99f,"Watch writing faces wrong side");
+        }
         [UnityTest] public IEnumerator PoleRealGripFromEveryFloorReachesGroundWithBothHands()
         {
             var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();var capsule=origin.GetComponent<CharacterController>();

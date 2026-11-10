@@ -4,6 +4,9 @@ Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 wa
 
 ## Done / current
 
+- Job 1 class-playtest fix from PR #85 is merged through d432c20. New recall build 573cf72 passed focused checks, full suites with documented reruns, Night 1 and two-Mac smoke. M3 adds no runtime changes beyond that fix yet. Runtime scheduling, ships, doors and mirror remain next.
+- Editor audio stays muted. Do not launch the Quest app unless the lead asks. USB is currently absent; install the built recall APK when it returns, without launching.
+
 - North star, per-night tension graphs, reuse boundaries and verification gates: [M3-FiveNights.md](M3-FiveNights.md).
 - Will’s PR #86 body/flood work is already integrated in the base. Do not remodel his body or sky.
 - Base follow-ups implement intermediate pole exits, remove the bedroom cage, retain a flush safety hatch, and remove floating dotted rain panes.
@@ -13,7 +16,6 @@ Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 wa
 
 ## Ordered implementation queue
 
-0. Physical doors: hand/forearm push and handle grab, bounded hinges, shared authoritative angle, tutorial/route/rain compatibility. Inspect Will’s avatars from both peers; optional mirror only after measuring the GPU budget.
 A1. DONE (data only). Extend day data for five nights: duration, storm stage, faults/conditions, active stations, ships, crew roles, solo modifiers, grace and radio/opening cues. Preserve accepted legacy behavior behind the feature switch.
 A2. Arc: Leak (safe preview), Blackout (one consequential ship), Warning (two ships/broadcast extension), Everything Breaks (fuel/power/soot), Long Night (late repeated failures and large ship).
 A3. Data schedules: 30–60 s opening, 10–20 s relief, no ten-second fault pileup except finale.
@@ -22,6 +24,7 @@ B1. Quest steamer art (8–12k triangles, 1–2 materials), emissive lights, mes
 B2. Host ship approach/window/pass/wreck rules; warning 60–90 s ahead, named ships, beacon grace/loss only near passage. Test pass, recovery and wreck.
 B3. Shared passage payoff: horn/voice/music/storm relief for both keepers, visible from gallery/windows.
 B4. One urgent ship objective/progress and chalkboard ship ticks.
+After B, before C1 (new Job 2-C): physical hand/handle doors with bounded hinges, authoritative angle, latch and route/rain compatibility. Add the requested small House mirror, culled when distant/not viewed; inspect Will’s body from three angles and measure on Quest.
 C1. Night 5 climax: repeated generator/pipe failure and final large ship, tuned from duo bot.
 C2. Dawn/rescue boat, warm window/fog light (not sky edits), calmer sea/gulls, P25, skippable team credits.
 D1. Shared morning logbook: night/name, named ships, peak water, close calls, job times, descriptive grade.
@@ -38,7 +41,7 @@ Commit and push each numbered step. Recheck solo/crew at each part boundary. Bum
 
 ## DEVICE CHECKS PENDING
 
-- Merge-candidate APK a9d5f2d is installed and launched. Human acceptance remains pending for F2/F3 release exits, bedroom flush hatch and F1 actual glazing; the M3 data-only checkpoint is not in that APK.
+- Class-recall APK 573cf72 is built; install is pending because adb sees no Quest. Do not launch. Human pole/fixture/avatar and B-recall acceptance is pending; five-night gameplay is still disabled.
 - See Will’s Captain/fisherman across peers; inspect head, hands, arms, crouch and own-body hiding.
 - Two-way mono/AEC speech, near/far/handheld routing, valve roles, shared task/bed and rejoin.
 - 72 Hz: GPU ≤11 ms, CPU work ≤9 ms, per-floor/sea/peak-storm measurements; no locked-frame-rate claim yet.
@@ -55,7 +58,7 @@ cat Docs/Design/M3-Data.md
 cat Docs/Verification/M3/baseline.json
 ```
 
-The second Editor at `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Build` currently has the M3 data overlay and is stopped. Its bridge helper is `artifacts/coop/mac_pair.py` in `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics`; do not assume that guest worktree is a clean Git checkout. A1 runner: `python3 artifacts/m3/a1-check.py` from this M3 worktree (copies authored data back and runs focused tests). Integration baseline scripts/results are in the integration workspace’s `artifacts/pole-avatar/final/`; use fresh output folders for reruns.
+The second Editor at `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Build` currently has the PR85 recall source overlay (not M3) and is stopped. Its bridge helper is `artifacts/coop/mac_pair.py` in `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics`; do not assume that guest worktree is a clean Git checkout. A1 runner: `python3 artifacts/m3/a1-check.py` from this M3 worktree (copies authored data back and runs focused tests). Integration baseline scripts/results are in the integration workspace’s `artifacts/pole-avatar/final/`; use fresh output folders for reruns.
 
 For a clean M3 Unity run (6000.3.23f1):
 ```sh
@@ -72,6 +75,37 @@ LK_APK_OUTPUT="$PWD/Builds/LighthouseKeepers-M3-$(git rev-parse --short HEAD).ap
 ## Release action held for user confirmation
 
 After the lead explicitly says PR #85 is merged: fetch main, verify its merge, tag `sprint4-m2` without moving an existing tag, build that exact commit, publish “Sprint 4 — Milestone 2” with APK/SHA-256/five plain-English lines, update README downloads. Close #81–#83 with a comment linking #85; **ask before closing Eli’s #84**. Do not publish or close ahead of that confirmation.
+
+---
+
+# Class playtest recall checkpoint — 2026-11-10
+
+Job 1 on `s4/integrated` / PR #85 is implemented, committed and verified; APK built from **573cf72**. The Quest disappeared from `adb devices` before installation. **Do not launch the Quest app unless the lead asks.** All Editor runs must remain muted with `EditorUtility.audioMasterMute = true`; `EditorPlaytestAudio` handles Editor initialization/Play Mode transitions, and `artifacts/coop/mac_pair.py` also mutes before runs. No player audio settings changed.
+
+Done: below-eye 1.5 m lazy-follow objective, five-second presentation, saved -20 to -5 degree height, instant B tap/hold, double-tap local replay, three-line history, wrist objective, existing X/Y/wrist recall, one-time Night 1 B reminder. Network remains **LK-S5-VOICE1 / snapshot v19**; no synchronized fields changed.
+
+Verification: EditMode 355 passing cases after the single FMOD scene-audit rerun; PlayMode 49 passing cases with the same 24 inherited failures and 3 skips after replacing the obsolete world-fixed assertion with the requested lazy-follow test. Original full results and focused reruns stay separate. Physical Night 1 and live two-Mac join/avatar/local replay/shared pipe/shared sleep pass. Mono/AEC setup passes, but no human listening claim while Editors are muted. See `Docs/Verification/ObjectiveRecall/README.md`.
+
+## DEVICE CHECKS PENDING
+
+- Connect the Quest over USB, install the exact APK below; **do not launch without a new request**.
+- When the lead is ready: press B near the board, pipe and generator; verify same-frame full objective and last line below gaze, hold, tap expiry, double-tap audio replay.
+- Turn the head quickly and slowly: lazy follow must be comfortable and leave the centre clear. Adjust Objective height in Watch Menu settings and restart to check persistence.
+- Read the current job on the left watch, check X/Y and wrist glance, and the one-time Night 1 B reminder.
+- Human two-way voice and Mac+Quest task/sleep smoke; on-device worn-headset CPU/GPU/readability/comfort remain unverified.
+
+## Exact continuation
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+"/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb" devices -l
+"/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb" install -r Builds/LighthouseKeepers-Recall-573cf72.apk
+# STOP here: do not run am start or monkey without the lead asking.
+```
+
+This fix is now merged into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `m3/five-nights`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #87 draft and never merge main.
+
+Raw runners/results: `artifacts/class-recall/`; `tests.py` (EditMode), `play-focused.py`, `play.py` (full PlayMode), `solo.py` (Night 1), `crew.py` (two-Mac smoke), `build.py` (exact-source Android build). Before repeating a run choose a fresh output directory; inspect the script's existing destination. Both Editors were stopped after the smoke test. Preserve the unrelated Quest prefab ray-width edit and `Docs/Verification/Immersion/pipe-lever/`.
 
 ---
 

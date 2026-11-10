@@ -1,0 +1,29 @@
+# Class playtest objective recall
+
+PR #85 / s4/integrated. Network LK-S5-VOICE1 remains unchanged: these are local presentation controls.
+
+1. Placement: 1.5 m away, centred, default 13.5 degrees below gaze, smooth follow. Objective changes reveal for five seconds; objective and live subtitle visibility are separate. Height slider in Watch Menu's settings saves -20 to -5 degrees per device. Focused placement/persistence test passes. Headset comfort/readability pending.
+
+Input audit: the Lab rig uses XRI input actions. B has no active Lab action. The unused InputSystem_Actions template has a generic secondary-button Jump binding, but no scene/prefab references it; authored Jump locomotion is disabled. X/Y and wrist recall remain available.
+
+2. B tap/hold reveals immediately, a tap lasts five seconds, and a double tap within 350 ms replays the last line locally (three-second replay debounce). The local radio history retains three cues. The shared host cue/serial and other keeper's audio are not changed. Three focused state/history/placement tests pass; live rendered checks follow step 6.
+
+3. The left watch face now always carries the current local Objective Director instruction below its time readout. Hands and watch mounting pose are unchanged. Compilation and focused tests pass; tiny physical text still needs a worn-headset readability check.
+
+4. X/Y still reveal the objective and request the existing status update; a fresh wrist glance still reveals it. B uses local state and local playback only. No command schema, game state, snapshot or network version changed. Rendered co-op isolation is checked in step 6.
+
+5. The first actual Night 1 objective transition shows “Press B to see your objective” for five seconds, caption only. It is remembered per device and does not repeat on retry. Four focused tests pass, including saved teaching state. Live narration remains independent of this brief reminder.
+
+6. Render review corrected the two-line subtitle height and the 3D wrist font scale. Both screenshots were inspected. A scene-level PlayMode check passes: full objective/caption on the recall frame, two complete caption lines, lazy follow, automatic expiry, local replay leaving host cue/serial unchanged, and visible wrist lettering. Full-suite and live transport results follow below.
+
+Editor output is muted automatically at initialization and every Play Mode transition, including separate/virtual Editor instances. The run helper also sets `EditorUtility.audioMasterMute = true` before tests. This does not change player/build audio. Per the latest request, installation must NOT launch the Quest app.
+
+The full PlayMode run exposed the old world-fixed-tracker assertion. This is an intentional specification change, not an inherited failure: the test now checks delayed follow below eye level and explicit recall placement. Its focused rerun passes. Preserve the original full-run result alongside the rerun; do not describe the raw suite as all green.
+
+Final checks: raw EditMode **354 pass / 1 error** (FMOD output-device switch while opening scenes); that one audit passed its focused rerun, preserving **355 passing cases**. Raw PlayMode **48 pass / 25 fail / 3 skip**; replacing the superseded world-fixed assertion and passing its rerun gives **49 passing cases, the same 24 inherited failures, 3 skips, no new unresolved failures**. Separate raw results and comparison are committed.
+
+Physical solo Night 1 repairs all bolts and sleeps into Night 2. Two separate Mac/Fusion clients join, see William's avatars, recall complete text on the same frame, replay without changing shared cue/serial, complete the guest pipe task with host valve hold, and sleep into Night 2. Mono/AEC/noise-suppression setup is checked on both. Editors were muted: this is transport/configuration evidence, not a fresh human listening acceptance. Host and guest screenshots were inspected.
+
+Human/device pending: B tap/hold/double-tap on actual controllers; below-eye placement and lazy-follow comfort; wrist readability; height persistence across application restart; X/Y and wrist-glance feel; two-way listening and sustained device frame time. No Quest launch is authorized for this delivery.
+
+APK built successfully from **573cf72**: `Builds/LighthouseKeepers-Recall-573cf72.apk` (133,776,698 bytes). SHA-256 `f7d80e587d604fc975c1aba04ea03b290c612b32fed9e1cc8db8b9707854a4e9`. Later commits only update tests/evidence. ADB sees no headset at delivery: installation is pending, and the app was not launched.
