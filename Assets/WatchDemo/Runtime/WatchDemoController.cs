@@ -107,6 +107,8 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Master&&state.Master.onboarding)OnboardingPresentation.Create(this,head,bed,pipeRepair);
             if(state.Master&&state.Master.worldSafety)MasterWorldSafety.Create(this);
             if(state.Master&&state.Master.movement)KeeperMovement.Create(this);
+            // Aperture guards are structural even when optional movement features are disabled.
+            PoleSlide.Create(this,FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>());
             ObjectiveHud.Create(this,head);
             QuestRenderQuality.Create(this);
             WorldLabelRaster.Create(this);

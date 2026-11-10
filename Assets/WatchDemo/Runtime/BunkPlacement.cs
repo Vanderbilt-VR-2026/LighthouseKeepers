@@ -4,7 +4,7 @@ namespace LighthouseKeepers.WatchDemo
  // One authored pose shared by the builder and restored-shell runtime adaptation.
  public static class BunkPlacement
  {
-  public static Vector3 FramePosition=>new Vector3(2.65f,6.9f,.3f);
+  public static Vector3 FramePosition=>new Vector3(2.95f,6.9f,0f);
   public static void Apply(Transform frame)
   {
    frame.position=FramePosition;

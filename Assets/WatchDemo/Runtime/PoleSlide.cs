@@ -1,57 +1,100 @@
-using UnityEngine;using Unity.XR.CoreUtils;using UnityEngine.XR.Interaction.Toolkit;using UnityEngine.XR.Interaction.Toolkit.Interactables;using UnityEngine.XR.Interaction.Toolkit.Locomotion;using UnityEngine.XR.Interaction.Toolkit.Locomotion.Gravity;using UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement;using LighthouseKeepers.Gameplay.Interaction;
-namespace LighthouseKeepers.WatchDemo {
- // Two short drops use existing stair voids. Floors are never disabled or teleported through.
- // Releasing grip brakes to a pause on the pole; regrip continues. Bottom restores ordinary movement.
- public sealed class PoleSlide:MonoBehaviour {
-  WatchDemoController watch;XROrigin rig;XRSimpleInteractable grab;XRBodyTransformer body;GravityProvider gravity;ContinuousMoveProvider move;readonly XROriginMovement motion=new();
-  readonly System.Collections.Generic.List<Collider> openedGuards=new();Vector3 axis;float top,bottom,speed,stalled,previousY;bool latched,oldGravity,oldMove;BoxCollider gate;CharacterController capsule;Transform gateHinge;AudioSource sound;HandRig hand;
-  public float Top=>top;public float Bottom=>bottom;public bool Latched=>latched;public float Speed=>speed;
-  public static void Create(WatchDemoController w,XROrigin rig){var points=new[]{new Vector3(-2.20f,6.6f,2f),new Vector3(-1.40f,9.9f,1.20f)};foreach(var p in points){if(!Physics.CapsuleCast(p+Vector3.up*.25f,p+Vector3.up*1.5f,.24f,Vector3.down,out var hit,3.8f,~0,QueryTriggerInteraction.Ignore)||hit.distance<2){Debug.LogWarning("Pole shaft blocked at "+p);continue;}var go=new GameObject("Brass descent pole F"+(1+Mathf.RoundToInt(p.y/3.3f)));go.SetActive(false);var c=go.AddComponent<PoleSlide>();c.watch=w;c.rig=rig;c.axis=p;c.top=p.y;c.bottom=hit.point.y+.06f;c.Build();go.SetActive(true);}}
-  void Build(){var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();parts.Brass.SetColor("_BaseColor",new Color(.32f,.20f,.07f));parts.Brass.SetColor("_EmissionColor",Color.black);parts.Brass.DisableKeyword("_EMISSION");parts.Brass.SetFloat("_Smoothness",.18f);parts.Brass.SetFloat("_Metallic",.55f);parts.Brass.SetFloat("_Cull",2);float shaftTop=top+2.6f;
-   var shaftPosition=axis+Vector3.left*.28f;
-   if(Physics.Raycast(shaftPosition+Vector3.up*1.3f,Vector3.up,out var ceiling,2.5f,~0,QueryTriggerInteraction.Ignore))shaftTop=ceiling.point.y;
-   float height=shaftTop-bottom;transform.position=shaftPosition;
-   parts.Part("Brass slide shaft",transform,new Vector3(0,(shaftTop+bottom)*.5f-top,0),new Vector3(.055f,height*.5f,.055f),parts.Brass,PrimitiveType.Cylinder);
-   parts.Part("Pole lower mounting shoe",transform,new Vector3(0,bottom-top+.025f,0),new Vector3(.14f,.025f,.14f),parts.Dark,PrimitiveType.Cylinder);
-   parts.Part("Pole ceiling mounting shoe",transform,new Vector3(0,shaftTop-top-.025f,0),new Vector3(.14f,.025f,.14f),parts.Dark,PrimitiveType.Cylinder);
-   var trigger=gameObject.AddComponent<BoxCollider>();trigger.isTrigger=true;trigger.center=new Vector3(0,(bottom-top)*.5f+.6f,0);trigger.size=new Vector3(.25f,top-bottom+1.2f,.25f);grab=gameObject.AddComponent<XRSimpleInteractable>();grab.colliders.Clear();grab.colliders.Add(trigger);grab.selectMode=InteractableSelectMode.Multiple;grab.selectEntered.AddListener(Grab);
-   var approach=(top<8?new Vector3(.39f,0,.39f):Vector3.forward*.55f).normalized;
-   var across=Vector3.Cross(Vector3.up,approach);
-   var surround=M2StationParts.Root("Pole landing railing",transform,Vector3.zero);surround.position=axis;surround.rotation=Quaternion.LookRotation(approach);
-   // One enclosure replaces the overlapping visual survey rails. Existing collision stays intact.
-   foreach(float x in new[]{-.36f,.36f})foreach(float z in new[]{-.32f,.44f})parts.Part("Pole landing upright",surround,new Vector3(x,.52f,z),new Vector3(.035f,1.04f,.035f),parts.Dark);
-   foreach(float y in new[]{.5f,1.02f}){
-    foreach(float x in new[]{-.36f,.36f})parts.Part("Pole landing side rail",surround,new Vector3(x,y,.06f),new Vector3(.035f,.035f,.76f),parts.Dark);
-    parts.Part("Pole landing back rail",surround,new Vector3(0,y,-.32f),new Vector3(.72f,.035f,.035f),parts.Dark);
-   }
-   parts.Part("Pole brace collar",transform,new Vector3(0,1.02f,0),new Vector3(.075f,.025f,.075f),parts.Dark,PrimitiveType.Cylinder);
-   gateHinge=M2StationParts.Root("Pole gate hinge",transform,Vector3.zero);
-   gateHinge.position=axis+approach*.44f-across*.32f+Vector3.up*.85f;
-   gateHinge.rotation=Quaternion.LookRotation(approach);
-   var bar=parts.Part("Pole safety gate",gateHinge,new Vector3(.32f,0,0),new Vector3(.64f,.035f,.035f),parts.Dark);
-   gate=bar.AddComponent<BoxCollider>();
-   var plate=parts.Part("Pole engraved plate",gateHinge,new Vector3(.32f,-.10f,.025f),new Vector3(.30f,.10f,.018f),parts.Dark);
-   parts.Text("Pole grip instruction",KeeperStrings.Get("pole.grip"),gateHinge,new Vector3(.32f,-.10f,.036f),.0024f);
-   capsule=rig.GetComponentInChildren<CharacterController>();
-   body=rig.GetComponentInChildren<XRBodyTransformer>();gravity=rig.GetComponentInChildren<GravityProvider>();move=rig.GetComponentInChildren<ContinuousMoveProvider>();sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.loop=true;sound.spatialBlend=1;sound.minDistance=.5f;sound.maxDistance=6;sound.volume=.09f;sound.clip=Resources.Load<AudioClip>("ImmersionAudio/creak");
-  }
-  System.Collections.IEnumerator Start(){yield return null;
-   foreach(var guard in FindObjectsByType<BoxCollider>(FindObjectsSortMode.None))
-    if(guard.name=="Surveyed stair opening guard"&&EntranceGuard(guard))foreach(var renderer in guard.GetComponentsInChildren<Renderer>())renderer.enabled=false;
-  }
-  bool EntranceGuard(BoxCollider guard)=>Mathf.Abs(guard.bounds.center.y-top-.55f)<.25f&&Vector3.ProjectOnPlane(guard.bounds.ClosestPoint(axis+Vector3.up*.55f)-axis,Vector3.up).magnitude<.85f;
-  void Grab(SelectEnterEventArgs e){if(watch.State.Failed||watch.ObjectivePresentationBlocked||!body)return;if(!latched&&Mathf.Abs(rig.transform.position.y-top)>.35f)return;if(!latched){oldGravity=gravity&&gravity.enabled;oldMove=move&&move.enabled;if(gravity)gravity.enabled=false;if(move)move.enabled=false;latched=true;gate.enabled=false;gateHinge.Rotate(0,85,0,Space.Self);
-   // Reconciled fall guards also cover the pole entrance. Open only this keeper's passage;
-   // the other keeper and every other floor retain collision protection.
-   foreach(var guard in FindObjectsByType<BoxCollider>(FindObjectsSortMode.None))
-    if(capsule&&guard.enabled&&(guard.name=="Surveyed stair opening guard"||guard.name.StartsWith(PlaytestWorldFixes.GuardPrefix))&&EntranceGuard(guard)){Physics.IgnoreCollision(capsule,guard,true);openedGuards.Add(guard);}
-   previousY=rig.transform.position.y;stalled=0;}hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.Pulse(.18f,.08f);}
-  void Update(){if(!latched)return;float dt=Time.deltaTime;bool held=grab.isSelected&&!watch.ObjectivePresentationBlocked;speed=Mathf.MoveTowards(speed,held?watch.State.Master.poleSpeed:0,watch.State.Master.poleAcceleration*dt);
-   var p=rig.Camera.transform.position;p.y=rig.transform.position.y;var delta=Vector3.ProjectOnPlane(axis-p,Vector3.up);float vertical=delta.magnitude<.08f?Mathf.Min(speed*dt,Mathf.Max(0,p.y-bottom)):0;motion.motion=(held?Vector3.ClampMagnitude(delta,dt*.7f):Vector3.zero)+Vector3.down*vertical;body.QueueTransformation(motion,100);
-   if(p.y<=bottom+.08f){Finish();return;}if(held&&Mathf.Abs(p.y-previousY)<.0001f&&delta.magnitude<.08f)stalled+=dt;else stalled=0;previousY=p.y;if(stalled>1){Finish();return;}
-   if(speed>.1f){if(sound.clip&&!sound.isPlaying)sound.Play();}else sound.Stop();
-  }
-  void Finish(){foreach(var guard in openedGuards)if(guard&&capsule)Physics.IgnoreCollision(capsule,guard,false);openedGuards.Clear();latched=false;speed=0;if(gravity)gravity.enabled=oldGravity;if(move)move.enabled=oldMove;if(gate){gate.enabled=true;gateHinge.Rotate(0,-85,0,Space.Self);}if(sound)sound.Stop();}
-  void OnDestroy(){if(latched)Finish();if(grab)grab.selectEntered.RemoveListener(Grab);}
- }
+using System.Collections.Generic;
+using LighthouseKeepers.Core;
+using UnityEngine;
+using Unity.XR.CoreUtils;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Gravity;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement;
+using LighthouseKeepers.Gameplay.Interaction;
+namespace LighthouseKeepers.WatchDemo
+{
+    // One side shaft, authored circular openings, three guarded entries. Never bypass floor collision.
+    public sealed class PoleSlide:MonoBehaviour
+    {
+        public static readonly Vector3 ShaftAxis=new Vector3(1.7f,0,1.1f);
+        public const float OpeningRadius=.58f;
+        public static readonly float[] EntryHeights={3.3f,6.6f,9.9f};
+        public float Top=>9.9f;
+        public float Bottom=>.04f;
+        public bool Latched=>latched;
+        public float Speed=>speed;
+        public bool CanEnterAt(float feetY){foreach(float y in EntryHeights)if(Mathf.Abs(feetY-y)<.38f)return true;return false;}
+        WatchDemoController watch;XROrigin rig;XRSimpleInteractable grab;XRBodyTransformer body;GravityProvider gravity;ContinuousMoveProvider move;
+        readonly XROriginMovement motion=new();readonly List<Collider> openedGuards=new();readonly List<Transform> gateHinges=new();readonly List<Collider> guards=new();
+        CharacterController capsule;AudioSource sound;float speed,stalled,previousY;bool latched,oldGravity,oldMove;Transform openedHinge;Mesh trimMesh;
+        public static void Create(WatchDemoController watch,XROrigin rig)
+        {
+            var go=new GameObject("Continuous brass descent pole F4 to F1");go.SetActive(false);var p=go.AddComponent<PoleSlide>();p.watch=watch;p.rig=rig;p.Build();go.SetActive(true);
+        }
+        void Build()
+        {
+            transform.position=ShaftAxis+Vector3.left*.28f;
+            var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();parts.Brass.SetColor("_BaseColor",new Color(.32f,.20f,.07f));parts.Brass.SetColor("_EmissionColor",Color.black);parts.Brass.DisableKeyword("_EMISSION");parts.Brass.SetFloat("_Smoothness",.25f);parts.Brass.SetFloat("_Metallic",.55f);
+            const float ceiling=12.9f;
+            parts.Part("Continuous brass slide shaft",transform,Vector3.up*((ceiling+Bottom)*.5f),new Vector3(.055f,(ceiling-Bottom)*.5f,.055f),parts.Brass,PrimitiveType.Cylinder);
+            foreach(float y in new[]{Bottom,ceiling})parts.Part("Pole mounting shoe",transform,Vector3.up*y,new Vector3(.14f,.025f,.14f),parts.Dark,PrimitiveType.Cylinder);
+            foreach(float y in EntryHeights)BuildLanding(parts,y);
+            var trigger=gameObject.AddComponent<BoxCollider>();trigger.isTrigger=true;trigger.center=Vector3.up*5.6f;trigger.size=new Vector3(.22f,11.2f,.22f);
+            grab=gameObject.AddComponent<XRSimpleInteractable>();grab.colliders.Clear();grab.colliders.Add(trigger);grab.selectMode=InteractableSelectMode.Multiple;grab.selectEntered.AddListener(Grab);grab.enabled=watch.State.Master&&watch.State.Master.movement;
+            capsule=rig.GetComponentInChildren<CharacterController>();body=rig.GetComponentInChildren<XRBodyTransformer>();gravity=rig.GetComponentInChildren<GravityProvider>();move=rig.GetComponentInChildren<ContinuousMoveProvider>();
+            sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.loop=true;sound.spatialBlend=1;sound.minDistance=.5f;sound.maxDistance=6;sound.volume=.09f;sound.clip=Resources.Load<AudioClip>("ImmersionAudio/creak");KeeperAudioMix.Route(sound,"SFX_World");
+        }
+        void BuildLanding(M2StationParts parts,float y)
+        {
+            var root=M2StationParts.Root("Circular pole landing F"+(1+Mathf.RoundToInt(y/3.3f)),transform,Vector3.zero);root.position=ShaftAxis+Vector3.up*y;
+            // 300 degree railing, open west toward the room; gate closes the remaining arc.
+            for(int i=0;i<12;i++){
+                float a=(i*30-150)*Mathf.Deg2Rad,b=(i*30-120)*Mathf.Deg2Rad;
+                if(i>=10)continue;
+                Vector3 p=new Vector3(Mathf.Cos(a),0,Mathf.Sin(a))*.67f,q=new Vector3(Mathf.Cos(b),0,Mathf.Sin(b))*.67f;
+                if(i%2==0)parts.Part("Pole guard upright",root,p+Vector3.up*.55f,new Vector3(.035f,1.1f,.035f),parts.Dark);
+                foreach(float height in new[]{.55f,1.08f}){var rail=parts.Part("Circular shaft rail",root,(p+q)*.5f+Vector3.up*height,new Vector3(.035f,.035f,(q-p).magnitude+.02f),parts.Dark);rail.transform.localRotation=Quaternion.LookRotation(q-p);}
+                var guard=new GameObject("Pole opening fall guard").AddComponent<BoxCollider>();guard.transform.SetParent(root,false);guard.transform.localPosition=(p+q)*.5f+Vector3.up*.58f;guard.transform.localRotation=Quaternion.LookRotation(q-p);guard.size=new Vector3(.07f,1.16f,(q-p).magnitude+.03f);guards.Add(guard);
+            }
+            // West entrance: reachable shaft 0.42 m beyond a standing keeper, unobstructed by signage.
+            var hinge=M2StationParts.Root("Pole entrance gate",root,new Vector3(-.58f,.80f,-.36f));gateHinges.Add(hinge);
+            var bar=parts.Part("Pole gate bar",hinge,new Vector3(0,0,.36f),new Vector3(.035f,.035f,.72f),parts.Dark);
+            var gate=bar.AddComponent<BoxCollider>();gate.size=new Vector3(1,30,1);guards.Add(gate);
+            parts.Part("Pole sign post",root,new Vector3(-.58f,.64f,.52f),new Vector3(.035f,1.28f,.035f),parts.Dark);
+            var sign=M2StationParts.Root("Pole side-mounted grip plate",root,new Vector3(-.60f,1.24f,.52f));sign.localRotation=Quaternion.Euler(0,-90,0);
+            parts.Part("Pole engraved plate",sign,Vector3.zero,new Vector3(.32f,.12f,.018f),parts.Brass);
+            parts.Text("Pole grip instruction",KeeperStrings.Get("pole.grip"),sign,new Vector3(0,0,.012f),.0024f);
+            // A visible metal liner makes the cut read as a constructed circular shaft, not a missing floor.
+            if(!trimMesh)trimMesh=BuildRim();var rim=new GameObject("Circular floor opening brass rim");rim.transform.SetParent(root,false);rim.AddComponent<MeshFilter>().sharedMesh=trimMesh;rim.AddComponent<MeshRenderer>().sharedMaterial=parts.Brass;
+        }
+        static Mesh BuildRim()
+        {
+            const int n=32;var v=new List<Vector3>();var t=new List<int>();
+            for(int i=0;i<n;i++){float a=i*Mathf.PI*2/n,b=(i+1)*Mathf.PI*2/n;var u=new Vector3(Mathf.Cos(a),0,Mathf.Sin(a));var w=new Vector3(Mathf.Cos(b),0,Mathf.Sin(b));
+                void Quad(Vector3 aa,Vector3 bb,Vector3 cc,Vector3 dd){int k=v.Count;v.AddRange(new[]{aa,bb,cc,dd});t.AddRange(new[]{k,k+1,k+2,k,k+2,k+3});}
+                Quad(u*(OpeningRadius+.035f)+Vector3.up*.006f,w*(OpeningRadius+.035f)+Vector3.up*.006f,w*OpeningRadius+Vector3.up*.006f,u*OpeningRadius+Vector3.up*.006f);
+                Quad(u*OpeningRadius,u*OpeningRadius-Vector3.up*.35f,w*OpeningRadius-Vector3.up*.35f,w*OpeningRadius);
+            }
+            var m=new Mesh{name="Circular pole floor liner"};m.SetVertices(v);m.SetTriangles(t,0);m.RecalculateNormals();m.RecalculateBounds();return m;
+        }
+        void Grab(SelectEnterEventArgs e)
+        {
+            if(watch.State.Failed||watch.ObjectivePresentationBlocked||!body)return;
+            if(!latched&&!CanEnterAt(rig.transform.position.y))return;
+            if(!latched){oldGravity=gravity&&gravity.enabled;oldMove=move&&move.enabled;if(gravity)gravity.enabled=false;if(move)move.enabled=false;latched=true;
+                float y=rig.transform.position.y;foreach(var hinge in gateHinges)if(Mathf.Abs(hinge.position.y-.8f-y)<.38f){openedHinge=hinge;hinge.Rotate(0,85,0);break;}
+                // Personal passage only; the second keeper retains every guard collider.
+                foreach(var guard in guards)if(capsule){Physics.IgnoreCollision(capsule,guard,true);openedGuards.Add(guard);}
+                previousY=y;stalled=0;
+            }
+            var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.Pulse(.18f,.08f);
+        }
+        void Update()
+        {
+            if(!latched)return;float dt=Time.deltaTime;bool held=grab.isSelected&&!watch.ObjectivePresentationBlocked;speed=Mathf.MoveTowards(speed,held?watch.State.Master.poleSpeed:0,watch.State.Master.poleAcceleration*dt);
+            var p=rig.Camera.transform.position;p.y=rig.transform.position.y;var delta=Vector3.ProjectOnPlane(ShaftAxis-p,Vector3.up);float vertical=delta.magnitude<.08f?Mathf.Min(speed*dt,Mathf.Max(0,p.y-Bottom)):0;
+            motion.motion=(held?Vector3.ClampMagnitude(delta,dt*.7f):Vector3.zero)+Vector3.down*vertical;body.QueueTransformation(motion,100);
+            if(p.y<=Bottom+.08f){Finish();return;}if(held&&Mathf.Abs(p.y-previousY)<.0001f&&delta.magnitude<.08f)stalled+=dt;else stalled=0;previousY=p.y;if(stalled>1){Finish();return;}
+            if(speed>.1f){if(sound.clip&&!sound.isPlaying)sound.Play();}else sound.Stop();
+        }
+        void Finish(){foreach(var guard in openedGuards)if(guard&&capsule)Physics.IgnoreCollision(capsule,guard,false);openedGuards.Clear();latched=false;speed=0;if(gravity)gravity.enabled=oldGravity;if(move)move.enabled=oldMove;if(openedHinge){openedHinge.Rotate(0,-85,0);openedHinge=null;}if(sound)sound.Stop();}
+        void OnDestroy(){if(latched)Finish();if(grab)grab.selectEntered.RemoveListener(Grab);if(trimMesh)Destroy(trimMesh);}
+    }
 }

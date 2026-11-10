@@ -87,6 +87,13 @@ namespace LighthouseKeepers.Editor.Environment
         };
         public static void ApplyVisualCorrections(GameObject root)
         {
+            // Persist the authored pole apertures when regenerating the shell.
+            const string poleMeshes="Assets/WatchDemo/PoleShaftMeshes/";
+            foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))
+            {var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+f.name+".asset");if(m)f.sharedMesh=m;}
+            foreach(var c in root.GetComponentsInChildren<MeshCollider>(true))
+            {var key=c.name.StartsWith("UCX_")?c.name.Substring(4):c.name;if(key.EndsWith("_01"))key=key.Substring(0,key.Length-3);
+             var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+key+".asset");if(m){c.convex=false;c.sharedMesh=m;}}
             foreach(var filter in root.GetComponentsInChildren<MeshFilter>(true))
                 if(separatedMeshes.TryGetValue(filter.name,out var guid))
                 {
@@ -138,6 +145,7 @@ namespace LighthouseKeepers.Editor.Environment
             foreach(var s in Layout.stations.Where(s=>s.floor==floor).OrderBy(s=>s.id,StringComparer.Ordinal))
             {
                 var p=new GameObject(s.id).transform;p.SetParent(root,false);p.position=V(s.anchor.position);p.rotation=Quaternion.Euler(V(s.anchor.rotationEuler));
+                if(s.id=="STN_BEACON_CONTROL"&&AssetDatabase.IsValidFolder("Assets/WatchDemo/PoleShaftMeshes")){p.position=new Vector3(1f,9.9f,2.4f);p.rotation=Quaternion.Euler(0,202.62f,0);}
                 foreach(var a in s.interactiveAnchors){var t=new GameObject(a.name).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);}
                 foreach(var a in s.legacySockets){var t=new GameObject(a.socketName).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);new GameObject(a.anchorName).transform.SetParent(t,false);}
             }

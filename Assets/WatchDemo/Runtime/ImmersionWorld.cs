@@ -45,7 +45,7 @@ namespace LighthouseKeepers.WatchDemo
             var bedMount=M2StationParts.Root("Bunk physical fittings",transform,Vector3.zero);bedMount.SetPositionAndRotation(bed.position,bed.rotation);
             var wood=bed.GetComponent<Renderer>().sharedMaterial;
             bed=bedMount;
-            parts.Part("Timber bunk headboard",bed,new Vector3(0,.64f,1.06f),new Vector3(1.14f,1.05f,.07f),wood);
+            parts.Part("Timber bunk headboard",bed,new Vector3(0,.64f,1.06f),new Vector3(1.05f,1.05f,.07f),wood);
             for(int i=0;i<2;i++)
             {
                 bunk[i]=Fixture(parts,bed,new Vector3(i==0?-.35f:.35f,.95f,1.01f),i==0?"Host bunk lamp":"Guest bunk lamp");

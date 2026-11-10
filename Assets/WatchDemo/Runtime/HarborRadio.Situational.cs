@@ -34,7 +34,7 @@ namespace LighthouseKeepers.WatchDemo
   bool KeepersSeparated()
   {if(watch.State.Coop is not ICoopKeeperLocations locations)return false;locations.Locations(out _,out var a,out int second,out var b);return second>0&&Mathf.Abs(a.y-b.y)>=6.6f;}
   bool AtUsefulPole(Vector3 p,KeeperStep step)
-  {if(poles==null||ObjectiveDirector.Floor(step)>=ObjectiveHud.FloorAt(p.y)||step==KeeperStep.None)return false;foreach(var pole in poles)if(pole&&ObjectiveHud.FloorAt(p.y)==ObjectiveHud.FloorAt(pole.Top+1.6f)&&Vector2.Distance(new Vector2(p.x,p.z),new Vector2(pole.transform.position.x,pole.transform.position.z))<1.8f)return true;return false;}
+  {if(poles==null||ObjectiveDirector.Floor(step)>=ObjectiveHud.FloorAt(p.y)||step==KeeperStep.None)return false;foreach(var pole in poles)if(pole&&pole.CanEnterAt(p.y-1.6f)&&Vector2.Distance(new Vector2(p.x,p.z),new Vector2(pole.transform.position.x,pole.transform.position.z))<1.8f)return true;return false;}
   bool UsefulPoleNearby()
   {var s=watch.State;var a=head.position;var b=a;int actor=0,other=0;if(s.Coop is ICoopKeeperLocations locations)locations.Locations(out actor,out a,out other,out b);return AtUsefulPole(a,s.Director?.ForActor(actor)??KeeperStep.None)||other>0&&AtUsefulPole(b,s.Director?.ForActor(other)??KeeperStep.None);}
   void ObserveSituationalLines()

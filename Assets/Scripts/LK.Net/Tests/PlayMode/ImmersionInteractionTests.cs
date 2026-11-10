@@ -41,19 +41,23 @@ namespace LighthouseKeepers.Net.Tests
             System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",oldM2);System.Environment.SetEnvironmentVariable("LK_IMMERSION_DISABLED",oldImmersion);SoloWatchSession.Cancel();WatchDayLaunch.RequestedDay=1;
             yield return null;
         }
-        [UnityTest] public IEnumerator PoleRealGripOpensOnlyLocalGuardAndReachesBothLandings()
+        [UnityTest] public IEnumerator PoleRealGripFromEveryFloorReachesGroundWithBothHands()
         {
             var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();var capsule=origin.GetComponent<CharacterController>();
             foreach(var b in origin.GetComponents<MonoBehaviour>())if(b.GetType().Name=="DesktopPreview")b.enabled=false;
-            var poles=Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Where(c=>c.GetType().Name=="PoleSlide").OrderBy(c=>Value<float>(c,"Top")).ToArray();Assert.AreEqual(2,poles.Length);
+            var poles=Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Where(c=>c.GetType().Name=="PoleSlide").OrderBy(c=>Value<float>(c,"Top")).ToArray();Assert.AreEqual(1,poles.Length);
+            var bed=GameObject.Find("Third-floor bed frame").GetComponent<Collider>();
+            foreach(var guard in poles[0].GetComponentsInChildren<BoxCollider>().Where(c=>!c.isTrigger))
+                Assert.False(Physics.ComputePenetration(guard,guard.transform.position,guard.transform.rotation,bed,bed.transform.position,bed.transform.rotation,out _,out _),"Pole railing intersects the bunk");
             foreach(var hand in hands){hand.enabled=false;var direct=hand.Direct;direct.enabled=true;
-            foreach(var pole in poles){
-                float top=Value<float>(pole,"Top"),bottom=Value<float>(pole,"Bottom");var axis=pole.transform.position+Vector3.right*.28f;
-                var approach=(top<8?new Vector3(.39f,0,.39f):Vector3.forward*.55f).normalized;
-                var plate=pole.GetComponentsInChildren<TextMesh>().Single(t=>t.name=="Pole grip instruction");
+            foreach(var pole in poles)foreach(float top in new[]{3.3f,6.6f,9.9f}){
+                float bottom=Value<float>(pole,"Bottom");var axis=pole.transform.position+Vector3.right*.28f+Vector3.up*top;
+                var approach=Vector3.left;
+                var plate=pole.GetComponentsInChildren<TextMesh>().Single(t=>t.name=="Pole grip instruction"&&Mathf.Abs(t.transform.position.y-top-1.24f)<.05f);
                 Assert.Greater(Vector3.Dot(plate.transform.right,Vector3.Cross(Vector3.up,-approach)),.99f,"Plate reads backwards from the landing");
-                var stand=axis+(top<8?new Vector3(.39f,0,.39f):Vector3.forward*.55f);origin.MoveCameraToWorldLocation(stand+Vector3.up*1.65f);
-                direct.selectInput.QueueManualState(false,0,false,true);hand.transform.parent.position+=pole.transform.position+Vector3.up*.8f-direct.transform.position;
+                Assert.Greater(Mathf.Abs(plate.transform.position.z-axis.z),.45f,"Sign blocks the reach corridor");
+                var stand=axis+Vector3.left*.72f;origin.MoveCameraToWorldLocation(stand+Vector3.up*1.65f);
+                direct.selectInput.QueueManualState(false,0,false,true);hand.transform.parent.position+=pole.transform.position+Vector3.up*(top+.8f)-direct.transform.position;
                 Physics.SyncTransforms();yield return new WaitForSeconds(.5f);
                 var target=pole.GetComponent<XRSimpleInteractable>();
                 TestContext.WriteLine("direct="+direct.enabled+" active="+direct.gameObject.activeInHierarchy+" at="+direct.transform.position+" shaft="+target.colliders.First(c=>c).bounds+" hovered="+string.Join(",",direct.interactablesHovered.Select(x=>x.transform.name))+" overlap="+string.Join(",",Physics.OverlapSphere(direct.transform.position,.08f).Select(x=>x.name)));
@@ -62,9 +66,9 @@ namespace LighthouseKeepers.Net.Tests
                 var opened=Field<System.Collections.Generic.List<Collider>>(pole,"openedGuards").ToArray();Assert.Greater(opened.Length,0,"No reconciled entrance guard opened");
                 foreach(var g in opened){Assert.True(g.enabled,"Guard removed for everyone");Assert.True(Physics.GetIgnoreCollision(capsule,g));}
                 direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.65f);Assert.True(Value<bool>(pole,"Latched"));Assert.Less(Value<float>(pole,"Speed"),.01f);
-                hand.transform.parent.position+=pole.transform.position+Vector3.up*(origin.transform.position.y-top+.8f)-direct.transform.position;yield return new WaitForSeconds(.1f);
-                direct.selectInput.QueueManualState(true,1,true,false);float end=Time.time+6;while(Value<bool>(pole,"Latched")&&Time.time<end)yield return null;
-                Assert.False(Value<bool>(pole,"Latched"),"Descent blocked");Assert.AreEqual(bottom,origin.transform.position.y,.3f,"Did not reach landing");
+                hand.transform.parent.position+=pole.transform.position+Vector3.up*(origin.transform.position.y+.8f)-direct.transform.position;yield return new WaitForSeconds(.1f);
+                direct.selectInput.QueueManualState(true,1,true,false);float end=Time.time+12;while(Value<bool>(pole,"Latched")&&Time.time<end)yield return null;
+                Assert.False(Value<bool>(pole,"Latched"),"Descent blocked");Assert.AreEqual(bottom,origin.transform.position.y,.3f,"Did not reach ground through the circular floor openings");
                 foreach(var g in opened)Assert.False(Physics.GetIgnoreCollision(capsule,g),"Fall protection not restored");
                 direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.1f);
             }}
