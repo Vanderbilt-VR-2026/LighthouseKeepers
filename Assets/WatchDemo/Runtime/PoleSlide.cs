@@ -71,9 +71,9 @@ namespace LighthouseKeepers.WatchDemo
         void BuildBedroomHatch(M2StationParts parts,Transform root)
         {
             bedroomHatch=M2StationParts.Root("Bedroom flush pole hatch",root,new Vector3(OpeningRadius,0,0));
-            for(int i=-5;i<=5;i++){float z=i*.10f;float width=2*Mathf.Sqrt(OpeningRadius*OpeningRadius-z*z);parts.Part("Flush hatch grate",bedroomHatch,new Vector3(-OpeningRadius,.012f,z),new Vector3(width,.02f,.075f),parts.Dark);}
+            for(int i=-5;i<=5;i++){float z=i*.10f;float width=2*Mathf.Sqrt((OpeningRadius+.02f)*(OpeningRadius+.02f)-z*z);parts.Part("Flush hatch grate",bedroomHatch,new Vector3(-OpeningRadius,.012f,z),new Vector3(width,.02f,.075f),parts.Dark);}
             var v=new Vector3[33];var triangles=new int[96];
-            for(int i=0;i<32;i++){float a=i*Mathf.PI/16;v[i+1]=new Vector3(Mathf.Cos(a)*OpeningRadius,0,Mathf.Sin(a)*OpeningRadius);triangles[i*3]=0;triangles[i*3+1]=(i+1)%32+1;triangles[i*3+2]=i+1;}
+            for(int i=0;i<32;i++){float a=i*Mathf.PI/16;v[i+1]=new Vector3(Mathf.Cos(a)*(OpeningRadius+.02f),0,Mathf.Sin(a)*(OpeningRadius+.02f));triangles[i*3]=0;triangles[i*3+1]=(i+1)%32+1;triangles[i*3+2]=i+1;}
             hatchMesh=new Mesh{name="Bedroom flush hatch support"};hatchMesh.vertices=v;hatchMesh.triangles=triangles;hatchMesh.RecalculateBounds();hatchMesh.RecalculateNormals();
             var support=new GameObject("Bedroom hatch fall protection").AddComponent<MeshCollider>();support.transform.SetParent(root,false);support.sharedMesh=hatchMesh;guards.Add(support);
         }
