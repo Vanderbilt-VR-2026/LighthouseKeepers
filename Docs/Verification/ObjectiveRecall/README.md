@@ -11,3 +11,5 @@ Input audit: the Lab rig uses XRI input actions. B has no active Lab action. The
 3. The left watch face now always carries the current local Objective Director instruction below its time readout. Hands and watch mounting pose are unchanged. Compilation and focused tests pass; tiny physical text still needs a worn-headset readability check.
 
 4. X/Y still reveal the objective and request the existing status update; a fresh wrist glance still reveals it. B uses local state and local playback only. No command schema, game state, snapshot or network version changed. Rendered co-op isolation is checked in step 6.
+
+5. The first actual Night 1 objective transition shows “Press B to see your objective” for five seconds, caption only. It is remembered per device and does not repeat on retry. Four focused tests pass, including saved teaching state. Live narration remains independent of this brief reminder.

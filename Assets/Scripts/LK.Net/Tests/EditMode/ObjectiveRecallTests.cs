@@ -20,5 +20,10 @@ namespace LighthouseKeepers.Net.Tests {
    var t=T("HarborRecallHistory");var o=Activator.CreateInstance(t);foreach(int cue in new[]{1,7,3,5})t.GetMethod("Remember").Invoke(o,new object[]{cue});
    CollectionAssert.AreEqual(new[]{5,3,7},(System.Collections.IEnumerable)t.GetProperty("Cues").GetValue(o));Assert.AreEqual(5,t.GetProperty("Latest").GetValue(o));
   }
+  [Test] public void RecallReminderIsNightOneOnlyAndRespectsSavedDismissal() {
+   int old=PlayerPrefs.GetInt("LK.Objective.BTaught",0);var test=T("ObjectiveHud").GetMethod("RecallTeachingDue");
+   try {PlayerPrefs.SetInt("LK.Objective.BTaught",0);Assert.False((bool)test.Invoke(null,new object[]{1,int.MinValue,2}));Assert.True((bool)test.Invoke(null,new object[]{1,2,3}));Assert.False((bool)test.Invoke(null,new object[]{2,2,3}));PlayerPrefs.SetInt("LK.Objective.BTaught",1);Assert.False((bool)test.Invoke(null,new object[]{1,2,3}));}
+   finally{PlayerPrefs.SetInt("LK.Objective.BTaught",old);}
+  }
  }
 }

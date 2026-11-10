@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class ObjectiveHud:MonoBehaviour
  {
   WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group,objectiveGroup;RectTransform root,line,strike,tick,danger;TMP_Text dangerText;
-  TMP_Text task,label,floor,subtitle,partner,speakerTag;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
+  TMP_Text task,label,floor,subtitle,partner,speakerTag,recallTip;float tipUntil;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
   readonly ObjectiveRecallState recall=new();
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
 
@@ -48,6 +48,7 @@ namespace LighthouseKeepers.WatchDemo
    cueSound=new GameObject("Soft objective completion").AddComponent<AudioSource>();cueSound.transform.SetParent(transform,false);cueSound.playOnAwake=false;cueSound.volume=.08f;cueSound.clip=Resources.Load<AudioClip>("Hands/clunk");
    task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);task.overflowMode=TextOverflowModes.Ellipsis;task.maxVisibleLines=2;
    floor=Text("Relative floor",new Vector2(10,-28),new Vector2(470,25),16,new Color(.76f,.7f,.56f));
+   recallTip=Text("Recall tutorial",new Vector2(0,-52),new Vector2(560,26),20,new Color(.93f,.86f,.65f));
    partner=Text("Partner job",new Vector2(10,-48),new Vector2(470,20),14,new Color(.76f,.7f,.56f));
    subtitleBacking=Rect(root,"Subtitle soft backing",new Vector2(0,-126),new Vector2(850,145)).gameObject.AddComponent<RawImage>();subtitleBacking.color=new Color(.012f,.018f,.023f,.8f);subtitleBacking.material=material;subtitleBacking.raycastTarget=false;
    subtitleTexture=new Texture2D(64,32,TextureFormat.RGBA32,true);var shade=new Color[64*32];
@@ -59,7 +60,7 @@ namespace LighthouseKeepers.WatchDemo
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
    danger=Rule("Danger fill",new Vector2(-220,-216),new Vector2(440,6));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-238),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
    var layer=Rect(root,"Objective content",Vector2.zero,root.sizeDelta);objectiveGroup=layer.gameObject.AddComponent<CanvasGroup>();
-   foreach(var item in new Transform[]{bg.transform,line,label.transform,icon.transform,task.transform,floor.transform,partner.transform,strike,tick,danger,dangerText.transform})item.SetParent(layer,false);
+   foreach(var item in new Transform[]{bg.transform,line,label.transform,icon.transform,task.transform,floor.transform,partner.transform,recallTip.transform,strike,tick,danger,dangerText.transform})item.SetParent(layer,false);
    built=Time.unscaledTime;Reveal(ObjectiveHudSettings.Duration,true);
   }
   public void Reveal()=>Reveal(ObjectiveHudSettings.Duration,true);
@@ -71,7 +72,8 @@ namespace LighthouseKeepers.WatchDemo
    if(radio&&!string.IsNullOrEmpty(radio.LastCaption)){subtitle.text=radio.LastCaption;subtitle.maxVisibleCharacters=int.MaxValue;speakerTag.text=KeeperStrings.Get("subtitle.speaker");subtitle.alpha=speakerTag.alpha=1;subtitleBacking.gameObject.SetActive(true);}
   }
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
-  void Set(int value,string text){index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
+  public static bool RecallTeachingDue(int night,int previous,int current)=>night==1&&previous!=int.MinValue&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BTaught",0)==0;
+  void Set(int value,string text){if(RecallTeachingDue(watch.State.Day,index,value)){tipUntil=Time.unscaledTime+5;PlayerPrefs.SetInt("LK.Objective.BTaught",1);PlayerPrefs.Save();}index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
   string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
   void Update()
   {
@@ -95,6 +97,7 @@ namespace LighthouseKeepers.WatchDemo
    if(recallPress>0){RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
    bool recalling=recall.Visible(Time.unscaledTime);
    if(recalling){until=Mathf.Max(until,recall.Until);changed=Time.unscaledTime-1;}
+   recallTip.text=Time.unscaledTime<tipUntil?KeeperStrings.Get("hud.recallTeach"):"";partner.gameObject.SetActive(Time.unscaledTime>=tipUntil);
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
    line.localScale=new Vector3(Mathf.Clamp01((Time.unscaledTime-changed)/.4f),1,1);
@@ -108,13 +111,14 @@ namespace LighthouseKeepers.WatchDemo
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
    string display=remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
-   if(subtitle.text!=display||subtitle.fontSize!=size){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.05f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
+   subtitle.enableAutoSizing=remembered;subtitle.fontSizeMin=22;subtitle.fontSizeMax=size;
+   if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.05f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
    int visible=remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
    int page=1;
    // Paginate long recordings into two readable lines rather than shrinking or clipping text.
    var info=subtitle.textInfo;
    for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
-   subtitle.pageToDisplay=page;subtitle.maxVisibleCharacters=visible;
+   subtitle.pageToDisplay=remembered?1:page;subtitle.maxVisibleCharacters=visible;
    float alpha=remembered?1:showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;
    subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);
