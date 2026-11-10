@@ -1,0 +1,28 @@
+# Inherited PlayMode failures
+
+The full run in this pass had 26 failures. Two stale fixtures were corrected and passed focused reruns; the following 24 match the prior integrated baseline. They remain unresolved, not hidden or marked passing.
+
+- `LighthouseKeepers.Presentation.Environment.Tests.EnvironmentPresentationTests.LabUsesOnePlayerAndLightingUpdatesAllocateNoManagedMemory`
+- `LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.RepairFirstWaitsForPowerAndThreeRealPullsRestorePump`
+- `LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests.GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead`
+- `LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults`
+- `LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss`
+- `LighthouseKeepers.Net.Tests.WatchMenuFlowTests.FailedRetryButtonKeepsDayAndClearsPartialWork`
+- `LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TerminalReplayButtonResetsToDayOneWithoutMovingTrackedTransforms`
+- `LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TrackedRaysReachReplayRetryAndReturnWithNearbyWall`
+- `LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast`
+- `LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority`
+- `LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding`
+- `LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry`
+- `LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction`
+- `LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve`
+- `LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning`
+- `LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir`
+- `LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps`
+- `LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops`
+- `LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond`
+- `LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings`
+- `LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections`
+- `LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput`
+- `LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart`
+- `LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate`
