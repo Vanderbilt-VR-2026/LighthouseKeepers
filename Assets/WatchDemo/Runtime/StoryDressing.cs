@@ -1,12 +1,11 @@
 using System.Collections.Generic;using UnityEngine;using UnityEngine.Rendering;using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo {
  public sealed class StoryDressing:MonoBehaviour {
-  WatchDemoController watch;M2StationParts parts;WatchBeacon beacon;Material glass,windowGlass,ink,paper,oilskin;Renderer core;readonly List<Material> owned=new();MaterialPropertyBlock block;Mesh ropeMesh;
+  WatchDemoController watch;M2StationParts parts;WatchBeacon beacon;Material ink,paper,oilskin;Renderer core;readonly List<Material> owned=new();MaterialPropertyBlock block;Mesh ropeMesh;
   public static void Create(WatchDemoController w){if(!VisualPassSettings.Current||!VisualPassSettings.Current.setDressing)return;var p=w.gameObject.AddComponent<StoryDressing>();p.watch=w;}
-  void Start(){parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();beacon=FindAnyObjectByType<WatchBeacon>();block=new MaterialPropertyBlock();glass=new Material(Resources.Load<Shader>("BeaconGlass"));owned.Add(glass);glass.SetColor("_BaseColor",new Color(.65f,.78f,.80f));windowGlass=new Material(glass);windowGlass.SetFloat("_Window",1);owned.Add(windowGlass);
-   // Keep Eli’s authored URP lens and lantern glass; rain panes use their own shader.
-   // Rain panes sit in the shell window recesses; no collision or new openings.
-   foreach(var point in new[]{new Vector2(60,1.65f),new Vector2(60,4.95f),new Vector2(45,8.25f),new Vector2(315,8.25f)}){float a=point.x*Mathf.Deg2Rad;var pane=parts.Part("Rain on recessed window",transform,new Vector3(Mathf.Sin(a)*3.72f,point.y,Mathf.Cos(a)*3.72f),new Vector3(.65f,.90f,.008f),windowGlass);pane.transform.rotation=Quaternion.Euler(0,point.x,0);}
+  void Start(){parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();beacon=FindAnyObjectByType<WatchBeacon>();block=new MaterialPropertyBlock();
+   // Keep the shell's actual glazing. Detached procedural rain panes floated outside
+   // the F1 recess and read as a sheet of white dots in the headset.
    var bulb=parts.Part("Amber lamp inside glass lens",beacon.rotor,new Vector3(0,.44f,0),new Vector3(.16f,.64f,.16f),parts.Brass,PrimitiveType.Capsule);core=bulb.GetComponent<Renderer>();
    paper=Mat("Logbook paper",new Color(.58f,.49f,.30f));ink=Mat("Aged photograph",new Color(.12f,.11f,.08f));oilskin=Mat("Keeper oilskin",new Color(.43f,.30f,.08f));
    var desk=GameObject.Find("Wrench table top");if(desk){var bounds=desk.GetComponent<Renderer>().bounds;var p=new Vector3(bounds.center.x,bounds.max.y+.018f,bounds.max.z-.22f);var book=M2StationParts.Root("Previous keeper open logbook",transform,Vector3.zero);book.position=p;book.rotation=Quaternion.Euler(0,90,0);parts.Part("Leather logbook cover",book,Vector3.zero,new Vector3(.34f,.02f,.25f),parts.Dark);parts.Part("Open logbook paper",book,new Vector3(0,.013f,0),new Vector3(.32f,.008f,.23f),paper);var text=parts.Text("Previous keeper entry",KeeperStrings.Get("story.logbook"),book,new Vector3(0,.020f,0),.0014f);text.transform.localRotation=Quaternion.Euler(90,0,0);text.color=new Color(.08f,.07f,.05f);}

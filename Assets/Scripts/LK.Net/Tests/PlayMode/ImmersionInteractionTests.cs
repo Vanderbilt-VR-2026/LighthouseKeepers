@@ -65,6 +65,7 @@ namespace LighthouseKeepers.Net.Tests
                 direct.selectInput.QueueManualState(true,1,true,false);yield return new WaitForSeconds(.25f);Assert.True(Value<bool>(pole,"Latched"),"Grip did not latch");
                 var opened=Field<System.Collections.Generic.List<Collider>>(pole,"openedGuards").ToArray();Assert.Greater(opened.Length,0,"No reconciled entrance guard opened");
                 foreach(var g in opened){Assert.True(g.enabled,"Guard removed for everyone");Assert.True(Physics.GetIgnoreCollision(capsule,g));}
+                float pauseDeadline=Time.time+4;while(origin.transform.position.y>top-.85f&&Time.time<pauseDeadline)yield return null;
                 direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.65f);Assert.True(Value<bool>(pole,"Latched"));Assert.Less(Value<float>(pole,"Speed"),.01f);
                 hand.transform.parent.position+=pole.transform.position+Vector3.up*(origin.transform.position.y+.8f)-direct.transform.position;yield return new WaitForSeconds(.1f);
                 direct.selectInput.QueueManualState(true,1,true,false);float end=Time.time+12;while(Value<bool>(pole,"Latched")&&Time.time<end)yield return null;
@@ -72,6 +73,30 @@ namespace LighthouseKeepers.Net.Tests
                 foreach(var g in opened)Assert.False(Physics.GetIgnoreCollision(capsule,g),"Fall protection not restored");
                 direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.1f);
             }}
+        }
+        [UnityTest] public IEnumerator PoleReleaseExitsBothIntermediateFloorsAndBedroomHasFlushHatch()
+        {
+            var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
+            foreach(var b in origin.GetComponents<MonoBehaviour>())if(b.GetType().Name=="DesktopPreview")b.enabled=false;
+            var pole=Find("PoleSlide");var target=pole.GetComponent<XRSimpleInteractable>();
+            var bedroom=GameObject.Find("Circular pole landing F3");Assert.IsNotNull(bedroom);
+            Assert.IsFalse(bedroom.GetComponentsInChildren<Transform>().Any(t=>t.name=="Pole entrance gate"||t.name=="Circular shaft rail"),"Bedroom cage remains");
+            Assert.IsNotNull(GameObject.Find("Bedroom hatch fall protection"));
+            Assert.IsNull(GameObject.Find("Rain on recessed window"),"Floating rain sheet remains");
+            foreach(var hand in hands)foreach(float landing in new[]{6.6f,3.3f}){
+                hand.enabled=false;var direct=hand.Direct;direct.enabled=true;
+                origin.MoveCameraToWorldLocation(new Vector3(.98f,9.9f+1.65f,1.1f));
+                direct.selectInput.QueueManualState(false,0,false,true);
+                hand.transform.parent.position+=pole.transform.position+Vector3.up*10.7f-direct.transform.position;Physics.SyncTransforms();yield return new WaitForSeconds(.3f);
+                direct.selectInput.QueueManualState(true,1,true,false);yield return new WaitForSeconds(.2f);Assert.True(Value<bool>(pole,"Latched"));
+                float releaseHeight=landing+(hand.Node==UnityEngine.XR.XRNode.LeftHand?.25f:-.20f);
+                float deadline=Time.time+12;while(origin.transform.position.y>releaseHeight&&Time.time<deadline)yield return null;
+                direct.selectInput.QueueManualState(false,0,false,true);deadline=Time.time+4;while(Value<bool>(pole,"Latched")&&Time.time<deadline)yield return null;
+                Assert.False(Value<bool>(pole,"Latched"),"Release did not exit floor "+landing+" with "+hand.Node);
+                Assert.That(origin.transform.position.y,Is.EqualTo(landing).Within(.18f));Assert.Less(origin.Camera.transform.position.x,.8f,"Keeper left in shaft");
+                Assert.True(origin.GetComponentInChildren<UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement.ContinuousMoveProvider>().enabled,"Walking not restored");
+                yield return new WaitForSeconds(.3f);Assert.That(origin.transform.position.y,Is.EqualTo(landing).Within(.18f),"Exit fell through floor");
+            }
         }
         [UnityTest] public IEnumerator NarrationDropsOldInstructionsAndLimitsBackToBackAnnouncements()
         {
