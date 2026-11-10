@@ -19,3 +19,11 @@ Input audit: the Lab rig uses XRI input actions. B has no active Lab action. The
 Editor output is muted automatically at initialization and every Play Mode transition, including separate/virtual Editor instances. The run helper also sets `EditorUtility.audioMasterMute = true` before tests. This does not change player/build audio. Per the latest request, installation must NOT launch the Quest app.
 
 The full PlayMode run exposed the old world-fixed-tracker assertion. This is an intentional specification change, not an inherited failure: the test now checks delayed follow below eye level and explicit recall placement. Its focused rerun passes. Preserve the original full-run result alongside the rerun; do not describe the raw suite as all green.
+
+Final checks: raw EditMode **354 pass / 1 error** (FMOD output-device switch while opening scenes); that one audit passed its focused rerun, preserving **355 passing cases**. Raw PlayMode **48 pass / 25 fail / 3 skip**; replacing the superseded world-fixed assertion and passing its rerun gives **49 passing cases, the same 24 inherited failures, 3 skips, no new unresolved failures**. Separate raw results and comparison are committed.
+
+Physical solo Night 1 repairs all bolts and sleeps into Night 2. Two separate Mac/Fusion clients join, see William's avatars, recall complete text on the same frame, replay without changing shared cue/serial, complete the guest pipe task with host valve hold, and sleep into Night 2. Mono/AEC/noise-suppression setup is checked on both. Editors were muted: this is transport/configuration evidence, not a fresh human listening acceptance. Host and guest screenshots were inspected.
+
+Human/device pending: B tap/hold/double-tap on actual controllers; below-eye placement and lazy-follow comfort; wrist readability; height persistence across application restart; X/Y and wrist-glance feel; two-way listening and sustained device frame time. No Quest launch is authorized for this delivery.
+
+APK built successfully from **573cf72**: `Builds/LighthouseKeepers-Recall-573cf72.apk` (133,776,698 bytes). SHA-256 `f7d80e587d604fc975c1aba04ea03b290c612b32fed9e1cc8db8b9707854a4e9`. Later commits only update tests/evidence. ADB sees no headset at delivery: installation is pending, and the app was not launched.
