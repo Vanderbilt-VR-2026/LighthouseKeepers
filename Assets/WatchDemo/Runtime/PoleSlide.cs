@@ -80,9 +80,11 @@ namespace LighthouseKeepers.WatchDemo
         void UpdateHatch(float dt)
         {
             if(!bedroomHatch)return;bool open=latched;
-            var poses=LighthouseKeepers.Net.CrewPoseStream.Active;
-            if(!open&&poses&&poses.Channel!=null&&poses.Channel.Connected)foreach(var peer in poses.Channel.Runner.ActivePlayers)
-                if(peer!=poses.Channel.Runner.LocalPlayer&&poses.SampleVisual(peer.RawEncoded,out var pose)&&Vector2.Distance(new Vector2(pose.Head.x,pose.Head.z),new Vector2(ShaftAxis.x,ShaftAxis.z))<.42f&&Mathf.Abs(pose.Head.y-7.7f)<2)open=true;
+            if(!open&&watch.State.Coop is LighthouseKeepers.Lobby.ICoopKeeperLocations crew){
+                crew.Locations(out int first,out Vector3 a,out int second,out Vector3 b);
+                bool Near(Vector3 head)=>Vector2.Distance(new Vector2(head.x,head.z),new Vector2(ShaftAxis.x,ShaftAxis.z))<.42f&&Mathf.Abs(head.y-7.7f)<2;
+                open=(first>0&&first!=crew.LocalActor&&Near(a))||(second>0&&second!=crew.LocalActor&&Near(b));
+            }
             bedroomHatch.localRotation=Quaternion.RotateTowards(bedroomHatch.localRotation,Quaternion.Euler(0,0,open?-85:0),180*dt);
         }
         static Mesh BuildRim()
