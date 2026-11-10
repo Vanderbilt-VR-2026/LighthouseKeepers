@@ -22,11 +22,15 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    var block=new MaterialPropertyBlock();GameObject.Find("Wall-mounted checklist white face").GetComponent<Renderer>().GetPropertyBlock(block);Assert.Greater(block.GetColor("_BaseColor").grayscale,.9f);
    foreach(var shaft in renderers.Where(r=>r.name=="Brass slide shaft"))Assert.Less(shaft.sharedMaterial.GetColor("_EmissionColor").maxColorComponent,.001f);
   }
-  [UnityTest]public IEnumerator TrackerIsWorldFixedAndRecallRepositionsIt(){
+  [UnityTest]public IEnumerator TrackerFollowsLazilyBelowEyesAndRecallRepositionsIt(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(2);
    var tracker=GameObject.Find("Transient objective tracker").transform;var hud=UnityEngine.Object.FindAnyObjectByType(T("ObjectiveHud"));var head=Camera.main.transform;T("ObjectiveHud").GetMethod("Reveal",Type.EmptyTypes).Invoke(hud,null);var pose=tracker.position;var rotation=tracker.rotation;
-   head.rotation=Quaternion.AngleAxis(80,Vector3.up)*head.rotation;yield return null;yield return null;
-   Assert.That(Vector3.Distance(pose,tracker.position),Is.LessThan(.001f));Assert.That(Quaternion.Angle(rotation,tracker.rotation),Is.LessThan(.1f));
+   foreach(var b in UnityEngine.Object.FindObjectsByType<Behaviour>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(b.GetType().Name=="DesktopPreview"||b.GetType().Name=="TrackedPoseDriver")b.enabled=false;
+   Assert.That(head.InverseTransformPoint(pose).y,Is.LessThan(-.1f));
+   head.rotation=Quaternion.AngleAxis(80,Vector3.up)*head.rotation;
+   Assert.That(Vector3.Distance(pose,tracker.position),Is.LessThan(.001f),"Head movement immediately snaps the tracker");
+   yield return new WaitForSecondsRealtime(.25f);
+   Assert.That(Vector3.Distance(pose,tracker.position),Is.GreaterThan(.05f));Assert.That(Quaternion.Angle(rotation,tracker.rotation),Is.GreaterThan(1));
    T("ObjectiveHud").GetMethod("Reveal",Type.EmptyTypes).Invoke(hud,null);Assert.That(Vector3.Distance(pose,tracker.position),Is.GreaterThan(.5f));
   }
   [UnityTest]public IEnumerator OnlyOneExteriorAndTwoBenchRadiosAndNoSupportFootStep(){

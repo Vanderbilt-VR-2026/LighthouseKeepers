@@ -17,3 +17,5 @@ Input audit: the Lab rig uses XRI input actions. B has no active Lab action. The
 6. Render review corrected the two-line subtitle height and the 3D wrist font scale. Both screenshots were inspected. A scene-level PlayMode check passes: full objective/caption on the recall frame, two complete caption lines, lazy follow, automatic expiry, local replay leaving host cue/serial unchanged, and visible wrist lettering. Full-suite and live transport results follow below.
 
 Editor output is muted automatically at initialization and every Play Mode transition, including separate/virtual Editor instances. The run helper also sets `EditorUtility.audioMasterMute = true` before tests. This does not change player/build audio. Per the latest request, installation must NOT launch the Quest app.
+
+The full PlayMode run exposed the old world-fixed-tracker assertion. This is an intentional specification change, not an inherited failure: the test now checks delayed follow below eye level and explicit recall placement. Its focused rerun passes. Preserve the original full-run result alongside the rerun; do not describe the raw suite as all green.
