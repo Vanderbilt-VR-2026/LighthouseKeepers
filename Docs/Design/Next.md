@@ -1,3 +1,53 @@
+# M3 checkpoint — five nights and the ship
+
+Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 was still unmerged when work began. Separate worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. Do not merge main. PR #85 remains the Milestone 2 merge candidate; no M3 gameplay goes into it.
+
+## Done / current
+
+- North star, per-night tension graphs, reuse boundaries and verification gates: [M3-FiveNights.md](M3-FiveNights.md).
+- Will’s PR #86 body/flood work is already integrated in the base. Do not remodel his body or sky.
+- Base follow-ups implement intermediate pole exits, remove the bedroom cage, retain a flush safety hatch, and remove floating dotted rain panes.
+- Fresh base regression and live two-Mac runs are in progress in `artifacts/pole-avatar/final/` of the integration workspace. Copy completed evidence into `artifacts/m3/before/` before gameplay changes. **M3 runtime features are not implemented yet.**
+
+## Ordered implementation queue
+
+0. Physical doors: hand/forearm push and handle grab, bounded hinges, shared authoritative angle, tutorial/route/rain compatibility. Inspect Will’s avatars from both peers; optional mirror only after measuring the GPU budget.
+A1. Extend day data for five nights: duration, storm stage, faults/conditions, active stations, ships, crew roles, solo modifiers, grace and radio/opening cues. Preserve accepted legacy behavior behind the feature switch.
+A2. Arc: Leak (safe preview), Blackout (one consequential ship), Warning (two ships/broadcast extension), Everything Breaks (fuel/power/soot), Long Night (late repeated failures and large ship).
+A3. Data schedules: 30–60 s opening, 10–20 s relief, no ten-second fault pileup except finale.
+A4. Measure instruction-following solo/two-player bots; tune 25–35% spare on Nights 1–3, 15–25% on 4–5. Record `Docs/Playtests/telemetry-m3.md`; do not label estimates measured.
+B1. Quest steamer art (8–12k triangles, 1–2 materials), emissive lights, mesh searchlight, ≤150 smoke particles, storm bow spray, distant light LOD.
+B2. Host ship approach/window/pass/wreck rules; warning 60–90 s ahead, named ships, beacon grace/loss only near passage. Test pass, recovery and wreck.
+B3. Shared passage payoff: horn/voice/music/storm relief for both keepers, visible from gallery/windows.
+B4. One urgent ship objective/progress and chalkboard ship ticks.
+C1. Night 5 climax: repeated generator/pipe failure and final large ship, tuned from duo bot.
+C2. Dawn/rescue boat, warm window/fog light (not sky edits), calmer sea/gulls, P25, skippable team credits.
+D1. Shared morning logbook: night/name, named ships, peak water, close calls, job times, descriptive grade.
+D2. Local saved unlocks/continue/night select shared across solo/crew per device; retry at night start.
+D3. Data-only Demo (6 min), one ship payoff around five minutes.
+E1. Split-information generator N2, House radio code N3, radio bearing/beacon N4, all N5; local equivalents in solo and role-specific instructions.
+E2. Existing crew valve puzzle on N3–5, solo clamp otherwise.
+E3. P26 only with an actual partner-danger state; otherwise explicitly leave unwired.
+F1. P19–P25 triggers and existing word timing/priority/spacing; P18 close-call morning. Never overlap voice lines.
+F2. Original/CC0 ship and dawn sounds with sources; ship danger music, pass resolve, hopeful dawn.
+G. Full regression, solo bot 1–5/demo, duo 3/5, ship outcomes/save/continue/version tests; inspect screenshots; Quest profile/install/Night1/demo; final timings and ten-step headset checklist.
+
+Commit and push each numbered step. Recheck solo/crew at each part boundary. Bump the network version for new replicated state; current base is **LK-S5-VOICE1 / v19**. Keep raw evidence out of claims until checked.
+
+## DEVICE CHECKS PENDING
+
+- Install latest merge-candidate APK; accept F2/F3 release exits, bedroom flush hatch and F1 actual glazing.
+- See Will’s Captain/fisherman across peers; inspect head, hands, arms, crouch and own-body hiding.
+- Two-way mono/AEC speech, near/far/handheld routing, valve roles, shared task/bed and rejoin.
+- 72 Hz: GPU ≤11 ms, CPU work ≤9 ms, per-floor/sea/peak-storm measurements; no locked-frame-rate claim yet.
+- For M3: physical doors without body/head pops; ship/peak-storm GPU; Night 1 and Demo payoff, subtitles, saved continue and final dawn.
+
+## Release action held for user confirmation
+
+After the lead explicitly says PR #85 is merged: fetch main, verify its merge, tag `sprint4-m2` without moving an existing tag, build that exact commit, publish “Sprint 4 — Milestone 2” with APK/SHA-256/five plain-English lines, update README downloads. Close #81–#83 with a comment linking #85; **ask before closing Eli’s #84**. Do not publish or close ahead of that confirmation.
+
+---
+
 # Integrated checkpoint — s4/integrated
 
 This branch reconciles #81–#84. Do not merge or close those PRs. Network **LK-S5-INTEGRATED1 / snapshot 18**; both clients need the same APK. Selected exterior: Eli’s ocean, mountain coast and opt-in sky, per the lead. Our newer interior, narration/PA, pole, connected power and valve puzzle remain. See [Reconcile-PR84.md](Reconcile-PR84.md).
