@@ -48,6 +48,10 @@ namespace LighthouseKeepers.Net.Tests
    Assert.AreEqual("LK-S5-VOICE1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
    var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");foreach(var e in Read().entries){Assert.NotNull(catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{e.id}),e.file);Assert.AreEqual(e.caption,catalog.GetType().GetMethod("Caption").Invoke(catalog,new object[]{e.id}));}
   }
+  [Test] public void SubtitleSdfRendersAboveItsDarkBackingAndKeepsAtlasReference()
+  {
+   var material=Resources.Load<Material>("HarborSubtitleSdf");Assert.NotNull(material);Assert.AreEqual("TextMeshPro/Mobile/Distance Field Overlay",material.shader.name);Assert.Greater(material.renderQueue,4000);Assert.NotNull(material.mainTexture);
+  }
   [Serializable] public class StringEntry {public string key,text;}
   [Serializable] public class StringTable {public StringEntry[] entries;}
   [Test] public void WordRevealNeverRewindsAndFinishesAtAudioEnd()

@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class ObjectiveHud:MonoBehaviour
  {
   WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group;RectTransform root,line,strike,tick,danger;TMP_Text dangerText;
-  TMP_Text task,label,floor,subtitle,partner,speakerTag;Image subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing;float built;bool wakePending,nagging;string note="";float noteUntil;
+  TMP_Text task,label,floor,subtitle,partner,speakerTag;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
 
   public static string WatchGateCaption=>string.Format(PlayerStrings.Get("integrated.watchGate"),Mathf.CeilToInt(MasterPassTuning.Current?MasterPassTuning.Current.watchStartGraceSeconds:45));
@@ -36,7 +36,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    var go=new GameObject("Transient objective tracker",typeof(RectTransform),typeof(Canvas),typeof(CanvasGroup));root=go.GetComponent<RectTransform>();root.SetParent(transform,false);root.localScale=Vector3.one*.001f;root.sizeDelta=new Vector2(600,210);
    var canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.WorldSpace;canvas.worldCamera=head.GetComponent<Camera>();canvas.sortingOrder=1000;group=go.GetComponent<CanvasGroup>();group.blocksRaycasts=false;group.interactable=false;
-   material=new Material(Resources.Load<Shader>("ObjectiveOverlay"));fontMaterial=new Material(material);fontMaterial.SetFloat("_AlphaOnly",1);
+   material=new Material(Resources.Load<Shader>("ObjectiveOverlay"));fontMaterial=new Material(Resources.Load<Material>("HarborSubtitleSdf"));
    backing=new Texture2D(64,32,TextureFormat.RGBA32,true);var data=new Color[64*32];var random=new System.Random(41);
    for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.30f*edge);}
    backing.SetPixels(data);backing.Apply();var bg=Rect(root,"Subtle gradient backing",Vector2.zero,root.sizeDelta).gameObject.AddComponent<RawImage>();bg.texture=backing;bg.material=material;bg.raycastTarget=false;
@@ -47,9 +47,12 @@ namespace LighthouseKeepers.WatchDemo
    task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);
    floor=Text("Relative floor",new Vector2(10,-28),new Vector2(470,25),16,new Color(.76f,.7f,.56f));
    partner=Text("Partner job",new Vector2(10,-48),new Vector2(470,20),14,new Color(.76f,.7f,.56f));
-   subtitleBacking=Rect(root,"Subtitle soft backing",new Vector2(0,-126),new Vector2(850,145)).gameObject.AddComponent<Image>();subtitleBacking.color=new Color(.012f,.018f,.023f,.8f);subtitleBacking.material=material;subtitleBacking.raycastTarget=false;
+   subtitleBacking=Rect(root,"Subtitle soft backing",new Vector2(0,-126),new Vector2(850,145)).gameObject.AddComponent<RawImage>();subtitleBacking.color=new Color(.012f,.018f,.023f,.8f);subtitleBacking.material=material;subtitleBacking.raycastTarget=false;
+   subtitleTexture=new Texture2D(64,32,TextureFormat.RGBA32,true);var shade=new Color[64*32];
+   for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Min(Mathf.Min(x,63-x)/5f,Mathf.Min(y,31-y)/4f);shade[y*64+x]=new Color(1,1,1,Mathf.SmoothStep(0,1,Mathf.Clamp01(edge)));}
+   subtitleTexture.SetPixels(shade);subtitleTexture.Apply();subtitleBacking.texture=subtitleTexture;
    speakerTag=Text("Subtitle speaker",new Vector2(0,-78),new Vector2(800,25),16,new Color(.84f,.73f,.51f));
-   subtitle=Text("Harbor subtitle",new Vector2(0,-137),new Vector2(800,84),24,Color.white);subtitle.overflowMode=TextOverflowModes.Page;subtitle.margin=new Vector4(0,0,0,0);
+   subtitle=Text("Harbor subtitle",new Vector2(0,-137),new Vector2(800,84),24,Color.white);subtitle.overflowMode=TextOverflowModes.Page;subtitle.margin=new Vector4(0,0,0,0);subtitle.fontSharedMaterial=fontMaterial;speakerTag.fontSharedMaterial=fontMaterial;
    strike=Rule("Completed objective strike",new Vector2(15,10),new Vector2(460,1));tick=Rule("Completion tick stem",new Vector2(240,13),new Vector2(12,2));tick.localRotation=Quaternion.Euler(0,0,45);var up=Rule("Completion tick sweep",new Vector2(253,18),new Vector2(24,2));up.SetParent(tick,false);up.anchoredPosition=new Vector2(11,4);up.localRotation=Quaternion.Euler(0,0,90);
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
    danger=Rule("Danger fill",new Vector2(-220,-216),new Vector2(440,6));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-238),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
@@ -109,6 +112,6 @@ namespace LighthouseKeepers.WatchDemo
    bool looking=wrist&&Vector3.Distance(head.position,wrist.position)<1.1f&&Vector3.Dot(head.forward,(wrist.position-head.position).normalized)>.94f;if(looking&&!glance)Reveal();glance=looking;
    // World-fixed until recall or the next objective; never trails head turns.
   }
-  void OnDestroy(){if(material)Destroy(material);if(fontMaterial)Destroy(fontMaterial);if(backing)Destroy(backing);}
+  void OnDestroy(){if(material)Destroy(material);if(fontMaterial)Destroy(fontMaterial);if(backing)Destroy(backing);if(subtitleTexture)Destroy(subtitleTexture);}
  }
 }

@@ -68,10 +68,11 @@ namespace LighthouseKeepers.Net.Tests
             var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
             Action<string,object> set=(n,v)=>radio.GetType().GetField(n,flags).SetValue(radio,v);
-            var pending=Field<System.Collections.Generic.Queue<int>>(radio,"pending");pending.Clear();
+            var pending=Field<System.Collections.Generic.List<int>>(radio,"pending");pending.Clear();
             // Isolate idle hints from the deliberate onboarding/pressure announcements. They may
             // correctly play at a station; this test concerns only the 90-second idle hint policy.
             var spoken=Field<System.Collections.Generic.HashSet<int>>(radio,"spoken");for(int id=1;id<80;id++)if(id!=6&&(id<7||id>12))spoken.Add(id);
+            var cueRules=Field<object>(radio,"cueRules");for(int id=76;id<=93;id++)cueRules.GetType().GetMethod("Played").Invoke(cueRules,new object[]{id,Time.time+10000f});
             set("dangerMask",63);set("nextStatus",float.PositiveInfinity);
             // Advance the narration clock only; the watch, station, proximity and audio route are real.
             Action tick=()=>radio.GetType().GetMethod("Update",flags).Invoke(radio,null);

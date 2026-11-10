@@ -8,7 +8,9 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
   }
   [UnityTest] public IEnumerator DecorativeWorldDoesNotAddPlayerObstaclesAndWaterKeepsItsHostSurface(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
-   foreach(var name in new[]{"Previous keeper open logbook","Oilskin on wall hook","Wall stowed supply crate","Old stove and kettle","Distant coast and inlet"}){var go=GameObject.Find(name);Assert.That(go,Is.Not.Null,name);Assert.False(go.GetComponentsInChildren<Collider>().Any(c=>c.enabled&&!c.isTrigger),name+" blocks the player");}
+   foreach(var name in new[]{"Previous keeper open logbook","Distant coast and inlet"}){var go=GameObject.Find(name);Assert.That(go,Is.Not.Null,name);Assert.False(go.GetComponentsInChildren<Collider>().Any(c=>c.enabled&&!c.isTrigger),name+" blocks the player");}
+   // These were intentionally removed by the accepted House cleanup before the voice pass.
+   foreach(var name in new[]{"Oilskin on wall hook","Wall stowed supply crate","Old stove and kettle"})Assert.IsNull(GameObject.Find(name),name+" was removed at the lead’s request");
    var flood=GameObject.Find("Visible first-floor flood");Assert.That(flood.GetComponent<Renderer>().sharedMaterial.shader.name,Is.EqualTo("LighthouseKeepers/StormWater"));Assert.That(flood.GetComponent<MeshFilter>().sharedMesh.vertexCount,Is.EqualTo(65),"Flood simulation plane remains unchanged");
    foreach(var skin in UnityEngine.Object.FindObjectsByType<SkinnedMeshRenderer>(FindObjectsSortMode.None).Where(s=>s.name=="Skinned glove"))Assert.That(skin.lightProbeUsage,Is.EqualTo(UnityEngine.Rendering.LightProbeUsage.BlendProbes));
   }
