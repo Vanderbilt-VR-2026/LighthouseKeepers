@@ -5,3 +5,5 @@ PLAY offers HOST / PLAY ALONE or JOIN CREW. Hosting displays the code and live n
 Focused checks: keypad/tracked pointer 2/2; offline launch and existing-runner shutdown 2/2 (Editor forced-unreachable fixture); launch policy 2/2; Day 3/count rules 7/7. Online one-player gets solo puzzles/budget; joining/leaving adapts valve roles. A running night's duration does not shrink on late join; the next night takes the roster's budget. No real Quest Wi-Fi-off acceptance claimed. Live two-Mac smoke and graphics Night 1–2 are the job-end checks.
 
 Network LK-S5-PLAYTEST1 / v21. Both clients must install the same APK.
+
+Final screenshot review caught the open keypad covering the lower part of the code field. Raised the field and status line; the tracked-pointer test now also asserts that the whole field clears the keypad. Both cases pass. Final screenshots show the larger shipping labels and clear code entry.

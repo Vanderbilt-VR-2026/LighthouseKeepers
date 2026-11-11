@@ -34,7 +34,7 @@ namespace LighthouseKeepers.Net
             hostStatus=Label(pages[2].transform,"HostStatus",new Vector2(0,-90),new Vector2(1100,70),23);hostStatus.textWrappingMode=TextWrappingModes.Normal;
             Key(pages[2].transform,"StartCrew",new Vector2(0,-205),new Vector2(580,85),()=>transport.StartOrOffline());start=Find("StartCrew");Text("StartCrew",S("start"));
             codeInput=CreateInput(pages[3].transform);
-            joinStatus=Label(pages[3].transform,"JoinStatus",new Vector2(0,240),new Vector2(1100,65),23);joinStatus.textWrappingMode=TextWrappingModes.Normal;
+            joinStatus=Label(pages[3].transform,"JoinStatus",new Vector2(0,255),new Vector2(1100,65),23);joinStatus.textWrappingMode=TextWrappingModes.Normal;
             BuildKeypad(pages[3].transform);
             Key(pages[3].transform,"JoinCrewCode",new Vector2(0,-245),new Vector2(580,75),()=>{manager.Join(codeInput.text);Refresh();});join=Find("JoinCrewCode");Text("JoinCrewCode",S("join"));
             Key(pages[4].transform,"LowerBoard",new Vector2(0,20),new Vector2(650,85),()=>screen.SetLowered(!screen.IsLowered));Text("LowerBoard",S("height"));
@@ -46,7 +46,7 @@ namespace LighthouseKeepers.Net
         }
         TMP_InputField CreateInput(Transform parent)
         {
-            var r=Rect("CrewCodeInput",parent,new Vector2(0,145),new Vector2(600,70));r.gameObject.AddComponent<Image>().color=new Color(.11f,.19f,.19f);
+            var r=Rect("CrewCodeInput",parent,new Vector2(0,185),new Vector2(600,70));r.gameObject.AddComponent<Image>().color=new Color(.11f,.19f,.19f);
             var t=Label(r,"CodeText",Vector2.zero,new Vector2(560,66),34);var hint=Label(r,"CodeHint",Vector2.zero,new Vector2(560,66),25);hint.text=S("codeHint");
             var input=r.gameObject.AddComponent<TMP_InputField>();input.textViewport=r;input.textComponent=t;input.placeholder=hint;input.characterLimit=6;input.contentType=TMP_InputField.ContentType.Alphanumeric;input.shouldHideSoftKeyboard=true;input.shouldHideMobileInput=true;
             input.onSelect.AddListener(_=>{if(keypad&&!transport.IsOnline)keypad.SetActive(true);});input.onValueChanged.AddListener(_=>Refresh());return input;

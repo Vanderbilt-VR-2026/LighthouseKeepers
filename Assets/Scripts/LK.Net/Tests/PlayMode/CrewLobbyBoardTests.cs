@@ -91,6 +91,8 @@ namespace LighthouseKeepers.Net.Tests
                 OpenPad(); yield return null; AssertTextFits();
                 var pad = root.GetComponentsInChildren<RectTransform>(true).Single(rect => rect.name == "Join code keypad");
                 var padBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvas.transform, pad);
+                var inputBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvas.transform, Code.GetComponent<RectTransform>());
+                Assert.Greater(inputBounds.min.y, padBounds.max.y, "The open keypad must not cover the entered code.");
                 var soloBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvas.transform, Button("JoinCrewCode").GetComponent<RectTransform>());
                 Assert.Less(soloBounds.max.y, padBounds.min.y, "The keypad must leave JOIN CREW fully reachable.");
                 foreach (var button in pad.GetComponentsInChildren<Button>())
