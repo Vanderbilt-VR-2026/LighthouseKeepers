@@ -1,5 +1,9 @@
 # M3 checkpoint — five nights and the ship
 
+## Latest follow-up — B reminder and wiring finish
+
+B is labelled on the HUD and House board; the reminder stays eligible until actual B use (per-player v2 acknowledgement). Wiring is thinner/darker, no steady glow, and material detail tiles every 35 mm rather than stretching per run. Seven focused checks and actual Night 1 → Night 2 replay pass; screenshots inspected. `Docs/Verification/M3/recall-wiring/` records evidence and the pending device checks. Campaign ON, network LK-M3-CAMPAIGN1 / v20 unchanged. Build/install in progress; never launch without a new request.
+
 ## Current override — five-night preview requested by lead
 
 Campaign is now **ON** at the lead’s explicit request. The five-night task schedules are selected; ships, rescue ending, saved progression, doors/mirror and final ship-inclusive timing are unfinished. Earlier OFF entries below describe historical checkpoints. Current network **LK-M3-CAMPAIGN1 / v20** (compatibility label only; no new snapshot fields). Wiring is darker, textured and 15% slimmer, with reduced glow. See `Docs/Verification/M3/campaign-on/`. Next: ship implementation.

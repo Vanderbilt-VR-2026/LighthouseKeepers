@@ -21,11 +21,14 @@ Shader "LighthouseKeepers/Tower conduit"
  half4 Frag(Vary i):SV_Target{
  UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
  int circuit=(int)round(i.route.x);float on=circuit==4?_Feed.x:_CircuitOn[min(circuit,3)];float age=circuit==4?_Feed.y:_CircuitAge[min(circuit,3)];
- float arrival=i.route.y*max(.1,_Feed.z);float pulse=(1-smoothstep(0,.22,abs(age-arrival)))*on*i.route.z;
+ float arrival=i.route.y*max(.1,_Feed.z);float routed=saturate(i.route.z);float pulse=(1-smoothstep(0,.22,abs(age-arrival)))*on*routed;
  float3 light=max(.08,SampleSH(normalize(i.normalWS)));light=lerp(dot(light,float3(.2126,.7152,.0722)).xxx,light,.45);Light sun=GetMainLight();light+=sun.color*saturate(dot(normalize(i.normalWS),sun.direction))*.3;
  light=clamp(light,.08,.85)*lerp(.18,1,saturate(_CircuitAge.w-min(.75,i.route.y*1.5))*_CircuitOn.w);
- float3 metal=SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,i.uv).rgb*i.colour.rgb;
- return half4(metal*light+float3(.5,.24,.055)*(pulse*.22+on*.004*i.route.z),1);
+ // Repeat the material tile every 35 mm; stencil UVs remain fixed in the atlas.
+ float2 atlasUV=i.uv;float2 dx=ddx(i.uv),dy=ddy(i.uv);
+ if(i.route.z>.5){float2 tile=frac(i.uv);atlasUV=float2(i.route.z>1.5?.27:.01,.005)+tile*float2(.22,.09);dx*=float2(.22,.09);dy*=float2(.22,.09);}
+ float3 metal=SAMPLE_TEXTURE2D_GRAD(_BaseMap,sampler_BaseMap,atlasUV,dx,dy).rgb*i.colour.rgb;
+ return half4(metal*light+float3(.5,.24,.055)*(pulse*.22),1);
  }
  ENDHLSL
  }

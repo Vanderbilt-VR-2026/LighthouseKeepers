@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "duration": 0.05,
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ObjectiveRecallTests.HeightStaysBelowEyeLineAndPersistsWithoutChangingHead",
+      "Status": "Passed",
+      "Duration": 0.0196041,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ObjectiveRecallTests.HistoryKeepsThreeMostRecentHostLines",
+      "Status": "Passed",
+      "Duration": 0.0013165,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ObjectiveRecallTests.ReminderPersistsUntilActualBUseEvenOnPreviouslyTaughtInstalls",
+      "Status": "Passed",
+      "Duration": 0.0011723,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ObjectiveRecallTests.TapShowsImmediatelyHoldExtendsAndOnlyDoubleTapReplays",
+      "Status": "Passed",
+      "Duration": 0.000389,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

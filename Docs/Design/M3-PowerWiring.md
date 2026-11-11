@@ -39,3 +39,5 @@ The route audit lists intentional service penetrations and contacts with invisib
 ## Headset feedback — quieter finish
 
 The lead found the grey wiring too prominent. Main conduit radius is now 15% slimmer; darker warm aged-metal colour, original procedural grime/scratch and cloth-braid atlas detail, and reduced steady/pulse emission blend it into the room. Paths and circuit rules are unchanged. Same 14,634 triangles, five floor meshes and single wiring material. Inspected screenshots: `Docs/Verification/M3/campaign-on/`. Device cost and human visual acceptance pending.
+
+Follow-up after the lead reported no visible difference: installed APK hash matched f5d2746. Conduit now .60× original radius (about 29% below the prior .85×), dark warm oxide colour, slimmer straps, no steady glow. The same atlas now tiles at 35 mm with stable mip gradients; previous UVs stretched the texture over whole segments. Labels retain separate atlas UVs. See `Docs/Verification/M3/recall-wiring/`.
