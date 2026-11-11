@@ -20,7 +20,7 @@ namespace LighthouseKeepers.Net.Tests
         GameObject root, createdEvents;
         LobbyScreen screen;
         const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
-        TMP_InputField Code => root.GetComponentsInChildren<TMP_InputField>(true).Single(input => input.name == "HostAddress");
+        TMP_InputField Code => root.GetComponentsInChildren<TMP_InputField>(true).Single(input => input.name == "CrewCodeInput");
         Button Button(string name) => root.GetComponentsInChildren<Button>(true).Single(button => button.name == name);
         [UnitySetUp] public IEnumerator Setup()
         {
@@ -47,7 +47,7 @@ namespace LighthouseKeepers.Net.Tests
         }
         void OpenPad()
         {
-            Click(Button("CrewOptions")); Code.text = "";
+            Click(Button("Play"));Click(Button("JoinChoice")); Code.text = "";
             ExecuteEvents.Execute(Code.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.selectHandler);
         }
         TrackedDeviceEventData TrackedPointer(Camera camera, Button button)
@@ -77,7 +77,7 @@ namespace LighthouseKeepers.Net.Tests
             Assert.AreEqual(0, root.GetComponentsInChildren<Button>(true).Count(button => button.name.StartsWith("RoomKey")), "The numeric-only duplicate keypad must be absent.");
             yield return null;
         }
-        [UnityTest] public IEnumerator AlphanumericPadReceivesFirstTrackedHitAndDoesNotCoverSolo()
+        [UnityTest] public IEnumerator AlphanumericPadReceivesFirstTrackedHitAndLeavesJoinReachable()
         {
             if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 Assert.Ignore("Run rendered tracked-pointer QA with graphics enabled.");
@@ -91,8 +91,8 @@ namespace LighthouseKeepers.Net.Tests
                 OpenPad(); yield return null; AssertTextFits();
                 var pad = root.GetComponentsInChildren<RectTransform>(true).Single(rect => rect.name == "Join code keypad");
                 var padBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvas.transform, pad);
-                var soloBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvas.transform, Button("PlaySolo").GetComponent<RectTransform>());
-                Assert.Less(padBounds.max.y, soloBounds.min.y, "The keypad must leave PLAY SOLO fully reachable.");
+                var soloBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvas.transform, Button("JoinCrewCode").GetComponent<RectTransform>());
+                Assert.Less(soloBounds.max.y, padBounds.min.y, "The keypad must leave JOIN CREW fully reachable.");
                 foreach (var button in pad.GetComponentsInChildren<Button>())
                 {
                     var corners = new Vector3[4]; button.GetComponent<RectTransform>().GetWorldCorners(corners);
@@ -101,7 +101,7 @@ namespace LighthouseKeepers.Net.Tests
                     if (button.name == "CLOSE KEYPAD") continue;
                     TrackedPointer(camera, button);
                 }
-                TrackedPointer(camera, Button("PlaySolo"));
+                Code.text="ABC234";TrackedPointer(camera, Button("JoinCrewCode"));Code.text="";
                 foreach (char character in "ABC234")
                 { var button = Button(character.ToString()); Click(button, TrackedPointer(camera, button)); }
                 Assert.AreEqual("ABC234", Code.text); AssertTextFits();

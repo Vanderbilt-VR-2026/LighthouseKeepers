@@ -60,14 +60,15 @@ namespace LighthouseKeepers.WatchDemo
         public bool HighWaterFailed {get;private set;}
         public SeaRecoveryState Sea {get;private set;}=new();
         public void ObserveSea(int a,Vector3 p,int b,Vector3 q,float dt){if(ReadOnly||Failed)return;Sea.Tick(a,p,b,q,dt);if(Sea.lost)Changed?.Invoke();}
-        public void SetKeeperCount(int count){if(!ReadOnly)balanceCrew=count>1;}
+        int keeperCount=1;
+        public void SetKeeperCount(int count){if(!ReadOnly){keeperCount=Math.Max(1,count);if(Elapsed==0)balanceCrew=keeperCount>1;}}
         readonly HashSet<string> faults = new HashSet<string>();
         int index;
         public bool NetworkRehearsal { get; private set; }
         public bool RemoteReplica { get; private set; }
         LighthouseKeepers.Lobby.ICoopWatchLink coop;
         public LighthouseKeepers.Lobby.ICoopWatchLink Coop
-        {get=>coop;set{coop=value;if(value!=null)balanceCrew=true;}}
+        {get=>coop;set{coop=value;}}
         public bool ReadOnly => NetworkRehearsal || RemoteReplica;
         public void SetRemoteReplica(bool value)
         { RemoteReplica=value; Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly; }
@@ -251,7 +252,7 @@ namespace LighthouseKeepers.WatchDemo
             Elapsed = 0; BeaconDarkElapsed=0; BeaconDarkFailed=false; StarterPulls = 0; faults.Clear();
             Sea=new();HighWaterElapsed=0;HighWaterFailed=false;
             foreach (var fault in Definition.startingFaults) faults.Add(fault);
-            day3Stage=Day3Balance?1:0;day3GraceUntil=0;balanceCrew=Coop!=null;
+            day3Stage=Day3Balance?1:0;day3GraceUntil=0;balanceCrew=keeperCount>1;
             Power = !GeneratorTutorial&&!Day3Balance&&faults.Contains(GeneratorStation) ? PowerState.Off : PowerState.On;
             Beacon?.Reset(Day3Balance||Definition.beaconInitiallyLit,Day3Balance?Definition.beaconTargetAlignment:Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,Definition.beaconInitialSoot,Definition.beaconSootPerSecond);
             Engine?.Reset(Day3Balance?Tuning.day3ArrivalFuel:Definition.initialFuelFraction,Day3Balance?Tuning.day3FuelDrainPerSecond:Definition.fuelDrainPerSecond,Power==PowerState.On);

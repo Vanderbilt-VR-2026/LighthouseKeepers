@@ -12,13 +12,18 @@ namespace LighthouseKeepers.Net
     /// <summary>Six-character crew codes and recovery around William's unchanged Fusion transport.</summary>
     [DefaultExecutionOrder(-200)]
     [DisallowMultipleComponent]
-    public sealed class CrewLobbyTransport : MonoBehaviour, ISessionLobbyTransport, ILobbyLaunchPolicy
+    public sealed class CrewLobbyTransport : MonoBehaviour, ISessionLobbyTransport, ILobbyLaunchPolicy, ILobbyReadyPolicy
     {
         [SerializeField] FusionLobbyTransport fusion;
         static string rememberedCode, rememberedName;
         static bool rememberedHost;
         string localError = "", desiredName = "Keeper", desiredCode = "";
-        bool timedOut, connecting, launchingSolo;
+        bool timedOut, connecting, launchingSolo,hostRequested;
+        public bool RequiresReady=>false;
+        public bool OfflineAvailable=>hostRequested&&!IsOnline&&!IsBusy;
+#if UNITY_EDITOR
+        public static bool ForceOfflineForTests;
+#endif
         float connectStarted;
         public FusionLobbyTransport Fusion => fusion;
         public bool IsOnline => fusion && fusion.IsOnline;
@@ -37,7 +42,11 @@ namespace LighthouseKeepers.Net
         public event Action StatusChanged;
         public event Action GameStarting;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetMemory() { rememberedCode = rememberedName = null; rememberedHost = false; }
+        static void ResetMemory() { rememberedCode = rememberedName = null; rememberedHost = false;
+#if UNITY_EDITOR
+            ForceOfflineForTests=false;
+#endif
+        }
         void Awake()
         {
             if (!fusion) fusion = GetComponent<FusionLobbyTransport>();
@@ -49,11 +58,12 @@ namespace LighthouseKeepers.Net
             fusion.StatusChanged += Status;
             fusion.GameStarting += Starting;
         }
-        public bool HostGame(int maxPlayers) => Connect(true, CrewConnectionPolicy.NewCode());
+        public bool HostGame(int maxPlayers) {hostRequested=true;return Connect(true,CrewConnectionPolicy.NewCode());}
+        public bool StartOrOffline(){if(IsOnline)return IsHost&&StartGame(ShipWorld.GameplaySceneName,1,false);return hostRequested&&PlaySolo();}
         public bool JoinGame(string address)
         {
             if (!CrewConnectionPolicy.TryCode(address, out var code)) return Fail("Enter the six-character join code shown on your host's board.");
-            return Connect(false, code);
+            hostRequested=false;return Connect(false, code);
         }
         public bool Reconnect()
         {
@@ -114,8 +124,12 @@ namespace LighthouseKeepers.Net
             if (!fusion || IsOnline || IsBusy) return false;
             localError = ""; timedOut = false;
             rememberedCode = desiredCode = code; rememberedHost = host; rememberedName = desiredName;
-            if (Application.internetReachability == NetworkReachability.NotReachable)
-                return Fail("No internet connection. Connect to Wi-Fi, then press Reconnect.");
+            if (Application.internetReachability == NetworkReachability.NotReachable
+#if UNITY_EDITOR
+                ||ForceOfflineForTests
+#endif
+                )
+                return Fail(host?"No connection — Play offline":"No connection. Connect to Wi-Fi to join.");
             connecting = true; connectStarted = Time.realtimeSinceStartup;
             fusion.SessionName = code;
             fusion.SetLocalName(desiredName);
@@ -128,7 +142,7 @@ namespace LighthouseKeepers.Net
         {
             if (!connecting || !IsBusy || timedOut || Time.realtimeSinceStartup - connectStarted < 30) return;
             timedOut = true;
-            localError = "Connection timed out. Check Wi-Fi and Photon settings, then press Reconnect.";
+            localError = "No connection — Play offline";
             fusion.LeaveGame(); Status();
         }
         public void LeaveGame() { connecting = false; localError = ""; if (fusion) fusion.LeaveGame(); }
@@ -153,9 +167,9 @@ namespace LighthouseKeepers.Net
             string blocked = StartBlockReason(sceneName);
             if (!string.IsNullOrEmpty(blocked)) return Fail(blocked);
             if (!IsHost || Players.Count < 1 || Players.Count > CrewConnectionPolicy.Capacity) return Fail("Host a crew before starting.");
-            foreach (var player in Players) if (!player.IsReady) return Fail("Every keeper must signal ready before starting.");
+            
             localError = "";
-            return fusion.StartGame(ShipWorld.GameplaySceneName, 1, true);
+            return fusion.StartGame(ShipWorld.GameplaySceneName, 1, false);
         }
         bool Fail(string message) { localError = message; Status(); return false; }
         void Roster()

@@ -20,6 +20,7 @@ namespace LighthouseKeepers.Net.Tests
     {
         [UnityTearDown] public IEnumerator Cleanup()
         {
+            CrewLobbyTransport.ForceOfflineForTests=false;
             var sessions = Object.FindObjectsByType<LighthouseKeepers.Networking.FusionLobbyTransport>(FindObjectsSortMode.None);
             foreach (var session in sessions) session.LeaveGame();
             float deadline = Time.realtimeSinceStartup + 30;
@@ -56,9 +57,14 @@ namespace LighthouseKeepers.Net.Tests
                 typeof(LighthouseKeepers.Networking.FusionLobbyTransport).GetField("runner", flags).SetValue(raw, runner);
                 typeof(LighthouseKeepers.Networking.FusionLobbyTransport).GetField("online", flags).SetValue(raw, true);
             }
-            var button = GameObject.Find("PlaySolo").GetComponent<Button>();
+            CrewLobbyTransport.ForceOfflineForTests=true;
+            GameObject.Find("Play").GetComponent<Button>().onClick.Invoke();
+            GameObject.Find("HostPlay").GetComponent<Button>().onClick.Invoke();
+            Assert.IsTrue(Object.FindAnyObjectByType<CrewLobbyTransport>().OfflineAvailable);
+            Assert.IsNull(GameObject.Find("Ready"));
+            var button = GameObject.Find("StartCrew").GetComponent<Button>();
             Assert.IsTrue(button.interactable);
-            Assert.IsNotNull(GameObject.Find("WatchBoardCanvas").transform.Find("CrewOptionsPanel/PlaySoloOptions"));
+            Assert.AreEqual("No connection — Play offline",GameObject.Find("HostStatus").GetComponent<TMPro.TMP_Text>().text);
             button.onClick.Invoke();
             float deadline = Time.realtimeSinceStartup + 90;
             while ((!SceneManager.GetSceneByName("LK_Lab_Environment").isLoaded || !Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Any(c=>c.GetType().Name=="WatchDemoController")) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -107,8 +113,8 @@ namespace LighthouseKeepers.Net.Tests
             Assert.IsFalse(SoloWatchSession.ConsumeRequest(), "WatchDemo must consume the one-shot launch request.");
             yield return SceneManager.LoadSceneAsync("LK_NetworkLobby");
             deadline = Time.realtimeSinceStartup + 15;
-            while (!GameObject.Find("PlaySolo") && Time.realtimeSinceStartup < deadline) yield return null;
-            Assert.IsNotNull(GameObject.Find("PlaySolo"));
+            while (!GameObject.Find("Play") && Time.realtimeSinceStartup < deadline) yield return null;
+            Assert.IsNotNull(GameObject.Find("Play"));
             Assert.IsFalse(SoloWatchSession.ConsumeRequest(), "A later multiplayer run must not inherit solo mode.");
         }
     }

@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "duration": 0.59,
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLobbyBoardTests.AlphanumericPadReceivesFirstTrackedHitAndLeavesJoinReachable",
+      "Status": "Passed",
+      "Duration": 0.4737097,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLobbyBoardTests.ExistingAlphanumericPadSupportsSixCharactersAndBackspaceWithoutKeyboard",
+      "Status": "Passed",
+      "Duration": 0.0170658,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

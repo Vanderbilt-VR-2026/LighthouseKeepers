@@ -2,7 +2,7 @@
 
 Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `m3/five-nights` / PR #87. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
 
-## Active checkpoint — Steps 5–6 complete, lobby next
+## Active checkpoint — Steps 5–6 and lobby implemented; final checks/build next
 
 Steps 1, 3 and 4 are implemented and checked; step 2 was audited but the reported separate yellow remnant was not reproduced. Job 1 is NOT finished. Full job-end suites, solo 1–3/two-Mac smoke, APK and M3 merge have NOT run for this checkpoint. Job 2 has not started. The full remaining scope (including the new lobby and horror additions) is preserved in [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Quest absent from ADB on November 11; no app launched.
 
@@ -17,7 +17,7 @@ Step 1: solo valve clamp removed from rules, objectives and narration; solo reta
 4. Implemented: short action/object + specific place/floor; nearby controller GRIP/TRIGGER cue. Director tests 9/9 and near/far graphics check pass; final rendered icon verified and screenshot inspected. Director tests now 10/10, including actual rendered mesh. See Docs/Verification/PlaytestFixes/step4/.
 5. DONE: separate yellow generator and dark-green wall POWER PANEL, over 4 m apart, one ceiling feed. Focused graphics test 1/1 and inspected screenshot: Docs/Verification/PlaytestFixes/step5/. Previous survey: Current panel is WatchPowerPanel.Create at STN_GENERATOR_PANEL; layout JSON anchor (3.031089,3.3,1.75), yaw 240. Generator mesh is reused by Editor/OneLighthouseM2.cs from the fixture prefab (Diesel crankcase, Alternator cover, Radiator grille). Inspect both world bounds before moving; runtime is generated, so fix the source/anchors and test rebuild. Integrated has ConnectedMachinePresentation legacy riser; M3 replaces it with baked TowerWiring resources, so re-bake that authoring after merge rather than duplicating conduit.
 6. DONE: perimeter rails + 160-direction sweep; solo sea loss/retry + host-owned 10 s per-keeper crew recovery. Focused rules 4/4, graphics edge/sea retry 1/1; Docs/Verification/PlaytestFixes/step6/. Network LK-S5-PLAYTEST1 / v21; live transport check queued.
-Lobby addition: PLAY flow, host-alone/START without READY, offline fallback, dynamic crew count, join/rejoin, README and version bump.
+Lobby implemented: one PLAY flow, host-alone/START without READY, existing offline loader and keypad, dynamic puzzle roles; docs updated. Focused 13/13 passed. Final graphics Night 1–2 / live two-Mac / build pending.
 7. Latest lean scope: focused tests only, one graphics solo Night 1–2 and one two-Mac smoke; no full suites. Build/install AND launch if Quest visible (explicitly requested this turn); update PR #85. Merge into M3 only after this job is verified.
 Job 2: finish M3 ship first; write TheDrowned.md, then implement the latest horror brief in numbered checkpoints. Do not claim ships/horror/finale/progression done; M3 currently has scheduling and wiring plus B recall.
 

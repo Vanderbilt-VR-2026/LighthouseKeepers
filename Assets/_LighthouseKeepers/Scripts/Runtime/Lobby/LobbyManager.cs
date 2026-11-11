@@ -36,7 +36,7 @@ namespace LighthouseKeepers.Lobby
         public string SessionName { get => Session?.SessionName ?? ""; set { if (Session != null) Session.SessionName = value; } }
         public int MaxPlayers => IsOnline && Session != null ? Session.MaxPlayers : config ? config.MaxPlayers : 4;
         public int MinPlayersToStart => config ? config.MinPlayersToStart : 1;
-        public bool RequireAllReady => config == null || config.RequireAllReady;
+        public bool RequireAllReady => transport is ILobbyReadyPolicy policy ? policy.RequiresReady : config == null || config.RequireAllReady;
         public string Title => config ? config.LobbyTitle : "Lighthouse Keepers";
         public string StartSceneName => config ? config.StartSceneName : ShipWorld.GameplaySceneName;
         public string LastError => !string.IsNullOrEmpty(lastError) ? lastError : Session?.LastError ?? "";
@@ -54,7 +54,7 @@ namespace LighthouseKeepers.Lobby
                     StartSceneName == ShipWorld.GameplaySceneName ? "Choose PLAY SOLO to begin offline, or host a crew for connection diagnostics." :
                     "Host a crew, or join the same room as your partner.";
                 if (!string.IsNullOrEmpty(LaunchBlockReason)) return LaunchBlockReason;
-                if (!IsHost) return IsLocalPreview ? "Guest preview only. Leave and open practice to play." : "Your host will start when the crew is ready.";
+                if (!IsHost) return IsLocalPreview ? "Guest preview only. Leave and open practice to play." : "Waiting for the host to START.";
                 if (Players.Count < MinPlayersToStart) return $"Waiting for {MinPlayersToStart - Players.Count} more keeper(s).";
                 if (RequireAllReady && Players.Any(p => !p.IsReady)) return "Every keeper must be ready before entering.";
                 return "Crew ready. Enter the lighthouse when you are ready.";

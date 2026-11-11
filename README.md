@@ -14,9 +14,20 @@ VR lighthouse survival for **Meta Quest 3**.
 
 ## Current development
 
-You are on **main**, the latest game source, including co-op and the S4 power systems. The sprint branches preserve the submitted versions; their downloads are separate from current development.
+This development branch contains the current playtest fixes and co-op systems. The sprint branches preserve the submitted versions; their downloads are separate from current development.
 
 [Build in Unity](Docs/DEVELOPMENT.md) · [Play together on two Quests](Docs/TwoQuestSetup.md) · [Team design](Docs/DesignDocument.md)
+
+## Play this development build
+
+Install the same APK on both Quests using SideQuest, or `adb install -r <file>.apk`. Open **Lighthouse Keepers** from Unknown Sources.
+
+1. Press **PLAY**.
+2. Choose **HOST / PLAY ALONE**. Press **START** immediately to play alone, or share the large crew code with a friend.
+3. Your friend chooses **PLAY → JOIN CREW**, enters the code, then presses **JOIN CREW**. The host presses **START**. There is no READY button.
+4. Without internet, the host screen says **No connection — Play offline**. Press **START** to play the same lighthouse alone.
+
+Both players need **NETWORK VERSION LK-S5-PLAYTEST1**. A friend can join an ongoing watch using its code. If they leave, the remaining keeper gets solo puzzle rules. Grip holds tools and squeezes the primer; **B** recalls the objective and last announcement.
 
 ## Design — S4-M3
 

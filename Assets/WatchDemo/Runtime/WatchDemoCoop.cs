@@ -71,8 +71,9 @@ namespace LighthouseKeepers.WatchDemo
         public void BeginSharedSleep(){if(CanSleep)StartCoroutine(Sleep());}
         public void CrewStatus(int beds,int keepers,string notice)
         {
+            state.SetKeeperCount(keepers);
             if(crewBeds==beds&&crewKeepers==keepers&&crewNotice==notice)return;
-            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;state.Pressure?.SetCrew(keepers>1);state.SetKeeperCount(keepers);RefreshBoard();
+            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;state.Pressure?.SetCrew(keepers>1);RefreshBoard();
         }
         public void ContinueAlone(string notice)
         {
