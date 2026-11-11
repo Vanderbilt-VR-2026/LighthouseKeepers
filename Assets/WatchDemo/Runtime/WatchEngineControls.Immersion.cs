@@ -23,15 +23,15 @@ namespace LighthouseKeepers.WatchDemo
             // Existing four lamps still show fuel, priming, choke and running; fifth confirms reopening.
             finalChokeLamp=parts.Part("Choke reopened lamp",transform,new Vector3(-.54f,1.33f,.90f),new Vector3(.065f,.035f,.025f),parts.Green).GetComponent<Renderer>();
             parts.Text("Final choke lamp label","5",transform,new Vector3(-.54f,1.40f,.90f),.0032f);
-            MountedLabel("Primer plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.4"),new Vector3(.4f,.88f,.91f),new Vector2(.30f,.13f));
+            MountedLabel("Primer plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.4"),new Vector3(.44f,1.04f,1.08f),new Vector2(.30f,.13f));
             MountedLabel("Choke plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.5"),new Vector3(-.4f,.88f,.91f),new Vector2(.30f,.13f));
             MountedLabel("Starter plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.6"),new Vector3(.05f,.93f,1.04f),new Vector2(.31f,.13f));
-            parts.Part("Primer mounting plate",Primer.transform,new Vector3(0,0,-.035f),new Vector3(.13f,.16f,.08f),parts.Metal);
-            var collar=parts.Part("Primer retaining collar",Primer.transform,new Vector3(0,0,.008f),new Vector3(.10f,.026f,.10f),parts.Brass,PrimitiveType.Cylinder);
+            parts.Part("Primer mounting plate",Primer.transform,new Vector3(0,0,-.07f),new Vector3(.16f,.20f,.16f),parts.Metal);
+            var collar=parts.Part("Primer retaining collar",Primer.transform,new Vector3(0,0,.008f),new Vector3(.125f,.026f,.125f),parts.Brass,PrimitiveType.Cylinder);
             collar.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Part("Primer fuel hose",Primer.transform,new Vector3(0,-.16f,-.045f),new Vector3(.022f,.25f,.022f),parts.Dark,PrimitiveType.Cylinder);
             parts.Part("Choke pivot housing",Choke.transform,new Vector3(0,0,-.025f),new Vector3(.13f,.13f,.08f),parts.Metal);
-            primerTally=Counter("Primer tally",new Vector3(.4f,1.20f,.93f),out primerDrum);
+            primerTally=Counter("Primer tally",new Vector3(.44f,1.38f,1.08f),out primerDrum);
             starterTally=Counter("Starter tally",new Vector3(.23f,1.14f,1.01f),out starterDrum);
             Filler.localPosition=new Vector3(.68f,1.12f,.99f);
             parts.Part("Filler neck",Filler,new Vector3(0,-.07f,-.015f),new Vector3(.10f,.07f,.10f),parts.Metal,PrimitiveType.Cylinder);

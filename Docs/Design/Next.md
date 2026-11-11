@@ -9,7 +9,7 @@ Step 1: solo valve clamp removed from rules, objectives and narration; solo reta
 ## Next in order
 
 2. Pole audit complete (PlayMode 1/1; inspected F3 screenshot). No obsolete shaft or separate yellow remnant reproduced. Location clarification/device confirmation pending; working pole and safety hatch preserved. Evidence: Docs/Verification/PlaytestFixes/step2/.
-3. Grip-pressure primer, larger front bulb, tally/feedback; interaction input audit.
+3. DONE: grip-only pressure primer at chest height, larger bulb, release/refill, tally and feedback. Focused 3/3 + engine 6/6; left/right actual-XRI graphics pass, screenshots inspected. See InteractionInputs.md and Docs/Verification/PlaytestFixes/step3/.
 4. Object/location/action objectives and nearby button icon.
 5. Separate generator and green wall POWER PANEL with conduit.
 6. Island edge protection and sea-loss/co-op return; test.
