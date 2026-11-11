@@ -26,6 +26,8 @@ Raw runners: `artifacts/m3/a2/run.py` (focused tests + guest overlay), `bot.py`,
 
 ## Wiring checkpoint / next commands
 
+Wiring runtime commit `b6ca4b3` is pushed. Android build succeeded: `/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-M3-b6ca4b3.apk`, SHA-256 `d6a47ad0a726f0ed2839127723c23d84fa7d426a3ad84d738b2efab4533dc501`. Receipt: `Docs/Verification/M3/wiring/build.json`. No install/launch; ADB absent. Clean stop after scheduling + wiring; **next is B1–B4 ships**, followed by the requested doors/mirror before Part C. PR #87 remains draft and updated.
+
 The scheduling part is followed by the requested wiring addition before Part C. The old cylinder/sleeves are replaced by saved Editor-generated routes: 57 terminals, 14,634 triangles, five combined meshes, one atlas/material; no gameplay fields or new network version. Circuit/guest-readonly tests, clearance audit, all-scene coplanar scan, graphics replay are recorded in `Docs/Verification/M3/wiring/`. Keep campaign OFF until ships and ship-inclusive timing pass. PA guidance intentionally retains its existing backup behaviour.
 
 Local runners (fresh evidence folders on repeats):
@@ -39,6 +41,21 @@ Editor authoring menu: `Lighthouse Keepers/M3/Wiring/Capture Lab Routes (Play Mo
 
 DEVICE CHECKS PENDING (wiring addition): install matching APK when authorized/available; sustained 72 Hz wiring-off/on GPU comparison (target ≤0.3 ms), both-eye collars/glass/headroom sweep, gallery/exterior/House feeds, nearby hum and trip bang, 1.5 s pulse/readability and restored lamps, Mac+Quest circuit changes. USB was absent at the last check. No device performance or human audio claim.
 
+## Ten-step headset checklist for this checkpoint / later M3 acceptance
+
+Use matching builds on both clients. This checkpoint retains the three-night game; campaign is OFF. Do not launch without the lead asking. Steps 8–10 require future implementation and are explicitly blocked today.
+
+1. In lobby confirm `LK-M3-NIGHTS1`; PLAY SOLO must still work offline.
+2. Tap/hold B near the House board and pipe: immediate objective and last line below gaze; double-tap replays once. X/Y and wrist glance still recall it.
+3. Set Watch Menu → Objective height, restart when authorized, and verify the saved height and left wrist objective.
+4. Complete Night 1: clamp, grip-only wrench, short clockwise ratchet pulls, visible bolt movement; drop/recovery, flood drain, bed.
+5. In Night 2 trace generator → breaker → riser → F1 pump/upper floors. Inspect floor collars, labels, lamp drops, outside House feed, clear stairs/windows/pole reach.
+6. Restore power and switch circuits: travelling warm pulse, floor-by-floor lamps, only fed branches glowing, quiet nearby hum; trip/reset the breaker. Capture matching-view GPU with wiring enabled/disabled (≤0.3 ms target, not yet measured).
+7. Matching Mac+Quest: join/avatars, clear two-way voice with headphones, both valve roles, guest repair, shared bed and rejoin; confirm circuit switches match both views. Editors stay muted unless the lead explicitly permits a listening check.
+8. **Pending ship implementation:** gallery horizon → rocks passage, beacon beam, horn of thanks; separately verify named wreck/retry.
+9. **Pending doors/mirror implementation:** grab/swing/latch doors from both peers; inspect Will’s body in House mirror from three angles.
+10. **Pending final campaign:** Nights 4–5 and Demo, finale/rescue, logbook/progression; profile ship-at-peak-storm at 72 Hz (GPU≤11 ms).
+
 ## Ordered implementation queue
 
 A1. DONE (data only). Extend day data for five nights: duration, storm stage, faults/conditions, active stations, ships, crew roles, solo modifiers, grace and radio/opening cues. Preserve accepted legacy behavior behind the feature switch.
@@ -47,6 +64,7 @@ A3. Data schedules: 30–60 s opening, 10–20 s relief, no ten-second fault pil
 A4. Initial task-only model DONE for 12 profiles; Nights 3–5 reach requested spare-time ranges after modeled bed travel. Ship-inclusive pacing and final approval PENDING. Nights 1–2 retain inherited budgets until ships are included. See `Docs/Playtests/telemetry-m3.md`; these are model execution times, not human measurements.
 Wiring addition DONE after Part A verification: see `M3-PowerWiring.md`. Existing circuits only, no new network fields; device cost pending.
 B1. Quest steamer art (8–12k triangles, 1–2 materials), emissive lights, mesh searchlight, ≤150 smoke particles, storm bow spray, distant light LOD.
+   Reuse audit: `NightScenario.NightShipEvent` already has approach/window/grace/broadcast-extension/preview/finale data; `M3NightAuthoring` authors the names and cue mappings 96–99 (P21–P24). Recorded `keeper_ship_sighted/close/passed/lost.wav` and `Resources/ImmersionAudio/foghorn.wav` already exist. No steamer/boat mesh was found. Files called ShipScene/ShipWorld refer to shipping/build routing, not a vessel. Add ship simulation as host state, then snapshot/Fusion/version tests; do not create a second clock. Existing ship offsets are provisional and must be retimed against the new longer N3–5 budgets.
 B2. Host ship approach/window/pass/wreck rules; warning 60–90 s ahead, named ships, beacon grace/loss only near passage. Test pass, recovery and wreck.
 B3. Shared passage payoff: horn/voice/music/storm relief for both keepers, visible from gallery/windows.
 B4. One urgent ship objective/progress and chalkboard ship ticks.

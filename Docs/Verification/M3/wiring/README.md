@@ -22,3 +22,7 @@ The pulse frame is a Play Mode power restoration paused partway through for capt
 Quest GPU target **≤0.3 ms** for wiring, both-eye clipping/headroom/label readability, nearby hum/trip sound, held-device performance and Mac+Quest circuit changes. ADB sees no device. Latest live two-Mac join/avatars/mono-AEC/recall/shared pipe/shared bed evidence is the preceding scheduling checkpoint; this visual step adds host-to-guest state assertions, not a second human/listening acceptance claim.
 
 Full suites at the preceding scheduling checkpoint: 371 EditMode pass; PlayMode 49 pass, 24 inherited failures, three skips, no regression. This incremental visual step uses the focused checks and graphics replay above; it does not relabel the earlier full run as a new run.
+
+## Android build
+
+Successful IL2CPP Android APK from `b6ca4b3cf2af6773f0c295145e931947958e93cb`: `/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-M3-b6ca4b3.apk` (134356886 bytes). SHA-256 `d6a47ad0a726f0ed2839127723c23d84fa7d426a3ad84d738b2efab4533dc501`. Exact receipt: [build.json](build.json). Campaign OFF; network LK-M3-NIGHTS1 / v20. No installation or launch; ADB absent.
