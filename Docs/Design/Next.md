@@ -2,7 +2,7 @@
 
 ## Latest follow-up — B reminder and wiring finish
 
-B is labelled on the HUD and House board; the reminder stays eligible until actual B use (per-player v2 acknowledgement). Wiring is thinner/darker, no steady glow, and material detail tiles every 35 mm rather than stretching per run. Seven focused checks and actual Night 1 → Night 2 replay pass; screenshots inspected. `Docs/Verification/M3/recall-wiring/` records evidence and the pending device checks. Campaign ON, network LK-M3-CAMPAIGN1 / v20 unchanged. Build/install in progress; never launch without a new request.
+B is labelled on the HUD and House board; the reminder stays eligible until actual B use (per-player v2 acknowledgement). Wiring is thinner/darker, no steady glow, and material detail tiles every 35 mm rather than stretching per run. Seven focused checks and actual Night 1 → Night 2 replay pass; screenshots inspected. `Docs/Verification/M3/recall-wiring/` records evidence and the pending device checks. Campaign ON, network LK-M3-CAMPAIGN1 / v20 unchanged. APK `Builds/LighthouseKeepers-M3-0987356.apk` built successfully; Quest disconnected during compilation, so installation is pending reconnection. Run `python3 artifacts/m3/recall-wiring/install.py`. Never launch without a new request.
 
 ## Current override — five-night preview requested by lead
 

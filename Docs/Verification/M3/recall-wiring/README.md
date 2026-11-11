@@ -20,3 +20,7 @@ No new live transport session for this local presentation pass; the previous act
 ## Device pending
 
 Human B discoverability, wiring appearance and texture stability in both eyes, sustained GPU cost (≤0.3 ms wiring target), and Mac+Quest human checks. Build/install receipts added after completion. Do not launch the Quest without the lead asking.
+
+## Build / device status
+
+Android IL2CPP build succeeded from `098735662aa60582c3599f7a30508a8b0d5e97fc`, APK `/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-M3-0987356.apk`, SHA-256 `4399cd29c435e1c0b0d4bc0e6691da8b6f4c2b9c3da5afadf3f4dcb6a3bc4710`. The authorized installer found no device: Quest disconnected during compilation. No install or launch occurred. Pending reconnection; run `python3 artifacts/m3/recall-wiring/install.py` from the M3 worktree.
