@@ -1,18 +1,35 @@
-# Job 1 — verification complete, final APK packaging (November 11)
+# Job 1 delivered — STOP before horror (November 11)
 
-On `s4/integrated` / PR #85. Steps 5–6 and simplified lobby are implemented and pushed. Focused checks pass; one actual-XRI graphics Night 1–2 replay and one live two-Mac smoke pass. No full suites run, per the latest lean request. Both Editors muted throughout. Sea recovery follow-up and larger lobby labels passed focused checks. Final APK packaging is next; install **and launch** explicitly authorized for the connected Quest this turn. Do not start horror or merge main.
+On `s4/integrated` / PR #85. Steps 5–6 and the simplified lobby are committed and pushed. Shipping code: **dff6e4b**. Generator vs POWER PANEL are distinct; island rails/sea recovery and one PLAY flow are implemented. No main merge and no M3/horror work in this turn.
 
-Next job after delivery: merge Job 1 into `m3/five-nights`, finish the ship prerequisite, then the queued horror job. Not started this turn. Full brief: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md).
+**Verification:** 21 focused cases pass, one actual-XRI graphics solo Night 1–2 replay passes, and one live two-Mac smoke passes (host alone, late join, avatars, guest sea recovery, shared valve task, shared sleep, leave/rejoin). Post-smoke defensive recovery and keypad-clearance changes passed focused tests; the entire smoke was not repeated. No full suites, per the lean request. Both test Editors were muted and are now closed. Evidence: [delivery report](../Verification/PlaytestFixes/final/README.md).
 
-Network: **LK-S5-PLAYTEST1 / LK-Lab-Coop-v21**. Both players must update. New sea-recovery snapshot; no READY requirement. Online host alone uses solo puzzles. Joining/leaving changes puzzle roles immediately; an already-running night's timer is preserved and the next night uses the new roster's budget.
+**Delivered:** `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-Playtest-dff6e4b.apk`; 133,792,150 bytes; SHA-256 `28b7df5f9f990c0f0e00b01e89c605968206a5dcd6721b407913819f29f4981d`. Installed and launched on the connected Quest as explicitly requested this turn; process alive after 15 seconds. No human headset acceptance implied. Build audio unchanged.
+
+**Network:** LK-S5-PLAYTEST1 / LK-Lab-Coop-v21. Both players must update. Sea-recovery snapshot added; no READY requirement. One player gets solo puzzles; joins/leaves adapt roles immediately. Current night time is preserved on roster changes; the next night uses the new roster's budget.
+
+## Next job (not started)
+
+Merge verified Job 1 into `m3/five-nights`; re-bake its existing TowerWiring authoring for the moved power panel (do not duplicate the feed). Finish the M3 ship prerequisite, then the queued horror job. Full scope: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Stop here until asked to continue.
 
 ## DEVICE CHECKS PENDING
 
-- Install/launch final APK (currently building), then human reach/readability for generator and separate POWER PANEL, primer squeeze, B recall.
-- Actual Quest Wi-Fi-off HOST / PLAY ALONE → START. The equivalent no-network Editor path passed; device acceptance still pending.
-- Worn island edge traversal, sea fall comfort, hands/controllers and return after ten seconds with a partner.
-- Two-Quest/real microphone listening and worn GPU/CPU measurements. The Mac smoke verified mono/AEC configuration, not human audio quality.
-- Locate the reported F3 yellow remnant; audit did not reproduce a separate obsolete shaft.
+- ADB screenshot was black; confirm the rendered lobby while wearing the Quest. Startup activity/OpenXR and live process were confirmed.
+- Human reach/readability: generator vs separate POWER PANEL, grip-only primer, B recall/objective height.
+- Actual Quest Wi-Fi OFF: PLAY → HOST / PLAY ALONE → START on the offline message. Editor forced-unreachable path passed; device acceptance pending.
+- Worn island edge traversal; sea fall comfort and ten-second return with a partner; dropped tools and tracked hands.
+- Two-Quest real voice listening, shared tasks/sleep/rejoin; worn GPU/CPU and frame budgets.
+- Locate the reported separate F3 yellow remnant; the all-floor audit did not reproduce it.
+
+## Exact delivery commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+# Reinstall the matching build without erasing app data:
+'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' install -r 'Builds/LighthouseKeepers-Playtest-dff6e4b.apk'
+# Launch only when requested (authorized for this completed delivery):
+'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' shell am start -n 'com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity'
+```
 
 ---
 
