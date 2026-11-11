@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
             pipe=FindAnyObjectByType<WatchPipeRepair>();engine=FindAnyObjectByType<WatchEngineControls>();radio=FindAnyObjectByType<WatchRadioConsole>();beacon=FindAnyObjectByType<WatchBeaconStation>();panel=FindAnyObjectByType<WatchPowerPanel>();
             material=new Material(pipe.indicators[0].sharedMaterial){name="Director control lamp"};material.EnableKeyword("_EMISSION");block=new MaterialPropertyBlock();
             Add(KeeperStep.GrabWrench,pipe.wrench.transform);
-            var valve=FindAnyObjectByType<WatchPressureValve>();if(valve){Add(KeeperStep.HoldValve,valve.transform);Add(KeeperStep.ClampValve,valve.transform);}
+            var valve=FindAnyObjectByType<WatchPressureValve>();if(valve){Add(KeeperStep.HoldValve,valve.GuidanceRoot);}
             for(int i=0;i<3;i++)Add((KeeperStep)((int)KeeperStep.BoltA+i),pipe.bolts[i]);
             Add(KeeperStep.CheckFuel,engine.Filler);Add(KeeperStep.Fuel,engine.FuelCan.transform);FittingFor(engine.Filler);Add(KeeperStep.Prime,engine.Primer.transform);Add(KeeperStep.CloseChoke,engine.Choke.transform);Add(KeeperStep.OpenChoke,engine.Choke.transform);Add(KeeperStep.Starter,FindAnyObjectByType<WatchGenerator>().Starter.transform);
             for(int i=0;i<4;i++){Add((KeeperStep)((int)KeeperStep.PumpOff+i),panel.Control(i).transform);Add((KeeperStep)((int)KeeperStep.PumpOn+i),panel.Control(i).transform);}

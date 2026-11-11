@@ -90,7 +90,7 @@ namespace LighthouseKeepers.WatchDemo
             return beacon==null?KeeperStep.None:!beacon.Ignited?KeeperStep.BeaconLight:!beacon.Aligned?KeeperStep.BeaconAlign:beacon.Soot>.5f?KeeperStep.BeaconWipe:KeeperStep.None;
         }
         KeeperStep PipeStep(bool held)
-        {if(!held)return KeeperStep.GrabWrench;if(state.Pressure!=null){if(!state.Pressure.CrewRequired&&!state.Pressure.Clamped)return KeeperStep.ClampValve;if(state.Pressure.CrewRequired)return KeeperStep.TightenBolt;}return state.Pipe.ActiveBolt>=0?(KeeperStep)((int)KeeperStep.BoltA+state.Pipe.ActiveBolt):KeeperStep.None;}
+        {if(!held)return KeeperStep.GrabWrench;if(state.Pressure?.CrewRequired==true)return KeeperStep.TightenBolt;return state.Pipe.ActiveBolt>=0?(KeeperStep)((int)KeeperStep.BoltA+state.Pipe.ActiveBolt):KeeperStep.None;}
         KeeperStep Step(int job,bool held)=>Available(job)?StepForStation(state.Definition.tasks[job].stationId,held):KeeperStep.None;
         KeeperStep BreakerStep(PowerCircuit desired)
         {

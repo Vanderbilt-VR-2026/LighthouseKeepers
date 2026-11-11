@@ -1,3 +1,42 @@
+# November 11 playtest fixes — ACTIVE CHECKPOINT
+
+Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `m3/five-nights` / PR #87. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
+
+## Current work
+
+Step 1: solo valve clamp removed from rules, objectives and narration; solo retains the prior post-clamp inflow rate. Two-player hold/release and distinct worker validation remain; disconnect allows immediate solo repair. Valve sits beside the active bolt and moves only when unheld; hidden/non-interactable for one player. Focused pressure 4/4 and director 8/8 pass. Graphics actual-XRI Night 1 → Night 2 passed; live one→two→one valve visibility/placement passed (0.43 m from active bolt). Step 1 complete; evidence in Docs/Verification/PlaytestFixes/step1/. No new replicated fields; network stays LK-S5-VOICE1 / v19 for now. Lobby changes will require a new matchmaking version.
+
+## Next in order
+
+2. Audit/remove old yellow F3 pole remnant across floors, preserving working continuous descent and fall guards.
+3. Grip-pressure primer, larger front bulb, tally/feedback; interaction input audit.
+4. Object/location/action objectives and nearby button icon.
+5. Separate generator and green wall POWER PANEL with conduit.
+6. Island edge protection and sea-loss/co-op return; test.
+Lobby addition: PLAY flow, host-alone/START without READY, offline fallback, dynamic crew count, join/rejoin, README and version bump.
+7. Focused tests + full suites at job end, graphics solo 1–3, two-Mac smoke, build/install if present; update PR #85. Merge into M3 only after this job is verified.
+Job 2: finish M3 ship first; write TheDrowned.md, then implement the latest horror brief in numbered checkpoints. Do not claim ships/horror/finale/progression done; M3 currently has scheduling and wiring plus B recall.
+
+## DEVICE CHECKS PENDING
+
+- Current job has no APK yet. Verify no-clamp solo repair, two-player valve reach/role split and disconnect.
+- Grip squeeze/release feel, primer visibility; readable objects/locations/button cues.
+- F3 pole remnant removed without losing floor exits/fall protection.
+- Updated lobby with Quest Wi-Fi off and two matching builds online; rejoin/leave.
+- Island edge walk, sea recovery; human voice; worn GPU/CPU/readability.
+
+## Exact commands / evidence
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+python3 artifacts/playtest-fixes/tests.py PressureValveTests pressure.json
+python3 artifacts/playtest-fixes/tests.py MasterDirectorTests director.json
+python3 artifacts/playtest-fixes/solo.py
+```
+Results/runners: `artifacts/playtest-fixes/`. Do not overwrite completed evidence; choose fresh output paths for reruns. Full suites only at job end. Preserve the earlier baseline below; its solo-clamp requirement is superseded by this playtest.
+
+---
+
 # Class playtest recall checkpoint — 2026-11-10
 
 Job 1 on `s4/integrated` / PR #85 is implemented, committed and verified; APK built from **573cf72**. The Quest disappeared from `adb devices` before installation. **Do not launch the Quest app unless the lead asks.** All Editor runs must remain muted with `EditorUtility.audioMasterMute = true`; `EditorPlaytestAudio` handles Editor initialization/Play Mode transitions, and `artifacts/coop/mac_pair.py` also mutes before runs. No player audio settings changed.

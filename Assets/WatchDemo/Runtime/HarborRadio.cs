@@ -132,7 +132,7 @@ namespace LighthouseKeepers.WatchDemo
             if(id==79)return s.WatchStartHeld;
             if(id==82)return s.Pressure?.CrewRequired==true&&!s.Repaired&&AtStation(7);
             if(id==83)return s.Pressure?.CrewRequired==true&&!s.Repaired&&s.Pressure.Holder==0;
-            if(id==84)return s.Pressure!=null&&!s.Pressure.CrewRequired&&!s.Pressure.Clamped&&!s.Repaired&&watch.WrenchHeld&&AtStation(7);
+            if(id==84)return false; // Retired solo-clamp instruction.
             if(id==85)return KeepersSeparated();
             if(id==86)return UsefulPoleNearby();
             if(id==87)return s.Grid?.Tripped==true;

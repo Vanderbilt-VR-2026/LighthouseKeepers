@@ -46,7 +46,7 @@ namespace LighthouseKeepers.WatchDemo
     wrenchDown=s.Repaired&&watch.WrenchHeld,
     valvePuzzle=crew&&!s.Repaired&&AtStation(7),
     valveReleased=crew&&!s.Repaired&&(s.Pipe.BoltsDone>0||s.Pipe.TurnsDone>0||s.Pipe.StrokeDegrees>0)&&priorValve>0&&holder==0,
-    soloClamp=s.Pressure!=null&&!crew&&!s.Pressure.Clamped&&!s.Repaired&&watch.WrenchHeld&&AtStation(7),
+    soloClamp=false, // Recorded P9 retained for archives, never requested by the current solo loop.
     crewRadios=KeepersSeparated(),
     pole=UsefulPoleNearby(),
     breakerTripped=s.Grid?.Tripped==true,
