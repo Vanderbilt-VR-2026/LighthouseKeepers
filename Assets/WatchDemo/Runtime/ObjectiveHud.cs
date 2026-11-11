@@ -80,7 +80,7 @@ namespace LighthouseKeepers.WatchDemo
   }
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   public static bool RecallTeachingDue(int night,int previous,int current)=>night>=1&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)==0;
-  public static void AcknowledgeRecallButton(){PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
+  public static void AcknowledgeRecallButton(){if(PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)!=0)return;PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
   void Set(int value,string text){if(RecallTeachingDue(watch.State.Day,index,value)){tipUntil=Time.unscaledTime+5;}index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
   string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
   void Update()
