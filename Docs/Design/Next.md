@@ -1,3 +1,34 @@
+# ACTIVE — generator, watch and wiring pass (November 11)
+
+Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](GeneratorWatchWiring.md). Work in numbered order, focused tests + one muted graphics solo Night 2 replay per item, commit/push each. No full suites or horror work. Preserve unrelated Wood.mat, Quest prefab ray widths and pipe-lever evidence.
+
+1. DONE: actual Night 2 fuel exhaustion, three-second sputter, empty gauge, mains outage and cause-first narration. Existing network fields only; `LK-S5-PLAYTEST1 / v21` unchanged. MasterDirector 12/12, VoicePass 23/23 pass. Final graphics Night 2 replay passed with cue 4 before refuelling, zero logged errors. Evidence: Docs/Verification/GeneratorWatchWiring/step1/.
+2. Next: mounted numbered generator control layout, fuel can on floor.
+3. Next: physical choke detents; preserve physical pour, starter pull and grip-pressure primer; verify complete sequence.
+4. Next: small left-wrist digital watch, corrected orientation and backlight.
+5. Next: restore/re-bake M3 TowerWiring assets/runtime/authoring; replace existing feed, not duplicate. Wiring was developed only on m3/five-nights, not dropped by an integrated merge.
+6. Then build current committed source, install if ADB connected (do not launch without request), update PR #85, report done/left.
+
+## DEVICE CHECKS PENDING (current pass)
+
+- Missing lobby hands / board below body: not reproduced or resolved. Preserve tracked hand rotations and Will's avatar; compare worn headset after START. First-frame logs alone do not establish the cause.
+- Night 2 fuel warning, actual blackout, speech timing and reachable controls.
+- Both-hand physical choke/pour/starter feel; watch fit/readability/orientation.
+- Wiring visibility/clearance and GPU cost <=0.3 ms; complete scene target 72 Hz.
+- Two-headset fuel state/presentation, voice/tasks/sleep regression (current pass has replica-focused evidence only).
+
+## Exact current check commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+python3 artifacts/playtest-fixes/lobby-state-tests.py MasterDirectorTests generator-step1.json
+python3 artifacts/playtest-fixes/lobby-state-tests.py VoicePassTests generator-step1-voice.json
+# Stop Play Mode before starting a fresh replay; helpers explicitly mute the Editor.
+python3 artifacts/generator-pass/solo.py step1-final
+```
+
+---
+
 # Job 1 delivered — STOP before horror (November 11)
 
 On `s4/integrated` / PR #85. Steps 5–6 and the simplified lobby are committed and pushed. Shipping code: **dff6e4b**. Generator vs POWER PANEL are distinct; island rails/sea recovery and one PLAY flow are implemented. No main merge and no M3/horror work in this turn.

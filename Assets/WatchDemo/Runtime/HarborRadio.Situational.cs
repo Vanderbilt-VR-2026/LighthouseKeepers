@@ -41,7 +41,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    var s=watch.State;bool crew=s.Pressure?.CrewRequired==true;
    int holder=s.Pressure?.Holder??0;bool running=s.Engine?.Running??false;
-   if(engineWasRunning&&!running)stallPending=true;
+   if(engineWasRunning&&!running){if(s.NightTwoFuelFailure&&s.Engine.Fuel<=0){Enqueue(4);stallPending=false;}else stallPending=true;}
    var c=new HarborCueRules.Context{
     wrenchDown=s.Repaired&&watch.WrenchHeld,
     valvePuzzle=crew&&!s.Repaired&&AtStation(7),
@@ -50,7 +50,7 @@ namespace LighthouseKeepers.WatchDemo
     crewRadios=KeepersSeparated(),
     pole=UsefulPoleNearby(),
     breakerTripped=s.Grid?.Tripped==true,
-    lowFuel=s.Engine?.LowFuel==true&&!s.IsPending(WatchState.GeneratorStation),
+    lowFuel=running&&s.Engine?.LowFuel==true&&!s.IsPending(WatchState.GeneratorStation),
     engineStalled=stallPending&&!running,
     lensSoot=s.Director!=null&&(s.Director.First==KeeperStep.BeaconWipe||s.Director.Second==KeeperStep.BeaconWipe),
     wrongCode=wrongCodePending,broadcast=broadcastReplyPending

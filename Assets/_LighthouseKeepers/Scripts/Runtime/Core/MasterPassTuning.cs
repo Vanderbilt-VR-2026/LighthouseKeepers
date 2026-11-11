@@ -6,6 +6,8 @@ namespace LighthouseKeepers.Core {
   public bool pressureCues=true,stormClock=true,onboarding=true,movement=true,worldSafety=true;
   public float walkMultiplier=1.2f,poleSpeed=2,poleAcceleration=4;
   public float guidedFuelTarget=.65f;
+  public bool nightTwoFuelFailure=true;
+  public float fuelSputterSeconds=3;
   public float nightTwoOutageSeconds=75,firstGeneratorGraceSeconds=120,tutorialFloodCap=.28f,gateTimeoutSeconds=30;
   [Header("Integrated watch grace — seconds; authoritative for solo and crew")]
   public bool watchStartGate=true,firstStationGrace=true;

@@ -97,14 +97,14 @@ namespace LighthouseKeepers.WatchDemo
             var e=State.Engine;
             for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);if(State.Director!=null)block.SetColor("_EmissionColor",Color.black);lamps[i].SetPropertyBlock(block);}
             RefreshPhysicalGuidance();
-            gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.9"),e.Fuel*100);
+            gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=e.Fuel<=.000001f?KeeperStrings.Get("fuel.empty"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.9"),e.Fuel*100);
             if(e.CoughSerial!=lastCough&&cough)sound.PlayOneShot(cough,.5f);lastCough=e.CoughSerial;
         }
         void Update()
         {
             AnimateCounters();
             starterCord.SetPosition(0,transform.TransformPoint(starterCordMount));starterCord.SetPosition(1,starterHandle.position-starterHandle.forward*.025f);
-            if(State.Engine.LowFuel&&State.Engine.Running&&Time.time>=nextWarning){nextWarning=Time.time+8;if(cough)sound.PlayOneShot(cough,.2f);}
+            if(State.Engine.Running&&(State.FuelSputtering||State.Engine.LowFuel&&!State.IsPending(WatchState.GeneratorStation))&&Time.time>=nextWarning){nextWarning=Time.time+(State.FuelSputtering?1f:8f);if(cough)sound.PlayOneShot(cough,.2f);}
             bool held=FuelCan.Grab.isSelected||State.Coop?.RemoteHeld(FuelCan.Grab)==true;
             bool pouring=CanPour(held);
             ShowPour(pouring);

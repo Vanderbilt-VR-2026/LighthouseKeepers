@@ -30,5 +30,18 @@ namespace LighthouseKeepers.Net.Tests {
 
   [Test] public void TutorialCannotLoseAndNightTwoOutageGetsLearningGrace(){var first=New(1);Call(first,"Tick",10000d);Call(first,"ObserveWater",60d,2f);Assert.False(Get<bool>(first,"Failed"));Assert.False(Get<bool>(first,"HighWaterFailed"));var second=New(2);Assert.AreEqual("On",Get<object>(second,"Power").ToString());Assert.True((bool)Call(second,"IsPending","STN_GENERATOR"));Call(second,"Tick",74d);Assert.AreEqual("On",Get<object>(second,"Power").ToString());Call(second,"Tick",2d);Assert.AreEqual("Off",Get<object>(second,"Power").ToString());Assert.AreEqual(119,Get<double>(second,"BeaconGraceRemaining"),.01);var guest=New(2);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(second,"Capture",.1f)));Assert.AreEqual(119,Get<double>(guest,"BeaconGraceRemaining"),.01);}
 
+  [Test] public void NightTwoFuelActuallyDepletesWarnsAndCutsEveryCircuit(){
+   var s=New(2);var e=Get<object>(s,"Engine");float initial=Get<float>(e,"Fuel");Call(s,"Tick",72.1d);Assert.Less(Get<float>(e,"Fuel"),initial*.05f);Assert.True(Get<bool>(s,"FuelSputtering"));
+   var guest=New(2);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(s,"Capture",.1f)));Assert.True(Get<bool>(guest,"FuelSputtering"));
+   Call(s,"Tick",3d);Assert.AreEqual(0,Get<float>(e,"Fuel"),.00001);Assert.False(Get<bool>(e,"Running"));Assert.True(Get<bool>(s,"NightTwoOutage"));
+   foreach(PowerCircuit circuit in Enum.GetValues(typeof(PowerCircuit)))Assert.False((bool)Call(s,"HasPower",circuit),circuit.ToString());
+   Assert.False(Get<bool>(s,"BeaconShining"));var d=Get<object>(s,"Director");Call(d,"Tick",80f,1,Vector3.zero,0,Vector3.zero,true);Assert.AreEqual("Fuel",Get<object>(d,"First").ToString());
+   Assert.True((bool)Call(guest,"ApplyRemote",Call(s,"Capture",.1f)));Assert.AreEqual("Off",Get<object>(guest,"Power").ToString());Assert.False(Get<bool>(guest,"FuelSputtering"));
+  }
+  [Test] public void EarlyRefillDelaysRunoutInsteadOfAnInvisibleForcedFailure(){
+   var s=New(2);Call(s,"Tick",65d);for(int i=0;i<40;i++)Call(s,"PourFuel",.1f);Call(s,"Tick",11d);
+   Assert.AreEqual("On",Get<object>(s,"Power").ToString());Assert.False(Get<bool>(s,"NightTwoOutage"));Call(s,"Tick",80d);Assert.AreEqual("Off",Get<object>(s,"Power").ToString());
+  }
+
  }
 }
