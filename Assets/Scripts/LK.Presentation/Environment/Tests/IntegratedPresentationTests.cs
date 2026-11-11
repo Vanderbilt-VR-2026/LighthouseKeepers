@@ -27,6 +27,16 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    Assert.True((bool)T("WatchDemoController").GetMethod("RetryDay").Invoke(watch,null));yield return null;
    Assert.False((bool)T("WatchState").GetProperty("Failed").GetValue(state));Assert.Greater(rig.transform.position.y,-.1f);Assert.That(rig.Camera.transform.position.z,Is.EqualTo(-6.3f).Within(.15f));
   }
+  [UnityTest]public IEnumerator GeneratorControlsMountInServiceOrderWithCanOnFloor(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var root=GameObject.Find("S4 generator sequence").transform;
+   var points=new[]{root.Find("FUEL_FILLER"),root.Find("GRIP_PrimerBulb"),root.Find("GRIP_ChokeControl"),GameObject.Find("GRIP_StarterHandle").transform};
+   float prior=10;
+   foreach(var p in points){var local=root.InverseTransformPoint(p.position);Assert.Less(local.x,prior,"Left-to-right service order");prior=local.x;Assert.That(local.y,Is.InRange(1.1f,1.3f),p.name);Assert.That(local.z,Is.InRange(1f,1.2f),p.name);}
+   Assert.NotNull(root.Find("Generator service fascia"));Assert.IsNull(root.Find("Fuel can service shelf"));
+   var can=root.Find("FUEL_CAN");Assert.That(can.localPosition.y,Is.EqualTo(.20f).Within(.01f));Assert.Greater(can.localPosition.x,.9f);
+   Assert.That(root.Find("Engraved starting order").GetComponent<TextMesh>().text,Does.Contain("1 FUEL").And.Contain("5 OPEN"));
+  }
   [UnityTest]public IEnumerator GeneratorAndPowerPanelHaveDistinctAccessibleStations(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
    var generator=GameObject.Find("STN_GENERATOR").transform;var panel=GameObject.Find("S4 breaker panel").transform;

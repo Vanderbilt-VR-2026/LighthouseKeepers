@@ -41,17 +41,17 @@ namespace LighthouseKeepers.WatchDemo
             string[] names={"FUEL","PRIMED","CHOKE","RUNNING"};
             for(int i=0;i<4;i++){float x=.39f-i*.26f;parts.Text(names[i],names[i],transform,new Vector3(x,1.40f,.90f),.0032f);lamps[i]=parts.Part(names[i]+" lamp",transform,new Vector3(x,1.33f,.90f),new Vector3(.10f,.035f,.025f),parts.Green).GetComponent<Renderer>();}
             ExposeStarter();
-            Primer=Control("GRIP_PrimerBulb",new Vector3(.44f,1.20f,1.01f),false);
-            Choke=Control("GRIP_ChokeControl",new Vector3(-.40f,1.06f,.88f),true);
+            Primer=Control("GRIP_PrimerBulb",new Vector3(.20f,1.18f,1.01f),false);
+            Choke=Control("GRIP_ChokeControl",new Vector3(-.20f,1.18f,1.01f),true);
             parts.Text("Primer label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.16"),transform,new Vector3(.44f,1.04f,1.08f),.0034f);
             parts.Text("Choke label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.17"),transform,new Vector3(-.4f,.88f,.96f),.0028f);
             Filler=M2StationParts.Root("FUEL_FILLER",transform,new Vector3(-.38f,1.43f,.28f));
             parts.Part("Filler collar",Filler,Vector3.zero,new Vector3(.13f,.025f,.13f),parts.Brass,PrimitiveType.Cylinder);
             parts.Text("Filler label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.18"),transform,new Vector3(-.38f,1.49f,.40f),.003f);
-            parts.Part("Fuel gauge face",transform,new Vector3(.69f,1.34f,.67f),new Vector3(.20f,.23f,.04f),parts.Dark);
-            gaugeNeedle=M2StationParts.Root("Fuel gauge needle pivot",transform,new Vector3(.69f,1.30f,.697f));
+            parts.Part("Fuel gauge face",transform,new Vector3(.62f,1.40f,1.01f),new Vector3(.20f,.23f,.04f),parts.Dark);
+            gaugeNeedle=M2StationParts.Root("Fuel gauge needle pivot",transform,new Vector3(.62f,1.36f,1.037f));
             parts.Part("Fuel gauge needle",gaugeNeedle,new Vector3(0,.05f,0),new Vector3(.007f,.10f,.007f),parts.Brass);
-            gaugeText=parts.Text("Fuel level","",transform,new Vector3(.69f,1.24f,.70f),.0028f);
+            gaugeText=parts.Text("Fuel level","",transform,new Vector3(.62f,1.30f,1.04f),.0028f);
             FuelCan=M2CarryProp.Create(parts,transform,"FUEL_CAN",new Vector3(1.02f,.24f,.20f),false);
             sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.4f;sound.maxDistance=12;
             cough=Resources.Load<AudioClip>("S4Audio/cough");clunk=Resources.Load<AudioClip>("S4Audio/breaker");
@@ -64,19 +64,19 @@ namespace LighthouseKeepers.WatchDemo
             starterHandle=starter.transform;
             // The new lamp panel occluded the original recessed handle from standing height.
             // Move the whole existing interaction forward; retain its rotation, grip anchors and 30 cm travel.
-            starterHandle.position=transform.TransformPoint(new Vector3(.05f,1.15f,1.02f));
+            starterHandle.position=transform.TransformPoint(new Vector3(-.62f,1.18f,1.06f));
             starter.ConfigureFoundation(starterHandle);
             var bar=starterHandle.Find("Control grip");
             var size=bar.GetComponent<MeshFilter>().sharedMesh.bounds.size;
             // This authored cylinder has baked dimensions and a 90-degree local rotation.
             bar.localPosition=Vector3.zero;bar.localScale=new Vector3(.035f/size.x,.14f/size.y,.035f/size.z);
             var renderer=bar.GetComponent<Renderer>();renderer.sharedMaterial=parts.Brass;
-            var colour=new Color(.95f,.75f,.27f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.24f);renderer.SetPropertyBlock(block);
+            var colour=new Color(.95f,.75f,.27f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",State.Director==null?colour*.24f:Color.black);renderer.SetPropertyBlock(block);
             var oldStem=starterHandle.Find("Control stem");if(oldStem)oldStem.gameObject.SetActive(false);
-            var housing=parts.Part("Starter recoil housing",transform,new Vector3(.05f,1.15f,.91f),new Vector3(.13f,.06f,.13f),parts.Dark,PrimitiveType.Cylinder);
+            var housing=parts.Part("Starter recoil housing",transform,new Vector3(-.62f,1.18f,.99f),new Vector3(.13f,.06f,.13f),parts.Dark,PrimitiveType.Cylinder);
             housing.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Text("Starter pull label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.19"),transform,new Vector3(.05f,.98f,1.04f),.0032f);
-            starterCordMount=new Vector3(.05f,1.15f,.97f);
+            starterCordMount=new Vector3(-.62f,1.18f,1.03f);
             starterCord=new GameObject("Starter recoil cord").AddComponent<LineRenderer>();starterCord.transform.SetParent(transform,false);
             starterCord.positionCount=2;starterCord.useWorldSpace=true;starterCord.widthMultiplier=.009f;starterCord.sharedMaterial=parts.Metal;
             starterCord.generateLightingData=true;starterCord.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;starterCord.receiveShadows=false;

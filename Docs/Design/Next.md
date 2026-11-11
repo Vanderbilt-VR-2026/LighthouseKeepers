@@ -3,7 +3,7 @@
 Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](GeneratorWatchWiring.md). Work in numbered order, focused tests + one muted graphics solo Night 2 replay per item, commit/push each. No full suites or horror work. Preserve unrelated Wood.mat, Quest prefab ray widths and pipe-lever evidence.
 
 1. DONE: actual Night 2 fuel exhaustion, three-second sputter, empty gauge, mains outage and cause-first narration. Existing network fields only; `LK-S5-PLAYTEST1 / v21` unchanged. MasterDirector 12/12, VoicePass 23/23 pass. Final graphics Night 2 replay passed with cue 4 before refuelling, zero logged errors. Evidence: Docs/Verification/GeneratorWatchWiring/step1/.
-2. Next: mounted numbered generator control layout, fuel can on floor.
+2. DONE: mounted numbered generator control layout, fuel can on floor. Focused scene test and solo Night 2 pass; evidence step2/.
 3. Next: physical choke detents; preserve physical pour, starter pull and grip-pressure primer; verify complete sequence.
 4. Next: small left-wrist digital watch, corrected orientation and backlight.
 5. Next: restore/re-bake M3 TowerWiring assets/runtime/authoring; replace existing feed, not duplicate. Wiring was developed only on m3/five-nights, not dropped by an integrated merge.

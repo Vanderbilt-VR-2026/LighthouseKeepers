@@ -1,0 +1,11 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Night 2 running arrival: elapsed=0.000s realtime=8.757 day=2 repaired=False water=0.02000m
+Fuel sputtering before shutdown: elapsed=72.002s realtime=125.958 day=2 repaired=False water=0.10979m
+Generator failure cause spoken before refuelling: elapsed=75.001s realtime=129.268 day=2 repaired=False water=0.11354m
+Three actual generator XRI pulls: elapsed=107.637s realtime=161.665 day=2 repaired=False water=0.23060m
+Solo repair ready without clamp; valve hidden: elapsed=107.637s realtime=161.790 day=2 repaired=False water=0.23060m
+day-two physical bolt 1 complete; inflow=0.6666667: elapsed=117.733s realtime=171.893 day=2 repaired=False water=0.24215m
+Released wrench: position=(3.19, 0.00, -0.05) kinematic=False water=0.2435837: elapsed=119.424s realtime=173.655 day=2 repaired=False water=0.24358m
+day-two physical bolt 0 complete; inflow=0.3333333: elapsed=125.782s realtime=179.941 day=2 repaired=False water=0.24808m
+day-two physical bolt 2 complete; inflow=0: elapsed=132.015s realtime=186.171 day=2 repaired=True water=0.24715m
+PASS solo Night 2 -> staged Night 3: elapsed=0.000s realtime=190.759 day=3 repaired=False water=0.02126m
