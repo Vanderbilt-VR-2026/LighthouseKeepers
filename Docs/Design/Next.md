@@ -4,7 +4,7 @@
 
 Campaign is now **ON** at the lead’s explicit request. The five-night task schedules are selected; ships, rescue ending, saved progression, doors/mirror and final ship-inclusive timing are unfinished. Earlier OFF entries below describe historical checkpoints. Current network **LK-M3-CAMPAIGN1 / v20** (compatibility label only; no new snapshot fields). Wiring is darker, textured and 15% slimmer, with reduced glow. See `Docs/Verification/M3/campaign-on/`. Next: ship implementation.
 
-42 focused tests and all 12 task-model simulations pass. Actual solo Night 1 repair/sleep and live two-Mac shared repair/sleep into Night 2 pass. Editors muted. Quest is connected; prior b6ca4b3 was installed without launch. This activation/finish build and installation are being completed; never launch without a new request.
+42 focused tests and all 12 task-model simulations pass. Actual solo Night 1 repair/sleep and live two-Mac shared repair/sleep into Night 2 pass. Editors muted. Quest is connected; prior b6ca4b3 was installed without launch. Activation/finish APK `Builds/LighthouseKeepers-M3-f5d2746.apk` built successfully and installed on Quest 3 2G0YC1ZG32048T, without launch. SHA-256 `527dae0eeea86f3ac2247fb4bff28e907c81578b08e292939389fe94b36f29aa`. See `Docs/Verification/M3/campaign-on/build.json` and `install.json`. Never launch without a new request.
 
 
 Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 was still unmerged when work began. Separate worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. Do not merge main. PR #85 remains the Milestone 2 merge candidate; no M3 gameplay goes into it.
