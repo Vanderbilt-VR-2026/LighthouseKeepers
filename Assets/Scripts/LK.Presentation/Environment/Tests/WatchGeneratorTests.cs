@@ -28,9 +28,13 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
                 System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",null);
                 yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity",new LoadSceneParameters(LoadSceneMode.Single));
                 float deadline=Time.realtimeSinceStartup+30;
-                while(!GameObject.Find("DevStartDay2")&&Time.realtimeSinceStartup<deadline)yield return null;
+                while(!GameObject.Find("Play")&&Time.realtimeSinceStartup<deadline)yield return null;
+                Find("LighthouseKeepers.Net.CrewLobbyTransport").GetField("ForceOfflineForTests").SetValue(null,true);
+                GameObject.Find("Play").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+                GameObject.Find("HostPlay").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
                 Assert.That(GameObject.Find("DevStartDay2"),Is.Not.Null);
                 GameObject.Find("DevStartDay2").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+                GameObject.Find("StartCrew").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
                 while(SceneManager.GetActiveScene().name!="LK_Lab_Environment"&&Time.realtimeSinceStartup<deadline)yield return null;
                 yield return null;yield return null;
                 var watch=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Single(c=>c.GetType().Name=="WatchDemoController");
@@ -67,7 +71,7 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
                 Assert.That(Vector3.Distance(starter.transform.position,rest),Is.LessThan(.001f));
                 Assert.That(Quaternion.Angle(starter.transform.rotation,rotation),Is.LessThan(.01f));
             }
-            finally {System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",previous);if(testHand)UnityEngine.Object.Destroy(testHand);}
+            finally {Find("LighthouseKeepers.Net.CrewLobbyTransport").GetField("ForceOfflineForTests").SetValue(null,false);System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",previous);if(testHand)UnityEngine.Object.Destroy(testHand);}
         }
         [UnityTest] public IEnumerator RepairFirstWaitsForPowerAndThreeRealPullsRestorePump()
         {

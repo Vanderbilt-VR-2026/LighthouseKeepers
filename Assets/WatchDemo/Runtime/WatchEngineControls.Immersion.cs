@@ -32,8 +32,9 @@ namespace LighthouseKeepers.WatchDemo
             collar.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Part("Primer fuel hose",Primer.transform,new Vector3(0,-.16f,-.045f),new Vector3(.022f,.25f,.022f),parts.Dark,PrimitiveType.Cylinder);
             parts.Part("Choke pivot housing",Choke.transform,new Vector3(0,0,-.025f),new Vector3(.13f,.13f,.08f),parts.Metal);
-            primerTally=Counter("Primer tally",new Vector3(.20f,1.40f,1.04f),out primerDrum);
-            starterTally=Counter("Starter tally",new Vector3(-.62f,1.40f,1.04f),out starterDrum);
+            // Recess counter bodies behind the starter sightline; keep their numbered faces exposed.
+            primerTally=Counter("Primer tally",new Vector3(.20f,1.40f,1.00f),out primerDrum);
+            starterTally=Counter("Starter tally",new Vector3(-.62f,1.40f,1.00f),out starterDrum);
             Filler.localPosition=new Vector3(.62f,1.15f,1.10f);
             parts.Part("Filler neck",Filler,new Vector3(0,-.07f,-.015f),new Vector3(.10f,.07f,.10f),parts.Metal,PrimitiveType.Cylinder);
             parts.Part("Filler neck bracket",Filler,new Vector3(0,-.16f,-.09f),new Vector3(.19f,.04f,.25f),parts.Dark);

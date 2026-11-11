@@ -70,7 +70,9 @@ namespace LighthouseKeepers.Net.Tests
         }
         [UnityTest] public IEnumerator ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio()
         {
-            var hud=Find("ObjectiveHud");var radio=Find("HarborRadio");yield return null;
+            var hud=Find("ObjectiveHud");var radio=Find("HarborRadio");
+            // Let the initial objective-change placement finish before testing recalled lazy-follow.
+            yield return new WaitForSecondsRealtime(.2f);
             radio.enabled=false;
             radio.GetType().GetMethod("Play",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(radio,new object[]{1,100,100f});
             int serial=Value<int>(radio,"Serial"),cue=Value<int>(radio,"Cue");
@@ -256,10 +258,8 @@ namespace LighthouseKeepers.Net.Tests
         {
             var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");var jaw=Field<Transform>(pipe,"jaw");
             var state=Value<object>(Value<object>(watch,"State"),"Pipe");
-            // This test isolates arm motion; the accepted solo clamp is its prerequisite.
-            // The separate pressure-valve tests exercise physical grip and crew release/expiry.
-            var pressure=Value<LighthouseKeepers.Core.PressureValveState>(Value<object>(watch,"State"),"Pressure");
-            if(pressure!=null)Assert.True(pressure.Clamp(),"Solo pressure prerequisite");
+            // Solo must repair directly, without touching a valve or clamp. Crew hold is tested separately.
+            Assert.True(Value<bool>(Value<object>(watch,"State"),"PipeReady"),"Solo repair unexpectedly needs a clamp");
             var socket=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="ImmersionWrenchSocket");
             var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
             var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();

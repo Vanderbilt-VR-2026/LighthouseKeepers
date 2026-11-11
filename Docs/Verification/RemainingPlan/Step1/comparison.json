@@ -1,0 +1,199 @@
+{
+  "summary": {
+    "total": "83",
+    "passed": "52",
+    "failed": "31",
+    "skipped": "0",
+    "duration": "855.1205971"
+  },
+  "failed": [
+    {
+      "name": "LighthouseKeepers.Presentation.Environment.Tests.EnvironmentPresentationTests.LabUsesOnePlayerAndLightingUpdatesAllocateNoManagedMemory",
+      "message": "  Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Presentation.Environment.Tests.EnvironmentPresentationTests+<LabUsesOnePlayerAndLightingUpdatesAllocateNoManagedMemory>d__2.MoveNext () [0x00259] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Presentation/Environment/Tests/EnvironmentPresentationTests.cs:31\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.RepairFirstWaitsForPowerAndThreeRealPullsRestorePump",
+      "message": "  Expected: not null\n  But was:  null\n",
+      "stack": "at LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests+<RepairFirstWaitsForPowerAndThreeRealPullsRestorePump>d__5.MoveNext () [0x000d2] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Presentation/Environment/Tests/WatchGeneratorTests.cs:77\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull",
+      "message": "  Expected: not null\n  But was:  null\n",
+      "stack": "at LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests+<S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull>d__4.MoveNext () [0x000ef] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Presentation/Environment/Tests/WatchGeneratorTests.cs:32\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests.GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead",
+      "message": "  Physical wrist twist must advance the active coupling\n  Expected: 1\n  But was:  0\n",
+      "stack": "at LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests+<GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead>d__1.MoveNext () [0x005ea] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Presentation/Environment/Tests/WatchInteractionTests.cs:51\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio",
+      "message": "  Follow snapped\n  Expected: less than 30.0f\n  But was:  34.9999847f\n",
+      "stack": "at LighthouseKeepers.Net.Tests.ImmersionInteractionTests+<ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio>d__12.MoveNext () [0x00322] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/ImmersionInteractionTests.cs:83\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops",
+      "message": "  Solo pressure prerequisite\n  Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Net.Tests.ImmersionInteractionTests+<WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops>d__19.MoveNext () [0x000e3] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/ImmersionInteractionTests.cs:262\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults",
+      "message": "  Expected: 72.0d +/- 0.01d\n  But was:  96.000001430511475d\n",
+      "stack": "at LighthouseKeepers.Net.Tests.S4HardeningTests+<BeaconDeadlineFailsBothAndRetryRestoresDayFaults>d__9.MoveNext () [0x000dc] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/S4HardeningTests.cs:51\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss",
+      "message": "  Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Net.Tests.S4HardeningTests+<HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss>d__8.MoveNext () [0x00279] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/S4HardeningTests.cs:36\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.FailedRetryButtonKeepsDayAndClearsPartialWork",
+      "message": "  Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Net.Tests.WatchMenuFlowTests+<FailedRetryButtonKeepsDayAndClearsPartialWork>d__15.MoveNext () [0x000aa] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchMenuFlowTests.cs:125\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.MenuReturnClosesExistingCrewRunnerBeforeLobbyArrival",
+      "message": "  Expected: not null\n  But was:  null\n",
+      "stack": "at LighthouseKeepers.Net.Tests.WatchMenuFlowTests+<WaitForLobby>d__19.MoveNext () [0x00095] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchMenuFlowTests.cs:211\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.OfflineMenuReturnButtonLoadsLobbyWithXrUiAvailable",
+      "message": "  Expected: not null\n  But was:  null\n",
+      "stack": "at LighthouseKeepers.Net.Tests.WatchMenuFlowTests+<WaitForLobby>d__19.MoveNext () [0x00095] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchMenuFlowTests.cs:211\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TerminalReplayButtonResetsToDayOneWithoutMovingTrackedTransforms",
+      "message": "  Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Net.Tests.WatchMenuFlowTests+<TerminalReplayButtonResetsToDayOneWithoutMovingTrackedTransforms>d__14.MoveNext () [0x00163] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchMenuFlowTests.cs:101\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TrackedRaysReachReplayRetryAndReturnWithNearbyWall",
+      "message": "System.NullReferenceException : Object reference not set to an instance of an object",
+      "stack": "  at LighthouseKeepers.Net.Tests.WatchMenuFlowTests+<TrackedRaysReachReplayRetryAndReturnWithNearbyWall>d__17.MoveNext () [0x001b6] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchMenuFlowTests.cs:173 \n  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44 "
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast",
+      "message": "  Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Net.Tests.WatchReplicaTests+<SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast>d__8.MoveNext () [0x002d5] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchReplicaTests.cs:82\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority",
+      "message": "Unhandled log message: '[Error] Scene 'LK_Bootstrap' couldn't be loaded because it has not been added to the active build profile or shared scene list or the AssetBundle has not been loaded.\nTo add a scene to the active build profile or shared scene list use the menu File->Build Profiles'. Use UnityEngine.TestTools.LogAssert.Expect",
+      "stack": "UnityEngine.SceneManagement.SceneManager:LoadSceneAsync (string,UnityEngine.SceneManagement.LoadSceneMode)\nLighthouseKeepers.Tests.BootstrapIntegrationTests/<BootstrapLoadsTeamEnvironmentWithOneFloodAuthority>d__0:MoveNext () (at Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/BootstrapIntegrationTests.cs:18)\nUnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)\n\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.FirstWatchPlayTests+<Load>d__4.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FirstWatchPlayTests.cs:31\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.FirstWatchPlayTests+<Load>d__4.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FirstWatchPlayTests.cs:31\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.FirstWatchPlayTests+<Load>d__4.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FirstWatchPlayTests.cs:31\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.FirstWatchPlayTests+<Load>d__4.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FirstWatchPlayTests.cs:31\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.FirstWatchPlayTests+<Load>d__4.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FirstWatchPlayTests.cs:31\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.OfflineFusionSessionLoadsLabAndSurvivesBoardUnload",
+      "message": "  Unready host must not start.\n  Expected: False\n  But was:  True\n",
+      "stack": "at LighthouseKeepers.Tests.FusionLobbyIntegrationTests+<OfflineFusionSessionLoadsLabAndSurvivesBoardUnload>d__5.MoveNext () [0x001a0] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FusionLobbyIntegrationTests.cs:78\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.TwoReadyKeepersLaunchLabAndHostStateCrossesExistingRunner",
+      "message": "  Expected: False\n  But was:  True\n",
+      "stack": "at LighthouseKeepers.Tests.FusionLobbyIntegrationTests+<TwoReadyKeepersLaunchLabAndHostStateCrossesExistingRunner>d__9.MoveNext () [0x001bd] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FusionLobbyIntegrationTests.cs:184\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object",
+      "stack": "--SetUp\n  at LighthouseKeepers.Tests.PlayerTraversalTests+<LoadEnvironment>d__6.MoveNext () [0x00091] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/PlayerTraversalTests.cs:34 \n  at UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35 \n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155 "
+    },
+    {
+      "name": "LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object",
+      "stack": "--SetUp\n  at LighthouseKeepers.Tests.PlayerTraversalTests+<LoadEnvironment>d__6.MoveNext () [0x00091] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/PlayerTraversalTests.cs:34 \n  at UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35 \n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155 "
+    },
+    {
+      "name": "LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object",
+      "stack": "--SetUp\n  at LighthouseKeepers.Tests.PlayerTraversalTests+<LoadEnvironment>d__6.MoveNext () [0x00091] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/PlayerTraversalTests.cs:34 \n  at UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35 \n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155 "
+    },
+    {
+      "name": "LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object",
+      "stack": "--SetUp\n  at LighthouseKeepers.Tests.PlayerTraversalTests+<LoadEnvironment>d__6.MoveNext () [0x00091] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/PlayerTraversalTests.cs:34 \n  at UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35 \n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155 "
+    },
+    {
+      "name": "LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object",
+      "stack": "--SetUp\n  at LighthouseKeepers.Tests.PlayerTraversalTests+<LoadEnvironment>d__6.MoveNext () [0x00091] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/PlayerTraversalTests.cs:34 \n  at UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35 \n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155 "
+    },
+    {
+      "name": "LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections",
+      "message": "SetUp : System.NullReferenceException : Object reference not set to an instance of an object",
+      "stack": "--SetUp\n  at LighthouseKeepers.Tests.PlayerTraversalTests+<LoadEnvironment>d__6.MoveNext () [0x00091] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/PlayerTraversalTests.cs:34 \n  at UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35 \n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155 "
+    },
+    {
+      "name": "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.StormWatchSceneTests+<Load>d__1.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/StormWatchSceneTests.cs:25\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.StormWatchSceneTests+<Load>d__1.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/StormWatchSceneTests.cs:25\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate",
+      "message": "SetUp :   Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Tests.StormWatchSceneTests+<Load>d__1.MoveNext () [0x000b4] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/StormWatchSceneTests.cs:25\nat UnityEngine.TestTools.EnumeratorHelper+<ProgressOnEnumerator>d__5.MoveNext () [0x00017] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:35\nat UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__16[T].MoveNext () [0x00132] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:155\n"
+    }
+  ],
+  "previouslyPassedNowFailed": [
+    {
+      "name": "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull",
+      "message": "  Expected: not null\n  But was:  null\n",
+      "stack": "at LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests+<S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull>d__4.MoveNext () [0x000ef] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Presentation/Environment/Tests/WatchGeneratorTests.cs:32\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio",
+      "message": "  Follow snapped\n  Expected: less than 30.0f\n  But was:  34.9999847f\n",
+      "stack": "at LighthouseKeepers.Net.Tests.ImmersionInteractionTests+<ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio>d__12.MoveNext () [0x00322] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/ImmersionInteractionTests.cs:83\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops",
+      "message": "  Solo pressure prerequisite\n  Expected: True\n  But was:  False\n",
+      "stack": "at LighthouseKeepers.Net.Tests.ImmersionInteractionTests+<WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops>d__19.MoveNext () [0x000e3] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/ImmersionInteractionTests.cs:262\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.MenuReturnClosesExistingCrewRunnerBeforeLobbyArrival",
+      "message": "  Expected: not null\n  But was:  null\n",
+      "stack": "at LighthouseKeepers.Net.Tests.WatchMenuFlowTests+<WaitForLobby>d__19.MoveNext () [0x00095] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchMenuFlowTests.cs:211\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.OfflineMenuReturnButtonLoadsLobbyWithXrUiAvailable",
+      "message": "  Expected: not null\n  But was:  null\n",
+      "stack": "at LighthouseKeepers.Net.Tests.WatchMenuFlowTests+<WaitForLobby>d__19.MoveNext () [0x00095] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchMenuFlowTests.cs:211\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.OfflineFusionSessionLoadsLabAndSurvivesBoardUnload",
+      "message": "  Unready host must not start.\n  Expected: False\n  But was:  True\n",
+      "stack": "at LighthouseKeepers.Tests.FusionLobbyIntegrationTests+<OfflineFusionSessionLoadsLabAndSurvivesBoardUnload>d__5.MoveNext () [0x001a0] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/_LighthouseKeepers/Scripts/Tests/PlayMode/FusionLobbyIntegrationTests.cs:78\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    }
+  ],
+  "newFailingTests": []
+}

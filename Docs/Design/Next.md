@@ -3,7 +3,7 @@
 Work in the user's latest order: Step 1 PR #85 verification → merge into m3/five-nights → scheduling/ships/doors/mirror → horror slices 1–3 → finale/progression → horror 4–6 → split-information/final verification. No main merge. Editor muted; Quest installs permitted, launches not permitted.
 
 - **1a DONE:** source audit confirms accepted generator/panel, edges/sea rules, physical inputs and simple lobby already implemented. See [audit](../Verification/RemainingPlan/Step1-Audit.md).
-- **1b IN PROGRESS:** full EditMode 372/372 passed; full PlayMode running. Fresh graphics Nights 1–3 and two-Mac regression next. Do not infer current results from historical checkpoints below.
+- **1b AVAILABLE CHECKS DONE:** EditMode 372/372; full PlayMode 52 pass/31 fail, six affected fixtures rerun 6/6, leaving 25 inherited failures. Graphics Nights 1–3 and live two-Mac valve/radio/sleep/rejoin pass. Recessed counter bodies to clear a starter sightline. See [fresh evidence](../Verification/RemainingPlan/Step1/README.md). Device GPU/Wi-Fi/listening remain pending.
 - **1c NEXT:** package/install (no launch), refresh PR #85, then merge into M3. Steps 2–6 have not started this pass.
 
 ## DEVICE CHECKS PENDING
