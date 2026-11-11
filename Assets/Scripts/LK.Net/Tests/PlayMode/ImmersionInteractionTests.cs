@@ -56,6 +56,18 @@ namespace LighthouseKeepers.Net.Tests
                 direct.EndManualInteraction();direct.selectInput.manualPerformed=false;control.position=Vector3.down*10;yield return null;
             }
         }
+        [UnityTest] public IEnumerator WristwatchFollowsVisualWristAndLightsOnlyWhenViewed()
+        {
+            yield return null;var mount=GameObject.Find("Keeper wristwatch").transform;
+            Assert.AreEqual("wrist",mount.parent.name);Assert.Greater(Vector3.Dot(mount.forward,mount.parent.up),.99f,"LCD must face out from the back of the wrist");
+            Assert.AreEqual(4,mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Watch side button"));
+            Assert.Less(mount.Find("Watch resin case").localScale.x,.06f);Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
+            var p=Find("PressurePresentation");var original=Field<Transform>(p,"head");var fake=new GameObject("Watch gaze test").transform;p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,fake);
+            fake.position=mount.position+mount.forward*.30f;yield return null;Assert.True(Value<bool>(p,"WatchBacklight"));
+            fake.position=mount.position-mount.forward*.30f;yield return null;Assert.False(Value<bool>(p,"WatchBacklight"));p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,original);Object.Destroy(fake.gameObject);
+            Assert.That(GameObject.Find("Watch night").GetComponent<TextMesh>().text,Does.StartWith("N"));Assert.That(GameObject.Find("Time to dawn").GetComponent<TextMesh>().text,Does.Match(@"^\d{2}:\d{2}$"));
+            var text=GameObject.Find("Wrist current objective").GetComponent<TMPro.TMP_Text>();Assert.IsNotEmpty(text.text);text.ForceMeshUpdate();Assert.LessOrEqual(text.textInfo.lineCount,2);
+        }
         [UnityTest] public IEnumerator ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio()
         {
             var hud=Find("ObjectiveHud");var radio=Find("HarborRadio");yield return null;
