@@ -117,6 +117,7 @@ namespace LighthouseKeepers.WatchDemo
             // Exterior sea/coast comes from Eli's StormSeascape; no second coastline.
             StoryDressing.Create(this);
             WorldAudioGaps.Create(this);
+            IslandSafety.Create(this);
             GeneratorIdentity.Create();
             ConnectedMachinePresentation.Create(this);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
@@ -187,7 +188,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
         public bool TryBeginRepair()=>!state.Failed&&!state.Repaired&&!sleeping&&pipeRepair&&pipeRepair.InContact;
-        public bool RetryDay(){if(state.RemoteReplica&&coop!=null)return state.Failed&&!sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Retry);if(state.ReadOnly||!state.Failed||sleeping)return false;state.Retry();BeginWatch();if(menu)menu.Close();return true;}
+        public bool RetryDay(){if(state.RemoteReplica&&coop!=null)return state.Failed&&!sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Retry);if(state.ReadOnly||!state.Failed||sleeping)return false;if(state.Sea.lost)GetComponent<IslandSafety>()?.ReturnToHouse();state.Retry();BeginWatch();if(menu)menu.Close();return true;}
         public bool ReplayFromDayOne()
         {
             if(state.RemoteReplica&&coop!=null)return !sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Replay);

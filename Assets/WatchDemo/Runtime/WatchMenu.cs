@@ -158,6 +158,7 @@ namespace LighthouseKeepers.WatchDemo
                 string.Format(KeeperStrings.Get("menu.day_status"),state.Day);
             if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
             else if(Book)status.text=state.Failed?(state.HighWaterFailed?KeeperStrings.Get("menu.old_flood"):state.BeaconDarkFailed?KeeperStrings.Get("menu.old_beacon"):KeeperStrings.Get("menu.old_time")):state.Complete&&!state.HasNextDay?KeeperStrings.Get("menu.survived"):string.Format(KeeperStrings.Get("menu.night_status"),state.Day);
+            if(state.Sea.lost)status.text=KeeperStrings.Get("loss.sea");
             retry.gameObject.SetActive(!state.NetworkRehearsal && state.Failed);
             close.gameObject.SetActive(!Book||!state.Failed);
             replay.gameObject.SetActive(!state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);

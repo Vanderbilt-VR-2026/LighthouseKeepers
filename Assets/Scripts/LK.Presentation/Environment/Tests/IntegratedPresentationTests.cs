@@ -9,6 +9,18 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    Assert.That(W(new Vector3(0,1.7f,-7.3f)).y,Is.GreaterThan(.99f));Assert.That(W(new Vector3(6,1.7f,0)).x,Is.GreaterThan(.99f));
    for(float r=2;r<4.3f;r+=.05f){var w=W(new Vector3(r,11.5f,0));Assert.That(w.x+w.y+w.z,Is.EqualTo(1).Within(.001f));Assert.That(Mathf.Min(w.x,w.y,w.z),Is.GreaterThanOrEqualTo(0));}
   }
+  [UnityTest]public IEnumerator IslandRailBlocksEveryOutwardEdgeAndSeaRetryReturnsHome(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var safety=T("IslandSafety");var edge=safety.GetMethod("Edge");
+   for(int i=0;i<160;i++){var p=(Vector3)edge.Invoke(null,new object[]{i*Mathf.PI*2/160});var outward=new Vector3(p.x+.2f,0,p.z+3.2f).normalized;
+    Assert.True(Physics.SphereCast(p-outward*.6f+Vector3.up*.8f,.2f,outward,out var hit,1.2f),"Unblocked edge "+i);Assert.IsTrue(hit.collider.name.StartsWith("Island edge rail"),hit.collider.name);
+   }
+   var rig=UnityEngine.Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();rig.transform.position=Vector3.down*4;yield return null;yield return null;
+   var watch=UnityEngine.Object.FindAnyObjectByType(T("WatchDemoController"));var state=T("WatchDemoController").GetProperty("State").GetValue(watch);
+   Assert.True((bool)T("WatchState").GetProperty("Failed").GetValue(state));Assert.AreEqual("Swept out to sea",T("WatchState").GetProperty("FailureMessage").GetValue(state));
+   Assert.True((bool)T("WatchDemoController").GetMethod("RetryDay").Invoke(watch,null));yield return null;
+   Assert.False((bool)T("WatchState").GetProperty("Failed").GetValue(state));Assert.Greater(rig.transform.position.y,-.1f);Assert.That(rig.Camera.transform.position.z,Is.EqualTo(-6.3f).Within(.15f));
+  }
   [UnityTest]public IEnumerator GeneratorAndPowerPanelHaveDistinctAccessibleStations(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
    var generator=GameObject.Find("STN_GENERATOR").transform;var panel=GameObject.Find("S4 breaker panel").transform;

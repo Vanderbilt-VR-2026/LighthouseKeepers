@@ -72,7 +72,7 @@ namespace LighthouseKeepers.WatchDemo
         public void CrewStatus(int beds,int keepers,string notice)
         {
             if(crewBeds==beds&&crewKeepers==keepers&&crewNotice==notice)return;
-            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;state.Pressure?.SetCrew(keepers>1);RefreshBoard();
+            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;state.Pressure?.SetCrew(keepers>1);state.SetKeeperCount(keepers);RefreshBoard();
         }
         public void ContinueAlone(string notice)
         {
