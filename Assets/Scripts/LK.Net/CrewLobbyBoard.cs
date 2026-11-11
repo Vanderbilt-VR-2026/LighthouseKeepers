@@ -29,7 +29,7 @@ namespace LighthouseKeepers.Net
             Key(pages[0].transform,"Quit",new Vector2(165,-130),new Vector2(300,65),Application.Quit);Text("Quit",S("quit"));
             Key(pages[1].transform,"HostPlay",new Vector2(0,90),new Vector2(650,100),()=>{Show(Page.Host);manager.Host();Refresh();});Text("HostPlay",S("host"));
             Key(pages[1].transform,"JoinChoice",new Vector2(0,-65),new Vector2(650,100),()=>Show(Page.Join));Text("JoinChoice",S("join"));
-            codeLabel=Label(pages[2].transform,"CrewCode",new Vector2(0,170),new Vector2(1100,80),46);
+            codeLabel=Label(pages[2].transform,"CrewCode",new Vector2(0,170),new Vector2(1100,80),56);
             roster=Label(pages[2].transform,"JoinedKeepers",new Vector2(0,35),new Vector2(1000,130),30);roster.textWrappingMode=TextWrappingModes.Normal;
             hostStatus=Label(pages[2].transform,"HostStatus",new Vector2(0,-90),new Vector2(1100,70),23);hostStatus.textWrappingMode=TextWrappingModes.Normal;
             Key(pages[2].transform,"StartCrew",new Vector2(0,-205),new Vector2(580,85),()=>transport.StartOrOffline());start=Find("StartCrew");Text("StartCrew",S("start"));
@@ -52,7 +52,7 @@ namespace LighthouseKeepers.Net
             input.onSelect.AddListener(_=>{if(keypad&&!transport.IsOnline)keypad.SetActive(true);});input.onValueChanged.AddListener(_=>Refresh());return input;
         }
         Button Find(string name)=>screen.BoardCanvas.GetComponentsInChildren<Button>(true).First(b=>b.name==name);
-        void Text(string name,string value)=>Find(name).GetComponentInChildren<TMP_Text>().text=value;
+        void Text(string name,string value){var b=Find(name);var text=b.GetComponentInChildren<TMP_Text>();text.text=value;text.fontSize=name.StartsWith("Dev")?18:name=="Play"?40:30;if(name=="Play"||name=="StartCrew"){b.GetComponent<Image>().color=new Color(.82f,.62f,.32f);text.color=new Color(.06f,.07f,.07f);}}
         void Show(Page value){page=value;for(int i=0;i<pages.Length;i++)pages[i].SetActive(i==(int)page);Find("FlowBack").gameObject.SetActive(page!=Page.Main);if(keypad)keypad.SetActive(page==Page.Join&&!transport.IsOnline);Refresh();}
         void Update(){if(transport.IsOnline&&(page==Page.Main||page==Page.Choice))Show(transport.IsHost?Page.Host:Page.Join);if(Time.unscaledTime>=nextRefresh){nextRefresh=Time.unscaledTime+.15f;Refresh();}}
         void Refresh()

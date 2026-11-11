@@ -1,3 +1,23 @@
+# Job 1 — verification complete, final APK packaging (November 11)
+
+On `s4/integrated` / PR #85. Steps 5–6 and simplified lobby are implemented and pushed. Focused checks pass; one actual-XRI graphics Night 1–2 replay and one live two-Mac smoke pass. No full suites run, per the latest lean request. Both Editors muted throughout. Sea recovery follow-up and larger lobby labels passed focused checks. Final APK packaging is next; install **and launch** explicitly authorized for the connected Quest this turn. Do not start horror or merge main.
+
+Next job after delivery: merge Job 1 into `m3/five-nights`, finish the ship prerequisite, then the queued horror job. Not started this turn. Full brief: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md).
+
+Network: **LK-S5-PLAYTEST1 / LK-Lab-Coop-v21**. Both players must update. New sea-recovery snapshot; no READY requirement. Online host alone uses solo puzzles. Joining/leaving changes puzzle roles immediately; an already-running night's timer is preserved and the next night uses the new roster's budget.
+
+## DEVICE CHECKS PENDING
+
+- Install/launch final APK (currently building), then human reach/readability for generator and separate POWER PANEL, primer squeeze, B recall.
+- Actual Quest Wi-Fi-off HOST / PLAY ALONE → START. The equivalent no-network Editor path passed; device acceptance still pending.
+- Worn island edge traversal, sea fall comfort, hands/controllers and return after ten seconds with a partner.
+- Two-Quest/real microphone listening and worn GPU/CPU measurements. The Mac smoke verified mono/AEC configuration, not human audio quality.
+- Locate the reported F3 yellow remnant; audit did not reproduce a separate obsolete shaft.
+
+---
+
+## Earlier checkpoints (historical; latest scope above takes precedence)
+
 # November 11 playtest fixes — ACTIVE CHECKPOINT
 
 Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `m3/five-nights` / PR #87. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.

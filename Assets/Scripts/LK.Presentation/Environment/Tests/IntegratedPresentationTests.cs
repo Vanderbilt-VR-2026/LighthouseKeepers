@@ -9,6 +9,12 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    Assert.That(W(new Vector3(0,1.7f,-7.3f)).y,Is.GreaterThan(.99f));Assert.That(W(new Vector3(6,1.7f,0)).x,Is.GreaterThan(.99f));
    for(float r=2;r<4.3f;r+=.05f){var w=W(new Vector3(r,11.5f,0));Assert.That(w.x+w.y+w.z,Is.EqualTo(1).Within(.001f));Assert.That(Mathf.Min(w.x,w.y,w.z),Is.GreaterThanOrEqualTo(0));}
   }
+  [UnityTest]public IEnumerator SeaRecoveryFadeNeverEntersSharedSleepSnapshot(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(2);
+   var w=UnityEngine.Object.FindAnyObjectByType(T("WatchDemoController"));T("WatchDemoController").GetMethod("ShowSeaRecovery").Invoke(w,new object[]{1f,true});
+   var json=(string)T("WatchDemoController").GetMethod("CaptureState").Invoke(w,null);var snapshot=JsonUtility.FromJson(json,T("WatchSnapshot"));Assert.Zero((float)T("WatchSnapshot").GetField("fade").GetValue(snapshot),"Only the fallen keeper should fade");Assert.False((bool)T("WatchSnapshot").GetField("sleeping").GetValue(snapshot));
+   T("WatchDemoController").GetMethod("HideSeaRecovery").Invoke(w,null);
+  }
   [UnityTest]public IEnumerator IslandRailBlocksEveryOutwardEdgeAndSeaRetryReturnsHome(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
    var safety=T("IslandSafety");var edge=safety.GetMethod("Edge");

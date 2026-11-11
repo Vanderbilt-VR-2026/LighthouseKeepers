@@ -11,7 +11,7 @@ namespace LighthouseKeepers.Core
         public static bool Outside(Vector3 head)=>head.y<-.75f || head.y<3&&
             new Vector2((head.x+.2f)/7.8f,(head.z+3.2f)/13.7f).sqrMagnitude>1;
         public void Tick(int a,Vector3 p,int b,Vector3 q,float dt)
-        {if(lost||!float.IsFinite(dt)||dt<0)return;TickSlot(first,a,p,b>0,dt);if(b>0)TickSlot(second,b,q,true,dt);else {second.actor=-1;second.remaining=0;}}
+        {if(lost||!float.IsFinite(dt)||dt<0)return;if(first.actor!=a&&second.actor==a)(first,second)=(second,first);TickSlot(first,a,p,b>0,dt);if(b>0)TickSlot(second,b,q,true,dt);else {second.actor=-1;second.remaining=0;}}
         void TickSlot(Slot s,int actor,Vector3 p,bool crew,float dt)
         {
             if(s.actor!=actor){s.actor=actor;s.remaining=s.cooldown=0;s.serial=0;}

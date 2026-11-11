@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo
 {
     public sealed class IslandSafety : MonoBehaviour
     {
-        WatchDemoController watch;XROrigin rig;Mesh mesh;int serial,revision=-1;float recoveryFade;bool recovering;
+        WatchDemoController watch;XROrigin rig;Mesh mesh;int serial,revision=-1,lastActor;float recoveryFade;bool recovering;
         public static void Create(WatchDemoController w){var s=w.gameObject.AddComponent<IslandSafety>();s.watch=w;s.rig=FindAnyObjectByType<XROrigin>();s.Build();}
         public static Vector3 Edge(float angle)=>new Vector3(-.2f+6.9f*Mathf.Sin(angle),0,-3.2f+12.2f*Mathf.Cos(angle));
         void Build()
@@ -29,7 +29,7 @@ namespace LighthouseKeepers.WatchDemo
         void Add(M2StationParts p,Transform t,Vector3 pos,Vector3 scale,List<CombineInstance> pieces){var o=p.Part("Rail source",t,pos,scale,p.Dark);pieces.Add(new CombineInstance{mesh=o.GetComponent<MeshFilter>().sharedMesh,transform=o.transform.localToWorldMatrix});o.SetActive(false);Destroy(o);}
         void LateUpdate()
         {
-            if(!rig||!rig.Camera)return;var state=watch.State;var locations=state.Coop as ICoopKeeperLocations;int actor=locations?.LocalActor??0;
+            if(!rig||!rig.Camera)return;var state=watch.State;var locations=state.Coop as ICoopKeeperLocations;if(locations!=null&&locations.LocalActor>0)lastActor=locations.LocalActor;int actor=lastActor;
             if(revision!=watch.Revision){revision=watch.Revision;serial=0;}
             if(!state.ReadOnly&&!state.Failed){
                 int a=actor,b=0;Vector3 p=rig.Camera.transform.position,q=default;
@@ -38,7 +38,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             var slot=state.Sea.For(actor);bool active=!state.Failed&&slot!=null&&slot.remaining>0;
             if(active&&!recovering){foreach(var hand in FindObjectsByType<LighthouseKeepers.Gameplay.Interaction.HandRig>(FindObjectsSortMode.None)){
-                var interactor=hand.GetComponentInChildren<UnityEngine.XR.Interaction.Toolkit.Interactors.XRDirectInteractor>();
+                var interactor=hand.Direct;
                 if(interactor)while(interactor.interactablesSelected.Count>0)interactor.interactionManager.SelectExit(interactor,interactor.interactablesSelected[0]);
             }}
             if(slot!=null&&slot.serial!=serial){serial=slot.serial;ReturnToHouse();}
@@ -52,7 +52,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed partial class WatchDemoController
     {
         bool seaPage;
-        public void ShowSeaRecovery(float value,bool active){SetFade(value);if(logbook)logbook.Recovery(active,head);seaPage=true;}
-        public void HideSeaRecovery(){if(!seaPage)return;seaPage=false;SetFade(0);if(logbook)logbook.Recovery(false,head);}
+        public void ShowSeaRecovery(float value,bool active){fade.enabled=value>0;fadeMaterial.color=new Color(0,0,0,value);if(logbook)logbook.Recovery(active,head);seaPage=true;}
+        public void HideSeaRecovery(){if(!seaPage)return;seaPage=false;fade.enabled=currentFade>0;fadeMaterial.color=new Color(0,0,0,currentFade);if(logbook)logbook.Recovery(false,head);}
     }
 }

@@ -167,7 +167,7 @@ namespace LighthouseKeepers.Net
             string blocked = StartBlockReason(sceneName);
             if (!string.IsNullOrEmpty(blocked)) return Fail(blocked);
             if (!IsHost || Players.Count < 1 || Players.Count > CrewConnectionPolicy.Capacity) return Fail("Host a crew before starting.");
-            
+
             localError = "";
             return fusion.StartGame(ShipWorld.GameplaySceneName, 1, false);
         }

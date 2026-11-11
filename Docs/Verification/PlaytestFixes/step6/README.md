@@ -5,3 +5,5 @@
 Host samples both existing authenticated keeper poses. Sea recovery is part of the shared snapshot: a crew fall returns only that keeper after 10 seconds, without resetting the partner's tasks/time. Focused rules 4/4: safe interior/gallery, solo loss, exact crew delay, partner disconnect during recovery, invalid timer rejection. Live two-Mac transport verification is queued for the job-end smoke.
 
 Protocol: LK-S5-PLAYTEST1 / LK-Lab-Coop-v21 (v20 reserved by M3). Both clients must update. Human edge traversal, fall comfort and headset checks pending.
+
+Follow-up: recovery follows the surviving actor if the host leaves (5/5 core checks). Its comfort fade is local and never enters the shared sleep/fail fade (graphics 1/1); hand release uses the existing HandRig direct interactor. The live two-Mac guest fall/return passed before this defensive follow-up.
