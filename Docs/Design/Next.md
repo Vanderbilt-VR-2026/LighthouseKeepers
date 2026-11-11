@@ -1,4 +1,4 @@
-# ACTIVE — generator, watch and wiring pass (November 11)
+# Generator, watch and wiring delivered — November 11
 
 Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](GeneratorWatchWiring.md). Work in numbered order, focused tests + one muted graphics solo Night 2 replay per item, commit/push each. No full suites or horror work. Preserve unrelated Wood.mat, Quest prefab ray widths and pipe-lever evidence.
 
@@ -7,7 +7,14 @@ Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](Generato
 3. DONE: physical choke detents; existing pour, starter and grip-pressure primer preserved. Both-hand focused test + graphics Night 2 pass. Evidence step3/.
 4. DONE: small dorsal left-wrist digital watch, corrected accessory orientation and gaze backlight. Focused recall/watch checks and Night 2 replay pass; inspected images step4/.
 5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on m3/five-nights, not dropped by a merge. Evidence step5/.
-6. Then build current committed source, install if ADB connected (do not launch without request), update PR #85, report done/left.
+6. DONE: source **c7b9a99** built successfully. Installed on the connected Quest; installed APK SHA-256 matches. App deliberately left closed.
+
+APK: `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk` (134,388,246 bytes). SHA-256 `757b9d404bb060355e7e9d06fcbd9092eb367bf56c108479859d027ef90dd0c2`. [Delivery/evidence](../Verification/GeneratorWatchWiring/README.md). PR #85 updated; no merge. All five implementation items are done; the listed device checks and separate missing-lobby-hands report remain. Do not resume M3/horror without the next request.
+
+Reinstall without launching:
+```sh
+'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' install -r '/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk'
+```
 
 ## DEVICE CHECKS PENDING (current pass)
 
