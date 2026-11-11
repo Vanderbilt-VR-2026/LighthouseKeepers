@@ -95,7 +95,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<interiorLights.Length;i++)
             {
                 var light=interiorLights[i];light.color=Color.Lerp(blackout?tint:Color.Lerp(normalLightColours[i],new Color(1,.48f,.25f),.25f),normalLightColours[i],warm);
-                float floorWarm=state.Director!=null&&power?Mathf.Clamp01((Time.time-recoveryStart-Mathf.Clamp(Mathf.Floor(light.transform.position.y/3.3f),0,3)*.18f)/recoverySeconds):warm;
+                float floorWarm=state.Director!=null&&power?Mathf.Clamp01((Time.time-recoveryStart-(state.Connected&&state.Connected.dependencies?TowerWiringPresentation.RestoreDelay(light.transform.position.y):Mathf.Clamp(Mathf.Floor(light.transform.position.y/3.3f),0,3)*.18f))/recoverySeconds):warm;
                 light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,atmosphere,floorWarm);
             }
             foreach(var guide in guides)guide.intensity=tuning.guideLampIntensity*(1-warm)*(blackout?pulse/Mathf.Max(.01f,tuning.emergencyMaximum):1);

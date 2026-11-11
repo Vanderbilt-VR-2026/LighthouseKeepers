@@ -1,0 +1,34 @@
+{
+  "status": "completed",
+  "duration": 0.06,
+  "summary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.TowerWiringTests.AnOpenCircuitGoesDarkWithoutExtinguishingOtherFeeds",
+      "Status": "Passed",
+      "Duration": 0.0078427,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.TowerWiringTests.BakedRoutesKeepAllFourCircuitsAndFitTheQuestGeometryBudget",
+      "Status": "Passed",
+      "Duration": 0.0288286,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.TowerWiringTests.GuestWiringUsesTheHostCircuitSnapshotAndCannotChangeItLocally",
+      "Status": "Passed",
+      "Duration": 0.0040749,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}
