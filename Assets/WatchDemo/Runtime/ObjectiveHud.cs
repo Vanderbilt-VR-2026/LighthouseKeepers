@@ -43,7 +43,7 @@ namespace LighthouseKeepers.WatchDemo
    for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.60f*edge);}
    backing.SetPixels(data);backing.Apply();var bg=Rect(root,"Subtle gradient backing",Vector2.zero,root.sizeDelta).gameObject.AddComponent<RawImage>();bg.texture=backing;bg.material=material;bg.raycastTarget=false;
    line=Rule("Brass accent",new Vector2(-265,76),new Vector2(480,1.4f));line.pivot=new Vector2(0,.5f);
-   label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.2");
+   label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),20,new Color(.9f,.78f,.55f,.95f));label.text=KeeperStrings.Get("hud.recallHeader");
    icon=Rect(root,"Objective line icon",new Vector2(-240,10),new Vector2(40,42)).gameObject.AddComponent<ObjectiveLineIcon>();icon.color=new Color(.76f,.62f,.36f);icon.material=material;icon.raycastTarget=false;
    cueSound=new GameObject("Soft objective completion").AddComponent<AudioSource>();cueSound.transform.SetParent(transform,false);cueSound.playOnAwake=false;cueSound.volume=.08f;cueSound.clip=Resources.Load<AudioClip>("Hands/clunk");
    task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);task.overflowMode=TextOverflowModes.Ellipsis;task.maxVisibleLines=2;
@@ -79,8 +79,9 @@ namespace LighthouseKeepers.WatchDemo
    if(radio&&!string.IsNullOrEmpty(radio.LastCaption)){ConfigureSubtitle(true);subtitle.text=radio.LastCaption;subtitle.pageToDisplay=1;subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();speakerTag.text=KeeperStrings.Get("subtitle.speaker");subtitle.alpha=speakerTag.alpha=1;subtitleBacking.gameObject.SetActive(true);}
   }
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
-  public static bool RecallTeachingDue(int night,int previous,int current)=>night==1&&previous!=int.MinValue&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BTaught",0)==0;
-  void Set(int value,string text){if(RecallTeachingDue(watch.State.Day,index,value)){tipUntil=Time.unscaledTime+5;PlayerPrefs.SetInt("LK.Objective.BTaught",1);PlayerPrefs.Save();}index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
+  public static bool RecallTeachingDue(int night,int previous,int current)=>night>=1&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)==0;
+  public static void AcknowledgeRecallButton(){PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
+  void Set(int value,string text){if(RecallTeachingDue(watch.State.Day,index,value)){tipUntil=Time.unscaledTime+5;}index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
   string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
   void Update()
   {
@@ -101,7 +102,7 @@ namespace LighthouseKeepers.WatchDemo
    if(Time.unscaledTime-built<.5f)Place();
    InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.secondaryButton,out bool b);
    int recallPress=recall.Input(b,Time.unscaledTime);
-   if(recallPress>0){RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
+   if(recallPress>0){AcknowledgeRecallButton();tipUntil=0;RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
    bool recalling=recall.Visible(Time.unscaledTime);
    if(recalling){until=Mathf.Max(until,recall.Until);changed=Time.unscaledTime-1;}
    recallTip.text=Time.unscaledTime<tipUntil?KeeperStrings.Get("hud.recallTeach"):"";partner.gameObject.SetActive(Time.unscaledTime>=tipUntil);

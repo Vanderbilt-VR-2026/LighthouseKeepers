@@ -20,10 +20,15 @@ namespace LighthouseKeepers.Net.Tests {
    var t=T("HarborRecallHistory");var o=Activator.CreateInstance(t);foreach(int cue in new[]{1,7,3,5})t.GetMethod("Remember").Invoke(o,new object[]{cue});
    CollectionAssert.AreEqual(new[]{5,3,7},(System.Collections.IEnumerable)t.GetProperty("Cues").GetValue(o));Assert.AreEqual(5,t.GetProperty("Latest").GetValue(o));
   }
-  [Test] public void RecallReminderIsNightOneOnlyAndRespectsSavedDismissal() {
-   int old=PlayerPrefs.GetInt("LK.Objective.BTaught",0);var test=T("ObjectiveHud").GetMethod("RecallTeachingDue");
-   try {PlayerPrefs.SetInt("LK.Objective.BTaught",0);Assert.False((bool)test.Invoke(null,new object[]{1,int.MinValue,2}));Assert.True((bool)test.Invoke(null,new object[]{1,2,3}));Assert.False((bool)test.Invoke(null,new object[]{2,2,3}));PlayerPrefs.SetInt("LK.Objective.BTaught",1);Assert.False((bool)test.Invoke(null,new object[]{1,2,3}));}
-   finally{PlayerPrefs.SetInt("LK.Objective.BTaught",old);}
+  [Test] public void ReminderPersistsUntilActualBUseEvenOnPreviouslyTaughtInstalls() {
+   const string key="LK.Objective.BUsed.v2";int old=PlayerPrefs.GetInt(key,0),legacy=PlayerPrefs.GetInt("LK.Objective.BTaught",0);var hud=T("ObjectiveHud");var due=hud.GetMethod("RecallTeachingDue");
+   try {PlayerPrefs.SetInt(key,0);PlayerPrefs.SetInt("LK.Objective.BTaught",1);
+    Assert.True((bool)due.Invoke(null,new object[]{1,int.MinValue,2}),"Arrival teaches B even if the old flash was missed");
+    Assert.True((bool)due.Invoke(null,new object[]{2,2,3}));Assert.True((bool)due.Invoke(null,new object[]{5,3,4}));
+    Assert.False((bool)due.Invoke(null,new object[]{1,2,2}),"An unchanged objective must not repeat the hint");
+    hud.GetMethod("AcknowledgeRecallButton").Invoke(null,null);
+    Assert.False((bool)due.Invoke(null,new object[]{1,2,3}));Assert.False((bool)due.Invoke(null,new object[]{5,3,4}));
+   } finally {PlayerPrefs.SetInt(key,old);PlayerPrefs.SetInt("LK.Objective.BTaught",legacy);}
   }
  }
 }

@@ -162,7 +162,7 @@
     },
     {
       "key": "board.night",
-      "text": "NIGHT {0}"
+      "text": "NIGHT {0}     B: OBJECTIVE"
     },
     {
       "key": "partner",
@@ -1885,8 +1885,12 @@
       "text": "Objective height"
     },
     {
+      "key": "hud.recallHeader",
+      "text": "OBJECTIVE     B — RECALL"
+    },
+    {
       "key": "hud.recallTeach",
-      "text": "Press B to see your objective"
+      "text": "Press B: show current objective"
     },
     {
       "key": "m3.night1",
