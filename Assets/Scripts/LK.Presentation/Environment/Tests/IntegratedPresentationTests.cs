@@ -9,6 +9,16 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    Assert.That(W(new Vector3(0,1.7f,-7.3f)).y,Is.GreaterThan(.99f));Assert.That(W(new Vector3(6,1.7f,0)).x,Is.GreaterThan(.99f));
    for(float r=2;r<4.3f;r+=.05f){var w=W(new Vector3(r,11.5f,0));Assert.That(w.x+w.y+w.z,Is.EqualTo(1).Within(.001f));Assert.That(Mathf.Min(w.x,w.y,w.z),Is.GreaterThanOrEqualTo(0));}
   }
+  [UnityTest]public IEnumerator GeneratorAndPowerPanelHaveDistinctAccessibleStations(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var generator=GameObject.Find("STN_GENERATOR").transform;var panel=GameObject.Find("S4 breaker panel").transform;
+   Assert.Greater(Vector3.Distance(generator.position,panel.position),4f);
+   Assert.AreEqual("POWER PANEL",panel.Find("Panel heading").GetComponent<TextMesh>().text);
+   var cabinet=panel.Find("Enamel breaker cabinet").GetComponent<Renderer>();var c=cabinet.sharedMaterial.GetColor("_BaseColor");Assert.Greater(c.g,c.r*1.5f);
+   var yellow=generator.GetComponentsInChildren<Renderer>().First(r=>r.name=="Diesel crankcase").sharedMaterial.GetColor("_BaseColor");Assert.Greater(yellow.r,.5f);Assert.Less(yellow.b,.15f);
+   var back=panel.TransformPoint(new Vector3(0,1.28f,.01f));Assert.True(Physics.Raycast(back,-panel.forward,out var wall,.15f));Assert.True(wall.collider.name.Contains("Wall_F2"),wall.collider.name);
+   Assert.NotNull(GameObject.Find("Generator to POWER PANEL conduit"));
+  }
   [UnityTest]public IEnumerator FixturesClearStairRailsAndHouseClutterIsRemoved(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
    var renderers=UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None).Where(r=>r.enabled).ToArray();

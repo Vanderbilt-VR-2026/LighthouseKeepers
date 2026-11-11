@@ -117,6 +117,7 @@ namespace LighthouseKeepers.WatchDemo
             // Exterior sea/coast comes from Eli's StormSeascape; no second coastline.
             StoryDressing.Create(this);
             WorldAudioGaps.Create(this);
+            GeneratorIdentity.Create();
             ConnectedMachinePresentation.Create(this);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
