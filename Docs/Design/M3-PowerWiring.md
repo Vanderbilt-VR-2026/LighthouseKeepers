@@ -35,3 +35,7 @@ The old `Tower power conduit` cylinder/sleeves are replaced. `TowerWiringAuthori
 14,634 triangles for the complete wiring/pump presentation; five combined floor meshes, one shared wiring material and one 512×1024 atlas. Sparks use their own existing URP particle shader/material and at most 24 quads (48 additional triangles). One bounded hum source. There are no per-strap renderers or realtime lights. **GPU ≤0.3 ms is a target, NOT VERIFIED on Quest.** No Editor frame rate is substituted for that measurement.
 
 The route audit lists intentional service penetrations and contacts with invisible safety volumes separately. It reports no unexpected contacts, including no window-glass/door/stair-mesh intersections. These are not a substitute for the pending both-eye/headroom sweep. The existing all-scene coplanar audit reports 36 scenes, zero conflicts, zero edits. Screenshots and focused/regression results are in `Docs/Verification/M3/wiring/`.
+
+## Headset feedback — quieter finish
+
+The lead found the grey wiring too prominent. Main conduit radius is now 15% slimmer; darker warm aged-metal colour, original procedural grime/scratch and cloth-braid atlas detail, and reduced steady/pulse emission blend it into the room. Paths and circuit rules are unchanged. Same 14,634 triangles, five floor meshes and single wiring material. Inspected screenshots: `Docs/Verification/M3/campaign-on/`. Device cost and human visual acceptance pending.

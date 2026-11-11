@@ -7,9 +7,9 @@ namespace LighthouseKeepers.Tests.M3
 {
     public sealed class M3NightDataTests
     {
-        [Test] public void FiveNightsAndDemoHaveCompleteValidDataWithoutEnablingTheCampaign()
+        [Test] public void EnabledFiveNightPreviewHasValidDataAndKeepsTimingUnapproved()
         {
-            var c=AssetDatabase.LoadAssetAtPath<FiveNightCatalog>("Assets/WatchDemo/Resources/M3Campaign.asset");Assert.IsNotNull(c);Assert.False(c.enabled);
+            var c=AssetDatabase.LoadAssetAtPath<FiveNightCatalog>("Assets/WatchDemo/Resources/M3Campaign.asset");Assert.IsNotNull(c);Assert.True(c.enabled);
             Assert.AreEqual(5,c.nights.Length);CollectionAssert.AreEqual(new[]{1,2,3,4,5},c.nights.Select(d=>d.day));
             foreach(var day in c.nights.Concat(new[]{c.demo})){
                 Assert.IsNotNull(day.scenario);Assert.True(day.scenario.configured);Assert.IsEmpty(day.scenario.Validate().ToArray(),day.name);Assert.False(day.scenario.timingApproved,"Timing must be measured in A4");

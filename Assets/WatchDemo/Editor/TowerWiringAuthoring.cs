@@ -14,7 +14,7 @@ namespace LighthouseKeepers.Editor
         const string Folder="Assets/WatchDemo/Resources/TowerWiring";
         const float RiserAngle=325;
         static readonly float[] heights={2.85f,6.15f,9.45f,12.75f};
-        static readonly Color Steel=new(.43f,.46f,.43f),Rust=new(.27f,.16f,.085f),Ceramic=new(.85f,.82f,.7f),Cloth=new(.12f,.085f,.05f);
+        static readonly Color Steel=new(.36f,.32f,.27f),Rust=new(.27f,.16f,.085f),Ceramic=new(.85f,.82f,.7f),Cloth=new(.12f,.085f,.05f);
         static Vector3 Wall(float angle,float y,float inset=.055f)
         {
             var dir=Quaternion.Euler(0,angle,0)*Vector3.forward;var origin=Vector3.up*y;
@@ -112,7 +112,7 @@ namespace LighthouseKeepers.Editor
                     var colour=run.floor==1?Color.Lerp(Steel,Rust,.25f):Steel;
                     if(run.radius<.005f)
                     {for(int strand=0;strand<2;strand++)g.Braid(points[i-1],points[i],run.radius,Cloth,run.circuit,baseTime+at/length*timeSpan,strand);}
-                    else g.Tube(points[i-1],points[i],run.radius,colour,run.circuit,baseTime+at/length*timeSpan,baseTime+(at+d)/length*timeSpan,6);
+                    else g.Tube(points[i-1],points[i],run.radius*.85f,colour,run.circuit,baseTime+at/length*timeSpan,baseTime+(at+d)/length*timeSpan,6);
                     at+=d;
                 }
                 // Saddles are baked into the same mesh; no per-strap Renderer or collider.
@@ -166,7 +166,7 @@ namespace LighthouseKeepers.Editor
             void Quad(Vector3 a,Vector3 b,Vector3 c,Vector3 d,Color colour,int circuit,float start,float end,Vector2? atlas=null)
             {int n=vertices.Count;vertices.AddRange(new[]{a,b,c,d});var norm=Vector3.Cross(b-a,c-a).normalized;for(int i=0;i<4;i++){normal.Add(norm);colours.Add(colour);route.Add(new Vector3(circuit,i<2?start:end,atlas.HasValue?0:1));}if(atlas.HasValue){float y=atlas.Value.y;uv.AddRange(new[]{new Vector2(.98f,y),new Vector2(.02f,y),new Vector2(.02f,y+.055f),new Vector2(.98f,y+.055f)});}else uv.AddRange(new[]{new Vector2(.02f,.02f),new Vector2(.2f,.02f),new Vector2(.2f,.06f),new Vector2(.02f,.06f)});tris.AddRange(new[]{n,n+1,n+2,n,n+2,n+3});}
             public void Tube(Vector3 a,Vector3 b,float radius,Color colour,int circuit,float start,float end,int sides)
-            {var axis=(b-a).normalized;var u=Vector3.Cross(axis,Mathf.Abs(axis.y)>.9f?Vector3.right:Vector3.up).normalized*radius;var v=Vector3.Cross(axis,u);for(int i=0;i<sides;i++){float x=i*Mathf.PI*2/sides,y=(i+1)*Mathf.PI*2/sides;var p=u*Mathf.Cos(x)+v*Mathf.Sin(x);var q=u*Mathf.Cos(y)+v*Mathf.Sin(y);Quad(a+p,a+q,b+q,b+p,colour,circuit,start,end);}}
+            {var axis=(b-a).normalized;var u=Vector3.Cross(axis,Mathf.Abs(axis.y)>.9f?Vector3.right:Vector3.up).normalized*radius;var v=Vector3.Cross(axis,u);for(int i=0;i<sides;i++){float x=i*Mathf.PI*2/sides,y=(i+1)*Mathf.PI*2/sides;var p=u*Mathf.Cos(x)+v*Mathf.Sin(x);var q=u*Mathf.Cos(y)+v*Mathf.Sin(y);Quad(a+p,a+q,b+q,b+p,colour,circuit,start,end);if(colour==Cloth){int n=uv.Count;uv[n-4]=new Vector2(.27f,.01f);uv[n-3]=new Vector2(.49f,.01f);uv[n-2]=new Vector2(.49f,.095f);uv[n-1]=new Vector2(.27f,.095f);}}}
             public void Disk(Vector3 p,Vector3 axis,float radius,Color c,int circuit)
             {var u=Vector3.Cross(axis,Mathf.Abs(axis.y)>.9f?Vector3.right:Vector3.up).normalized*radius;var v=Vector3.Cross(axis,u);int n=vertices.Count;for(int i=0;i<8;i++){float a=i*Mathf.PI/4;vertices.Add(p+u*Mathf.Cos(a)+v*Mathf.Sin(a));normal.Add(axis);route.Add(new Vector3(circuit,.75f,0));colours.Add(c);uv.Add(new Vector2(.1f,.02f));}for(int i=1;i<7;i++)tris.AddRange(new[]{n,n+i,n+i+1});}
             public void Braid(Vector3 a,Vector3 b,float radius,Color colour,int circuit,float age,int strand)

@@ -1,5 +1,12 @@
 # M3 checkpoint — five nights and the ship
 
+## Current override — five-night preview requested by lead
+
+Campaign is now **ON** at the lead’s explicit request. The five-night task schedules are selected; ships, rescue ending, saved progression, doors/mirror and final ship-inclusive timing are unfinished. Earlier OFF entries below describe historical checkpoints. Current network **LK-M3-CAMPAIGN1 / v20** (compatibility label only; no new snapshot fields). Wiring is darker, textured and 15% slimmer, with reduced glow. See `Docs/Verification/M3/campaign-on/`. Next: ship implementation.
+
+42 focused tests and all 12 task-model simulations pass. Actual solo Night 1 repair/sleep and live two-Mac shared repair/sleep into Night 2 pass. Editors muted. Quest is connected; prior b6ca4b3 was installed without launch. This activation/finish build and installation are being completed; never launch without a new request.
+
+
 Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 was still unmerged when work began. Separate worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. Do not merge main. PR #85 remains the Milestone 2 merge candidate; no M3 gameplay goes into it.
 
 ## Done / current
@@ -20,7 +27,7 @@ Runtime commits: `31cff1a` schedules, `b3bb144` task-model timing/guidance. Full
 
 APK: `/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-M3-b3bb144.apk` (133795458 bytes), SHA-256 `d6c4cafb1f974afad160c30b35ec32c3a26e6a5581769810498bce17026cdb9f`. Campaign OFF, network `LK-M3-NIGHTS1` / v20. USB absent, not installed or launched. A4 final approval still waits for ship-inclusive timings.
 
-The added diegetic wiring pass is implemented; see `M3-PowerWiring.md` and `Docs/Verification/M3/wiring/`. Next: B1 ship implementation/ship-inclusive A4 timing, doors + mirror, remaining M3 parts. Do not turn on the campaign yet. The original Editor source is restored after the smoke; guest Editor retains the tested M3 overlay and is stopped. Preserve the original worktree's unrelated prefab ray-width edit.
+The added diegetic wiring pass is implemented; see `M3-PowerWiring.md` and `Docs/Verification/M3/wiring/`. Next: B1 ship implementation/ship-inclusive A4 timing, doors + mirror, remaining M3 parts. Campaign activation has now been requested by the lead; unfinished features remain pending. The original Editor source is restored after the smoke; guest Editor retains the tested M3 overlay and is stopped. Preserve the original worktree's unrelated prefab ray-width edit.
 
 Raw runners: `artifacts/m3/a2/run.py` (focused tests + guest overlay), `bot.py`, `graphics.py`, `graphics-retry.py`, `full.py`, `overlay-root.py`, `restore-root.py`, `crew.py`, `build.py`. Use fresh evidence destinations when rerunning. `overlay-root.py` backs up only candidate paths before temporarily testing them in the original Editor. Do not run `a1-check.py`: it copies guest-authored assets back into this worktree.
 

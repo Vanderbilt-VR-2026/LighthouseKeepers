@@ -45,7 +45,7 @@ namespace LighthouseKeepers.Net.Tests
   }
   [Test] public void NewCueDomainIsVersionedAndAllImportedPClipsAreAddressable()
   {
-   Assert.AreEqual("LK-M3-NIGHTS1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
+   Assert.AreEqual("LK-M3-CAMPAIGN1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
    var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");foreach(var e in Read().entries){Assert.NotNull(catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{e.id}),e.file);Assert.AreEqual(e.caption,catalog.GetType().GetMethod("Caption").Invoke(catalog,new object[]{e.id}));}
   }
   [Test] public void ObjectiveTransitionsAllowTwoLinesThenRequireAQuietStretch()

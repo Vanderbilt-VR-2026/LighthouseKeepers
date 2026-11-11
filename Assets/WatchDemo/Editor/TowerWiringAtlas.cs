@@ -23,7 +23,20 @@ namespace LighthouseKeepers.Editor
             var mesh=new Mesh();mesh.SetVertices(v);mesh.SetUVs(0,uv);mesh.SetTriangles(tris,0);
             var mat=new Material(Shader.Find("LighthouseKeepers/WorldWriting"));mat.mainTexture=font.material.mainTexture;mat.SetColor("_Color",new Color(.07f,.08f,.065f));
             var rt=RenderTexture.GetTemporary(w,h,0,RenderTextureFormat.ARGB32);var cmd=new CommandBuffer();cmd.SetRenderTarget(rt);cmd.ClearRenderTarget(false,true,new Color(.71f,.70f,.64f));cmd.SetViewProjectionMatrices(Matrix4x4.identity,GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(0,w,0,h,-1,1),true));cmd.DrawMesh(mesh,Matrix4x4.identity,mat);Graphics.ExecuteCommandBuffer(cmd);cmd.Release();
-            var prior=RenderTexture.active;RenderTexture.active=rt;var texture=new Texture2D(w,h,TextureFormat.RGB24,false);texture.ReadPixels(new Rect(0,0,w,h),0,0);texture.Apply();if(SystemInfo.graphicsUVStartsAtTop){var pixels=texture.GetPixels();var flipped=new Color[pixels.Length];for(int y=0;y<h;y++)System.Array.Copy(pixels,y*w,flipped,(h-1-y)*w,w);texture.SetPixels(flipped);texture.Apply();}File.WriteAllBytes(Folder+"/Atlas.png",texture.EncodeToPNG());RenderTexture.active=prior;RenderTexture.ReleaseTemporary(rt);Object.DestroyImmediate(texture);Object.DestroyImmediate(mat);Object.DestroyImmediate(mesh);
+            var prior=RenderTexture.active;RenderTexture.active=rt;var texture=new Texture2D(w,h,TextureFormat.RGB24,false);texture.ReadPixels(new Rect(0,0,w,h),0,0);texture.Apply();if(SystemInfo.graphicsUVStartsAtTop){var pixels=texture.GetPixels();var flipped=new Color[pixels.Length];for(int y=0;y<h;y++)System.Array.Copy(pixels,y*w,flipped,(h-1-y)*w,w);texture.SetPixels(flipped);texture.Apply();}// Original procedural material detail: aged conduit, fine scratches and cloth braid.
+            // Reserved bottom atlas strip; mipmaps filter the grain at headset distance.
+            var rng=new System.Random(1900);
+            for(int y=0;y<104;y++)for(int x=0;x<w;x++)
+            {
+                float grain=(float)rng.NextDouble()-.5f;
+                float grime=Mathf.PerlinNoise(x*.045f,y*.055f);
+                bool cloth=x>=130&&x<260;
+                float weave=cloth?(Mathf.Sin((x+y)*.55f)*Mathf.Sin((x-y)*.55f)*.07f):0;
+                float scratch=!cloth&&x%37==0?.045f:0;
+                var baseColour=cloth?new Color(.56f,.45f,.31f):new Color(.58f,.55f,.47f);
+                texture.SetPixel(x,y,baseColour*(.82f+grime*.18f+grain*.065f+weave+scratch));
+            }
+            texture.Apply();File.WriteAllBytes(Folder+"/Atlas.png",texture.EncodeToPNG());RenderTexture.active=prior;RenderTexture.ReleaseTemporary(rt);Object.DestroyImmediate(texture);Object.DestroyImmediate(mat);Object.DestroyImmediate(mesh);
             AssetDatabase.ImportAsset(Folder+"/Atlas.png",ImportAssetOptions.ForceSynchronousImport);var importer=(TextureImporter)AssetImporter.GetAtPath(Folder+"/Atlas.png");importer.mipmapEnabled=true;importer.filterMode=FilterMode.Trilinear;importer.anisoLevel=4;importer.wrapMode=TextureWrapMode.Clamp;var android=importer.GetPlatformTextureSettings("Android");android.overridden=true;android.format=TextureImporterFormat.ASTC_6x6;android.maxTextureSize=1024;importer.SetPlatformTextureSettings(android);importer.SaveAndReimport();
             var spark=AssetDatabase.LoadAssetAtPath<Material>(Folder+"/Sparks.mat");if(!spark){spark=new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit"));spark.SetColor("_BaseColor",new Color(1,.45f,.08f));AssetDatabase.CreateAsset(spark,Folder+"/Sparks.mat");}
         }
