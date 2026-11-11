@@ -8,7 +8,7 @@ Step 1: solo valve clamp removed from rules, objectives and narration; solo reta
 
 ## Next in order
 
-2. Audit/remove old yellow F3 pole remnant across floors, preserving working continuous descent and fall guards.
+2. Pole audit complete (PlayMode 1/1; inspected F3 screenshot). No obsolete shaft or separate yellow remnant reproduced. Location clarification/device confirmation pending; working pole and safety hatch preserved. Evidence: Docs/Verification/PlaytestFixes/step2/.
 3. Grip-pressure primer, larger front bulb, tally/feedback; interaction input audit.
 4. Object/location/action objectives and nearby button icon.
 5. Separate generator and green wall POWER PANEL with conduit.

@@ -22,6 +22,20 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    var block=new MaterialPropertyBlock();GameObject.Find("Wall-mounted checklist white face").GetComponent<Renderer>().GetPropertyBlock(block);Assert.Greater(block.GetColor("_BaseColor").grayscale,.9f);
    foreach(var shaft in renderers.Where(r=>r.name=="Brass slide shaft"))Assert.Less(shaft.sharedMaterial.GetColor("_EmissionColor").maxColorComponent,.001f);
   }
+  [UnityTest]public IEnumerator OnlyCurrentDescentShaftAndThreeLandingsExist(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var all=UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include,FindObjectsSortMode.None);
+   Assert.AreEqual(1,all.Count(t=>t.name=="Continuous brass descent pole F4 to F1"));
+   Assert.AreEqual(1,all.Count(t=>t.name=="Continuous brass slide shaft"));
+   Assert.AreEqual(3,all.Count(t=>t.name.StartsWith("Circular pole landing F")));
+   Assert.AreEqual(1,all.Count(t=>t.name=="Bedroom flush pole hatch"));
+   Assert.AreEqual(1,all.Count(t=>t.name=="Bedroom hatch fall protection"));
+   foreach(var t in all)Assert.AreNotEqual("Brass slide shaft",t.name,"Obsolete separate-floor shaft remains");
+   foreach(var r in all.Where(t=>t.name=="Circular floor opening brass rim").Select(t=>t.GetComponent<Renderer>())){
+    Assert.Less(r.sharedMaterial.GetColor("_EmissionColor").maxColorComponent,.001f,"Floor trim must not glow yellow");
+    Assert.Less(r.sharedMaterial.GetColor("_BaseColor").maxColorComponent,.4f,"Floor trim must stay subdued");
+   }
+  }
   [UnityTest]public IEnumerator TrackerFollowsLazilyBelowEyesAndRecallRepositionsIt(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(2);
    var tracker=GameObject.Find("Transient objective tracker").transform;var hud=UnityEngine.Object.FindAnyObjectByType(T("ObjectiveHud"));var head=Camera.main.transform;T("ObjectiveHud").GetMethod("Reveal",Type.EmptyTypes).Invoke(hud,null);var pose=tracker.position;var rotation=tracker.rotation;
