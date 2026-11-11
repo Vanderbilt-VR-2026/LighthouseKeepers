@@ -9,7 +9,8 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class ObjectiveHud:MonoBehaviour
  {
   WatchDemoController watch;Transform head,wrist;HarborRadio radio;CanvasGroup group,objectiveGroup;RectTransform root,line,strike,tick,danger;TMP_Text dangerText;
-  TMP_Text task,label,floor,subtitle,partner,speakerTag,recallTip;float tipUntil;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
+  TMP_Text task,label,floor,subtitle,partner,speakerTag,recallTip;float tipUntil;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,lastLocationStep=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
+  ObjectiveInputIcon inputIcon;TMP_Text inputLabel;DirectorPresentation guidance;
   readonly ObjectiveRecallState recall=new();
   int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
 
@@ -46,7 +47,9 @@ namespace LighthouseKeepers.WatchDemo
    label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.2");
    icon=Rect(root,"Objective line icon",new Vector2(-240,10),new Vector2(40,42)).gameObject.AddComponent<ObjectiveLineIcon>();icon.color=new Color(.76f,.62f,.36f);icon.material=material;icon.raycastTarget=false;
    cueSound=new GameObject("Soft objective completion").AddComponent<AudioSource>();cueSound.transform.SetParent(transform,false);cueSound.playOnAwake=false;cueSound.volume=.08f;cueSound.clip=Resources.Load<AudioClip>("Hands/clunk");
-   task=Text("Objective task",new Vector2(15,10),new Vector2(510,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);task.overflowMode=TextOverflowModes.Ellipsis;task.maxVisibleLines=2;
+   task=Text("Objective task",new Vector2(-15,10),new Vector2(450,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);task.overflowMode=TextOverflowModes.Ellipsis;task.maxVisibleLines=2;
+   inputIcon=Rect(root,"Nearby controller button",new Vector2(274,8),new Vector2(34,42)).gameObject.AddComponent<ObjectiveInputIcon>();inputIcon.material=material;inputIcon.raycastTarget=false;
+   inputLabel=Text("Exact input button",new Vector2(274,-23),new Vector2(68,18),14,new Color(.94f,.79f,.47f));inputLabel.alignment=TextAlignmentOptions.Center;
    floor=Text("Relative floor",new Vector2(10,-28),new Vector2(470,25),16,new Color(.76f,.7f,.56f));
    recallTip=Text("Recall tutorial",new Vector2(0,-52),new Vector2(560,26),20,new Color(.93f,.86f,.65f));
    partner=Text("Partner job",new Vector2(10,-48),new Vector2(470,20),14,new Color(.76f,.7f,.56f));
@@ -60,7 +63,7 @@ namespace LighthouseKeepers.WatchDemo
    foreach(var h in FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(h.Node==XRNode.LeftHand)wrist=h.transform.parent;
    danger=Rule("Danger fill",new Vector2(-220,-216),new Vector2(440,6));danger.pivot=new Vector2(0,.5f);dangerText=Text("Danger cause",new Vector2(0,-238),new Vector2(440,20),14,new Color(.95f,.72f,.37f));
    var layer=Rect(root,"Objective content",Vector2.zero,root.sizeDelta);objectiveGroup=layer.gameObject.AddComponent<CanvasGroup>();
-   foreach(var item in new Transform[]{bg.transform,line,label.transform,icon.transform,task.transform,floor.transform,partner.transform,recallTip.transform,strike,tick,danger,dangerText.transform})item.SetParent(layer,false);
+   foreach(var item in new Transform[]{bg.transform,line,label.transform,icon.transform,task.transform,floor.transform,inputIcon.transform,inputLabel.transform,partner.transform,recallTip.transform,strike,tick,danger,dangerText.transform})item.SetParent(layer,false);
    built=Time.unscaledTime;Reveal(ObjectiveHudSettings.Duration,true);
   }
   public void Reveal()=>Reveal(ObjectiveHudSettings.Duration,true);
@@ -111,7 +114,17 @@ namespace LighthouseKeepers.WatchDemo
    string station=s.Director!=null?ObjectiveDirector.Job((KeeperStep)index):index>=0&&index<s.Definition.tasks.Length?s.Definition.tasks[index].stationId:"BED";
    int target=s.Director!=null?ObjectiveDirector.Floor((KeeperStep)index):station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
    int here=FloorAt(head.position.y);
-   if(lastFloor!=here||lastTarget!=target){lastFloor=here;lastTarget=target;floor.text=FloorDirection(target,here);}
+   if(lastFloor!=here||lastTarget!=target||lastLocationStep!=index){
+    lastFloor=here;lastTarget=target;lastLocationStep=index;
+    if(s.Director!=null){var where=ObjectiveDirector.Location((KeeperStep)index);floor.text=string.IsNullOrEmpty(where)?"":where+" · "+FloorDirection(target,here);}
+    else floor.text=FloorDirection(target,here);
+   }
+   if(!guidance)guidance=GetComponent<DirectorPresentation>();
+   string button=s.Director!=null?ObjectiveDirector.Button((KeeperStep)index):"";
+   bool near=guidance&&!string.IsNullOrEmpty(button)&&Vector3.Distance(head.position,guidance.HintPosition((KeeperStep)index))<2.2f;
+   inputIcon.gameObject.SetActive(near);inputLabel.gameObject.SetActive(near);
+   if(near){inputIcon.Set(button=="TRIGGER");inputLabel.text=KeeperStrings.Get("input."+button);}
+
    icon.Set(station);
    bool showVoice=HarborSubtitleSettings.Enabled&&radio&&radio.SubtitleAlpha>0;
    bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);

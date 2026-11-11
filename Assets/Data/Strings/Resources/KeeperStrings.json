@@ -22,27 +22,27 @@
     },
     {
       "key": "step.Fuel",
-      "text": "Fill the fuel tank"
+      "text": "Fill the generator fuel tank"
     },
     {
       "key": "step.Prime",
-      "text": "Squeeze the primer ×{0}"
+      "text": "Squeeze the primer bulb ×{0}"
     },
     {
       "key": "step.CloseChoke",
-      "text": "Close the choke"
+      "text": "Close the generator choke"
     },
     {
       "key": "step.Starter",
-      "text": "Pull the starter ×{0}"
+      "text": "Pull the generator starter ×{0}"
     },
     {
       "key": "step.OpenChoke",
-      "text": "Open the choke"
+      "text": "Open the generator choke"
     },
     {
       "key": "step.ResetBreaker",
-      "text": "Reset the breaker"
+      "text": "Reset the POWER PANEL breaker"
     },
     {
       "key": "step.RadioPower",
@@ -86,35 +86,35 @@
     },
     {
       "key": "step.PumpOn",
-      "text": "Switch pump on"
+      "text": "Switch PUMP on"
     },
     {
       "key": "step.PumpOff",
-      "text": "Switch pump off"
+      "text": "Switch PUMP off"
     },
     {
       "key": "step.BeaconOn",
-      "text": "Switch beacon on"
+      "text": "Switch BEACON on"
     },
     {
       "key": "step.BeaconOff",
-      "text": "Switch beacon off"
+      "text": "Switch BEACON off"
     },
     {
       "key": "step.RadioOn",
-      "text": "Switch radio on"
+      "text": "Switch RADIO on"
     },
     {
       "key": "step.RadioOff",
-      "text": "Switch radio off"
+      "text": "Switch RADIO off"
     },
     {
       "key": "step.LightsOn",
-      "text": "Switch lights on"
+      "text": "Switch LIGHTS on"
     },
     {
       "key": "step.LightsOff",
-      "text": "Switch lights off"
+      "text": "Switch LIGHTS off"
     },
     {
       "key": "job.STN_PIPE_LEAK",
@@ -590,7 +590,7 @@
     },
     {
       "key": "step.CheckFuel",
-      "text": "Check the fuel"
+      "text": "Check the generator fuel gauge"
     },
     {
       "key": "pole.grip",
@@ -1578,7 +1578,7 @@
     },
     {
       "key": "step.HoldValve",
-      "text": "Hold the valve"
+      "text": "Hold the pipe pressure valve"
     },
     {
       "key": "step.ClampValve",
@@ -1586,7 +1586,7 @@
     },
     {
       "key": "step.TightenBolt",
-      "text": "Tighten the bolt"
+      "text": "Tighten the active pipe bolt"
     },
     {
       "key": "connected.pressure",
@@ -1883,6 +1883,42 @@
     {
       "key": "hud.recallTeach",
       "text": "Press B to see your objective"
+    },
+    {
+      "key": "where.workbench",
+      "text": "House workbench"
+    },
+    {
+      "key": "where.STN_PIPE_LEAK",
+      "text": "Wall-mounted pipe"
+    },
+    {
+      "key": "where.STN_GENERATOR",
+      "text": "Front of generator"
+    },
+    {
+      "key": "where.BREAKER",
+      "text": "POWER PANEL cabinet"
+    },
+    {
+      "key": "where.STN_RADIO_CONSOLE",
+      "text": "Radio console"
+    },
+    {
+      "key": "where.STN_BEACON_CONTROL",
+      "text": "Beacon platform"
+    },
+    {
+      "key": "where.BED",
+      "text": "Bedroom bunk"
+    },
+    {
+      "key": "input.GRIP",
+      "text": "GRIP"
+    },
+    {
+      "key": "input.TRIGGER",
+      "text": "TRIGGER"
     }
   ]
 }

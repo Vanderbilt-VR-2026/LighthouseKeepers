@@ -9,6 +9,20 @@ namespace LighthouseKeepers.Net.Tests {
   [Test] public void HostSplitsAvailableJobsAndGuestOnlyAppliesAssignments(){var s=New(2);Call(s,"Tick",75d);var d=Get<object>(s,"Director");Call(d,"Tick",0f,1,new Vector3(0,4.6f,0),2,new Vector3(0,1.6f,0),true);Assert.AreNotEqual(Get<object>(d,"First"),Get<object>(d,"Second"));var guest=New(2);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(s,"Capture",.02f)));var gd=Get<object>(guest,"Director");Assert.AreEqual(Get<object>(d,"First"),Get<object>(gd,"First"));Call(gd,"Tick",100f,2,Vector3.zero,1,Vector3.zero,false);Assert.AreEqual(Get<object>(d,"First"),Get<object>(gd,"First"));var snap=Call(s,"Capture",.02f);snap.GetType().GetField("stepA").SetValue(snap,999);Assert.False((bool)Call(guest,"ApplyRemote",snap));}
   [Test] public void GuidedGeneratorIgnoresExtraSqueezesAndDoesNotHideAChokeDeadline(){var t=ScriptableObject.CreateInstance<S4M2Tuning>();try{var e=new WatchEngineState(t){Guided=true,IgnoreExtraPulls=true};e.Reset(.8f,0,false);for(int i=0;i<3;i++){Assert.True(e.Prime());e.Tick(.5f);}Assert.False(e.Prime());e.SetChoke(true);for(int i=0;i<3;i++){Assert.True(e.Pull());e.Tick(.5f);}Assert.False(e.Pull());e.Tick(30);Assert.True(e.Running);Assert.False(e.Settled);e.SetChoke(false);Assert.True(e.Settled);}finally{UnityEngine.Object.DestroyImmediate(t);}}
   [Test] public void InstructionsStayShortAndTableHasEveryStep(){var strings=T("KeeperStrings");foreach(var step in Enum.GetValues(T("KeeperStep"))){string key="step."+step;Assert.True((bool)strings.GetMethod("Has").Invoke(null,new object[]{key}),key);var text=(string)strings.GetMethod("Get").Invoke(null,new object[]{key});Assert.LessOrEqual(text.Split(new[]{' '},StringSplitOptions.RemoveEmptyEntries).Length,6,key);}}
+  [Test]public void ControllerHintBuildsActualVisibleGeometry(){
+   var go=new GameObject("Hint canvas",typeof(RectTransform),typeof(Canvas));
+   try {var hint=(UnityEngine.UI.Graphic)go.AddComponent(T("ObjectiveInputIcon"));Assert.NotNull(go.GetComponent<CanvasRenderer>());hint.Rebuild(UnityEngine.UI.CanvasUpdate.PreRender);var mesh=hint.canvasRenderer.GetMesh();Assert.NotNull(mesh);Assert.AreEqual(16,mesh.vertexCount);Assert.Greater(mesh.colors[0].a,.9f);}
+   finally{UnityEngine.Object.DestroyImmediate(go);}
+  }
+  [Test]public void EveryActionHasAnObjectLocationAndOneButton(){
+   var director=T("ObjectiveDirector");var stepType=T("KeeperStep");
+   foreach(var step in Enum.GetValues(stepType)){
+    string name=step.ToString();if(name=="None"||name=="Complete"||name=="Lost")continue;
+    Assert.IsNotEmpty((string)director.GetMethod("Location").Invoke(null,new[]{step}),name);
+    string input=(string)director.GetMethod("Button").Invoke(null,new[]{step});
+    Assert.AreEqual(name=="CheckFuel"?"":name=="RadioTransmit"?"TRIGGER":"GRIP",input,name);
+   }
+  }
   [Test] public void PressureUsesHostWaterAndRejectsInvalidPeaks(){var host=New(2);Call(host,"ObserveWater",.1d,.44f);Assert.GreaterOrEqual(Get<float>(host,"PeakDanger"),.79f);var guest=New(2);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(host,"Capture",.44f)));Assert.AreEqual(Get<float>(host,"Danger"),Get<float>(guest,"Danger"),.001f);Call(guest,"ObserveWater",10d,.9f);Assert.AreEqual(.44f,Get<float>(guest,"LatestWater"));var bad=Call(host,"Capture",.44f);bad.GetType().GetField("peakDanger").SetValue(bad,float.NaN);Assert.False((bool)Call(guest,"ApplyRemote",bad));}
   [Test] public void WarningRecordingsAreSingleTakesWithCaptions(){var cat=Resources.Load("HarborRadioLines");for(int id=19;id<=43;id++){var clip=(AudioClip)Call(cat,"Line",id);Assert.NotNull(clip,"cue "+id);Assert.Less(clip.length,10,"cue "+id);Assert.IsNotEmpty((string)Call(cat,"Caption",id));}}
 

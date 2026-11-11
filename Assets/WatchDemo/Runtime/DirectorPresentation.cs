@@ -50,6 +50,7 @@ namespace LighthouseKeepers.WatchDemo
             if(step==KeeperStep.RadioCode){int colour=watch.State.Radio.Program.callCode[Mathf.Min(watch.State.Radio.CodeProgress,watch.State.Radio.Program.callCode.Length-1)];foreach(var c in radio.controls)if(c.codeColour==colour)return c.transform;}
             return targets.TryGetValue(step,out var target)?target:null;
         }
+        public Vector3 HintPosition(KeeperStep step)=>step==KeeperStep.Sleep?watch.BedPosition:Target(step)?Target(step).position:Vector3.positiveInfinity;
         int Progress()=>watch.State.Pipe.BoltsDone*1000000+watch.State.Pipe.TurnsDone*100000+(watch.State.Engine?.Primer??0)*10000+(watch.State.Engine?.Pulls??0)*1000+watch.State.Radio.Step*100+watch.State.Radio.CodeProgress*10+(watch.State.Engine?.ChokeClosed==true?1:0);
         void LateUpdate()
         {

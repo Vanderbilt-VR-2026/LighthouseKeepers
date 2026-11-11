@@ -114,6 +114,12 @@ namespace LighthouseKeepers.WatchDemo
             return step==KeeperStep.Sleep?"BED":"";
         }
         public static int Floor(KeeperStep step){string id=Job(step);return id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
+        public static string Location(KeeperStep step)
+        {
+            string key=step==KeeperStep.GrabWrench?"where.workbench":"where."+Job(step);
+            return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
+        }
+        public static string Button(KeeperStep step)=>step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
         public static int Hint(KeeperStep step){string id=Job(step);return id==WatchState.PipeStation?7:id==WatchState.GeneratorStation?8:id=="BREAKER"?9:id==WatchState.BeaconStation?10:id==WatchState.RadioStation?11:id=="BED"?12:0;}
         public string StationInstruction(string station) {
             if(Job(First)==station)return Instruction(First);
