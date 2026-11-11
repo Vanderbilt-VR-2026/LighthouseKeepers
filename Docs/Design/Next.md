@@ -1,3 +1,27 @@
+# Full remaining plan — active checkpoint
+
+Work in the user's latest order: Step 1 PR #85 verification → merge into m3/five-nights → scheduling/ships/doors/mirror → horror slices 1–3 → finale/progression → horror 4–6 → split-information/final verification. No main merge. Editor muted; Quest installs permitted, launches not permitted.
+
+- **1a DONE:** source audit confirms accepted generator/panel, edges/sea rules, physical inputs and simple lobby already implemented. See [audit](../Verification/RemainingPlan/Step1-Audit.md).
+- **1b IN PROGRESS:** full EditMode 372/372 passed; full PlayMode running. Fresh graphics Nights 1–3 and two-Mac regression next. Do not infer current results from historical checkpoints below.
+- **1c NEXT:** package/install (no launch), refresh PR #85, then merge into M3. Steps 2–6 have not started this pass.
+
+## DEVICE CHECKS PENDING
+
+Real Quest Wi-Fi OFF lobby/start; wiring ≤0.3 ms GPU at matched views; worn missing-lobby-hands report; physical control/watch comfort. No reliable device-equivalent GPU timer exists on this Mac. Human voice listening is pending because Editor output remains muted. Continue independent work without waiting for a headset reply.
+
+## Exact next commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+# Current full suites write here:
+cat artifacts/reconcile/remaining-step1-tests/summary.json
+# After suites exit, open a muted graphics Editor and run the prepared replay:
+python3 artifacts/remaining/step1/solo.py
+```
+
+---
+
 # Generator, watch and wiring delivered — November 11
 
 Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](GeneratorWatchWiring.md). Work in numbered order, focused tests + one muted graphics solo Night 2 replay per item, commit/push each. No full suites or horror work. Preserve unrelated Wood.mat, Quest prefab ray widths and pipe-lever evidence.
