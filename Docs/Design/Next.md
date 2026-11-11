@@ -4,7 +4,7 @@ Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](Generato
 
 1. DONE: actual Night 2 fuel exhaustion, three-second sputter, empty gauge, mains outage and cause-first narration. Existing network fields only; `LK-S5-PLAYTEST1 / v21` unchanged. MasterDirector 12/12, VoicePass 23/23 pass. Final graphics Night 2 replay passed with cue 4 before refuelling, zero logged errors. Evidence: Docs/Verification/GeneratorWatchWiring/step1/.
 2. DONE: mounted numbered generator control layout, fuel can on floor. Focused scene test and solo Night 2 pass; evidence step2/.
-3. Next: physical choke detents; preserve physical pour, starter pull and grip-pressure primer; verify complete sequence.
+3. DONE: physical choke detents; existing pour, starter and grip-pressure primer preserved. Both-hand focused test + graphics Night 2 pass. Evidence step3/.
 4. Next: small left-wrist digital watch, corrected orientation and backlight.
 5. Next: restore/re-bake M3 TowerWiring assets/runtime/authoring; replace existing feed, not duplicate. Wiring was developed only on m3/five-nights, not dropped by an integrated merge.
 6. Then build current committed source, install if ADB connected (do not launch without request), update PR #85, report done/left.

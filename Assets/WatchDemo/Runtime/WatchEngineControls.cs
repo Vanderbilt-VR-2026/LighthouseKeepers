@@ -92,6 +92,8 @@ namespace LighthouseKeepers.WatchDemo
         }
         public void Act(bool choke)
         {var action=choke?CoopAction.EngineChoke:CoopAction.EnginePrime;bool closed=choke&&!State.Engine.ChokeClosed;if(State.RemoteReplica&&State.Coop!=null)State.Coop.Send(action,0,closed);else watch.ApplyCommand(action,0,closed);if(clunk)sound.PlayOneShot(clunk,.25f);}
+        public void MoveChoke(bool closed)
+        {if(State.Failed)return;if(State.RemoteReplica&&State.Coop!=null)State.Coop.Send(CoopAction.EngineChoke,0,closed);else watch.ApplyCommand(CoopAction.EngineChoke,0,closed);if(clunk)sound.PlayOneShot(clunk,.25f);}
         void Refresh()
         {
             var e=State.Engine;
@@ -116,12 +118,13 @@ namespace LighthouseKeepers.WatchDemo
     [DefaultExecutionOrder(100)]
     public sealed class EngineControl : MonoBehaviour
     {
-        WatchEngineControls owner;bool choke;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;readonly GripSqueezeCycle cycle=new();float pressure;
+        WatchEngineControls owner;bool choke;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;readonly GripSqueezeCycle cycle=new();float pressure;Vector3 leverHandStart;float leverStart,leverPosition;bool requestedClosed;
         public void Initialize(WatchEngineControls parent,bool lever,Transform model){owner=parent;choke=lever;visual=model;}
         void Awake()
         {grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-.014f);right=Palm(.014f);interaction.selectEntered.AddListener(Select);interaction.selectExited.AddListener(Release);}
         Transform Palm(float x){var t=M2StationParts.Root(x<0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.20"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.21"),visual,new Vector3(choke?x:x*2,.012f,choke?.16f:.10f));t.localRotation=Quaternion.Euler(0,180,0);return t;}
-        void Select(SelectEnterEventArgs e){if(choke)owner.Act(true);}
+        void Select(SelectEnterEventArgs e)
+        {if(!choke)return;requestedClosed=owner.State.Engine.ChokeClosed;leverStart=leverPosition=requestedClosed?1:0;leverHandStart=transform.InverseTransformPoint(e.interactorObject.transform.position);}
         void Release(SelectExitEventArgs e){cycle.Sample(0,false);pressure=0;}
         float GripPressure()
         {
@@ -135,7 +138,15 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
-            if(choke)visual.localRotation=Quaternion.Slerp(visual.localRotation,Quaternion.Euler(owner.State.Engine.ChokeClosed?-30:30,0,0),1-Mathf.Exp(-20*Time.deltaTime));
+            if(choke){
+                if(interaction.isSelected&&interaction.interactorsSelecting.Count>0){
+                    float travel=transform.InverseTransformPoint(interaction.interactorsSelecting[0].transform.position).y-leverHandStart.y;
+                    leverPosition=Mathf.Clamp01(leverStart+travel/.16f);
+                    bool next=leverPosition>=.85f?true:leverPosition<=.15f?false:requestedClosed;
+                    if(next!=requestedClosed){requestedClosed=next;owner.MoveChoke(next);if(grip.HoldingHand)grip.HoldingHand.Pulse(.4f,.06f);}
+                }else leverPosition=owner.State.Engine.ChokeClosed?1:0;
+                visual.localRotation=Quaternion.Slerp(visual.localRotation,Quaternion.Euler(Mathf.Lerp(30,-30,leverPosition),0,0),1-Mathf.Exp(-20*Time.deltaTime));
+            }
             else {
                 pressure=GripPressure();
                 if(cycle.Sample(pressure,interaction.isSelected)&&!owner.State.Failed&&!owner.State.Engine.Primed){

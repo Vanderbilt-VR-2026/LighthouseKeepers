@@ -7,7 +7,7 @@ Current integrated build, not unimplemented M3 doors/mirror/horror tools. Hand b
 | Wrench / active bolt | Hold GRIP, bring jaw to bolt, short arm pulls | Auto-snap; no trigger lock. Push resets, progress stays. Release drops. |
 | Pressure valve (two keepers only) | Hold GRIP | Partner tightens; release removes pressure reduction. Solo has no valve step. |
 | Primer bulb | Squeeze GRIP to ≥80%; ease/release to ≤25% | One count, visible deflation, click and haptic; sustained hold never repeats. Release refills; extra squeezes after primed are silent. |
-| Choke | GRIP lever once; release before next flip | Changes detent; no trigger. |
+| Choke | Hold GRIP, pull UP / push DOWN | 16 cm physical stroke; release holds detent; grab alone does nothing. No trigger. |
 | Starter | Hold GRIP and pull arm outward; return | Existing travel/pose and ratchet retained. |
 | Fuel can | Hold GRIP, tilt spout above filler | Pour; no second button. |
 | Power panel circuit / RESET | GRIP lever | Flip/reset; no trigger. |

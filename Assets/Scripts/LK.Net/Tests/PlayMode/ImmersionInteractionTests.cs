@@ -41,6 +41,21 @@ namespace LighthouseKeepers.Net.Tests
             System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",oldM2);System.Environment.SetEnvironmentVariable("LK_IMMERSION_DISABLED",oldImmersion);SoloWatchSession.Cancel();WatchDayLaunch.RequestedDay=1;
             yield return null;
         }
+        [UnityTest] public IEnumerator ChokeRequiresArmTravelAndDetentsWithEitherHand()
+        {
+            var controls=Find("WatchEngineControls");var choke=Value<Component>(controls,"Choke");var interaction=choke.GetComponent<XRSimpleInteractable>();var state=Value<object>(watch,"State");var engine=Value<object>(state,"Engine");
+            foreach(var hand in hands){
+                var control=hand.transform.parent;var direct=hand.Direct;control.SetPositionAndRotation(choke.transform.position+choke.transform.forward*.14f,choke.transform.rotation);
+                direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)interaction);yield return new WaitForSeconds(.15f);
+                Assert.True(interaction.isSelected);Assert.False(Value<bool>(engine,"ChokeClosed"),"A grab alone must not flip the lever");
+                control.position+=Vector3.up*.04f;yield return new WaitForSeconds(.15f);Assert.False(Value<bool>(engine,"ChokeClosed"),"A partial pull must not cross the detent");
+                control.position+=Vector3.up*.13f;yield return new WaitForSeconds(.15f);Assert.True(Value<bool>(engine,"ChokeClosed"));
+                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;yield return new WaitForSeconds(.15f);Assert.True(Value<bool>(engine,"ChokeClosed"),"Released detent must hold");
+                control.position=choke.transform.position+choke.transform.forward*.14f;direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)interaction);yield return new WaitForSeconds(.15f);Assert.True(Value<bool>(engine,"ChokeClosed"),"Re-grab must not flip");
+                control.position-=Vector3.up*.17f;yield return new WaitForSeconds(.15f);Assert.False(Value<bool>(engine,"ChokeClosed"));
+                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;control.position=Vector3.down*10;yield return null;
+            }
+        }
         [UnityTest] public IEnumerator ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio()
         {
             var hud=Find("ObjectiveHud");var radio=Find("HarborRadio");yield return null;
