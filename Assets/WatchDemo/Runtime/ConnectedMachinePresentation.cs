@@ -13,15 +13,7 @@ namespace LighthouseKeepers.WatchDemo
         void Build()
         {
             parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();block=new MaterialPropertyBlock();
-            var root=M2StationParts.Root("Tower power conduit",transform,Vector3.zero);
-            var mount=PipeWallLayout.WallSurface(1.7f,out var inward)+inward*.045f;
-            var tube=parts.Part("Wall mounted riser",root,new Vector3(mount.x,6,mount.z),new Vector3(.045f,5.2f,.045f),parts.Dark,PrimitiveType.Cylinder);
-            for(int i=0;i<12;i++)
-            {
-                var y=.9f+i*.9f;
-                parts.Part("Conduit saddle",root,new Vector3(mount.x,y,mount.z)-inward*.015f,new Vector3(.09f,.04f,.13f),parts.Metal);
-                sleeves.Add(parts.Part("Power flow inspection sleeve "+i,root,new Vector3(mount.x,y,mount.z)+inward*.025f,new Vector3(.025f,.15f,.06f),parts.Brass).GetComponent<Renderer>());
-            }
+            TowerWiringPresentation.Create(watch);
             var radio=FindAnyObjectByType<WatchRadioConsole>();
             var plate=M2StationParts.Root("Beacon proof instrument",radio.transform,new Vector3(.66f,1.66f,.35f));
             parts.Part("Proof enamel plate",plate,Vector3.zero,new Vector3(.31f,.14f,.025f),parts.Dark);

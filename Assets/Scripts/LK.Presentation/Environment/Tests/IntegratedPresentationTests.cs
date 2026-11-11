@@ -45,7 +45,8 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    var cabinet=panel.Find("Enamel breaker cabinet").GetComponent<Renderer>();var c=cabinet.sharedMaterial.GetColor("_BaseColor");Assert.Greater(c.g,c.r*1.5f);
    var yellow=generator.GetComponentsInChildren<Renderer>().First(r=>r.name=="Diesel crankcase").sharedMaterial.GetColor("_BaseColor");Assert.Greater(yellow.r,.5f);Assert.Less(yellow.b,.15f);
    var back=panel.TransformPoint(new Vector3(0,1.28f,.01f));Assert.True(Physics.Raycast(back,-panel.forward,out var wall,.15f));Assert.True(wall.collider.name.Contains("Wall_F2"),wall.collider.name);
-   Assert.NotNull(GameObject.Find("Generator to POWER PANEL conduit"));
+   Assert.IsNull(GameObject.Find("Generator to POWER PANEL conduit"));Assert.IsNull(GameObject.Find("Tower power conduit"));
+   var wiring=GameObject.Find("Tower power wiring (baked routes)");Assert.NotNull(wiring,"Wiring missing from generated player scene");var meshes=wiring.GetComponentsInChildren<MeshFilter>();Assert.AreEqual(5,meshes.Length);Assert.LessOrEqual(meshes.Sum(m=>m.sharedMesh.triangles.Length/3),15000);Assert.AreEqual(1,wiring.GetComponentsInChildren<MeshRenderer>().Select(r=>r.sharedMaterial).Distinct().Count());
   }
   [UnityTest]public IEnumerator FixturesClearStairRailsAndHouseClutterIsRemoved(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);

@@ -12,6 +12,7 @@ namespace LighthouseKeepers.WatchDemo
             var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();
             yellow=new Material(parts.Metal){name="Worn diesel yellow"};yellow.SetTexture("_BaseMap",null);yellow.SetColor("_BaseColor",new Color(.68f,.43f,.07f));yellow.SetColor("_EmissionColor",Color.black);yellow.SetFloat("_Metallic",.35f);
             foreach(var r in GetComponentsInChildren<Renderer>())if(r.name=="Diesel crankcase"||r.name=="Alternator cover"||r.name=="Generator service fascia")r.sharedMaterial=yellow;
+            if(Resources.Load<TowerWiringAsset>("TowerWiring/Layout"))return; // Full baked route replaces this older single feed.
             // Short feed up the rear of the engine, then around the wall to the separate panel.
             // One combined mesh, no light/collider, no conductor crossing the operating aisle.
             var points=new List<Vector3>{transform.TransformPoint(new Vector3(0,.45f,0)),transform.TransformPoint(new Vector3(0,2.8f,0))};

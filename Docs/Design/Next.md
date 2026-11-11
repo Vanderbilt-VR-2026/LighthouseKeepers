@@ -6,7 +6,7 @@ Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](Generato
 2. DONE: mounted numbered generator control layout, fuel can on floor. Focused scene test and solo Night 2 pass; evidence step2/.
 3. DONE: physical choke detents; existing pour, starter and grip-pressure primer preserved. Both-hand focused test + graphics Night 2 pass. Evidence step3/.
 4. DONE: small dorsal left-wrist digital watch, corrected accessory orientation and gaze backlight. Focused recall/watch checks and Night 2 replay pass; inspected images step4/.
-5. Next: restore/re-bake M3 TowerWiring assets/runtime/authoring; replace existing feed, not duplicate. Wiring was developed only on m3/five-nights, not dropped by an integrated merge.
+5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on m3/five-nights, not dropped by a merge. Evidence step5/.
 6. Then build current committed source, install if ADB connected (do not launch without request), update PR #85, report done/left.
 
 ## DEVICE CHECKS PENDING (current pass)
