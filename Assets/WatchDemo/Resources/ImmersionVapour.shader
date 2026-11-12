@@ -14,7 +14,6 @@ Shader "LighthouseKeepers/GPU service vapour"
    #pragma fragment frag
    #pragma multi_compile_instancing
    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-   #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
    CBUFFER_START(UnityPerMaterial)
    half4 _Tint;float _Strength,_Rise,_Size,_Rate;
    CBUFFER_END
@@ -33,9 +32,8 @@ Shader "LighthouseKeepers/GPU service vapour"
    {
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
     float radial=saturate(1-dot(i.uv,i.uv));
-    float raw=SampleSceneDepth(i.screen.xy/i.screen.w);
-    float scene=LinearEyeDepth(raw,_ZBufferParams);
-    float soft=saturate((scene-i.eye)*10);
+    // No camera-depth copy on Quest; radial edges and near-eye fade keep these tiny wisps soft.
+    float soft=saturate((i.eye-.08)*5);
     half alpha=radial*radial*sin(i.age*3.14159)*_Tint.a*_Strength*soft;
     alpha*=.75+.25*sin(i.uv.x*9+i.uv.y*7+i.age*8);
     return half4(_Tint.rgb,alpha);

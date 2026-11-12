@@ -22,7 +22,7 @@ namespace LighthouseKeepers.Net.Tests
   }
   [Test] public void ReleasePreservesBoltProgressBlocksSameKeeperAndReplicates()
   {
-   var s=New();var v=Get<PressureValveState>(s,"Pressure");var p=Get<object>(s,"Pipe");v.SetCrew(true);s.GetType().GetProperty("PipeWorkerActor").SetValue(s,2);v.Hold(1,true);
+   var s=New();Call(s,"SetKeeperCount",2);var v=Get<PressureValveState>(s,"Pressure");var p=Get<object>(s,"Pipe");s.GetType().GetProperty("PipeWorkerActor").SetValue(s,2);v.Hold(1,true);
    Call(p,"Observe",.3f,15f,true,true,true);float progress=Get<float>(p,"StrokeDegrees");Assert.Greater(progress,0);float reduced=Get<float>(s,"LeakStrength");
    v.Hold(1,false);Call(p,"Observe",.3f,15f,true,true,true);Assert.AreEqual(progress,Get<float>(p,"StrokeDegrees"));Assert.Greater(Get<float>(s,"LeakStrength"),reduced);
    v.Hold(2,true);Call(p,"Observe",.3f,15f,true,true,true);Assert.AreEqual(progress,Get<float>(p,"StrokeDegrees"));v.Hold(2,false);v.Hold(1,true);
