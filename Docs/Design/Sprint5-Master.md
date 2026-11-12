@@ -49,8 +49,9 @@ phase. Where it conflicts with older docs, this brief wins. Where it is silent, 
    never for being confused.
 6. **CLAUSTROPHOBIC, NOT NAUSEATING.** Darkness, closeness, sound and heartbeat create pressure. No
    vignette, no forced camera motion, no head bob, no strobe faster than 3 Hz.
-7. **QUEST-FIRST.** 72 fps locked. GPU ≤ 11 ms, CPU main ≤ 9 ms with the ship + the Drowned + storm peak
-   in view. Measure on device.
+7. **QUEST-FIRST.** 72 fps locked (13.9 ms frame budget). GPU ≤ 11 ms, CPU main ≤ 9 ms with the ship +
+   the Drowned + storm peak in view. Measure on device. Follow the professor's Quest 3 quality baseline
+   in §14 — it is a grading requirement.
 
 ---------------------------------------------------------------------------------------------------
 ## 2. THE STORY + CORE DESIGN (write `Docs/Design/Sprint5.md` from this first)
@@ -135,6 +136,10 @@ use it when you must.").
 - TECH: one realtime point light per lantern, NO shadows, range = pool radius, warm (#FFB066),
   subtle flicker (noise on intensity ±8%). Max 2 realtime lights total (one per keeper). Glass globe
   emissive + flame card. Oil level synced (host-owned).
+  QUALITY NOTE (§14): the professor's baseline bakes all additional lights. The lantern is the ONE
+  documented exception: in the Quest URP Asset set Additional Lights = Per Pixel, Per Object Limit = 2,
+  Cast Shadows OFF. Every other light stays Baked/Mixed. If GPU time goes over budget, switch the lantern
+  to Per Vertex before cutting anything else. Log this exception in QuestQuality.md.
 - WATCH shows oil % as a small bar when holding the lantern.
 
 ---------------------------------------------------------------------------------------------------
@@ -278,8 +283,9 @@ code"). Proximity voice + the handheld radios carry it. Host-owned, synced.
 - Lighting: baked (Mixed/Baked only except the two lantern lights), light probes on every floor and
   stair, baked reflection probes per room, powered + blackout states, lightning via emissive/ambient/
   probe boost. URP fog: exponential, interior density 0.02 powered → 0.06 blackout; exterior 0.035.
-- Post: tonemapping + one LUT at most (bake the grade if over budget). No bloom/DOF/SSAO/SSR.
-  MSAA 4x, render scale ~1.2 (as measured), fixed foveated rendering on.
+- Post: classic URP post-processing OFF. Tonemapping + colour grading only through Unity 6.3's
+  "On Tile Post Processing" renderer feature (never its vignette). No bloom/DOF/SSAO/SSR.
+- MSAA, render scale, foveation, shadows, textures: exactly as §14.
 
 ---------------------------------------------------------------------------------------------------
 ## 12. SOUND DESIGN (it's half the horror)
@@ -316,7 +322,9 @@ dawn glimpse, dawn rescue variant. Use TTS placeholders until I record them with
 ---------------------------------------------------------------------------------------------------
 ## 13. PHASES (do in order; commit + push per step)
 
-**PHASE 1 — FOUNDATION:** 1.1 Sprint5.md + FeelChecklist.md + SoundMap.md skeletons. 1.2 TensionDirector
+**PHASE 1 — FOUNDATION:** 1.0 QUEST QUALITY BASELINE FIRST (§14): audit every setting, apply the
+baseline via an editor menu, add QualityBaselineTests, measure on device, write QuestQuality.md — so
+everything after is built and measured against the right settings. 1.1 Sprint5.md + FeelChecklist.md + SoundMap.md skeletons. 1.2 TensionDirector
 (unify storm/music/faults/fear). 1.3 Fear system + heartbeat audio/haptics + breathing (§6).
 **PHASE 2 — THE SHIP (§8).** 2.1 ship asset + path + lights. 2.2 danger window + pass/wreck + voice.
 2.3 beacon-dark-only-during-windows rule. 2.4 make the gallery moment huge.
@@ -336,10 +344,15 @@ spot → one ship passing). 8.4 hand-operated doors (hinge, latch, synced). 8.5 
 **PHASE 9 — 30-SECOND LOOP + AMBIENCE POLISH (§9, §11, §12).** 9.1 fill every FeelChecklist cell.
 9.2 art pass on new props/decals. 9.3 full sound pass + mix + loudness check. 9.4 new voice-line script.
 9.5 fix every NOT VERIFIED/known issue in Next.md; z-fighting/clipping sweep; text readability.
+9.6 QUALITY RE-AUDIT (§14): re-run the baseline audit (new props/materials/lights may have drifted —
+mipmaps, ASTC, aniso, static flags, probes, light modes), re-bake lighting, re-measure with OVR Metrics
+Tool at storm peak, use the §14.9 diagnosis table on anything over budget.
 **PHASE 10 — VERIFY + SHIP.** Tests: no new failures; first-timer bot wins Nights 1–5 solo + Demo;
 two-player bot wins Nights 3 and 5; every sabotage + fix; ship pass + wreck; hunt/hide/stun/bell/flare/
-caught/revive; lantern oil; Scare Off; save/continue; Wi-Fi-off offline. Device: fps/GPU with ship +
-Drowned + storm peak in view; 72 fps. Screenshots you've looked at for every key moment. Build, install,
+caught/revive; lantern oil; Scare Off; save/continue; Wi-Fi-off offline; QualityBaselineTests pass.
+Device: OVR Metrics Tool + Profiler attached to a development build — fps, CPU/GPU ms with ship +
+Drowned + storm peak in view; 72 fps; Render Graph Viewer shows no unexpected intermediate textures.
+Final QuestQuality.md table filled in (every §14 setting, its value, where it lives, measured cost). Screenshots you've looked at for every key moment. Build, install,
 push, update PR #87 (plain-English description + network version). FINAL REPORT: WORKS / NOT VERIFIED per
 phase, timing table, network version, assets I still need to provide, voice lines to record, and a
 20-step headset playtest checklist (Night 1 start → first sabotage → Night 2 blackout + lantern → first
