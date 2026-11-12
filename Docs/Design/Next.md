@@ -15,9 +15,11 @@ Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR 
 
 ## Next implementation boundary
 
-Step 1.2 is NOT implemented. Extend existing `NightSchedule`, `StormDirector`, `AdaptiveMusic` and WatchState; do not create competing timers. Current schedule uses a 12-second authored fault gap, while the new brief requires at least 15 seconds. Reconcile physical fuel exhaustion with relief rather than faking power state. Preserve current Night1–3 mechanics/timing headroom, validate host snapshots and bump the network version for new tension/fear fields. Scratch TensionDirector files in artifacts/s5/foundation are uncompiled design sketches, not approved code.
+**1.2 implemented (#92):** one host TensionDirector owns fault spacing (at least 15 s), 10–20 s relief, storm stage and requested music layer. Scare permission/2.5 s quiet and tutorial/escape guards are integration points; no entity exists yet. Physical fuel exhaustion respects recovery without faking power. Network is now **LK-S5-TENSION1 / LK-Lab-Coop-v23**; both clients must update. 82 focused tests pass; actual-XRI graphics Nights1–3 → Night4 passes with zero errors; inspected images and task-only models in Docs/Verification/S5/Tension/. The previous 12 s fault-gap assertion was updated to the new required 15 s, not a gameplay workaround.
 
-Step 1.3 then adds per-keeper host-owned fear and optional heartbeat haptics. Re-read §3 and §6 first. Run focused tests, graphics replay and matching two-Mac regression before finishing Phase 1. Device-only checks remain pending; do not block autonomous work on the missing Quest.
+**Next 1.3 (#93):** per-keeper host fear, optional heartbeat haptics, breathing and world-only filtering. Read §6 first. Then Phase1-end focused/full regression and matching-source two-Mac crew, APK. The graphics/two-Mac quality evidence above predates new tension fields; do not call it a current-protocol transport pass. No connected Quest; no app launched.
+
+Exact new run: `python3 artifacts/s5/tension/replay.py` (use a fresh output directory for another attempt); focused runner `python3 artifacts/remaining/m3/tests.py tension-pass 'M3;MasterDirectorTests;Day3BalanceTests;ConnectedTasksTests;VoicePassTests;AudioPassTests'`.
 
 The six-branch grading cleanup is complete. A teammate merged PR88. Small docs-only PR134 adds the new preview download and removes the private-board link from main; it needs teammate review, not self-merge. Draft PR89 targets main. Sprint5 milestone due date was corrected to December3 (GitHub normalized the earlier midnight input to December2).
 

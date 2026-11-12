@@ -23,21 +23,13 @@ namespace LighthouseKeepers.WatchDemo
    }
   }
   void FinishJob(string station)
-  {if(faults.Remove(station)&&!resetting){schedule?.Completed(Elapsed);Changed?.Invoke();}}
+  {if(faults.Remove(station)&&!resetting){schedule?.Completed(Elapsed);TickTension();Storm?.Tick();Changed?.Invoke();}}
   void AdvanceSchedule()
   {
    if(schedule==null||ReadOnly||advancingSchedule)return;
    advancingSchedule=true;
    try{schedule.Advance(Elapsed,Engine?.Settled??Power==PowerState.On,id=>!IsPending(id)&&IsDone(id),ApplyNightFault);}
    finally{advancingSchedule=false;}
-  }
-  float ReplicaFuelDrain(DayDefinition day,WatchSnapshot snapshot)
-  {
-   if(snapshot.day3Stage>0)return Tuning.day3FuelDrainPerSecond;
-   var fuel=day.scenario?.configured==true?Array.Find(day.scenario.faults,f=>f.kind==NightFaultKind.FuelExhaustion):null;
-   if(!snapshot.nightTwoOutage&&fuel!=null)return day.scenario.arrivalFuelFraction/UnityEngine.Mathf.Max(1,fuel.atSeconds);
-   if(!snapshot.campaignEnabled&&Master&&Master.onboarding&&Master.nightTwoFuelFailure&&snapshot.day==2&&!snapshot.nightTwoOutage)return day.initialFuelFraction/UnityEngine.Mathf.Max(1,Master.nightTwoOutageSeconds);
-   return day.fuelDrainPerSecond;
   }
   NightFault CampaignFuelFault=>Campaign?Array.Find(Scenario.faults,f=>f.kind==NightFaultKind.FuelExhaustion):null;
   void ApplyNightFault(NightFault f)
@@ -54,9 +46,12 @@ namespace LighthouseKeepers.WatchDemo
   bool ValidCampaignSnapshot(DayDefinition d,WatchSnapshot s)
   {
    bool enabled=d.scenario?.configured==true;
+   var pacing=NewTension(d);
+   if(s.tension==null||s.tension.enabled!=(pacing!=null)||!s.tension.Valid(s.elapsed))return false;
+   if(pacing!=null&&(s.nightReliefUntil!=s.tension.reliefUntil||s.nightNextFaultAt!=s.tension.nextProblemAt||s.stormStage!=s.tension.storm))return false;
    if(s.campaignEnabled!=enabled)return false;
    if(!enabled)return s.nightFaultMask==0&&!s.nightSawPowerOff&&s.nightReliefUntil==0&&s.nightNextFaultAt==0&&s.nightGraceUntil==0;
-   return new NightSchedule(d.scenario).ValidReplica(s.nightFaultMask,s.nightSawPowerOff,s.nightReliefUntil,s.nightNextFaultAt,s.nightGraceUntil,s.elapsed);
+   return new NightSchedule(d.scenario,pacing).ValidReplica(s.nightFaultMask,s.nightSawPowerOff,s.nightReliefUntil,s.nightNextFaultAt,s.nightGraceUntil,s.elapsed);
   }
  }
 }

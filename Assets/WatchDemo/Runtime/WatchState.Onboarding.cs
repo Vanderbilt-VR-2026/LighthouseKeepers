@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo {
   double firstGeneratorGraceUntil,simulationSliceEnd;
   public bool NightTwoFuelFailure=>GeneratorTutorial&&Master.nightTwoFuelFailure||CampaignFuelFault!=null;
   public float TutorialFuelDrain=>CampaignFuelFault!=null?Scenario.arrivalFuelFraction/UnityEngine.Mathf.Max(1,CampaignFuelFault.atSeconds):Definition.initialFuelFraction/UnityEngine.Mathf.Max(1,Master.nightTwoOutageSeconds);
-  public double FuelRunoutRemaining=>NightTwoFuelFailure&&!NightTwoOutage&&Engine.Running?Engine.Fuel/UnityEngine.Mathf.Max(.00001f,TutorialFuelDrain):double.PositiveInfinity;
+  public double FuelRunoutRemaining=>NightTwoFuelFailure&&!NightTwoOutage&&Engine.Running?Engine.Fuel/UnityEngine.Mathf.Max(.00001f,Engine.Consumption):double.PositiveInfinity;
   public bool FuelSputtering=>NightTwoFuelFailure&&FuelRunoutRemaining<=Master.fuelSputterSeconds;
   void ObserveTutorialFuelStop(){if(!NightTwoFuelFailure||NightTwoOutage||Engine.Running)return;NightTwoOutage=true;firstGeneratorGraceUntil=Math.Max(Elapsed,simulationSliceEnd)+Master.firstGeneratorGraceSeconds;Engine.SetConsumption(Definition.fuelDrainPerSecond);}
 

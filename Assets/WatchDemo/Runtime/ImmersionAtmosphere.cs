@@ -34,8 +34,8 @@ namespace LighthouseKeepers.WatchDemo
             // One broad 1.4-second envelope, never repeated rapidly. No hard flashes or camera shake.
             lightning.intensity=flashAge<1.4f?.35f*Mathf.Sin(flashAge/1.4f*Mathf.PI):0;
             int stage=watch.State.Storm?.Stage??1;
-            if(watch.State.Storm!=null&&stage>=3&&Time.time>=nextMasterStrike){nextMasterStrike=Time.time+(stage==4?15:22);flashAge=0;PlayThunder();}
-            if(Time.time<nextEvent)return;nextEvent=Time.time+(watch.State.Storm!=null?Mathf.Lerp(24,8,(stage-1)/3f):14)+(eventNumber%3)*4;
+            if(!watch.State.TensionQuiet&&watch.State.Storm!=null&&stage>=3&&Time.time>=nextMasterStrike){nextMasterStrike=Time.time+(stage==4?15:22);flashAge=0;PlayThunder();}
+            if(watch.State.TensionQuiet||Time.time<nextEvent)return;nextEvent=Time.time+(watch.State.Storm!=null?Mathf.Lerp(24,8,(stage-1)/3f):14)+(eventNumber%3)*4;
             var clip=eventNumber%4==0?creak:eventNumber%4==1?horn:eventNumber%4==2?drip:thunder;
             events.transform.position=head.position+new Vector3(eventNumber%2==0?3:-3,1.5f,2);
             if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,.5f+.1f*stage);}

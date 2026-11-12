@@ -12,6 +12,7 @@ namespace LighthouseKeepers.Core
         public bool IgnoreExtraPulls {get;set;}
         public bool Guided {get;set;}
         public float Fuel {get;private set;}
+        public float Consumption => drain;
         public int Primer {get;private set;}
         public int Pulls {get;private set;}
         public int ClosedPulls {get;private set;}

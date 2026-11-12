@@ -212,7 +212,7 @@ namespace LighthouseKeepers.WatchDemo
             else if(!s.BeaconShining&&(dangerMask&8)==0){id=30;bit=8;}
             bool critical=id==29||id==32;
             if(id>0&&(critical||!FuelExplanationPending)&&(critical?(Cue!=29&&Cue!=32||SilenceSeconds>=0):SilenceSeconds>=s.Master.speechSpacingSeconds)){dangerMask|=bit;Play(id,Serial+1,0);}
-            if(!FuelExplanationPending&&Time.time>=nextStatus&&SilenceSeconds>=s.Master.speechSpacingSeconds)StatusUpdate();
+            if(!s.SuppressBackgroundNarration&&!FuelExplanationPending&&Time.time>=nextStatus&&SilenceSeconds>=s.Master.speechSpacingSeconds)StatusUpdate();
             if(s.CompletedTasks>priorTasks&&!(s.Master&&s.Master.onboarding)&&!(s.Radio.Completed&&lastJob==11)){Enqueue(s.Power==PowerState.On&&lastJob==8?21:lastJob==10?22:20);}priorTasks=s.CompletedTasks;
         }
         void Enqueue(int id){if(id>=76){QueueSituational(id);return;}if(id!=6&&!spoken.Contains(id)&&pending.Count<16&&!pending.Contains(id))AddPending(id);}
@@ -220,6 +220,7 @@ namespace LighthouseKeepers.WatchDemo
         void PruneInstructions(){float lifetime=watch.State.Master?watch.State.Master.instructionLifetimeSeconds:20;for(int i=pending.Count-1;i>=0;i--){int id=pending[i];if(!Relevant(id)||(HarborCueRules.InstructionExpires(id)&&!(id==4&&FuelExplanationPending)&&queuedAt.TryGetValue(id,out float at)&&Time.time-at>lifetime)){pending.RemoveAt(i);queuedAt.Remove(id);}}}
         bool CanPlayQueued(int id)
         {
+            if(watch.State.SuppressBackgroundNarration&&!HarborCueRules.Danger(id))return false;
             if(Cue==0)return true;
             var clip=catalog?catalog.Line(Cue):null;float silence=Age-(clip?clip.length:0)-Extra;
             float recovery=watch.State.Master?watch.State.Master.narrationQuietSeconds:20f;
