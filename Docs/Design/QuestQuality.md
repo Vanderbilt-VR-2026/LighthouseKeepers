@@ -74,3 +74,5 @@ Install only when ADB returns; do not launch without the lead's request. With pe
 One-click scene preparation was rerun successfully with no serialized scene drift; expanded QualityBaselineTests **3/3 pass**, including baked fixed fixtures and route-probe coverage. This editor-only follow-up does not change the preview APK runtime content.
 
 Focused current PlayMode: **19/23 passed**. All four failures reproduce with identical messages on pre-quality `785f2d1` (narration hint, legacy beacon deadline, legacy Night1 high-water loss, same-day radio retry). `playmode-comparison.json` records the exact names/messages; no new failures in this set. These remain open technical debt, not passing tests.
+
+Fresh live two-Mac regression **passed**: join/late join, visible avatars, native mono/AEC configuration, proximity and both handheld radio paths, mute, shared guest pipe, shared sleep, leave/rejoin; separate Night3 valve+guest-wrench run also passed. See `Docs/Verification/S5/Quality/crew/`. Editors stayed muted: human voice quality remains unverified.

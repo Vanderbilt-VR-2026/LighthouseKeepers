@@ -11,7 +11,15 @@ Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR 
 
 ## Next in order
 
-Finish fresh two-Mac quality regression and publish evidence. **1.1 DONE (#91):** Sprint5.md, 28-row FeelChecklist.md, 32-event-family SoundMap.md are committed skeletons; implementation vs planned work is explicit. Next #92 TensionDirector and #93 fear system; re-read the relevant master sections before each phase. Do not jump to historical ship-first instructions.
+**Quality regression DONE:** fresh two-Mac join/avatars/mono-AEC configuration/proximity/both radios/mute/shared task/shared sleep/rejoin pass. Separate Night3 host-valve + guest-wrench transport passes. See Docs/Verification/S5/Quality/crew/. **1.1 DONE (#91):** Sprint5.md, 28-row FeelChecklist.md, 32-event-family SoundMap.md are committed skeletons; implementation vs planned work is explicit. Next #92 TensionDirector and #93 fear system; re-read the relevant master sections before each phase. Do not jump to historical ship-first instructions.
+
+## Next implementation boundary
+
+Step 1.2 is NOT implemented. Extend existing `NightSchedule`, `StormDirector`, `AdaptiveMusic` and WatchState; do not create competing timers. Current schedule uses a 12-second authored fault gap, while the new brief requires at least 15 seconds. Reconcile physical fuel exhaustion with relief rather than faking power state. Preserve current Night1–3 mechanics/timing headroom, validate host snapshots and bump the network version for new tension/fear fields. Scratch TensionDirector files in artifacts/s5/foundation are uncompiled design sketches, not approved code.
+
+Step 1.3 then adds per-keeper host-owned fear and optional heartbeat haptics. Re-read §3 and §6 first. Run focused tests, graphics replay and matching two-Mac regression before finishing Phase 1. Device-only checks remain pending; do not block autonomous work on the missing Quest.
+
+The six-branch grading cleanup is complete. A teammate merged PR88. Small docs-only PR134 adds the new preview download and removes the private-board link from main; it needs teammate review, not self-merge. Draft PR89 targets main. Sprint5 milestone due date was corrected to December3 (GitHub normalized the earlier midnight input to December2).
 
 ## DEVICE CHECKS PENDING
 
