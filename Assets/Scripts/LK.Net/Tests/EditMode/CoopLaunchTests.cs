@@ -5,6 +5,9 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class CoopLaunchTests
     {
+        [Test] public void HostCanStartAloneOrWithGuestWithoutReady(){
+            foreach(int count in new[]{1,2}){var state=new FusionLobbyState();state.Reset(2);state.Add("1",true);if(count==2)state.Add("2",false);Assert.IsTrue(state.Begin(1,false));}
+        }
         [Test] public void FlagGatesTwoKeeperLabAndStillRejectsThirdKeeper()
         {
             bool before=ShipWorld.CoopEnabled;

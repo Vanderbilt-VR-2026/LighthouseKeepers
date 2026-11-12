@@ -206,9 +206,9 @@ namespace LighthouseKeepers.Net.Tests
         static IEnumerator WaitForLobby()
         {
             float deadline = Time.realtimeSinceStartup + 45;
-            while ((!SceneManager.GetSceneByName("LK_NetworkLobby").isLoaded || !GameObject.Find("PlaySolo")) && Time.realtimeSinceStartup < deadline) yield return null;
+            while ((!SceneManager.GetSceneByName("LK_NetworkLobby").isLoaded || !GameObject.Find("Play")) && Time.realtimeSinceStartup < deadline) yield return null;
             Assert.IsTrue(SceneManager.GetSceneByName("LK_NetworkLobby").isLoaded);
-            Assert.IsNotNull(GameObject.Find("PlaySolo"));
+            Assert.IsNotNull(GameObject.Find("Play"));
             yield return null;
         }
     }

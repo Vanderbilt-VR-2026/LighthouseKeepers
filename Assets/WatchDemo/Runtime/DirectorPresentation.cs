@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
             pipe=FindAnyObjectByType<WatchPipeRepair>();engine=FindAnyObjectByType<WatchEngineControls>();radio=FindAnyObjectByType<WatchRadioConsole>();beacon=FindAnyObjectByType<WatchBeaconStation>();panel=FindAnyObjectByType<WatchPowerPanel>();
             material=new Material(pipe.indicators[0].sharedMaterial){name="Director control lamp"};material.EnableKeyword("_EMISSION");block=new MaterialPropertyBlock();
             Add(KeeperStep.GrabWrench,pipe.wrench.transform);
-            var valve=FindAnyObjectByType<WatchPressureValve>();if(valve){Add(KeeperStep.HoldValve,valve.transform);Add(KeeperStep.ClampValve,valve.transform);}
+            var valve=FindAnyObjectByType<WatchPressureValve>();if(valve){Add(KeeperStep.HoldValve,valve.GuidanceRoot);}
             for(int i=0;i<3;i++)Add((KeeperStep)((int)KeeperStep.BoltA+i),pipe.bolts[i]);
             Add(KeeperStep.CheckFuel,engine.Filler);Add(KeeperStep.Fuel,engine.FuelCan.transform);FittingFor(engine.Filler);Add(KeeperStep.Prime,engine.Primer.transform);Add(KeeperStep.CloseChoke,engine.Choke.transform);Add(KeeperStep.OpenChoke,engine.Choke.transform);Add(KeeperStep.Starter,FindAnyObjectByType<WatchGenerator>().Starter.transform);
             for(int i=0;i<4;i++){Add((KeeperStep)((int)KeeperStep.PumpOff+i),panel.Control(i).transform);Add((KeeperStep)((int)KeeperStep.PumpOn+i),panel.Control(i).transform);}
@@ -50,6 +50,7 @@ namespace LighthouseKeepers.WatchDemo
             if(step==KeeperStep.RadioCode){int colour=watch.State.Radio.Program.callCode[Mathf.Min(watch.State.Radio.CodeProgress,watch.State.Radio.Program.callCode.Length-1)];foreach(var c in radio.controls)if(c.codeColour==colour)return c.transform;}
             return targets.TryGetValue(step,out var target)?target:null;
         }
+        public Vector3 HintPosition(KeeperStep step)=>step==KeeperStep.Sleep?watch.BedPosition:Target(step)?Target(step).position:Vector3.positiveInfinity;
         int Progress()=>watch.State.Pipe.BoltsDone*1000000+watch.State.Pipe.TurnsDone*100000+(watch.State.Engine?.Primer??0)*10000+(watch.State.Engine?.Pulls??0)*1000+watch.State.Radio.Step*100+watch.State.Radio.CodeProgress*10+(watch.State.Engine?.ChokeClosed==true?1:0);
         void LateUpdate()
         {

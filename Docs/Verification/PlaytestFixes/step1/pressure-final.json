@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "duration": 0.09,
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PressureValveTests.DirectorAssignsDifferentValveAndWrenchRoles",
+      "Status": "Passed",
+      "Duration": 0.0425984,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PressureValveTests.DisconnectImmediatelyAllowsSoloRepairAndRejoinRequiresTwoActors",
+      "Status": "Passed",
+      "Duration": 0.00079,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PressureValveTests.ReleasePreservesBoltProgressBlocksSameKeeperAndReplicates",
+      "Status": "Passed",
+      "Duration": 0.005086,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PressureValveTests.TwoDistinctActorsMustOverlapAndDroppedHeartbeatReleasesPressure",
+      "Status": "Passed",
+      "Duration": 0.0001131,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

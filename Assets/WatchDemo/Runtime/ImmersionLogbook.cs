@@ -44,6 +44,11 @@ namespace LighthouseKeepers.WatchDemo
             }
             showing=show;page.SetActive(show);
         }
+        public void Recovery(bool active,Transform viewer)
+        {
+            if(active){var f=Vector3.ProjectOnPlane(viewer.forward,Vector3.up).normalized;page.transform.SetPositionAndRotation(viewer.position+f*.95f-Vector3.up*.08f,Quaternion.LookRotation(f));ink.text=KeeperStrings.Get("sea.recovery");}
+            page.SetActive(active);
+        }
         void OnDestroy(){if(material)Destroy(material);if(sprite)Destroy(sprite);if(paper)Destroy(paper);if(page)Destroy(page);}
     }
 }

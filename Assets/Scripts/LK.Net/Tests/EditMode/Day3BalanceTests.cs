@@ -17,7 +17,7 @@ namespace LighthouseKeepers.Net.Tests
   [TearDown]public void Teardown(){UnityEngine.Object.DestroyImmediate(tuning);}
   sealed class Crew:ICoopWatchLink
   {public bool Ready=>true;public bool Send(CoopAction a,float v=0,bool p=false)=>true;public bool RemoteHeld(Component p)=>false;public bool RemoteMicrophone(Component p,out bool t){t=false;return false;}}
-  object New(int day=3,bool crew=false){var cat=Resources.Load("WatchDaysS4M2");Assert.NotNull(cat);var days=cat.GetType().GetField("days").GetValue(cat);var s=Activator.CreateInstance(T("WatchState"),days,day,tuning,Resources.Load<S4M2Tuning>("S4M2Tuning"),Resources.Load<ImmersionTuning>("ImmersionTuning"));if(crew)Set(s,"Coop",new Crew());return s;}
+  object New(int day=3,bool crew=false){var cat=Resources.Load("WatchDaysS4M2");Assert.NotNull(cat);var days=cat.GetType().GetField("days").GetValue(cat);var s=Activator.CreateInstance(T("WatchState"),days,day,tuning,Resources.Load<S4M2Tuning>("S4M2Tuning"),Resources.Load<ImmersionTuning>("ImmersionTuning"));if(crew){Set(s,"Coop",new Crew());Call(s,"SetKeeperCount",2);}return s;}
   void Tick(object s,double seconds)=>Call(s,"Tick",seconds);
   void StartEngine(object s)
   {
@@ -27,6 +27,7 @@ namespace LighthouseKeepers.Net.Tests
    for(int i=0;i<3;i++){Assert.True((bool)Call(s,"StarterPulled"));Tick(s,.4);}
    Assert.True((bool)Call(s,"SetChoke",false));
   }
+  [Test]public void OnlineHostAloneKeepsSoloBudgetAndLateJoinDoesNotShortenRunningNight(){var s=New();Set(s,"Coop",new Crew());Call(s,"SetKeeperCount",1);Assert.AreEqual(450,Get<double>(s,"Duration"));Tick(s,20);Call(s,"SetKeeperCount",2);Assert.AreEqual(450,Get<double>(s,"Duration"));Call(s,"Retry");Assert.AreEqual(330,Get<double>(s,"Duration"));}
   [Test]public void PipeFirstPendingJobsDoNotTickOrAllowSleep()
   {
    var s=New();Assert.AreEqual(1,Get<int>(s,"Day3Stage"));Assert.True(Get<bool>(s,"BeaconShining"));Assert.AreEqual("On",Get<object>(s,"Power").ToString());

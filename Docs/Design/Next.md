@@ -1,135 +1,144 @@
-# M3 checkpoint — five nights and the ship
+# Full remaining plan — M3 checkpoint (November 11)
 
-## Latest follow-up — B reminder and wiring finish
+Branch `m3/five-nights`, draft PR #87. PR #85 verification/delivery is complete as far as unattended checks allow; ready for review, not merged into main. APK d5051f7 installed on Quest with matching hash; app left closed. Full EditMode 372 pass; full PlayMode 25 inherited failures remain after six corrected cases pass. See Docs/Verification/RemainingPlan/Step1/.
 
-B is labelled on the HUD and House board; the reminder stays eligible until actual B use (per-player v2 acknowledgement). Wiring is thinner/darker, no steady glow, and material detail tiles every 35 mm rather than stretching per run. Seven focused checks and actual Night 1 → Night 2 replay pass; screenshots inspected. `Docs/Verification/M3/recall-wiring/` records evidence and the pending device checks. Campaign ON, network LK-M3-CAMPAIGN1 / v20 unchanged. APK `Builds/LighthouseKeepers-M3-0987356.apk` built successfully; Quest disconnected during compilation, so installation is pending reconnection. Run `python3 artifacts/m3/recall-wiring/install.py`. Never launch without a new request.
+**Step 1c merged:** integrated changes plus the campaign schedule. Network **LK-M3-CAMPAIGN2 / v22**. 68 focused EditMode cases pass. No-clamp solo and count-dependent co-op retained; latest wiring and generator placement retained. Evidence: Docs/Verification/M3/integrated-merge/.
 
-## Current override — five-night preview requested by lead
-
-Campaign is now **ON** at the lead’s explicit request. The five-night task schedules are selected; ships, rescue ending, saved progression, doors/mirror and final ship-inclusive timing are unfinished. Earlier OFF entries below describe historical checkpoints. Current network **LK-M3-CAMPAIGN1 / v20** (compatibility label only; no new snapshot fields). Wiring is darker, textured and 15% slimmer, with reduced glow. See `Docs/Verification/M3/campaign-on/`. Next: ship implementation.
-
-42 focused tests and all 12 task-model simulations pass. Actual solo Night 1 repair/sleep and live two-Mac shared repair/sleep into Night 2 pass. Editors muted. Quest is connected; prior b6ca4b3 was installed without launch. Activation/finish APK `Builds/LighthouseKeepers-M3-f5d2746.apk` built successfully and installed on Quest 3 2G0YC1ZG32048T, without launch. SHA-256 `527dae0eeea86f3ac2247fb4bff28e907c81578b08e292939389fe94b36f29aa`. See `Docs/Verification/M3/campaign-on/build.json` and `install.json`. Never launch without a new request.
-
-
-Branch `m3/five-nights`, based on `s4/integrated` at `ddc25f0` because PR #85 was still unmerged when work began. Separate worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. Do not merge main. PR #85 remains the Milestone 2 merge candidate; no M3 gameplay goes into it.
-
-## Done / current
-
-- Job 1 class-playtest fix from PR #85 is merged through d432c20. New recall build 573cf72 passed focused checks, full suites with documented reruns, Night 1 and two-Mac smoke. M3 now adds switched host scheduling and a task-timing bot; the normal three-night catalog remains selected. Ships, doors and mirror are not implemented yet.
-- Editor audio stays muted. Do not launch the Quest app unless the lead asks. USB is currently absent; install the built recall APK when it returns, without launching.
-
-- North star, per-night tension graphs, reuse boundaries and verification gates: [M3-FiveNights.md](M3-FiveNights.md).
-- Will’s PR #86 body/flood work is already integrated in the base. Do not remodel his body or sky.
-- Base follow-ups implement intermediate pole exits, remove the bedroom cage, retain a flush safety hatch, and remove floating dotted rain panes.
-- Base regression is complete and copied to `artifacts/m3/before/`: 351 EditMode passes; full PlayMode plus the corrected hatch rerun preserves 48 passing cases, the same 24 inherited failures and 3 skips; graphics Nights 1–3 and live two-Mac valve/radio/sleep/rejoin pass. Source a9d5f2d. PR #85 is Ready for review, not merged.
-- **A1 complete:** optional night schema, five assets plus demo, disabled catalog, editor authoring and three focused passing tests. See [M3-Data.md](M3-Data.md). No five-night gameplay is active yet; timings remain unapproved.
-- **A2/A3 runtime scheduling implemented:** host-owned one-shot fault gates, opening/recovery breaks, low-fuel event, authored durations/flood/grace/storm/opening cues and retry/replica validation. Campaign catalog remains OFF. Focused checks: M3 16/16, legacy Day3 6/6, voice 23/23. Initial A4 instruction-only task timing now passes all 12 solo/duo profiles; see telemetry-m3.md. Campaign remains OFF until ship-inclusive pacing and regression gates pass. Graphics/crew baseline passed. Initial task timing is complete; ship-inclusive approval and physical doors remain pending.
-
-## Latest verified checkpoint (2026-11-10)
-
-Runtime commits: `31cff1a` schedules, `b3bb144` task-model timing/guidance. Full EditMode 371/371; PlayMode 49 pass / 24 inherited fail / 3 skip, no lost passing cases. Graphics legacy Nights 1–3 and live two-Mac join/avatars/mono-AEC setup/recall/shared valve-pipe/shared sleep pass. Evidence: `Docs/Verification/M3/scheduling/`. Editors muted throughout. First Night 3 capture timed out loading; only its harness allowance changed before a passing rerun.
-
-APK: `/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-M3-b3bb144.apk` (133795458 bytes), SHA-256 `d6c4cafb1f974afad160c30b35ec32c3a26e6a5581769810498bce17026cdb9f`. Campaign OFF, network `LK-M3-NIGHTS1` / v20. USB absent, not installed or launched. A4 final approval still waits for ship-inclusive timings.
-
-The added diegetic wiring pass is implemented; see `M3-PowerWiring.md` and `Docs/Verification/M3/wiring/`. Next: B1 ship implementation/ship-inclusive A4 timing, doors + mirror, remaining M3 parts. Campaign activation has now been requested by the lead; unfinished features remain pending. The original Editor source is restored after the smoke; guest Editor retains the tested M3 overlay and is stopped. Preserve the original worktree's unrelated prefab ray-width edit.
-
-Raw runners: `artifacts/m3/a2/run.py` (focused tests + guest overlay), `bot.py`, `graphics.py`, `graphics-retry.py`, `full.py`, `overlay-root.py`, `restore-root.py`, `crew.py`, `build.py`. Use fresh evidence destinations when rerunning. `overlay-root.py` backs up only candidate paths before temporarily testing them in the original Editor. Do not run `a1-check.py`: it copies guest-authored assets back into this worktree.
-
-## Wiring checkpoint / next commands
-
-Wiring runtime commit `b6ca4b3` is pushed. Android build succeeded: `/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-M3-b6ca4b3.apk`, SHA-256 `d6a47ad0a726f0ed2839127723c23d84fa7d426a3ad84d738b2efab4533dc501`. Receipt: `Docs/Verification/M3/wiring/build.json`. No install/launch; ADB absent. Clean stop after scheduling + wiring; **next is B1–B4 ships**, followed by the requested doors/mirror before Part C. PR #87 remains draft and updated.
-
-The scheduling part is followed by the requested wiring addition before Part C. The old cylinder/sleeves are replaced by saved Editor-generated routes: 57 terminals, 14,634 triangles, five combined meshes, one atlas/material; no gameplay fields or new network version. Circuit/guest-readonly tests, clearance audit, all-scene coplanar scan, graphics replay are recorded in `Docs/Verification/M3/wiring/`. Keep campaign OFF until ships and ship-inclusive timing pass. PA guidance intentionally retains its existing backup behaviour.
-
-Local runners (fresh evidence folders on repeats):
-```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
-python3 artifacts/m3/wiring/tests.py TowerWiringTests ConnectedTasksTests PowerGridTests
-python3 artifacts/m3/wiring/graphics.py
-python3 artifacts/m3/wiring/build.py
-```
-Editor authoring menu: `Lighthouse Keepers/M3/Wiring/Capture Lab Routes (Play Mode)`, `Rebuild Saved Waypoints`, then `Audit Preview Clearances`. Source is in `Assets/WatchDemo/Editor/TowerWiring*.cs`. Do not copy an old guest mesh back after a new bake; preserve asset GUIDs and save the generated meshes explicitly. Both Editors remain muted. Never launch the Quest without a new request.
-
-DEVICE CHECKS PENDING (wiring addition): install matching APK when authorized/available; sustained 72 Hz wiring-off/on GPU comparison (target ≤0.3 ms), both-eye collars/glass/headroom sweep, gallery/exterior/House feeds, nearby hum and trip bang, 1.5 s pulse/readability and restored lamps, Mac+Quest circuit changes. USB was absent at the last check. No device performance or human audio claim.
-
-## Ten-step headset checklist for this checkpoint / later M3 acceptance
-
-Use matching builds on both clients. This checkpoint retains the three-night game; campaign is OFF. Do not launch without the lead asking. Steps 8–10 require future implementation and are explicitly blocked today.
-
-1. In lobby confirm `LK-M3-NIGHTS1`; PLAY SOLO must still work offline.
-2. Tap/hold B near the House board and pipe: immediate objective and last line below gaze; double-tap replays once. X/Y and wrist glance still recall it.
-3. Set Watch Menu → Objective height, restart when authorized, and verify the saved height and left wrist objective.
-4. Complete Night 1: clamp, grip-only wrench, short clockwise ratchet pulls, visible bolt movement; drop/recovery, flood drain, bed.
-5. In Night 2 trace generator → breaker → riser → F1 pump/upper floors. Inspect floor collars, labels, lamp drops, outside House feed, clear stairs/windows/pole reach.
-6. Restore power and switch circuits: travelling warm pulse, floor-by-floor lamps, only fed branches glowing, quiet nearby hum; trip/reset the breaker. Capture matching-view GPU with wiring enabled/disabled (≤0.3 ms target, not yet measured).
-7. Matching Mac+Quest: join/avatars, clear two-way voice with headphones, both valve roles, guest repair, shared bed and rejoin; confirm circuit switches match both views. Editors stay muted unless the lead explicitly permits a listening check.
-8. **Pending ship implementation:** gallery horizon → rocks passage, beacon beam, horn of thanks; separately verify named wreck/retry.
-9. **Pending doors/mirror implementation:** grab/swing/latch doors from both peers; inspect Will’s body in House mirror from three angles.
-10. **Pending final campaign:** Nights 4–5 and Demo, finale/rescue, logbook/progression; profile ship-at-peak-storm at 72 Hz (GPU≤11 ms).
-
-## Ordered implementation queue
-
-A1. DONE (data only). Extend day data for five nights: duration, storm stage, faults/conditions, active stations, ships, crew roles, solo modifiers, grace and radio/opening cues. Preserve accepted legacy behavior behind the feature switch.
-A2. Arc: Leak (safe preview), Blackout (one consequential ship), Warning (two ships/broadcast extension), Everything Breaks (fuel/power/soot), Long Night (late repeated failures and large ship).
-A3. Data schedules: 30–60 s opening, 10–20 s relief, no ten-second fault pileup except finale.
-A4. Initial task-only model DONE for 12 profiles; Nights 3–5 reach requested spare-time ranges after modeled bed travel. Ship-inclusive pacing and final approval PENDING. Nights 1–2 retain inherited budgets until ships are included. See `Docs/Playtests/telemetry-m3.md`; these are model execution times, not human measurements.
-Wiring addition DONE after Part A verification: see `M3-PowerWiring.md`. Existing circuits only, no new network fields; device cost pending.
-B1. Quest steamer art (8–12k triangles, 1–2 materials), emissive lights, mesh searchlight, ≤150 smoke particles, storm bow spray, distant light LOD.
-   Reuse audit: `NightScenario.NightShipEvent` already has approach/window/grace/broadcast-extension/preview/finale data; `M3NightAuthoring` authors the names and cue mappings 96–99 (P21–P24). Recorded `keeper_ship_sighted/close/passed/lost.wav` and `Resources/ImmersionAudio/foghorn.wav` already exist. No steamer/boat mesh was found. Files called ShipScene/ShipWorld refer to shipping/build routing, not a vessel. Add ship simulation as host state, then snapshot/Fusion/version tests; do not create a second clock. Existing ship offsets are provisional and must be retimed against the new longer N3–5 budgets.
-B2. Host ship approach/window/pass/wreck rules; warning 60–90 s ahead, named ships, beacon grace/loss only near passage. Test pass, recovery and wreck.
-B3. Shared passage payoff: horn/voice/music/storm relief for both keepers, visible from gallery/windows.
-B4. One urgent ship objective/progress and chalkboard ship ticks.
-After B, before C1 (new Job 2-C): physical hand/handle doors with bounded hinges, authoritative angle, latch and route/rain compatibility. Add the requested small House mirror, culled when distant/not viewed; inspect Will’s body from three angles and measure on Quest.
-C1. Night 5 climax: repeated generator/pipe failure and final large ship, tuned from duo bot.
-C2. Dawn/rescue boat, warm window/fog light (not sky edits), calmer sea/gulls, P25, skippable team credits.
-D1. Shared morning logbook: night/name, named ships, peak water, close calls, job times, descriptive grade.
-D2. Local saved unlocks/continue/night select shared across solo/crew per device; retry at night start.
-D3. Data-only Demo (6 min), one ship payoff around five minutes.
-E1. Split-information generator N2, House radio code N3, radio bearing/beacon N4, all N5; local equivalents in solo and role-specific instructions.
-E2. Existing crew valve puzzle on N3–5, solo clamp otherwise.
-E3. P26 only with an actual partner-danger state; otherwise explicitly leave unwired.
-F1. P19–P25 triggers and existing word timing/priority/spacing; P18 close-call morning. Never overlap voice lines.
-F2. Original/CC0 ship and dawn sounds with sources; ship danger music, pass resolve, hopeful dawn.
-G. Full regression, solo bot 1–5/demo, duo 3/5, ship outcomes/save/continue/version tests; inspect screenshots; Quest profile/install/Night1/demo; final timings and ten-step headset checklist.
-
-Commit and push each numbered step. Recheck solo/crew at each part boundary. Bump the network version for new replicated state; current branch is **LK-M3-NIGHTS1 / v20** (new schedule snapshot fields; both crew clients must update). Keep raw evidence out of claims until checked.
+**Step 2a NEXT:** reconcile campaign Night 2 fuel exhaustion (older campaign uses a timer reset), rerun instruction-only solo/duo timing and graphics Nights 1–3. Then Step 2b ships; 2c doors/mirror; Step 3 horror slices 1–3; Step 4 finale/progression; Step 5 remaining horror; Step 6 split-information/final checks. No ship/door/mirror/horror work started this pass.
 
 ## DEVICE CHECKS PENDING
 
-- Class-recall APK 573cf72 is built; install is pending because adb sees no Quest. Do not launch. Human pole/fixture/avatar and B-recall acceptance is pending; five-night gameplay is still disabled.
-- See Will’s Captain/fisherman across peers; inspect head, hands, arms, crouch and own-body hiding.
-- Two-way mono/AEC speech, near/far/handheld routing, valve roles, shared task/bed and rejoin.
-- 72 Hz: GPU ≤11 ms, CPU work ≤9 ms, per-floor/sea/peak-storm measurements; no locked-frame-rate claim yet.
-- For M3: physical doors without body/head pops; ship/peak-storm GPU; Night 1 and Demo payoff, subtitles, saved continue and final dawn.
+Real Quest Wi-Fi OFF start; wiring ≤0.3 ms GPU; missing lobby hands/board-like body; controller/watch comfort and readability; real voice listening. Mac timing is not device-equivalent profiling. Editor stays muted. Install allowed; **do not launch Quest** without explicit request.
 
-## Exact continuation commands
+## Exact next commands
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
-git status --short
-git fetch team
-# Review the checkpoint and preserve the separate integration workspace’s local prefab edit.
-cat Docs/Design/M3-Data.md
-cat Docs/Verification/M3/baseline.json
+python3 artifacts/remaining/m3/tests.py merge-final
+# Source: WatchState.Campaign.cs, WatchState.Onboarding.cs, NightScenario.cs, NightSchedule.cs.
+# Bot: LighthouseKeepers.Editor.M3CampaignBot.Run(outputPath)
+# Graphics replay inputs: ../LighthouseKeepers-Coop-Basics/artifacts/remaining/step1/Nights123.cs
 ```
 
-The second Editor at `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Build` currently has the PR85 recall source overlay (not M3) and is stopped. Its bridge helper is `artifacts/coop/mac_pair.py` in `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics`; do not assume that guest worktree is a clean Git checkout. A1 runner: `python3 artifacts/m3/a1-check.py` from this M3 worktree (copies authored data back and runs focused tests). Integration baseline scripts/results are in the integration workspace’s `artifacts/pole-avatar/final/`; use fresh output folders for reruns.
+---
 
-For a clean M3 Unity run (6000.3.23f1):
+# Generator, watch and wiring delivered — November 11
+
+Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](GeneratorWatchWiring.md). Work in numbered order, focused tests + one muted graphics solo Night 2 replay per item, commit/push each. No full suites or horror work. Preserve unrelated Wood.mat, Quest prefab ray widths and pipe-lever evidence.
+
+1. DONE: actual Night 2 fuel exhaustion, three-second sputter, empty gauge, mains outage and cause-first narration. Existing network fields only; `LK-S5-PLAYTEST1 / v21` unchanged. MasterDirector 12/12, VoicePass 23/23 pass. Final graphics Night 2 replay passed with cue 4 before refuelling, zero logged errors. Evidence: Docs/Verification/GeneratorWatchWiring/step1/.
+2. DONE: mounted numbered generator control layout, fuel can on floor. Focused scene test and solo Night 2 pass; evidence step2/.
+3. DONE: physical choke detents; existing pour, starter and grip-pressure primer preserved. Both-hand focused test + graphics Night 2 pass. Evidence step3/.
+4. DONE: small dorsal left-wrist digital watch, corrected accessory orientation and gaze backlight. Focused recall/watch checks and Night 2 replay pass; inspected images step4/.
+5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on m3/five-nights, not dropped by a merge. Evidence step5/.
+6. DONE: source **c7b9a99** built successfully. Installed on the connected Quest; installed APK SHA-256 matches. App deliberately left closed.
+
+APK: `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk` (134,388,246 bytes). SHA-256 `757b9d404bb060355e7e9d06fcbd9092eb367bf56c108479859d027ef90dd0c2`. [Delivery/evidence](../Verification/GeneratorWatchWiring/README.md). PR #85 updated; no merge. All five implementation items are done; the listed device checks and separate missing-lobby-hands report remain. Do not resume M3/horror without the next request.
+
+Reinstall without launching:
 ```sh
-mkdir -p artifacts/m3/after
-"/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity" -batchmode -projectPath "$PWD" -runTests -testPlatform EditMode -testResults "$PWD/artifacts/m3/after/editmode.xml" -logFile "$PWD/artifacts/m3/after/editor.log"
+'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' install -r '/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk'
 ```
 
-Build only after the next runtime step passes, with a fresh output filename:
+## DEVICE CHECKS PENDING (current pass)
+
+- Missing lobby hands / board below body: not reproduced or resolved. Preserve tracked hand rotations and Will's avatar; compare worn headset after START. First-frame logs alone do not establish the cause.
+- Night 2 fuel warning, actual blackout, speech timing and reachable controls.
+- Both-hand physical choke/pour/starter feel; watch fit/readability/orientation.
+- Wiring visibility/clearance and GPU cost <=0.3 ms; complete scene target 72 Hz.
+- Two-headset fuel state/presentation, voice/tasks/sleep regression (current pass has replica-focused evidence only).
+
+## Exact current check commands
+
 ```sh
-mkdir -p Builds
-LK_APK_OUTPUT="$PWD/Builds/LighthouseKeepers-M3-$(git rev-parse --short HEAD).apk" "/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity" -batchmode -quit -projectPath "$PWD" -buildTarget Android -executeMethod LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest -logFile "$PWD/artifacts/m3/after/build.log"
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+python3 artifacts/playtest-fixes/lobby-state-tests.py MasterDirectorTests generator-step1.json
+python3 artifacts/playtest-fixes/lobby-state-tests.py VoicePassTests generator-step1-voice.json
+# Stop Play Mode before starting a fresh replay; helpers explicitly mute the Editor.
+python3 artifacts/generator-pass/solo.py step1-final
 ```
 
-## Release action held for user confirmation
+---
 
-After the lead explicitly says PR #85 is merged: fetch main, verify its merge, tag `sprint4-m2` without moving an existing tag, build that exact commit, publish “Sprint 4 — Milestone 2” with APK/SHA-256/five plain-English lines, update README downloads. Close #81–#83 with a comment linking #85; **ask before closing Eli’s #84**. Do not publish or close ahead of that confirmation.
+# Job 1 delivered — STOP before horror (November 11)
+
+On `s4/integrated` / PR #85. Steps 5–6 and the simplified lobby are committed and pushed. Shipping code: **dff6e4b**. Generator vs POWER PANEL are distinct; island rails/sea recovery and one PLAY flow are implemented. No main merge and no M3/horror work in this turn.
+
+**Verification:** 21 focused cases pass, one actual-XRI graphics solo Night 1–2 replay passes, and one live two-Mac smoke passes (host alone, late join, avatars, guest sea recovery, shared valve task, shared sleep, leave/rejoin). Post-smoke defensive recovery and keypad-clearance changes passed focused tests; the entire smoke was not repeated. No full suites, per the lean request. Both test Editors were muted and are now closed. Evidence: [delivery report](../Verification/PlaytestFixes/final/README.md).
+
+**Delivered:** `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-Playtest-dff6e4b.apk`; 133,792,150 bytes; SHA-256 `28b7df5f9f990c0f0e00b01e89c605968206a5dcd6721b407913819f29f4981d`. Installed and launched on the connected Quest as explicitly requested this turn; process alive after 15 seconds. No human headset acceptance implied. Build audio unchanged.
+
+**Network:** LK-S5-PLAYTEST1 / LK-Lab-Coop-v21. Both players must update. Sea-recovery snapshot added; no READY requirement. One player gets solo puzzles; joins/leaves adapt roles immediately. Current night time is preserved on roster changes; the next night uses the new roster's budget.
+
+## Next job (not started)
+
+Merge verified Job 1 into `m3/five-nights`; re-bake its existing TowerWiring authoring for the moved power panel (do not duplicate the feed). Finish the M3 ship prerequisite, then the queued horror job. Full scope: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Stop here until asked to continue.
+
+## DEVICE CHECKS PENDING
+
+- ADB screenshot was black; confirm the rendered lobby while wearing the Quest. Startup activity/OpenXR and live process were confirmed.
+- Human reach/readability: generator vs separate POWER PANEL, grip-only primer, B recall/objective height.
+- Actual Quest Wi-Fi OFF: PLAY → HOST / PLAY ALONE → START on the offline message. Editor forced-unreachable path passed; device acceptance pending.
+- Worn island edge traversal; sea fall comfort and ten-second return with a partner; dropped tools and tracked hands.
+- Two-Quest real voice listening, shared tasks/sleep/rejoin; worn GPU/CPU and frame budgets.
+- Locate the reported separate F3 yellow remnant; the all-floor audit did not reproduce it.
+
+## Exact delivery commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+# Reinstall the matching build without erasing app data:
+'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' install -r 'Builds/LighthouseKeepers-Playtest-dff6e4b.apk'
+# Launch only when requested (authorized for this completed delivery):
+'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' shell am start -n 'com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity'
+```
+
+---
+
+## Earlier checkpoints (historical; latest scope above takes precedence)
+
+# November 11 playtest fixes — ACTIVE CHECKPOINT
+
+Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `m3/five-nights` / PR #87. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
+
+## Active checkpoint — Steps 5–6 and lobby implemented; final checks/build next
+
+Steps 1, 3 and 4 are implemented and checked; step 2 was audited but the reported separate yellow remnant was not reproduced. Job 1 is NOT finished. Full job-end suites, solo 1–3/two-Mac smoke, APK and M3 merge have NOT run for this checkpoint. Job 2 has not started. The full remaining scope (including the new lobby and horror additions) is preserved in [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Quest absent from ADB on November 11; no app launched.
+
+## Current work
+
+Step 1: solo valve clamp removed from rules, objectives and narration; solo retains the prior post-clamp inflow rate. Two-player hold/release and distinct worker validation remain; disconnect allows immediate solo repair. Valve sits beside the active bolt and moves only when unheld; hidden/non-interactable for one player. Focused pressure 4/4 and director 8/8 pass. Graphics actual-XRI Night 1 → Night 2 passed; live one→two→one valve visibility/placement passed (0.43 m from active bolt). Step 1 complete; evidence in Docs/Verification/PlaytestFixes/step1/. No new replicated fields; network stays LK-S5-VOICE1 / v19 for now. Lobby changes will require a new matchmaking version.
+
+## Next in order
+
+2. Pole audit complete (PlayMode 1/1; inspected F3 screenshot). No obsolete shaft or separate yellow remnant reproduced. Location clarification/device confirmation pending; working pole and safety hatch preserved. Evidence: Docs/Verification/PlaytestFixes/step2/.
+3. DONE: grip-only pressure primer at chest height, larger bulb, release/refill, tally and feedback. Focused 3/3 + engine 6/6; left/right actual-XRI graphics pass, screenshots inspected. See InteractionInputs.md and Docs/Verification/PlaytestFixes/step3/.
+4. Implemented: short action/object + specific place/floor; nearby controller GRIP/TRIGGER cue. Director tests 9/9 and near/far graphics check pass; final rendered icon verified and screenshot inspected. Director tests now 10/10, including actual rendered mesh. See Docs/Verification/PlaytestFixes/step4/.
+5. DONE: separate yellow generator and dark-green wall POWER PANEL, over 4 m apart, one ceiling feed. Focused graphics test 1/1 and inspected screenshot: Docs/Verification/PlaytestFixes/step5/. Previous survey: Current panel is WatchPowerPanel.Create at STN_GENERATOR_PANEL; layout JSON anchor (3.031089,3.3,1.75), yaw 240. Generator mesh is reused by Editor/OneLighthouseM2.cs from the fixture prefab (Diesel crankcase, Alternator cover, Radiator grille). Inspect both world bounds before moving; runtime is generated, so fix the source/anchors and test rebuild. Integrated has ConnectedMachinePresentation legacy riser; M3 replaces it with baked TowerWiring resources, so re-bake that authoring after merge rather than duplicating conduit.
+6. DONE: perimeter rails + 160-direction sweep; solo sea loss/retry + host-owned 10 s per-keeper crew recovery. Focused rules 4/4, graphics edge/sea retry 1/1; Docs/Verification/PlaytestFixes/step6/. Network LK-S5-PLAYTEST1 / v21; live transport check queued.
+Lobby implemented: one PLAY flow, host-alone/START without READY, existing offline loader and keypad, dynamic puzzle roles; docs updated. Focused 13/13 passed. Final graphics Night 1–2 / live two-Mac / build pending.
+7. Latest lean scope: focused tests only, one graphics solo Night 1–2 and one two-Mac smoke; no full suites. Build/install AND launch if Quest visible (explicitly requested this turn); update PR #85. Merge into M3 only after this job is verified.
+Job 2: finish M3 ship first; write TheDrowned.md, then implement the latest horror brief in numbered checkpoints. Do not claim ships/horror/finale/progression done; M3 currently has scheduling and wiring plus B recall.
+
+## DEVICE CHECKS PENDING
+
+- Current job has no APK yet. Verify no-clamp solo repair, two-player valve reach/role split and disconnect.
+- Grip squeeze/release feel, primer visibility; readable objects/locations/button cues.
+- F3 pole remnant removed without losing floor exits/fall protection.
+- Updated lobby with Quest Wi-Fi off and two matching builds online; rejoin/leave.
+- Island edge walk, sea recovery; human voice; worn GPU/CPU/readability.
+
+## Exact commands / evidence
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
+python3 artifacts/playtest-fixes/tests.py PressureValveTests pressure.json
+python3 artifacts/playtest-fixes/tests.py MasterDirectorTests director.json
+python3 artifacts/playtest-fixes/solo.py
+```
+Additional focused commands: `python3 artifacts/playtest-fixes/pole-test.py OnlyCurrentDescentShaftAndThreeLandingsExist pole-test.json`; `python3 artifacts/playtest-fixes/primer-tests.py GripSqueezeTests grip-cycle.json`; `python3 artifacts/playtest-fixes/primer-live.py`; `python3 artifacts/playtest-fixes/objective-tests.py MasterDirectorTests director-locations.json`; `python3 artifacts/playtest-fixes/hud-live.py`. These use saved scene/input fixtures and must not be called human/device evidence. The primer runner injects grip after HandRig updates; old EngineLive/Days12 trigger-based primer harnesses must be updated before step 7 (do not change gameplay back for the harness).
+
+Results/runners: `artifacts/playtest-fixes/`. Do not overwrite completed evidence; choose fresh output paths for reruns. Full suites only at job end. Preserve the earlier baseline below; its solo-clamp requirement is superseded by this playtest.
 
 ---
 
@@ -158,7 +167,7 @@ cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
 # STOP here: do not run am start or monkey without the lead asking.
 ```
 
-This fix is now merged into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `m3/five-nights`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #87 draft and never merge main.
+For M3, merge this branch into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `m3/five-nights`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #87 draft and never merge main.
 
 Raw runners/results: `artifacts/class-recall/`; `tests.py` (EditMode), `play-focused.py`, `play.py` (full PlayMode), `solo.py` (Night 1), `crew.py` (two-Mac smoke), `build.py` (exact-source Android build). Before repeating a run choose a fresh output directory; inspect the script's existing destination. Both Editors were stopped after the smoke test. Preserve the unrelated Quest prefab ray-width edit and `Docs/Verification/Immersion/pipe-lever/`.
 

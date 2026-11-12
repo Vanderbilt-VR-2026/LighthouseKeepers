@@ -34,6 +34,7 @@ namespace LighthouseKeepers.Editor
                 float weave=cloth?(Mathf.Sin((x+y)*.55f)*Mathf.Sin((x-y)*.55f)*.07f):0;
                 float scratch=!cloth&&x%37==0?.045f:0;
                 var baseColour=cloth?new Color(.56f,.45f,.31f):new Color(.58f,.55f,.47f);
+                if(cloth&&(x+y*3)%59==0)baseColour=Color.Lerp(baseColour,new Color(.8f,.76f,.60f),.35f); // Salt and exposed fibres
                 texture.SetPixel(x,y,baseColour*(.82f+grime*.18f+grain*.065f+weave+scratch));
             }
             texture.Apply();File.WriteAllBytes(Folder+"/Atlas.png",texture.EncodeToPNG());RenderTexture.active=prior;RenderTexture.ReleaseTemporary(rt);Object.DestroyImmediate(texture);Object.DestroyImmediate(mat);Object.DestroyImmediate(mesh);

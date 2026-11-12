@@ -14,7 +14,7 @@ namespace LighthouseKeepers.Editor
         const string Folder="Assets/WatchDemo/Resources/TowerWiring";
         const float RiserAngle=325;
         static readonly float[] heights={2.85f,6.15f,9.45f,12.75f};
-        static readonly Color Steel=new(.18f,.135f,.095f),Rust=new(.27f,.16f,.085f),Ceramic=new(.85f,.82f,.7f),Cloth=new(.12f,.085f,.05f);
+        static readonly Color Steel=new(.18f,.135f,.095f),Rust=new(.27f,.16f,.085f),Ceramic=new(.85f,.82f,.7f),Cloth=new(.34f,.25f,.16f);
         static Vector3 Wall(float angle,float y,float inset=.055f)
         {
             var dir=Quaternion.Euler(0,angle,0)*Vector3.forward;var origin=Vector3.up*y;
@@ -35,12 +35,12 @@ namespace LighthouseKeepers.Editor
             var runs=new List<TowerWiringAsset.Run>();var endpoints=new List<TowerWiringAsset.Endpoint>();
             void Add(string name,int circuit,int floor,float radius,IEnumerable<Vector3> points){var p=points.ToArray();if(p.Length>1)runs.Add(new TowerWiringAsset.Run{name=name,circuit=circuit,floor=floor,radius=radius,points=p});}
             var gen=GameObject.Find("STN_GENERATOR").transform;var panel=UnityEngine.Object.FindAnyObjectByType<WatchPowerPanel>().transform;
-            var generator=gen.TransformPoint(new Vector3(0,1.25f,.18f));var breaker=panel.TransformPoint(new Vector3(0,1.65f,-.035f));data.breaker=panel.TransformPoint(new Vector3(0,1.5f,.24f));
-            var feed=new List<Vector3>{generator,Wall(Angle(generator),generator.y)};feed.AddRange(Arc(Angle(generator),Angle(breaker)+20,5.95f));feed.Add(Wall(Angle(breaker)+20,breaker.y));feed.Add(breaker);Add("Generator output to F2 breaker",4,2,.025f,feed);
+            var generator=gen.TransformPoint(new Vector3(0,1.25f,.18f));var breaker=panel.TransformPoint(new Vector3(0,1.65f,.075f));data.breaker=panel.TransformPoint(new Vector3(0,1.5f,.24f));
+            var feed=new List<Vector3>{generator,Wall(Angle(generator),generator.y)};feed.AddRange(Arc(Angle(generator),Angle(breaker),6.15f));feed.Add(Wall(Angle(breaker),breaker.y));feed.Add(breaker);Add("Generator output to F2 breaker",4,2,.025f,feed);
             for(int circuit=0;circuit<4;circuit++)
             {
                 float offset=.055f;float angle=RiserAngle+circuit*1.35f;
-                var socket=panel.TransformPoint(new Vector3(-.27f+circuit*.18f,1.83f,-.035f));float trunkY=heights[1]-.02f-circuit*.055f;var trunk=new List<Vector3>{socket,new Vector3(socket.x,trunkY,socket.z)};trunk.AddRange(Arc(Angle(socket),angle,trunkY));Add("Breaker to "+(PowerCircuit)circuit+" riser",circuit,2,.016f,trunk);
+                var socket=panel.TransformPoint(new Vector3(-.27f+circuit*.18f,1.83f,.075f));float trunkY=heights[1]-.02f-circuit*.055f;var trunk=new List<Vector3>{socket,new Vector3(socket.x,trunkY,socket.z)};trunk.AddRange(Arc(Angle(socket),angle,trunkY));Add("Breaker to "+(PowerCircuit)circuit+" riser",circuit,2,.016f,trunk);
                 // Continuous circuits run in parallel, collars sit on both faces of each slab.
                 for(int floor=1;floor<=4;floor++){if(circuit==0&&floor>2||circuit==1&&floor<2)continue;var points=new List<Vector3>{Wall(angle,(floor-1)*3.3f+.035f,floor==4?.20f:offset)};
                     if(floor==4)points.Add(Wall(angle,10.22f,offset));points.Add(Wall(angle,heights[floor-1],offset));
@@ -112,14 +112,28 @@ namespace LighthouseKeepers.Editor
                     var colour=run.floor==1?Color.Lerp(Steel,Rust,.25f):Steel;
                     if(run.radius<.005f)
                     {for(int strand=0;strand<2;strand++)g.Braid(points[i-1],points[i],run.radius,Cloth,run.circuit,baseTime+at/length*timeSpan,strand);}
-                    else g.Tube(points[i-1],points[i],run.radius*.60f,colour,run.circuit,baseTime+at/length*timeSpan,baseTime+(at+d)/length*timeSpan,6);
+                    else {
+                        var a=points[i-1];var b=points[i];float begin=baseTime+at/length*timeSpan,finish=baseTime+(at+d)/length*timeSpan;
+                        // Flexible wrapped cable: small catenary approximation on long horizontal spans.
+                        if(d>.75f&&Mathf.Abs(a.y-b.y)<.10f){var mid=(a+b)*.5f-Vector3.up*.025f;g.Tube(a,mid,run.radius*.40f,Cloth,run.circuit,begin,(begin+finish)*.5f,4);g.Tube(mid,b,run.radius*.40f,Cloth,run.circuit,(begin+finish)*.5f,finish,4);}
+                        else g.Tube(a,b,run.radius*.40f,Cloth,run.circuit,begin,finish,4);
+                    }
                     at+=d;
                 }
                 // Saddles are baked into the same mesh; no per-strap Renderer or collider.
                 if(run.radius>=.009f)for(float s=.3f;s<length;s+=.6f)
-                {var p=Along(points,s,out var direction);var inward=run.floor==0?Vector3.right:-new Vector3(p.x,0,p.z).normalized;var q=Quaternion.LookRotation(inward);g.Saddle(p-inward*.018f,new Vector3(.055f,.022f,.028f),q,Steel,run.circuit,baseTime);}
+                {var p=Along(points,s,out var direction);var inward=run.floor==0?Vector3.right:-new Vector3(p.x,0,p.z).normalized;var q=Quaternion.LookRotation(inward);g.Saddle(p-inward*.018f,new Vector3(.055f,.022f,.028f),q,Rust,run.circuit,baseTime);}
                 else
                 {var p=run.points[0];g.Tube(p-Vector3.up*.03f,p+Vector3.up*.02f,.015f,Ceramic,run.circuit,baseTime,baseTime,6);}
+            }
+            // A few local tarred tape repairs, rather than repeating bands along every cable.
+            foreach(var run in data.runs.Where(r=>r.name.Contains("riser")&&r.floor<=2)){
+                var a=run.points[0];var b=run.points[1];var mid=(a+b)*.5f;var axis=(b-a).normalized;
+                groups[run.floor].Tube(mid-axis*.035f,mid+axis*.035f,run.radius*.48f,new Color(.075f,.065f,.045f),run.circuit,.35f,.35f,4);
+            }
+            // Ceramic isolation at each cable branch; combined into the same floor mesh.
+            foreach(var run in data.runs.Where(r=>r.radius>=.009f)){
+                var p=run.points[0];groups[run.floor].Tube(p-Vector3.up*.018f,p+Vector3.up*.018f,.018f,Ceramic,run.circuit,.3f,.3f,4);
             }
             for(int floor=0;floor<5;floor++)
             {
@@ -156,7 +170,7 @@ namespace LighthouseKeepers.Editor
         static List<Vector3> Round(Vector3[] source)
         {
             var p=source.Where((v,i)=>i==0||(v-source[i-1]).sqrMagnitude>.000001f).ToArray();var output=new List<Vector3>();if(p.Length<2)return output;output.Add(p[0]);
-            for(int i=1;i<p.Length-1;i++){if(Vector3.Angle(p[i]-p[i-1],p[i+1]-p[i])<22){output.Add(p[i]);continue;}float r=Mathf.Min(.06f,Mathf.Min(Vector3.Distance(p[i-1],p[i]),Vector3.Distance(p[i],p[i+1]))*.25f);var a=p[i]+(p[i-1]-p[i]).normalized*r;var b=p[i]+(p[i+1]-p[i]).normalized*r;output.Add(a);for(int j=1;j<=2;j++){float t=j/2f;output.Add((1-t)*(1-t)*a+2*(1-t)*t*p[i]+t*t*b);}}output.Add(p[p.Length-1]);return output;
+            for(int i=1;i<p.Length-1;i++){if(Vector3.Angle(p[i]-p[i-1],p[i+1]-p[i])<22){output.Add(p[i]);continue;}float r=Mathf.Min(.06f,Mathf.Min(Vector3.Distance(p[i-1],p[i]),Vector3.Distance(p[i],p[i+1]))*.25f);var a=p[i]+(p[i-1]-p[i]).normalized*r;var b=p[i]+(p[i+1]-p[i]).normalized*r;output.Add(a);for(int j=1;j<=1;j++){float t=j;output.Add((1-t)*(1-t)*a+2*(1-t)*t*p[i]+t*t*b);}}output.Add(p[p.Length-1]);return output;
         }
         static Vector3 Along(List<Vector3> p,float s,out Vector3 direction)
         {direction=Vector3.up;for(int i=1;i<p.Count;i++){float d=Vector3.Distance(p[i-1],p[i]);direction=(p[i]-p[i-1]).normalized;if(s<=d)return p[i-1]+direction*s;s-=d;}return p[p.Count-1];}

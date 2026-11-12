@@ -9,6 +9,45 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    Assert.That(W(new Vector3(0,1.7f,-7.3f)).y,Is.GreaterThan(.99f));Assert.That(W(new Vector3(6,1.7f,0)).x,Is.GreaterThan(.99f));
    for(float r=2;r<4.3f;r+=.05f){var w=W(new Vector3(r,11.5f,0));Assert.That(w.x+w.y+w.z,Is.EqualTo(1).Within(.001f));Assert.That(Mathf.Min(w.x,w.y,w.z),Is.GreaterThanOrEqualTo(0));}
   }
+  [UnityTest]public IEnumerator SeaRecoveryFadeNeverEntersSharedSleepSnapshot(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(2);
+   var w=UnityEngine.Object.FindAnyObjectByType(T("WatchDemoController"));T("WatchDemoController").GetMethod("ShowSeaRecovery").Invoke(w,new object[]{1f,true});
+   var json=(string)T("WatchDemoController").GetMethod("CaptureState").Invoke(w,null);var snapshot=JsonUtility.FromJson(json,T("WatchSnapshot"));Assert.Zero((float)T("WatchSnapshot").GetField("fade").GetValue(snapshot),"Only the fallen keeper should fade");Assert.False((bool)T("WatchSnapshot").GetField("sleeping").GetValue(snapshot));
+   T("WatchDemoController").GetMethod("HideSeaRecovery").Invoke(w,null);
+  }
+  [UnityTest]public IEnumerator IslandRailBlocksEveryOutwardEdgeAndSeaRetryReturnsHome(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var safety=T("IslandSafety");var edge=safety.GetMethod("Edge");
+   for(int i=0;i<160;i++){var p=(Vector3)edge.Invoke(null,new object[]{i*Mathf.PI*2/160});var outward=new Vector3(p.x+.2f,0,p.z+3.2f).normalized;
+    Assert.True(Physics.SphereCast(p-outward*.6f+Vector3.up*.8f,.2f,outward,out var hit,1.2f),"Unblocked edge "+i);Assert.IsTrue(hit.collider.name.StartsWith("Island edge rail"),hit.collider.name);
+   }
+   var rig=UnityEngine.Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();rig.transform.position=Vector3.down*4;yield return null;yield return null;
+   var watch=UnityEngine.Object.FindAnyObjectByType(T("WatchDemoController"));var state=T("WatchDemoController").GetProperty("State").GetValue(watch);
+   Assert.True((bool)T("WatchState").GetProperty("Failed").GetValue(state));Assert.AreEqual("Swept out to sea",T("WatchState").GetProperty("FailureMessage").GetValue(state));
+   Assert.True((bool)T("WatchDemoController").GetMethod("RetryDay").Invoke(watch,null));yield return null;
+   Assert.False((bool)T("WatchState").GetProperty("Failed").GetValue(state));Assert.Greater(rig.transform.position.y,-.1f);Assert.That(rig.Camera.transform.position.z,Is.EqualTo(-6.3f).Within(.15f));
+  }
+  [UnityTest]public IEnumerator GeneratorControlsMountInServiceOrderWithCanOnFloor(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var root=GameObject.Find("S4 generator sequence").transform;
+   var points=new[]{root.Find("FUEL_FILLER"),root.Find("GRIP_PrimerBulb"),root.Find("GRIP_ChokeControl"),GameObject.Find("GRIP_StarterHandle").transform};
+   float prior=10;
+   foreach(var p in points){var local=root.InverseTransformPoint(p.position);Assert.Less(local.x,prior,"Left-to-right service order");prior=local.x;Assert.That(local.y,Is.InRange(1.1f,1.3f),p.name);Assert.That(local.z,Is.InRange(1f,1.2f),p.name);}
+   Assert.NotNull(root.Find("Generator service fascia"));Assert.IsNull(root.Find("Fuel can service shelf"));
+   var can=root.Find("FUEL_CAN");Assert.That(can.localPosition.y,Is.EqualTo(.20f).Within(.01f));Assert.Greater(can.localPosition.x,.9f);
+   Assert.That(root.Find("Engraved starting order").GetComponent<TextMesh>().text,Does.Contain("1 FUEL").And.Contain("5 OPEN"));
+  }
+  [UnityTest]public IEnumerator GeneratorAndPowerPanelHaveDistinctAccessibleStations(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var generator=GameObject.Find("STN_GENERATOR").transform;var panel=GameObject.Find("S4 breaker panel").transform;
+   Assert.Greater(Vector3.Distance(generator.position,panel.position),4f);
+   Assert.AreEqual("POWER PANEL",panel.Find("Panel heading").GetComponent<TextMesh>().text);
+   var cabinet=panel.Find("Enamel breaker cabinet").GetComponent<Renderer>();var c=cabinet.sharedMaterial.GetColor("_BaseColor");Assert.Greater(c.g,c.r*1.5f);
+   var yellow=generator.GetComponentsInChildren<Renderer>().First(r=>r.name=="Diesel crankcase").sharedMaterial.GetColor("_BaseColor");Assert.Greater(yellow.r,.5f);Assert.Less(yellow.b,.15f);
+   var back=panel.TransformPoint(new Vector3(0,1.28f,.01f));Assert.True(Physics.Raycast(back,-panel.forward,out var wall,.15f));Assert.True(wall.collider.name.Contains("Wall_F2"),wall.collider.name);
+   Assert.IsNull(GameObject.Find("Generator to POWER PANEL conduit"));Assert.IsNull(GameObject.Find("Tower power conduit"));
+   var wiring=GameObject.Find("Tower power wiring (baked routes)");Assert.NotNull(wiring,"Wiring missing from generated player scene");var meshes=wiring.GetComponentsInChildren<MeshFilter>();Assert.AreEqual(5,meshes.Length);Assert.LessOrEqual(meshes.Sum(m=>m.sharedMesh.triangles.Length/3),15000);Assert.AreEqual(1,wiring.GetComponentsInChildren<MeshRenderer>().Select(r=>r.sharedMaterial).Distinct().Count());
+  }
   [UnityTest]public IEnumerator FixturesClearStairRailsAndHouseClutterIsRemoved(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
    var renderers=UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None).Where(r=>r.enabled).ToArray();
@@ -21,6 +60,20 @@ namespace LighthouseKeepers.Presentation.Environment.Tests {
    var board=GameObject.Find("Watch checklist").GetComponent<TextMesh>();Assert.Less(board.color.grayscale,.05f);
    var block=new MaterialPropertyBlock();GameObject.Find("Wall-mounted checklist white face").GetComponent<Renderer>().GetPropertyBlock(block);Assert.Greater(block.GetColor("_BaseColor").grayscale,.9f);
    foreach(var shaft in renderers.Where(r=>r.name=="Brass slide shaft"))Assert.Less(shaft.sharedMaterial.GetColor("_EmissionColor").maxColorComponent,.001f);
+  }
+  [UnityTest]public IEnumerator OnlyCurrentDescentShaftAndThreeLandingsExist(){
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var all=UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include,FindObjectsSortMode.None);
+   Assert.AreEqual(1,all.Count(t=>t.name=="Continuous brass descent pole F4 to F1"));
+   Assert.AreEqual(1,all.Count(t=>t.name=="Continuous brass slide shaft"));
+   Assert.AreEqual(3,all.Count(t=>t.name.StartsWith("Circular pole landing F")));
+   Assert.AreEqual(1,all.Count(t=>t.name=="Bedroom flush pole hatch"));
+   Assert.AreEqual(1,all.Count(t=>t.name=="Bedroom hatch fall protection"));
+   foreach(var t in all)Assert.AreNotEqual("Brass slide shaft",t.name,"Obsolete separate-floor shaft remains");
+   foreach(var r in all.Where(t=>t.name=="Circular floor opening brass rim").Select(t=>t.GetComponent<Renderer>())){
+    Assert.Less(r.sharedMaterial.GetColor("_EmissionColor").maxColorComponent,.001f,"Floor trim must not glow yellow");
+    Assert.Less(r.sharedMaterial.GetColor("_BaseColor").maxColorComponent,.4f,"Floor trim must stay subdued");
+   }
   }
   [UnityTest]public IEnumerator TrackerFollowsLazilyBelowEyesAndRecallRepositionsIt(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(2);

@@ -22,27 +22,27 @@
     },
     {
       "key": "step.Fuel",
-      "text": "Fill the fuel tank"
+      "text": "Fill the generator fuel tank"
     },
     {
       "key": "step.Prime",
-      "text": "Squeeze the primer ×{0}"
+      "text": "Squeeze the primer bulb ×{0}"
     },
     {
       "key": "step.CloseChoke",
-      "text": "Close the choke"
+      "text": "Pull the choke lever UP"
     },
     {
       "key": "step.Starter",
-      "text": "Pull the starter ×{0}"
+      "text": "Pull the generator starter ×{0}"
     },
     {
       "key": "step.OpenChoke",
-      "text": "Open the choke"
+      "text": "Push the choke lever DOWN"
     },
     {
       "key": "step.ResetBreaker",
-      "text": "Reset the breaker"
+      "text": "Reset the POWER PANEL breaker"
     },
     {
       "key": "step.RadioPower",
@@ -86,35 +86,35 @@
     },
     {
       "key": "step.PumpOn",
-      "text": "Switch pump on"
+      "text": "Switch PUMP on"
     },
     {
       "key": "step.PumpOff",
-      "text": "Switch pump off"
+      "text": "Switch PUMP off"
     },
     {
       "key": "step.BeaconOn",
-      "text": "Switch beacon on"
+      "text": "Switch BEACON on"
     },
     {
       "key": "step.BeaconOff",
-      "text": "Switch beacon off"
+      "text": "Switch BEACON off"
     },
     {
       "key": "step.RadioOn",
-      "text": "Switch radio on"
+      "text": "Switch RADIO on"
     },
     {
       "key": "step.RadioOff",
-      "text": "Switch radio off"
+      "text": "Switch RADIO off"
     },
     {
       "key": "step.LightsOn",
-      "text": "Switch lights on"
+      "text": "Switch LIGHTS on"
     },
     {
       "key": "step.LightsOff",
-      "text": "Switch lights off"
+      "text": "Switch LIGHTS off"
     },
     {
       "key": "job.STN_PIPE_LEAK",
@@ -234,7 +234,7 @@
     },
     {
       "key": "label.Panel heading",
-      "text": "POWER"
+      "text": "POWER PANEL"
     },
     {
       "key": "label.Meter legend",
@@ -242,23 +242,23 @@
     },
     {
       "key": "label.Engraved starting order",
-      "text": "GENERATOR"
+      "text": "1 FUEL   2 PRIME   3 CLOSE   4 PULL   5 OPEN"
     },
     {
       "key": "label.Primer plate",
-      "text": "PRIMER"
+      "text": "2 PRIMER"
     },
     {
       "key": "label.Choke plate",
-      "text": "CHOKE"
+      "text": "3 CLOSE / 5 OPEN"
     },
     {
       "key": "label.Starter plate",
-      "text": "STARTER"
+      "text": "4 STARTER"
     },
     {
       "key": "label.Fuel filling plate",
-      "text": "FILL"
+      "text": "1 FILL"
     },
     {
       "key": "label.Fuel shelf plate",
@@ -594,7 +594,7 @@
     },
     {
       "key": "step.CheckFuel",
-      "text": "Check the fuel"
+      "text": "Check the generator fuel gauge"
     },
     {
       "key": "pole.grip",
@@ -1054,7 +1054,7 @@
     },
     {
       "key": "legacy.WatchEngineControls.6",
-      "text": "2 PRIME — GRIP BULB + SQUEEZE TRIGGER {0}/{1}"
+      "text": "SQUEEZE PRIMER GRIP {0}/{1}"
     },
     {
       "key": "legacy.WatchEngineControls.7",
@@ -1398,11 +1398,11 @@
     },
     {
       "key": "legacy.WatchEngineControls.Immersion.3",
-      "text": "1 FUEL   2 PRIME ×3   3 CHOKE ▲\n4 PULL ×3   5 CHOKE ▼"
+      "text": "1 FUEL   2 PRIME   3 CLOSE   4 PULL   5 OPEN"
     },
     {
       "key": "legacy.WatchEngineControls.Immersion.4",
-      "text": "2 PRIME\nGRIP + SQUEEZE"
+      "text": "PRIMER — SQUEEZE GRIP"
     },
     {
       "key": "legacy.WatchEngineControls.Immersion.5",
@@ -1466,7 +1466,7 @@
     },
     {
       "key": "legacy.ImmersionPipePresentation.2",
-      "text": "GRIP: HOLD   TRIGGER: LOCK\nPULL TOWARD YOU · RELEASE TO RESET"
+      "text": "GRIP TO HOLD · BRING TO BOLT\nPULL TOWARD YOU · PUSH TO RESET"
     },
     {
       "key": "legacy.PoleSlide.1",
@@ -1502,7 +1502,7 @@
     },
     {
       "key": "legacy.WatchPowerPanel.4",
-      "text": "POWER DISTRIBUTION"
+      "text": "POWER PANEL"
     },
     {
       "key": "legacy.WatchPowerPanel.5",
@@ -1514,7 +1514,7 @@
     },
     {
       "key": "legacy.WatchEngineControls.16",
-      "text": "PRIMER\nGRIP + TRIGGER"
+      "text": "PRIMER — SQUEEZE GRIP"
     },
     {
       "key": "legacy.WatchEngineControls.17",
@@ -1582,7 +1582,7 @@
     },
     {
       "key": "step.HoldValve",
-      "text": "Hold the valve"
+      "text": "Hold the pipe pressure valve"
     },
     {
       "key": "step.ClampValve",
@@ -1590,7 +1590,7 @@
     },
     {
       "key": "step.TightenBolt",
-      "text": "Tighten the bolt"
+      "text": "Tighten the active pipe bolt"
     },
     {
       "key": "connected.pressure",
@@ -1947,6 +1947,130 @@
     {
       "key": "wiring.box4",
       "text": "BEACON CIRCUIT"
+    },
+    {
+      "key": "where.workbench",
+      "text": "House workbench"
+    },
+    {
+      "key": "where.STN_PIPE_LEAK",
+      "text": "Wall-mounted pipe"
+    },
+    {
+      "key": "where.STN_GENERATOR",
+      "text": "Front of generator"
+    },
+    {
+      "key": "where.BREAKER",
+      "text": "POWER PANEL cabinet"
+    },
+    {
+      "key": "where.STN_RADIO_CONSOLE",
+      "text": "Radio console"
+    },
+    {
+      "key": "where.STN_BEACON_CONTROL",
+      "text": "Beacon platform"
+    },
+    {
+      "key": "where.BED",
+      "text": "Bedroom bunk"
+    },
+    {
+      "key": "input.GRIP",
+      "text": "GRIP"
+    },
+    {
+      "key": "input.TRIGGER",
+      "text": "TRIGGER"
+    },
+    {
+      "key": "loss.sea",
+      "text": "Swept out to sea"
+    },
+    {
+      "key": "sea.recovery",
+      "text": "Swept out to sea\nWashing back to the House…"
+    },
+    {
+      "key": "lobby.play",
+      "text": "PLAY"
+    },
+    {
+      "key": "lobby.host",
+      "text": "HOST / PLAY ALONE"
+    },
+    {
+      "key": "lobby.join",
+      "text": "JOIN CREW"
+    },
+    {
+      "key": "lobby.start",
+      "text": "START"
+    },
+    {
+      "key": "lobby.settings",
+      "text": "SETTINGS"
+    },
+    {
+      "key": "lobby.quit",
+      "text": "QUIT"
+    },
+    {
+      "key": "lobby.height",
+      "text": "LOWER / RAISE BOARD"
+    },
+    {
+      "key": "lobby.back",
+      "text": "BACK"
+    },
+    {
+      "key": "lobby.code",
+      "text": "CREW CODE"
+    },
+    {
+      "key": "lobby.codeHint",
+      "text": "Enter 6-character code"
+    },
+    {
+      "key": "lobby.connecting",
+      "text": "Connecting…"
+    },
+    {
+      "key": "lobby.offline",
+      "text": "No connection — Play offline"
+    },
+    {
+      "key": "lobby.startHint",
+      "text": "Start now, or wait for your partner."
+    },
+    {
+      "key": "lobby.cancelHint",
+      "text": "Finding a crew connection. You can start offline now."
+    },
+    {
+      "key": "lobby.startOffline",
+      "text": "START OFFLINE"
+    },
+    {
+      "key": "lobby.entering",
+      "text": "Entering…"
+    },
+    {
+      "key": "lobby.waitHost",
+      "text": "Waiting for host to START"
+    },
+    {
+      "key": "lobby.enterCode",
+      "text": "Enter the host’s crew code"
+    },
+    {
+      "key": "fuel.empty",
+      "text": "E"
+    },
+    {
+      "key": "where.fuel",
+      "text": "Red can · FLOOR 2"
     }
   ]
 }

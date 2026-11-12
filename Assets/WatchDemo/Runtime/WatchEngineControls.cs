@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 using LighthouseKeepers.Gameplay.Interaction;
@@ -40,17 +41,17 @@ namespace LighthouseKeepers.WatchDemo
             string[] names={"FUEL","PRIMED","CHOKE","RUNNING"};
             for(int i=0;i<4;i++){float x=.39f-i*.26f;parts.Text(names[i],names[i],transform,new Vector3(x,1.40f,.90f),.0032f);lamps[i]=parts.Part(names[i]+" lamp",transform,new Vector3(x,1.33f,.90f),new Vector3(.10f,.035f,.025f),parts.Green).GetComponent<Renderer>();}
             ExposeStarter();
-            Primer=Control("GRIP_PrimerBulb",new Vector3(.40f,1.06f,.88f),false);
-            Choke=Control("GRIP_ChokeControl",new Vector3(-.40f,1.06f,.88f),true);
-            parts.Text("Primer label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.16"),transform,new Vector3(.4f,.88f,.96f),.0028f);
+            Primer=Control("GRIP_PrimerBulb",new Vector3(.20f,1.18f,1.01f),false);
+            Choke=Control("GRIP_ChokeControl",new Vector3(-.20f,1.18f,1.01f),true);
+            parts.Text("Primer label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.16"),transform,new Vector3(.44f,1.04f,1.08f),.0034f);
             parts.Text("Choke label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.17"),transform,new Vector3(-.4f,.88f,.96f),.0028f);
             Filler=M2StationParts.Root("FUEL_FILLER",transform,new Vector3(-.38f,1.43f,.28f));
             parts.Part("Filler collar",Filler,Vector3.zero,new Vector3(.13f,.025f,.13f),parts.Brass,PrimitiveType.Cylinder);
             parts.Text("Filler label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.18"),transform,new Vector3(-.38f,1.49f,.40f),.003f);
-            parts.Part("Fuel gauge face",transform,new Vector3(.69f,1.34f,.67f),new Vector3(.20f,.23f,.04f),parts.Dark);
-            gaugeNeedle=M2StationParts.Root("Fuel gauge needle pivot",transform,new Vector3(.69f,1.30f,.697f));
+            parts.Part("Fuel gauge face",transform,new Vector3(.62f,1.40f,1.01f),new Vector3(.20f,.23f,.04f),parts.Dark);
+            gaugeNeedle=M2StationParts.Root("Fuel gauge needle pivot",transform,new Vector3(.62f,1.36f,1.037f));
             parts.Part("Fuel gauge needle",gaugeNeedle,new Vector3(0,.05f,0),new Vector3(.007f,.10f,.007f),parts.Brass);
-            gaugeText=parts.Text("Fuel level","",transform,new Vector3(.69f,1.24f,.70f),.0028f);
+            gaugeText=parts.Text("Fuel level","",transform,new Vector3(.62f,1.30f,1.04f),.0028f);
             FuelCan=M2CarryProp.Create(parts,transform,"FUEL_CAN",new Vector3(1.02f,.24f,.20f),false);
             sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.4f;sound.maxDistance=12;
             cough=Resources.Load<AudioClip>("S4Audio/cough");clunk=Resources.Load<AudioClip>("S4Audio/breaker");
@@ -63,19 +64,19 @@ namespace LighthouseKeepers.WatchDemo
             starterHandle=starter.transform;
             // The new lamp panel occluded the original recessed handle from standing height.
             // Move the whole existing interaction forward; retain its rotation, grip anchors and 30 cm travel.
-            starterHandle.position=transform.TransformPoint(new Vector3(.05f,1.15f,1.02f));
+            starterHandle.position=transform.TransformPoint(new Vector3(-.62f,1.18f,1.06f));
             starter.ConfigureFoundation(starterHandle);
             var bar=starterHandle.Find("Control grip");
             var size=bar.GetComponent<MeshFilter>().sharedMesh.bounds.size;
             // This authored cylinder has baked dimensions and a 90-degree local rotation.
             bar.localPosition=Vector3.zero;bar.localScale=new Vector3(.035f/size.x,.14f/size.y,.035f/size.z);
             var renderer=bar.GetComponent<Renderer>();renderer.sharedMaterial=parts.Brass;
-            var colour=new Color(.95f,.75f,.27f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.24f);renderer.SetPropertyBlock(block);
+            var colour=new Color(.95f,.75f,.27f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",State.Director==null?colour*.24f:Color.black);renderer.SetPropertyBlock(block);
             var oldStem=starterHandle.Find("Control stem");if(oldStem)oldStem.gameObject.SetActive(false);
-            var housing=parts.Part("Starter recoil housing",transform,new Vector3(.05f,1.15f,.91f),new Vector3(.13f,.06f,.13f),parts.Dark,PrimitiveType.Cylinder);
+            var housing=parts.Part("Starter recoil housing",transform,new Vector3(-.62f,1.18f,.99f),new Vector3(.13f,.06f,.13f),parts.Dark,PrimitiveType.Cylinder);
             housing.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Text("Starter pull label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.19"),transform,new Vector3(.05f,.98f,1.04f),.0032f);
-            starterCordMount=new Vector3(.05f,1.15f,.97f);
+            starterCordMount=new Vector3(-.62f,1.18f,1.03f);
             starterCord=new GameObject("Starter recoil cord").AddComponent<LineRenderer>();starterCord.transform.SetParent(transform,false);
             starterCord.positionCount=2;starterCord.useWorldSpace=true;starterCord.widthMultiplier=.009f;starterCord.sharedMaterial=parts.Metal;
             starterCord.generateLightingData=true;starterCord.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;starterCord.receiveShadows=false;
@@ -84,26 +85,28 @@ namespace LighthouseKeepers.WatchDemo
         {
             var t=M2StationParts.Root(name,transform,position);var visual=M2StationParts.Root("Moving grip",t,Vector3.zero);
             if(choke){parts.Part("Choke lever",visual,new Vector3(0,0,.07f),new Vector3(.025f,.025f,.14f),parts.Metal);parts.Part("Choke bar",visual,new Vector3(0,0,.14f),new Vector3(.12f,.035f,.035f),parts.Brass);}
-            else parts.Part("Rubber primer bulb",visual,new Vector3(0,0,.07f),new Vector3(.065f,.09f,.065f),parts.Dark,PrimitiveType.Sphere);
-            var col=t.gameObject.AddComponent<BoxCollider>();col.isTrigger=true;col.center=new Vector3(0,0,.08f);col.size=new Vector3(.14f,.14f,.18f);
+            else parts.Part("Rubber primer bulb",visual,new Vector3(0,0,.07f),new Vector3(.105f,.145f,.105f),parts.Dark,PrimitiveType.Sphere);
+            var col=t.gameObject.AddComponent<BoxCollider>();col.isTrigger=true;col.center=new Vector3(0,0,.08f);col.size=choke?new Vector3(.14f,.14f,.18f):new Vector3(.18f,.20f,.20f);
             var x=t.gameObject.AddComponent<XRSimpleInteractable>();x.colliders.Add(col);t.gameObject.AddComponent<PhysicalGrip>().Configure(visual,HandPose.WrapGrip);
             var c=t.gameObject.AddComponent<EngineControl>();c.Initialize(this,choke,visual);return c;
         }
         public void Act(bool choke)
         {var action=choke?CoopAction.EngineChoke:CoopAction.EnginePrime;bool closed=choke&&!State.Engine.ChokeClosed;if(State.RemoteReplica&&State.Coop!=null)State.Coop.Send(action,0,closed);else watch.ApplyCommand(action,0,closed);if(clunk)sound.PlayOneShot(clunk,.25f);}
+        public void MoveChoke(bool closed)
+        {if(State.Failed)return;if(State.RemoteReplica&&State.Coop!=null)State.Coop.Send(CoopAction.EngineChoke,0,closed);else watch.ApplyCommand(CoopAction.EngineChoke,0,closed);if(clunk)sound.PlayOneShot(clunk,.25f);}
         void Refresh()
         {
             var e=State.Engine;
             for(int i=0;i<4;i++){bool on=i==0?e.EnoughFuel:i==1?e.Primed||physicalGuidance&&e.Settled:i==2?e.ChokeClosed||physicalGuidance&&e.Settled:e.Running;var col=on?new Color(.05f,.75f,.1f):new Color(.12f,.015f,.01f);if(i==0&&e.LowFuel)col=new Color(.9f,.24f,.015f);block.Clear();block.SetColor("_BaseColor",col);block.SetColor("_EmissionColor",on?col*.65f:Color.black);if(State.Director!=null)block.SetColor("_EmissionColor",Color.black);lamps[i].SetPropertyBlock(block);}
             RefreshPhysicalGuidance();
-            gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.9"),e.Fuel*100);
+            gaugeNeedle.localRotation=Quaternion.Euler(0,0,Mathf.Lerp(-60,60,e.Fuel));gaugeText.text=e.Fuel<=.000001f?KeeperStrings.Get("fuel.empty"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.9"),e.Fuel*100);
             if(e.CoughSerial!=lastCough&&cough)sound.PlayOneShot(cough,.5f);lastCough=e.CoughSerial;
         }
         void Update()
         {
             AnimateCounters();
             starterCord.SetPosition(0,transform.TransformPoint(starterCordMount));starterCord.SetPosition(1,starterHandle.position-starterHandle.forward*.025f);
-            if(State.Engine.LowFuel&&State.Engine.Running&&Time.time>=nextWarning){nextWarning=Time.time+8;if(cough)sound.PlayOneShot(cough,.2f);}
+            if(State.Engine.Running&&(State.FuelSputtering||State.Engine.LowFuel&&!State.IsPending(WatchState.GeneratorStation))&&Time.time>=nextWarning){nextWarning=Time.time+(State.FuelSputtering?1f:8f);if(cough)sound.PlayOneShot(cough,.2f);}
             bool held=FuelCan.Grab.isSelected||State.Coop?.RemoteHeld(FuelCan.Grab)==true;
             bool pouring=CanPour(held);
             ShowPour(pouring);
@@ -115,15 +118,44 @@ namespace LighthouseKeepers.WatchDemo
     [DefaultExecutionOrder(100)]
     public sealed class EngineControl : MonoBehaviour
     {
-        WatchEngineControls owner;bool choke;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;float squeezed;
+        WatchEngineControls owner;bool choke;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;readonly GripSqueezeCycle cycle=new();float pressure;Vector3 leverHandStart;float leverStart,leverPosition;bool requestedClosed;
         public void Initialize(WatchEngineControls parent,bool lever,Transform model){owner=parent;choke=lever;visual=model;}
         void Awake()
-        {grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-.014f);right=Palm(.014f);interaction.selectEntered.AddListener(Select);interaction.activated.AddListener(Squeeze);}
-        Transform Palm(float x){var t=M2StationParts.Root(x<0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.20"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.21"),visual,new Vector3(x,.012f,choke?.16f:.085f));t.localRotation=Quaternion.Euler(0,180,0);return t;}
-        void Select(SelectEnterEventArgs e){if(choke)owner.Act(true);}
-        void Squeeze(ActivateEventArgs e){if(!choke&&!(owner.State.Engine.Guided&&owner.State.Engine.Primed)){owner.Act(false);squeezed=Time.time+.18f;if(grip.HoldingHand)grip.HoldingHand.Pulse(.35f,.06f);}}
+        {grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-.014f);right=Palm(.014f);interaction.selectEntered.AddListener(Select);interaction.selectExited.AddListener(Release);}
+        Transform Palm(float x){var t=M2StationParts.Root(x<0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.20"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.21"),visual,new Vector3(choke?x:x*2,.012f,choke?.16f:.10f));t.localRotation=Quaternion.Euler(0,180,0);return t;}
+        void Select(SelectEnterEventArgs e)
+        {if(!choke)return;requestedClosed=owner.State.Engine.ChokeClosed;leverStart=leverPosition=requestedClosed?1:0;leverHandStart=transform.InverseTransformPoint(e.interactorObject.transform.position);}
+        void Release(SelectExitEventArgs e){cycle.Sample(0,false);pressure=0;}
+        float GripPressure()
+        {
+            if(!interaction.isSelected)return 0;
+            var hand=grip.HoldingHand;
+            if(hand&&InputDevices.GetDeviceAtXRNode(hand.Node).TryGetFeatureValue(CommonUsages.grip,out float analog))return Mathf.Clamp01(analog);
+            // Desktop/manual-XRI uses the same select value; trigger is never consulted.
+            foreach(var interactor in interaction.interactorsSelecting)
+                if(interactor is XRBaseInputInteractor input)return Mathf.Clamp01(input.selectInput.ReadValue());
+            return 0;
+        }
         void Update()
-        {if(choke)visual.localRotation=Quaternion.Slerp(visual.localRotation,Quaternion.Euler(owner.State.Engine.ChokeClosed?-30:30,0,0),1-Mathf.Exp(-20*Time.deltaTime));else visual.localScale=Vector3.one*(Time.time<squeezed?.75f:1);var hand=grip.HoldingHand;if(hand)hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);}
-        void OnDestroy(){if(interaction){interaction.selectEntered.RemoveListener(Select);interaction.activated.RemoveListener(Squeeze);}}
+        {
+            if(choke){
+                if(interaction.isSelected&&interaction.interactorsSelecting.Count>0){
+                    float travel=transform.InverseTransformPoint(interaction.interactorsSelecting[0].transform.position).y-leverHandStart.y;
+                    leverPosition=Mathf.Clamp01(leverStart+travel/.16f);
+                    bool next=leverPosition>=.85f?true:leverPosition<=.15f?false:requestedClosed;
+                    if(next!=requestedClosed){requestedClosed=next;owner.MoveChoke(next);if(grip.HoldingHand)grip.HoldingHand.Pulse(.4f,.06f);}
+                }else leverPosition=owner.State.Engine.ChokeClosed?1:0;
+                visual.localRotation=Quaternion.Slerp(visual.localRotation,Quaternion.Euler(Mathf.Lerp(30,-30,leverPosition),0,0),1-Mathf.Exp(-20*Time.deltaTime));
+            }
+            else {
+                pressure=GripPressure();
+                if(cycle.Sample(pressure,interaction.isSelected)&&!owner.State.Failed&&!owner.State.Engine.Primed){
+                    owner.Act(false);if(grip.HoldingHand)grip.HoldingHand.Pulse(.35f,.06f);
+                }
+                visual.localScale=Vector3.Lerp(visual.localScale,Vector3.Lerp(Vector3.one,new Vector3(.88f,.65f,.84f),pressure),1-Mathf.Exp(-22*Time.deltaTime));
+            }
+            var hand=grip.HoldingHand;if(hand)hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);
+        }
+        void OnDestroy(){if(interaction){interaction.selectEntered.RemoveListener(Select);interaction.selectExited.RemoveListener(Release);}}
     }
 }

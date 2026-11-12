@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "duration": 18.67,
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.SoloLobbyFlowTests.SoloButtonClosesAnExistingRunnerBeforeOpeningPractice",
+      "Status": "Passed",
+      "Duration": 12.5439993,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.SoloLobbyFlowTests.SoloButtonLoadsLabWithoutHostingAndReturnsToLobby",
+      "Status": "Passed",
+      "Duration": 6.0193593,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

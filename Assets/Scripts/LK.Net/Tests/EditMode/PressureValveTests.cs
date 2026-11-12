@@ -15,9 +15,9 @@ namespace LighthouseKeepers.Net.Tests
    var v=new PressureValveState(.55f);v.SetCrew(true);Assert.False(v.Allows(2));Assert.True(v.Hold(1,true));Assert.False(v.Allows(1));Assert.True(v.Allows(2));Assert.False(v.Hold(2,true));
    v.Tick(.3f);v.Hold(1,true);v.Tick(.3f);Assert.True(v.Allows(2));v.Tick(.3f);Assert.False(v.Reduced);Assert.True(v.Hold(2,true));Assert.True(v.Hold(2,false));Assert.False(v.Reduced);
   }
-  [Test] public void DisconnectExposesClampAndJoiningCannotKeepSoloLatch()
+  [Test] public void DisconnectImmediatelyAllowsSoloRepairAndRejoinRequiresTwoActors()
   {
-   var v=new PressureValveState(.55f);v.SetCrew(true);v.Hold(2,true);v.SetCrew(false);Assert.False(v.Reduced);Assert.True(v.Clamp());v.Tick(1000);Assert.True(v.Allows(0));v.SetCrew(true);Assert.False(v.Clamped);Assert.False(v.Allows(1));
+   var v=new PressureValveState(.55f);v.SetCrew(true);v.Hold(2,true);v.SetCrew(false);Assert.True(v.Reduced);Assert.False(v.Clamp());v.Tick(1000);Assert.True(v.Allows(0));v.SetCrew(true);Assert.False(v.Clamped);Assert.False(v.Allows(1));
    var guest=new PressureValveState(.55f){ReadOnly=true};Assert.False(guest.Clamp());Assert.False(guest.Hold(1,true));Assert.True(guest.Apply(true,false,2));guest.Tick(10);Assert.AreEqual(2,guest.Holder);Assert.False(guest.Apply(true,true,2));
   }
   [Test] public void ReleasePreservesBoltProgressBlocksSameKeeperAndReplicates()

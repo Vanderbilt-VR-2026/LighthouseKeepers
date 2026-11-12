@@ -41,9 +41,38 @@ namespace LighthouseKeepers.Net.Tests
             System.Environment.SetEnvironmentVariable("LK_S4M2_DISABLED",oldM2);System.Environment.SetEnvironmentVariable("LK_IMMERSION_DISABLED",oldImmersion);SoloWatchSession.Cancel();WatchDayLaunch.RequestedDay=1;
             yield return null;
         }
+        [UnityTest] public IEnumerator ChokeRequiresArmTravelAndDetentsWithEitherHand()
+        {
+            var controls=Find("WatchEngineControls");var choke=Value<Component>(controls,"Choke");var interaction=choke.GetComponent<XRSimpleInteractable>();var state=Value<object>(watch,"State");var engine=Value<object>(state,"Engine");
+            foreach(var hand in hands){
+                var control=hand.transform.parent;var direct=hand.Direct;control.SetPositionAndRotation(choke.transform.position+choke.transform.forward*.14f,choke.transform.rotation);
+                direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)interaction);yield return new WaitForSeconds(.15f);
+                Assert.True(interaction.isSelected);Assert.False(Value<bool>(engine,"ChokeClosed"),"A grab alone must not flip the lever");
+                control.position+=Vector3.up*.04f;yield return new WaitForSeconds(.15f);Assert.False(Value<bool>(engine,"ChokeClosed"),"A partial pull must not cross the detent");
+                control.position+=Vector3.up*.13f;yield return new WaitForSeconds(.15f);Assert.True(Value<bool>(engine,"ChokeClosed"));
+                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;yield return new WaitForSeconds(.15f);Assert.True(Value<bool>(engine,"ChokeClosed"),"Released detent must hold");
+                control.position=choke.transform.position+choke.transform.forward*.14f;direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)interaction);yield return new WaitForSeconds(.15f);Assert.True(Value<bool>(engine,"ChokeClosed"),"Re-grab must not flip");
+                control.position-=Vector3.up*.17f;yield return new WaitForSeconds(.15f);Assert.False(Value<bool>(engine,"ChokeClosed"));
+                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;control.position=Vector3.down*10;yield return null;
+            }
+        }
+        [UnityTest] public IEnumerator WristwatchFollowsVisualWristAndLightsOnlyWhenViewed()
+        {
+            yield return null;var mount=GameObject.Find("Keeper wristwatch").transform;
+            Assert.AreEqual("wrist",mount.parent.name);Assert.Greater(Vector3.Dot(mount.forward,mount.parent.up),.99f,"LCD must face out from the back of the wrist");
+            Assert.AreEqual(4,mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Watch side button"));
+            Assert.Less(mount.Find("Watch resin case").localScale.x,.06f);Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
+            var p=Find("PressurePresentation");var original=Field<Transform>(p,"head");var fake=new GameObject("Watch gaze test").transform;p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,fake);
+            fake.position=mount.position+mount.forward*.30f;yield return null;Assert.True(Value<bool>(p,"WatchBacklight"));
+            fake.position=mount.position-mount.forward*.30f;yield return null;Assert.False(Value<bool>(p,"WatchBacklight"));p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,original);Object.Destroy(fake.gameObject);
+            Assert.That(GameObject.Find("Watch night").GetComponent<TextMesh>().text,Does.StartWith("N"));Assert.That(GameObject.Find("Time to dawn").GetComponent<TextMesh>().text,Does.Match(@"^\d{2}:\d{2}$"));
+            var text=GameObject.Find("Wrist current objective").GetComponent<TMPro.TMP_Text>();Assert.IsNotEmpty(text.text);text.ForceMeshUpdate();Assert.LessOrEqual(text.textInfo.lineCount,2);
+        }
         [UnityTest] public IEnumerator ObjectiveRecallIsImmediateTransientAndDoesNotChangeSharedRadio()
         {
-            var hud=Find("ObjectiveHud");var radio=Find("HarborRadio");yield return null;
+            var hud=Find("ObjectiveHud");var radio=Find("HarborRadio");
+            // Let the initial objective-change placement finish before testing recalled lazy-follow.
+            yield return new WaitForSecondsRealtime(.2f);
             radio.enabled=false;
             radio.GetType().GetMethod("Play",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(radio,new object[]{1,100,100f});
             int serial=Value<int>(radio,"Serial"),cue=Value<int>(radio,"Cue");
@@ -229,10 +258,8 @@ namespace LighthouseKeepers.Net.Tests
         {
             var pipe=Find("WatchPipeRepair");var grab=Field<XRGrabInteractable>(pipe,"wrench");var jaw=Field<Transform>(pipe,"jaw");
             var state=Value<object>(Value<object>(watch,"State"),"Pipe");
-            // This test isolates arm motion; the accepted solo clamp is its prerequisite.
-            // The separate pressure-valve tests exercise physical grip and crew release/expiry.
-            var pressure=Value<LighthouseKeepers.Core.PressureValveState>(Value<object>(watch,"State"),"Pressure");
-            if(pressure!=null)Assert.True(pressure.Clamp(),"Solo pressure prerequisite");
+            // Solo must repair directly, without touching a valve or clamp. Crew hold is tested separately.
+            Assert.True(Value<bool>(Value<object>(watch,"State"),"PipeReady"),"Solo repair unexpectedly needs a clamp");
             var socket=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="ImmersionWrenchSocket");
             var recovery=grab.GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="WatchWrenchReturn");
             var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();

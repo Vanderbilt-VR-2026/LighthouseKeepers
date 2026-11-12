@@ -12,7 +12,7 @@ Read left to right: arrival → first problem → recovery → escalation → pa
 
 | Night | Intended tension | New lesson | Payoff |
 |---|---|---|---|
-| 1 · The Leak | ▁▂▃▁▂▃▁ | Grip, clamp, ratchet, then rest | A safe preview ship shows why the light matters |
+| 1 · The Leak | ▁▂▃▁▂▃▁ | Grip, ratchet, then rest | A safe preview ship shows why the light matters |
 | 2 · Blackout | ▁▂▄▂▃▄▁ | Restore power; read the generator information together | First passage whose safety depends on the crew |
 | 3 · The Warning | ▁▃▂▄▂▅▁ | Relay the radio code and warn a ship | Two passages; the broadcast extends the second window |
 | 4 · Everything Breaks | ▂▄▂▄▃▅▁ | Maintain fuel, allocate power, clean the lens | Closely spaced ships reward anticipation |
@@ -25,7 +25,7 @@ Read left to right: arrival → first problem → recovery → escalation → pa
 - Calm opening 30–60 seconds; 10–20 seconds of storm-only breathing room after fixes. Only the finale intentionally stacks faults inside ten seconds.
 - Ships are visible and audible before their danger window. Beacon loss is fatal only during or approaching an active passage; outside that period it is a warning. Every loss names its cause and supports retry.
 - A completed job is not the same as surviving the watch. Morning reports and the sleep gate must account for scheduled passages and the dawn transition, with an explicit next instruction while waiting.
-- Solo retains local information and the valve clamp. Crew information is deliberately separated, with each keeper told their own role. Existing handheld radios provide communication across floors.
+- Solo retains local information and repairs directly with the wrench; the removed clamp must not return. Crew information is deliberately separated, with each keeper told their own role. Existing handheld radios provide communication across floors.
 - Will owns avatar meshes/rigging and the sky. Reuse his appearance prefabs and existing poses; do not alter his art. A mirror is optional and must earn its device GPU cost; no unprofiled continuous reflection camera.
 - Doors should respond to the hand/forearm or a physical handle, with bounded hinges and host-authoritative motion. They must preserve tutorial access, clear routes, rain zones and rejoin state.
 - Ship art uses emissive windows/mast lights, bounded smoke/spray, a mesh beam and a distant light-cluster LOD. No extra realtime ship lights.

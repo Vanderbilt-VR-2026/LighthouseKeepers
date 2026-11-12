@@ -266,7 +266,7 @@ namespace LighthouseKeepers.Networking
                 if (state.Capacity > ShipWorld.MaximumCrewSize || state.Players.Count < 1 || state.Players.Count > ShipWorld.MaximumCrewSize || runner.ActivePlayers.Count() != state.Players.Count)
                     return Fail("This test supports up to two connected keepers.");
                 minimumPlayers = 1;
-                requireAllReady = true;
+                requireAllReady = rehearsal;
             }
             int index = -1;
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)

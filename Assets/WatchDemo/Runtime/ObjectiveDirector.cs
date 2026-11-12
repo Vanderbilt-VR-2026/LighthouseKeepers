@@ -91,7 +91,7 @@ namespace LighthouseKeepers.WatchDemo
             return beacon==null?KeeperStep.None:!beacon.Ignited?KeeperStep.BeaconLight:!beacon.Aligned?KeeperStep.BeaconAlign:beacon.Soot>.5f?KeeperStep.BeaconWipe:KeeperStep.None;
         }
         KeeperStep PipeStep(bool held)
-        {if(!held)return KeeperStep.GrabWrench;if(state.Pressure!=null){if(!state.Pressure.CrewRequired&&!state.Pressure.Clamped)return KeeperStep.ClampValve;if(state.Pressure.CrewRequired)return KeeperStep.TightenBolt;}return state.Pipe.ActiveBolt>=0?(KeeperStep)((int)KeeperStep.BoltA+state.Pipe.ActiveBolt):KeeperStep.None;}
+        {if(!held)return KeeperStep.GrabWrench;if(state.Pressure?.CrewRequired==true)return KeeperStep.TightenBolt;return state.Pipe.ActiveBolt>=0?(KeeperStep)((int)KeeperStep.BoltA+state.Pipe.ActiveBolt):KeeperStep.None;}
         KeeperStep Step(int job,bool held)=>Available(job)?StepForStation(state.Definition.tasks[job].stationId,held):KeeperStep.None;
         KeeperStep BreakerStep(PowerCircuit desired)
         {
@@ -115,6 +115,12 @@ namespace LighthouseKeepers.WatchDemo
             return step==KeeperStep.Sleep?"BED":"";
         }
         public static int Floor(KeeperStep step){string id=Job(step);return id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
+        public static string Location(KeeperStep step)
+        {
+            string key=step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
+            return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
+        }
+        public static string Button(KeeperStep step)=>step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
         public static int Hint(KeeperStep step){string id=Job(step);return id==WatchState.PipeStation?7:id==WatchState.GeneratorStation?8:id=="BREAKER"?9:id==WatchState.BeaconStation?10:id==WatchState.RadioStation?11:id=="BED"?12:0;}
         public string StationInstruction(string station) {
             if(Job(First)==station)return Instruction(First);

@@ -33,6 +33,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var anchor=GameObject.Find("STN_GENERATOR_PANEL");
             if(!anchor)throw new System.InvalidOperationException("Lab is missing its F2 generator panel anchor");
+            anchor.transform.SetPositionAndRotation(new Vector3(3.67f,3.3f,0),Quaternion.Euler(0,270,0));
             var root=new GameObject("S4 breaker panel");root.SetActive(false);
             root.transform.SetParent(anchor.transform,false);
             var panel=root.AddComponent<WatchPowerPanel>();panel.watch=watch;panel.Build();root.SetActive(true);return panel;

@@ -18,7 +18,7 @@ namespace LighthouseKeepers.Net.Tests
    var cat=Resources.Load("M3Campaign");Assert.NotNull(cat);var defs=cat.GetType().GetField("nights").GetValue(cat);
    if(demo){var d=cat.GetType().GetField("demo").GetValue(cat);var a=Array.CreateInstance(d.GetType(),1);a.SetValue(d,0);defs=a;}
    var state=Activator.CreateInstance(T("WatchState"),defs,day,Resources.Load<S4Tuning>("S4Tuning"),Resources.Load<S4M2Tuning>("S4M2Tuning"),Resources.Load<ImmersionTuning>("ImmersionTuning"));
-   if(crew)Set(state,"Coop",new Crew());return state;
+   if(crew){Set(state,"Coop",new Crew());Call(state,"SetKeeperCount",2);}return state;
   }
   void Tick(object s,double t)=>Call(s,"Tick",t);
   void Start(object s)
@@ -33,6 +33,17 @@ namespace LighthouseKeepers.Net.Tests
    var s=New(day);Assert.True(Get<bool>(s,"Campaign"));Assert.False(Get<bool>(s,"Day3Balance"));Assert.False(Get<bool>(s,"Repaired"));Assert.True(Get<bool>(s,"BeaconShining"));
    Assert.AreEqual(1,Get<int>(s,"CampaignFaultMask"));Tick(s,30);Assert.False((bool)Call(s,"Sleep"));
    Call(s,"CompleteRepair");Tick(s,50);Call(s,"Retry");Assert.Zero(Get<double>(s,"Elapsed"));Assert.AreEqual(1,Get<int>(s,"CampaignFaultMask"));Assert.False(Get<bool>(s,"Repaired"));
+  }
+  [TestCase(1,false)][TestCase(2,false)][TestCase(3,true)][TestCase(4,true)][TestCase(5,true)]
+  public void ValveUsesCurrentRosterAndAuthoredNightWithoutRestoringSoloClamp(int day,bool required)
+  {
+   var s=New(day);var pressure=Get<object>(s,"Pressure");
+   Assert.True(Get<bool>(s,"PipeReady"));Assert.False(Get<bool>(pressure,"CrewRequired"));
+   Call(s,"SetKeeperCount",2);Assert.AreEqual(required,Get<bool>(pressure,"CrewRequired"));
+   Call(s,"Retry");Assert.AreEqual(required,Get<bool>(pressure,"CrewRequired"));
+   Call(s,"SetKeeperCount",1);Assert.True(Get<bool>(s,"PipeReady"));Assert.False(Get<bool>(pressure,"CrewRequired"));
+   var guest=New(day);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(s,"Capture",.1f)));
+   Call(guest,"SetKeeperCount",2);Assert.False(Get<bool>(Get<object>(guest,"Pressure"),"CrewRequired"));
   }
   [Test] public void PipeCompletionWaitsForOpeningThenEngineThenUpperJobsWithBreathers()
   {

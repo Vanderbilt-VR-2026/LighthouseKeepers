@@ -2,8 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace LighthouseKeepers.WatchDemo
 {
+ [RequireComponent(typeof(CanvasRenderer))]
  public sealed class ObjectiveLineIcon:Graphic
  {
+  public override Texture mainTexture=>Texture2D.whiteTexture;
   string kind;public void Set(string value){if(kind==value)return;kind=value;SetVerticesDirty();}
   void Stroke(VertexHelper v,Vector2 a,Vector2 b){var n=new Vector2(-(b-a).y,(b-a).x).normalized*1.4f;int i=v.currentVertCount;v.AddVert(a-n,color,Vector2.zero);v.AddVert(a+n,color,Vector2.zero);v.AddVert(b+n,color,Vector2.zero);v.AddVert(b-n,color,Vector2.zero);v.AddTriangle(i,i+1,i+2);v.AddTriangle(i,i+2,i+3);}
   void Path(VertexHelper v,params Vector2[] p){for(int i=1;i<p.Length;i++)Stroke(v,p[i-1],p[i]);}

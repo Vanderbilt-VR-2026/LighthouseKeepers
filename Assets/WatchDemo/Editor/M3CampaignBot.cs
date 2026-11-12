@@ -20,7 +20,7 @@ namespace LighthouseKeepers.Editor
   }
   static Result One(DayDefinition[] all,DayDefinition day,bool crew)
   {
-   var s=new WatchState(all,day.day,S4Tuning.Current,S4M2Tuning.Current,ImmersionTuning.Current);if(crew)s.Coop=new Crew();s.Pressure?.SetCrew(crew&&s.RequiresCrewValve);
+   var s=new WatchState(all,day.day,S4Tuning.Current,S4M2Tuning.Current,ImmersionTuning.Current);if(crew){s.Coop=new Crew();s.SetKeeperCount(2);}s.Pressure?.SetCrew(crew&&s.RequiresCrewValve);
    var r=new Result{night=day.scenario.id,mode=crew?"duo":"solo"};var workers=crew?new[]{new Worker{actor=1},new Worker{actor=2}}:new[]{new Worker{actor=1}};
    int wrench=0;float water=.02f;const float dt=.1f;double clock=0;
    bool Work(KeeperStep k)=>k!=KeeperStep.None&&k!=KeeperStep.HoldValve&&k!=KeeperStep.Sleep&&k!=KeeperStep.Complete&&k!=KeeperStep.Lost;

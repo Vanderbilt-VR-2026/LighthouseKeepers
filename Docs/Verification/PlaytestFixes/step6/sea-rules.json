@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "duration": 0.1,
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.SeaRecoveryTests.CrewOnlyReturnsFallenKeeperAfterTenSeconds",
+      "Status": "Passed",
+      "Duration": 0.0355096,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.SeaRecoveryTests.DisconnectDuringRecoveryStillReturnsSurvivor",
+      "Status": "Passed",
+      "Duration": 0.0001861,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.SeaRecoveryTests.InteriorAndGalleryAreSafeButSeaAndIslandEscapeAreNot",
+      "Status": "Passed",
+      "Duration": 0.000161,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.SeaRecoveryTests.SoloSeaFallLosesAndFreshNightResets",
+      "Status": "Passed",
+      "Duration": 8.45e-05,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}
