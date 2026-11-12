@@ -95,6 +95,7 @@ public static class QuestQualityBaseline
             if(t.mipmapEnabled&&t.anisoLevel>=aniso&&a.overridden&&a.format==format)continue;
             t.mipmapEnabled=true;t.anisoLevel=aniso;a.overridden=true;a.format=format;t.SetPlatformTextureSettings(a);t.SaveAndReimport();changed++;
         }
+        QuestQualityLighting.ApplySceneSettings();
         AssetDatabase.SaveAssets();Audit("after.txt");
         Debug.Log($"QUEST_QUALITY_APPLIED: QuestPipeline MSAA4 scale1 Vulkan; textures changed={changed}; device GPU pending.");
     }

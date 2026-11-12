@@ -1,30 +1,34 @@
 # Sprint 5 checkpoint — November 12
 
-Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89 (base `sprint-4` / PR #88). The new Sprint5-Master.md supersedes older M3 ordering below. Main is untouched.
+Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR #88 was merged by a teammate into main at `14634af`; bring that merge into this branch and retarget #89 to main. The new Sprint5-Master.md, including §14, supersedes the historical M3 ordering below.
 
 ## Current work
 
-- Full updated brief, including §14.0–14.13, copied and committed. Quality steps tracked by #90 and #127; all 40 Sprint 5 issues are in milestone Sprint 5 (December 3) and the PR checklist.
-- **1.0 IN PROGRESS:** active Android QuestPipeline audited (was MSAA2/scale1). Menu, tests, on-tile grade and lighting rebake are being implemented. No measured Quest performance claim.
-- Pre-change EditMode: 393/394; the legacy valve retry test expects a two-player roster it never sets. Full PlayMode stalled in retired BootstrapIntegrationTests, stopped after ~12 minutes; original log preserved. Graphics Nights1–3 baseline underway.
-- Repo cleanup: PRs88/89 replace old stacks. Eight old remote branches archive-tagged and ancestry-verified before deletion. Remote now has main plus sprint-1..5. Sprint4 release build/publication and final cleanup report still pending.
+- **1.0 implementation complete; device acceptance OPEN (#90):** active Android QuestPipeline MSAA4/scale1, Vulkan, fixed FFR0.5, on-tile grade, mipmaps/ASTC; one-click menu includes fixed-scene baked lighting/static/probe setup. Progressive GPU powered/emergency bakes: two maps / 4.93 MiB each, 444 probes. See QuestQuality.md.
+- Full EditMode 396/396 pass; expanded quality checks 3/3 pass. Before/after actual-XRI graphics Nights1–3 pass into Night4, zero logged errors; inspected images in Docs/Verification/S5/Quality. Focused PlayMode 19/23; four failures are being compared on pre-quality 785f2d1 before classifying them. Pre-change full PlayMode stalled in retired Bootstrap tests; not a full-suite pass.
+- Clean-source `6c13885` APK built and published as an explicitly unfinished Sprint5 preview. Public download hash verified. Ships/horror/lantern/progression are not finished. No gameplay/network changes in quality pass: **LK-M3-CAMPAIGN2 / v22**.
+- Grading cleanup complete: exactly main and sprint-1..5 remotely; eight old branch tips archived and containment verified. Sprint4 release `sprint4-final` and Sprint5 prerelease `sprint5-preview-20261112` are public. Sprint5 milestone December3; 40 implementation/ownership issues (GitHub milestone totals also count PRs).
 
 ## Next in order
 
-Finish #90 (apply menu, quality tests, powered/emergency bake, graphics regression, APK); then finish grading release publication. Continue #91 design documents, #92 TensionDirector, #93 fear system; read the relevant master section each phase. Never jump to old M3 ship-first order.
+Finish current quality verification (before-comparison PlayMode, fresh two-Mac regression) and publish evidence. Commit #91 design/feel/sound skeletons prepared in artifacts/s5/foundation. Then #92 TensionDirector and #93 fear system; re-read the relevant master sections before each phase. Do not jump to historical ship-first instructions.
 
 ## DEVICE CHECKS PENDING
 
-ADB currently reports no devices. Install latest exact-source APK when one returns; **do not launch** without request. OVR Metrics/Profiler: 72Hz, peak-storm GPU≤11ms, CPU main≤9ms; compare MSAA4 to prior2, scale1.0, fixed foveation0.5, on-tile Render Graph passes, text readability and powered/blackout bake. Ship/lantern/Drowned worst-case profiling only after those systems exist. All previously listed human co-op/voice/comfort checks remain pending.
+ADB reports no devices. Install latest exact-source APK when one returns; **do not launch** without request. Latest quality APK: `Builds/LighthouseKeepers-Sprint5-Quality-6c13885.apk`, SHA-256 `20c12e9c6c63efe820a11ff31966a9204ec310af2246b666e2f86ca16c2e692b`.
+
+OVR Metrics/Profiler: 72Hz, peak-storm GPU≤11ms, CPU main≤9ms; compare MSAA4 to prior2, scale1.0, fixed foveation0.5, on-tile Render Graph passes, text and powered/blackout bake. No Editor FPS substitutes for these measurements. Human two-way voice, controller comfort, offline Wi-Fi-off and current-build two-Quest play remain pending. Ship/lantern/Drowned worst-case profiling follows their implementation.
 
 ## Commands
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
 # Unity 6000.3.23f1; EditorPlaytestAudio mutes every play/test session.
-# Menu: Lighthouse Keepers/Apply Quest Quality Baseline
-# Menu: Lighthouse Keepers/Quality/Rebake Quest Lighting
-# New evidence: artifacts/s5/quality/ and artifacts/s5/before/
+# Menu: Lighthouse Keepers/Apply Quest Quality Baseline (includes Lab lighting/probe settings)
+# Menu: Lighthouse Keepers/Quality/Rebake Quest Lighting (regenerates both variants)
+python3 artifacts/s5/quality/replay.py  # actual-XRI Nights1–3; closes its muted Editor afterward
+# Fresh transport: artifacts/s5/quality/crew.py (two muted, matching-source Editors required).
+# Evidence: artifacts/s5/quality/ and Docs/Verification/S5/Quality/
 ```
 
 ---

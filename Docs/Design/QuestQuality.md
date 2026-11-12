@@ -2,7 +2,7 @@
 
 Authority: Sprint5-Master.md §14, Unity 6000.3.23f1. Step 1.0 is tracked by #90; the final-content re-audit is #127. Network remains LK-M3-CAMPAIGN2 / snapshot 22: these are local rendering/import settings, with no new replicated fields.
 
-The menu is **Lighthouse Keepers → Apply Quest Quality Baseline**. It audits the active Android pipeline, applies the baseline and writes before/after inventories to `artifacts/s5/quality/`. The separate **Quality → Rebake Quest Lighting** menu rebuilds powered/emergency variants using the existing lighting controller. A build guard rejects settings drift rather than silently changing a release during packaging.
+The menu is **Lighthouse Keepers → Apply Quest Quality Baseline**. It audits the active Android pipeline, applies the baseline including Lab static/light/probe settings, and writes before/after inventories to `artifacts/s5/quality/`. The separate **Quality → Rebake Quest Lighting** menu rebuilds powered/emergency variants using the existing lighting controller. A build guard rejects settings drift rather than silently changing a release during packaging.
 
 ## Required settings and measured cost
 
@@ -59,10 +59,16 @@ The oil lanterns do not exist yet. Their two no-shadow per-pixel lights are an e
 
 Actual **Progressive GPU** bake on Apple M2 Pro (OpenCL device named in log). Powered: **2 maps, 4.93 MiB, 17.4 s**. Emergency: **2 maps, 4.93 MiB, 10.7 s**. **444 probes**, **2,227 static renderers**; existing reflection probes retained. Maps are asset-file sizes, not GPU resident memory. Evidence: `Docs/Verification/S5/Quality/bake.txt`. No CPU fallback used.
 
-Full EditMode after application: **396/396 pass**, including QualityBaselineTests. Before graphics Nights 1–3 pass through bed into Night 4, zero logged errors. After graphics/build are in progress. Nine texture imports were updated; four are avatar texture compression/aniso metadata only—the source pixels, body mesh, rig and materials remain unchanged. All 20 audited world texture imports have mipmaps and Android ASTC.
+Full EditMode after application: **396/396 pass**, including QualityBaselineTests. Before graphics Nights 1–3 pass through bed into Night 4, zero logged errors. After graphics Nights 1–3 also pass through bed into Night 4 with zero logged errors. Inspected matching F2 emergency views and the turned pipe bolt: layout/interaction preserved; new bake has slightly different bounce. These desktop views do not exercise Android-only on-tile/FFR. The clean-source development APK built successfully from 6c13885 (IL2CPP ARM64), and APK manifest/CRC/signature checks pass. See `Docs/Verification/S5/Quality/`. Nine texture imports were updated; four are avatar texture compression/aniso metadata only—the source pixels, body mesh, rig and materials remain unchanged. All 20 audited world texture imports have mipmaps and Android ASTC.
 
 Pre-change full EditMode: 393/394. The valve retry test manually set pressure to crew mode without setting the watch's keeper count; retry correctly returned to one-player rules. Full PlayMode stalled in obsolete Bootstrap integration (log retained, run stopped). The current graphics replay is separately recorded; its old Day3Stage assertion and asynchronous lobby-start race are test setup issues, not reasons to rewrite gameplay.
 
 ## DEVICE CHECKS PENDING
 
 Install only when ADB returns; do not launch without the lead's request. With permission to run: wear Quest, set 72 Hz, attach OVR Metrics + Profiler, capture 25–60 s each at House, F1, F2, F4, gallery sea and peak storm. Record GPU/CPU, sustained app FPS, draws, triangles and audio voices. Inspect both-eye text, foveation edges, baked powered/blackout states, reflection glass and smoke. Check Frame Debugger/Render Graph for unexpected depth/opaque/classic-post passes and off-tile fallbacks. Later repeat with ship + Drowned + two lanterns at peak storm before step 9.6 can close.
+
+## Preview APK
+
+[Download the Sprint 5 development preview](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint5-preview-20261112), source `6c138852227c2c44204bfd0514592a2d6ec36eb4`. SHA-256: `20c12e9c6c63efe820a11ff31966a9204ec310af2246b666e2f86ca16c2e692b`. It is a task/quality preview, not the completed ship/horror campaign. No Quest is connected, so installation and on-device measurements remain pending.
+
+One-click scene preparation was rerun successfully with no serialized scene drift; expanded QualityBaselineTests **3/3 pass**, including baked fixed fixtures and route-probe coverage. This editor-only follow-up does not change the preview APK runtime content.

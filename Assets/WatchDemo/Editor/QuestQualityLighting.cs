@@ -12,6 +12,38 @@ using LighthouseKeepers.Presentation.Environment;
 
 public static class QuestQualityLighting
 {
+    const string LabPath="Assets/Scenes/Lab/LK_Lab_Environment.unity";
+    public static void ApplySceneSettings()
+    {
+        if(EditorApplication.isPlayingOrWillChangePlaymode)throw new InvalidOperationException("Apply Quest quality outside Play Mode.");
+        var previous=UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        var scene=UnityEngine.SceneManagement.SceneManager.GetSceneByPath(LabPath);bool opened=!scene.isLoaded;
+        if(opened)scene=EditorSceneManager.OpenScene(LabPath,OpenSceneMode.Additive);
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene);
+        try{PrepareActiveScene();EditorSceneManager.SaveScene(scene);}
+        finally{if(previous.IsValid()&&previous.isLoaded)UnityEngine.SceneManagement.SceneManager.SetActiveScene(previous);if(opened)EditorSceneManager.CloseScene(scene,true);}
+    }
+    static void PrepareActiveScene()
+    {
+        var scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        foreach(var r in scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<MeshRenderer>(true))) {
+            if(r.GetComponentInParent<Rigidbody>()||r.GetComponentInParent<Animator>())continue;
+            var flags=GameObjectUtility.GetStaticEditorFlags(r.gameObject);
+            if(r.gameObject.isStatic||r.name.StartsWith("SM_"))GameObjectUtility.SetStaticEditorFlags(r.gameObject,flags|StaticEditorFlags.ContributeGI);
+        }
+        var old=scene.GetRootGameObjects().FirstOrDefault(g=>g.name=="Quest quality route probes");if(!old){old=new GameObject("Quest quality route probes");UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(old,scene);}
+        var probe=old.GetComponent<LightProbeGroup>();if(!probe)probe=old.AddComponent<LightProbeGroup>();var points=new List<Vector3>();
+        // Stair route and outdoor House approach supplement existing room grids.
+        for(int floor=0;floor<4;floor++)for(int i=0;i<8;i++){float angle=(i*45+15)*Mathf.Deg2Rad;points.Add(new Vector3(Mathf.Cos(angle)*3.2f,floor*3.3f+1.4f,Mathf.Sin(angle)*3.2f));}
+        for(int i=0;i<10;i++)points.Add(new Vector3(-3.8f+i*.8f,1.3f,-11.8f));probe.probePositions=points.ToArray();
+        var lights=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<Light>(true));
+        foreach(var l in lights){l.lightmapBakeType=LightmapBakeType.Baked;l.shadows=LightShadows.Soft;}
+        var settings=Lightmapping.lightingSettings;
+        if(!settings)throw new Exception("Missing existing LightingSettings");
+        settings.lightmapper=LightingSettings.Lightmapper.ProgressiveGPU;settings.bakedGI=true;settings.realtimeGI=false;
+        settings.lightmapResolution=10;settings.lightmapMaxSize=1024;settings.directSampleCount=64;settings.indirectSampleCount=128;settings.environmentSampleCount=64;
+        EditorUtility.SetDirty(settings);
+    }
     [MenuItem("Lighthouse Keepers/Quality/Rebake Quest Lighting")]
     public static void Bake()
     {
@@ -20,27 +52,13 @@ public static class QuestQualityLighting
         var group=UnityEngine.Object.FindAnyObjectByType<BeaconAndMainsLightingGroup>();
         if(!group)throw new Exception("Missing existing lighting variant controller");
         group.enabled=false;
-        foreach(var r in UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Include,FindObjectsSortMode.None)) {
-            if(r.GetComponentInParent<Rigidbody>()||r.GetComponentInParent<Animator>())continue;
-            var flags=GameObjectUtility.GetStaticEditorFlags(r.gameObject);
-            if(r.gameObject.isStatic||r.name.StartsWith("SM_"))GameObjectUtility.SetStaticEditorFlags(r.gameObject,flags|StaticEditorFlags.ContributeGI);
-        }
-        var old=GameObject.Find("Quest quality route probes");if(!old)old=new GameObject("Quest quality route probes");
-        var probe=old.GetComponent<LightProbeGroup>();if(!probe)probe=old.AddComponent<LightProbeGroup>();var points=new List<Vector3>();
-        // Stair route and outdoor House approach supplement existing room grids.
-        for(int floor=0;floor<4;floor++)for(int i=0;i<8;i++){float angle=(i*45+15)*Mathf.Deg2Rad;points.Add(new Vector3(Mathf.Cos(angle)*3.2f,floor*3.3f+1.4f,Mathf.Sin(angle)*3.2f));}
-        for(int i=0;i<10;i++)points.Add(new Vector3(-3.8f+i*.8f,1.3f,-11.8f));probe.probePositions=points.ToArray();
+        PrepareActiveScene();
         var renderers=UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Include,FindObjectsSortMode.None)
             .Where(r=>(GameObjectUtility.GetStaticEditorFlags(r.gameObject)&StaticEditorFlags.ContributeGI)!=0)
             .OrderBy(r=>EnvironmentLightingBake.PathOf(r.transform),StringComparer.Ordinal).ToArray();
         var lights=UnityEngine.Object.FindObjectsByType<Light>(FindObjectsInactive.Include,FindObjectsSortMode.None);
         var original=lights.Select(l=>(l.enabled,l.color,l.intensity)).ToArray();
-        foreach(var l in lights){l.lightmapBakeType=LightmapBakeType.Baked;l.shadows=LightShadows.Soft;}
         var settings=Lightmapping.lightingSettings;
-        if(!settings)throw new Exception("Missing existing LightingSettings");
-        settings.lightmapper=LightingSettings.Lightmapper.ProgressiveGPU;settings.bakedGI=true;settings.realtimeGI=false;
-        settings.lightmapResolution=10;settings.lightmapMaxSize=1024;settings.directSampleCount=64;settings.indirectSampleCount=128;settings.environmentSampleCount=64;
-        EditorUtility.SetDirty(settings);
         var capture=typeof(EnvironmentLightingBake).GetMethod("Capture",BindingFlags.NonPublic|BindingFlags.Static);
         var variants=new List<EnvironmentLightingPreset>();var stats=new List<string>();Directory.CreateDirectory(QuestQualityBaseline.Output);
         foreach(bool powered in new[]{true,false}) {
