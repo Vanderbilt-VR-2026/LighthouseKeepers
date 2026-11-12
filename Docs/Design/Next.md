@@ -4,7 +4,7 @@ Work in the user's latest order: Step 1 PR #85 verification → merge into m3/fi
 
 - **1a DONE:** source audit confirms accepted generator/panel, edges/sea rules, physical inputs and simple lobby already implemented. See [audit](../Verification/RemainingPlan/Step1-Audit.md).
 - **1b AVAILABLE CHECKS DONE:** EditMode 372/372; full PlayMode 52 pass/31 fail, six affected fixtures rerun 6/6, leaving 25 inherited failures. Graphics Nights 1–3 and live two-Mac valve/radio/sleep/rejoin pass. Recessed counter bodies to clear a starter sightline. See [fresh evidence](../Verification/RemainingPlan/Step1/README.md). Device GPU/Wi-Fi/listening remain pending.
-- **1c NEXT:** package/install (no launch), refresh PR #85, then merge into M3. Steps 2–6 have not started this pass.
+- **1c APK/PR DONE:** Source **d5051f7**, APK `LighthouseKeepers-PR85-d5051f7.apk` (134,389,082 bytes). SHA-256 `74709cc32f6843aab60553c55ed52ee61be311ed31135fe0a90edce7f25da800`. Installed on Quest; installed APK hash matches. App left closed. PR #85 is ready for review. NEXT: merge s4/integrated into m3/five-nights, preserving campaign scheduling and latest physical controls/player-count rules. Steps 2–6 remain pending.
 
 ## DEVICE CHECKS PENDING
 
@@ -13,11 +13,11 @@ Real Quest Wi-Fi OFF lobby/start; wiring ≤0.3 ms GPU at matched views; worn mi
 ## Exact next commands
 
 ```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-# Current full suites write here:
-cat artifacts/reconcile/remaining-step1-tests/summary.json
-# After suites exit, open a muted graphics Editor and run the prepared replay:
-python3 artifacts/remaining/step1/solo.py
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+git status --short
+git merge --no-commit s4/integrated
+# Resolve latest physical controls/sea rules + campaign schedule, bump M3 protocol.
+# Keep EditorUtility.audioMasterMute=true; run M3 runtime + integrated regression checks.
 ```
 
 ---

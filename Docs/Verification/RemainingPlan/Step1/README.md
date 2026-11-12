@@ -22,3 +22,7 @@ python3 artifacts/remaining/step1/crew.py
 ```
 
 These local runners preserve the original raw results. The semicolon filter sent through Pipeline once matched zero tests and is excluded; command-line Unity filtering produced the recorded six-case result. A stalled GUI rerun was cancelled before using the batch runner.
+
+## Step 1c delivery
+
+Source **d5051f7**, APK `LighthouseKeepers-PR85-d5051f7.apk` (134,389,082 bytes). SHA-256 `74709cc32f6843aab60553c55ed52ee61be311ed31135fe0a90edce7f25da800`. Installed on Quest; installed APK hash matches. App left closed.
