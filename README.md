@@ -54,7 +54,7 @@ Sprint 2 installs separately as **Lighthouse Keepers S2**. Sprint 1, 3, 4 and 5 
 
 A physical crew ledger introduces the game; the House board and harbor master explain the watch. Equipment uses direct grabs, pulls, squeezes and tilts with visible progress. Short objective recall, captions and practical lights support clarity without an always-on panel.
 
-[Run/build in Unity](Docs/DEVELOPMENT.md) · [Install troubleshooting](Docs/INSTALL.md) · [Sprint 4 details](Docs/Sprint4.md) · [Team project board](https://github.com/orgs/Vanderbilt-VR-2026/projects/15)
+[Run/build in Unity](Docs/DEVELOPMENT.md) · [Install troubleshooting](Docs/INSTALL.md) · [Sprint 4 details](Docs/Sprint4.md)
 
 ## History
 
