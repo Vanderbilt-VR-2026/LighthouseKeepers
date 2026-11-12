@@ -1,6 +1,39 @@
+# Sprint 5 checkpoint — November 12
+
+Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89 (base `sprint-4` / PR #88). The new Sprint5-Master.md supersedes older M3 ordering below. Main is untouched.
+
+## Current work
+
+- Full updated brief, including §14.0–14.13, copied and committed. Quality steps tracked by #90 and #127; all 40 Sprint 5 issues are in milestone Sprint 5 (December 3) and the PR checklist.
+- **1.0 IN PROGRESS:** active Android QuestPipeline audited (was MSAA2/scale1). Menu, tests, on-tile grade and lighting rebake are being implemented. No measured Quest performance claim.
+- Pre-change EditMode: 393/394; the legacy valve retry test expects a two-player roster it never sets. Full PlayMode stalled in retired BootstrapIntegrationTests, stopped after ~12 minutes; original log preserved. Graphics Nights1–3 baseline underway.
+- Repo cleanup: PRs88/89 replace old stacks. Eight old remote branches archive-tagged and ancestry-verified before deletion. Remote now has main plus sprint-1..5. Sprint4 release build/publication and final cleanup report still pending.
+
+## Next in order
+
+Finish #90 (apply menu, quality tests, powered/emergency bake, graphics regression, APK); then finish grading release publication. Continue #91 design documents, #92 TensionDirector, #93 fear system; read the relevant master section each phase. Never jump to old M3 ship-first order.
+
+## DEVICE CHECKS PENDING
+
+ADB currently reports no devices. Install latest exact-source APK when one returns; **do not launch** without request. OVR Metrics/Profiler: 72Hz, peak-storm GPU≤11ms, CPU main≤9ms; compare MSAA4 to prior2, scale1.0, fixed foveation0.5, on-tile Render Graph passes, text readability and powered/blackout bake. Ship/lantern/Drowned worst-case profiling only after those systems exist. All previously listed human co-op/voice/comfort checks remain pending.
+
+## Commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+# Unity 6000.3.23f1; EditorPlaytestAudio mutes every play/test session.
+# Menu: Lighthouse Keepers/Apply Quest Quality Baseline
+# Menu: Lighthouse Keepers/Quality/Rebake Quest Lighting
+# New evidence: artifacts/s5/quality/ and artifacts/s5/before/
+```
+
+---
+
+## Historical checkpoints (new brief above takes precedence)
+
 # Full remaining plan — clean checkpoint after Step 2a (November 11)
 
-Branch `m3/five-nights`, draft PR #87. Nothing merged to main. Editor muted throughout; all test Editors closed. Quest was installed but **not launched**.
+Branch `sprint-5`, draft PR #89. Nothing merged to main. Editor muted throughout; all test Editors closed. Quest was installed but **not launched**.
 
 ## Done
 
@@ -65,7 +98,7 @@ Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](Generato
 2. DONE: mounted numbered generator control layout, fuel can on floor. Focused scene test and solo Night 2 pass; evidence step2/.
 3. DONE: physical choke detents; existing pour, starter and grip-pressure primer preserved. Both-hand focused test + graphics Night 2 pass. Evidence step3/.
 4. DONE: small dorsal left-wrist digital watch, corrected accessory orientation and gaze backlight. Focused recall/watch checks and Night 2 replay pass; inspected images step4/.
-5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on m3/five-nights, not dropped by a merge. Evidence step5/.
+5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on sprint-5, not dropped by a merge. Evidence step5/.
 6. DONE: source **c7b9a99** built successfully. Installed on the connected Quest; installed APK SHA-256 matches. App deliberately left closed.
 
 APK: `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk` (134,388,246 bytes). SHA-256 `757b9d404bb060355e7e9d06fcbd9092eb367bf56c108479859d027ef90dd0c2`. [Delivery/evidence](../Verification/GeneratorWatchWiring/README.md). PR #85 updated; no merge. All five implementation items are done; the listed device checks and separate missing-lobby-hands report remain. Do not resume M3/horror without the next request.
@@ -107,7 +140,7 @@ On `s4/integrated` / PR #85. Steps 5–6 and the simplified lobby are committed 
 
 ## Next job (not started)
 
-Merge verified Job 1 into `m3/five-nights`; re-bake its existing TowerWiring authoring for the moved power panel (do not duplicate the feed). Finish the M3 ship prerequisite, then the queued horror job. Full scope: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Stop here until asked to continue.
+Merge verified Job 1 into `sprint-5`; re-bake its existing TowerWiring authoring for the moved power panel (do not duplicate the feed). Finish the M3 ship prerequisite, then the queued horror job. Full scope: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Stop here until asked to continue.
 
 ## DEVICE CHECKS PENDING
 
@@ -134,7 +167,7 @@ cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
 
 # November 11 playtest fixes — ACTIVE CHECKPOINT
 
-Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `m3/five-nights` / PR #87. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
+Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `sprint-5` / PR #89. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
 
 ## Active checkpoint — Steps 5–6 and lobby implemented; final checks/build next
 
@@ -202,7 +235,7 @@ cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
 # STOP here: do not run am start or monkey without the lead asking.
 ```
 
-For M3, merge this branch into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `m3/five-nights`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #87 draft and never merge main.
+For M3, merge this branch into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `sprint-5`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #89 draft and never merge main.
 
 Raw runners/results: `artifacts/class-recall/`; `tests.py` (EditMode), `play-focused.py`, `play.py` (full PlayMode), `solo.py` (Night 1), `crew.py` (two-Mac smoke), `build.py` (exact-source Android build). Before repeating a run choose a fresh output directory; inspect the script's existing destination. Both Editors were stopped after the smoke test. Preserve the unrelated Quest prefab ray-width edit and `Docs/Verification/Immersion/pipe-lever/`.
 

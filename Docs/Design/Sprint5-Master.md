@@ -13,7 +13,7 @@ phase. Where it conflicts with older docs, this brief wins. Where it is silent, 
   checks — log every headset-only check in `Docs/Design/Next.md` → "DEVICE CHECKS PENDING". Stop only to
   ask ONE clear question when something truly needs a decision or an asset only I can get (e.g. Mixamo
   downloads); keep working on other steps meanwhile.
-- BRANCH: `m3/five-nights` (draft PR #87). If PR #85 has been merged into main, merge main into it first.
+- BRANCH: `sprint-5` (draft PR #89; renamed during grading cleanup). If Sprint 4 PR #88 has been merged into main, merge main into it first.
 - COMMIT + PUSH after every numbered step, with a clear message. Keep `Next.md` current (done / next /
   exact commands) so "continue" always resumes cleanly.
 - RULE ZERO: nothing that works may break — lobby (PLAY → HOST / PLAY ALONE / JOIN CREW, offline
@@ -322,29 +322,29 @@ dawn glimpse, dawn rescue variant. Use TTS placeholders until I record them with
 ---------------------------------------------------------------------------------------------------
 ## 13. PHASES (do in order; commit + push per step)
 
-**PHASE 1 — FOUNDATION:** 1.0 QUEST QUALITY BASELINE FIRST (§14): audit every setting, apply the
+**PHASE 1 — FOUNDATION:** 1.0 [#90](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/90) QUEST QUALITY BASELINE FIRST (§14): audit every setting, apply the
 baseline via an editor menu, add QualityBaselineTests, measure on device, write QuestQuality.md — so
-everything after is built and measured against the right settings. 1.1 Sprint5.md + FeelChecklist.md + SoundMap.md skeletons. 1.2 TensionDirector
-(unify storm/music/faults/fear). 1.3 Fear system + heartbeat audio/haptics + breathing (§6).
-**PHASE 2 — THE SHIP (§8).** 2.1 ship asset + path + lights. 2.2 danger window + pass/wreck + voice.
-2.3 beacon-dark-only-during-windows rule. 2.4 make the gallery moment huge.
-**PHASE 3 — SABOTAGE (§2).** 3.1 sabotage events + pre-sounds + evidence decals for every fault.
-3.2 new fixes: cable reconnect, lens wipe with handprints, fuel drained. 3.3 harbor master explanations.
-**PHASE 4 — LANTERN (§5).** 4.1 lantern + wick + oil + hooks. 4.2 oil can + watch bar. 4.3 Night 2 teach.
-**PHASE 5 — THE DROWNED (§7).** 5.1 assets + apparitions + outside ambience. 5.2 NavMesh + stalk/chase/
-search/retreat + sprint. 5.3 hiding spots. 5.4 stun/bell/flare + caught/revive. 5.5 Scare level option.
-**PHASE 6 — THE FIVE NIGHTS (§4).** 6.1 night data + Tension Director schedules. 6.2 timing pass with bots.
-6.3 Night 5 climax + dawn rescue + credits.
-**PHASE 7 — CO-OP SPLIT INFO (§10).** 7.1 gauge / telegram / bearing. 7.2 entity targets the lone keeper.
-**PHASE 8 — PROGRESSION + DETAILS.** 8.1 morning logbook report card (ships by name, peak water, close
-calls, encounters survived, keeper's grade). 8.2 continue from Night N + night select. 8.3 DEMO NIGHT
+everything after is built and measured against the right settings. 1.1 [#91](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/91) Sprint5.md + FeelChecklist.md + SoundMap.md skeletons. 1.2 [#92](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/92) TensionDirector
+(unify storm/music/faults/fear). 1.3 [#93](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/93) Fear system + heartbeat audio/haptics + breathing (§6).
+**PHASE 2 — THE SHIP (§8).** 2.1 [#94](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/94) ship asset + path + lights. 2.2 [#95](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/95) danger window + pass/wreck + voice.
+2.3 [#96](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/96) beacon-dark-only-during-windows rule. 2.4 [#97](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/97) make the gallery moment huge.
+**PHASE 3 — SABOTAGE (§2).** 3.1 [#98](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/98) sabotage events + pre-sounds + evidence decals for every fault.
+3.2 [#99](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/99) new fixes: cable reconnect, lens wipe with handprints, fuel drained. 3.3 [#100](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/100) harbor master explanations.
+**PHASE 4 — LANTERN (§5).** 4.1 [#101](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/101) lantern + wick + oil + hooks. 4.2 [#102](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/102) oil can + watch bar. 4.3 [#103](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/103) Night 2 teach.
+**PHASE 5 — THE DROWNED (§7).** 5.1 [#104](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/104) assets + apparitions + outside ambience. 5.2 [#105](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/105) NavMesh + stalk/chase/
+search/retreat + sprint. 5.3 [#106](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/106) hiding spots. 5.4 [#107](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/107) stun/bell/flare + caught/revive. 5.5 [#108](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/108) Scare level option.
+**PHASE 6 — THE FIVE NIGHTS (§4).** 6.1 [#109](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/109) night data + Tension Director schedules. 6.2 [#110](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/110) timing pass with bots.
+6.3 [#111](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/111) Night 5 climax + dawn rescue + credits.
+**PHASE 7 — CO-OP SPLIT INFO (§10).** 7.1 [#112](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/112) gauge / telegram / bearing. 7.2 [#113](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/113) entity targets the lone keeper.
+**PHASE 8 — PROGRESSION + DETAILS.** 8.1 [#114](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/114) morning logbook report card (ships by name, peak water, close
+calls, encounters survived, keeper's grade). 8.2 [#115](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/115) continue from Night N + night select. 8.3 [#116](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/116) DEMO NIGHT
 (6 min: pipe sabotage → blackout + lantern + restart → one apparition → one short chase ending in a hiding
-spot → one ship passing). 8.4 hand-operated doors (hinge, latch, synced). 8.5 one cracked House mirror
+spot → one ship passing). 8.4 [#117](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/117) hand-operated doors (hinge, latch, synced). 8.5 [#118](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/118) one cracked House mirror
 (Quest-cheap planar/RT within 2 m) showing Will's avatar.
-**PHASE 9 — 30-SECOND LOOP + AMBIENCE POLISH (§9, §11, §12).** 9.1 fill every FeelChecklist cell.
-9.2 art pass on new props/decals. 9.3 full sound pass + mix + loudness check. 9.4 new voice-line script.
-9.5 fix every NOT VERIFIED/known issue in Next.md; z-fighting/clipping sweep; text readability.
-9.6 QUALITY RE-AUDIT (§14): re-run the baseline audit (new props/materials/lights may have drifted —
+**PHASE 9 — 30-SECOND LOOP + AMBIENCE POLISH (§9, §11, §12).** 9.1 [#119](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/119) fill every FeelChecklist cell.
+9.2 [#120](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/120) art pass on new props/decals. 9.3 [#121](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/121) full sound pass + mix + loudness check. 9.4 [#122](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/122) new voice-line script.
+9.5 [#123](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/123) fix every NOT VERIFIED/known issue in Next.md; z-fighting/clipping sweep; text readability.
+9.6 [#127](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/127) QUALITY RE-AUDIT (§14): re-run the baseline audit (new props/materials/lights may have drifted —
 mipmaps, ASTC, aniso, static flags, probes, light modes), re-bake lighting, re-measure with OVR Metrics
 Tool at storm peak, use the §14.9 diagnosis table on anything over budget.
 **PHASE 10 — VERIFY + SHIP.** Tests: no new failures; first-timer bot wins Nights 1–5 solo + Demo;
@@ -353,7 +353,7 @@ caught/revive; lantern oil; Scare Off; save/continue; Wi-Fi-off offline; Quality
 Device: OVR Metrics Tool + Profiler attached to a development build — fps, CPU/GPU ms with ship +
 Drowned + storm peak in view; 72 fps; Render Graph Viewer shows no unexpected intermediate textures.
 Final QuestQuality.md table filled in (every §14 setting, its value, where it lives, measured cost). Screenshots you've looked at for every key moment. Build, install,
-push, update PR #87 (plain-English description + network version). FINAL REPORT: WORKS / NOT VERIFIED per
+push, update PR #89 (plain-English description + network version). FINAL REPORT: WORKS / NOT VERIFIED per
 phase, timing table, network version, assets I still need to provide, voice lines to record, and a
 20-step headset playtest checklist (Night 1 start → first sabotage → Night 2 blackout + lantern → first
 hunt + hiding → a ship passing from the gallery → a wreck → Demo Night).
