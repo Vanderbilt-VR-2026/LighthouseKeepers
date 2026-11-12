@@ -33,7 +33,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
             // solo envelope. These are explicitly NOT approved M3 timings until A4 measurements.
             p.soloSeconds=demo?360:n<=2?315:n==3?515:n==4?540:760;p.crewSeconds=demo?360:n<=2?315:n==3?510:n==4?510:730;
             if(n<3){p.soloFloodMultiplier=p.crewFloodMultiplier=1;}
-            var stations=new List<NightStationRule>{Station(WatchState.PipeStation,n>=3&&!demo?NightCrewVariant.HoldValve:NightCrewVariant.Local,"F1","clamp","tighten")};
+            var stations=new List<NightStationRule>{Station(WatchState.PipeStation,n>=3&&!demo?NightCrewVariant.HoldValve:NightCrewVariant.Local,"F1","tighten")};
             if(n>=2||demo)stations.Add(Station(WatchState.GeneratorStation,n==2||n==5?NightCrewVariant.RelayGenerator:NightCrewVariant.Local,"House","fuel","prime","choke-close","starter","choke-open","breakers"));
             if(n>=3&&!demo)stations.Add(Station(WatchState.RadioStation,NightCrewVariant.RelayRadioCode,"House","power","tune","code","transmit"));
             if(n>=3||demo)stations.Add(Station(WatchState.BeaconStation,n>=4?NightCrewVariant.RelayBeaconBearing:NightCrewVariant.Local,"F4 radio",n>=4?new[]{"ignite","align","wipe"}:new[]{"ignite","align"}));
@@ -45,6 +45,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
             if(n>=3&&!demo)faults.Add(Fault("broadcast",WatchState.RadioStation,0,NightEventGate.PowerRestored));
             if(n>=4){var low=Fault("fuel-low",WatchState.GeneratorStation,170,repeat:true);low.kind=NightFaultKind.LowFuel;low.fuelFraction=.18f;faults.Add(low);}
             if(n==5){faults.Add(Fault("final-outage",WatchState.GeneratorStation,225,repeat:true));faults.Add(Fault("final-rupture",WatchState.PipeStation,225,repeat:true));}
+            if(n==2&&!demo)faults.Find(f=>f.id=="outage").kind=NightFaultKind.FuelExhaustion;
             p.faults=faults.ToArray();
             p.ships=demo?new[]{Ship("demo-passage","m3.ship.maryEllen",210,75,55)}:
                 n==1?new[]{Ship("preview","m3.ship.maryEllen",180,75,45,true)}:

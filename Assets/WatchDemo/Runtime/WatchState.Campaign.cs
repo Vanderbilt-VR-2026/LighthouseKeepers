@@ -31,10 +31,20 @@ namespace LighthouseKeepers.WatchDemo
    try{schedule.Advance(Elapsed,Engine?.Settled??Power==PowerState.On,id=>!IsPending(id)&&IsDone(id),ApplyNightFault);}
    finally{advancingSchedule=false;}
   }
+  float ReplicaFuelDrain(DayDefinition day,WatchSnapshot snapshot)
+  {
+   if(snapshot.day3Stage>0)return Tuning.day3FuelDrainPerSecond;
+   var fuel=day.scenario?.configured==true?Array.Find(day.scenario.faults,f=>f.kind==NightFaultKind.FuelExhaustion):null;
+   if(!snapshot.nightTwoOutage&&fuel!=null)return day.scenario.arrivalFuelFraction/UnityEngine.Mathf.Max(1,fuel.atSeconds);
+   if(!snapshot.campaignEnabled&&Master&&Master.onboarding&&Master.nightTwoFuelFailure&&snapshot.day==2&&!snapshot.nightTwoOutage)return day.initialFuelFraction/UnityEngine.Mathf.Max(1,Master.nightTwoOutageSeconds);
+   return day.fuelDrainPerSecond;
+  }
+  NightFault CampaignFuelFault=>Campaign?Array.Find(Scenario.faults,f=>f.kind==NightFaultKind.FuelExhaustion):null;
   void ApplyNightFault(NightFault f)
   {
    faults.Add(f.stationId);
-   if(f.kind==NightFaultKind.LowFuel){Engine?.SetFuel(Math.Min(Engine.Fuel,f.fuelFraction));}
+   if(f.kind==NightFaultKind.FuelExhaustion){ /* Physical fuel exhaustion already stopped the engine. */ }
+   else if(f.kind==NightFaultKind.LowFuel){Engine?.SetFuel(Math.Min(Engine.Fuel,f.fuelFraction));}
    else if(f.stationId==PipeStation)Pipe.Reset(unchecked(++repairSeed),false);
    else if(f.stationId==GeneratorStation)Engine?.Reset(Definition.initialFuelFraction,Definition.fuelDrainPerSecond,false);
    else if(f.stationId==BeaconStation)Beacon?.Reset(Definition.beaconInitiallyLit,Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,Definition.beaconInitialSoot,Definition.beaconSootPerSecond);

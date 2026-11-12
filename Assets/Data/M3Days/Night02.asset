@@ -102,6 +102,7 @@ MonoBehaviour:
     - id: outage
       stationId: STN_GENERATOR
       afterStationId: STN_PIPE_LEAK
+      kind: 2
       gate: 0
       atSeconds: 75
       graceSeconds: 60
@@ -109,7 +110,6 @@ MonoBehaviour:
     stations:
     - stationId: STN_PIPE_LEAK
       activeSteps:
-      - clamp
       - tighten
       crewVariant: 0
       informationSite: F1

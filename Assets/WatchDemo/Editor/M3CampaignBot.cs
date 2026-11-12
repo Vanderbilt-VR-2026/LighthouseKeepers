@@ -11,6 +11,13 @@ namespace LighthouseKeepers.Editor
   sealed class Worker {public int actor,floor,targetFloor;public KeeperStep step;public double ready,start;public bool busy;}
   [Serializable] public sealed class Result {public string night,mode;public bool passed;public double seconds,spare,bedTravelSeconds;public float peakWater;public string cause;public List<string> steps=new();}
   [Serializable] public sealed class Report {public List<Result> runs=new();}
+  public static void RunBatch()
+  {
+   string path=System.Environment.GetEnvironmentVariable("LK_M3_TIMING_OUTPUT");
+   if(string.IsNullOrEmpty(path))throw new ArgumentException("Set LK_M3_TIMING_OUTPUT to the report path.");
+   var report=(Report)Run(path);
+   foreach(var result in report.runs)if(!result.passed)throw new InvalidOperationException(result.night+" "+result.mode+": "+result.cause);
+  }
   public static object Run(string path)
   {
    EditorUtility.audioMasterMute=true;var c=Resources.Load<FiveNightCatalog>("M3Campaign");var report=new Report();

@@ -67,6 +67,17 @@ namespace LighthouseKeepers.Net.Tests
    var demo=New(3,false,true);Assert.AreEqual(360,Get<double>(demo,"Duration"));Tick(demo,75);Assert.AreEqual("Off",Get<object>(demo,"Power").ToString());
    var one=New(1);Call(one,"EngageWatch");Tick(one,400);Call(one,"ObserveWater",10d,1f);Assert.False(Get<bool>(one,"Failed"));
   }
+  [Test] public void NightTwoActuallyConsumesFuelSputtersThenCutsEveryCircuitAndReplicates()
+  {
+   var s=New(2);Tick(s,72.5);Assert.True(Get<bool>(s,"FuelSputtering"));Assert.AreEqual("On",Get<object>(s,"Power").ToString());
+   var engine=Get<object>(s,"Engine");Assert.Greater(Get<float>(engine,"Fuel"),0);
+   Tick(s,3);Assert.Zero(Get<float>(engine,"Fuel"));Assert.True(Get<bool>(s,"NightTwoOutage"));Assert.False(Get<bool>(s,"BeaconShining"));
+   foreach(PowerCircuit circuit in Enum.GetValues(typeof(PowerCircuit)))Assert.False((bool)Call(s,"HasPower",circuit));
+   Assert.False((bool)Call(s,"IsPending","STN_GENERATOR"));
+   Assert.AreEqual("Fuel",Call(Get<object>(s,"Director"),"StepForStation","STN_GENERATOR",false).ToString());
+   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(s,"Capture",.1f)));Assert.True(Get<bool>(g,"NightTwoOutage"));
+   Start(s);Assert.AreEqual("On",Get<object>(s,"Power").ToString());Assert.True((bool)Call(s,"IsDone","STN_GENERATOR"));
+  }
   [Test] public void LowFuelEventDoesNotRestartEngineAndCannotCompleteBeforeRefilling()
   {
    var s=New(4);Tick(s,75);Call(s,"CompleteRepair");Start(s);Tick(s,95);

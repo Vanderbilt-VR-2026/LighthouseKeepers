@@ -6,18 +6,18 @@ Measured execution of the real WatchState/ObjectiveDirector rules with an **assu
 
 | Night | Mode | Modeled time including bed walk | Watch budget | Spare on watch | Result |
 |---|---|---:|---:|---:|---|
-| night-1 | solo | 148.1 s | 315 s | 206.1 s (65.4%) | Tasks pass |
-| night-1 | duo | 148.1 s | 315 s | 206.1 s (65.4%) | Tasks pass |
-| night-2 | solo | 226.9 s | 315 s | 127.3 s (40.4%) | Tasks pass |
-| night-2 | duo | 226.9 s | 315 s | 127.3 s (40.4%) | Tasks pass |
-| night-3 | solo | 420.0 s | 515 s | 134.2 s (26.1%) | Tasks pass |
+| night-1 | solo | 143.0 s | 315 s | 206.1 s (65.4%) | Tasks pass |
+| night-1 | duo | 143.0 s | 315 s | 206.1 s (65.4%) | Tasks pass |
+| night-2 | solo | 238.0 s | 315 s | 111.1 s (35.3%) | Tasks pass |
+| night-2 | duo | 238.0 s | 315 s | 111.1 s (35.3%) | Tasks pass |
+| night-3 | solo | 415.0 s | 515 s | 134.1 s (26.0%) | Tasks pass |
 | night-3 | duo | 408.2 s | 510 s | 135.9 s (26.6%) | Tasks pass |
-| night-4 | solo | 461.1 s | 540 s | 118.1 s (21.9%) | Tasks pass |
+| night-4 | solo | 456.1 s | 540 s | 118.0 s (21.9%) | Tasks pass |
 | night-4 | duo | 449.3 s | 510 s | 94.8 s (18.6%) | Tasks pass |
-| night-5 | solo | 623.0 s | 760 s | 176.2 s (23.2%) | Tasks pass |
+| night-5 | solo | 617.9 s | 760 s | 176.2 s (23.2%) | Tasks pass |
 | night-5 | duo | 612.1 s | 730 s | 152.0 s (20.8%) | Tasks pass |
-| demo | solo | 329.2 s | 360 s | 70.0 s (19.4%) | Tasks pass |
-| demo | duo | 329.2 s | 360 s | 70.0 s (19.4%) | Tasks pass |
+| demo | solo | 324.2 s | 360 s | 69.9 s (19.4%) | Tasks pass |
+| demo | duo | 324.2 s | 360 s | 69.9 s (19.4%) | Tasks pass |
 
 ## Changes driven by this model
 
@@ -36,5 +36,7 @@ The model exposed campaign guidance defects: open the choke before resuming the 
 ## Not yet a campaign approval
 
 Every `timingApproved` flag remains false. The lead enabled the preview campaign in a later checkpoint; its final ship pacing is still unapproved. The model excludes ship windows, final rescue, progression and split-information conversation. Nights 1–2 intentionally retain their inherited budgets until passage pacing is measured. Their large task-only margins are not a claim of meeting final ship-night headroom. After Part B, rerun with ship waiting/repair pressure included, then use graphics and two-client verification. No human-first-timer or headset acceptance is claimed.
+
+November 11 rerun: solo clamp removed; online-host roster follows actual keeper count; Night 2 burns fuel to empty, then requires refuelling. All 12 solo/duo task models passed. No duration/flood change was made in this rerun. Night 1/2 spare margins still include time intended for the pending ship passage. This is not final pacing approval.
 
 Raw per-action trace: `Docs/Verification/M3/scheduling/task-timing.json`. Source runner is committed in `Assets/WatchDemo/Editor/M3CampaignBot.cs`.

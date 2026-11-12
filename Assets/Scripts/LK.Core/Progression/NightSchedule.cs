@@ -27,14 +27,15 @@ namespace LighthouseKeepers.Core.Progression
             {
                 if(Fired(i))continue;
                 var f=data.faults[i];
-                bool ready=f.gate==NightEventGate.Clock?now>=f.atSeconds:
+                bool exhaustion=f.kind==NightFaultKind.FuelExhaustion;
+                bool ready=exhaustion?!powerRestored:f.gate==NightEventGate.Clock?now>=f.atSeconds:
                     f.gate==NightEventGate.ClockOrJobComplete?now>=f.atSeconds||done(f.afterStationId):
                     f.gate==NightEventGate.JobComplete?done(f.afterStationId):SawPowerOff&&powerRestored;
                 // Initial leak is the tutorial's immediate job; later faults respect the calm opening.
                 bool initial=f.gate==NightEventGate.Clock&&f.atSeconds==0;
                 bool finale=data.finaleFaultPileup&&f.repeat&&f.kind==NightFaultKind.StationFailure;
                 if(f.kind==NightFaultKind.LowFuel&&!powerRestored)continue;
-                if(!ready||!initial&&(now<data.openingSeconds||now<ReliefUntil||!finale&&now<NextFaultAt))continue;
+                if(!ready||!initial&&!exhaustion&&(now<data.openingSeconds||now<ReliefUntil||!finale&&now<NextFaultAt))continue;
                 FiredMask|=1<<i;GraceUntil=Math.Max(GraceUntil,now+f.graceSeconds);
                 if(!initial)NextFaultAt=now+data.faultSpacingSeconds;
                 fire(f);

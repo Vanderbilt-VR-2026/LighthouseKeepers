@@ -93,7 +93,6 @@ MonoBehaviour:
     stations:
     - stationId: STN_PIPE_LEAK
       activeSteps:
-      - clamp
       - tighten
       crewVariant: 0
       informationSite: F1

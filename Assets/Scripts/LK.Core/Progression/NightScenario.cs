@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace LighthouseKeepers.Core.Progression
 {
-    public enum NightFaultKind { StationFailure=0, LowFuel=1 }
+    public enum NightFaultKind { StationFailure=0, LowFuel=1, FuelExhaustion=2 }
     public enum NightEventGate { Clock=0, ClockOrJobComplete=1, PowerRestored=2, JobComplete=3 }
     public enum NightCrewVariant { Local=0, HoldValve=1, RelayGenerator=2, RelayRadioCode=3, RelayBeaconBearing=4 }
     [Serializable] public sealed class NightFault
@@ -80,6 +80,7 @@ namespace LighthouseKeepers.Core.Progression
             foreach(var f in faults??Array.Empty<NightFault>()){
                 if(f==null||string.IsNullOrWhiteSpace(f.id)||!ids.Add(f.id)){yield return "Missing/duplicate fault event.";continue;}
                 if(!Enum.IsDefined(typeof(NightEventGate),f.gate)||!Enum.IsDefined(typeof(NightFaultKind),f.kind)||!Nonnegative(f.fuelFraction)||f.fuelFraction>1)yield return "Invalid fault kind or fuel: "+f.id;
+                if(f.kind==NightFaultKind.FuelExhaustion&&(f.gate!=NightEventGate.Clock||f.atSeconds<=0||f.repeat))yield return "Fuel exhaustion requires one positive arrival fuel budget: "+f.id;
                 if(!stationIds.Contains(f.stationId))yield return "Fault station is not active: "+f.id;
                 if(float.IsNaN(f.atSeconds)||float.IsInfinity(f.atSeconds)||f.atSeconds<0||!Nonnegative(f.graceSeconds))yield return "Fault timing is invalid: "+f.id;
                 if((f.gate==NightEventGate.JobComplete||f.gate==NightEventGate.ClockOrJobComplete)&&!stationIds.Contains(f.afterStationId))yield return "Fault dependency is not active: "+f.id;

@@ -1,24 +1,59 @@
-# Full remaining plan — M3 checkpoint (November 11)
+# Full remaining plan — clean checkpoint after Step 2a (November 11)
 
-Branch `m3/five-nights`, draft PR #87. PR #85 verification/delivery is complete as far as unattended checks allow; ready for review, not merged into main. APK d5051f7 installed on Quest with matching hash; app left closed. Full EditMode 372 pass; full PlayMode 25 inherited failures remain after six corrected cases pass. See Docs/Verification/RemainingPlan/Step1/.
+Branch `m3/five-nights`, draft PR #87. Nothing merged to main. Editor muted throughout; all test Editors closed. Quest was installed but **not launched**.
 
-**Step 1c merged:** integrated changes plus the campaign schedule. Network **LK-M3-CAMPAIGN2 / v22**. 68 focused EditMode cases pass. No-clamp solo and count-dependent co-op retained; latest wiring and generator placement retained. Evidence: Docs/Verification/M3/integrated-merge/.
+## Done
 
-**Step 2a NEXT:** reconcile campaign Night 2 fuel exhaustion (older campaign uses a timer reset), rerun instruction-only solo/duo timing and graphics Nights 1–3. Then Step 2b ships; 2c doors/mirror; Step 3 horror slices 1–3; Step 4 finale/progression; Step 5 remaining horror; Step 6 split-information/final checks. No ship/door/mirror/horror work started this pass.
+- **1a–1c:** audited existing accepted fixes; repaired the tally-counter obstruction of the starter. Full EditMode 372/372. Full PlayMode 52/83 initially passed; six corrected cases passed focused rerun, leaving 25 inherited failures (listed in evidence). Graphics Nights 1–3 and live two-Mac join/avatars/valve/both radio routes/mute/sleep/leave/rejoin passed. PR #85 ready for review. APK d5051f7 installed, installed hash matches, app closed. See Docs/Verification/RemainingPlan/Step1/.
+- **Merged PR #85 into M3:** preserved current PLAY/host-alone/offline lobby, no-clamp solo, physical generator, sea recovery, watch and latest wiring. Campaign valve roles follow authored night AND current roster; join/leave/retry covered. Merge 0b6de74.
+- **2a runtime reconciliation:** campaign Night 2 now consumes fuel to E with sputter and mains loss, then asks for refill; data-authored FuelExhaustion replaces the old silent timer reset. Solo clamp metadata removed. 69 focused cases pass. All 12 instruction-only task models pass (five nights + Demo, solo + duo). Actual-XRI graphics Nights 1–3 pass through sleep into Night 4, zero logged errors; inspected generator and Night 3 board. Docs/Verification/M3/scheduling-current/ and Docs/Playtests/telemetry-m3.md.
+
+M3 network **LK-M3-CAMPAIGN2 / LK-Lab-Coop-v22** (campaign + sea-recovery fields). PR #85 installed on Quest is **LK-S5-PLAYTEST1 / v21**. Both clients must use the same build. Campaign remains the previously enabled task preview; timingApproved remains false. Final ship-inclusive 25–35% / 15–25% headroom is NOT yet approved. No night duration/flood retuning this pass.
+
+## Next — Step 2b, then 2c, then horror
+
+1. Implement named ship pass/wreck loop from NightScenario.ships (P21–P24 = cue IDs 96–99). Host owns passage outcomes/dark-window grace; guests consume snapshots. Add snapshot fields/version bump. Keep legacy catalogs outside campaign untouched. Ships must gate sleep; safe Night 1 preview; sighting → rocks → away, spatial foghorn, named loss, pass relief/sting, HUD/board state. Retime provisional authored windows against the current timing trace — existing windows are NOT approved for shipping. Reuse Eli's StormSeascape/ocean, no sky or avatar edits.
+2. Re-run instruction-only models including ship waiting/pressure; graphics pass/wreck + screenshots; live campaign co-op. Then physical doors/mirror (2c).
+3. Step 3 horror slices 1–3; Step 4 finale/progression; Step 5 horror 4–6; Step 6 split-information/final verification. **None implemented this pass.** No new M3 APK has been delivered since the merge; build/install when the next completed part is ready.
 
 ## DEVICE CHECKS PENDING
 
-Real Quest Wi-Fi OFF start; wiring ≤0.3 ms GPU; missing lobby hands/board-like body; controller/watch comfort and readability; real voice listening. Mac timing is not device-equivalent profiling. Editor stays muted. Install allowed; **do not launch Quest** without explicit request.
+- Real Quest Wi-Fi OFF HOST / PLAY ALONE → START.
+- Wiring GPU ≤0.3 ms and full scene GPU/CPU at 72 Hz; Mac timing cannot establish Quest cost.
+- Missing lobby hands / board-like own-body report; physical grip/choke/pour/starter/watch comfort; B recall/text readability.
+- Human voice intelligibility, Mac+Quest/2-Quest current-build transport and radio falloff.
+- Ships/doors/mirror/horror budgets and comfort only after those systems exist.
 
-## Exact next commands
+Install allowed; **do not launch the Quest** without a new explicit request. Root integrated worktree still has unrelated user Wood.mat, Quest prefab ray-width edits and pipe-lever evidence; preserve them. M3-generated Wood change was backed up and restored after graphics capture.
+
+## Exact commands
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
-python3 artifacts/remaining/m3/tests.py merge-final
-# Source: WatchState.Campaign.cs, WatchState.Onboarding.cs, NightScenario.cs, NightSchedule.cs.
-# Bot: LighthouseKeepers.Editor.M3CampaignBot.Run(outputPath)
-# Graphics replay inputs: ../LighthouseKeepers-Coop-Basics/artifacts/remaining/step1/Nights123.cs
+python3 artifacts/remaining/m3/tests.py scheduling-final
+LK_M3_TIMING_OUTPUT="$PWD/artifacts/remaining/m3/timing.json" /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath "$PWD" -buildTarget StandaloneOSX -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/remaining/m3/timing.log"
+# Current mechanics replay: artifacts/remaining/m3/Nights123.cs, entry ImmersionSoloReplay.Run(output).
+# replay.py launches a muted batch graphics Editor; inspect/use the corrected Nights123.cs,
+# whose pending-stage waits account for authored relief periods.
+# No Quest launch command here.
 ```
+
+## Twelve-step headset checklist
+
+Use the installed PR #85 build for 1–8; 9–12 need later M3 systems and are NOT ready today.
+
+1. PLAY → HOST / PLAY ALONE → START; confirm hands and House.
+2. With Wi-Fi off, confirm the same offline route.
+3. Tap/hold B for objective + last line; double-tap to replay; adjust objective height.
+4. Grip wrench, repair without a solo clamp, drop/recover it, then sleep.
+5. Night 2: watch fuel reach E, hear sputter, see mains/pump/beacon cut out.
+6. Pour fuel; squeeze primer three times; pull choke up; pull cord three times; push choke down.
+7. Find separate POWER PANEL, trace subtle cables, check left-wrist time/objective.
+8. Two matching builds: join/start, avatars, voice/radios, shared valve repair and sleep; leave/rejoin.
+9. PENDING ship: gallery sighting → beam-lit passage and horn; test named wreck/retry.
+10. PENDING doors/mirror: hand-swing doors and inspect Will's avatar from three angles.
+11. PENDING horror: apparition, telegraphed hunt, sprint/hide; Scare Off removes it.
+12. PENDING Demo: six-minute loop through ship moment, then continue/night-select persistence.
 
 ---
 
