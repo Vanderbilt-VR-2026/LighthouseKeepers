@@ -357,3 +357,112 @@ push, update PR #87 (plain-English description + network version). FINAL REPORT:
 phase, timing table, network version, assets I still need to provide, voice lines to record, and a
 20-step headset playtest checklist (Night 1 start → first sabotage → Night 2 blackout + lantern → first
 hunt + hiding → a ship passing from the gallery → a wreck → Demo Night).
+
+---------------------------------------------------------------------------------------------------
+## 14. QUEST 3 QUALITY SETTINGS (professor's field manual, Unity 6.3 LTS + URP + OpenXR — REQUIRED)
+
+Source: the course deck "Quality settings for Meta Quest 3" (Unity 6000.3.23f1, URP, OpenXR + XRI,
+standalone). It's graded, so follow it exactly. Where this brief needs an exception (the lantern
+lights), document it. Record every setting + value + where it lives + measured cost in
+`Docs/Design/QuestQuality.md`.
+
+**14.0 The budget.** Every setting spends the same frame: 13.9 ms at 72 Hz (11.1 ms @ 90, 8.3 ms @ 120).
+We ship at 72 Hz. Two eyes, one mobile tile-based GPU. MSAA is cheap on it. Anything that forces an
+intermediate full-screen texture is expensive: HDR, classic post, Depth/Opaque Texture copies.
+
+**14.1 Find the URP Asset the Quest build REALLY uses (do this first).**
+Edit > Project Settings > Quality → the Android/Meta column: the green tick is the default level.
+Select that level and read its Render Pipeline Asset. Edit THAT asset, not a look-alike (the VR
+template's Quest default is Low → "Performance URP Config"; ours may differ). Remove or point to the
+same asset any other levels a Quest could select, so there's no ambiguity. Log the asset name.
+
+**14.2 URP Asset (Inspector)** — the Quest one from 14.1:
+| Setting | Value |
+|---|---|
+| Rendering > Depth Texture | OFF (unless a shader truly needs it — list it if so) |
+| Rendering > Opaque Texture | OFF |
+| Quality > HDR | OFF (the Quest display is 8-bit) |
+| Quality > Anti Aliasing (MSAA) | 4x (drop to 2x only if measured GPU-bound) |
+| Quality > Render Scale | 1.0 baseline (= 1680×1760 per eye). The panel is 2064×2208, so ~1.23 matches it at +51% pixels. Raise toward 1.2 ONLY if the OVR Metrics GPU time at storm peak leaves ≥ 2 ms of headroom. Never go below 1.0 (small text breaks, and store review can fail). Set it once; never change it at runtime. |
+| Lighting > Main Light | per-pixel. Shadows: 1 cascade, Max Distance ≤ 15 m (shorten distance before raising resolution), Shadow Resolution 1024; soft shadows only if measured affordable. If the scene has no realtime main-light shadows, turn them off. |
+| Lighting > Additional Lights | baseline Disabled (bake them). OUR EXCEPTION: Per Pixel, Per Object Limit 2, no shadows — only for the two lanterns (§5). |
+
+**14.3 Universal Renderer Data** (URP Asset > Rendering > Renderer List):
+- Rendering Path: Forward (never Deferred: G-buffer loads are slow on tile GPUs).
+- Depth Priming: Disabled (the pre-pass is paid twice in stereo).
+- Post-processing (integrated): OFF.
+- Renderer Features: "On Tile Post Processing" (new in 6.3) for tonemapping + colour grading only. No
+  vignette (comfort pillar). No SSAO. Remove any other features we don't need (e.g. old droplet/lens
+  features if superseded; if kept, prove they add no intermediate texture in the Render Graph Viewer).
+
+**14.4 OpenXR** (Project Settings > XR Plug-in Management > OpenXR — the ANDROID/META tab, not desktop):
+- Render Mode: Multi-view (both eyes in one set of draw calls).
+- Latency Optimization: Prioritize Input Polling.
+- Depth Submission Mode: None (we don't use depth occlusion).
+- Offscreen Rendering Only: ON (per Meta's recommendation in the deck).
+- Meta Quest Support (gear): check Symmetric Projection and the other Quest options; enable what
+  measurably helps and log it.
+- Features: tick "Foveated Rendering" (it ships unticked). If the package shows "Foveated Rendering API",
+  choose SRP Foveation (OpenXR 1.17.1 may not show it).
+
+**14.5 Foveated rendering** — the feature tick does nothing alone. At startup, get the
+XRDisplaySubsystem (SubsystemManager.GetSubsystems) and set `displays[0].foveatedRenderingLevel` (0 = off,
+1 = strongest; Quest maps it to discrete levels). Start at a medium level (~0.5–0.75), check text and the
+edges of the lens. You can't preview it in the Editor — log it as a device check. Reuse our existing
+FFR code if it already does this; make sure it actually runs in the build.
+
+**14.6 Resolution control.** Use the URP Render Scale (set once) only. Do NOT use
+XRSettings.renderViewportScale or the OpenXR "Automatic viewport dynamic resolution" feature: viewport
+scaling can't be combined with fixed foveation when post is on, and we want both FFR and on-tile grading.
+
+**14.7 Lighting** (Window > Rendering > Lighting) — "many lights for the cost of none":
+1. Mark all scenery Static (Contribute GI): walls, floors, stairs, fixed props.
+2. Lights → Baked (or Mixed where a moving object needs a realtime shadow). Wall lamps, the beacon room
+   and the powered/blackout states are baked variants (as in §11).
+3. Light Probe Groups on every floor, stair landing and outdoor path; moving things (hands, avatars, the
+   Drowned, the ship near the rocks, lanterns' meshes) sample probes.
+4. Generate Lighting (Progressive GPU). Re-bake after moving static objects or lights. Raise lightmap
+   resolution only where stepped shadow edges show; keep the atlas count and size low; log the bake
+   stats (lightmap count, MB, time).
+
+**14.8 Textures** (Texture Import Settings > Advanced):
+- Generate Mipmaps ON for every 3D texture (no mipmaps = shimmer/crawl with every head movement). UI and
+  subtitle font atlases follow their own rules.
+- Android override: ASTC (6x6 colour, 4x4–5x5 normal, as §11).
+- Aniso Level 4–8 on floors, stairs, decks, walls seen at grazing angles; 1–2 elsewhere. Quality >
+  Anisotropic Textures = Per Texture.
+- Shimmer is a texture problem, not an MSAA one — fix it with mips/aniso, not more MSAA.
+
+**14.9 Player:** Project Settings > Player > Other Settings (Android) > Graphics APIs = Vulkan only
+(remove OpenGLES3); keep IL2CPP ARM64.
+
+**14.10 "Usually off" check** (all must be OFF): HDR, classic post-processing, Depth Texture, Opaque
+Texture, SSAO, Depth Priming, Deferred path.
+
+**14.11 Measure on the headset, never in the Editor.** Tools: OVR Metrics Tool (on-device overlay: fps,
+CPU/GPU), Unity Profiler attached to a development build (CPU-bound or GPU-bound?), Frame Debugger
+(draw calls and passes), Render Graph Viewer (catch unexpected intermediate textures). THE LOOP: change
+one setting → measure → keep or revert. Write every result to QuestQuality.md.
+
+**14.12 Diagnosis — symptom → check first:**
+| You see | Check first |
+|---|---|
+| Jagged edges on geometry | MSAA |
+| Everything soft, small text unreadable | Render scale; foveation level |
+| Floors and textures shimmer | Mipmaps + anisotropic filtering |
+| Blocky or swimming shadows | Shadow distance, then resolution |
+| Flat, lifeless lighting | Bake lightmaps; add light probes |
+| Dropped frames, GPU-bound | Render scale, MSAA, shadows, post-processing (then the lantern lights → per-vertex) |
+| Dropped frames, CPU-bound | Draw calls + batching (SRP Batcher, static batching, GPU instancing); confirm Multi-view |
+
+**14.13 Make it stick (automation):**
+- Editor menu "Lighthouse Keepers/Apply Quest Quality Baseline" sets everything above (14.1–14.9) in one
+  click and logs what changed.
+- EditMode `QualityBaselineTests` fail if any of these drift: Quest quality level → expected URP Asset,
+  HDR off, MSAA 4x (or 2x if documented), render scale within the documented value, Depth/Opaque Texture
+  off, Forward path, Depth Priming disabled, integrated post off, no SSAO feature, Additional Lights
+  per-pixel limit ≤ 2 with no shadows, main-light shadow distance ≤ 15 m and 1 cascade, OpenXR Android
+  Multi-view + Foveated Rendering feature on, Vulkan only, and every texture under Assets/Art and the new
+  Sprint 5 asset folders has mipmaps + ASTC on Android.
+- QuestQuality.md: before/after table (setting · old · new · where · measured ms) + bake stats + the
+  final OVR Metrics numbers at storm peak.
