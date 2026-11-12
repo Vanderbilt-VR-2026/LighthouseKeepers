@@ -72,3 +72,5 @@ Install only when ADB returns; do not launch without the lead's request. With pe
 [Download the Sprint 5 development preview](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint5-preview-20261112), source `6c138852227c2c44204bfd0514592a2d6ec36eb4`. SHA-256: `20c12e9c6c63efe820a11ff31966a9204ec310af2246b666e2f86ca16c2e692b`. It is a task/quality preview, not the completed ship/horror campaign. No Quest is connected, so installation and on-device measurements remain pending.
 
 One-click scene preparation was rerun successfully with no serialized scene drift; expanded QualityBaselineTests **3/3 pass**, including baked fixed fixtures and route-probe coverage. This editor-only follow-up does not change the preview APK runtime content.
+
+Focused current PlayMode: **19/23 passed**. All four failures reproduce with identical messages on pre-quality `785f2d1` (narration hint, legacy beacon deadline, legacy Night1 high-water loss, same-day radio retry). `playmode-comparison.json` records the exact names/messages; no new failures in this set. These remain open technical debt, not passing tests.

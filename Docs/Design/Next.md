@@ -1,17 +1,17 @@
 # Sprint 5 checkpoint — November 12
 
-Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR #88 was merged by a teammate into main at `14634af`; bring that merge into this branch and retarget #89 to main. The new Sprint5-Master.md, including §14, supersedes the historical M3 ordering below.
+Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR #88 was merged by a teammate into main at `14634af`; that merge is included and #89 now targets main. The new Sprint5-Master.md, including §14, supersedes the historical M3 ordering below.
 
 ## Current work
 
 - **1.0 implementation complete; device acceptance OPEN (#90):** active Android QuestPipeline MSAA4/scale1, Vulkan, fixed FFR0.5, on-tile grade, mipmaps/ASTC; one-click menu includes fixed-scene baked lighting/static/probe setup. Progressive GPU powered/emergency bakes: two maps / 4.93 MiB each, 444 probes. See QuestQuality.md.
-- Full EditMode 396/396 pass; expanded quality checks 3/3 pass. Before/after actual-XRI graphics Nights1–3 pass into Night4, zero logged errors; inspected images in Docs/Verification/S5/Quality. Focused PlayMode 19/23; four failures are being compared on pre-quality 785f2d1 before classifying them. Pre-change full PlayMode stalled in retired Bootstrap tests; not a full-suite pass.
+- Full EditMode 396/396 pass; expanded quality checks 3/3 pass. Before/after actual-XRI graphics Nights1–3 pass into Night4, zero logged errors; inspected images in Docs/Verification/S5/Quality. Focused PlayMode 19/23; all four failures reproduce identically on pre-quality 785f2d1, so this set has no new failures. Pre-change full PlayMode stalled in retired Bootstrap tests; not a full-suite pass.
 - Clean-source `6c13885` APK built and published as an explicitly unfinished Sprint5 preview. Public download hash verified. Ships/horror/lantern/progression are not finished. No gameplay/network changes in quality pass: **LK-M3-CAMPAIGN2 / v22**.
 - Grading cleanup complete: exactly main and sprint-1..5 remotely; eight old branch tips archived and containment verified. Sprint4 release `sprint4-final` and Sprint5 prerelease `sprint5-preview-20261112` are public. Sprint5 milestone December3; 40 implementation/ownership issues (GitHub milestone totals also count PRs).
 
 ## Next in order
 
-Finish current quality verification (before-comparison PlayMode, fresh two-Mac regression) and publish evidence. Commit #91 design/feel/sound skeletons prepared in artifacts/s5/foundation. Then #92 TensionDirector and #93 fear system; re-read the relevant master sections before each phase. Do not jump to historical ship-first instructions.
+Finish fresh two-Mac quality regression and publish evidence. **1.1 DONE (#91):** Sprint5.md, 28-row FeelChecklist.md, 32-event-family SoundMap.md are committed skeletons; implementation vs planned work is explicit. Next #92 TensionDirector and #93 fear system; re-read the relevant master sections before each phase. Do not jump to historical ship-first instructions.
 
 ## DEVICE CHECKS PENDING
 
