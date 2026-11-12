@@ -12,6 +12,16 @@ namespace LighthouseKeepers.Net.Tests
             Assert.IsTrue(LatestSampleBatch.TryUnpack(wire,out var seq,out var samples));Assert.AreEqual(7,seq);
             CollectionAssert.AreEquivalent(new[]{999,-999,1009},samples.ConvertAll(s=>BitConverter.ToInt32(s.Data,0)));
         }
+        [Test] public void IntegratedSnapshotAboveTwoKiBSurvivesTheActualBatch()
+        {
+            var payload=new byte[2300];new Random(18).NextBytes(payload);
+            var q=new LatestSampleBatch();q.Put(41,0,payload);
+            Assert.AreEqual(1,q.Count,"Snapshot must not disappear before transport");
+            var wire=q.Pack(18);Assert.Greater(wire.Length,2048);Assert.LessOrEqual(wire.Length,FusionMessageChannel.MaxBytes);
+            Assert.IsTrue(LatestSampleBatch.TryUnpack(wire,out var sequence,out var samples));
+            Assert.AreEqual(18,sequence);Assert.AreEqual(41,samples[0].Kind);
+            CollectionAssert.AreEqual(payload,samples[0].Data);
+        }
         [Test] public void VisualMayHoldLastPoseWhileGameplayRejectsTheStaleHand()
         {
             var buffer=new KeeperPoseBuffer();var q=UnityEngine.Quaternion.identity;
@@ -22,8 +32,8 @@ namespace LighthouseKeepers.Net.Tests
         [Test] public void TruncatedOversizedAndNonSampleTrafficIsRejected()
         {
             var q=new LatestSampleBatch();q.Put(42,0,new byte[]{1});Assert.AreEqual(0,q.Count);
-            q.Put(10,0,new byte[2049]);Assert.AreEqual(0,q.Count);
-            Assert.IsFalse(LatestSampleBatch.TryUnpack(new byte[2049],out _,out _));
+            q.Put(10,0,new byte[LatestSampleBatch.MaxPayloadBytes+1]);Assert.AreEqual(0,q.Count);
+            Assert.IsFalse(LatestSampleBatch.TryUnpack(new byte[LatestSampleBatch.MaxPayloadBytes+1],out _,out _));
             Assert.IsFalse(LatestSampleBatch.TryUnpack(new byte[]{1,2,3},out _,out _));
             q.Put(10,0,new byte[]{1,2,3});var wire=q.Pack(1);
             Array.Resize(ref wire,wire.Length/2);Assert.IsFalse(LatestSampleBatch.TryUnpack(wire,out _,out _));

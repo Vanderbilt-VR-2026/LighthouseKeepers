@@ -9,7 +9,7 @@ namespace LighthouseKeepers.Net
         public bool Accept(int actor,int sequence,int revision,int currentRevision,CoopAction action,float value)
         {
             if(actor<=0||sequence<=0||revision!=currentRevision||!float.IsFinite(value)||
-                action<CoopAction.Starter||action>CoopAction.PAReplay||
+                action<CoopAction.Starter||action>CoopAction.HandheldRadio||
                 sequences.TryGetValue(actor,out int old)&&sequence<=old)return false;
             sequences[actor]=sequence;return true;
         }

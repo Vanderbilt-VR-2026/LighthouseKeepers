@@ -6,6 +6,10 @@ namespace LighthouseKeepers.WatchDemo
     // Crew-only adapter. Solo station, clock, flood and sleep implementations remain in their original paths.
     public sealed partial class WatchDemoController
     {
+        WatchPressureValve pressureValve;
+        public bool PressureCommand(int actor,bool held){bool accepted=state.Pressure!=null&&!state.ReadOnly&&!sleeping&&!state.Failed&&!state.Repaired&&state.Pressure.CrewRequired&&state.Pressure.Hold(actor,held);if(accepted&&held)state.EngageWatch();return accepted;}
+        public void PressureWorker(int actor){if(!state.ReadOnly)state.PipeWorkerActor=actor;}
+        public void PressureActorLeft(int actor){state.Pressure?.Hold(actor,false);}
         public int Revision {get;private set;}
         public bool CanSleep=>state!=null&&!sleeping&&!state.Failed&&state.Complete&&state.HasNextDay;
         public Vector3 BedPosition=>bed.position+Vector3.up*1.3f;
@@ -14,6 +18,8 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.HandheldRadio)return value==(int)value&&value>=0&&value<2&&crewRadios[(int)value]?crewRadios[(int)value].Grab:null;
+            if(action==CoopAction.PressureValve)return pressureValve?pressureValve.Grip:null;
             if(action==CoopAction.PAReplay)return value==(int)value&&immersionWorld&&immersionWorld.Narrator?immersionWorld.Narrator.ReplayButton((int)value):null;
             if(action==CoopAction.GridCircuit)return powerPanel?powerPanel.Control((int)value):null;
             if(action==CoopAction.GridReset)return powerPanel?powerPanel.ResetControl:null;
@@ -34,6 +40,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly||sleeping)return -1;
             switch(action)
             {
+                case CoopAction.StatusRequest:
                 case CoopAction.PAReplay:return immersionWorld&&immersionWorld.Narrator&&immersionWorld.Narrator.RequestReplay()?1:-1;
                 case CoopAction.Bed:
                     if(state.Immersion&&!state.Failed&&immersionWorld&&immersionWorld.Narrator){immersionWorld.Narrator.EarlyBed();return 1;}
@@ -64,8 +71,9 @@ namespace LighthouseKeepers.WatchDemo
         public void BeginSharedSleep(){if(CanSleep)StartCoroutine(Sleep());}
         public void CrewStatus(int beds,int keepers,string notice)
         {
+            state.SetKeeperCount(keepers);
             if(crewBeds==beds&&crewKeepers==keepers&&crewNotice==notice)return;
-            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;RefreshBoard();
+            crewBeds=beds;crewKeepers=keepers;crewNotice=notice;state.Pressure?.SetCrew(keepers>1);RefreshBoard();
         }
         public void ContinueAlone(string notice)
         {
@@ -81,7 +89,7 @@ namespace LighthouseKeepers.WatchDemo
             left.TryGetFeatureValue(CommonUsages.gripButton,out bool lg);right.TryGetFeatureValue(CommonUsages.gripButton,out bool rg);
             left.TryGetFeatureValue(CommonUsages.triggerButton,out bool lt);right.TryGetFeatureValue(CommonUsages.triggerButton,out bool rt);
             bool grip=lg||rg,trigger=lt||rt,near=Vector3.Distance(head.position,BedPosition)<1.8f;
-            bedPrompt.text=near?(CanSleep?SleepPrompt+" TOGETHER":"Finish the board tasks before resting"):"";
+            bedPrompt.text=near?(CanSleep?SleepPrompt+LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoCoop.1"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoCoop.2")):"";
             if(near){var direction=bedPrompt.transform.position-head.position;direction.y=0;if(direction.sqrMagnitude>.01f)bedPrompt.transform.rotation=Quaternion.LookRotation(direction);}
             if(!state.Immersion&&(!menu||!menu.IsOpen)&&state.Failed&&trigger&&!previousTrigger)RetryDay();
             else if((!menu||!menu.IsOpen)&&near&&grip&&!previousGrip)TrySleep();

@@ -10,6 +10,10 @@ namespace LighthouseKeepers.Net
     {
         [SerializeField] GameObject leftHandVisual;
         [SerializeField] GameObject rightHandVisual;
+        [SerializeField, Tooltip("Captain appearance prefab with CrewAvatarModel on its root. Assigned to the room host.")]
+        GameObject captainModel;
+        [SerializeField, Tooltip("Fisherman appearance prefab with CrewAvatarModel on its root. Assigned to guests, including rejoining guests.")]
+        GameObject fishermanModel;
         public UnityEvent<int,float,float> LeftPoseChanged = new();
         public UnityEvent<int,float,float> RightPoseChanged = new();
         NetworkObject identity;
@@ -20,6 +24,10 @@ namespace LighthouseKeepers.Net
         Camera observer;
         float nextName;
         bool bodyPlaced;
+        CrewAvatarModel customModel;
+        CrewAvatarRole role;
+        int appearanceActor;
+        float nextAppearance;
         void Awake()
         {
             identity = GetComponent<NetworkObject>();
@@ -57,6 +65,43 @@ namespace LighthouseKeepers.Net
             if (fallback) part.GetComponent<Renderer>().sharedMaterial = fallback;
             return part.transform;
         }
+        void RefreshAppearance(CrewPoseStream stream, int actor)
+        {
+            if (appearanceActor != actor)
+            {
+                if (customModel) { customModel.gameObject.SetActive(false); Destroy(customModel.gameObject); }
+                customModel = null; role = CrewAvatarRole.Unknown; appearanceActor = actor;
+                nextAppearance = 0; bodyPlaced = false;
+                head.gameObject.SetActive(true); coat.gameObject.SetActive(true);
+                left.gameObject.SetActive(true); right.gameObject.SetActive(true);
+            }
+            if (Time.unscaledTime < nextAppearance) return;
+            nextAppearance = Time.unscaledTime + .5f;
+            if (!stream.TryRoleFor(actor, out var resolved) || resolved == role) return;
+            role = resolved; bodyPlaced = false;
+            if (customModel) { customModel.gameObject.SetActive(false); Destroy(customModel.gameObject); }
+            customModel = null;
+            var prefab = role == CrewAvatarRole.Captain ? captainModel : fishermanModel;
+            if (prefab)
+            {
+                var template = prefab.GetComponent<CrewAvatarModel>();
+                string error = "Add CrewAvatarModel to the appearance prefab's root.";
+                if (template && template.TryValidate(out error))
+                {
+                    customModel = Instantiate(prefab, visuals.transform, false).GetComponent<CrewAvatarModel>();
+                    if (customModel.PrepareVisualOnly(out error)) customModel.gameObject.SetActive(true);
+                    else
+                    {
+                        Debug.LogWarning($"{role} appearance could not initialize: {error} Keeping the fallback avatar.",this);
+                        customModel.gameObject.SetActive(false); Destroy(customModel.gameObject); customModel=null;
+                    }
+                }
+                else Debug.LogWarning($"{role} appearance is invalid: {error} Keeping the fallback avatar.", this);
+            }
+            head.gameObject.SetActive(!customModel); coat.gameObject.SetActive(!customModel);
+            left.gameObject.SetActive(!customModel || !customModel.FullBody && !customModel.LeftHand);
+            right.gameObject.SetActive(!customModel || !customModel.FullBody && !customModel.RightHand);
+        }
         void LateUpdate()
         {
             var stream = CrewPoseStream.Active;
@@ -64,16 +109,9 @@ namespace LighthouseKeepers.Net
                 identity.InputAuthority != identity.Runner.LocalPlayer && stream.SampleVisual(identity.InputAuthority.RawEncoded,out _);
             visuals.SetActive(visible);
             if (!visible || !stream.SampleVisual(identity.InputAuthority.RawEncoded,out var pose)) return;
-            head.SetPositionAndRotation(pose.Head,pose.HeadRotation);
-            left.SetPositionAndRotation(pose.Left,pose.LeftRotation); right.SetPositionAndRotation(pose.Right,pose.RightRotation);
-            var forward = Vector3.ProjectOnPlane(pose.HeadRotation*Vector3.forward,Vector3.up);
-            if (forward.sqrMagnitude > .01f)
-            {
-                var yaw = Quaternion.LookRotation(forward,Vector3.up);
-                coat.rotation = bodyPlaced ? Quaternion.Slerp(coat.rotation,yaw,1-Mathf.Exp(-6*Time.unscaledDeltaTime)) : yaw;
-            }
-            coat.position = pose.Head - Vector3.up*.48f;
-            bodyPlaced = true;
+            RefreshAppearance(stream, identity.InputAuthority.RawEncoded);
+            if (customModel && customModel.FullBody) customModel.FullBody.ApplyPose(pose,Time.unscaledDeltaTime);
+            else ApplyModularPose(pose);
             LeftPoseChanged.Invoke(pose.LeftPose,pose.LeftGrip,pose.LeftTrigger);
             RightPoseChanged.Invoke(pose.RightPose,pose.RightGrip,pose.RightTrigger);
             if (!observer) observer = Camera.main;
@@ -82,6 +120,23 @@ namespace LighthouseKeepers.Net
             nameplate.transform.rotation = observer.transform.rotation;
             nameplate.alpha = Mathf.Clamp01(7-Vector3.Distance(observer.transform.position,pose.Head));
             if (Time.unscaledTime >= nextName) { nextName = Time.unscaledTime + 1; nameplate.text = stream.NameFor(identity.InputAuthority.RawEncoded); }
+        }
+        void ApplyModularPose(KeeperPoseFrame pose)
+        {
+            var trackedHead = customModel ? customModel.Head : head;
+            var body = customModel ? customModel.Body : coat;
+            var trackedLeft = customModel && customModel.LeftHand ? customModel.LeftHand : left;
+            var trackedRight = customModel && customModel.RightHand ? customModel.RightHand : right;
+            var forward = Vector3.ProjectOnPlane(pose.HeadRotation*Vector3.forward,Vector3.up);
+            if (forward.sqrMagnitude > .01f)
+            {
+                var yaw = Quaternion.LookRotation(forward,Vector3.up);
+                body.rotation = bodyPlaced ? Quaternion.Slerp(body.rotation,yaw,1-Mathf.Exp(-6*Time.unscaledDeltaTime)) : yaw;
+            }
+            body.position = pose.Head + body.rotation * (customModel ? customModel.BodyOffsetFromHead : Vector3.down*.48f);
+            trackedHead.SetPositionAndRotation(pose.Head,pose.HeadRotation);
+            trackedLeft.SetPositionAndRotation(pose.Left,pose.LeftRotation); trackedRight.SetPositionAndRotation(pose.Right,pose.RightRotation);
+            bodyPlaced = true;
         }
         void OnDestroy() { if (fallback) Destroy(fallback); }
     }

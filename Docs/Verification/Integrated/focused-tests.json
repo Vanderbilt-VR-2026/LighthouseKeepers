@@ -1,0 +1,33 @@
+{
+  "EditMode": {
+    "exit": 0,
+    "counts": {
+      "total": "304",
+      "passed": "304",
+      "failed": "0",
+      "duration": "9.0991656"
+    },
+    "failures": []
+  },
+  "PlayMode": {
+    "exit": 2,
+    "counts": {
+      "total": "21",
+      "passed": "19",
+      "failed": "2",
+      "duration": "84.5844465"
+    },
+    "failures": [
+      {
+        "name": "LighthouseKeepers.Presentation.Environment.Tests.PlaytestWorldFixesTests.ThroatShellFacesAreNotCoplanarAndLensReadsAsGlass",
+        "message": "  East door frame strip is coplanar with the throat wall face\n  Expected: less than or equal to 0.548000038f\n  But was:  0.559300065f\n",
+        "stack": "at LighthouseKeepers.Presentation.Environment.Tests.PlaytestWorldFixesTests+<ThroatShellFacesAreNotCoplanarAndLensReadsAsGlass>d__7.MoveNext () [0x000ab] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Presentation/Environment/Tests/PlaytestWorldFixesTests.cs:61\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast",
+        "message": "  Expected: True\n  But was:  False\n",
+        "stack": "at LighthouseKeepers.Net.Tests.WatchReplicaTests+<SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast>d__8.MoveNext () [0x002d5] in /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Assets/Scripts/LK.Net/Tests/PlayMode/WatchReplicaTests.cs:79\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+      }
+    ]
+  }
+}

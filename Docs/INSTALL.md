@@ -1,12 +1,12 @@
 # Install Lighthouse Keepers
 
-[← Back to downloads](../README.md#choose-your-download)
+[← Back to downloads](../README.md#download--play)
 
 ## Before you start
 
 You need a Quest 3, the phone paired to it, a Mac or Windows computer, and a USB cable that transfers data. A charging-only cable will not work. Download the **APK** from the project home page; the MP4 is a video, and the source ZIP is for developers.
 
-For co-op, install **LighthouseKeepers-Coop-Preview.apk on both headsets**. An old Sprint 3 submission APK cannot join the shared co-op game.
+For current co-op, install **the same Sprint 4 release APK on both headsets**. Different sprint/network versions cannot share a room.
 
 ## One-time headset setup
 
@@ -41,28 +41,9 @@ For co-op, install **LighthouseKeepers-Coop-Preview.apk on both headsets**. An o
 
 ## Joining a friend
 
-- Use the **same co-op APK**, with Wi-Fi/internet on for both players.
-- The host presses **HOST CREW** and reads the current code out loud. The guest enters it under **CREW OPTIONS**, closes the keypad, then presses **JOIN CREW**.
-- **SIGNAL READY is disabled until you actually join.** Both names must appear in the ledger; entering text is not enough.
-- If you get **Game does not exist**, ask the host to leave and create a fresh crew. Enter the new code. We observed a stale code after Photon recovered the host connection; fresh hosting is the tested workaround.
-- If the host is a Mac Editor, keep the Mac awake and Unity in Play Mode. Do not let either headset sleep while joining.
-- Only the host presses **BEGIN WATCH**, after both players signal ready. This preview supports **two players**, not four.
-- Co-op requires the internet. For offline play, choose **PLAY SOLO** instead.
-- Use Quest party chat or speak aloud for voice.
+1. Install the same release APK on both Quests; turn internet/Wi-Fi on.
+2. Host: **PLAY → HOST / PLAY ALONE**. Read the crew code to your friend.
+3. Guest: **PLAY → JOIN CREW**. Enter the code and join.
+4. Host: when both names appear, press **START**. No READY step.
 
-## For people who already use ADB
-
-With Android platform-tools installed, open a terminal in the download folder:
-
-```sh
-adb devices
-adb install -r LighthouseKeepers-Coop-Preview.apk
-```
-
-`adb devices` must show `device`, not `unauthorized`. For Sprint 3 or Sprint 2, use that APK's filename instead. Then launch from **Unknown Sources**.
-
-## Switching versions
-
-Sprint 2 (`com.lighthousekeepers.sprint2`) can stay installed beside either other build. Sprint 3 and co-op both use `com.lighthousekeepers.game`; installing one replaces the other. To restore the graded Sprint 3 game, download and install its APK again. No GitHub release needs to be deleted or changed.
-
-Official setup references: [Meta device setup](https://developers.meta.com/horizon/documentation/native/android/mobile-device-setup/) · [SideQuest installation](https://sidequestvr.com/setup-howto) · [SideQuest connection help](https://side.quest/support/700315/unauthorized-unable-to-connect-the-quest-apps-not-installing-cant-see-apps-once-installed-heres-why).
+A host can START alone immediately. Without internet use START on **No connection — Play offline**. If a code no longer exists, the host can create a fresh crew and share the new code. [Back to the current download](../README.md#download--play).

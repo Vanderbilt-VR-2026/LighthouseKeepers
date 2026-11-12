@@ -14,10 +14,10 @@ namespace LighthouseKeepers.WatchDemo
         public int Day3Stage=>day3Stage;
         public bool Day3Crew=>balanceCrew;
         public float FloodRiseMultiplier=>Day3Balance?(balanceCrew?Tuning.day3CrewFloodMultiplier:Tuning.day3SoloFloodMultiplier):1;
-        double Day3GraceSeconds=>balanceCrew?Tuning.day3CrewBeaconGraceSeconds:Tuning.day3SoloBeaconGraceSeconds;
-        public double BeaconGraceRemaining=>Day3Balance?Math.Max(0,day3GraceUntil-Elapsed):0;
+        double Day3GraceSeconds=>Master?(balanceCrew?Master.day3CrewBeaconGraceSeconds:Master.day3SoloBeaconGraceSeconds):(balanceCrew?Tuning.day3CrewBeaconGraceSeconds:Tuning.day3SoloBeaconGraceSeconds);
+        public double BeaconGraceRemaining=>Math.Max(StationGraceRemaining,GeneratorTutorial?Math.Max(0,firstGeneratorGraceUntil-Elapsed):Day3Balance?Math.Max(0,day3GraceUntil-Elapsed):0);
         bool RadioAvailable=>HasPower(PowerCircuit.Radio)&&!IsPending(RadioStation);
-        public bool IsPending(string station)=>Day3Balance&&
+        public bool IsPending(string station)=>GeneratorTutorial&&!NightTwoOutage&&station==GeneratorStation || Day3Balance&&
             (station==GeneratorStation&&day3Stage==1 || (station==RadioStation||station==BeaconStation)&&day3Stage<3);
         void StartDay3Outage()
         {
@@ -39,7 +39,7 @@ namespace LighthouseKeepers.WatchDemo
             bool balanced=Tuning&&Tuning.day3Balance&&day.day==3&&Engine!=null&&Grid!=null&&Beacon!=null;
             if(!balanced)return s.day3Stage==0&&s.day3GraceUntil==0;
             if(s.day3Stage<1||s.day3Stage>3)return false;
-            double grace=s.day3Crew?Tuning.day3CrewBeaconGraceSeconds:Tuning.day3SoloBeaconGraceSeconds;
+            double grace=Master?(s.day3Crew?Master.day3CrewBeaconGraceSeconds:Master.day3SoloBeaconGraceSeconds):(s.day3Crew?Tuning.day3CrewBeaconGraceSeconds:Tuning.day3SoloBeaconGraceSeconds);
             return s.day3GraceUntil<=s.elapsed+grace+.01&&(s.day3Stage!=1||s.day3GraceUntil==0);
         }
     }

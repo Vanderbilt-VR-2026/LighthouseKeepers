@@ -37,6 +37,12 @@ namespace LighthouseKeepers.Net
                 foreach (var player in lobby.Players) if (player.Id == peer.PlayerId.ToString(System.Globalization.CultureInfo.InvariantCulture)) return player.DisplayName;
             return "Keeper";
         }
+        public bool TryRoleFor(int actor, out CrewAvatarRole role)
+        {
+            role = CrewAvatarRole.Unknown;
+            return lobby && channel.TryPlayer(actor, out var peer) &&
+                CrewAvatarRoles.TryResolve(peer.PlayerId.ToString(System.Globalization.CultureInfo.InvariantCulture), lobby.Players, out role);
+        }
         public bool Sample(int actor, out KeeperPoseFrame pose)
         { pose = default; return poses.TryGetValue(actor, out var buffer) && buffer.Sample(Time.unscaledTimeAsDouble, out pose); }
         // A brief network stall freezes the remote visual instead of blinking it.

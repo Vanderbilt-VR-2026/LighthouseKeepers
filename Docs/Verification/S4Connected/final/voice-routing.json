@@ -1,0 +1,196 @@
+[
+  {
+    "time": 1794101566.655692,
+    "event": "voice LighthouseKeepers-Coop-Basics",
+    "data": {
+      "muted": false,
+      "recording": true,
+      "transmit": true,
+      "channels": 1,
+      "reference": true,
+      "aec": true,
+      "ns": true,
+      "processor": true,
+      "remote": [
+        {
+          "name": "Remote p#2 v#1",
+          "IsPlaying": true,
+          "channels": 1,
+          "rate": 48000
+        }
+      ]
+    }
+  },
+  {
+    "time": 1794101566.904043,
+    "event": "voice LighthouseKeepers-Coop-Build",
+    "data": {
+      "muted": false,
+      "recording": true,
+      "transmit": true,
+      "channels": 1,
+      "reference": true,
+      "aec": true,
+      "ns": true,
+      "processor": true,
+      "remote": []
+    }
+  },
+  {
+    "time": 1794101613.40786,
+    "event": "Cross-floor proximity LighthouseKeepers-Coop-Basics",
+    "data": {
+      "radio0": 0,
+      "radio1": 0,
+      "muted": false,
+      "allowed": true,
+      "radios": [
+        {
+          "name": "CREW_RADIO_0",
+          "held": true,
+          "wants": false,
+          "position": "(3.35, 1.17, -1.74)"
+        },
+        {
+          "name": "CREW_RADIO_1",
+          "held": false,
+          "wants": false,
+          "position": "(3.35, 11.07, -1.74)"
+        }
+      ],
+      "voices": [
+        {
+          "actor": 3,
+          "radio": false,
+          "gain": 0.0222070385,
+          "cutoff": 1800.01013,
+          "occluded": true
+        }
+      ]
+    }
+  },
+  {
+    "time": 1794101613.4701812,
+    "event": "Cross-floor proximity LighthouseKeepers-Coop-Build",
+    "data": {
+      "radio0": 0,
+      "radio1": 0,
+      "muted": false,
+      "allowed": true,
+      "radios": [
+        {
+          "name": "CREW_RADIO_0",
+          "held": false,
+          "wants": false,
+          "position": "(3.35, 1.17, -1.74)"
+        },
+        {
+          "name": "CREW_RADIO_1",
+          "held": true,
+          "wants": false,
+          "position": "(3.35, 11.07, -1.74)"
+        }
+      ],
+      "voices": [
+        {
+          "actor": 2,
+          "radio": false,
+          "gain": 0.0222070385,
+          "cutoff": 1800.00037,
+          "occluded": true
+        }
+      ]
+    }
+  },
+  {
+    "time": 1794101614.727487,
+    "event": "Host trigger radio",
+    "data": {
+      "radio0": 2,
+      "radio1": 0,
+      "muted": false,
+      "allowed": true,
+      "radios": [
+        {
+          "name": "CREW_RADIO_0",
+          "held": false,
+          "wants": false,
+          "position": "(3.35, 1.17, -1.74)"
+        },
+        {
+          "name": "CREW_RADIO_1",
+          "held": true,
+          "wants": false,
+          "position": "(3.35, 11.07, -1.74)"
+        }
+      ],
+      "voices": [
+        {
+          "actor": 2,
+          "radio": true,
+          "gain": 0.9,
+          "cutoff": 3499.72729,
+          "occluded": true
+        }
+      ]
+    }
+  },
+  {
+    "time": 1794101617.7506502,
+    "event": "Guest head radio",
+    "data": {
+      "radio0": 0,
+      "radio1": 3,
+      "muted": false,
+      "allowed": true,
+      "radios": [
+        {
+          "name": "CREW_RADIO_0",
+          "held": true,
+          "wants": false,
+          "position": "(3.35, 1.17, -1.74)"
+        },
+        {
+          "name": "CREW_RADIO_1",
+          "held": false,
+          "wants": false,
+          "position": "(2.89, 11.57, -1.42)"
+        }
+      ],
+      "voices": [
+        {
+          "actor": 3,
+          "radio": true,
+          "gain": 0.9,
+          "cutoff": 3499.95923,
+          "occluded": true
+        }
+      ]
+    }
+  },
+  {
+    "time": 1794101619.581263,
+    "event": "Mute cancels radio",
+    "data": {
+      "radio0": 0,
+      "radio1": 0,
+      "muted": false,
+      "allowed": true,
+      "radios": [
+        {
+          "name": "CREW_RADIO_0",
+          "held": true,
+          "wants": false,
+          "position": "(3.35, 1.17, -1.74)"
+        },
+        {
+          "name": "CREW_RADIO_1",
+          "held": false,
+          "wants": false,
+          "position": "(2.89, 11.57, -1.42)"
+        }
+      ],
+      "voices": []
+    }
+  }
+]

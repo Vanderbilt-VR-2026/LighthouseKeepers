@@ -1,0 +1,9 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=15.360 day=1 repaired=False water=0.02000m
+Solo clamp set with actual XRI grip: elapsed=0.857s realtime=16.214 day=1 repaired=False water=0.02108m
+day-one physical bolt 1 complete; inflow=0.6666667: elapsed=10.833s realtime=26.252 day=1 repaired=False water=0.03221m
+Released wrench: position=(3.19, 0.00, -0.03) kinematic=False water=0.03367284: elapsed=12.593s realtime=28.082 day=1 repaired=False water=0.03367m
+day-one physical bolt 0 complete; inflow=0.3333333: elapsed=18.950s realtime=34.369 day=1 repaired=False water=0.03807m
+day-one physical bolt 2 complete; inflow=0: elapsed=25.345s realtime=40.757 day=1 repaired=True water=0.03722m
+Day 1 bed -> Day 2: elapsed=0.000s realtime=51.032 day=2 repaired=False water=0.02196m
+PASS solo Night 1 -> Night 2: elapsed=0.000s realtime=51.032 day=2 repaired=False water=0.02196m

@@ -1,0 +1,7 @@
+# Final regression accounting
+
+The complete run on runtime source `a8688d4` passed 272/272 EditMode and 39/65 PlayMode. Twenty-five failures match the Part B baseline. One additional failure in `CoopAppearanceTests.BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes` was caused by the preceding failing legacy wrist-roll test leaving its synthetic hand holding the wrench. Scene unload then attempted a finger-animation coroutine on an inactive wrench.
+
+`WatchInteractionTests` now releases its test-owned grab during UnityTearDown even when its assertion fails. No runtime/gameplay/pose code changed for this issue. An ordered rerun of that legacy test followed by both avatar tests gives the expected inherited wrist-roll failure and **both avatar tests pass**. Combined coverage is 40 passing PlayMode cases and the same 25 inherited failures; every previously passing test still passes. Full raw XML/logs remain under `artifacts/s4-master/part-c/exact-full/` and `isolation-rerun/`. Summaries and exact failure names are alongside this file; no results were overwritten to hide the initial failure.
+
+The graphics replay also replaced an obsolete assertion requiring a second realtime beacon spotlight with a check of the actual visible beam renderer; the spinning/illuminated beacon and one-light budget are both asserted. The reflection-reference failure discovered in the first run was fixed in authored scene/pipeline code and passes in the final complete suite.

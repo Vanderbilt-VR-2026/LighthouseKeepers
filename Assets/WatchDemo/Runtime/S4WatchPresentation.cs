@@ -116,7 +116,7 @@ namespace LighthouseKeepers.WatchDemo
             if(nightText)
             {
                 nightText.gameObject.SetActive(sleeping&&survivedDay>0&&fade>.55f);
-                if(shownNight!=survivedDay){shownNight=survivedDay;nightText.text="NIGHT "+survivedDay+" SURVIVED";}
+                if(shownNight!=survivedDay){shownNight=survivedDay;nightText.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.S4WatchPresentation.1")+survivedDay+LighthouseKeepers.Core.PlayerStrings.Get("legacy.S4WatchPresentation.2");}
                 nightText.color=new Color(.95f,.88f,.7f,Mathf.InverseLerp(.55f,.9f,fade));
             }
         }

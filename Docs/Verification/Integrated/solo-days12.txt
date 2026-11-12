@@ -1,0 +1,15 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=10.490 day=1 repaired=False water=0.02000m
+Solo clamp set with actual XRI grip: elapsed=0.860s realtime=11.348 day=1 repaired=False water=0.02108m
+day-one physical bolt 1 complete; inflow=0.6666667: elapsed=11.763s realtime=22.252 day=1 repaired=False water=0.03321m
+Released wrench: position=(3.19, 0.00, -0.05) kinematic=False water=0.03462525: elapsed=13.475s realtime=24.030 day=1 repaired=False water=0.03463m
+day-one physical bolt 0 complete; inflow=0.3333333: elapsed=19.819s realtime=30.307 day=1 repaired=False water=0.03901m
+day-one physical bolt 2 complete; inflow=0: elapsed=26.027s realtime=36.516 day=1 repaired=True water=0.03821m
+Day 1 bed -> Day 2: elapsed=0.000s realtime=46.814 day=2 repaired=False water=0.02194m
+Three actual generator XRI pulls: elapsed=93.620s realtime=185.678 day=2 repaired=False water=0.26515m
+Solo clamp set with actual XRI grip: elapsed=94.545s realtime=186.600 day=2 repaired=False water=0.26641m
+day-two physical bolt 2 complete; inflow=0.6666667: elapsed=102.905s realtime=194.961 day=2 repaired=False water=0.27615m
+Released wrench: position=(3.11, 0.01, 0.75) kinematic=False water=0.277609: elapsed=104.628s realtime=196.755 day=2 repaired=False water=0.27761m
+day-two physical bolt 0 complete; inflow=0.3333333: elapsed=111.063s realtime=203.119 day=2 repaired=False water=0.28218m
+day-two physical bolt 1 complete; inflow=0: elapsed=117.201s realtime=209.257 day=2 repaired=True water=0.28139m
+PASS Night 1 -> Night 2 -> staged Night 3: elapsed=0.000s realtime=213.869 day=3 repaired=False water=0.02126m

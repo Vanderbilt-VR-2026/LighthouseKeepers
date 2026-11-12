@@ -1,0 +1,59 @@
+PASS 72 rendered sweep views: House, four floors, three stair flights, gallery; wall materials double-sided opaque; camera clip .04; occlusion off.
+camera near=0.04 occlusion=False
+TMP HUD labels=5
+LIGHT Central service light F3 enabled=True bake=Baked shadows=None
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Central service light House enabled=True bake=Baked shadows=None
+LIGHT S4 red guide light stairs F2 enabled=True bake=Realtime shadows=None
+LIGHT Emergency gallery fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Powered lantern light enabled=True bake=Baked shadows=None
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT S4 red guide light landing F2 enabled=True bake=Realtime shadows=None
+LIGHT Gentle lightning through windows enabled=True bake=Realtime shadows=None
+LIGHT Distant lightning flash enabled=True bake=Baked shadows=None
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Watch powered service light F2 enabled=True bake=Baked shadows=None
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT S4 red guide light landing F3 enabled=True bake=Realtime shadows=None
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT S4 red guide light stairs F1 enabled=True bake=Realtime shadows=None
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT S4 red guide light generator enabled=True bake=Realtime shadows=None
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Watch powered service light F1 enabled=True bake=Baked shadows=None
+LIGHT Powered rotating beacon beam enabled=True bake=Baked shadows=None
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Emergency gallery fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Central service light F4 enabled=True bake=Baked shadows=None
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT S4 red guide light landing F4 enabled=True bake=Realtime shadows=None
+LIGHT Mains fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Brief dawn through windows enabled=False bake=Realtime shadows=None
+LIGHT Oil fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+LIGHT S4 red guide light stairs F3 enabled=True bake=Realtime shadows=None
+LIGHT Emergency fixture light [50%] enabled=True bake=Baked shadows=Hard
+LIGHT Warm practical light enabled=True bake=Realtime shadows=None
+PASS graphics capture completed; inspect images separately

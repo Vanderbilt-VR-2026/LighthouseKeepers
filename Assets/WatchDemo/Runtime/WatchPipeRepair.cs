@@ -28,10 +28,11 @@ namespace LighthouseKeepers.WatchDemo
             return bolts[index].TransformPoint(new Vector3(0,0,.033f-.022f*fraction));
         }
         public Vector3 ActivePosition=>SocketPosition(watch!=null&&watch.Pipe.ActiveBolt>=0?watch.Pipe.ActiveBolt:0);
+        public Transform PipeIndexForGuide()=>watch!=null&&watch.Pipe.ActiveBolt>=0?bolts[watch.Pipe.ActiveBolt]:null;
         void Awake(){haptics=wrench.GetComponent<WrenchHaptics>();active=Block(new Color(1,.58f,.12f),1);done=Block(new Color(.1f,.65f,.2f),.3f);idle=Block(new Color(.2f,.25f,.27f),0);}
         static MaterialPropertyBlock Block(Color c,float glow){var p=new MaterialPropertyBlock();p.SetColor("_BaseColor",c);p.SetColor("_EmissionColor",c*glow);return p;}
         public void Bind(WatchState state)
-        {watch=state;if(state.Immersion&&state.Immersion.leverPipe)PipeWallLayout.Apply(this);watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;
+        {watch=state;if(state.Immersion&&state.Immersion.leverPipe)PipeWallLayout.Apply(this);watch.Pipe.QuarterTurn+=TickFeedback;watch.Pipe.Completed+=CompleteFeedback;watch.Pipe.Changed+=Changed;if(watch.Pressure!=null)watch.Pressure.Changed+=Changed;
             if(state.Immersion&&state.Immersion.forgivingPipe&&!wrench.GetComponent<ImmersionWrenchSocket>())
             {
                 // XRI adds its ordinary follow transformer lazily only when the list is empty.
@@ -55,11 +56,11 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<3;i++)
             {
                 indicators[i].SetPropertyBlock(finished[i]?done:i==lastBolt?active:idle);
-                var emission=sprays[i].emission;emission.rateOverTime=watch.Pipe.Profile.sprayParticlesPerSecond*watch.Pipe.InflowFraction;
+                var emission=sprays[i].emission;emission.rateOverTime=watch.Pipe.Profile.sprayParticlesPerSecond*watch.LeakStrength;
                 if(i==lastBolt&&!watch.Failed){if(!sprays[i].isPlaying)sprays[i].Play();}
                 else sprays[i].Stop(true,ParticleSystemStopBehavior.StopEmitting);
             }
-            leakAudio.volume=.25f*watch.Pipe.InflowFraction;
+            leakAudio.volume=.25f*watch.LeakStrength;
             if(watch.Pipe.Complete||watch.Failed)leakAudio.Stop();else if(!leakAudio.isPlaying)leakAudio.Play();
         }
         void Update()
@@ -67,7 +68,7 @@ namespace LighthouseKeepers.WatchDemo
             if(watch==null)return;
             var state=watch.Pipe;int index=state.ActiveBolt;
             bool remoteHeld=watch.Coop!=null&&watch.Coop.RemoteHeld(wrench);
-            bool triggerMode=watch.Immersion&&watch.Immersion.leverPipe&&watch.Immersion.triggerClutch;
+            bool triggerMode=watch.Immersion&&watch.Immersion.leverPipe&&watch.Immersion.triggerClutch&&!(watch.Master&&watch.Master.gripOnlyWrench);
             if(triggerMode&&!socket)socket=wrench.GetComponent<ImmersionWrenchSocket>();
             bool locked=socket&&socket.ClutchHeld&&socket.IsSnapped;
             if(triggerMode&&watch.RemoteReplica&&watch.Coop!=null&&(Time.unscaledTime>=nextClutchSend||locked!=previousClutch))
@@ -105,7 +106,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             else if(!InContact||degrees*state.Direction>0)returnClickDegrees=0;
             state.Observe(Time.deltaTime,degrees,InContact,steady,!watch.Failed);
-            if(watch.Failed){if(!failureShown){Changed();prompt.text="WATCH LOST — PRESS TRIGGER TO RETRY";failureShown=true;}return;}
+            if(watch.Failed){if(!failureShown){Changed();prompt.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPipeRepair.1");failureShown=true;}return;}
             if(watch.Immersion&&watch.Immersion.physicalGuidance)return;
             if(Time.unscaledTime<nextText)return;nextText=Time.unscaledTime+.1f;
             if(state.Complete){prompt.text="PIPE SEALED  3/3";return;}
@@ -113,8 +114,8 @@ namespace LighthouseKeepers.WatchDemo
             var facing=prompt.transform.position-head.position;if(facing.sqrMagnitude>.01f)prompt.transform.rotation=Quaternion.LookRotation(facing);
             if(Vector3.Distance(head.position,bolts[index].position)>3){prompt.text="";return;}
             string name=((char)('A'+index)).ToString();
-            string instruction=!InContact?"SEAT WRENCH JAW ON GLOWING BOLT":state.NeedsSeal?$"HOLD STEADY  {Mathf.CeilToInt(state.Profile.sealSeconds-state.SealElapsed)}s":state.NeedsReturn?"RETURN WRIST / REGRIP":$"TURN WRIST  {state.TurnsDone}/{state.Profile.quarterTurns[index]} CLICKS";
-            prompt.text=$"COUPLING {name}  /  PIPE {state.BoltsDone}/3\n{instruction}";
+            string instruction=!InContact?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPipeRepair.3"):state.NeedsSeal?$"HOLD STEADY  {Mathf.CeilToInt(state.Profile.sealSeconds-state.SealElapsed)}s":state.NeedsReturn?"RETURN WRIST / REGRIP":$"TURN WRIST  {state.TurnsDone}/{state.Profile.quarterTurns[index]} CLICKS";
+            prompt.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPipeRepair.2"),name,state.BoltsDone,instruction);
         }
         // atan2 preserves sub-degree motion at high Editor frame rates; acos(w) in
         // ToAngleAxis rounds tiny rotations to zero and made slow turns inconsistent.
@@ -135,6 +136,6 @@ namespace LighthouseKeepers.WatchDemo
             if(Mathf.Abs(toward)<.000001f)return 0;
             return Mathf.Abs(degrees)*Mathf.Sign(toward);
         }
-        void OnDestroy(){if(watch!=null){watch.Pipe.QuarterTurn-=TickFeedback;watch.Pipe.Completed-=CompleteFeedback;watch.Pipe.Changed-=Changed;}}
+        void OnDestroy(){if(watch!=null){watch.Pipe.QuarterTurn-=TickFeedback;watch.Pipe.Completed-=CompleteFeedback;watch.Pipe.Changed-=Changed;if(watch.Pressure!=null)watch.Pressure.Changed-=Changed;}}
     }
 }

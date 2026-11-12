@@ -46,7 +46,7 @@ WASD / Q–E use the existing desktop preview. Near the relevant station: B brac
 
 ## Authoring and verification
 
-The Inspector's `WatchTuning` controls action durations, flood rates, blackout timing, support grace, air/rescue/pull timers and reach. Default work durations are 14 seconds per pipe stage, 18 per generator step and 8 per beacon switch at full interaction effort. Human movement, regripping, communication and refuges account for the remaining pacing; measure the total during the first two-person playtest.
+The Inspector's `WatchTuning` controls action durations, flood rates, blackout timing, support grace, air/rescue/pull timers and reach. In solo play only, `ImmersionTuning.soloWatchGate` holds each night's clock and flood until the keeper starts work (first wrench grab or station use) or `soloWatchStartGraceSeconds` (default 45) pass; crew sessions start immediately as before. Default work durations are 14 seconds per pipe stage, 18 per generator step and 8 per beacon switch at full interaction effort. Human movement, regripping, communication and refuges account for the remaining pacing; measure the total during the first two-person playtest.
 
 **Build Quest APK** writes `Builds/LighthouseKeepers-StormWatch.apk`; **Build desktop companion** writes a development Mac player when that Unity platform module is installed. Both build helpers use the normal crew lobby first, followed by Storm Watch, the development Bootstrap, and the six content scenes. The standard development APK uses that same scene list.
 

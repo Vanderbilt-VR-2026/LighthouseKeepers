@@ -31,6 +31,7 @@ namespace LighthouseKeepers.Lobby
         static readonly Color Brass = new(0.72f, 0.49f, 0.22f);
         static readonly Color Ready = new(0.47f, 0.77f, 0.58f);
         public Canvas BoardCanvas => canvas;
+        public bool ExternalFlow {get;set;}
         public bool IsLowered => lowered;
 
         void Awake()
@@ -91,7 +92,7 @@ namespace LighthouseKeepers.Lobby
         void CloseOptions() { options.SetActive(false); roster.SetActive(true); }
         public void Refresh()
         {
-            if (!manager || !modeText) return;
+            if (ExternalFlow || !manager || !modeText) return;
             bool local = manager.IsLocalPreview;
             modeText.text = local ? (manager.IsOnline && !manager.IsHost ? "SIMULATED GUEST" : "LOCAL PRACTICE") : manager.IsBusy ? "CONNECTING..." : "PHOTON CREW";
             crewCount.text = $"{manager.Players.Count:00} / {manager.MaxPlayers:00} KEEPERS";

@@ -36,6 +36,7 @@ namespace LighthouseKeepers.WatchDemo
    {
     float height=s.Tuning?s.Tuning.failWaterHeightM:.55f;
     int wanted=Choose(!s.Complete,Mathf.Max(0,watch.WaterHeight)/height,s.BeaconDarkRemaining,!s.BeaconShining&&s.BeaconDarkLimit>0,s.Duration-s.Elapsed);
+    if(s.Storm!=null&&s.Storm.Stage==4&&!s.Complete)wanted=2;
     if(mode<0)Transition(wanted,s.Elapsed,0);
     if(wanted!=mode&&wanted!=pending)
     {

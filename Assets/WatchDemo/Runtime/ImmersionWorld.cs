@@ -11,13 +11,13 @@ namespace LighthouseKeepers.WatchDemo
         readonly List<AudioSource> faultAudio=new();
         readonly List<(Light light,Renderer lens)> lenses=new();MaterialPropertyBlock lensBlock;
         readonly TextMesh[] bunkLabels=new TextMesh[2];int shownBedState=-1;
-        Font chalk;int bedMask;HarborRadio narrator;
+        Font chalk;Material boardEnamel;int bedMask;HarborRadio narrator;
         public HarborRadio Narrator=>narrator;
         public static ImmersionWorld Create(WatchDemoController watch,Transform head,Transform bed,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
         {
             var p=watch.gameObject.AddComponent<ImmersionWorld>();p.watch=watch;p.bed=bed;p.lensBlock=new MaterialPropertyBlock();p.parts=watch.gameObject.AddComponent<M2StationParts>();p.parts.Initialize();
             p.chalk=Resources.Load<Font>("Fonts/Kalam-Regular");
-            if(watch.State.Immersion.physicalGuidance)p.Build(head,board,pipe,generator,radio,beacon);
+            if(watch.State.Immersion.physicalGuidance)p.Build(head,board,wrench,pipe,generator,radio,beacon);
             var cabinet=p.HouseRadio(board);
             foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>()));}
             if(watch.State.Immersion.radioNarration)p.narrator=HarborRadio.Create(watch,head,wrench,pipe,cabinet);
@@ -26,33 +26,41 @@ namespace LighthouseKeepers.WatchDemo
             RainSoundscape.Create(watch,head);
             return p;
         }
-        void Build(Transform head,TextMesh board,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
+        public static string WrenchBenchText=>LighthouseKeepers.Core.PlayerStrings.Get("integrated.wrenchPlate");
+        void Build(Transform head,TextMesh board,Transform wrench,WatchPipeRepair pipe,WatchGenerator generator,WatchRadioConsole radio,WatchBeacon beacon)
         {
             var face=GameObject.Find("Wall-mounted checklist white face");
-            if(face){var b=new MaterialPropertyBlock();b.SetColor("_BaseColor",new Color(.025f,.045f,.035f));b.SetColor("_EmissionColor",new Color(.006f,.009f,.007f));face.GetComponent<Renderer>().SetPropertyBlock(b);}
+            if(face)
+            {
+                var renderer=face.GetComponent<Renderer>();
+                boardEnamel=new Material(renderer.sharedMaterial){name="Readable white board enamel"};
+                boardEnamel.EnableKeyword("_EMISSION");renderer.sharedMaterial=boardEnamel;
+                var b=new MaterialPropertyBlock();b.SetColor("_BaseColor",new Color(.94f,.94f,.91f));
+                b.SetColor("_EmissionColor",new Color(.55f,.55f,.52f));renderer.SetPropertyBlock(b);
+            }
             if(chalk){board.font=chalk;board.GetComponent<Renderer>().sharedMaterial=chalk.material;board.fontStyle=FontStyle.Normal;}
-            board.color=new Color(.87f,.86f,.74f);board.characterSize*=.90f;
+            board.color=new Color(.025f,.025f,.025f);board.characterSize*=.90f;
             ImmersionPipePresentation.Create(pipe,watch.State);
+            BenchPlate(wrench);
             var bedMount=M2StationParts.Root("Bunk physical fittings",transform,Vector3.zero);bedMount.SetPositionAndRotation(bed.position,bed.rotation);
             var wood=bed.GetComponent<Renderer>().sharedMaterial;
             bed=bedMount;
-            parts.Part("Timber bunk headboard",bed,new Vector3(0,.64f,1.06f),new Vector3(1.14f,1.05f,.07f),wood);
+            parts.Part("Timber bunk headboard",bed,new Vector3(0,.64f,1.06f),new Vector3(1.05f,1.05f,.07f),wood);
             for(int i=0;i<2;i++)
             {
                 bunk[i]=Fixture(parts,bed,new Vector3(i==0?-.35f:.35f,.95f,1.01f),i==0?"Host bunk lamp":"Guest bunk lamp");
                 bunk[i].transform.parent.localRotation=Quaternion.Euler(0,180,0);
-                var label=parts.Text("Bunk lamp keeper "+i,i==0?"KEEPER 1":"KEEPER 2",bunk[i].transform.parent,new Vector3(0,-.13f,.04f),.0035f);bunkLabels[i]=label;
+                var label=parts.Text("Bunk lamp keeper "+i,i==0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.6"):KeeperStrings.Get("bunk.keeperTwo"),bunk[i].transform.parent,new Vector3(0,-.13f,.04f),.0035f);bunkLabels[i]=label;
                 parts.Part("Bunk lamp name plate",label.transform,new Vector3(0,0,.007f),new Vector3(.25f,.10f,.012f),parts.Dark);
             }
             var bedPlate=M2StationParts.Root("Bunk rest plate",bed,new Vector3(0,.36f,-1.035f));bedPlate.localRotation=Quaternion.Euler(0,180,0);
             parts.Part("Bunk brass plate",bedPlate,Vector3.zero,new Vector3(.64f,.17f,.02f),parts.Dark);
-            parts.Text("Bunk instructions","WARM LAMPS = READY TO REST\nGRIP THE BUNK. WAIT FOR BOTH KEEPERS.",bedPlate,new Vector3(0,0,.012f),.0035f).color=new Color(.95f,.89f,.7f);
+            parts.Text("Bunk instructions",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.7"),bedPlate,new Vector3(0,0,.012f),.0035f).color=new Color(.95f,.89f,.7f);
             for(int i=0;i<4;i++)
             {
-                float a=320*Mathf.Deg2Rad,r=i<2?3.48f:2.18f;
-                var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,new Vector3(Mathf.Sin(a)*r,i*3.3f+1.1f,Mathf.Cos(a)*r));
-                t.localRotation=Quaternion.LookRotation(new Vector3(-t.localPosition.x,0,-t.localPosition.z));
-                parts.Part("Stair lamp mounting post",t,new Vector3(0,-.55f,-.04f),new Vector3(.025f,1.1f,.025f),parts.Metal);
+                var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,Vector3.zero);
+                WallFixtureMount.Place(t,i*3.3f+2.15f,i==3?315:320,false);
+                parts.Part("Stair lamp wall bracket",t,new Vector3(0,0,-.012f),new Vector3(.17f,.23f,.025f),parts.Metal);
                 stair.Add(Fixture(parts,t,Vector3.zero,"Shielded stair lamp"));
             }
             station.Add(Fixture(parts,generator.transform,new Vector3(0,1.9f,.55f),"Generator fault service lamp"));
@@ -66,7 +74,7 @@ namespace LighthouseKeepers.WatchDemo
             var lens=beacon.transform.Find("Lens wipe label");if(lens)lens.gameObject.SetActive(false);
             var tag=M2StationParts.Root("Engraved lens cleaning tag",beacon.transform,new Vector3(.38f,.68f,.40f));
             parts.Part("Lens tag brass",tag,Vector3.zero,new Vector3(.28f,.10f,.015f),parts.Brass);
-            parts.Text("Lens tag engraving","WIPE GLASS\nWITH CLOTH",tag,new Vector3(0,0,.009f),.0023f).color=new Color(.1f,.07f,.03f);
+            parts.Text("Lens tag engraving",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.8"),tag,new Vector3(0,0,.009f),.0023f).color=new Color(.1f,.07f,.03f);
             var controls=FindAnyObjectByType<WatchBeaconStation>();
             if(controls)
             {
@@ -74,10 +82,20 @@ namespace LighthouseKeepers.WatchDemo
                 parts.Part("Beacon instruction plate",t,new Vector3(0,1.53f,.179f),new Vector3(.73f,.10f,.016f),parts.Metal);
                 var ring=M2StationParts.Root("Engraved wheel alignment legend",t,new Vector3(-.14f,.91f,.215f));
                 parts.Part("Wheel brass legend plate",ring,Vector3.zero,new Vector3(.39f,.09f,.015f),parts.Brass);
-                parts.Text("Wheel alignment engraving","ALIGN MARKS ▲",ring,new Vector3(0,0,.01f),.0027f).color=new Color(.1f,.07f,.03f);
+                parts.Text("Wheel alignment engraving",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.9"),ring,new Vector3(0,0,.01f),.0027f).color=new Color(.1f,.07f,.03f);
                 var old=t.Find("Wheel label");if(old)old.gameObject.SetActive(false);
                 parts.Part("Rag instruction plate",t,new Vector3(.25f,.64f,.207f),new Vector3(.29f,.13f,.025f),parts.Dark);
             }
+        }
+        void OnDestroy(){if(boardEnamel)Destroy(boardEnamel);}
+        // World-fixed brass plate behind the wrench's bench rest, read from the House side (+X); never billboards.
+        void BenchPlate(Transform wrench)
+        {
+            var plate=M2StationParts.Root("Wrench bench instruction plate",transform,wrench.position+new Vector3(-.30f,.10f,0));
+            plate.rotation=Quaternion.LookRotation(new Vector3(1,.35f,0).normalized,Vector3.up);
+            parts.Part("Bench brass plate",plate,Vector3.zero,new Vector3(.46f,.12f,.015f),parts.Brass);
+            parts.Part("Bench plate stand",plate,new Vector3(0,-.07f,-.02f),new Vector3(.02f,.08f,.02f),parts.Metal);
+            parts.Text("Bench plate engraving",WrenchBenchText,plate,new Vector3(0,0,.009f),.0026f).color=new Color(.1f,.07f,.03f);
         }
         Transform HouseRadio(TextMesh board)
         {
@@ -88,8 +106,8 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<9;i++)parts.Part("Radio speaker grille",t,new Vector3(-.11f+i*.021f,0,.075f),new Vector3(.006f,.17f,.006f),parts.Metal);
             parts.Part("Radio frequency glass",t,new Vector3(.135f,.055f,.075f),new Vector3(.14f,.045f,.01f),parts.Brass);
             for(int i=0;i<2;i++)parts.Part("Radio knob",t,new Vector3(.10f+i*.07f,-.045f,.09f),Vector3.one*.035f,parts.Metal,PrimitiveType.Sphere);
-            parts.Text("Harbor radio maker plate","HARBOR CONTROL",t,new Vector3(0,.105f,.076f),.0024f);
-            Fixture(parts,t,new Vector3(0,.20f,0),"House briefing radio lamp");return t;
+            parts.Text("Harbor radio maker plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.10"),t,new Vector3(0,.105f,.076f),.0024f);
+            Fixture(parts,t,new Vector3(0,.20f,0),LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.11"));return t;
         }
         public static Light Fixture(M2StationParts parts,Transform parent,Vector3 pos,string name)
         {
@@ -112,15 +130,15 @@ namespace LighthouseKeepers.WatchDemo
             {
                 bool resting=(bedMask&(1<<i))!=0;bool enabled=i==0||crew;
                 bunk[i].intensity=enabled?(resting?.55f:s.Complete&&!s.Failed?.35f:0):0;
-                if(shownBedState!=bedState)bunkLabels[i].text=!enabled?"SOLO WATCH":("KEEPER "+(i+1)+"\n"+(resting?"RESTING":s.Complete?"READY TO REST":"JOBS REMAIN"));
+                if(shownBedState!=bedState)bunkLabels[i].text=!enabled?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.1"):(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.2")+(i+1)+"\n"+(resting?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.3"):s.Complete?LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.4"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.5")));
             }
             shownBedState=bedState;
             for(int i=0;i<stair.Count;i++)
-            {bool fault=i==0?!s.Repaired:i==1?s.Power==PowerState.Off:i==3?!s.BeaconShining||!s.IsDone(WatchState.RadioStation):false;stair[i].intensity=fault?pulse:.18f;}
+            {bool fault=i==0?!s.Repaired:i==1?s.Power==PowerState.Off:i==3?!s.BeaconShining||!s.IsDone(WatchState.RadioStation):false;if(s.Director!=null)fault=ObjectiveDirector.Floor(watch.CurrentInstruction)==i+1||watch.PartnerInstruction!=KeeperStep.None&&ObjectiveDirector.Floor(watch.PartnerInstruction)==i+1;stair[i].intensity=fault?pulse:.18f;}
             for(int i=0;i<station.Count;i++)
             {
                 bool fault=i==0?s.Power==PowerState.Off:i==1?!s.IsDone(WatchState.RadioStation):!s.BeaconShining;
-                station[i].intensity=fault?pulse:.25f;
+                if(s.Director!=null){string job=i==0?WatchState.GeneratorStation:i==1?WatchState.RadioStation:WatchState.BeaconStation;station[i].intensity=ObjectiveDirector.Job(watch.CurrentInstruction)==job||ObjectiveDirector.Job(watch.PartnerInstruction)==job?pulse:0;}else station[i].intensity=fault?pulse:.25f;
                 var a=faultAudio[i];if(!a.clip)continue;
                 if(i==0){if(fault&&!s.Failed&&Time.time>=nextCough){a.Play();nextCough=Time.time+9;}continue;}
                 if(fault&&!s.Failed){if(!a.isPlaying)a.Play();}else if(a.isPlaying)a.Stop();

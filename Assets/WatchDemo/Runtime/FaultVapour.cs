@@ -42,7 +42,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var s=watch.State;bool leaking=!s.Repaired&&!s.Failed,broken=s.Engine!=null?!s.Engine.Running:s.Power==PowerState.Off;
             steam.enabled=leaking;smoke.enabled=broken&&!s.Failed;
-            if(leaking){steam.transform.position=pipe.ActivePosition+Vector3.left*.065f;steamMaterial.SetFloat("_Strength",s.Pipe.InflowFraction);}
+            if(leaking){steam.transform.position=pipe.ActivePosition+Vector3.left*.065f;steamMaterial.SetFloat("_Strength",s.LeakStrength);}
         }
         void OnDestroy(){if(cameraData)cameraData.requiresDepthOption=oldDepth;if(mesh)Destroy(mesh);if(steamMaterial)Destroy(steamMaterial);if(smokeMaterial)Destroy(smokeMaterial);}
     }

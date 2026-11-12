@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bad096efc2ee4fc1ae498f382a507710, type: 3}
+  m_Name: VisualPassSettings
+  renderQuality: 1
+  materials: 1
+  lighting: 1
+  water: 1
+  setDressing: 1
+  audioGaps: 1
+  fixedFoveation: 0.5
+  eliStormSky: 1

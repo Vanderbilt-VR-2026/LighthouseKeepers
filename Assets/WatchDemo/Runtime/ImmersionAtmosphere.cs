@@ -6,7 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class ImmersionAtmosphere : MonoBehaviour
     {
         WatchDemoController watch;Transform head;AudioSource wind,events,heartbeat;Light lightning,dawn;HandRig[] hands;
-        AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100;int eventNumber,day;bool waking;bool failed;
+        AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100,nextMasterStrike;int eventNumber,day;bool waking;bool failed;
         public void Initialize(WatchDemoController w,Transform h)
         {
             watch=w;head=h;hands=FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None);
@@ -27,16 +27,18 @@ namespace LighthouseKeepers.WatchDemo
             if(watch.State.Failed!=failed){failed=watch.State.Failed;if(failed){heartbeat.Play();if(watch.State.HighWaterFailed){var roar=Resources.Load<AudioClip>("S4Audio/water");if(roar)events.PlayOneShot(roar,1);}}else heartbeat.Stop();}
             if(day!=watch.State.Day){waking=day>0&&watch.State.Day>day;day=watch.State.Day;flashAge=0;PlayThunder();}
             // Existing host day/time drives both views. A brief recovery wash, never permanent daylight.
-            float dawnPhase=(float)watch.State.Elapsed/watch.State.Immersion.dawnWashSeconds;
+            float dawnPhase=(float)(watch.State.Elapsed+watch.State.WatchGateElapsed)/watch.State.Immersion.dawnWashSeconds;
             dawn.enabled=waking&&!failed&&dawnPhase<1;
             dawn.intensity=dawn.enabled?watch.State.Immersion.dawnWashIntensity*Mathf.Sin(Mathf.Clamp01(dawnPhase)*Mathf.PI):0;
             flashAge+=Time.deltaTime;
             // One broad 1.4-second envelope, never repeated rapidly. No hard flashes or camera shake.
             lightning.intensity=flashAge<1.4f?.35f*Mathf.Sin(flashAge/1.4f*Mathf.PI):0;
-            if(Time.time<nextEvent)return;nextEvent=Time.time+14+(eventNumber%3)*4;
+            int stage=watch.State.Storm?.Stage??1;
+            if(watch.State.Storm!=null&&stage>=3&&Time.time>=nextMasterStrike){nextMasterStrike=Time.time+(stage==4?15:22);flashAge=0;PlayThunder();}
+            if(Time.time<nextEvent)return;nextEvent=Time.time+(watch.State.Storm!=null?Mathf.Lerp(24,8,(stage-1)/3f):14)+(eventNumber%3)*4;
             var clip=eventNumber%4==0?creak:eventNumber%4==1?horn:eventNumber%4==2?drip:thunder;
             events.transform.position=head.position+new Vector3(eventNumber%2==0?3:-3,1.5f,2);
-            if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,.7f);}
+            if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,.5f+.1f*stage);}
             if(eventNumber%4==3){flashAge=0;foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
             eventNumber++;
         }

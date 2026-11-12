@@ -1,0 +1,274 @@
+{
+  "ours": {
+    "renderScale": 1.25,
+    "msaa": 4,
+    "stationary": {
+      "F1-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 39
+      },
+      "F2-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 4
+      },
+      "F3-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 19
+      },
+      "F4-normal": {
+        "start": "11-09 13:49:25.369",
+        "end": "11-09 13:49:35.513",
+        "head": [
+          3.33,
+          10.72,
+          -0.48
+        ],
+        "forward": [
+          -0.58,
+          0.32,
+          -0.75
+        ],
+        "gpuMs": {
+          "n": 11,
+          "median": 25.97,
+          "p95": 28.16,
+          "max": 28.16
+        },
+        "appFps": {
+          "n": 11,
+          "median": 35.5,
+          "p95": 35.9,
+          "max": 35.9
+        },
+        "pacedMainMs": {
+          "n": 11,
+          "median": 28.16,
+          "p95": 28.39,
+          "max": 28.39
+        },
+        "draws": {
+          "n": 11,
+          "median": 628,
+          "p95": 629,
+          "max": 629
+        }
+      },
+      "House-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 31
+      },
+      "gallery-sea-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 5
+      }
+    },
+    "note": "Whole-build comparison, resolution and content differ. Paced main includes waits. Peak=Night3+ full Eli seascape intensity; ours needs stage confirmation."
+  },
+  "eli": {
+    "renderScale": 1.0,
+    "msaa": 4,
+    "stationary": {
+      "F1-night2": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 18
+      },
+      "F1-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 26
+      },
+      "F1-peak": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 24
+      },
+      "F2-night2": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 19
+      },
+      "F2-normal": {
+        "start": "11-09 13:28:47.143",
+        "end": "11-09 13:28:55.200",
+        "head": [
+          -0.32,
+          4.16,
+          -0.86
+        ],
+        "forward": [
+          0.7,
+          -0.43,
+          0.57
+        ],
+        "gpuMs": {
+          "n": 9,
+          "median": 10.24,
+          "p95": 10.3,
+          "max": 10.3
+        },
+        "appFps": {
+          "n": 9,
+          "median": 72.0,
+          "p95": 72.1,
+          "max": 72.1
+        },
+        "pacedMainMs": {
+          "n": 9,
+          "median": 13.88,
+          "p95": 13.88,
+          "max": 13.88
+        },
+        "draws": {
+          "n": 9,
+          "median": 274,
+          "p95": 276,
+          "max": 276
+        }
+      },
+      "F2-peak": {
+        "start": "11-09 13:36:15.373",
+        "end": "11-09 13:36:24.442",
+        "head": [
+          -0.37,
+          4.33,
+          2.25
+        ],
+        "forward": [
+          0.6,
+          0.17,
+          0.78
+        ],
+        "gpuMs": {
+          "n": 10,
+          "median": 10.72,
+          "p95": 11.14,
+          "max": 11.14
+        },
+        "appFps": {
+          "n": 10,
+          "median": 72.0,
+          "p95": 72.1,
+          "max": 72.1
+        },
+        "pacedMainMs": {
+          "n": 10,
+          "median": 13.87,
+          "p95": 13.88,
+          "max": 13.88
+        },
+        "draws": {
+          "n": 10,
+          "median": 174.0,
+          "p95": 177,
+          "max": 177
+        }
+      },
+      "F3-night2": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 12
+      },
+      "F3-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 51
+      },
+      "F3-peak": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 58
+      },
+      "F4-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 55
+      },
+      "F4-peak": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 38
+      },
+      "House-night2": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 6
+      },
+      "House-normal": {
+        "start": "11-09 13:33:08.015",
+        "end": "11-09 13:33:15.070",
+        "head": [
+          -2.08,
+          1.01,
+          -7.77
+        ],
+        "forward": [
+          -0.95,
+          0.08,
+          -0.3
+        ],
+        "gpuMs": {
+          "n": 8,
+          "median": 9.6,
+          "p95": 10.38,
+          "max": 10.38
+        },
+        "appFps": {
+          "n": 8,
+          "median": 72.0,
+          "p95": 72.0,
+          "max": 72.0
+        },
+        "pacedMainMs": {
+          "n": 8,
+          "median": 13.88,
+          "p95": 14.05,
+          "max": 14.05
+        },
+        "draws": {
+          "n": 8,
+          "median": 62.5,
+          "p95": 65,
+          "max": 65
+        }
+      },
+      "House-peak": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 7
+      },
+      "gallery-sea-normal": {
+        "result": "insufficient stationary samples",
+        "movingSamples": 25
+      },
+      "gallery-sea-peak": {
+        "start": "11-09 13:39:31.346",
+        "end": "11-09 13:39:39.429",
+        "head": [
+          4.05,
+          10.7,
+          -0.09
+        ],
+        "forward": [
+          0.95,
+          0.32,
+          -0.04
+        ],
+        "gpuMs": {
+          "n": 9,
+          "median": 9.26,
+          "p95": 9.49,
+          "max": 9.49
+        },
+        "appFps": {
+          "n": 9,
+          "median": 72.0,
+          "p95": 72.3,
+          "max": 72.3
+        },
+        "pacedMainMs": {
+          "n": 9,
+          "median": 13.88,
+          "p95": 13.88,
+          "max": 13.88
+        },
+        "draws": {
+          "n": 9,
+          "median": 15,
+          "p95": 19,
+          "max": 19
+        }
+      }
+    },
+    "note": "Whole-build comparison, resolution and content differ. Paced main includes waits. Peak=Night3+ full Eli seascape intensity; ours needs stage confirmation."
+  }
+}

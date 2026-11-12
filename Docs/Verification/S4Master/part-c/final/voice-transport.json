@@ -1,0 +1,46 @@
+[
+  {
+    "time": 1793930694.146889,
+    "event": "voice LighthouseKeepers-Coop-Basics",
+    "data": {
+      "muted": false,
+      "recording": true,
+      "transmit": true,
+      "channels": 1,
+      "reference": true,
+      "aec": true,
+      "ns": true,
+      "processor": true,
+      "remote": [
+        {
+          "name": "Remote p#2 v#1",
+          "IsPlaying": true,
+          "channels": 1,
+          "rate": 48000
+        }
+      ]
+    }
+  },
+  {
+    "time": 1793930694.35426,
+    "event": "voice LighthouseKeepers-Coop-Build",
+    "data": {
+      "muted": false,
+      "recording": true,
+      "transmit": true,
+      "channels": 1,
+      "reference": true,
+      "aec": true,
+      "ns": true,
+      "processor": true,
+      "remote": [
+        {
+          "name": "Remote p#1 v#1",
+          "IsPlaying": true,
+          "channels": 1,
+          "rate": 48000
+        }
+      ]
+    }
+  }
+]

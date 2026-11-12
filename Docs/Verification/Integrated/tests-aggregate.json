@@ -1,0 +1,292 @@
+{
+  "note": "Full suite with later focused results overlaid by test name; not a fresh all-green full run",
+  "passed": 47,
+  "failed": 24,
+  "missingBaselinePasses": [],
+  "tests": {
+    "LighthouseKeepers.Presentation.Environment.Tests.EnvironmentLobbyFlowTests.OriginalLobbyStartLoadsHouseWithOneGroundedPlayer": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.EnvironmentPresentationTests.LabUsesOnePlayerAndLightingUpdatesAllocateNoManagedMemory": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.MasterSafetyTests.BakedPracticalLightingLeavesAtMostOneRealtimeSource": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.MasterSafetyTests.DecorativeWorldDoesNotAddPlayerObstaclesAndWaterKeepsItsHostSurface": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.MasterSafetyTests.EveryWalkableFloorBoundaryHasSupportOrGuard": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.MasterSafetyTests.GalleryIsContinuousAndHouseClutterCannotStepThePlayerUp": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.PlaytestWorldFixesTests.InteriorFloorsHaveNoRockStepsAndPlayerCapsuleIgnoresWrench": {
+      "result": "Passed",
+      "run": "integrated-rerun/WorldFixes.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.PlaytestWorldFixesTests.OpenStairwellEdgesAreGuardedWhileStairWalkLinesStayClear": {
+      "result": "Passed",
+      "run": "integrated-rerun/WorldFixes.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.PlaytestWorldFixesTests.ThroatShellFacesAreNotCoplanarAndLensReadsAsGlass": {
+      "result": "Passed",
+      "run": "integrated-rerun/WorldFixes.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.ShellTraversalTests.ExistingRigWalksAuthoredHouseToGalleryRoute": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.RepairFirstWaitsForPowerAndThreeRealPullsRestorePump": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchInteractionTests.GrabRepairDrainAndSleepAdvanceDayWithoutMovingHead": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.CoopAppearanceTests.BothHouseSpawnsHaveStandingClearanceAndRemoteHandsAreVisualOnlyTanMeshes": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.CoopAppearanceTests.RemoteGloveSurvivesDestructionOfTheLobbyRigResources": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.CrewLobbyBoardTests.AlphanumericPadReceivesFirstTrackedHitAndDoesNotCoverSolo": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.CrewLobbyBoardTests.ExistingAlphanumericPadSupportsSixCharactersAndBackspaceWithoutKeyboard": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.DisconnectClearsRemoteOwnerAndNotifiesTheEightSecondReturnExactlyOnce": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.HostReceivesReleaseMomentumAndCapsExtremeThrows": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.GrabReleasePhysicsTests.ReleasePacketPreservesMomentumAndWorldGeneration": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.DroppedWrenchReturnsAfterEightSecondsEvenBesideKeeper": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.FuelHandleGrabsWithEitherHandUprightDoesNotPourTiltRaisesHostFuel": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.PipeBracketsTouchRealShellAndMarkingsFaceRoom": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.RadioHintsWaitNinetySecondsStayQuietAtStationsAndPlayOnce": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.WrenchFollowsArmFromBothHandsAndThreeStancesKeepsProgressAndDrops": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.NetworkPracticeFreezeTests.PracticeCannotAdvanceToAnotherDayEvenAfterATaskWasCompleted": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.NetworkPracticeFreezeTests.PracticeDoesNotAdvanceTheClockOrAcceptIndependentRepairAndRadioProgress": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.NetworkRigTests.PlayerPrefabSpawnsOnRealOfflineRunnerWithoutAnotherCamera": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.NetworkRigTests.TwoInteractorChildrenResolveOneActor": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.ReleaseSoloOverrideTests.DayShortcutHasNoMutableRequestInRelease": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.ReleaseSoloOverrideTests.ReleaseBuildCannotEnableSoloOverride": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.SoloLobbyFlowTests.SoloButtonClosesAnExistingRunnerBeforeOpeningPractice": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.SoloLobbyFlowTests.SoloButtonLoadsLabWithoutHostingAndReturnsToLobby": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.FailedRetryButtonKeepsDayAndClearsPartialWork": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.MenuReturnClosesExistingCrewRunnerBeforeLobbyArrival": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.OfflineMenuReturnButtonLoadsLobbyWithXrUiAvailable": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TerminalReplayButtonResetsToDayOneWithoutMovingTrackedTransforms": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchMenuFlowTests.TrackedRaysReachReplayRetryAndReturnWithNearbyWall": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.CompleteSnapshotFitsExistingReliableChannelAndRejectsCorruptPipePermutation": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.HostDayPowerAndTaskStateAppliesToReadOnlyGuestWhileGuestCannotAdvanceAnything": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.HostLossContinuationPreservesTheEntirePipeOrderAndUnfinishedRatchet": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast": {
+      "result": "Failed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.SoloRejectsRemoteWritesAndReplicaRejectsMalformedOrUnknownDay": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.BootstrapIntegrationTests.BootstrapLoadsTeamEnvironmentWithOneFloodAuthority": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.AuthoredSliceRepairsBuysTimeAndRecoversAtLanding": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.InspectorClampDurationControlsFeedbackAndExpiry": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.MissingRequiredStationIsReportedBeforeInteraction": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.SelectedBraceAndWristRotationActuallySealAValve": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FirstWatchPlayTests.WrongValveSurgeIsBoundedAndRetryWorksAfterDrowning": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.DefaultLobbyUsesPhotonInsteadOfLocalSimulation": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.OfflineFusionSessionLoadsLabAndSurvivesBoardUnload": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.PhotonPeersShareRosterReadyLateJoinKickAndDisconnect": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.ReadyCrewRemainsInLobbyUntilLabSharedStateIsImplemented": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.FusionLobbyIntegrationTests.TwoReadyKeepersLaunchLabAndHostStateCrossesExistingRunner": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.LobbyControllerEntryTests.HistoricalSceneRetainsItsReadinessAndLaunchRules": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.LobbyControllerEntryTests.HostAloneKeepsReadyGateAndCanEnterLabForDebugging": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.LobbyControllerEntryTests.TwoReadyKeepersStayConnectedButCannotEnterUnreplicatedLab": {
+      "result": "Passed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.PlayerTraversalTests.FootstepsFollowTravelAndStaySilentAtRestAgainstWallsAndInAir": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.PlayerTraversalTests.SnapTurnWithOffsetHeadDoesNotPlayFootsteps": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.PlayerTraversalTests.StandingOnEnvironmentIsGroundedAndReleasingStickStops": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.PlayerTraversalTests.TowerRouteAlsoWorksAtThirtyFramesPerSecond": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.PlayerTraversalTests.WalksAllThreeFlightsUpAndDownThroughLandings": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.PlayerTraversalTests.WalksThroughHouseAndBalconyDoorwaysInBothDirections": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.StormWatchSceneTests.LobbyApprovalBeginsOnlyWhenPartnerEnvironmentSendsInput": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.StormWatchSceneTests.PhysicalPumpRequiresStrokesAndDisconnectOffersRestart": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Tests.StormWatchSceneTests.SceneHasNightLightingAndRepairActuallyOpensStairGate": {
+      "result": "Failed",
+      "run": "integrated-tests/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.IntegratedPresentationTests.GalleryRainIsExteriorInEveryDirectionWhileLanternAndHouseKeepTheirBeds": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.IntegratedPresentationTests.OnlyOneExteriorAndTwoBenchRadiosAndNoSupportFootStep": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    },
+    "LighthouseKeepers.Presentation.Environment.Tests.IntegratedPresentationTests.TrackerIsWorldFixedAndRecallRepositionsIt": {
+      "result": "Passed",
+      "run": "integrated-rerun/PlayMode.xml"
+    }
+  }
+}

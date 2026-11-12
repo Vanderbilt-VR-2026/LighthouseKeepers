@@ -52,3 +52,7 @@ Music has 20–40 s storm-only rests every 180 s, driven by shared day/time. Cri
 ## Crew echo cancellation
 
 Crew voice uses Photon native mono capture (48 kHz Opus / 48 kbps / 20 ms), with WebRTC AEC and noise suppression ON. Native Android AEC/AGC/NS are off to avoid stacked processing; received-speech gain control is retained. Output remains spatial stereo. The DSP output reference follows the active listener across lobby/Lab changes. See [execution evidence](../Verification/AudioPass/VoiceEcho.md).
+
+## Recorded keeper voice pass (PR #85)
+
+94 single takes: −18.34 to −17.74 LUFS, peaks ≤−1.35 dBTP. Offline +2.5 dB at 2.8 kHz with gentle de-essing. PA band-pass widened to 250–4500 Hz; live presence reduced to +1 dB, saturation softened, .22 s short reverb, speech hiss .003 (was .008), noise follows room falloff. Existing voice-first ducking remains. See `Docs/Audio/radio-ab.md`: five-line offline ASR A/B did not establish a consistent word-recognition gain; the lead subsequently confirmed clear, single-take speech on the installed c716030 Quest build. New timing/pole/UI feedback is documented in Docs/Audio/verification.md.

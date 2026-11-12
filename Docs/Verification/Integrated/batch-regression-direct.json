@@ -1,0 +1,14 @@
+{
+  "diagnostics": [],
+  "compileMs": 114,
+  "executeMs": 41,
+  "assemblyName": "PipelineRunScript_BatchRegression_8065bf25d23b464b8d627942c1b3f165",
+  "success": true,
+  "result": [
+    "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.CongestionKeepsLatestPosePerActorAndPropWithoutOverwritingPartner",
+    "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.IntegratedSnapshotAboveTwoKiBSurvivesTheActualBatch",
+    "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.VisualMayHoldLastPoseWhileGameplayRejectsTheStaleHand",
+    "LighthouseKeepers.Net.Tests.LatestSampleBatchTests.TruncatedOversizedAndNonSampleTrafficIsRejected",
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.CompleteSnapshotFitsExistingReliableChannelAndRejectsCorruptPipePermutation"
+  ]
+}

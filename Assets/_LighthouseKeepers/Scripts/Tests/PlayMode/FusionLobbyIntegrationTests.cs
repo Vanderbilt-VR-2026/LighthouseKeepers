@@ -75,8 +75,8 @@ namespace LighthouseKeepers.Tests
             yield return Until(() => !transport.IsBusy, "Offline Fusion connection timed out.");
             Assert.IsTrue(transport.IsOnline, transport.LastError);
             Assert.IsTrue(transport.IsHost); Assert.AreEqual(1, transport.Players.Count);
-            Assert.IsFalse(manager.CanStart, "Unready host must not start.");
-            manager.ToggleReady(); Assert.IsTrue(manager.CanStart);
+            Assert.IsTrue(manager.CanStart, "Host must be able to START without a READY step.");
+            Assert.IsNull(GameObject.Find("Ready"), "Removed READY button returned.");
             var originalRunner = transport.Runner;
             Assert.IsTrue(manager.StartGame(), manager.LastError);
             Assert.IsFalse(manager.StartGame(), "Repeated launch must not create another world.");

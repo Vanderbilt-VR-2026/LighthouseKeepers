@@ -1,33 +1,63 @@
 # Lighthouse Keepers
 
-VR lighthouse survival for **Meta Quest 3**.
+Keep a storm-battered lighthouse running, alone or with a friend, in **VR on Meta Quest 3**. Repair leaking pipes, restart the generator, route power and broadcast a warning before the water or darkness wins. Finish tonight’s jobs, rest in the upstairs bunk, and face the next watch together.
 
-## Submissions — start here
+![The House briefing board inside Lighthouse Keepers](Docs/Verification/RemainingPlan/Step1/night2-board.png)
 
-| Sprint | Open the submission | What is included |
-| --- | --- | --- |
-| **Sprint 3** | **[Sprint 3 submission](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-3)** | Playable APK + submission video |
-| **Sprint 2** | **[Sprint 2 resubmission](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-2)** | Playable APK resubmission |
-| **Sprint 1** | **[Sprint 1](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-1)** | Original environment + APK |
+## Download & play
 
-**Professor / TA:** open **Sprint 3** for the submitted game and video. Open **Sprint 2** for the playable resubmission. Each page has its download at the top and short install instructions. No Unity or GitHub account is needed to download.
+**[Download the Sprint 4 game (APK)](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint4-final/LighthouseKeepers-Sprint4.apk)** · **[Sprint 4 release notes and checksum](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint4-final)** · Video: **coming soon**
 
-## Current development
+**Professor / TA:** use Sprint 4 for the current playable submission. The table below preserves earlier hand-ins. **APK = game; MP4 = video.** You do not need Unity to play. Sprint 5 is work in progress, not the submitted finished game.
 
-You are on **main**, the latest game source, including co-op and the S4 power systems. The sprint branches preserve the submitted versions; their downloads are separate from current development.
+1. Download the **APK**, not GitHub’s “Source code” ZIP.
+2. On the phone paired to your Quest, open **Meta Horizon → your headset → Headset Settings → Developer Mode** and enable it. If missing, follow the [account/setup help](Docs/INSTALL.md).
+3. Connect the Quest to a computer with a USB data cable. Inside the headset, accept **Allow USB debugging**.
+4. In [SideQuest](https://sidequestvr.com/setup-howto), choose **Install APK file from folder** and select the APK (or drag it into the installer). Alternatively: `adb install -r LighthouseKeepers-Sprint4.apk`.
+5. On Quest, open **Library → Unknown Sources → Lighthouse Keepers**.
+6. Press **PLAY → HOST / PLAY ALONE → START** to play alone. If there is no internet, use **START** on the **No connection — Play offline** message.
 
-[Build in Unity](Docs/DEVELOPMENT.md) · [Play together on two Quests](Docs/TwoQuestSetup.md) · [Team design](Docs/DesignDocument.md)
+### Play together — two people
 
-## Design — S4-M3
+Install the **same Sprint 4 APK on both Quests** and connect both to the internet. The host chooses **PLAY → HOST / PLAY ALONE** and shares the six-character crew code. The friend chooses **PLAY → JOIN CREW**, enters the code and joins; the host presses **START** when both names appear. **There is no READY button.**
 
-The keeper lobby is the first scene: a physical crew ledger introduces the role and a clear choice between solo and joining a friend. The intended next beat is House arrival, the harbor master on a wall radio, tonight’s jobs on the chalkboard, then the wrench on the bench.
+Both lobby screens must show **NETWORK VERSION LK-S5-PLAYTEST1** for this Sprint 4 release. This is an internal compatibility code, not the submission name. Different sprint builds cannot join each other. A partner can join an ongoing watch or rejoin with its current code. [Two-Quest help](Docs/TwoQuestSetup.md).
 
-Equipment uses direct grabbing and physical turning/pulling. This milestone replaces detached instructions with mounted plates, chalk, gauges, practical lights and sound, and gives the wrench a forgiving snap onto a bolt. Menu rays remain for deliberate lobby/logbook actions. Current tan hands, controller alignment and finger blending are preserved; held tools retain their established grip poses.
+### Controls
 
-These are the choices being implemented on `s4/immersion`. [Design rules](Docs/Design/Immersion.md) · [Professor playtest](Docs/Playtests/2026-11-03-professor.md) · [Radio script](Docs/Design/RadioLines.md).
+| Control | What it does |
+| --- | --- |
+| Left stick | Walk |
+| Right stick | Snap-turn |
+| Grip | Hold tools, squeeze primer, pull starter/choke; grip the bed to rest |
+| Wrench near active bolt | Auto-snap; pull toward yourself, reposition and repeat |
+| Trigger | Menu selection; push-to-talk while holding the radio microphone |
+| B | Recall objective and last announcement; double-tap to replay the announcement |
+| Left controller menu button | Open Watch Menu: retry, return to lobby, audio and objective height |
+| Look at left wrist / X or Y | Re-show the current objective |
 
-## Project history
+Try **Night 1: pipe → water drains → bunk**; **Night 2: fuel/generator + pipe**; **Night 3: generator, pipe, beacon and radio**. In co-op, one keeper holds the pipe valve while the other repairs; both must rest to advance. [What we built and known issues](Docs/Sprint4.md).
 
-Only four branches are kept: **main**, **sprint-1**, **sprint-2**, **sprint-3**. Previous branch histories are saved under archive tags.
+## Sprints
 
-[Browse the archive](Docs/Archives/Branches-2026-11-03.md) · [All releases](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases)
+| Sprint | Source branch | Release / APK | Review PR | Issues milestone | Video |
+| --- | --- | --- | --- | --- | --- |
+| 1 · Environment | [sprint-1](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-1) | [Release](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint1-quest3-20261001) · [APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint1-quest3-20261001/LighthouseKeepers-Sprint1-Environment.apk) | [#23](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/23) | [Sprint 1](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/4) | See original branch history |
+| 2 · Resubmission | [sprint-2](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-2) | [Release](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint2-final-v2) · [APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint2-final-v2/LighthouseKeepers-Sprint2.apk) | [Submission #70](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/70) | [Sprint 2](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/5) | [MP4](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint2-final-v2/LighthouseKeepers-Sprint2-Video.mp4) |
+| 3 · Three-night game | [sprint-3](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-3) | [Release](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint3-final) · [APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-final/LighthouseKeepers-Sprint3.apk) | [#65](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/65) | [Sprint 3](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/1) | [MP4](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint3-final/LighthouseKeepers-Sprint3-Video.mp4) |
+| **4 · Current submission** | [sprint-4](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-4) | **[Release](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint4-final) · [APK](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/download/sprint4-final/LighthouseKeepers-Sprint4.apk)** | [#88](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/88) | [Sprint 4](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/2) | Coming soon |
+| 5 · In progress | [sprint-5](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/tree/sprint-5) | Preview pending; not a final submission | [Draft #89](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/89) | [Sprint 5 · Dec 3](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/milestone/3) | Coming soon |
+
+Sprint 2 installs separately as **Lighthouse Keepers S2**. Sprint 1, 3, 4 and 5 use **Lighthouse Keepers** and replace one another when installed. Earlier videos/APKs remain unchanged.
+
+## Design and development
+
+A physical crew ledger introduces the game; the House board and harbor master explain the watch. Equipment uses direct grabs, pulls, squeezes and tilts with visible progress. Short objective recall, captions and practical lights support clarity without an always-on panel.
+
+[Run/build in Unity](Docs/DEVELOPMENT.md) · [Install troubleshooting](Docs/INSTALL.md) · [Sprint 4 details](Docs/Sprint4.md) · [Team project board](https://github.com/orgs/Vanderbilt-VR-2026/projects/15)
+
+## History
+
+[Earlier Sprint 4 immersion/audio milestone](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases/tag/sprint4-m1) · [All releases](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/releases) · [Archived branch history](Docs/Archives/Branches-2026-11-12.md).
+
+Historical branches are preserved by archive tags before removal. **main** changes only after teammate review and merge. The six working/submission branches are main and sprint-1 through sprint-5.

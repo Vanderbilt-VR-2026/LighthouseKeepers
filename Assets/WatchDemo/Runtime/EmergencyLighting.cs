@@ -18,8 +18,8 @@ namespace LighthouseKeepers.WatchDemo
         readonly List<Material> materials=new();
         readonly List<Color> baseColours=new(), emissions=new();
         Color[] normalLightColours;float[] normalIntensities;
-        float warm=1,outageStart;
-        bool power=true,initialized;
+        float warm=1,outageStart,recoveryStart=-100;
+        bool power=true,initialized,wasSputtering;
         S4Tuning tuning;
         readonly List<Light> guides=new();
         public float WarmBlend=>warm;
@@ -64,14 +64,16 @@ namespace LighthouseKeepers.WatchDemo
         }
         void StateChanged()
         {
-            bool next=state.HasPower(PowerCircuit.Lights)&&(!state.Immersion||!state.Failed);if(next==power&&initialized&&state.Elapsed>0)return;power=next;
+            bool next=state.HasPower(PowerCircuit.Lights)&&(!state.Immersion||!state.Failed);if(next==power&&initialized&&state.Elapsed>0)return;if(next&&!power)recoveryStart=Time.time;power=next;
             if(!power){outageStart=Time.unscaledTime;alarm.volume=tuning&&tuning.soundPass?tuning.alarmVolume:.09f;}
             if(power)alarm.Stop();else if(!alarm.isPlaying)alarm.Play();
         }
         void LateUpdate()
         {
             if(!initialized)return;
-            if(power&&warm>=1)return;
+            bool sputter=state.FuelSputtering;
+            if(power&&warm>=1&&Time.time-recoveryStart>2&&!sputter&&!wasSputtering)return;
+            wasSputtering=sputter;
             if(!power)alarm.volume=Mathf.Lerp(tuning&&tuning.soundPass?tuning.alarmVolume:.09f,tuning&&tuning.soundPass?tuning.alarmHumVolume:.02f,Mathf.SmoothStep(0,1,(Time.unscaledTime-outageStart)/(tuning&&tuning.soundPass?tuning.alarmFadeSeconds:10f)));
             warm=Mathf.MoveTowards(warm,power?1:0,Time.deltaTime/(power?recoverySeconds:.5f));Apply();
         }
@@ -81,7 +83,8 @@ namespace LighthouseKeepers.WatchDemo
             float pulse=blackout?tuning.EmergencyPulse(Time.unscaledTime):PulseAt(Time.unscaledTime,cycleSeconds);
             var tint=blackout?tuning.emergencyTint:new Color(1,.82f,.68f,1);
             float atmosphere=state.Immersion&&state.Immersion.atmosphere?state.Immersion.interiorLightMultiplier:1;
-            var illumination=Color.Lerp(tint*pulse,Color.white*atmosphere,Mathf.SmoothStep(0,1,warm));
+            float sputter=state.FuelSputtering?.85f+.15f*Mathf.Cos((float)state.FuelRunoutRemaining*Mathf.PI*2/1.5f):1;
+            var illumination=Color.Lerp(tint*pulse,Color.white*atmosphere,Mathf.SmoothStep(0,1,warm))*sputter;
             for(int i=0;i<materials.Count;i++)
             {
                 var colour=baseColours[i]*illumination;colour.a=baseColours[i].a;materials[i].SetColor("_BaseColor",colour);
@@ -89,13 +92,14 @@ namespace LighthouseKeepers.WatchDemo
                 {
                     var e=emissions[i];float strength=Mathf.Max(e.r,Mathf.Max(e.g,e.b));
                     var emergency=blackout?tint*strength*pulse+baseColours[i]*.003f:new Color(1,.78f,.58f)*strength*pulse+baseColours[i]*(.025f+.025f*pulse);
-                    materials[i].SetColor("_EmissionColor",Color.Lerp(emergency,e*atmosphere,warm));
+                    materials[i].SetColor("_EmissionColor",Color.Lerp(emergency,e*atmosphere,warm)*sputter);
                 }
             }
             for(int i=0;i<interiorLights.Length;i++)
             {
                 var light=interiorLights[i];light.color=Color.Lerp(blackout?tint:Color.Lerp(normalLightColours[i],new Color(1,.48f,.25f),.25f),normalLightColours[i],warm);
-                light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,atmosphere,warm);
+                float floorWarm=state.Director!=null&&power?Mathf.Clamp01((Time.time-recoveryStart-TowerWiringPresentation.RestoreDelay(light.transform.position.y))/recoverySeconds):warm;
+                light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,atmosphere,floorWarm)*sputter;
             }
             foreach(var guide in guides)guide.intensity=tuning.guideLampIntensity*(1-warm)*(blackout?pulse/Mathf.Max(.01f,tuning.emergencyMaximum):1);
         }

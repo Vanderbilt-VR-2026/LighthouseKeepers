@@ -23,6 +23,7 @@ namespace LighthouseKeepers.WatchDemo
         bool savedPositionSmoothing,savedRotationSmoothing;
         int bolt = -1, frame = -1, requestedBolt = -1;
         float angle;
+        bool TriggerMode=>tuning.triggerClutch&&!(watch.Master&&watch.Master.gripOnlyWrench);
         public bool IsSnapped => bolt >= 0;
         public bool ClutchHeld {get;private set;}
         XRGrabInteractable sourceGrab;
@@ -43,7 +44,7 @@ namespace LighthouseKeepers.WatchDemo
             if (!pipe || !tuning || !tuning.forgivingPipe || watch.Failed || watch.Pipe.Complete ||
                 !grab.isSelected || grab.interactorsSelecting.Count != 1)
             { Unseat(); return; }
-            if(tuning.leverPipe&&tuning.triggerClutch&&!ClutchHeld){Unseat();return;}
+            if(tuning.leverPipe&&TriggerMode&&!ClutchHeld){Unseat();return;}
             var holder = grab.interactorsSelecting[0];
             var holdingHand = holder.transform.GetComponentInParent<HandRig>();
             // Direct-interactor frames differ between mirrored hands. Wrist roll belongs to
@@ -51,7 +52,7 @@ namespace LighthouseKeepers.WatchDemo
             var tracked = holdingHand ? holdingHand.transform.parent : holder.transform;
             int active = watch.Pipe.ActiveBolt;
             if (bolt >= 0 && (active != bolt || controller != tracked ||
-                (tuning.leverPipe ? !tuning.triggerClutch&&OutsideLever(tracked.position, bolt) : Vector3.Distance(tracked.position, handAtSeat) > tuning.wrenchReleaseMetres)))
+                (tuning.leverPipe ? !TriggerMode&&OutsideLever(tracked.position, bolt) : Vector3.Distance(tracked.position, handAtSeat) > tuning.wrenchReleaseMetres)))
             { Unseat(); return; }
 
             if (bolt < 0)
@@ -79,7 +80,7 @@ namespace LighthouseKeepers.WatchDemo
                 if (hand)
                 {
                     var visual = hand.GetComponentInChildren<SkinnedMeshRenderer>();
-                    if (visual && !(tuning.leverPipe&&tuning.triggerClutch))
+                    if (visual && !tuning.leverPipe)
                     {
                         palm.SetPositionAndRotation(visual.transform.position + visual.transform.rotation * new Vector3(0, -.018f, .025f), visual.transform.rotation);
                         hand.SetConstrainedGrip(palm);
@@ -97,7 +98,9 @@ namespace LighthouseKeepers.WatchDemo
                 var pivot = pipe.SocketPosition(bolt);
                 var normal = pipe.bolts[bolt].forward;
                 var radial = Vector3.ProjectOnPlane(tracked.position - pivot, normal);
-                if (radial.sqrMagnitude > .0016f)
+                // Controller-to-palm offsets can put the tracked origin inside four centimetres.
+                // Only the singular centre needs a dead zone; otherwise follow the arm.
+                if (radial.sqrMagnitude > .0001f)
                     seatedRotation = Quaternion.LookRotation(-radial.normalized, leverNormal);
                 targetPose.rotation = seatedRotation;
                 targetPose.position = pivot - seatedRotation * Vector3.Scale(jawLocal, localScale);
@@ -130,14 +133,14 @@ namespace LighthouseKeepers.WatchDemo
 #endif
             // Lock the jaw the player sees at the press, before XRI advances its smoothed carry pose.
             int active=watch.Pipe.ActiveBolt;
-            if(tuning.leverPipe&&tuning.triggerClutch&&active>=0&&Vector3.Distance(pipe.jaw.position,pipe.SocketPosition(active))<=tuning.wrenchSnapMetres)requestedBolt=active;
+            if(tuning.leverPipe&&TriggerMode&&active>=0&&Vector3.Distance(pipe.jaw.position,pipe.SocketPosition(active))<=tuning.wrenchSnapMetres)requestedBolt=active;
         }
         void Deactivate(DeactivateEventArgs args)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if(tuning&&tuning.triggerClutch)Debug.Log($"PIPE_CLUTCH released bolts={watch.Pipe.BoltsDone} clicks={watch.Pipe.TurnsDone} degrees={watch.Pipe.StrokeDegrees:F1}");
 #endif
-            ClutchHeld=false;requestedBolt=-1;Unseat();
+            ClutchHeld=false;requestedBolt=-1;if(TriggerMode)Unseat();
         }
         void Released(SelectExitEventArgs args){ClutchHeld=false;requestedBolt=-1;Unseat();}
         public override void OnGrab(XRGrabInteractable grab) {ClutchHeld=false;requestedBolt=-1;Unseat();}

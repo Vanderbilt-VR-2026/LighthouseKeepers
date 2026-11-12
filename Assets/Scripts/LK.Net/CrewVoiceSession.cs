@@ -9,7 +9,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     /// <summary>Photon's Fusion room lifecycle, with primary open-mic audio attached to our existing pose avatars.</summary>
-    public sealed class CrewVoiceSession: FusionVoiceClient, ICrewVoice
+    public sealed class CrewVoiceSession: FusionVoiceClient, ICrewVoice, ICrewVoiceCapture
     {
         FusionMessageChannel channel;
         S4Tuning tuning;
@@ -18,7 +18,7 @@ namespace LighthouseKeepers.Net
         public bool Muted {get;private set;}
         public bool MicrophoneAllowed=>permission;
         public override bool AlwaysUsePrimaryRecorder=>true;
-        public string StatusText=>!permission?permissionStatus:Muted?"MIC MUTED":"MIC ON · "+ClientState;
+        public string StatusText=>!permission?permissionStatus:Muted?LighthouseKeepers.Core.PlayerStrings.Get("legacy.CrewVoiceSession.1"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.CrewVoiceSession.2")+ClientState;
 
         public static void Ensure(NetworkRunner runner,FusionMessageChannel channel)
         {
@@ -69,7 +69,7 @@ namespace LighthouseKeepers.Net
             if(!Application.HasUserAuthorization(UserAuthorization.Microphone))yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
             permission=Application.HasUserAuthorization(UserAuthorization.Microphone);
 #endif
-            requesting=false;permissionStatus=permission?"Microphone allowed":"MIC PERMISSION DENIED · tap to retry";
+            requesting=false;permissionStatus=permission?LighthouseKeepers.Core.PlayerStrings.Get("voice.allowed"):LighthouseKeepers.Core.PlayerStrings.Get("voice.denied");
             ApplyMute();Debug.Log("CREW_VOICE microphone permission="+permission);
         }
         public void ToggleMute()
@@ -89,7 +89,9 @@ namespace LighthouseKeepers.Net
             var go=new GameObject("Remote keeper voice "+actor);go.transform.SetParent(transform,false);
             var audio=go.AddComponent<AudioSource>();audio.playOnAwake=false;audio.spatialBlend=1;audio.dopplerLevel=0;
             audio.rolloffMode=AudioRolloffMode.Linear;audio.minDistance=tuning.voiceNearM;audio.maxDistance=tuning.voiceFarM;audio.volume=tuning.voiceVolume;
-            var follow=go.AddComponent<CrewVoiceHead>();follow.Actor=actor;
+            var connected=ConnectedTasksTuning.Current;
+            if(connected&&connected.enabledForWatch&&(connected.proximityVoice||connected.handheldRadios))go.AddComponent<CrewSpatialVoice>().Actor=actor;
+            else {var follow=go.AddComponent<CrewVoiceHead>();follow.Actor=actor;}
             KeeperAudioMix.Route(audio,"VoiceChat");
             var speaker=go.AddComponent<Speaker>();speaker.OnRemoteVoiceRemoveAction=s=>{if(s)Destroy(s.gameObject);};return speaker;
         }

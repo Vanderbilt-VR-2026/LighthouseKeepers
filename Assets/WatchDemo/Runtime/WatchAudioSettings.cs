@@ -16,10 +16,10 @@ namespace LighthouseKeepers.WatchDemo
   public static void Attach(GameObject panel,Font font,Material ink,Action refresh)
   {
    var s=AudioPassSettings.Current;if(!s||!s.audioMix)return;
-   var rect=(RectTransform)panel.transform;rect.sizeDelta=new Vector2(600,680);
-   var open=Button(rect,"AudioSettingsButton","SOUND LEVELS",-290,font,ink);
-   var page=Rect(rect,"Sound settings page",Vector2.zero,rect.sizeDelta);Text(page,"Sound settings title","SOUND LEVELS",new Vector2(0,230),new Vector2(520,60),font,ink);
-   string[] keys={"Music","Effects","Radio","VoiceChat"},labels={"MUSIC","EFFECTS","RADIO","VOICE CHAT"};
+   var rect=(RectTransform)panel.transform;bool comfort=panel.transform.Find("TurnComfortMode")!=null;rect.sizeDelta=new Vector2(600,comfort?800:680);
+   var open=Button(rect,"AudioSettingsButton",KeeperStrings.Get("menu.sound"),comfort?-350:-290,font,ink);
+   var page=Rect(rect,"Sound settings page",Vector2.zero,rect.sizeDelta);Text(page,"Sound settings title",KeeperStrings.Get("menu.sound"),new Vector2(0,230),new Vector2(520,60),font,ink);
+   string[] keys={"Music","Effects","Radio","VoiceChat"},labels={KeeperStrings.Get("menu.music"),KeeperStrings.Get("menu.effects"),KeeperStrings.Get("menu.radio"),KeeperStrings.Get("menu.voice")};
    for(int i=0;i<4;i++)
    {
     string key=keys[i];float y=130-i*90;
@@ -30,7 +30,15 @@ namespace LighthouseKeepers.WatchDemo
     var value=Text(page,key+" value",Mathf.RoundToInt(slider.value*100)+"%",new Vector2(220,y),new Vector2(90,50),font,ink);
     slider.onValueChanged.AddListener(v=>{KeeperAudioMix.SetGain(key,v);value.text=Mathf.RoundToInt(v*100)+"%";});
    }
-   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings","BACK",-245,font,ink);
+   var captions=Button(page,"SubtitleToggle","",-230,font,ink);var size=Button(page,"SubtitleSize","",-285,font,ink);
+   void Labels(){captions.GetComponentInChildren<Text>().text=KeeperStrings.Get(HarborSubtitleSettings.Enabled?"menu.subtitlesOn":"menu.subtitlesOff");size.GetComponentInChildren<Text>().text=KeeperStrings.Get(HarborSubtitleSettings.Large?"menu.subtitleLarge":"menu.subtitleNormal");}
+   captions.onClick.AddListener(()=>{HarborSubtitleSettings.Enabled=!HarborSubtitleSettings.Enabled;Labels();});size.onClick.AddListener(()=>{HarborSubtitleSettings.Large=!HarborSubtitleSettings.Large;Labels();});Labels();
+   page.sizeDelta=new Vector2(600,920);
+   Text(page,"Objective height label",KeeperStrings.Get("menu.objectiveHeight"),new Vector2(-155,-350),new Vector2(230,50),font,ink);
+   var heightRect=Rect(page,"ObjectiveHeight",new Vector2(105,-350),new Vector2(220,34));var heightTrack=heightRect.gameObject.AddComponent<Image>();heightTrack.color=new Color(.25f,.17f,.1f,.2f);
+   var heightArea=Rect(heightRect,"Handle area",Vector2.zero,new Vector2(196,34));var heightHandle=Rect(heightArea,"Handle",Vector2.zero,new Vector2(24,42));heightHandle.gameObject.AddComponent<Image>().color=new Color(.27f,.17f,.08f);
+   var height=heightRect.gameObject.AddComponent<Slider>();height.targetGraphic=heightTrack;height.handleRect=heightHandle;height.minValue=-20;height.maxValue=-5;height.SetValueWithoutNotify(ObjectiveHudSettings.Height);height.onValueChanged.AddListener(v=>ObjectiveHudSettings.Height=v);
+   var states=new Dictionary<GameObject,bool>();var back=Button(page,"CloseAudioSettings",KeeperStrings.Get("menu.back"),-420,font,ink);
    open.onClick.AddListener(()=>{states.Clear();foreach(Transform t in rect)if(t!=page){states[t.gameObject]=t.gameObject.activeSelf;t.gameObject.SetActive(false);}page.gameObject.SetActive(true);});
    back.onClick.AddListener(()=>{foreach(var pair in states)if(pair.Key)pair.Key.SetActive(pair.Value);page.gameObject.SetActive(false);refresh();});page.gameObject.SetActive(false);
   }

@@ -1,0 +1,1 @@
+namespace LighthouseKeepers.WatchDemo { public static class KeeperStrings { public static bool Has(string key)=>LighthouseKeepers.Core.PlayerStrings.Has(key); public static string Get(string key)=>LighthouseKeepers.Core.PlayerStrings.Get(key); } }

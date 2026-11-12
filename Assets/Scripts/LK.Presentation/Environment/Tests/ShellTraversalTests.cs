@@ -29,6 +29,8 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             input=new XRInputValueReader<Vector2>("Environment traversal regression",XRInputValueReader.InputSourceMode.ManualValue);
             rig.GetComponentInChildren<ContinuousMoveProvider>().leftHandMoveInput=input;
             for(int i=0;i<72;i++)yield return null;
+            // No pickup is performed in this locomotion-only test; exercise the tutorial door timeout.
+            if(GameObject.Find("Tutorial threshold gate"))for(int i=0;i<72*31;i++)yield return null;
             Assert.That(rig.GetComponentInChildren<GravityProvider>().isGrounded,Is.True,"Rig must recognize new shell floor collision.");
             // Test-only reflection reads the editor's parsed source data without adding
             // an Editor assembly dependency to player presentation code.
@@ -46,8 +48,9 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
                     yield return WalkTo(point,id);
                     Assert.That(rig.transform.position.y,Is.EqualTo(point.y).Within(.25f),id+" vertical alignment at "+point);
                 }
-            // New station must be reachable around the central beacon using the existing rig/collision.
-            foreach(var point in new[]{new Vector3(1.85f,9.9f,0),new Vector3(1.55f,9.9f,1.1f),new Vector3(-.5f,9.9f,1.55f)})
+            // Reach the radio around the room side of the guarded pole aperture; the former
+            // diagonal crossed the newly authored hole. Keep actual rig/collision traversal.
+            foreach(var point in new[]{new Vector3(1.85f,9.9f,0),new Vector3(1.2f,9.9f,.2f),new Vector3(.3f,9.9f,1f),new Vector3(-.5f,9.9f,1.55f)})
                 yield return WalkTo(point,"F4 stair/gallery to radio standing area");
             Assert.That(rig.transform.position.y,Is.EqualTo(9.9f).Within(.25f));
             input.manualValue=Vector2.zero;var stopped=rig.transform.position;

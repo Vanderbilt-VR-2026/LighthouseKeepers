@@ -56,8 +56,51 @@ namespace LighthouseKeepers.Editor.Environment
             ColorUtility.TryParseHtmlString(hex,out var c);m.SetColor("_BaseColor",c);m.SetFloat("_Smoothness",key=="Metal"?.38f:.18f);m.SetFloat("_Metallic",key=="Metal"||key=="Brass"?.65f:0);
             m.enableInstancing=true;
             if(key=="Lamp"||key=="Emergency") {m.EnableKeyword("_EMISSION");m.SetColor("_EmissionColor",c*2);m.globalIlluminationFlags=MaterialGlobalIlluminationFlags.BakedEmissive;}
-            if(key=="Glass") {m.SetFloat("_Surface",1);m.SetFloat("_SrcBlend",(int)BlendMode.SrcAlpha);m.SetFloat("_DstBlend",(int)BlendMode.OneMinusSrcAlpha);m.SetFloat("_ZWrite",0);m.SetColor("_BaseColor",new Color(c.r,c.g,c.b,.13f));m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");m.renderQueue=3000;}
+            if(key=="Glass") {m.SetFloat("_Surface",1);m.SetFloat("_SrcBlend",(int)BlendMode.SrcAlpha);m.SetFloat("_DstBlend",(int)BlendMode.OneMinusSrcAlpha);m.SetFloat("_ZWrite",0);m.SetColor("_BaseColor",new Color(c.r,c.g,c.b,.13f));m.SetFloat("_Smoothness",.9f);m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");m.renderQueue=3000;}
             EditorUtility.SetDirty(m);return m;
+        }
+        // Millimetre offsets that separate coplanar shell faces (playtest z-fighting). Applied on every
+        // rebuild so regenerating the prefabs keeps them; renderers are static-batched, so runtime moves would not.
+        public static Vector3 CoplanarNudge(string name)
+        {
+            if(name=="SM_Floor_Throat"||name=="SM_Floor_Porch")return new Vector3(0,-.004f,0);
+            if(name=="SM_Reveal_F1_0_Frame_1")return new Vector3(.003f,0,0);
+            if(name=="SM_Reveal_F1_0_Frame_N1")return new Vector3(-.003f,0,0);
+            if(name.StartsWith("SM_Landing_",StringComparison.Ordinal))return new Vector3(0,.003f,0);
+            return Vector3.zero;
+        }
+        // Reviewed visual-only mesh separations from the Lab coplanar audit. Carry them into
+        // regenerated shell prefabs too; collision and the imported FBX remain unchanged.
+        static readonly Dictionary<string,string> separatedMeshes=new Dictionary<string,string>{
+            {"SM_Reveal_F1_0_Frame_1","9b2050f92c79a4f1ba80d77c7c823547"},
+            {"SM_Reveal_F1_0_Lintel","d672310cbbc97414d82c84ceed904ebe"},
+            {"SM_Reveal_F1_0_Frame_N1","ffb7a723a88ed4002835becb68afe6a0"},
+            {"SM_Landing_F2_F3_arrival","e380f2b5169704693b920dd3daec6df4"},
+            {"SM_Landing_F3_F4_departure","0531f2bf0e33c4c79b7423ceaff43909"},
+            {"SM_Landing_F1_F2_arrival","c8907f4d24bbc4f47b8fe8c956a400bf"},
+            {"SM_Landing_F2_F3_departure","ac1f661c14ac049338f0d70f89c2ca9a"},
+            {"SM_Frame_Lantern_Base_A","95249f1d9df584dad9e4102575804ab9"},
+            {"SM_Landing_F3_F4_arrival","6b80683cd3ae84394bf546b63aa48c20"},
+            {"SM_Gallery_Toeboard","f7b3acaf7f7834ac48dc1a6cb613cfb9"},
+            {"SM_Frame_Lantern_Base_B","f99841fca524740a6ac5095b333e9ca8"},
+            {"SM_Gallery_Deck","7f17094f034754fd99ee172f922add53"}
+        };
+        public static void ApplyVisualCorrections(GameObject root)
+        {
+            // Persist the authored pole apertures when regenerating the shell.
+            const string poleMeshes="Assets/WatchDemo/PoleShaftMeshes/";
+            foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))
+            {var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+f.name+".asset");if(m)f.sharedMesh=m;}
+            foreach(var c in root.GetComponentsInChildren<MeshCollider>(true))
+            {var key=c.name.StartsWith("UCX_")?c.name.Substring(4):c.name;if(key.EndsWith("_01"))key=key.Substring(0,key.Length-3);
+             var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+key+".asset");if(m){c.convex=false;c.sharedMesh=m;}}
+            foreach(var filter in root.GetComponentsInChildren<MeshFilter>(true))
+                if(separatedMeshes.TryGetValue(filter.name,out var guid))
+                {
+                    var mesh=AssetDatabase.LoadAssetAtPath<Mesh>(AssetDatabase.GUIDToAssetPath(guid));
+                    if(!mesh)throw new Exception("Missing reviewed shell separation: "+filter.name);
+                    filter.sharedMesh=mesh;
+                }
         }
         static void MakePrefab(ShellAsset entry)
         {
@@ -91,6 +134,8 @@ namespace LighthouseKeepers.Editor.Environment
                 renderer.scaleInLightmap=1f;
                 if(t.name.Contains("_LOD1")||t.name.Contains("_LOD2"))renderer.enabled=false;
             }
+            foreach(var t in root.GetComponentsInChildren<Transform>(true))t.localPosition+=CoplanarNudge(t.name);
+            ApplyVisualCorrections(root);
             var rocks=root.GetComponentsInChildren<MeshRenderer>(true).Where(r=>r.name.StartsWith("SM_Rock_Island_LOD")).OrderBy(r=>r.name).ToArray();
             if(rocks.Length==3){var g=new GameObject("Island LOD");g.transform.SetParent(root.transform,false);foreach(var r in rocks){r.enabled=true;r.transform.SetParent(g.transform,true);}var lod=g.AddComponent<LODGroup>();lod.SetLODs(new[]{new LOD(.15f,new Renderer[]{rocks[0]}),new LOD(.06f,new Renderer[]{rocks[1]}),new LOD(.01f,new Renderer[]{rocks[2]})});lod.RecalculateBounds();}
             PrefabUtility.SaveAsPrefabAsset(root,"Assets/Prefabs/Environment/PF_Shell_"+entry.scene+".prefab");UnityEngine.Object.DestroyImmediate(root);
@@ -100,6 +145,7 @@ namespace LighthouseKeepers.Editor.Environment
             foreach(var s in Layout.stations.Where(s=>s.floor==floor).OrderBy(s=>s.id,StringComparer.Ordinal))
             {
                 var p=new GameObject(s.id).transform;p.SetParent(root,false);p.position=V(s.anchor.position);p.rotation=Quaternion.Euler(V(s.anchor.rotationEuler));
+                if(s.id=="STN_BEACON_CONTROL"&&AssetDatabase.IsValidFolder("Assets/WatchDemo/PoleShaftMeshes")){p.position=new Vector3(1f,9.9f,2.4f);p.rotation=Quaternion.Euler(0,202.62f,0);}
                 foreach(var a in s.interactiveAnchors){var t=new GameObject(a.name).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);}
                 foreach(var a in s.legacySockets){var t=new GameObject(a.socketName).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);new GameObject(a.anchorName).transform.SetParent(t,false);}
             }

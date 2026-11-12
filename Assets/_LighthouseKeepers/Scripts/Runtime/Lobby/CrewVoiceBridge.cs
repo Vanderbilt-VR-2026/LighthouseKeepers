@@ -7,6 +7,7 @@ namespace LighthouseKeepers.Lobby
         string StatusText {get;}
         void ToggleMute();
     }
+    public interface ICrewVoiceCapture {bool Muted {get;} bool MicrophoneAllowed {get;}}
     public static class CrewVoiceBridge
     {
         public static ICrewVoice Current {get;set;}

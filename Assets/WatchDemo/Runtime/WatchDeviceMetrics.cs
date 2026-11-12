@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         float start, next;
         float maxFrameMs;
         bool extended;
-        double gpu, cpu;
+        double gpu, cpu, appCpu;int appCpuCount;
         int count;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install() { var go=new GameObject("Development GPU measurement"); DontDestroyOnLoad(go); go.AddComponent<WatchDeviceMetrics>(); }
@@ -40,6 +40,7 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var display in displays)
             {
                 if(!display.running || !display.TryGetAppGPUTimeLastFrame(out float seconds) || seconds<=0) continue;
+                if(UnityEngine.XR.Provider.XRStats.TryGetStat(display,"perfmetrics.appcputime",out float ms)&&ms>0){appCpu+=ms;appCpuCount++;}
                 gpu+=seconds*1000;cpu+=mainThread.Valid?mainThread.LastValue/1000000.0:0;count++;
                 if(elapsed<next+1)break;
                 display.TryGetDisplayRefreshRate(out float hz);
@@ -50,6 +51,7 @@ namespace LighthouseKeepers.WatchDemo
                     var watch=FindAnyObjectByType<WatchDemoController>();var voice=LighthouseKeepers.Lobby.CrewVoiceBridge.Current;
                     Debug.Log($"S4_PERF day={(watch?watch.State.Day:0)} fps={count/(elapsed-next):F1} max_frame_ms={maxFrameMs:F2} voice={(voice!=null?voice.StatusText:"OFF")} focus={Application.isFocused}");
                 }
+                Debug.Log($"CPU_PERF app_cpu_ms={(appCpuCount>0?appCpu/appCpuCount:-1):F3} samples={appCpuCount}");appCpu=0;appCpuCount=0;
                 var ceiling=FindAnyObjectByType<LighthouseKeepers.Core.AudioCeiling>();
                 Debug.Log($"AUDIO_PERF dsp_valid={audioDsp.Valid} dsp_ms={(audioDsp.Valid?audioDsp.LastValue/1000000.0:-1):F4} ceiling_ms={(ceiling?ceiling.MeanCpuMs:-1):F4} real_voice_cap={AudioSettings.GetConfiguration().numRealVoices}");
                 next=elapsed;gpu=cpu=0;count=0;maxFrameMs=0;break;

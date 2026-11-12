@@ -10,7 +10,7 @@ namespace LighthouseKeepers.WatchDemo
         public RadioProgram Program=>program;
         public void Refresh()
         {
-            var text=new StringBuilder("SOLO CALL CODE\n");
+            var text=new StringBuilder(KeeperStrings.Get("code.heading"));
             for(int i=0;i<program.callCode.Length;i++){if(i>0)text.Append(" > ");text.Append(program.ColourName(program.callCode[i]));}
             readout.text=text.ToString();
         }
