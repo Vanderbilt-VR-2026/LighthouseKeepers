@@ -112,6 +112,7 @@ namespace LighthouseKeepers.WatchDemo
             // Aperture guards are structural even when optional movement features are disabled.
             PoleSlide.Create(this,FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>());
             ObjectiveHud.Create(this,head);
+            KeeperFearPresentation.Create(this,head);
             QuestRenderQuality.Create(this);
             WorldLabelRaster.Create(this);
             PracticalAtmosphere.Create(this);

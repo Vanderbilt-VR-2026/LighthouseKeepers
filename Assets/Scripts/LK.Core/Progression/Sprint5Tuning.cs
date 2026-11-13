@@ -5,10 +5,11 @@ namespace LighthouseKeepers.Core.Progression
     public sealed class Sprint5Tuning : ScriptableObject
     {
         public bool tensionDirector = true;
+        public bool fearFeedback = true;
         [Range(15,60)] public float minimumProblemGapSeconds = 15;
         [Range(2,3)] public float preScareQuietSeconds = 2.5f;
         [Min(60)] public float earliestScareSeconds = 60;
-        [Range(.01f,.15f)] public float blackoutFogDensity = .06f;
+        [Range(.01f,.2f)] public float blackoutFogDensity = .18f;
         public static Sprint5Tuning Current => Resources.Load<Sprint5Tuning>("Sprint5Tuning");
     }
 }

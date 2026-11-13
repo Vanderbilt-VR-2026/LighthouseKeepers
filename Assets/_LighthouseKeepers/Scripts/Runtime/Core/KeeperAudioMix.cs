@@ -12,6 +12,7 @@ namespace LighthouseKeepers.Core
   readonly Dictionary<string,float> gains=new(),last=new();readonly Dictionary<string,string> exposed=new();
   AudioMixer mixer;AudioPassSettings settings;float scanUntil,nextScan,musicDuck,worldDuck,radioDuck,localPeak,saveAt=-1,quietGain;
   public bool PreScareQuiet {get;set;}
+  public float LocalFear {get;set;}
   public bool VoiceActive{get;private set;}public bool RadioActive{get;private set;}
   [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]static void ResetStatic()=>Instance=null;
   [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]static void Boot()
@@ -24,7 +25,7 @@ namespace LighthouseKeepers.Core
    var config=AudioSettings.GetConfiguration();config.numRealVoices=24;config.numVirtualVoices=64;AudioSettings.Reset(config);
    m.scanUntil=Time.unscaledTime+2;SceneManager.sceneLoaded+=m.SceneLoaded;
   }
-  void SceneLoaded(Scene s,LoadSceneMode mode){PreScareQuiet=false;routed.Clear();scanUntil=Time.unscaledTime+2;nextScan=0;}
+  void SceneLoaded(Scene s,LoadSceneMode mode){PreScareQuiet=false;LocalFear=0;routed.Clear();scanUntil=Time.unscaledTime+2;nextScan=0;}
   public static float Gain(string name)=>PlayerPrefs.GetFloat("LK.Audio."+name,1);
   public static void SetGain(string name,float gain){PlayerPrefs.SetFloat("LK.Audio."+name,Mathf.Clamp01(gain));if(Instance){Instance.gains[name]=Mathf.Clamp01(gain);Instance.saveAt=Time.unscaledTime+.5f;}}
   public static void LocalVoice(float peak){if(Instance)Instance.localPeak=peak;}
@@ -35,6 +36,7 @@ namespace LighthouseKeepers.Core
    if(!source||!groups.TryGetValue(bus,out var group))return;
    if(SceneManager.GetActiveScene().name=="LK_NetworkLobby"&&source.clip&&source.clip.name.StartsWith("Placeholder_"))source.Stop();
    source.outputAudioMixerGroup=group;source.priority=bus=="VoiceChat"?0:bus=="Radio"?10:bus=="SFX_Critical"?40:bus=="SFX_World"?90:bus=="Ambience"?140:200;
+   var fearFilter=source.GetComponent<FearWorldFilter>();bool filterWorld=bus=="SFX_World"||bus=="Ambience";if(filterWorld&&!fearFilter&&FearWorldFilter.CanAttach(source))fearFilter=source.gameObject.AddComponent<FearWorldFilter>();if(fearFilter)fearFilter.FilterBus=filterWorld;
    if(!routed.Add(source.GetInstanceID()))return;
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
    if(bus=="VoiceChat")Debug.Log("AUDIO_VOICE_ROUTE name="+source.name+" group=VoiceChat priority="+source.priority);

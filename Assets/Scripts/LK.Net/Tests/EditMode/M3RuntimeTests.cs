@@ -102,5 +102,29 @@ namespace LighthouseKeepers.Net.Tests
    snap=Call(h,"Capture",.1f);snap.GetType().GetField("engineConsumption").SetValue(snap,float.NaN);Assert.False((bool)Call(g,"ApplyRemote",snap));
    Call(h,"Retry");Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.AreEqual(Get<int>(Get<object>(h,"Tension"),"StormStage"),Get<int>(Get<object>(g,"Tension"),"StormStage"));
   }
+  [Test] public void HostSamplesFearByFloorAndGuestCannotSubmitItsOwnFear()
+  {
+   var h=New(3,true);Tick(h,80);Call(h,"ObserveWater",.1d,.5f);Call(h,"ObserveKeepers",8f,1,new Vector3(0,1.6f,0),2,new Vector3(0,8.2f,0));
+   var fear=Get<object>(h,"Fear");float low=(float)Call(fear,"ForActor",1),high=(float)Call(fear,"ForActor",2);Assert.Greater(low,high);Assert.Greater(high,0);
+   var g=New(3);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.5f)));Call(g,"ObserveKeepers",100f,1,Vector3.zero,2,Vector3.zero);Assert.AreEqual(low,Call(Get<object>(g,"Fear"),"ForActor",1));
+   var bad=Call(h,"Capture",.5f);var f=bad.GetType().GetField("fear").GetValue(bad);f.GetType().GetField("first").SetValue(f,float.NaN);Assert.False((bool)Call(g,"ApplyRemote",bad));
+   Call(h,"Retry");Assert.Zero((float)Call(Get<object>(h,"Fear"),"ForActor",1));
+  }
+  [Test] public void WorldFilterNeverAttachesToSharedCameraOrMultipleSourceObjects()
+  {
+   var go=new GameObject("Filter endpoint test");try{var a=go.AddComponent<AudioSource>();Assert.True(FearWorldFilter.CanAttach(a));var listener=go.AddComponent<AudioListener>();Assert.False(FearWorldFilter.CanAttach(a));UnityEngine.Object.DestroyImmediate(listener);go.AddComponent<AudioSource>();Assert.False(FearWorldFilter.CanAttach(a));}finally{UnityEngine.Object.DestroyImmediate(go);}
+  }
+  [Test] public void FearComfortControlsStayInsideTheLogbookPage()
+  {
+   var panel=new GameObject("Settings bounds test",typeof(RectTransform));try{
+    T("WatchAudioSettings").GetMethod("Attach").Invoke(null,new object[]{panel,Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"),null,(Action)(()=>{})});
+    var page=panel.transform.Find("Sound settings page");Assert.NotNull(page);
+    float half=((RectTransform)panel.transform).sizeDelta.y/2;
+    foreach(Transform child in page)if(child.name=="HeartbeatHaptics"||child.name=="CloseAudioSettings"||child.name=="ObjectiveHeight"){
+     var r=(RectTransform)child;Assert.LessOrEqual(Mathf.Abs(r.anchoredPosition.y)+r.sizeDelta.y/2,half,child.name);
+    }
+   }finally{UnityEngine.Object.DestroyImmediate(panel);}
+  }
+
  }
 }

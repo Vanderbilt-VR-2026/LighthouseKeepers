@@ -56,3 +56,7 @@ Crew voice uses Photon native mono capture (48 kHz Opus / 48 kbps / 20 ms), with
 ## Recorded keeper voice pass (PR #85)
 
 94 single takes: −18.34 to −17.74 LUFS, peaks ≤−1.35 dBTP. Offline +2.5 dB at 2.8 kHz with gentle de-essing. PA band-pass widened to 250–4500 Hz; live presence reduced to +1 dB, saturation softened, .22 s short reverb, speech hiss .003 (was .008), noise follows room falloff. Existing voice-first ducking remains. See `Docs/Audio/radio-ab.md`: five-line offline ASR A/B did not establish a consistent word-recognition gain; the lead subsequently confirmed clear, single-take speech on the installed c716030 Quest build. New timing/pole/UI feedback is documented in Docs/Audio/verification.md.
+
+## Sprint 5 foundation — local fear (#93)
+
+KeeperFearPresentation adds original synthesized mono heartbeat/breath and a low hunted undertone; no external recordings. Gains, cadence, source limits and exclusions are in [FearFeedback.md](FearFeedback.md). FearWorldFilter only processes SFX_World/Ambience above fear 0.6, toward 6 kHz; VoiceChat/Radio/SFX_Critical remain clear. The mixer still caps real voices at 24 and retains the master ceiling. All Editor verification stays muted; device audition and CPU cost remain pending. The TensionDirector's reserved pre-scare window ducks Music/Ambience 24 dB for 2.5 s, without muting speech or critical warnings; no scare is spawned by this foundation.

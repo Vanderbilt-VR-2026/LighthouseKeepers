@@ -24,7 +24,7 @@ namespace LighthouseKeepers.WatchDemo
         {var t=M2StationParts.Root(name,transform,position);var s=t.gameObject.AddComponent<AudioSource>();s.playOnAwake=false;s.spatialBlend=1;s.dopplerLevel=0;s.minDistance=3;s.maxDistance=25;s.rolloffMode=AudioRolloffMode.Linear;t.gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=1800;return s;}
         void Update()
         {
-            if(watch.State.Failed!=failed){failed=watch.State.Failed;if(failed){heartbeat.Play();if(watch.State.HighWaterFailed){var roar=Resources.Load<AudioClip>("S4Audio/water");if(roar)events.PlayOneShot(roar,1);}}else heartbeat.Stop();}
+            if(watch.State.Failed!=failed){failed=watch.State.Failed;if(failed){if(watch.State.Fear==null)heartbeat.Play();if(watch.State.HighWaterFailed){var roar=Resources.Load<AudioClip>("S4Audio/water");if(roar)events.PlayOneShot(roar,1);}}else heartbeat.Stop();}
             if(day!=watch.State.Day){waking=day>0&&watch.State.Day>day;day=watch.State.Day;flashAge=0;PlayThunder();}
             // Existing host day/time drives both views. A brief recovery wash, never permanent daylight.
             float dawnPhase=(float)(watch.State.Elapsed+watch.State.WatchGateElapsed)/watch.State.Immersion.dawnWashSeconds;

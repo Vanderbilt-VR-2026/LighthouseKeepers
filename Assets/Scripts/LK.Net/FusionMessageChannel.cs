@@ -22,6 +22,7 @@ namespace LighthouseKeepers.Net
         int transfer;
         float nextBind;
         public NetworkRunner Runner => runner;
+        public string SessionName => transport ? transport.SessionName : null;
         public bool Connected => runner && runner.IsRunning && transport && transport.IsOnline;
         public bool IsHost => Connected && runner.IsServer;
         public int LocalActorId => Connected ? runner.LocalPlayer.RawEncoded : 0;

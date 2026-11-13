@@ -46,5 +46,10 @@ namespace LighthouseKeepers.Tests.M3
    guest.Fixed(80);guest.Problem(80);guest.Tick(80,1,600,1,1,true,0,false,true);Assert.AreEqual(90,guest.NextProblemAt);Assert.False(guest.PrepareScare(100,false,true,true,true));
    f=t.Capture();f.value=float.NaN;Assert.False(guest.Apply(f,75));f=t.Capture();f.quietUntil=999;Assert.False(guest.Apply(f,75));Assert.False(t.Apply(t.Capture(),75));
   }
+  [Test] public void KeeperFearFeedsTheSameTensionAndMusicDecisionButDoesNotInventAHunt()
+  {
+   var t=new TensionDirector(Night());t.Tick(80,520,600,0,0,false,50,false,true,.85f);Assert.AreEqual(.85f,t.Value,.001f);Assert.AreEqual(2,t.MusicLayer);Assert.AreNotEqual(TensionPhase.Hunt,t.Phase);
+   t.Fixed(81);t.Tick(81,519,600,0,0,false,50,false,true,.85f);Assert.AreEqual(0,t.MusicLayer);Assert.Less(t.Value,.85f);
+  }
  }
 }
