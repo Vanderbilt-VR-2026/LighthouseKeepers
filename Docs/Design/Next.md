@@ -23,15 +23,17 @@ Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR 
 
 A test-only movement error was isolated after sea recovery: its direct pose jump while the character capsule was enabled left the camera at the doorway. The corrected test temporarily disables that capsule during reposition and verifies the requested head pose; the unchanged pipe gameplay then passes. No gameplay workaround was made. The earlier sleep-interrupted runs and raw failure remain archived. Reproduction: `caffeinate -i python3 artifacts/s5/fear/crew-driver.py`; always use fresh output folders. The phase-end416 EditMode and19/23 PlayMode results already cover current source; no additional full rerun is needed for evidence-only changes.
 
-Build done: `Builds/LighthouseKeepers-Sprint5-Foundation-859f8b0.apk` from859f8b0; SHA-256 `1ace925be0aa22b44756e5512cc625956a061cf44e98818c445b6f5d7c09184c`. `Docs/Verification/S5/Fear/` has exact-source metadata, final tests, reviewed images and all limitations. No ship/Drowned implementation yet. No Quest detected or app launched.
+Build done from clean source **805e779** (includes the final Sound-page fix): `Builds/LighthouseKeepers-Sprint5-Foundation-805e779.apk`; SHA-256 `c1a987c01e4c47e5522adefab7a76ca95dd084d22f641a50e98a636affc2e9a7`, 123,912,774 bytes, IL2CPP ARM64/Vulkan, zero build errors. Exact-source metadata is in `Docs/Verification/S5/Fear/final-apk.*.json`. ADB still empty; no app launched.
 
-**NEXT: Phase2.1 (#94)** ship mesh + route + lights. Re-read §8/§13, preserve the accepted ocean/sky/avatar, then 2.2 pass/wreck/voice, 2.3 loss windows, 2.4 gallery moment. No ship or Drowned implementation is claimed yet.
+**2.1 implemented (#94):** baked original 52 m steamer, named hull, emissive lamps, searchlight, bounded GPU smoke/spray, 204-triangle distant LOD, continuous west-side route clear of the island/coast. Full close model 11,760 triangles, two materials, zero realtime lights. Graphics Play Mode zero errors; inspected horizon/approach/near/peak images in `Docs/Verification/S5/Ship/`. Normal-play `shipVisuals` remains OFF pending outcomes. No protocol change.
+
+**NEXT: 2.2 (#95)** host-owned danger windows/pass/wreck, named loss, P21–P24; then2.3 (#96) beacon-dark loss only near ship windows, then2.4 (#97) gallery payoff and phase-end regression/build. Re-read §8/§13. No ship gameplay or Drowned implementation claimed yet. Reproduce asset: `LighthouseKeepers.WatchDemo.Editor.SteamerAuthoring.Bake`; tests `python3 artifacts/remaining/m3/tests.py ship-model-final 'SteamerTests;QualityBaselineTests;StormSeascapeTests'`; muted visuals `python3 artifacts/s5/ship/preview.py`.
 
 The six-branch grading cleanup is complete. A teammate merged PR88. Small docs-only PR134 adds the new preview download and removes the private-board link from main; it needs teammate review, not self-merge. Draft PR89 targets main. Sprint5 milestone due date was corrected to December3 (GitHub normalized the earlier midnight input to December2).
 
 ## DEVICE CHECKS PENDING
 
-ADB reports no devices. Install latest exact-source APK when one returns; **do not launch** without request. Latest foundation APK: `Builds/LighthouseKeepers-Sprint5-Foundation-859f8b0.apk`, SHA-256 `1ace925be0aa22b44756e5512cc625956a061cf44e98818c445b6f5d7c09184c`. Public quality preview remains v22; this new source is v24.
+ADB reports no devices. Install latest exact-source APK when one returns; **do not launch** without request. Latest foundation APK: `Builds/LighthouseKeepers-Sprint5-Foundation-805e779.apk`, SHA-256 `c1a987c01e4c47e5522adefab7a76ca95dd084d22f641a50e98a636affc2e9a7`. Public quality preview remains v22; this new source is v24.
 
 OVR Metrics/Profiler: 72Hz, peak-storm GPU≤11ms, CPU main≤9ms; compare MSAA4 to prior2, scale1.0, fixed foveation0.5, on-tile Render Graph passes, text and powered/blackout bake. No Editor FPS substitutes for these measurements. Human two-way voice, controller comfort, offline Wi-Fi-off and current-build two-Quest play remain pending. Ship/lantern/Drowned worst-case profiling follows their implementation.
 

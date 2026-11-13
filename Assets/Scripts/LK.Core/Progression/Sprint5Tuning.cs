@@ -6,6 +6,8 @@ namespace LighthouseKeepers.Core.Progression
     {
         public bool tensionDirector = true;
         public bool fearFeedback = true;
+        [Tooltip("Ship presentation is gated until host-owned passage outcomes are verified.")]
+        public bool shipVisuals;
         [Range(15,60)] public float minimumProblemGapSeconds = 15;
         [Range(2,3)] public float preScareQuietSeconds = 2.5f;
         [Min(60)] public float earliestScareSeconds = 60;

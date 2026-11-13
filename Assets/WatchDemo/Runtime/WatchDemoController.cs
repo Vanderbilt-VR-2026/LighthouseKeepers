@@ -113,6 +113,7 @@ namespace LighthouseKeepers.WatchDemo
             PoleSlide.Create(this,FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>());
             ObjectiveHud.Create(this,head);
             KeeperFearPresentation.Create(this,head);
+            ShipFleetPresentation.Create(this);
             QuestRenderQuality.Create(this);
             WorldLabelRaster.Create(this);
             PracticalAtmosphere.Create(this);
