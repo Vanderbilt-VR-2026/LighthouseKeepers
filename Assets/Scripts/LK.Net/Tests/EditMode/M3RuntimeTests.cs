@@ -126,5 +126,22 @@ namespace LighthouseKeepers.Net.Tests
    }finally{UnityEngine.Object.DestroyImmediate(panel);}
   }
 
+  [Test] public void LiveWatchRefreshDoesNotOverlayMainButtonsOnTheSoundPage()
+  {
+   var root=new GameObject("Menu refresh regression");
+   try {
+    var controller=root.AddComponent(T("WatchDemoController"));var menu=root.AddComponent(T("WatchMenu"));
+    void Field(object target,string name,object value)=>target.GetType().GetField(name,System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).SetValue(target,value);
+    Field(controller,"state",New(2));Field(menu,"watch",controller);
+    var sound=new GameObject("Sound settings page");sound.transform.SetParent(root.transform);Field(menu,"soundPage",sound.transform);
+    var label=new GameObject("Status",typeof(RectTransform),typeof(UnityEngine.UI.Text));label.transform.SetParent(root.transform);Field(menu,"status",label.GetComponent<UnityEngine.UI.Text>());
+    foreach(var name in new[]{"retry","close","replay"}){var button=new GameObject(name,typeof(RectTransform),typeof(UnityEngine.UI.Button));button.transform.SetParent(root.transform);Field(menu,name,button.GetComponent<UnityEngine.UI.Button>());}
+    var refresh=menu.GetType().GetMethod("Refresh",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+    refresh.Invoke(menu,null);refresh.Invoke(menu,null);
+    foreach(var name in new[]{"retry","close","replay"})Assert.False(root.transform.Find(name).gameObject.activeSelf,name+" must remain hidden while settings are open");
+    sound.SetActive(false);refresh.Invoke(menu,null);Assert.True(root.transform.Find("close").gameObject.activeSelf,"Back restores the main page");
+   } finally{UnityEngine.Object.DestroyImmediate(root);}
+  }
+
  }
 }

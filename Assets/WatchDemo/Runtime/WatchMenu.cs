@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         const string LobbyScene = "LK_NetworkLobby";
         WatchDemoController watch;
-        Transform head;
+        Transform head, soundPage;
         GameObject panel, ownedEventSystem;
         Canvas canvas;
         Text status;
@@ -87,6 +87,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(watch.State.Master&&watch.State.Master.movement){turnMode=Action("TurnComfortMode",KeeperStrings.Get("turn.snap"),-285,()=>{if(KeeperMovement.Current){KeeperMovement.Current.Toggle();turnMode.GetComponentInChildren<Text>().text=KeeperStrings.Get(KeeperMovement.Current.Smooth?"turn.smooth":"turn.snap");}});((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);}
             WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
+            soundPage=panel.transform.Find("Sound settings page");
             panel.SetActive(false);
         }
 
@@ -159,9 +160,12 @@ namespace LighthouseKeepers.WatchDemo
             if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
             else if(Book)status.text=state.Failed?(state.HighWaterFailed?KeeperStrings.Get("menu.old_flood"):state.BeaconDarkFailed?KeeperStrings.Get("menu.old_beacon"):KeeperStrings.Get("menu.old_time")):state.Complete&&!state.HasNextDay?KeeperStrings.Get("menu.survived"):string.Format(KeeperStrings.Get("menu.night_status"),state.Day);
             if(state.Sea.lost)status.text=KeeperStrings.Get("loss.sea");
-            retry.gameObject.SetActive(!state.NetworkRehearsal && state.Failed);
-            close.gameObject.SetActive(!Book||!state.Failed);
-            replay.gameObject.SetActive(!state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
+            // Host snapshots can refresh every frame. Do not bring main-page controls
+            // back over the active Sound page when the watch state changes.
+            bool settingsOpen=soundPage&&soundPage.gameObject.activeSelf;
+            retry.gameObject.SetActive(!settingsOpen && !state.NetworkRehearsal && state.Failed);
+            close.gameObject.SetActive(!settingsOpen && (!Book||!state.Failed));
+            replay.gameObject.SetActive(!settingsOpen && !state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
         }
 
         public void ReturnToLobby()
