@@ -39,7 +39,9 @@ LK_SHIP_TIMING=1 LK_M3_TIMING_OUTPUT="$PWD/artifacts/s5/sabotage/new-timing.json
 
 ## DEVICE CHECKS PENDING
 
-Latest installed before this checkpoint:005e641 (LK-S5-SHIPS1/v25), which the lead explicitly launched/playtested. New matching APK build/install is next; record exact source/hash afterward. Do not launch automatically.
+Installed on the connected Quest: **8927fb64**, `Builds/LighthouseKeepers-Sprint5-Beam-8927fb64.apk` (124,535,954bytes), **LK-S5-TRACES1/v27**. SHA-256`a964546b879116dc0451b3de092a790a5bbebbbe7f933d33c0635c2703c44fbb`. Built from clean source with IL2CPP ARM64, zero errors; APK VR manifest/signature checked and installed APK hash matches. **Not launched; app is closed.** Evidence: `Docs/Verification/S5/Ship/playtest/final-apk.*.json` and `install.json`. Earlier005e641 is superseded on this device.
+
+Ship aiming and new generator/watch are ON. Sabotage prototype remains OFF; next implementation boundary is unchanged above.
 
 - Start with **PLAY → HOST / PLAY ALONE → DEV: SELECT NIGHT3 → START** to test active ship steering. Night1 ship is intentionally a safe preview.
 - Check hull consistent at horizon/approach/near; F4 wheel follows bearing, beam holds the ship, deliberately miss then recover. Confirm named wreck/retry and both-player outcomes.

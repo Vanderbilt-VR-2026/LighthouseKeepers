@@ -1,3 +1,5 @@
 # Ship playtest corrections
 
 Distant vessel correction: the same shaped hull, deck and attached lamps are drawn throughout the visible approach. Only lettering/small effects fall away at distance. Five focused EditMode tests pass; muted graphics Play Mode has zero errors. Reviewed horizon, approach and close images here. No forced LOD in these gallery images. Geometry remains 11,760 triangles for the complete vessel; Quest GPU cost and human pop check remain pending.
+
+Final delivery8927fb64 contains active ship aiming, generator model and watch dial correction. Clean-source IL2CPP ARM64 APK built with zero errors/eight warnings, VR packaging verified, installed hash verified on Quest3. App not launched. ProtocolLK-S5-TRACES1/v27; both clients update.81 final focused checks,12/12 shipping workload models, live two-Mac regression pass; earlier actual-XRI Night3/guest-wheel evidence remains in this folder. Sabotage prototype is deliberately OFF following its enabled Night5 duo model failure, documented in `Docs/Verification/S5/Sabotage/`. Human headset feel/GPU and new build's audible voice remain pending.
