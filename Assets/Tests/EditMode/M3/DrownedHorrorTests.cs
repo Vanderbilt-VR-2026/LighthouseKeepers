@@ -63,5 +63,20 @@ namespace LighthouseKeepers.Tests.M3
                 if(n=="score")Assert.AreEqual(AudioClipLoadType.Streaming,c.loadType);
             }
         }
+        [Test] public void SculptAndLocalEffectsAreFiniteAndBounded()
+        {
+            var type=Runtime("DrownedSculpt");
+            var body=(Mesh)type.GetMethod("Body").Invoke(null,null);
+            var effects=(Mesh)type.GetMethod("Effects").Invoke(null,null);
+            try {
+                Assert.LessOrEqual(body.triangles.Length/3,3000);
+                Assert.That(body.bounds.size.y,Is.InRange(1.8f,2.3f));
+                Assert.LessOrEqual(body.bounds.size.x,1.1f);
+                Assert.AreEqual(body.vertexCount,body.uv.Length);
+                Assert.LessOrEqual(effects.triangles.Length/3,250);
+                foreach(var p in body.vertices)Assert.True(float.IsFinite(p.x)&&float.IsFinite(p.y)&&float.IsFinite(p.z));
+                Assert.GreaterOrEqual(effects.bounds.max.y,body.bounds.max.y);
+            } finally { UnityEngine.Object.DestroyImmediate(body);UnityEngine.Object.DestroyImmediate(effects); }
+        }
     }
 }

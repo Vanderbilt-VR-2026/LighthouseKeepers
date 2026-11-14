@@ -24,3 +24,7 @@ November 14. Latest direction: take creative liberty with frightening effects, m
 1. Record the baseline, create the sound palette and deterministic cue envelopes, wire music/ducking without changing gameplay. Test duplicate receipts, late join, retry and Off.
 2. Sculpt the keeper, wet surface, subtle head lift, mist and drips. Review front/side/scene screenshots; enforce geometry and renderer budgets.
 3. Focused checks, solo Night 3, live two-Mac shared appearance/retreat, APK build and packaging verification. Install only if ADB returns; never launch without a request. Quest GPU, stereo, startling intensity and audible mix remain device checks.
+
+## Visual review
+
+The final keeper is 2,131 triangles, one opaque/coverage material with probe-based wet sheen. A separate 68-triangle mesh supplies low mist, coat runoff and cold breath. The head rises 7.5 cm slowly; no rig/player camera motion. Screenshot review rejected the round-mouth mask and replaced it with a gaunt face mostly recessed in the hood. No colliders or new lights. Graphics Night2 verifies Off, cue routing, voice attenuation and power-driven retreat. Device cost and listening remain pending.

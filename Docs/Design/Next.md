@@ -6,7 +6,9 @@ Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base m
 
 User requested creative liberty with frightening effects/music/sound. Design: `Docs/Design/DrownedHorror.md`. Step1 sound palette and runtime cue/music integration implemented; baseline51/51 and focused57/57 pass. Six original mastered clips; one event+one breath source, existing music decks reused, voice-first attenuation, Off/late-join/retry protected. Network stays **LK-S5-DROWNED2/v29**; no replicated field changes.
 
-Next this turn: step2 crooked oilskin sculpt/wet material/local mist and drips; inspected graphics + focused geometry checks. Then step3 physical soloNight3, two-Mac appearance/audio-route/retreat checks, build and install if ADB appears. Editor muted; do not launch Quest. No hunter enabled in this presentation pass.
+Step2 implemented: original 2,131-triangle crooked oilskin keeper, wet material/head lift, 68-triangle mist/drips mesh. Graphics screenshots inspected; face corrected after review. Night2 outage→appearance→power restore passes, including live Off/no-replay/speech-duck assertions. Focused visual+quality61/61, final face rerun61/61.
+
+Next: step3 actual-XRI soloNight3 and live two-Mac appearance/audio-route/retreat checks; build clean commit, verify APK, install only if ADB returns. Editor muted; do not launch Quest. No hunter enabled in this presentation pass.
 
 ## Latest requested playtest corrections
 
