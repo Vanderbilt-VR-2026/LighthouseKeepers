@@ -50,3 +50,16 @@ Editor audio remains muted during all automation. Auditory quality, comfort, tru
 ## Ship phase2 implementation
 
 `Sprint5Ships/foghorn`: spatial SFX_Critical, .35 source volume, linear25–320m, priority45, one call per24 simulation seconds. `thanks` and `wreck` reuse that source, replacing rather than layering it. `engine`: spatial SFX_World, .16,12–110m, priority115, loop. All synthesized locally; originals and script in AssetSources. Ship pass plays the existing short survived sting on the adaptive-music sting source; it does not signal sleeping. The host TensionDirector supplies crisis during passage and relief after pass to both players. Quest voice-count/CPU and human audibility remain device checks.
+
+## Sabotage3.1 prototype (OFF in shipping tuning)
+
+Four original, deterministic synthesized3s mono44.1kHz WAVs in `Assets/WatchDemo/Resources/S5Audio`; imported as compressed Vorbis/preloaded short cues. Generator script is preserved with the verification evidence. No third-party source/licence required. Source measurements (FFmpeg loudnorm analysis, **input** values; files not altered):
+
+| Clip | Integrated LUFS | True peak dBTP |
+|---|---:|---:|
+| sabotage_tear | -23.20 | -5.96 |
+| sabotage_fuel | -16.02 | -6.02 |
+| sabotage_wire | -19.29 | -5.42 |
+| sabotage_smear | -21.10 | -6.01 |
+
+Prototype uses one source per station (four maximum), SFX_Critical, volume0.35, priority80, logarithmic1–16m. No playback with the feature off. These are source measurements, not mixed-bus loudness or Quest audio cost. Audition/localization remains pending; don't call the synthesized cues a finished sound pass.

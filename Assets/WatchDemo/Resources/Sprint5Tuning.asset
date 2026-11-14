@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   tensionDirector: 1
   fearFeedback: 1
+  sabotageTraces: 0
+  sabotageWarningSeconds: 3
+  sabotageEvidenceSeconds: 20
   minimumProblemGapSeconds: 15
   preScareQuietSeconds: 2.5
   earliestScareSeconds: 60

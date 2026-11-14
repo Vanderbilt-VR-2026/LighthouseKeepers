@@ -73,9 +73,9 @@ namespace LighthouseKeepers.WatchDemo
         {get=>coop;set{coop=value;}}
         public bool ReadOnly => NetworkRehearsal || RemoteReplica;
         public void SetRemoteReplica(bool value)
-        { RemoteReplica=value; if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly; Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly; }
+        { RemoteReplica=value; if(Sabotage!=null)Sabotage.ReadOnly=ReadOnly;if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly; Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly; }
         public void SetNetworkRehearsal(bool value)
-        {NetworkRehearsal=value;if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly;}
+        {NetworkRehearsal=value;if(Sabotage!=null)Sabotage.ReadOnly=ReadOnly;if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly;}
         public event Action Changed;
         public RadioState Radio {get;}
         public PipeRepairState Pipe {get;}
@@ -162,7 +162,7 @@ namespace LighthouseKeepers.WatchDemo
             if(GeneratorTutorial&&!NightTwoOutage){double until=NightTwoFuelFailure?FuelRunoutRemaining:Master.nightTwoOutageSeconds-Elapsed;if(until>.00001&&seconds>until){Tick(until);Tick(seconds-until);return;}}
             double darkSeconds=Math.Max(0,seconds-BeaconGraceRemaining);
             Pressure?.Tick((float)seconds);
-            simulationSliceEnd=Elapsed+seconds;PaceArrivalFuel();Engine?.Tick((float)seconds);
+            simulationSliceEnd=Elapsed+seconds;PaceArrivalFuel();WarnFuelSabotage();Engine?.Tick((float)seconds);
             Beacon?.Tick((float)seconds,HasPower(PowerCircuit.Beacon));
             if(Ships==null&&!Tutorial&&!BeaconShining && Definition.beaconDarkLimitSeconds>0)
             {BeaconDarkElapsed=Math.Min(BeaconDarkLimit,BeaconDarkElapsed+darkSeconds);BeaconDarkFailed=BeaconDarkElapsed>=BeaconDarkLimit;}
@@ -218,7 +218,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             int done=0;
             for(int i=0;i<Definition.tasks.Length;i++)if(IsDone(Definition.tasks[i].stationId))done|=1<<i;
-            return new WatchSnapshot { ships=Ships?.Capture()??new ShipFrame(), fear=Fear?.Capture()??new FearFrame(),tension=Tension?.Capture()??new TensionFrame(), campaignEnabled=Campaign,nightFaultMask=schedule?.FiredMask??0,nightSawPowerOff=schedule?.SawPowerOff??false,nightReliefUntil=schedule?.ReliefUntil??0,nightNextFaultAt=schedule?.NextFaultAt??0,nightGraceUntil=schedule?.GraceUntil??0,watchEngaged=watchEngaged,watchGateElapsed=watchGateElapsed,stationGraceUntil=stationGraceUntil,seenStationMask=seenStationMask,nightStartSeenMask=nightStartSeenMask, handheldEnabled=CrewRadio!=null,radioActor0=CrewRadio?.Actor(0)??0,radioActor1=CrewRadio?.Actor(1)??0, valveEnabled=Pressure!=null,valveCrew=Pressure?.CrewRequired??false,valveClamped=Pressure?.Clamped??false,valveActor=Pressure?.Holder??0, nightTwoOutage=NightTwoOutage,firstGeneratorGraceUntil=firstGeneratorGraceUntil,stormStage=Storm?.Stage??1,peakDanger=PeakDanger,previousCloseCall=PreviousCloseCall,directorEnabled=Director!=null,stepA=(int)(Director?.First??KeeperStep.None),stepB=(int)(Director?.Second??KeeperStep.None),actorA=Director?.FirstActor??0,actorB=Director?.SecondActor??0,houseWaterVolume=HouseFlood?.Volume??0,day3Stage=day3Stage,day3Crew=balanceCrew,day3GraceUntil=day3GraceUntil,objectiveIndex=ObjectiveIndex,day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
+            return new WatchSnapshot { sabotage=Sabotage?.Capture()??new SabotageFrame(), ships=Ships?.Capture()??new ShipFrame(), fear=Fear?.Capture()??new FearFrame(),tension=Tension?.Capture()??new TensionFrame(), campaignEnabled=Campaign,nightFaultMask=schedule?.FiredMask??0,nightSawPowerOff=schedule?.SawPowerOff??false,nightReliefUntil=schedule?.ReliefUntil??0,nightNextFaultAt=schedule?.NextFaultAt??0,nightGraceUntil=schedule?.GraceUntil??0,watchEngaged=watchEngaged,watchGateElapsed=watchGateElapsed,stationGraceUntil=stationGraceUntil,seenStationMask=seenStationMask,nightStartSeenMask=nightStartSeenMask, handheldEnabled=CrewRadio!=null,radioActor0=CrewRadio?.Actor(0)??0,radioActor1=CrewRadio?.Actor(1)??0, valveEnabled=Pressure!=null,valveCrew=Pressure?.CrewRequired??false,valveClamped=Pressure?.Clamped??false,valveActor=Pressure?.Holder??0, nightTwoOutage=NightTwoOutage,firstGeneratorGraceUntil=firstGeneratorGraceUntil,stormStage=Storm?.Stage??1,peakDanger=PeakDanger,previousCloseCall=PreviousCloseCall,directorEnabled=Director!=null,stepA=(int)(Director?.First??KeeperStep.None),stepB=(int)(Director?.Second??KeeperStep.None),actorA=Director?.FirstActor??0,actorB=Director?.SecondActor??0,houseWaterVolume=HouseFlood?.Volume??0,day3Stage=day3Stage,day3Crew=balanceCrew,day3GraceUntil=day3GraceUntil,objectiveIndex=ObjectiveIndex,day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
                 beaconStationEnabled=Beacon!=null,beaconIgnited=Beacon?.Ignited??false,beaconAlignment=Beacon?.Alignment??0,beaconTarget=Beacon?.Target??0,beaconSoot=Beacon?.Soot??0,
                 engineConsumption=Engine?.Consumption??0,engineEnabled=Engine!=null,fuel=Engine?.Fuel??0,primer=Engine?.Primer??0,enginePulls=Engine?.Pulls??0,engineClosedPulls=Engine?.ClosedPulls??0,chokeClosed=Engine?.ChokeClosed??false,engineSettled=Engine?.Settled??false,chokeRemaining=Engine?.OpenRemaining??0,engineFloodRemaining=Engine?.FloodRemaining??0,coughSerial=Engine?.CoughSerial??0,
                 gridEnabled=Grid!=null,gridCapacity=Grid?.Capacity??0,gridMask=Grid?.SelectedMask??0,gridTripped=Grid?.Tripped??false,
@@ -237,7 +237,7 @@ namespace LighthouseKeepers.WatchDemo
             if(!RemoteReplica || snapshot==null || !snapshot.Valid())return false;
             int next=Array.FindIndex(days,d=>d.day==snapshot.day);
             if(next<0 || snapshot.objectiveIndex>=days[next].tasks.Length || snapshot.elapsed>SnapshotDuration(days[next],snapshot.day3Crew) || (snapshot.doneMask>>days[next].tasks.Length)!=0)return false;
-            if(!ValidShipSnapshot(days[next],snapshot)||!ValidCampaignSnapshot(days[next],snapshot)||!ValidDay3Snapshot(days[next],snapshot)||!ValidGraceSnapshot(snapshot,days[next]))return false;
+            if(!ValidSabotage(days[next],snapshot)||!ValidShipSnapshot(days[next],snapshot)||!ValidCampaignSnapshot(days[next],snapshot)||!ValidDay3Snapshot(days[next],snapshot)||!ValidGraceSnapshot(snapshot,days[next]))return false;
             if(snapshot.firstGeneratorGraceUntil>snapshot.elapsed+(Master?Master.firstGeneratorGraceSeconds:0)+.01)return false;
             if(snapshot.fear.enabled!=(Master&&Sprint5&&Sprint5.fearFeedback&&days[next].scenario?.configured==true))return false;
             if(snapshot.directorEnabled!=(Director!=null)||snapshot.valveEnabled!=(Pressure!=null)||snapshot.handheldEnabled!=(CrewRadio!=null))return false;
@@ -248,7 +248,8 @@ namespace LighthouseKeepers.WatchDemo
             Fear=snapshot.fear.enabled?new KeeperFearState{ReadOnly=true}:null;Fear?.Apply(snapshot.fear);
             Ships=NewShips(days[next]);Ships?.Apply(snapshot.ships,snapshot.elapsed);
             Tension=NewTension(days[next]);if(Tension!=null)Tension.Apply(snapshot.tension,snapshot.elapsed);
-            if(snapshot.campaignEnabled){schedule=new NightSchedule(days[next].scenario,Tension);schedule.Apply(snapshot.nightFaultMask,snapshot.nightSawPowerOff,snapshot.nightReliefUntil,snapshot.nightNextFaultAt,snapshot.nightGraceUntil);}else schedule=null;
+            Sabotage=NewSabotage(days[next]);Sabotage?.Apply(snapshot.sabotage,snapshot.nightFaultMask,snapshot.elapsed);
+            if(snapshot.campaignEnabled){schedule=new NightSchedule(days[next].scenario,Tension,Sabotage);schedule.Apply(snapshot.nightFaultMask,snapshot.nightSawPowerOff,snapshot.nightReliefUntil,snapshot.nightNextFaultAt,snapshot.nightGraceUntil);}else schedule=null;
             day3Stage=snapshot.day3Stage;balanceCrew=snapshot.day3Crew;day3GraceUntil=snapshot.day3GraceUntil;replicaObjective=snapshot.objectiveIndex;index=next;Elapsed=snapshot.elapsed;Power=(PowerState)snapshot.power;StarterPulls=snapshot.starterPulls;
             BeaconDarkElapsed=snapshot.beaconDarkElapsed;BeaconDarkFailed=snapshot.beaconDarkFailed;
             Sea=snapshot.sea;HighWaterElapsed=snapshot.highWaterElapsed;HighWaterFailed=snapshot.highWaterFailed;
@@ -269,7 +270,8 @@ namespace LighthouseKeepers.WatchDemo
             Ships=NewShips(Definition);
             Tension=NewTension(Definition);
             Fear=Master&&Sprint5&&Sprint5.fearFeedback&&Campaign?new KeeperFearState{ReadOnly=ReadOnly}:null;shipFear=0;
-            schedule=Campaign?new NightSchedule(Scenario,Tension):null;
+            Sabotage=NewSabotage(Definition);
+            schedule=Campaign?new NightSchedule(Scenario,Tension,Sabotage):null;
             if(Campaign){faults.Clear();foreach(var task in Definition.tasks)faults.Add(task.stationId);}
             day3Stage=Day3Balance?1:0;day3GraceUntil=0;balanceCrew=keeperCount>1;
             Power = !Campaign&&!GeneratorTutorial&&!Day3Balance&&faults.Contains(GeneratorStation) ? PowerState.Off : PowerState.On;

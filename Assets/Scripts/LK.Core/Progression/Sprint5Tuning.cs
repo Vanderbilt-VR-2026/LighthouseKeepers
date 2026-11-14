@@ -6,6 +6,10 @@ namespace LighthouseKeepers.Core.Progression
     {
         public bool tensionDirector = true;
         public bool fearFeedback = true;
+        [Tooltip("Prototype; keep off until Night5 duo timing and complete evidence coverage pass.")]
+        public bool sabotageTraces = false;
+        [Range(2,5)] public float sabotageWarningSeconds = 3;
+        [Min(0)] public float sabotageEvidenceSeconds = 20;
         [Tooltip("Ship presentation is gated until host-owned passage outcomes are verified.")]
         public bool shipVisuals;
         public bool shipPassages;

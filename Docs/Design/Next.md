@@ -1,73 +1,58 @@
 # Sprint 5 checkpoint — November 13
 
-Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR #88 was merged by a teammate into main at `14634af`; that merge is included and #89 now targets main. The new Sprint5-Master.md, including §14, supersedes the historical M3 ordering below.
+Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base main after teammate merge of PR88. Main-folder branch untouched. Editor muted. Never launch Quest without request; installing is allowed.
 
-## Latest headset steering — November 13
+## Latest requested playtest corrections
 
-The lead launched/playtested ship APK005e641 and confirmed the ship appears. Distant box/light LOD, active wheel tracking, generator realism and watch face orientation need correction before continuing toward the Drowned. The distant hull correction passes five focused tests and reviewed graphics views (`Docs/Verification/S5/Ship/playtest`). Next: host-owned beam aiming/hold, generator model, watch face180°, then Phase3 sabotage / Phase4 lantern / Phase5 Drowned. Historical “not launched” receipts below predate the explicitly authorized playtest.
+- `57e0a6d6`: full steamer hull remains visible from horizon to shore; removed the grey proxy/floating lights. Same11,760-triangle/two-material hull at distance; no realtime ship lights. Reviewed normal-LOD gallery images.
+- `5fb7fe4c`: the F4 wheel now aims the actual beam at the moving ship. Host requires powered/lit/clean lens, within8°, held steady0.6s. Off-beam pauses safe travel;30s grace then named wreck. Reacquire to continue. Night1 remains a safe preview. Task/director and arrival times reconciled;72 focused tests,12 workload models, actual-XRI soloNight3 plus live guest steering pause/recovery/pass. See `Docs/Playtests/2026-11-13-ship.md`.
+- `bd3e8bca`: original rounded diesel castings/tank, ribbed alternator, flywheel, exhaust and fuel plumbing.10,072triangles/three combined meshes, no added lights/colliders. Accepted physical controls/grips unchanged; actual-XRI Night2 full start passes. Reviewed front/oblique/both-grip pictures.
+- `f9aa684a`: watch resin case/bezel/LCD/four side buttons; **dial/text rotated180°**, hand and mount unchanged. Focused watch geometry/face/backlight test passes; three accessory views inspected. Headset wrist feel pending.
 
-## Current work
+Evidence: `Docs/Verification/S5/Ship/playtest/`, `Docs/Verification/S5/Props/`.
 
-- **1.0 implementation complete; device acceptance OPEN (#90):** active Android QuestPipeline MSAA4/scale1, Vulkan, fixed FFR0.5, on-tile grade, mipmaps/ASTC; one-click menu includes fixed-scene baked lighting/static/probe setup. Progressive GPU powered/emergency bakes: two maps / 4.93 MiB each, 444 probes. See QuestQuality.md.
-- Full EditMode 396/396 pass; expanded quality checks 3/3 pass. Before/after actual-XRI graphics Nights1–3 pass into Night4, zero logged errors; inspected images in Docs/Verification/S5/Quality. Focused PlayMode 19/23; all four failures reproduce identically on pre-quality 785f2d1, so this set has no new failures. Pre-change full PlayMode stalled in retired Bootstrap tests; not a full-suite pass.
-- Clean-source `6c13885` APK built and published as an explicitly unfinished Sprint5 preview. Public download hash verified. Ships/horror/lantern/progression are not finished. No gameplay/network changes in quality pass: **LK-M3-CAMPAIGN2 / v22**.
-- Grading cleanup complete: exactly main and sprint-1..5 remotely; eight old branch tips archived and containment verified. Sprint4 release `sprint4-final` and Sprint5 prerelease `sprint5-preview-20261112` are public. Sprint5 milestone December3; 40 implementation/ownership issues (GitHub milestone totals also count PRs).
+## Current boundary — phase3.1 prototype, not enabled
 
-## Next in order
+Sabotage warning/evidence receipts are implemented behind `Sprint5Tuning.sabotageTraces`, but the shipped asset is **OFF**.81 focused checks and enabled-prototype graphics Night2 pass. Enabled-prototype Night5 duo fails the workload model: two-person pipe repair overlaps active beam steering. Clock warnings now anticipate the original deadline and respect relief, but dependency-triggered delay still exposes this conflict. Preserve the failure; don't enable the feature or claim a completed phase3 until fixed.
 
-**Quality regression DONE:** fresh two-Mac join/avatars/mono-AEC configuration/proximity/both radios/mute/shared task/shared sleep/rejoin pass. Separate Night3 host-valve + guest-wrench transport passes. See Docs/Verification/S5/Quality/crew/. **1.1 DONE (#91):** Sprint5.md, 28-row FeelChecklist.md, 32-event-family SoundMap.md are committed skeletons; implementation vs planned work is explicit. Next #92 TensionDirector and #93 fear system; re-read the relevant master sections before each phase. Do not jump to historical ship-first instructions.
+With the prototype OFF, all12 workload models pass again. Final first-timer tuning/headroom remains unapproved (`timingApproved=false`). No new human timing evidence. See `Docs/Verification/S5/Sabotage/README.md` and `timing-prototype-failure.json`.
 
-## Next implementation boundary
+Network is **LK-S5-TRACES1 / LK-Lab-Coop-v27** for ship steering plus the optional receipt schema. Both clients must update. Live two-Mac final regression PASSED: host-alone/latejoin, avatars, mono/AEC/NS configuration, both radios/mute, guest repair, shared ship/sleep, leave/rejoin. Evidence in `Docs/Verification/S5/Sabotage/crew/`. No hunter, apparitions, lantern or cable-reconnect mechanic claimed yet.
 
-**1.2 implemented (#92):** one host TensionDirector owns fault spacing (at least 15 s), 10–20 s relief, storm stage and requested music layer. Scare permission/2.5 s quiet and tutorial/escape guards are integration points; no entity exists yet. Physical fuel exhaustion respects recovery without faking power. Network is now **LK-S5-TENSION1 / LK-Lab-Coop-v23**; both clients must update. 82 focused tests pass; actual-XRI graphics Nights1–3 → Night4 passes with zero errors; inspected images and task-only models in Docs/Verification/S5/Tension/. The previous 12 s fault-gap assertion was updated to the new required 15 s, not a gameplay workaround.
+## Next implementation, in order
 
-**1.3 implemented and automated regression passed; device acceptance OPEN (#93):** host per-keeper fear, heartbeat/breath/undertone, saved heartbeat-haptics toggle, world filtering excluding voice/radio/critical sounds. Source **859f8b0**, protocol **LK-S5-FEAR1 / LK-Lab-Coop-v24**; both clients must update. Final full EditMode **416/416**. Focused PlayMode19/23: the same four baseline failures. Actual-XRI solo Nights1–3 reaches Night4; appended probe had an overly broad clip selector, then the corrected isolated fear probe passes. The Sound page was reflowed inside its backing; bounds test and reviewed final screenshot confirm the fit. Final menu-probe tail was interrupted by Mac sleep; preserve its raw failure.
+1. Finish3.1 (#98): fix Night5 duo dependency/ship overlap without demanding three simultaneous roles or masking the failed model. Review radio/beacon trace anchors, then test enabled12-run model and both-client warning/evidence transport.
+2. Phase3.2 (#99): cable reconnect, lens handprint wipe and fuel sabotage, reusing existing hands/grab/authority;3.3 (#100) brief harbor-master explanations.
+3. Phase4 lantern (#101–103), then Phase5 Drowned (#104–108), following the **current** Sprint5-Master.md§13. Do not jump to superseded ship-first history below. Re-read relevant sections; commit/push each step and keep all Editors muted.
 
-**Phase1 automated regression gate PASSED:** fresh live two-Mac host-alone/late join, both avatars, Voice joined + mono/AEC/NS configuration, cross-floor falloff, both handheld radio routes, mute, guest pipe task, shared sleep to Night2, leave/rejoin. Separate Night3 host-held valve + guest three-bolt repair passes; per-keeper lower-floor/upstairs fear matches both replicas and the saved haptics toggle works. Both Editors muted, so human speech/comfort remains unverified.
-
-A test-only movement error was isolated after sea recovery: its direct pose jump while the character capsule was enabled left the camera at the doorway. The corrected test temporarily disables that capsule during reposition and verifies the requested head pose; the unchanged pipe gameplay then passes. No gameplay workaround was made. The earlier sleep-interrupted runs and raw failure remain archived. Reproduction: `caffeinate -i python3 artifacts/s5/fear/crew-driver.py`; always use fresh output folders. The phase-end416 EditMode and19/23 PlayMode results already cover current source; no additional full rerun is needed for evidence-only changes.
-
-Build done from clean source **805e779** (includes the final Sound-page fix): `Builds/LighthouseKeepers-Sprint5-Foundation-805e779.apk`; SHA-256 `c1a987c01e4c47e5522adefab7a76ca95dd084d22f641a50e98a636affc2e9a7`, 123,912,774 bytes, IL2CPP ARM64/Vulkan, zero build errors. Exact-source metadata is in `Docs/Verification/S5/Fear/final-apk.*.json`. Foundation APK installed successfully via non-streamed ADB on November13; no app launched.
-
-**2.1 implemented (#94):** baked original 52 m steamer, named hull, emissive lamps, searchlight, bounded GPU smoke/spray, 204-triangle distant LOD, continuous west-side route clear of the island/coast. Full close model 11,760 triangles, two materials, zero realtime lights. Graphics Play Mode zero errors; inspected horizon/approach/near/peak images in `Docs/Verification/S5/Ship/`. Normal-play `shipVisuals` remains OFF pending outcomes. No protocol change.
-
-**2.2 implemented (#95), feature still OFF pending phase gate:** host ship windows/pass/wreck, safe preview, broadcast approach extension, shared sleep gate, P21–P24, horn/crash/flare, named logbook loss and retry. 72/72 focused cases; muted graphics pass and reviewed images (`Docs/Verification/S5/Ship/outcomes`). Snapshot now **LK-S5-SHIPS1 / LK-Lab-Coop-v25**. Both players must update when the phase build is delivered. Latest built APK805e779 is still foundation v24.
-
-**2.3 implemented (#96):** 83/83 focused checks and muted graphics Play Mode pass (zero errors). Darkness is a warning outside near-rocks/passage windows; the ship-specific grace owns a named loss inside them. Night1 preview remains safe. Evidence: `Docs/Verification/S5/Ship/window-rules/`. Protocol unchanged from2.2.
-
-**2.4 implemented (#97); phase2 automated regression PASSED:** gallery searchlight sweep, repeated spatial horn, original engine/hull loop, existing comfort-limited lightning and pass relief/sting. Normal campaign ship visuals/rules are ON. Full EditMode438/438; focused PlayMode19/23, same four inherited failing names (the obsolete beacon test stops earlier at ship-gated sleep). Nights1–2 real-XRI pass; Night3 caught a fuel exhaustion regression during the walk to bed. Campaign Night3 fuel drain0.0025→0.0015 fixes it; focused real-XRI replay now reaches Night4, zero errors. Twelve ship/task timing models pass; final phase6 headroom targets remain unapproved. See Docs/Playtests/telemetry-s5.md and Docs/Verification/S5/Ship/gallery/. Full legacy PlayMode remains blocked by retired Bootstrap tests; not a full-suite pass.
-
-Live two-Mac join/avatars/mono-AEC configuration/proximity/both radios/mute/guest task/shared ship outcome/shared sleep/leave/rejoin PASS. Separate Night3 host valve + guest wrench and per-keeper fear PASS. Source network remains **LK-S5-SHIPS1 / LK-Lab-Coop-v25**. Human voice, Quest GPU/CPU and usability remain pending. Clean-source ship APK005e641 (v25) is now installed, device APK hash matches the local build, and the app was not launched. Never launch it without request.
-
-**NEXT: Phase3.1 (#98)** sabotage pre-sounds/evidence. Re-read master §2/§3/§9/§13. Reuse NightSchedule/WatchState.Campaign and TensionDirector; a host-owned telegraph must precede the fault by2–5s, evidence persists through repair then fades20s later. Preserve physical fuel exhaustion and the authored initial tutorial leak. Implement duplicate/retry/late-join validation and any new snapshot fields behind a switch; bump the network version for those fields. Do not build a second fault scheduler. No sabotage, lantern or entity implementation is claimed yet.
-
-Reproduction: `caffeinate -i python3 artifacts/s5/ship/night3.py` (use a fresh output path); two-Editor `crew-driver.py` in that folder; `python3 artifacts/remaining/m3/tests.py ship-final ''` for EditMode. The graphics wrappers keep Editors muted. Current board-only spacing change was checked visually after the438-case run; no repeat of the whole suite is needed for whitespace alone.
-
-The six-branch grading cleanup is complete. A teammate merged PR88. Small docs-only PR134 adds the new preview download and removes the private-board link from main; it needs teammate review, not self-merge. Draft PR89 targets main. Sprint5 milestone due date was corrected to December3 (GitHub normalized the earlier midnight input to December2).
-
-## Ship playtest follow-up — November13
-
-Consistent full-hull LOD fixed in57e0a6d6. Active beacon steering is implemented and verified:72/72 focused tests,12/12 instruction-only models, physical soloNight3 and live guest-wheel pause/recovery/pass. Existing two-Mac join/avatar/radios/mute/repair/sleep/rejoin regression passed. Protocol **LK-S5-BEAMAIM1 /v26**; both clients update. See `Docs/Playtests/2026-11-13-ship.md`. Generator mesh now verified (physical Night2 start and reviewed3angles;10,072tris). Watch dial180° and bevelled resin/LCD case now verified in focused PlayMode and inspected close-ups. Next Phase3.1 sabotage traces, then build/install; resumePhase3 sabotage →Phase4 lantern →Phase5 Drowned. New aiming device feel/performance remains pending.
-
-## DEVICE CHECKS PENDING
-
-Installed November13: `Builds/LighthouseKeepers-Sprint5-Ships-005e641.apk`, clean source005e641, IL2CPP ARM64/Vulkan, 124,410,010 bytes. SHA-256 `d810d621440287eef54cf33a88d14e3243f21b12ad58d81ce047fd5f85eb33ea`. Non-streamed install succeeded and the installed APK hash matches. **App not launched.** Network **LK-S5-SHIPS1 / v25**; both crew clients need this build. Build/packaging/install receipts: `Docs/Verification/S5/Ship/gallery/final-apk.*.json` and `install.json`. The public quality preview remains v22 and is not this ship build.
-
-When the lead authorizes launch: watch the Night1 preview from the gallery after repairing the pipe; verify P21/P23 and horn location; keep the beacon shining for both Night3 passages, then walk to bed without a fuel stop; test a named wreck/retry. Confirm both-player ship ticks, radio falloff, valve repair and shared sleep. Measure the actual worn-headset views before changing quality settings.
-
-OVR Metrics/Profiler: 72Hz, peak-storm GPU≤11ms, CPU main≤9ms; compare MSAA4 to prior2, scale1.0, fixed foveation0.5, on-tile Render Graph passes, text and powered/blackout bake. No Editor FPS substitutes for these measurements. Human two-way voice, controller comfort, offline Wi-Fi-off and current-build two-Quest play remain pending. Ship/lantern/Drowned worst-case profiling follows their implementation.
-
-## Commands
+## Reproduce current checks
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
-# Unity 6000.3.23f1; EditorPlaytestAudio mutes every play/test session.
-# Menu: Lighthouse Keepers/Apply Quest Quality Baseline (includes Lab lighting/probe settings)
-# Menu: Lighthouse Keepers/Quality/Rebake Quest Lighting (regenerates both variants)
-python3 artifacts/s5/quality/replay.py  # actual-XRI Nights1–3; closes its muted Editor afterward
-# Fresh transport: artifacts/s5/quality/crew.py (two muted, matching-source Editors required).
-# Evidence: artifacts/s5/quality/ and Docs/Verification/S5/Quality/
+caffeinate -i python3 artifacts/remaining/m3/tests.py sabotage-gated 'SabotageTests;Ship;M3Campaign;VoicePassTests;Tension'
+# Fresh output folder for every graphics/transport rerun:
+caffeinate -i python3 artifacts/s5/sabotage/crew-driver.py
+# Graphics prototype: review.py, Review.cs; temporarily enable Resources Sprint5Tuning.sabotageTraces IN MEMORY after Play starts, never save it.
+# Workload model: exact command below; both clients must have matching current source.
+LK_SHIP_TIMING=1 LK_M3_TIMING_OUTPUT="$PWD/artifacts/s5/sabotage/new-timing.json" caffeinate -i /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath /Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer -buildTarget StandaloneOSX -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/s5/sabotage/new-timing.log"
 ```
+
+## DEVICE CHECKS PENDING
+
+Latest installed before this checkpoint:005e641 (LK-S5-SHIPS1/v25), which the lead explicitly launched/playtested. New matching APK build/install is next; record exact source/hash afterward. Do not launch automatically.
+
+- Start with **PLAY → HOST / PLAY ALONE → DEV: SELECT NIGHT3 → START** to test active ship steering. Night1 ship is intentionally a safe preview.
+- Check hull consistent at horizon/approach/near; F4 wheel follows bearing, beam holds the ship, deliberately miss then recover. Confirm named wreck/retry and both-player outcomes.
+- Inspect new generator from the front/side; refill, three primer squeezes, close choke, three cord pulls, reopen. Confirm hand reach unchanged.
+- Check left-watch dial now faces the wearer, LCD readable, backlight and objective/B recall still work.
+- Human Mac+Quest/current-build two-Quest voice, valve, guest wheel and shared sleep/rejoin; both needv27. Muted Editors prove configuration/transport, not audible conversation.
+- Worn Quest72Hz: GPU≤11ms/CPU main≤9ms; full-hull distance change/beam/generator peak-storm view. No Editor FPS substitutes. Quest3 quality baseline remains MSAA4/scale1/fixedFFR0.5.
+- Prototype sabotage warning audibility/readability and Night5 pacing only AFTER activation gate; lantern/Drowned performance/comfort after implementation.
+- Preserve existing pending offline Wi-Fi-off, wall/edge sweeps, held-prop comfort and rendered text checks. Will's skybox/avatar not edited.
+
+## Earlier completed foundations
+
+Quality1.0 and foundation1.1–1.3 implemented; headset acceptance remains open. Last phase2 full EditMode438/438; focused legacy PlayMode19/23 with the same four inherited failures. Full legacy PlayMode still stalls in retired Bootstrap tests, so no full-suite pass is claimed. Latest checks above are focused on the changed behavior. Previous source805e779 foundation and005e641 ship build receipts remain archived. Grading remote has main+sprint1–5; PR134 docs-only publication awaits teammate review.
 
 ---
 

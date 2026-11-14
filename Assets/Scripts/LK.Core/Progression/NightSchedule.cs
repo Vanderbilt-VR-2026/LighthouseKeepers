@@ -6,6 +6,7 @@ namespace LighthouseKeepers.Core.Progression
     {
         readonly NightScenario data;
         readonly TensionDirector tension;
+        readonly SabotageState sabotage;
         double reliefUntil, nextFaultAt;
         public int FiredMask {get;private set;}
         public bool SawPowerOff {get;private set;}
@@ -13,7 +14,7 @@ namespace LighthouseKeepers.Core.Progression
         public double NextFaultAt => tension?.NextProblemAt ?? nextFaultAt;
         public double GraceUntil {get;private set;}
         public bool Finished=>FiredMask==((1<<data.faults.Length)-1);
-        public NightSchedule(NightScenario data, TensionDirector tension=null){this.data=data;this.tension=tension;}
+        public NightSchedule(NightScenario data, TensionDirector tension=null,SabotageState sabotage=null){this.data=data;this.tension=tension;this.sabotage=sabotage;}
         public bool Fired(int i)=>(FiredMask&(1<<i))!=0;
         public bool Pending(string station)
         {
@@ -37,8 +38,18 @@ namespace LighthouseKeepers.Core.Progression
                 bool initial=f.gate==NightEventGate.Clock&&f.atSeconds==0&&(tension==null||FiredMask==0);
                 bool finale=data.finaleFaultPileup&&f.repeat&&f.kind==NightFaultKind.StationFailure;
                 if(f.kind==NightFaultKind.LowFuel&&!powerRestored)continue;
+                // Telegraph authored clock faults before their due time, preserving the established
+                // finale overlap. Dependency-triggered faults still wait a full warning after readiness.
+                if(sabotage!=null&&!initial&&!exhaustion&&
+                    (f.gate==NightEventGate.Clock||f.gate==NightEventGate.ClockOrJobComplete)){
+                    double upcoming=now+sabotage.WarningSeconds;
+                    if(upcoming>=f.atSeconds&&now>=data.openingSeconds&&
+                        (tension!=null?tension.CanProblem(now,finale):now>=ReliefUntil&&(finale||now>=NextFaultAt)))sabotage.Warn(i,now);
+                }
                 if(!ready||!initial&&!exhaustion&&(now<data.openingSeconds||
                     (tension!=null?!tension.CanProblem(now,finale):now<ReliefUntil||!finale&&now<NextFaultAt)))continue;
+                if(sabotage!=null&&!sabotage.BeforeFault(i,now,initial||exhaustion))continue;
+                sabotage?.Broke(i,now);
                 FiredMask|=1<<i;GraceUntil=Math.Max(GraceUntil,now+f.graceSeconds);
                 if(tension!=null)tension.Problem(now);else if(!initial)nextFaultAt=now+data.faultSpacingSeconds;
                 fire(f);

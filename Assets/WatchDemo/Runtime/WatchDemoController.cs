@@ -123,6 +123,7 @@ namespace LighthouseKeepers.WatchDemo
             WorldAudioGaps.Create(this);
             IslandSafety.Create(this);
             GeneratorIdentity.Create();
+            SabotagePresentation.Create(this);
             ConnectedMachinePresentation.Create(this);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
