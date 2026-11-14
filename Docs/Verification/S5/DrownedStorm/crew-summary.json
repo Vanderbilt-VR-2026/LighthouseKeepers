@@ -1,0 +1,328 @@
+[
+  {
+    "run": "two-mac",
+    "event": "Host created room",
+    "time": 1794679735.5664508,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Online host started alone without READY",
+    "time": 1794679738.5073888,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Guest joins running watch without READY",
+    "time": 1794679742.5866308,
+    "states": [
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      },
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "run": "two-mac",
+    "event": "Avatars LighthouseKeepers-M3",
+    "time": 1794679745.521792,
+    "states": [
+      {
+        "day": null,
+        "stormStage": null,
+        "power": null,
+        "drowned": null
+      },
+      {
+        "day": null,
+        "stormStage": null,
+        "power": null,
+        "drowned": null
+      }
+    ]
+  },
+  {
+    "run": "two-mac",
+    "event": "Voice configuration LighthouseKeepers-M3",
+    "time": 1794679745.569878,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Avatars LighthouseKeepers-S5-Peer",
+    "time": 1794679745.730279,
+    "states": [
+      {
+        "day": null,
+        "stormStage": null,
+        "power": null,
+        "drowned": null
+      },
+      {
+        "day": null,
+        "stormStage": null,
+        "power": null,
+        "drowned": null
+      }
+    ]
+  },
+  {
+    "run": "two-mac",
+    "event": "Voice configuration LighthouseKeepers-S5-Peer",
+    "time": 1794679745.7931101,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Guest washed home; host night continues",
+    "time": 1794679758.696437,
+    "states": [
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      },
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "run": "two-mac",
+    "event": "Guest task shared",
+    "time": 1794679801.240291,
+    "states": [
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      },
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "run": "two-mac",
+    "event": "Cross-floor proximity LighthouseKeepers-M3",
+    "time": 1794679805.221349,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Cross-floor proximity LighthouseKeepers-S5-Peer",
+    "time": 1794679805.309165,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Host trigger radio",
+    "time": 1794679806.5718,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Guest head radio",
+    "time": 1794679809.351105,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Mute cancels radio",
+    "time": 1794679810.863797,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Ship passage shared",
+    "time": 1794679852.276094,
+    "states": [
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      },
+      {
+        "day": 1,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": -1,
+          "appearances": 0,
+          "consumed": 0,
+          "since": 0.0,
+          "nextAt": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "run": "two-mac",
+    "event": "Disconnect adapts to solo",
+    "time": 1794679860.357423,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "Rejoin active day 2",
+    "time": 1794679865.230413,
+    "states": null
+  },
+  {
+    "run": "two-mac",
+    "event": "FAIL",
+    "time": 1794679961.915081,
+    "states": null
+  },
+  {
+    "run": "two-mac-appearance",
+    "event": "Host created room",
+    "time": 1794680138.7313778,
+    "states": null
+  },
+  {
+    "run": "two-mac-appearance",
+    "event": "Drowned and storm shared",
+    "time": 1794680153.293503,
+    "states": [
+      {
+        "day": 2,
+        "stormStage": 4,
+        "power": 0,
+        "drowned": {
+          "enabled": true,
+          "phase": 2,
+          "fault": 1,
+          "appearances": 1,
+          "consumed": 2,
+          "since": 139.34926779507077,
+          "nextAt": 0.0
+        }
+      },
+      {
+        "day": 2,
+        "stormStage": 4,
+        "power": 0,
+        "drowned": {
+          "enabled": true,
+          "phase": 2,
+          "fault": 1,
+          "appearances": 1,
+          "consumed": 2,
+          "since": 139.34926779507077,
+          "nextAt": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "run": "two-mac-appearance",
+    "event": "Restoration and retreat shared",
+    "time": 1794680158.100915,
+    "states": [
+      {
+        "day": 2,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": 1,
+          "appearances": 1,
+          "consumed": 2,
+          "since": 148.90666861306522,
+          "nextAt": 206.90626682690925
+        }
+      },
+      {
+        "day": 2,
+        "stormStage": 1,
+        "power": 1,
+        "drowned": {
+          "enabled": true,
+          "phase": 0,
+          "fault": 1,
+          "appearances": 1,
+          "consumed": 2,
+          "since": 148.90666861306525,
+          "nextAt": 206.90626682690925
+        }
+      }
+    ]
+  }
+]

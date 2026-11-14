@@ -1,4 +1,4 @@
-# Sprint 5 checkpoint — November 13
+# Sprint 5 checkpoint — November 14
 
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base main after teammate merge of PR88. Main-folder branch untouched. Editor muted. Never launch Quest without request; installing is allowed.
 
@@ -16,9 +16,9 @@ Evidence: `Docs/Verification/S5/Ship/playtest/`, `Docs/Verification/S5/Props/`.
 - Fairness fix3562928f: sabotage enabled; bounded120s offshore crew wait; stable wheel keeper assignment.12 models pass (Night5 duo137s spare).
 - Visible non-contact Drowned: host warning/manifestation/retreat, light/repair repel it, no first-minute/Night1/new-control-grace scares, bounded sightings and local opt-out. Storm follows the phase; independent day-only rain/ocean intensity removed. No hunter/catch/stun claimed.
 - Heavy exterior rain replaces particle scan with1600 GPU-animated streaks.12 supported outdoor puddles with ripples.692-triangle oilskin form;3488 rain/puddle triangles;3 renderers total, no new lights/depth/reflection pass. Graphics inspected; shader self-sorting, overly bright puddles and first-control-grace race corrected.
--95 focused cases resolved passing;12 solo/duo workload models pass. Graphics Night2 outage→Drowned→power restore→retreat passes. Evidence: `Docs/Verification/S5/DrownedStorm/`.
+- Focused cases pass across the documented initial run and targeted fixture/regression reruns;19 final Drowned/Tension checks include real blackout before a ship window. All12 solo/duo workload models pass. Graphics Night2 outage→Drowned→power restore→retreat passes. Live co-op storm4 appearance and restoration/storm1 now pass after the window-gating fix. Evidence: `Docs/Verification/S5/DrownedStorm/`.
 
-Network **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. Both clients update. Current follow-through: final live Drowned/weather rerun (existing co-op regression passed; fixed blackout input previously gated by ship windows,19 focused checks pass), soloNight3, build, install only if ADB returns; do NOT launch. ADB currently empty. Previous installed APK8927fb64.
+Network **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. Both clients update. Current follow-through: build and install only if ADB returns; do NOT launch. Final actual-XRI soloNight3 passes through both steered ships and bed intoNight4, zero errors. ADB currently empty. Previous installed APK8927fb64. The first solo run accidentally used the older passive-beacon fixture and correctly wrecked; preserved as a setup error, no gameplay change.
 
 After this pass: finish phase3.2 cable reconnect/lens smears (#99), short explanations (#100), phase4 lantern (#101–103), then actual NavMesh hunter/hiding/escape phases (#105–108). Latest user direction makes the Drowned central; do not confuse the shipped saboteur/appearance slice with a finished hunter. `timingApproved=false` until human workload/headroom acceptance.
 
@@ -26,27 +26,31 @@ After this pass: finish phase3.2 cable reconnect/lens smears (#99), short explan
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
-caffeinate -i python3 artifacts/remaining/m3/tests.py sabotage-gated 'SabotageTests;Ship;M3Campaign;VoicePassTests;Tension'
-# Fresh output folder for every graphics/transport rerun:
-caffeinate -i python3 artifacts/s5/sabotage/crew-driver.py
-# Graphics prototype: review.py, Review.cs; temporarily enable Resources Sprint5Tuning.sabotageTraces IN MEMORY after Play starts, never save it.
-# Workload model: exact command below; both clients must have matching current source.
-LK_SHIP_TIMING=1 LK_M3_TIMING_OUTPUT="$PWD/artifacts/s5/sabotage/new-timing.json" caffeinate -i /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath /Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer -buildTarget StandaloneOSX -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/s5/sabotage/new-timing.log"
+# Choose new output names/directories; preserve previous receipts.
+caffeinate -i python3 artifacts/remaining/m3/tests.py drowned-next 'DrownedTests;TensionDirectorTests'
+# Full existing co-op transport harness, then focused Drowned/storm correction:
+caffeinate -i python3 artifacts/s5/drowned-storm/crew-driver.py
+caffeinate -i python3 artifacts/s5/drowned-storm/crew-appearance-driver.py
+# Current physical-input solo replay includes wheel steering (not older ship/Night3.cs):
+caffeinate -i python3 artifacts/s5/drowned-storm/night3-wheel.py
+# All Editors mute before play; never refresh source while playing.
 ```
 
 ## DEVICE CHECKS PENDING
 
 Installed on the connected Quest: **8927fb64**, `Builds/LighthouseKeepers-Sprint5-Beam-8927fb64.apk` (124,535,954bytes), **LK-S5-TRACES1/v27**. SHA-256`a964546b879116dc0451b3de092a790a5bbebbbe7f933d33c0635c2703c44fbb`. Built from clean source with IL2CPP ARM64, zero errors; APK VR manifest/signature checked and installed APK hash matches. **Not launched; app is closed.** Evidence: `Docs/Verification/S5/Ship/playtest/final-apk.*.json` and `install.json`. Earlier005e641 is superseded on this device.
 
-Ship aiming and new generator/watch are ON. Sabotage prototype remains OFF; next implementation boundary is unchanged above.
+That previously installed APK has sabotage OFF. The new v29 source enables the fair sabotage/appearance loop and heavy rain/puddles; it must be installed before testing this pass.
 
 - Start with **PLAY → HOST / PLAY ALONE → DEV: SELECT NIGHT3 → START** to test active ship steering. Night1 ship is intentionally a safe preview.
 - Check hull consistent at horizon/approach/near; F4 wheel follows bearing, beam holds the ship, deliberately miss then recover. Confirm named wreck/retry and both-player outcomes.
 - Inspect new generator from the front/side; refill, three primer squeezes, close choke, three cord pulls, reopen. Confirm hand reach unchanged.
 - Check left-watch dial now faces the wearer, LCD readable, backlight and objective/B recall still work.
-- Human Mac+Quest/current-build two-Quest voice, valve, guest wheel and shared sleep/rejoin; both needv27. Muted Editors prove configuration/transport, not audible conversation.
+- Human Mac+Quest/current-build two-Quest voice, valve, guest wheel and shared sleep/rejoin; both needv29 for the new build. Muted Editors prove configuration/transport, not audible conversation.
 - Worn Quest72Hz: GPU≤11ms/CPU main≤9ms; full-hull distance change/beam/generator peak-storm view. No Editor FPS substitutes. Quest3 quality baseline remains MSAA4/scale1/fixedFFR0.5.
-- Prototype sabotage warning audibility/readability and Night5 pacing only AFTER activation gate; lantern/Drowned performance/comfort after implementation.
+- New v29: Night2 outage → warning/sighting after first-control grace → storm rises; restore the generator → figure retreats/weather eases. Confirm warning audibility, no face pops, both-eye fade and Sightings Off.
+- Inspect12 outdoor puddles and heavier rain at ground/gallery. Rain stays outside roofs; no floating puddles. Profile rain/Drowned on/off at the same view.
+- Night5 human pacing/headroom still pending. Hunter/lantern/hiding are not enabled.
 - Preserve existing pending offline Wi-Fi-off, wall/edge sweeps, held-prop comfort and rendered text checks. Will's skybox/avatar not edited.
 
 ## Earlier completed foundations

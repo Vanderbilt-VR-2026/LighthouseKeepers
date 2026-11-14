@@ -1,0 +1,18 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=8.702 day=3 repaired=False water=0.02000m
+Focused Night 3 replay; prior Nights 1–2 already passed: elapsed=0.000s realtime=8.703 day=3 repaired=False water=0.02000m
+START focused fast Night3 XRI replay; original paced actions passed before the late fuel exhaustion: elapsed=0.000s realtime=8.703 day=3 repaired=False water=0.02000m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=8.802 day=3 repaired=False water=0.02002m
+day-three physical bolt 2 complete; inflow=0.6666667: elapsed=8.414s realtime=17.222 day=3 repaired=False water=0.02598m
+Released wrench: position=(3.11, 0.01, 0.75) kinematic=False water=0.02690603: elapsed=10.132s realtime=19.017 day=3 repaired=False water=0.02691m
+day-three physical bolt 0 complete; inflow=0.3333333: elapsed=16.665s realtime=25.474 day=3 repaired=False water=0.02989m
+day-three physical bolt 1 complete; inflow=0: elapsed=22.811s realtime=31.621 day=3 repaired=True water=0.02848m
+PIPE finished: elapsed=22.825s realtime=31.711 day=3 repaired=True water=0.02831m
+Three actual generator XRI pulls: elapsed=70.306s realtime=79.116 day=3 repaired=True water=-0.03000m
+GENERATOR settled; beacon and radio now required: elapsed=101.028s realtime=109.829 day=3 repaired=True water=-0.03000m
+BEACON shining: elapsed=104.010s realtime=112.812 day=3 repaired=True water=-0.03000m
+Rag wiped lens during ship watch: elapsed=204.824s realtime=145.218 day=3 repaired=True water=-0.03000m
+System.InvalidOperationException: Authored ships did not pass: The North Star struck the rocks.
+  at LighthouseKeepers.Editor.ImmersionSoloReplay+<AwaitShips>d__20.MoveNext () [0x003b7] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/drowned-storm/solo-night3/Nights123.cs:178 
+  at LighthouseKeepers.Editor.ImmersionSoloReplay+<Loop>d__18.MoveNext () [0x0141c] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/drowned-storm/solo-night3/Nights123.cs:153 
+  at LighthouseKeepers.Editor.ImmersionSoloReplay.Tick () [0x00061] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/drowned-storm/solo-night3/Nights123.cs:58 
