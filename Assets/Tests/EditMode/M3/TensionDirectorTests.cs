@@ -46,6 +46,15 @@ namespace LighthouseKeepers.Tests.M3
    guest.Fixed(80);guest.Problem(80);guest.Tick(80,1,600,1,1,true,0,false,true);Assert.AreEqual(90,guest.NextProblemAt);Assert.False(guest.PrepareScare(100,false,true,true,true));
    f=t.Capture();f.value=float.NaN;Assert.False(guest.Apply(f,75));f=t.Capture();f.quietUntil=999;Assert.False(guest.Apply(f,75));Assert.False(t.Apply(t.Capture(),75));
   }
+  [Test] public void ShipWindowRaisesMusicThenPassReliefResolvesWithoutChangingOtherFaults()
+  {
+   var n=Night();n.stormBaseStage=3;var host=new TensionDirector(n);
+   host.Tick(100,500,600,0,0,false,30,false,true,0,true);Assert.AreEqual(2,host.MusicLayer);Assert.AreEqual(3,host.StormStage);
+   host.Fixed(101);host.Tick(101,499,600,0,0,false,30,false,true,0,false);
+   Assert.AreEqual(0,host.MusicLayer);Assert.AreEqual(2,host.StormStage);Assert.AreEqual(TensionPhase.Relief,host.Phase);
+   var guest=new TensionDirector(n){ReadOnly=true};Assert.True(guest.Apply(host.Capture(),101));Assert.AreEqual(host.StormStage,guest.StormStage);Assert.AreEqual(host.MusicLayer,guest.MusicLayer);
+   host.Tick(117,483,600,0,0,false,30,false,true);Assert.AreEqual(3,host.StormStage);Assert.AreEqual(1,host.MusicLayer);
+  }
   [Test] public void KeeperFearFeedsTheSameTensionAndMusicDecisionButDoesNotInventAHunt()
   {
    var t=new TensionDirector(Night());t.Tick(80,520,600,0,0,false,50,false,true,.85f);Assert.AreEqual(.85f,t.Value,.001f);Assert.AreEqual(2,t.MusicLayer);Assert.AreNotEqual(TensionPhase.Hunt,t.Phase);

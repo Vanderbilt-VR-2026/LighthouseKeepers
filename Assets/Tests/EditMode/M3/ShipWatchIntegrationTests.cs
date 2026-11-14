@@ -29,6 +29,14 @@ namespace LighthouseKeepers.Tests.M3
    var g=New();Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(Get<string>(h,"FailureMessage"),Get<string>(g,"FailureMessage"));
    Call(h,"Retry");Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.False(Get<bool>(g,"Failed"));Assert.AreEqual(-1,Get<ShipPassageState>(g,"Ships").WreckIndex);
   }
+  [Test] public void NightThreeRefilledTankCoversShipWatchAndTheWalkToBed()
+  {
+   var d=Resources.Load<FiveNightCatalog>("M3Campaign").nights[2];
+   var h=Activator.CreateInstance(State,Resources.Load<FiveNightCatalog>("M3Campaign").nights,3,Resources.Load("S4Tuning"),Resources.Load("S4M2Tuning"),Resources.Load("ImmersionTuning"));var e=Get<object>(h,"Engine");
+   Call(e,"Reset",.72f,d.fuelDrainPerSecond,true);
+   double last=0;foreach(var ship in d.scenario.ships)last=Math.Max(last,ship.LatestExit);
+   Call(e,"Tick",(float)(last-45+30));Assert.True(Get<bool>(e,"Running"),"An early restart must last through the final passage plus the walk to the bunk");Assert.Greater(Get<float>(e,"Fuel"),.1f);
+  }
   [Test] public void InvalidShipPayloadIsRejectedBeforeGuestStationStateChanges()
   {
    var h=New();Call(h,"Tick",5d);var g=New();Call(g,"SetRemoteReplica",true);var snap=Call(h,"Capture",0f);
@@ -37,11 +45,11 @@ namespace LighthouseKeepers.Tests.M3
   }
   [Test] public void AuthoredNightTwoDoesNotLoseToBeaconBeforeShipThreatButWrecksIfIgnored()
   {
-   Sprint5Tuning.Current.shipApproachDangerSeconds=15;var h=New(2);Call(h,"Tick",200d);
+   Sprint5Tuning.Current.shipApproachDangerSeconds=15;var h=New(2);double before=Get<ShipPassageState>(h,"Ships").ThreatStart(0)-10;Call(h,"Tick",before);
    Assert.False(Get<bool>(h,"BeaconShining"));Assert.False(Get<bool>(h,"Failed"));Assert.Zero(Get<double>(h,"BeaconDarkElapsed"));Assert.Zero(Get<double>(h,"BeaconDarkLimit"));
-   Call(h,"Tick",60d);Assert.False(Get<bool>(h,"Failed"));Assert.AreEqual(5,Get<double>(h,"BeaconDarkRemaining"));
-   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(5,Get<double>(g,"BeaconDarkRemaining"));
-   Call(h,"Tick",6d);Assert.True(Get<bool>(h,"Failed"));Assert.False(Get<bool>(h,"BeaconDarkFailed"),"The ship outcome, not the legacy timer, owns this loss");
+   Call(h,"Tick",15d);Assert.False(Get<bool>(h,"Failed"));Assert.AreEqual(25,Get<double>(h,"BeaconDarkRemaining"));
+   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(25,Get<double>(g,"BeaconDarkRemaining"));
+   Call(h,"Tick",26d);Assert.True(Get<bool>(h,"Failed"));Assert.False(Get<bool>(h,"BeaconDarkFailed"),"The ship outcome, not the legacy timer, owns this loss");
    StringAssert.Contains("Mary Ellen",Get<string>(h,"FailureMessage"));Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.True(Get<bool>(g,"Failed"));
   }
  }

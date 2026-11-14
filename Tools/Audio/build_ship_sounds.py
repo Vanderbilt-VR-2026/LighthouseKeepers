@@ -8,14 +8,19 @@ import wave
 folder = Path('Assets/WatchDemo/Resources/Sprint5Ships')
 folder.mkdir(parents=True, exist_ok=True)
 rate = 22050
-for name, seconds in [('foghorn', 3.8), ('thanks', 3.2), ('wreck', 4.8)]:
+for name, seconds in [('foghorn', 3.8), ('thanks', 3.2), ('wreck', 4.8), ('engine', 8)]:
     rng = random.Random(1923)
     samples, low = [], 0
     for i in range(int(rate * seconds)):
         t = i / rate
         noise = rng.uniform(-1, 1)
         low = .94 * low + .06 * noise
-        if name == 'wreck':
+        if name == 'engine':
+            # Eight-second periodic reciprocating engine + sparse timber/metal flex. Endpoints match.
+            chug = max(0, math.sin(2 * math.pi * 2 * t)) ** 8
+            flex = math.sin(math.pi * t / 8) ** 10
+            value = (.045 + .24 * chug) * math.sin(2 * math.pi * 48 * t) + .03 * math.sin(2 * math.pi * 72 * t) + .035 * flex * math.sin(2 * math.pi * 137 * t)
+        elif name == 'wreck':
             env = min(1, t / .025) * math.exp(-t * .8)
             value = env * (.9 * low + .09 * noise + .1 * math.sin(t * 2 * math.pi * (53 - 4 * t)))
         else:

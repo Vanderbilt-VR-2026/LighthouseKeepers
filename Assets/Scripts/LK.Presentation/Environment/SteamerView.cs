@@ -25,7 +25,9 @@ namespace LighthouseKeepers.Presentation.Environment
             // Vessel rolls gently; the player's camera never moves. Root route stays deterministic.
             pose.position.y+=Mathf.Sin(age*.57f)*(.03f+.16f*storm);
             transform.SetPositionAndRotation(pose.position,pose.rotation*Quaternion.Euler(Mathf.Sin(age*.31f)*.5f*storm,0,Mathf.Sin(age*.43f)*1.2f*storm));
-            lightPivot.localRotation=Quaternion.Euler(5,65+Mathf.Sin(age*.11f)*55,0);
+            // Sweep across the tower during the close passage, never a player-camera effect.
+            Vector3 target=new Vector3(0,11,0)-lightPivot.position;
+            lightPivot.rotation=Quaternion.LookRotation(target.normalized,Vector3.up)*Quaternion.Euler(0,Mathf.Sin(age*.11f)*24,0);
             effects.SetFloat("_ShipClock",age);effects.SetFloat("_Storm",storm);smoke.SetPropertyBlock(effects);cone.SetPropertyBlock(effects);
         }
         public void Wreck(float age)

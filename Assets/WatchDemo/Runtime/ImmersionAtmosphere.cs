@@ -42,6 +42,8 @@ namespace LighthouseKeepers.WatchDemo
             if(eventNumber%4==3){flashAge=0;foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
             eventNumber++;
         }
+        // Reuses the comfort-limited storm envelope; no new light or repeated flash burst.
+        public void ShipPassageLightning(){if(flashAge<8||watch.State.TensionQuiet)return;flashAge=0;nextMasterStrike=Mathf.Max(nextMasterStrike,Time.time+15);PlayThunder();}
         void PlayThunder(){if(thunder){events.clip=thunder;events.PlayDelayed(1.2f);}foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
     }
 }

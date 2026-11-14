@@ -183,7 +183,7 @@ MonoBehaviour:
     ships:
     - id: finale-first
       nameKey: m3.ship.northStar
-      sightedAtSeconds: 75
+      sightedAtSeconds: 285
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30
@@ -192,7 +192,7 @@ MonoBehaviour:
       largeFinale: 0
     - id: finale-second
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 185
+      sightedAtSeconds: 355
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30
@@ -201,7 +201,7 @@ MonoBehaviour:
       largeFinale: 0
     - id: finale-large
       nameKey: m3.ship.meridian
-      sightedAtSeconds: 300
+      sightedAtSeconds: 475
       approachSeconds: 75
       windowSeconds: 70
       darkGraceSeconds: 30

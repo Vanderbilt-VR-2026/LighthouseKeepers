@@ -46,3 +46,7 @@ Preserve the current voice-first ducking and saved player sliders. Existing voic
 Every new clip needs its filename, source/licence, decoded LUFS and true peak; every new loop needs a seam check. Long beds stream compressed, short cues preload. Pool one-shots and cap real voices at 24. Keep the −1 dBTP master ceiling; no scare exceeds it. Measure a two-minute Night 3 per-bus playback capture and Quest DSP cost in phase 9; source-file LUFS is not that result. Silence and breathing must not mask the one urgent instruction.
 
 Editor audio remains muted during all automation. Auditory quality, comfort, true spatial localization and current-build human voice intelligibility remain device/listening checks even when event timing tests pass.
+
+## Ship phase2 implementation
+
+`Sprint5Ships/foghorn`: spatial SFX_Critical, .35 source volume, linear25–320m, priority45, one call per24 simulation seconds. `thanks` and `wreck` reuse that source, replacing rather than layering it. `engine`: spatial SFX_World, .16,12–110m, priority115, loop. All synthesized locally; originals and script in AssetSources. Ship pass plays the existing short survived sting on the adaptive-music sting source; it does not signal sleeping. The host TensionDirector supplies crisis during passage and relief after pass to both players. Quest voice-count/CPU and human audibility remain device checks.

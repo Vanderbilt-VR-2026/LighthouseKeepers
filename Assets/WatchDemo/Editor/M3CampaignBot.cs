@@ -15,7 +15,10 @@ namespace LighthouseKeepers.Editor
   {
    string path=System.Environment.GetEnvironmentVariable("LK_M3_TIMING_OUTPUT");
    if(string.IsNullOrEmpty(path))throw new ArgumentException("Set LK_M3_TIMING_OUTPUT to the report path.");
-   var report=(Report)Run(path);
+   var tuning=Sprint5Tuning.Current;bool prior=tuning.shipPassages;
+   Report report;
+   try{if(System.Environment.GetEnvironmentVariable("LK_SHIP_TIMING")=="1")tuning.shipPassages=true;report=(Report)Run(path);}
+   finally{tuning.shipPassages=prior;}
    foreach(var result in report.runs)if(!result.passed)throw new InvalidOperationException(result.night+" "+result.mode+": "+result.cause);
   }
   public static object Run(string path)
@@ -30,7 +33,7 @@ namespace LighthouseKeepers.Editor
    var s=new WatchState(all,day.day,S4Tuning.Current,S4M2Tuning.Current,ImmersionTuning.Current);if(crew){s.Coop=new Crew();s.SetKeeperCount(2);}s.Pressure?.SetCrew(crew&&s.RequiresCrewValve);
    var r=new Result{night=day.scenario.id,mode=crew?"duo":"solo"};var workers=crew?new[]{new Worker{actor=1},new Worker{actor=2}}:new[]{new Worker{actor=1}};
    int wrench=0;float water=.02f;const float dt=.1f;double clock=0;
-   bool Work(KeeperStep k)=>k!=KeeperStep.None&&k!=KeeperStep.HoldValve&&k!=KeeperStep.Sleep&&k!=KeeperStep.Complete&&k!=KeeperStep.Lost;
+   bool Work(KeeperStep k)=>k!=KeeperStep.KeepLight&&k!=KeeperStep.None&&k!=KeeperStep.HoldValve&&k!=KeeperStep.Sleep&&k!=KeeperStep.Complete&&k!=KeeperStep.Lost;
    while(clock<1200&&!s.Failed&&!s.Complete)
    {
     s.PipeWorkerActor=wrench;
@@ -41,6 +44,7 @@ namespace LighthouseKeepers.Editor
      // Do not abandon a held valve because the other keeper is still reading the instruction.
      if(next==KeeperStep.HoldValve&&w.floor==1){s.Pressure.Hold(w.actor,true);w.busy=false;continue;}
      if(s.Pressure?.Holder==w.actor)s.Pressure.Hold(w.actor,false);
+     if(next==KeeperStep.KeepLight){if(w.floor!=4){if(!w.busy||w.step!=next){w.busy=true;w.step=next;w.start=clock;w.ready=clock+Math.Abs(4-w.floor)*12+4;}if(clock>=w.ready){w.floor=4;w.busy=false;r.steps.Add($"{clock:F1}s keeper{w.actor} KeepLight (gallery watch)");}}continue;}
      if(!Work(next)&&next!=KeeperStep.HoldValve){w.busy=false;continue;}
      if(!w.busy||w.step!=next)
      {
@@ -78,7 +82,7 @@ namespace LighthouseKeepers.Editor
     r.peakWater=Mathf.Max(r.peakWater,water);clock+=dt;
    }
    if(s.Complete&&!s.Failed){foreach(var w in workers)r.bedTravelSeconds=Math.Max(r.bedTravelSeconds,Math.Abs(3-w.floor)*12+4);s.Tick(r.bedTravelSeconds);clock+=r.bedTravelSeconds;}
-   r.seconds=clock;r.spare=s.Duration-s.Elapsed;r.passed=s.Complete&&!s.Failed;r.cause=r.passed?"tasks complete; return-to-bed travel modeled (ships/shared-bed transport not measured)":s.Failed?s.FailureMessage:"instruction stalled";return r;
+   r.seconds=clock;r.spare=s.Duration-s.Elapsed;r.passed=s.Complete&&!s.Failed;r.cause=r.passed?"tasks and authored ships complete; return-to-bed travel modeled (not human timing or shared-bed transport)":s.Failed?s.FailureMessage:"instruction stalled";return r;
   }
   static float Gesture(KeeperStep k)=>k==KeeperStep.GrabWrench?8:k==KeeperStep.Fuel?12:k==KeeperStep.RadioTune?18:k==KeeperStep.BeaconAlign?14:k==KeeperStep.TightenBolt||k>=KeeperStep.BoltA&&k<=KeeperStep.BoltC?6:k==KeeperStep.Starter?3:k==KeeperStep.Prime?2:1;
  }

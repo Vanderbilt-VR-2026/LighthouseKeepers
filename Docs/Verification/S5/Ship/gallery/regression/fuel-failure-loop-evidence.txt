@@ -1,0 +1,21 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=49.737 day=3 repaired=False water=0.02000m
+Focused Night 3 replay; prior Nights 1–2 already passed: elapsed=0.000s realtime=49.737 day=3 repaired=False water=0.02000m
+START paced solo Day 3; physical XRI plus explicitly budgeted read/navigation waits: elapsed=0.000s realtime=49.737 day=3 repaired=False water=0.02000m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=74.836 day=3 repaired=False water=0.02002m
+day-three physical bolt 2 complete; inflow=0.6666667: elapsed=8.421s realtime=83.339 day=3 repaired=False water=0.02599m
+Released wrench: position=(3.11, 0.01, 0.75) kinematic=False water=0.02690088: elapsed=10.119s realtime=85.105 day=3 repaired=False water=0.02690m
+day-three physical bolt 0 complete; inflow=0.3333333: elapsed=16.556s realtime=91.471 day=3 repaired=False water=0.02980m
+day-three physical bolt 1 complete; inflow=0: elapsed=22.693s realtime=97.611 day=3 repaired=True water=0.02839m
+PIPE finished: elapsed=22.707s realtime=97.721 day=3 repaired=True water=0.02822m
+Three actual generator XRI pulls: elapsed=115.191s realtime=190.108 day=3 repaired=True water=-0.03000m
+GENERATOR settled; beacon and radio now required: elapsed=142.885s realtime=217.793 day=3 repaired=True water=-0.03000m
+BEACON shining: elapsed=218.038s realtime=292.947 day=3 repaired=True water=-0.03000m
+Rag wiped lens during ship watch: elapsed=316.798s realtime=352.382 day=3 repaired=True water=-0.03000m
+All authored ships passed: elapsed=390.020s realtime=370.681 day=3 repaired=True water=-0.03000m
+RADIO complete; board 4/4: elapsed=390.020s realtime=370.803 day=3 repaired=True water=-0.03000m
+SOLO DAY3 SPARE=104.86 seconds
+Bed before grip canSleep=False sleeping=False menu=False head=(2.95, 8.20, 0.00) bed=(2.95, 8.20, 0.00): elapsed=410.544s realtime=391.209 day=3 repaired=True water=-0.03000m
+System.InvalidOperationException: Day 3 sleep failed
+  at LighthouseKeepers.Editor.ImmersionSoloReplay+<Loop>d__18.MoveNext () [0x01789] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/night3-final/Nights123.cs:160 
+  at LighthouseKeepers.Editor.ImmersionSoloReplay.Tick () [0x00061] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/night3-final/Nights123.cs:58 

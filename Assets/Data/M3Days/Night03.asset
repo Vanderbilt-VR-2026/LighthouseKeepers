@@ -17,7 +17,7 @@ MonoBehaviour:
   beaconDarkLimitSeconds: 150
   powerCapacity: 2.5
   initialCircuitMask: 11
-  fuelDrainPerSecond: 0.0025
+  fuelDrainPerSecond: 0.0015
   beaconInitiallyLit: 0
   beaconInitialAlignment: 0.18
   beaconTargetAlignment: 0.5
@@ -157,7 +157,7 @@ MonoBehaviour:
     ships:
     - id: first-passage
       nameKey: m3.ship.northStar
-      sightedAtSeconds: 90
+      sightedAtSeconds: 180
       approachSeconds: 75
       windowSeconds: 45
       darkGraceSeconds: 30
@@ -166,8 +166,8 @@ MonoBehaviour:
       largeFinale: 0
     - id: warned-passage
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 210
-      approachSeconds: 60
+      sightedAtSeconds: 255
+      approachSeconds: 75
       windowSeconds: 45
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 15

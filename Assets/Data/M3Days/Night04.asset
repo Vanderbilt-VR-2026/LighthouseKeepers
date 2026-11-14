@@ -169,7 +169,7 @@ MonoBehaviour:
     ships:
     - id: maintenance-first
       nameKey: m3.ship.northStar
-      sightedAtSeconds: 120
+      sightedAtSeconds: 210
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30
@@ -178,7 +178,7 @@ MonoBehaviour:
       largeFinale: 0
     - id: maintenance-second
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 230
+      sightedAtSeconds: 285
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30

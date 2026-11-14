@@ -20,7 +20,7 @@ namespace LighthouseKeepers.Net.Tests {
     string name=step.ToString();if(name=="None"||name=="Complete"||name=="Lost")continue;
     Assert.IsNotEmpty((string)director.GetMethod("Location").Invoke(null,new[]{step}),name);
     string input=(string)director.GetMethod("Button").Invoke(null,new[]{step});
-    Assert.AreEqual(name=="CheckFuel"?"":name=="RadioTransmit"?"TRIGGER":"GRIP",input,name);
+    Assert.AreEqual((name=="CheckFuel"||name=="KeepLight")?"":name=="RadioTransmit"?"TRIGGER":"GRIP",input,name);
    }
   }
   [Test] public void PressureUsesHostWaterAndRejectsInvalidPeaks(){var host=New(2);Call(host,"ObserveWater",.1d,.44f);Assert.GreaterOrEqual(Get<float>(host,"PeakDanger"),.79f);var guest=New(2);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(host,"Capture",.44f)));Assert.AreEqual(Get<float>(host,"Danger"),Get<float>(guest,"Danger"),.001f);Call(guest,"ObserveWater",10d,.9f);Assert.AreEqual(.44f,Get<float>(guest,"LatestWater"));var bad=Call(host,"Capture",.44f);bad.GetType().GetField("peakDanger").SetValue(bad,float.NaN);Assert.False((bool)Call(guest,"ApplyRemote",bad));}
