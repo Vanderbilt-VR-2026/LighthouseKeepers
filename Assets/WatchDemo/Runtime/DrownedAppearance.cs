@@ -10,14 +10,15 @@ namespace LighthouseKeepers.WatchDemo
     {
         WatchDemoController watch;Transform figure;Mesh mesh;Material material;MeshRenderer body;MaterialPropertyBlock block;
         readonly Vector3[] places=new Vector3[4]; readonly bool[] supported=new bool[4];
-        AudioSource breath;int revision=-1;double heard=-1;float visibility;
+        int revision=-1;float visibility;
+        public bool SafeAnchor { get; private set; }
         public const int MaximumTriangles=3000;
         public static void Create(WatchDemoController w){if(w.State.Drowned==null)return;var p=w.gameObject.AddComponent<DrownedAppearance>();p.watch=w;p.Build();}
         public static bool Sightings {get=>PlayerPrefs.GetInt("LK.DrownedSightings",1)!=0;set{PlayerPrefs.SetInt("LK.DrownedSightings",value?1:0);PlayerPrefs.Save();}}
         void Build(){
             block=new MaterialPropertyBlock();mesh=BuildMesh();material=new Material(Resources.Load<Shader>("S5Drowned")){name="Salt-wet oilskin"};
             figure=new GameObject("The Drowned — oilskin saboteur").transform;figure.SetParent(transform,false);figure.gameObject.AddComponent<MeshFilter>().sharedMesh=mesh;body=figure.gameObject.AddComponent<MeshRenderer>();body.sharedMaterial=material;body.shadowCastingMode=ShadowCastingMode.Off;body.receiveShadows=false;body.enabled=false;
-            breath=figure.gameObject.AddComponent<AudioSource>();breath.playOnAwake=false;breath.spatialBlend=1;breath.dopplerLevel=0;breath.minDistance=1;breath.maxDistance=12;breath.volume=.13f;breath.priority=75;breath.clip=Resources.Load<AudioClip>("S5Audio/drowned_breath");KeeperAudioMix.Route(breath,"SFX_Critical");
+            DrownedHorror.Create(watch,this,figure);
             var anchors=new[]{FindAnyObjectByType<WatchPipeRepair>().transform,FindAnyObjectByType<WatchGenerator>().transform,FindAnyObjectByType<WatchRadioConsole>().transform,FindAnyObjectByType<WatchBeacon>().transform};
             Physics.SyncTransforms();
             for(int i=0;i<4;i++){
@@ -38,14 +39,13 @@ namespace LighthouseKeepers.WatchDemo
         int Station(){var d=watch.State.Drowned;if(d==null||d.Fault<0)return -1;string id=watch.State.Scenario.faults[d.Fault].stationId;return id==WatchState.PipeStation?0:id==WatchState.GeneratorStation?1:id==WatchState.RadioStation?2:3;}
         void Update(){
             var s=watch.State;var d=s.Drowned;if(d==null)return;
-            if(revision!=watch.Revision){revision=watch.Revision;heard=-1;visibility=0;breath.Stop();}
-            int station=Station();bool active=Sightings&&station>=0&&supported[station]&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
+            if(revision!=watch.Revision){revision=watch.Revision;visibility=0;}
+            int station=Station();SafeAnchor=station>=0&&supported[station];
             if(station>=0&&supported[station]){figure.position=places[station];var inward=new Vector3(-figure.position.x,0,-figure.position.z);figure.rotation=Quaternion.LookRotation(inward.sqrMagnitude>.01f?inward:Vector3.forward);}
-            if(Camera.main&&(Camera.main.transform.position-figure.position).sqrMagnitude<2.25f)active=false; // no face pop at arm's length
+            if(Camera.main&&(Camera.main.transform.position-figure.position).sqrMagnitude<2.25f)SafeAnchor=false; // no face pop at arm's length
+            bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
             float wanted=active&&d.Phase==DrownedPhase.Manifest?1:0;visibility=Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?1.4f:.5f));
             body.enabled=visibility>.005f;block.SetFloat("_Visibility",visibility);block.SetFloat("_Breath",(float)s.Elapsed);body.SetPropertyBlock(block);
-            if(Sightings&&d.Phase==DrownedPhase.Warning&&heard!=d.Since){heard=d.Since;if(s.Elapsed-d.Since<1.5&&station>=0&&supported[station]&&breath.clip)breath.Play();}
-            if(!Sightings&&breath.isPlaying)breath.Stop();
         }
         public static Mesh BuildMesh(){
             var v=new List<Vector3>();var colours=new List<Color>();var t=new List<int>();

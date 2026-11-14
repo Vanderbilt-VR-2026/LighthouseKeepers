@@ -45,7 +45,8 @@ namespace LighthouseKeepers.WatchDemo
             float target=silent?0:s.Fear.ForActor(actor);shown=Mathf.MoveTowards(shown,target,Time.unscaledDeltaTime*2);
             if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.LocalFear=silent?0:shown;
             breath.volume=silent||s.Fear.HoldingBreath(actor)?0:Mathf.Lerp(.07f,.2f,shown);breath.pitch=Mathf.Lerp(1,2.2f,shown);
-            hunted.volume=silent?0:Mathf.InverseLerp(.6f,1,shown)*.16f;
+            bool apparition=s.Drowned!=null&&DrownedAppearance.Sightings&&s.Drowned.Phase==DrownedPhase.Manifest;
+            hunted.volume=silent||apparition?0:Mathf.InverseLerp(.6f,1,shown)*.16f;
             if(silent){secondAt=-1;return;}
             float now=Time.unscaledTime;
             if(now>=nextBeat){Pulse(1);secondAt=now+.13f;nextBeat=now+60/KeeperFearState.BeatsPerMinute(shown);}

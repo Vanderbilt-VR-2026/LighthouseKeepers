@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class AdaptiveMusic:MonoBehaviour
  {
   WatchDemoController watch;AudioPassSettings settings;AudioSource[] deck;AudioSource stings;
-  AudioClip[] clips;AudioClip fixedClip,survivedClip,lostClip;
+  AudioClip[] clips;AudioClip fixedClip,survivedClip,lostClip,drownedScore;bool horrorDeck;
   int passedShips;int mode=-1,pending=-1,active,day,tasks;double since,nextChange,lastElapsed;float restGain=1;float fadeAge=100,nextSting;int pendingFixed;bool failed,sleeping,lobby;
   public int Mode=>mode;public double Since=>since;
   public static int Choose(bool fault,float waterFraction,double darkRemaining,bool dark,double timeRemaining)
@@ -21,7 +21,8 @@ namespace LighthouseKeepers.WatchDemo
   void Setup(AudioPassSettings s)
   {
    settings=s;clips=new[]{Resources.Load<AudioClip>("AudioPass/calm"),Resources.Load<AudioClip>("AudioPass/tension"),Resources.Load<AudioClip>("AudioPass/crisis")};
-   deck=new[]{Source("Adaptive music A"),Source("Adaptive music B")};foreach(var d in deck){d.loop=true;d.priority=180;}
+   drownedScore=Resources.Load<AudioClip>("S5Audio/DrownedHorror/score");
+   deck=new[]{Source("Adaptive music A"),Source("Adaptive music B")};foreach(var d in deck){d.loop=true;d.priority=180;KeeperAudioMix.Route(d,"Music");}
    stings=Source("Short watch stings");stings.priority=50;
    fixedClip=Resources.Load<AudioClip>("AudioPass/sting_fixed");survivedClip=Resources.Load<AudioClip>("AudioPass/sting_survived");lostClip=Resources.Load<AudioClip>("AudioPass/sting_lost");
   }
@@ -30,7 +31,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    if(lobby){if(!deck[0].isPlaying&&deck[0].clip)deck[0].Play();return;}
    var s=watch.State;if(s==null)return;
-   if(day!=s.Day||s.Elapsed<lastElapsed-.01){day=s.Day;tasks=s.CompletedTasks;passedShips=s.Ships?.PassedMask??0;failed=sleeping=false;pendingFixed=0;pending=-1;mode=-1;}
+   if(day!=s.Day||s.Elapsed<lastElapsed-.01){day=s.Day;tasks=s.CompletedTasks;passedShips=s.Ships?.PassedMask??0;failed=sleeping=false;pendingFixed=0;pending=-1;mode=-1;horrorDeck=false;foreach(var d in deck)d.Stop();}
    lastElapsed=s.Elapsed;
    if(!s.RemoteReplica)
    {
@@ -47,8 +48,10 @@ namespace LighthouseKeepers.WatchDemo
     if(wanted==mode)pending=-1;
     if(pending>=0&&s.Elapsed>=nextChange){Transition(pending,nextChange,0);pending=-1;}
    }
+   bool wantedHorror=drownedScore&&s.Drowned!=null&&DrownedHorror.ScoreWanted(s.Drowned.Phase,DrownedAppearance.Sightings,watch.Sleeping||s.Failed);
+   if(wantedHorror!=horrorDeck){horrorDeck=wantedHorror;if(horrorDeck)SetDeck(drownedScore,(float)System.Math.Max(0,s.Elapsed-s.Drowned.Since));else if(mode>=0)SetDeck(clips[mode],(float)System.Math.Max(0,s.Elapsed-since));}
    fadeAge+=Time.unscaledDeltaTime;float t=Mathf.Clamp01(fadeAge/settings.crossfadeSeconds);
-   float restTarget=StormRest(s.Day,s.Elapsed,mode)?0:1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
+   float restTarget=!horrorDeck&&StormRest(s.Day,s.Elapsed,mode)?0:1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
    deck[active].volume=rest*settings.musicVolume*Mathf.Sin(t*Mathf.PI*.5f);deck[1-active].volume=rest*settings.musicVolume*Mathf.Cos(t*Mathf.PI*.5f);
    if(t>=1)deck[1-active].Stop();
    int shipMask=s.Ships?.PassedMask??0;
@@ -60,8 +63,9 @@ namespace LighthouseKeepers.WatchDemo
   }
   void Transition(int next,double at,float age)
   {
-   if(!clips[next])return;mode=next;since=at;active=1-active;var a=deck[active];a.Stop();a.clip=clips[next];a.time=age%a.clip.length;a.volume=0;a.Play();fadeAge=age;
+   if(!clips[next])return;mode=next;since=at;if(!horrorDeck){SetDeck(clips[next],age);fadeAge=age;}
   }
+  void SetDeck(AudioClip clip,float age){if(!clip)return;active=1-active;var a=deck[active];a.Stop();a.clip=clip;a.time=age%clip.length;a.volume=0;a.Play();fadeAge=0;}
   public void Capture(WatchSnapshot s)
   {
    s.musicMode=Mathf.Max(0,mode);s.musicSince=System.Math.Clamp(since,0,s.elapsed);

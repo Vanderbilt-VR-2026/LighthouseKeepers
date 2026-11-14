@@ -2,6 +2,12 @@
 
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base main after teammate merge of PR88. Main-folder branch untouched. Editor muted. Never launch Quest without request; installing is allowed.
 
+## Current follow-up — Drowned horror presentation
+
+User requested creative liberty with frightening effects/music/sound. Design: `Docs/Design/DrownedHorror.md`. Step1 sound palette and runtime cue/music integration implemented; baseline51/51 and focused57/57 pass. Six original mastered clips; one event+one breath source, existing music decks reused, voice-first attenuation, Off/late-join/retry protected. Network stays **LK-S5-DROWNED2/v29**; no replicated field changes.
+
+Next this turn: step2 crooked oilskin sculpt/wet material/local mist and drips; inspected graphics + focused geometry checks. Then step3 physical soloNight3, two-Mac appearance/audio-route/retreat checks, build and install if ADB appears. Editor muted; do not launch Quest. No hunter enabled in this presentation pass.
+
 ## Latest requested playtest corrections
 
 - `57e0a6d6`: full steamer hull remains visible from horizon to shore; removed the grey proxy/floating lights. Same11,760-triangle/two-material hull at distance; no realtime ship lights. Reviewed normal-LOD gallery images.

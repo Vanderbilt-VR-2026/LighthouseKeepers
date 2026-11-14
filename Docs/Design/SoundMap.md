@@ -63,3 +63,17 @@ Four original, deterministic synthesized3s mono44.1kHz WAVs in `Assets/WatchDemo
 | sabotage_smear | -21.10 | -6.01 |
 
 Prototype uses one source per station (four maximum), SFX_Critical, volume0.35, priority80, logarithmic1–16m. No playback with the feature off. These are source measurements, not mixed-bus loudness or Quest audio cost. Audition/localization remains pending; don't call the synthesized cues a finished sound pass.
+
+## Drowned horror presentation — November 14
+
+Original deterministic synthesis, seed1907; reproducible with `Tools/Audio/build_drowned_horror.py` (numpy2.0.2/scipy1.13.1, ffmpeg). No external samples or changes to teammate recordings. Source measurements: `Docs/Verification/S5/DrownedHorror/audio-analysis.json`. All clips44.1kHz, spatial effects mono; score stereo/streaming.
+
+| Host event | Clip | Placement / bus | Source gain | Duration | Integrated LUFS / true peak |
+|---|---|---|---:|---:|---|
+| Warning | approach | Station / Critical SFX | .45 |3.1s|−21.99 / −7.06dBTP|
+| Appearance | reveal_a or reveal_b | Body / Critical SFX | .50 |3.6/3.9s|−20.01/−20.00 / −6.72/−6.40dBTP|
+| Presence | breathing | Body / Critical SFX | .36 |12s loop|−24.00 / −8.75dBTP|
+| Presence | score |2D / existing Music decks|existing musicVolume|24s loop|−21.99 / −9.86dBTP|
+| Retreat | retreat | Body / Critical SFX | .45 |2.8s|−23.00 / −9.16dBTP|
+
+At most one entity event plus one breath loop. Entity source gains reduce to45% during voice chat,65% during narration;50ms attack/600ms recovery. Score follows Music slider and existing−7/−9dB speech ducking. Existing master ceiling and24-real-voice configuration are unchanged. Loops seek host phase age; old stingers do not replay on late join or sightings re-enable. Editor remains muted; full-mix loudness, audible clarity and scare strength require headset listening.
