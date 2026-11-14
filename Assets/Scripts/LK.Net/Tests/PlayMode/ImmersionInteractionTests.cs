@@ -61,7 +61,8 @@ namespace LighthouseKeepers.Net.Tests
             yield return null;var mount=GameObject.Find("Keeper wristwatch").transform;
             Assert.AreEqual("wrist",mount.parent.name);Assert.Greater(Vector3.Dot(mount.forward,mount.parent.up),.99f,"LCD must face out from the back of the wrist");
             Assert.AreEqual(4,mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Watch side button"));
-            Assert.Less(mount.Find("Watch resin case").localScale.x,.06f);Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
+            Assert.Less(mount.Find("Watch resin case").GetComponent<MeshFilter>().sharedMesh.bounds.size.x,.06f);
+            var dial=mount.Find("Watch readable dial");Assert.Less(Vector3.Dot(dial.up,mount.up),-.99f,"Reading direction must be flipped180 degrees");Assert.Greater(Vector3.Dot(dial.forward,mount.forward),.99f,"Face must still face out of the wrist");Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
             var p=Find("PressurePresentation");var original=Field<Transform>(p,"head");var fake=new GameObject("Watch gaze test").transform;p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,fake);
             fake.position=mount.position+mount.forward*.30f;yield return null;Assert.True(Value<bool>(p,"WatchBacklight"));
             fake.position=mount.position-mount.forward*.30f;yield return null;Assert.False(Value<bool>(p,"WatchBacklight"));p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,original);Object.Destroy(fake.gameObject);
@@ -178,6 +179,10 @@ namespace LighthouseKeepers.Net.Tests
                 var controller=hand.transform.parent;controller.SetPositionAndRotation(handle,can.transform.rotation);
                 var direct=hand.Direct;direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);Assert.True(grab.isSelected);
                 var before=can.transform.position;controller.position+=Vector3.right*.25f;yield return new WaitForSeconds(.2f);Assert.Greater(Vector3.Distance(before,can.transform.position),.15f,"Free carry stopped following grip");
+                // Establish an actually distant spout; a fixed world-right displacement
+                // can land beside the filler after the mirrored hand attach rotates the can.
+                controller.position+=filler.position+Vector3.forward*1.5f-tip.position;yield return new WaitForSeconds(.2f);
+                Assert.Greater(Vector3.Distance(tip.position,filler.position),.6f,"Away-pour test setup");
                 Assert.False((bool)Call(controls,"CanPour",true),"Can poured away from filler");
                 controller.rotation=Quaternion.Euler(0,controls.transform.eulerAngles.y,105);yield return new WaitForSeconds(.2f);
                 for(int i=0;i<8;i++){controller.position+=filler.position+Vector3.up*.06f-tip.position;yield return new WaitForSeconds(.05f);}

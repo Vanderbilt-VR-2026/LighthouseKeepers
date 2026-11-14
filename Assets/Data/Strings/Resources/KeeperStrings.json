@@ -149,6 +149,10 @@
       "text": "Keep the light. Survive till dawn."
     },
     {
+      "key": "board.loop.five",
+      "text": "Finish jobs. Sleep. Survive five nights."
+    },
+    {
       "key": "board.loop",
       "text": "Finish jobs. Sleep. Survive three nights."
     },
@@ -158,7 +162,7 @@
     },
     {
       "key": "board.night",
-      "text": "NIGHT {0}"
+      "text": "NIGHT {0}     B: OBJECTIVE"
     },
     {
       "key": "partner",
@@ -1881,8 +1885,68 @@
       "text": "Objective height"
     },
     {
+      "key": "hud.recallHeader",
+      "text": "OBJECTIVE     B — RECALL"
+    },
+    {
       "key": "hud.recallTeach",
-      "text": "Press B to see your objective"
+      "text": "Press B: show current objective"
+    },
+    {
+      "key": "m3.night1",
+      "text": "The Leak"
+    },
+    {
+      "key": "m3.night2",
+      "text": "Blackout"
+    },
+    {
+      "key": "m3.night3",
+      "text": "The Warning"
+    },
+    {
+      "key": "m3.night4",
+      "text": "Everything Breaks"
+    },
+    {
+      "key": "m3.night5",
+      "text": "The Long Night"
+    },
+    {
+      "key": "m3.demo",
+      "text": "Demo (6 min)"
+    },
+    {
+      "key": "m3.ship.maryEllen",
+      "text": "Mary Ellen"
+    },
+    {
+      "key": "m3.ship.northStar",
+      "text": "North Star"
+    },
+    {
+      "key": "m3.ship.meridian",
+      "text": "Meridian"
+    },
+    {
+      "key": "wiring.box0",
+      "text": "HOUSE FEED"
+    },
+    {
+      "key": "wiring.box1",
+      "text": "F1 PUMP"
+    },
+    {
+      "key": "wiring.box2",
+      "text": "F2 GENERATOR"
+    },
+    {
+      "key": "wiring.box3",
+      "text": "F3 LIGHTS"
+    },
+    {
+      "key": "wiring.box4",
+      "text": "BEACON CIRCUIT"
     },
     {
       "key": "where.workbench",
@@ -2009,24 +2073,44 @@
       "text": "Red can · FLOOR 2"
     },
     {
-      "key": "wiring.box0",
-      "text": "HOUSE FEED"
+      "key": "menu.heartbeatOn",
+      "text": "Heartbeat haptics: On"
     },
     {
-      "key": "wiring.box1",
-      "text": "F1 PUMP"
+      "key": "menu.heartbeatOff",
+      "text": "Heartbeat haptics: Off"
     },
     {
-      "key": "wiring.box2",
-      "text": "F2 GENERATOR"
+      "key": "loss.ship",
+      "text": "The {0} struck the rocks."
     },
     {
-      "key": "wiring.box3",
-      "text": "F3 LIGHTS"
+      "key": "board.ships",
+      "text": "SHIPS"
     },
     {
-      "key": "wiring.box4",
-      "text": "BEACON CIRCUIT"
+      "key": "step.KeepLight",
+      "text": "Aim at ship — beacon wheel, Floor 4"
+    },
+    {
+      "key": "where.SHIP",
+      "text": "Beacon wheel, Floor 4"
+    },
+    {
+      "key": "board.shipLoss",
+      "text": "Flood or shipwreck: night lost."
+    },
+    {
+      "key": "beacon.shipAim",
+      "text": "KEEP BEAM ON SHIP"
+    },
+    {
+      "key": "beacon.shipHold",
+      "text": "HOLD STEADY"
+    },
+    {
+      "key": "beacon.shipSafe",
+      "text": "SHIP GUIDED"
     }
   ]
 }

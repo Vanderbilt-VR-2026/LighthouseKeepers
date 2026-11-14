@@ -12,6 +12,7 @@ namespace LighthouseKeepers.Core
         public bool IgnoreExtraPulls {get;set;}
         public bool Guided {get;set;}
         public float Fuel {get;private set;}
+        public float Consumption => drain;
         public int Primer {get;private set;}
         public int Pulls {get;private set;}
         public int ClosedPulls {get;private set;}
@@ -52,6 +53,8 @@ namespace LighthouseKeepers.Core
         }
         public void Pour(float seconds)
         {if(ReadOnly||!float.IsFinite(seconds)||seconds<=0||Fuel>=1)return;Fuel=Mathf.Min(1,Fuel+tuning.fuelPourPerSecond*Mathf.Min(seconds,.1f));}
+        public void SetFuel(float amount)
+        {if(ReadOnly||!float.IsFinite(amount))return;Fuel=Mathf.Clamp01(amount);if(Fuel<=0)Stop();Changed?.Invoke();}
         void Stop(){Running=Settled=false;OpenRemaining=0;Primer=Pulls=ClosedPulls=0;}
         public void Tick(float seconds)
         {

@@ -18,6 +18,11 @@ namespace LighthouseKeepers.Net
         public bool Muted {get;private set;}
         public bool MicrophoneAllowed=>permission;
         public override bool AlwaysUsePrimaryRecorder=>true;
+        // SessionInfo.IsValid briefly goes false when Fusion closes the room for scene launch.
+        // That is not a disconnect: the live transport and its immutable room name stay valid.
+        // Following SessionInfo here strands Voice on MasterServer (OpLeaveRoom before joining).
+        protected override bool LeaderInRoom => channel && channel.Connected && !string.IsNullOrWhiteSpace(channel.SessionName);
+        protected override string GetVoiceRoomName() => LeaderInRoom ? channel.SessionName + "_voice" : null;
         public string StatusText=>!permission?permissionStatus:Muted?LighthouseKeepers.Core.PlayerStrings.Get("legacy.CrewVoiceSession.1"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.CrewVoiceSession.2")+ClientState;
 
         public static void Ensure(NetworkRunner runner,FusionMessageChannel channel)
@@ -48,7 +53,7 @@ namespace LighthouseKeepers.Net
         {
             // Fusion may invalidate SessionInfo during shutdown before transport IsOnline
             // changes. Let Photon follow a valid room, never force-connect a departed leader.
-            while(channel&&channel.Connected&&!LeaderInRoom)yield return null;
+            while(channel&&channel.Connected&&!channel.Runner.SessionInfo.IsValid)yield return null;
             if(channel&&channel.Connected&&LeaderInRoom)LeaderStateChanged(Photon.Realtime.ClientState.Joined);
         }
         IEnumerator RequestMicrophone()

@@ -10,14 +10,14 @@ namespace LighthouseKeepers.WatchDemo
         int day3Stage; // 0 legacy, 1 pipe first, 2 outage, 3 upper-floor jobs available
         bool balanceCrew;
         double day3GraceUntil;
-        public bool Day3Balance=>Tuning&&Tuning.day3Balance&&Day==3&&Engine!=null&&Grid!=null&&Beacon!=null;
+        public bool Day3Balance=>!Campaign&&Tuning&&Tuning.day3Balance&&Day==3&&Engine!=null&&Grid!=null&&Beacon!=null;
         public int Day3Stage=>day3Stage;
         public bool Day3Crew=>balanceCrew;
-        public float FloodRiseMultiplier=>Day3Balance?(balanceCrew?Tuning.day3CrewFloodMultiplier:Tuning.day3SoloFloodMultiplier):1;
+        public float FloodRiseMultiplier=>Campaign?(balanceCrew?Scenario.crewFloodMultiplier:Scenario.soloFloodMultiplier):Day3Balance?(balanceCrew?Tuning.day3CrewFloodMultiplier:Tuning.day3SoloFloodMultiplier):1;
         double Day3GraceSeconds=>Master?(balanceCrew?Master.day3CrewBeaconGraceSeconds:Master.day3SoloBeaconGraceSeconds):(balanceCrew?Tuning.day3CrewBeaconGraceSeconds:Tuning.day3SoloBeaconGraceSeconds);
-        public double BeaconGraceRemaining=>Math.Max(StationGraceRemaining,GeneratorTutorial?Math.Max(0,firstGeneratorGraceUntil-Elapsed):Day3Balance?Math.Max(0,day3GraceUntil-Elapsed):0);
+        public double BeaconGraceRemaining=>Ships!=null?0:Math.Max(Math.Max(CampaignGraceRemaining,StationGraceRemaining),GeneratorTutorial?Math.Max(0,firstGeneratorGraceUntil-Elapsed):Day3Balance?Math.Max(0,day3GraceUntil-Elapsed):0);
         bool RadioAvailable=>HasPower(PowerCircuit.Radio)&&!IsPending(RadioStation);
-        public bool IsPending(string station)=>GeneratorTutorial&&!NightTwoOutage&&station==GeneratorStation || Day3Balance&&
+        public bool IsPending(string station)=>Campaign?(schedule?.Pending(station)??true):GeneratorTutorial&&!NightTwoOutage&&station==GeneratorStation || Day3Balance&&
             (station==GeneratorStation&&day3Stage==1 || (station==RadioStation||station==BeaconStation)&&day3Stage<3);
         void StartDay3Outage()
         {
@@ -32,11 +32,11 @@ namespace LighthouseKeepers.WatchDemo
             Beacon.Reset(Definition.beaconInitiallyLit,Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,Definition.beaconInitialSoot,Definition.beaconSootPerSecond);
             Radio.SetPower(RadioAvailable);
         }
-        double SnapshotDuration(DayDefinition day,bool crew)=>Tuning&&Tuning.day3Balance&&day.day==3&&Engine!=null&&Grid!=null&&Beacon!=null
+        double SnapshotDuration(DayDefinition day,bool crew)=>day.scenario?.configured==true?(crew?day.scenario.crewSeconds:day.scenario.soloSeconds):Tuning&&Tuning.day3Balance&&day.day==3&&Engine!=null&&Grid!=null&&Beacon!=null
             ?(crew?Tuning.day3CrewSeconds:Tuning.day3SoloSeconds):day.dayLengthSeconds;
         bool ValidDay3Snapshot(DayDefinition day,WatchSnapshot s)
         {
-            bool balanced=Tuning&&Tuning.day3Balance&&day.day==3&&Engine!=null&&Grid!=null&&Beacon!=null;
+            bool balanced=day.scenario?.configured!=true&&Tuning&&Tuning.day3Balance&&day.day==3&&Engine!=null&&Grid!=null&&Beacon!=null;
             if(!balanced)return s.day3Stage==0&&s.day3GraceUntil==0;
             if(s.day3Stage<1||s.day3Stage>3)return false;
             double grace=Master?(s.day3Crew?Master.day3CrewBeaconGraceSeconds:Master.day3SoloBeaconGraceSeconds):(s.day3Crew?Tuning.day3CrewBeaconGraceSeconds:Tuning.day3SoloBeaconGraceSeconds);

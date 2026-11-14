@@ -1,0 +1,39 @@
+UTC 2026-11-12T17:26:23.7645320Z
+Android default:     Android: 0
+m_MSAA = 2
+m_RenderScale = 1
+m_SupportsHDR = False
+m_RequireDepthTexture = False
+m_RequireOpaqueTexture = False
+m_MainLightRenderingMode = 1
+m_MainLightShadowsSupported = True
+m_MainLightShadowmapResolution = 1024
+m_ShadowDistance = 20
+m_ShadowCascadeCount = 1
+m_AdditionalLightsRenderingMode = 2
+m_AdditionalLightsPerObjectLimit = 2
+m_AdditionalLightShadowsSupported = False
+m_SoftShadowsSupported = False
+renderer={"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"QuestRenderer","m_EditorClassIdentifier":"","debugShaders":{"debugReplacementPS":{"fileID":4800000,"guid":"cf852408f2e174538bcd9b7fda1c5ae7","type":3},"hdrDebugViewPS":{"fileID":4800000,"guid":"573620ae32aec764abd4d728906d2587","type":3},"probeVolumeSamplingDebugComputeShader":{"fileID":7200000,"guid":"53626a513ea68ce47b59dc1299fe3959","type":3}},"probeVolumeResources":{"probeVolumeDebugShader":{"instanceID":0},"probeVolumeFragmentationDebugShader":{"instanceID":0},"probeVolumeOffsetDebugShader":{"instanceID":0},"probeVolumeSamplingDebugShader":{"instanceID":0},"probeSamplingDebugMesh":{"instanceID":0},"probeSamplingDebugTexture":{"instanceID":0},"probeVolumeBlendStatesCS":{"instanceID":0}},"m_RendererFeatures":[],"m_RendererFeatureMap":[],"m_UseNativeRenderPass":false,"xrSystemData":{"instanceID":0},"postProcessData":{"fileID":11400000,"guid":"41439944d30ece34e96484bdb6645b55","type":2},"m_AssetVersion":3,"m_PrepassLayerMask":{"serializedVersion":"2","m_Bits":4294967295},"m_OpaqueLayerMask":{"serializedVersion":"2","m_Bits":4294967295},"m_TransparentLayerMask":{"serializedVersion":"2","m_Bits":4294967295},"m_DefaultStencilState":{"overrideStencilState":false,"stencilReference":0,"stencilCompareFunction":8,"passOperation":2,"failOperation":0,"zFailOperation":0},"m_ShadowTransparentReceive":false,"m_RenderingMode":0,"m_DepthPrimingMode":0,"m_CopyDepthMode":0,"m_DepthAttachmentFormat":0,"m_DepthTextureFormat":0,"m_AccurateGbufferNormals":false,"m_IntermediateTextureMode":0}}
+OpenXR Android={"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"Android","m_EditorClassIdentifier":"Unity.XR.OpenXR::UnityEngine.XR.OpenXR.OpenXRSettings","features":[{"fileID":2338827624756126222,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":9135993474207568075,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-7981142356277230677,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":145008085680852595,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-3510950390146296000,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-4352290333508791487,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":7636561961456588031,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":719429157726160825,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":3292960394325841446,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-4692000973242792377,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-8998053549199869589,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":4581573255274817352,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":254495436587809917,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-4442075986684104182,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-4432655545214847437,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":4619382653314049271,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-4006239962196147521,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-1926062041442440649,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":8484059909188012764,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":-4672872596515846159,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":7001169779692031628,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2},{"fileID":5039247632450372104,"guid":"6c08aa29900fa4e58a0c3dc469bf4d81","type":2}],"customLoaderName":"","m_renderMode":1,"m_latencyOptimization":1,"m_autoColorSubmissionMode":true,"m_colorSubmissionModes":{"m_List":[0]},"m_depthSubmissionMode":0,"m_spacewarpMotionVectorTextureFormat":0,"m_optimizeBufferDiscards":false,"m_symmetricProjection":false,"m_optimizeMultiviewRenderRegions":false,"m_multiviewRenderRegionsOptimizationMode":0,"m_hasMigratedMultiviewRenderRegionSetting":true,"m_foveatedRenderingApi":1,"m_useOpenXRPredictedTime":true}}
+APIs=Vulkan,OpenGLES3
+texture Assets/Art/Avatars/ReferenceFisherman/Fisherman_Albedo.png: world=True mip=True aniso=1 override=False format=AutomaticCompressed
+texture Assets/Art/Avatars/ReferenceFisherman/Fisherman_Normal.png: world=True mip=True aniso=1 override=False format=AutomaticCompressed
+texture Assets/Art/Avatars/ReferenceFisherman/Fisherman_Roughness.png: world=True mip=True aniso=1 override=False format=AutomaticCompressed
+texture Assets/Art/Avatars/ReferenceFisherman/Fisherman_Smoothness.png: world=True mip=True aniso=1 override=False format=AutomaticCompressed
+texture Assets/Art/VisualPass/brass_worn_albedo.jpg: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/brass_worn_mask.png: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/green_metal_rust_albedo.jpg: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/green_metal_rust_mask.png: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/green_metal_rust_normal.jpg: world=True mip=True aniso=4 override=True format=ASTC_5x5
+texture Assets/Art/VisualPass/plastered_stone_wall_albedo.jpg: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/plastered_stone_wall_mask.png: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/plastered_stone_wall_normal.jpg: world=True mip=True aniso=4 override=True format=ASTC_5x5
+texture Assets/Art/VisualPass/rock_boulder_dry_albedo.jpg: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/rock_boulder_dry_mask.png: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/rock_boulder_dry_normal.jpg: world=True mip=True aniso=4 override=True format=ASTC_5x5
+texture Assets/Art/VisualPass/weathered_planks_albedo.jpg: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/weathered_planks_mask.png: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/Art/VisualPass/weathered_planks_normal.jpg: world=True mip=True aniso=4 override=True format=ASTC_5x5
+texture Assets/WatchDemo/Resources/TowerWiring/Atlas.png: world=True mip=True aniso=4 override=True format=ASTC_6x6
+texture Assets/WatchDemo/Resources/WaterRippleNormal.png: world=True mip=True aniso=4 override=True format=ASTC_5x5

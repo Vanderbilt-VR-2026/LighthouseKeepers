@@ -1,0 +1,174 @@
+{
+  "status": "completed",
+  "duration": 0.33,
+  "summary": {
+    "total": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.All94MappedClipsExistWithExactScriptCaptionsAndTimedSingleCuts",
+      "Status": "Passed",
+      "Duration": 0.2664858,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.NewCueDomainIsVersionedAndAllImportedPClipsAreAddressable",
+      "Status": "Passed",
+      "Duration": 0.0065358,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.ObjectiveTransitionsAllowTwoLinesThenRequireAQuietStretch",
+      "Status": "Passed",
+      "Duration": 0.0004738,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(76,\"pipeOpening\")",
+      "Status": "Passed",
+      "Duration": 0.0016914,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(77,\"upperJobs\")",
+      "Status": "Passed",
+      "Duration": 0.0001264,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(78,\"wrenchDown\")",
+      "Status": "Passed",
+      "Duration": 0.0001147,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(79,\"startGrace\")",
+      "Status": "Passed",
+      "Duration": 0.0001071,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(80,\"tonightPair\")",
+      "Status": "Passed",
+      "Duration": 0.0001113,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(81,\"tonightFull\")",
+      "Status": "Passed",
+      "Duration": 0.0001212,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(82,\"valvePuzzle\")",
+      "Status": "Passed",
+      "Duration": 0.0001136,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(83,\"valveReleased\")",
+      "Status": "Passed",
+      "Duration": 0.000128,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(84,\"soloClamp\")",
+      "Status": "Passed",
+      "Duration": 0.0001114,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(85,\"crewRadios\")",
+      "Status": "Passed",
+      "Duration": 0.0001079,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(86,\"pole\")",
+      "Status": "Passed",
+      "Duration": 0.0001017,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(87,\"breakerTripped\")",
+      "Status": "Passed",
+      "Duration": 0.0001154,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(88,\"lowFuel\")",
+      "Status": "Passed",
+      "Duration": 0.0001075,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(89,\"engineStalled\")",
+      "Status": "Passed",
+      "Duration": 9.87e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(90,\"lensSoot\")",
+      "Status": "Passed",
+      "Duration": 0.0001014,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(91,\"wrongCode\")",
+      "Status": "Passed",
+      "Duration": 0.0001084,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(92,\"broadcast\")",
+      "Status": "Passed",
+      "Duration": 0.000107,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(93,\"closeCall\")",
+      "Status": "Passed",
+      "Duration": 0.0001048,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SubtitleSdfRendersAboveItsDarkBackingAndKeepsAtlasReference",
+      "Status": "Passed",
+      "Duration": 0.0200472,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.WordRevealNeverRewindsAndFinishesAtAudioEnd",
+      "Status": "Passed",
+      "Duration": 0.0268607,
+      "Message": null,
+      "StackTrace": null
+    }
+  ]
+}

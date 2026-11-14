@@ -8,7 +8,7 @@ namespace LighthouseKeepers.WatchDemo
  {
   WatchDemoController watch;AudioPassSettings settings;AudioSource[] deck;AudioSource stings;
   AudioClip[] clips;AudioClip fixedClip,survivedClip,lostClip;
-  int mode=-1,pending=-1,active,day,tasks;double since,nextChange,lastElapsed;float restGain=1;float fadeAge=100,nextSting;int pendingFixed;bool failed,sleeping,lobby;
+  int passedShips;int mode=-1,pending=-1,active,day,tasks;double since,nextChange,lastElapsed;float restGain=1;float fadeAge=100,nextSting;int pendingFixed;bool failed,sleeping,lobby;
   public int Mode=>mode;public double Since=>since;
   public static int Choose(bool fault,float waterFraction,double darkRemaining,bool dark,double timeRemaining)
    =>!fault?0:waterFraction>.7f||dark&&darkRemaining<20||timeRemaining<60?2:fault?1:0;
@@ -30,13 +30,14 @@ namespace LighthouseKeepers.WatchDemo
   {
    if(lobby){if(!deck[0].isPlaying&&deck[0].clip)deck[0].Play();return;}
    var s=watch.State;if(s==null)return;
-   if(day!=s.Day||s.Elapsed<lastElapsed-.01){day=s.Day;tasks=s.CompletedTasks;failed=sleeping=false;pendingFixed=0;pending=-1;mode=-1;}
+   if(day!=s.Day||s.Elapsed<lastElapsed-.01){day=s.Day;tasks=s.CompletedTasks;passedShips=s.Ships?.PassedMask??0;failed=sleeping=false;pendingFixed=0;pending=-1;mode=-1;}
    lastElapsed=s.Elapsed;
    if(!s.RemoteReplica)
    {
     float height=s.Tuning?s.Tuning.failWaterHeightM:.55f;
     int wanted=Choose(!s.Complete,Mathf.Max(0,watch.WaterHeight)/height,s.BeaconDarkRemaining,!s.BeaconShining&&s.BeaconDarkLimit>0,s.Duration-s.Elapsed);
     if(s.Storm!=null&&s.Storm.Stage==4&&!s.Complete)wanted=2;
+    if(s.Tension!=null)wanted=s.Tension.MusicLayer;
     if(mode<0)Transition(wanted,s.Elapsed,0);
     if(wanted!=mode&&wanted!=pending)
     {
@@ -50,6 +51,9 @@ namespace LighthouseKeepers.WatchDemo
    float restTarget=StormRest(s.Day,s.Elapsed,mode)?0:1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
    deck[active].volume=rest*settings.musicVolume*Mathf.Sin(t*Mathf.PI*.5f);deck[1-active].volume=rest*settings.musicVolume*Mathf.Cos(t*Mathf.PI*.5f);
    if(t>=1)deck[1-active].Stop();
+   int shipMask=s.Ships?.PassedMask??0;
+   if((shipMask&~passedShips)!=0&&survivedClip){stings.Stop();stings.PlayOneShot(survivedClip,settings.stingVolume);nextSting=Time.unscaledTime+survivedClip.length;}
+   passedShips=shipMask;
    if(s.CompletedTasks>tasks)pendingFixed+=s.CompletedTasks-tasks;tasks=s.CompletedTasks;
    if(pendingFixed>0&&Time.unscaledTime>=nextSting&&fixedClip){pendingFixed--;stings.PlayOneShot(fixedClip,settings.stingVolume);nextSting=Time.unscaledTime+fixedClip.length;}
    if(s.Failed&&!failed&&lostClip)stings.PlayOneShot(lostClip,settings.stingVolume);failed=s.Failed;
@@ -65,6 +69,7 @@ namespace LighthouseKeepers.WatchDemo
   }
   public void Apply(WatchSnapshot s)
   {
+   if(day!=s.day||s.elapsed<lastElapsed-.01)passedShips=watch.State.Ships?.PassedMask??0;
    day=s.day;lastElapsed=s.elapsed;
    if(s.musicMode!=mode||System.Math.Abs(s.musicSince-since)>.01)Transition(s.musicMode,s.musicSince,(float)System.Math.Max(0,s.elapsed-s.musicSince));
    if(s.sleeping&&!sleeping&&survivedClip)stings.PlayOneShot(survivedClip,settings.stingVolume);sleeping=s.sleeping;

@@ -1,0 +1,15 @@
+{
+  "exit": 2,
+  "counts": {
+    "total": "6",
+    "passed": "5",
+    "failed": "1",
+    "duration": "17.0588468"
+  },
+  "failures": {
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull": "  An unprimed physical pull still reaches the engine rules\n  Expected: 1\n  But was:  0\n"
+  },
+  "new_failures": {
+    "LighthouseKeepers.Presentation.Environment.Tests.WatchGeneratorTests.S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull": "  An unprimed physical pull still reaches the engine rules\n  Expected: 1\n  But was:  0\n"
+  }
+}

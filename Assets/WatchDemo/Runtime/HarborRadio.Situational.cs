@@ -22,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
   }
   bool QueueSituational(int id)
   {
-   if(!cueRules.Allows(id,Time.time)||pending.Contains(id)||pending.Count>=16)return false;
+   if(!(watch.State.Campaign&&id>=94?cueRules.AllowsCampaign(id):cueRules.Allows(id,Time.time))||pending.Contains(id)||pending.Count>=16)return false;
    AddPending(id);return true;
   }
   public static int TonightCue(WatchState s)

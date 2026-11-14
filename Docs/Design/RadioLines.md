@@ -119,12 +119,14 @@ P1–P18 obey once-per-night gates, except P8/P16 use 20/15-second cooldowns mea
 | 78 | P18 / 93 | `keeper_close_call` | That was close, keeper. Too close. | Night objectives won after peak danger >80%, before completion/rest line |
 | 79 | P19 / 94 | `keeper_night_four` | Fourth night. The sea's angrier than I've ever heard it. Everything's going to go at once. | Imported only; future milestone, no runtime trigger |
 | 80 | P20 / 95 | `keeper_night_five` | Last night, keeper. This is the big one. Hold on till dawn and the boat comes for you. | Imported only; future milestone, no runtime trigger |
-| 81 | P23 / 98 | `keeper_ship_passed` | She's through. You did it, keeper. | Imported only; future milestone, no runtime trigger |
+| 81 | P23 / 98 | `keeper_ship_passed` | She's through. You did it, keeper. | Ship passes safely; once per ship |
 | 82 | P25 / 100 | `keeper_rescue_dawn` | Boat's coming for you at first light. You held the light, keeper. All five nights. | Imported only; future milestone, no runtime trigger |
 | 89 | P8 / 83 | `keeper_valve_slipped` | Valve slipped! Hold it steady! | Valve released during unfinished repair; at most once per 20 seconds |
-| 90 | P21 / 96 | `keeper_ship_sighted` | Ship on the horizon! Keep that light steady. | Imported only; future milestone, no runtime trigger |
-| 91 | P22 / 97 | `keeper_ship_close` | She's close to the rocks. Don't you let that light go out. | Imported only; future milestone, no runtime trigger |
+| 90 | P21 / 96 | `keeper_ship_sighted` | Ship on the horizon! Keep that light steady. | Ship first sighted; once per ship, host cue |
+| 91 | P22 / 97 | `keeper_ship_close` | She's close to the rocks. Don't you let that light go out. | First darkness in a ship's near-rocks/window threat; once per ship |
 | 92 | P26 / 101 | `keeper_partner_down` | Your partner's in trouble. Get to them! | Imported only; future milestone, no runtime trigger |
-| 93 | P24 / 99 | `keeper_ship_lost` | Oh no... she's on the rocks. | Imported only; future milestone, no runtime trigger |
+| 93 | P24 / 99 | `keeper_ship_lost` | Oh no... she's on the rocks. | Ship wrecks; replaces generic loss announcement |
 
 The November 9 headset timing revision is authoritative: see [trigger and quiet-period rules](../Audio/triggers.md#headset-feedback-timing-and-quiet-november-9). At most two ordinary lines play back-to-back, followed by 20 seconds of quiet; stale instructions expire and location-sensitive tips wait until relevant.
+
+Sprint5 ship cues are active behind `shipPassages`; snapshot `LK-S5-SHIPS1 / v25`. Thirty/ten-second beacon shouts only apply to an active ship threat; ordinary light-out warnings remain outside it. Arrival/pass cues may recur for a different ship, never repeatedly for the same ship.

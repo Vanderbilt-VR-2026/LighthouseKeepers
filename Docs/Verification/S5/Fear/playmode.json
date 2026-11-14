@@ -1,0 +1,16 @@
+{
+  "exit": 2,
+  "counts": {
+    "total": "23",
+    "passed": "19",
+    "failed": "4",
+    "duration": "152.7877904"
+  },
+  "failures": {
+    "LighthouseKeepers.Net.Tests.ImmersionInteractionTests.RadioHintsWaitNinetySecondsStayQuietAtStationsAndPlayOnce": "  Expected: 8\n  But was:  0\n",
+    "LighthouseKeepers.Net.Tests.S4HardeningTests.BeaconDeadlineFailsBothAndRetryRestoresDayFaults": "  Expected: 72.0d +/- 0.01d\n  But was:  96.000001430511475d\n",
+    "LighthouseKeepers.Net.Tests.S4HardeningTests.HighWaterRequiresContinuousThreeSecondsThenFailsBothAndRetryClearsLoss": "  Expected: True\n  But was:  False\n",
+    "LighthouseKeepers.Net.Tests.WatchReplicaTests.SameDayHostRetryResetsGuestRadioAudioAfterPreviousBroadcast": "  Expected: True\n  But was:  False\n"
+  },
+  "new_failures": {}
+}

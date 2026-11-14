@@ -1,0 +1,6 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=8.583 day=2 repaired=False water=0.02000m
+Physical Night2 generator check with replacement mesh: elapsed=0.000s realtime=8.584 day=2 repaired=False water=0.02000m
+Advanced host clock through the arrival grace to isolate physical generator controls: elapsed=100.000s realtime=8.626 day=2 repaired=False water=0.02004m
+Three actual generator XRI pulls: elapsed=121.654s realtime=31.349 day=2 repaired=False water=0.09392m
+Physical fuel tilt, primer squeezes, choke detents, three cord pulls and choke reopen passed: elapsed=121.654s realtime=31.457 day=2 repaired=False water=0.09392m

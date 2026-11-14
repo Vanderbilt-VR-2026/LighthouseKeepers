@@ -1,24 +1,121 @@
-# Full remaining plan — active checkpoint
+# Sprint 5 checkpoint — November 13
 
-Work in the user's latest order: Step 1 PR #85 verification → merge into m3/five-nights → scheduling/ships/doors/mirror → horror slices 1–3 → finale/progression → horror 4–6 → split-information/final verification. No main merge. Editor muted; Quest installs permitted, launches not permitted.
+Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base main after teammate merge of PR88. Main-folder branch untouched. Editor muted. Never launch Quest without request; installing is allowed.
 
-- **1a DONE:** source audit confirms accepted generator/panel, edges/sea rules, physical inputs and simple lobby already implemented. See [audit](../Verification/RemainingPlan/Step1-Audit.md).
-- **1b AVAILABLE CHECKS DONE:** EditMode 372/372; full PlayMode 52 pass/31 fail, six affected fixtures rerun 6/6, leaving 25 inherited failures. Graphics Nights 1–3 and live two-Mac valve/radio/sleep/rejoin pass. Recessed counter bodies to clear a starter sightline. See [fresh evidence](../Verification/RemainingPlan/Step1/README.md). Device GPU/Wi-Fi/listening remain pending.
-- **1c APK/PR DONE:** Source **d5051f7**, APK `LighthouseKeepers-PR85-d5051f7.apk` (134,389,082 bytes). SHA-256 `74709cc32f6843aab60553c55ed52ee61be311ed31135fe0a90edce7f25da800`. Installed on Quest; installed APK hash matches. App left closed. PR #85 is ready for review. NEXT: merge s4/integrated into m3/five-nights, preserving campaign scheduling and latest physical controls/player-count rules. Steps 2–6 remain pending.
+## Latest requested playtest corrections
 
-## DEVICE CHECKS PENDING
+- `57e0a6d6`: full steamer hull remains visible from horizon to shore; removed the grey proxy/floating lights. Same11,760-triangle/two-material hull at distance; no realtime ship lights. Reviewed normal-LOD gallery images.
+- `5fb7fe4c`: the F4 wheel now aims the actual beam at the moving ship. Host requires powered/lit/clean lens, within8°, held steady0.6s. Off-beam pauses safe travel;30s grace then named wreck. Reacquire to continue. Night1 remains a safe preview. Task/director and arrival times reconciled;72 focused tests,12 workload models, actual-XRI soloNight3 plus live guest steering pause/recovery/pass. See `Docs/Playtests/2026-11-13-ship.md`.
+- `bd3e8bca`: original rounded diesel castings/tank, ribbed alternator, flywheel, exhaust and fuel plumbing.10,072triangles/three combined meshes, no added lights/colliders. Accepted physical controls/grips unchanged; actual-XRI Night2 full start passes. Reviewed front/oblique/both-grip pictures.
+- `f9aa684a`: watch resin case/bezel/LCD/four side buttons; **dial/text rotated180°**, hand and mount unchanged. Focused watch geometry/face/backlight test passes; three accessory views inspected. Headset wrist feel pending.
 
-Real Quest Wi-Fi OFF lobby/start; wiring ≤0.3 ms GPU at matched views; worn missing-lobby-hands report; physical control/watch comfort. No reliable device-equivalent GPU timer exists on this Mac. Human voice listening is pending because Editor output remains muted. Continue independent work without waiting for a headset reply.
+Evidence: `Docs/Verification/S5/Ship/playtest/`, `Docs/Verification/S5/Props/`.
 
-## Exact next commands
+## Current boundary — phase3.1 prototype, not enabled
+
+Sabotage warning/evidence receipts are implemented behind `Sprint5Tuning.sabotageTraces`, but the shipped asset is **OFF**.81 focused checks and enabled-prototype graphics Night2 pass. Enabled-prototype Night5 duo fails the workload model: two-person pipe repair overlaps active beam steering. Clock warnings now anticipate the original deadline and respect relief, but dependency-triggered delay still exposes this conflict. Preserve the failure; don't enable the feature or claim a completed phase3 until fixed.
+
+With the prototype OFF, all12 workload models pass again. Final first-timer tuning/headroom remains unapproved (`timingApproved=false`). No new human timing evidence. See `Docs/Verification/S5/Sabotage/README.md` and `timing-prototype-failure.json`.
+
+Network is **LK-S5-TRACES1 / LK-Lab-Coop-v27** for ship steering plus the optional receipt schema. Both clients must update. Live two-Mac final regression PASSED: host-alone/latejoin, avatars, mono/AEC/NS configuration, both radios/mute, guest repair, shared ship/sleep, leave/rejoin. Evidence in `Docs/Verification/S5/Sabotage/crew/`. No hunter, apparitions, lantern or cable-reconnect mechanic claimed yet.
+
+## Next implementation, in order
+
+1. Finish3.1 (#98): fix Night5 duo dependency/ship overlap without demanding three simultaneous roles or masking the failed model. Review radio/beacon trace anchors, then test enabled12-run model and both-client warning/evidence transport.
+2. Phase3.2 (#99): cable reconnect, lens handprint wipe and fuel sabotage, reusing existing hands/grab/authority;3.3 (#100) brief harbor-master explanations.
+3. Phase4 lantern (#101–103), then Phase5 Drowned (#104–108), following the **current** Sprint5-Master.md§13. Do not jump to superseded ship-first history below. Re-read relevant sections; commit/push each step and keep all Editors muted.
+
+## Reproduce current checks
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
-git status --short
-git merge --no-commit s4/integrated
-# Resolve latest physical controls/sea rules + campaign schedule, bump M3 protocol.
-# Keep EditorUtility.audioMasterMute=true; run M3 runtime + integrated regression checks.
+caffeinate -i python3 artifacts/remaining/m3/tests.py sabotage-gated 'SabotageTests;Ship;M3Campaign;VoicePassTests;Tension'
+# Fresh output folder for every graphics/transport rerun:
+caffeinate -i python3 artifacts/s5/sabotage/crew-driver.py
+# Graphics prototype: review.py, Review.cs; temporarily enable Resources Sprint5Tuning.sabotageTraces IN MEMORY after Play starts, never save it.
+# Workload model: exact command below; both clients must have matching current source.
+LK_SHIP_TIMING=1 LK_M3_TIMING_OUTPUT="$PWD/artifacts/s5/sabotage/new-timing.json" caffeinate -i /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath /Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer -buildTarget StandaloneOSX -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/s5/sabotage/new-timing.log"
 ```
+
+## DEVICE CHECKS PENDING
+
+Installed on the connected Quest: **8927fb64**, `Builds/LighthouseKeepers-Sprint5-Beam-8927fb64.apk` (124,535,954bytes), **LK-S5-TRACES1/v27**. SHA-256`a964546b879116dc0451b3de092a790a5bbebbbe7f933d33c0635c2703c44fbb`. Built from clean source with IL2CPP ARM64, zero errors; APK VR manifest/signature checked and installed APK hash matches. **Not launched; app is closed.** Evidence: `Docs/Verification/S5/Ship/playtest/final-apk.*.json` and `install.json`. Earlier005e641 is superseded on this device.
+
+Ship aiming and new generator/watch are ON. Sabotage prototype remains OFF; next implementation boundary is unchanged above.
+
+- Start with **PLAY → HOST / PLAY ALONE → DEV: SELECT NIGHT3 → START** to test active ship steering. Night1 ship is intentionally a safe preview.
+- Check hull consistent at horizon/approach/near; F4 wheel follows bearing, beam holds the ship, deliberately miss then recover. Confirm named wreck/retry and both-player outcomes.
+- Inspect new generator from the front/side; refill, three primer squeezes, close choke, three cord pulls, reopen. Confirm hand reach unchanged.
+- Check left-watch dial now faces the wearer, LCD readable, backlight and objective/B recall still work.
+- Human Mac+Quest/current-build two-Quest voice, valve, guest wheel and shared sleep/rejoin; both needv27. Muted Editors prove configuration/transport, not audible conversation.
+- Worn Quest72Hz: GPU≤11ms/CPU main≤9ms; full-hull distance change/beam/generator peak-storm view. No Editor FPS substitutes. Quest3 quality baseline remains MSAA4/scale1/fixedFFR0.5.
+- Prototype sabotage warning audibility/readability and Night5 pacing only AFTER activation gate; lantern/Drowned performance/comfort after implementation.
+- Preserve existing pending offline Wi-Fi-off, wall/edge sweeps, held-prop comfort and rendered text checks. Will's skybox/avatar not edited.
+
+## Earlier completed foundations
+
+Quality1.0 and foundation1.1–1.3 implemented; headset acceptance remains open. Last phase2 full EditMode438/438; focused legacy PlayMode19/23 with the same four inherited failures. Full legacy PlayMode still stalls in retired Bootstrap tests, so no full-suite pass is claimed. Latest checks above are focused on the changed behavior. Previous source805e779 foundation and005e641 ship build receipts remain archived. Grading remote has main+sprint1–5; PR134 docs-only publication awaits teammate review.
+
+---
+
+## Historical checkpoints (new brief above takes precedence)
+
+# Full remaining plan — clean checkpoint after Step 2a (November 11)
+
+Branch `sprint-5`, draft PR #89. Nothing merged to main. Editor muted throughout; all test Editors closed. Quest was installed but **not launched**.
+
+## Done
+
+- **1a–1c:** audited existing accepted fixes; repaired the tally-counter obstruction of the starter. Full EditMode 372/372. Full PlayMode 52/83 initially passed; six corrected cases passed focused rerun, leaving 25 inherited failures (listed in evidence). Graphics Nights 1–3 and live two-Mac join/avatars/valve/both radio routes/mute/sleep/leave/rejoin passed. PR #85 ready for review. APK d5051f7 installed, installed hash matches, app closed. See Docs/Verification/RemainingPlan/Step1/.
+- **Merged PR #85 into M3:** preserved current PLAY/host-alone/offline lobby, no-clamp solo, physical generator, sea recovery, watch and latest wiring. Campaign valve roles follow authored night AND current roster; join/leave/retry covered. Merge 0b6de74.
+- **2a runtime reconciliation:** campaign Night 2 now consumes fuel to E with sputter and mains loss, then asks for refill; data-authored FuelExhaustion replaces the old silent timer reset. Solo clamp metadata removed. 69 focused cases pass. All 12 instruction-only task models pass (five nights + Demo, solo + duo). Actual-XRI graphics Nights 1–3 pass through sleep into Night 4, zero logged errors; inspected generator and Night 3 board. Docs/Verification/M3/scheduling-current/ and Docs/Playtests/telemetry-m3.md.
+
+M3 network **LK-M3-CAMPAIGN2 / LK-Lab-Coop-v22** (campaign + sea-recovery fields). PR #85 installed on Quest is **LK-S5-PLAYTEST1 / v21**. Both clients must use the same build. Campaign remains the previously enabled task preview; timingApproved remains false. Final ship-inclusive 25–35% / 15–25% headroom is NOT yet approved. No night duration/flood retuning this pass.
+
+## Next — Step 2b, then 2c, then horror
+
+1. Implement named ship pass/wreck loop from NightScenario.ships (P21–P24 = cue IDs 96–99). Host owns passage outcomes/dark-window grace; guests consume snapshots. Add snapshot fields/version bump. Keep legacy catalogs outside campaign untouched. Ships must gate sleep; safe Night 1 preview; sighting → rocks → away, spatial foghorn, named loss, pass relief/sting, HUD/board state. Retime provisional authored windows against the current timing trace — existing windows are NOT approved for shipping. Reuse Eli's StormSeascape/ocean, no sky or avatar edits.
+2. Re-run instruction-only models including ship waiting/pressure; graphics pass/wreck + screenshots; live campaign co-op. Then physical doors/mirror (2c).
+3. Step 3 horror slices 1–3; Step 4 finale/progression; Step 5 horror 4–6; Step 6 split-information/final verification. **None implemented this pass.** No new M3 APK has been delivered since the merge; build/install when the next completed part is ready.
+
+## DEVICE CHECKS PENDING
+
+- Real Quest Wi-Fi OFF HOST / PLAY ALONE → START.
+- Wiring GPU ≤0.3 ms and full scene GPU/CPU at 72 Hz; Mac timing cannot establish Quest cost.
+- Missing lobby hands / board-like own-body report; physical grip/choke/pour/starter/watch comfort; B recall/text readability.
+- Human voice intelligibility, Mac+Quest/2-Quest current-build transport and radio falloff.
+- Ships/doors/mirror/horror budgets and comfort only after those systems exist.
+
+Install allowed; **do not launch the Quest** without a new explicit request. Root integrated worktree still has unrelated user Wood.mat, Quest prefab ray-width edits and pipe-lever evidence; preserve them. M3-generated Wood change was backed up and restored after graphics capture.
+
+## Exact commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+python3 artifacts/remaining/m3/tests.py scheduling-final
+LK_M3_TIMING_OUTPUT="$PWD/artifacts/remaining/m3/timing.json" /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath "$PWD" -buildTarget StandaloneOSX -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/remaining/m3/timing.log"
+# Current mechanics replay: artifacts/remaining/m3/Nights123.cs, entry ImmersionSoloReplay.Run(output).
+# replay.py launches a muted batch graphics Editor; inspect/use the corrected Nights123.cs,
+# whose pending-stage waits account for authored relief periods.
+# No Quest launch command here.
+```
+
+## Twelve-step headset checklist
+
+Use the installed PR #85 build for 1–8; 9–12 need later M3 systems and are NOT ready today.
+
+1. PLAY → HOST / PLAY ALONE → START; confirm hands and House.
+2. With Wi-Fi off, confirm the same offline route.
+3. Tap/hold B for objective + last line; double-tap to replay; adjust objective height.
+4. Grip wrench, repair without a solo clamp, drop/recover it, then sleep.
+5. Night 2: watch fuel reach E, hear sputter, see mains/pump/beacon cut out.
+6. Pour fuel; squeeze primer three times; pull choke up; pull cord three times; push choke down.
+7. Find separate POWER PANEL, trace subtle cables, check left-wrist time/objective.
+8. Two matching builds: join/start, avatars, voice/radios, shared valve repair and sleep; leave/rejoin.
+9. PENDING ship: gallery sighting → beam-lit passage and horn; test named wreck/retry.
+10. PENDING doors/mirror: hand-swing doors and inspect Will's avatar from three angles.
+11. PENDING horror: apparition, telegraphed hunt, sprint/hide; Scare Off removes it.
+12. PENDING Demo: six-minute loop through ship moment, then continue/night-select persistence.
 
 ---
 
@@ -30,7 +127,7 @@ Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](Generato
 2. DONE: mounted numbered generator control layout, fuel can on floor. Focused scene test and solo Night 2 pass; evidence step2/.
 3. DONE: physical choke detents; existing pour, starter and grip-pressure primer preserved. Both-hand focused test + graphics Night 2 pass. Evidence step3/.
 4. DONE: small dorsal left-wrist digital watch, corrected accessory orientation and gaze backlight. Focused recall/watch checks and Night 2 replay pass; inspected images step4/.
-5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on m3/five-nights, not dropped by a merge. Evidence step5/.
+5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on sprint-5, not dropped by a merge. Evidence step5/.
 6. DONE: source **c7b9a99** built successfully. Installed on the connected Quest; installed APK SHA-256 matches. App deliberately left closed.
 
 APK: `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk` (134,388,246 bytes). SHA-256 `757b9d404bb060355e7e9d06fcbd9092eb367bf56c108479859d027ef90dd0c2`. [Delivery/evidence](../Verification/GeneratorWatchWiring/README.md). PR #85 updated; no merge. All five implementation items are done; the listed device checks and separate missing-lobby-hands report remain. Do not resume M3/horror without the next request.
@@ -72,7 +169,7 @@ On `s4/integrated` / PR #85. Steps 5–6 and the simplified lobby are committed 
 
 ## Next job (not started)
 
-Merge verified Job 1 into `m3/five-nights`; re-bake its existing TowerWiring authoring for the moved power panel (do not duplicate the feed). Finish the M3 ship prerequisite, then the queued horror job. Full scope: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Stop here until asked to continue.
+Merge verified Job 1 into `sprint-5`; re-bake its existing TowerWiring authoring for the moved power panel (do not duplicate the feed). Finish the M3 ship prerequisite, then the queued horror job. Full scope: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Stop here until asked to continue.
 
 ## DEVICE CHECKS PENDING
 
@@ -99,7 +196,7 @@ cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
 
 # November 11 playtest fixes — ACTIVE CHECKPOINT
 
-Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `m3/five-nights` / PR #87. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
+Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `sprint-5` / PR #89. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
 
 ## Active checkpoint — Steps 5–6 and lobby implemented; final checks/build next
 
@@ -167,7 +264,7 @@ cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
 # STOP here: do not run am start or monkey without the lead asking.
 ```
 
-For M3, merge this branch into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `m3/five-nights`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #87 draft and never merge main.
+For M3, merge this branch into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `sprint-5`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #89 draft and never merge main.
 
 Raw runners/results: `artifacts/class-recall/`; `tests.py` (EditMode), `play-focused.py`, `play.py` (full PlayMode), `solo.py` (Night 1), `crew.py` (two-Mac smoke), `build.py` (exact-source Android build). Before repeating a run choose a fresh output directory; inspect the script's existing destination. Both Editors were stopped after the smoke test. Preserve the unrelated Quest prefab ray-width edit and `Docs/Verification/Immersion/pipe-lever/`.
 
@@ -281,3 +378,5 @@ The current instruction says build but skip installs. No device results are infe
 - Mac+Quest join, avatars, two-way audible voice/echo processing, guest task, split objective, remote pole movement, shared sleep/rejoin. Two-Mac transport tests do not certify human speech or headset tracking.
 
 Then stop and await the user's next chunk. No main merge is authorized.
+
+Final screenshot review also caught main-page Close reappearing over Sound settings on live state refresh. WatchMenu now keeps its main buttons hidden until Back. The new regression and rendered follow-up pass; no synced fields changed. The `859f8b0` APK predates this menu-only correction; next APK must include it.

@@ -1,0 +1,54 @@
+[
+  {
+    "file": "sabotage_tear.wav",
+    "input_i": "-23.20",
+    "input_tp": "-5.96",
+    "input_lra": "0.20",
+    "input_thresh": "-34.24",
+    "output_i": "-17.26",
+    "output_tp": "-1.20",
+    "output_lra": "0.00",
+    "output_thresh": "-28.34",
+    "normalization_type": "dynamic",
+    "target_offset": "-0.74"
+  },
+  {
+    "file": "sabotage_wire.wav",
+    "input_i": "-19.29",
+    "input_tp": "-5.42",
+    "input_lra": "0.10",
+    "input_thresh": "-29.29",
+    "output_i": "-17.99",
+    "output_tp": "-4.16",
+    "output_lra": "0.00",
+    "output_thresh": "-27.99",
+    "normalization_type": "dynamic",
+    "target_offset": "-0.01"
+  },
+  {
+    "file": "sabotage_smear.wav",
+    "input_i": "-21.10",
+    "input_tp": "-6.01",
+    "input_lra": "0.10",
+    "input_thresh": "-31.10",
+    "output_i": "-17.88",
+    "output_tp": "-2.84",
+    "output_lra": "0.00",
+    "output_thresh": "-27.88",
+    "normalization_type": "dynamic",
+    "target_offset": "-0.12"
+  },
+  {
+    "file": "sabotage_fuel.wav",
+    "input_i": "-16.02",
+    "input_tp": "-6.02",
+    "input_lra": "0.10",
+    "input_thresh": "-26.02",
+    "output_i": "-17.90",
+    "output_tp": "-7.96",
+    "output_lra": "0.00",
+    "output_thresh": "-27.90",
+    "normalization_type": "dynamic",
+    "target_offset": "-0.10"
+  }
+]

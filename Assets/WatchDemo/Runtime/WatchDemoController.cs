@@ -71,7 +71,9 @@ namespace LighthouseKeepers.WatchDemo
         void Start()
         {
             var powerTuning=S4M2Tuning.Current;
-            state = new WatchState(Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current);
+            var campaign=Resources.Load<FiveNightCatalog>("M3Campaign");
+            var definitions=campaign&&campaign.enabled?campaign.nights:Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days;
+            state = new WatchState(definitions, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current);
             if(state.Tuning&&state.Tuning.difficulty)
             {poweredLeakRiseMPerSecond=state.Tuning.poweredRiseMPerSecond;unpoweredLeakRiseMPerSecond=state.Tuning.unpoweredRiseMPerSecond;repairedDrainMPerSecond=state.Tuning.drainMPerSecond;}
             coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);state.Coop=coop;
@@ -110,6 +112,8 @@ namespace LighthouseKeepers.WatchDemo
             // Aperture guards are structural even when optional movement features are disabled.
             PoleSlide.Create(this,FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>());
             ObjectiveHud.Create(this,head);
+            KeeperFearPresentation.Create(this,head);
+            ShipFleetPresentation.Create(this);
             QuestRenderQuality.Create(this);
             WorldLabelRaster.Create(this);
             PracticalAtmosphere.Create(this);
@@ -119,6 +123,7 @@ namespace LighthouseKeepers.WatchDemo
             WorldAudioGaps.Create(this);
             IslandSafety.Create(this);
             GeneratorIdentity.Create();
+            SabotagePresentation.Create(this);
             ConnectedMachinePresentation.Create(this);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
@@ -143,6 +148,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
+            if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.PreScareQuiet=state.TensionQuiet;
             UpdateCrewRadios();
             UpdateDirector();
             if(state.Immersion&&state.Immersion.physicalGuidance)
@@ -250,7 +256,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(!state.Grid.Tripped&&state.Grid.EngineRunning)for(int i=0;i<4;i++)if(state.Grid.Selected((PowerCircuit)i))boardText.Append(((PowerCircuit)i).ToString().ToUpperInvariant()).Append(' ');
                 boardText.Append('\n');}
             if(!state.BeaconShining&&state.BeaconGraceRemaining>0&&!state.Failed)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.20")).Append(Mathf.CeilToInt((float)state.BeaconGraceRemaining)).Append(state.Power==PowerState.Off?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.21"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.22"));
-            else if(!state.BeaconShining&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.23")).Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.24"));
+            else if((!state.BeaconShining||state.Ships?.Danger>0)&&state.BeaconDarkLimit>0&&!state.Failed)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.23")).Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.24"));
             boardText.Append('\n');
             if(state.Failed)boardText.Append(state.FailureMessage).Append(state.Immersion?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.25"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.37"));
             else if(state.Complete)boardText.Append(state.HasNextDay?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.26"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.27"));

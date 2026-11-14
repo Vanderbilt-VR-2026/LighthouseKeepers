@@ -1,0 +1,29 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=10.125 day=1 repaired=False water=0.02000m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=10.129 day=1 repaired=False water=0.02000m
+day-one physical bolt 2 complete; inflow=0.6666667: elapsed=8.247s realtime=18.751 day=1 repaired=False water=0.02943m
+Released wrench: position=(3.13, 0.01, 0.75) kinematic=False water=0.03085664: elapsed=9.972s realtime=20.557 day=1 repaired=False water=0.03086m
+day-one physical bolt 0 complete; inflow=0.3333333: elapsed=16.560s realtime=27.063 day=1 repaired=False water=0.03547m
+day-one physical bolt 1 complete; inflow=0: elapsed=22.855s realtime=33.364 day=1 repaired=True water=0.03475m
+Day 1 bed -> Day 2: elapsed=0.000s realtime=43.403 day=2 repaired=False water=0.02196m
+Three actual generator XRI pulls: elapsed=108.327s realtime=110.515 day=2 repaired=False water=0.23436m
+Solo repair ready without clamp; valve hidden: elapsed=108.327s realtime=110.606 day=2 repaired=False water=0.23436m
+day-two physical bolt 2 complete; inflow=0.6666667: elapsed=116.864s realtime=119.210 day=2 repaired=False water=0.24433m
+Released wrench: position=(3.12, 0.01, 0.74) kinematic=False water=0.245817: elapsed=118.623s realtime=121.072 day=2 repaired=False water=0.24582m
+day-two physical bolt 0 complete; inflow=0.3333333: elapsed=125.216s realtime=127.561 day=2 repaired=False water=0.25054m
+day-two physical bolt 1 complete; inflow=0: elapsed=131.491s realtime=133.839 day=2 repaired=True water=0.24983m
+PASS Night 1 -> Night 2 -> staged Night 3: elapsed=0.000s realtime=138.550 day=3 repaired=False water=0.02128m
+START paced solo Day 3; physical XRI plus explicitly budgeted read/navigation waits: elapsed=0.000s realtime=138.550 day=3 repaired=False water=0.02128m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=163.688 day=3 repaired=False water=0.02128m
+day-three physical bolt 0 complete; inflow=0.6666667: elapsed=9.064s realtime=172.865 day=3 repaired=False water=0.02769m
+Released wrench: position=(3.18, 0.01, 0.88) kinematic=False water=0.0286225: elapsed=10.801s realtime=174.703 day=3 repaired=False water=0.02862m
+day-three physical bolt 2 complete; inflow=0.3333333: elapsed=17.305s realtime=181.114 day=3 repaired=False water=0.03158m
+day-three physical bolt 1 complete; inflow=0: elapsed=23.574s realtime=187.383 day=3 repaired=True water=0.03022m
+PIPE finished: elapsed=45.009s realtime=208.813 day=3 repaired=True water=-0.03000m
+Three actual generator XRI pulls: elapsed=115.249s realtime=279.058 day=3 repaired=True water=-0.03000m
+GENERATOR settled; beacon and radio now required: elapsed=142.957s realtime=306.758 day=3 repaired=True water=-0.03000m
+BEACON shining: elapsed=218.113s realtime=381.914 day=3 repaired=True water=-0.03000m
+RADIO complete; board 4/4: elapsed=263.124s realtime=426.925 day=3 repaired=True water=-0.03000m
+SOLO DAY3 SPARE=231.86 seconds
+BED passed next day: elapsed=0.000s realtime=452.010 day=4 repaired=False water=0.02128m
+PASS: current actual-XRI solo regression. This functional replay is not a first-timer timing approval; its input helpers are faster than a new player.

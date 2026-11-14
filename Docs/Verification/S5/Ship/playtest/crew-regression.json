@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "room": "P2MNSE",
+  "checks": [
+    "online host starts alone/no READY",
+    "late join",
+    "avatars",
+    "mono/AEC configuration",
+    "live cross-floor proximity",
+    "both handheld radio routes",
+    "mute cancels radio",
+    "host-owned guest sea return",
+    "guest Night 1 pipe shared (no valve per night data)",
+    "ship passage replicated",
+    "shared bed",
+    "disconnect solo rules",
+    "rejoin"
+  ],
+  "human_voice": "NOT VERIFIED: both Editors muted"
+}

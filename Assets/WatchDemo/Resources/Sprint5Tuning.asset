@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0c943ce57684726803753d8199c05c2, type: 3}
+  m_Name: Sprint5Tuning
+  m_EditorClassIdentifier:
+  tensionDirector: 1
+  fearFeedback: 1
+  sabotageTraces: 0
+  sabotageWarningSeconds: 3
+  sabotageEvidenceSeconds: 20
+  minimumProblemGapSeconds: 15
+  preScareQuietSeconds: 2.5
+  earliestScareSeconds: 60
+  blackoutFogDensity: 0.18
+  shipVisuals: 1
+  shipPassages: 1
+  shipWheelTracking: 1
+  shipGuidanceLeadSeconds: 45
+  shipAimToleranceDegrees: 8
+  shipAimSteadySeconds: 0.6
+  shipMaximumSoot: 0.7
+  shipApproachDangerSeconds: 15
