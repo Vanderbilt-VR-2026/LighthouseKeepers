@@ -18,7 +18,9 @@ Evidence: `Docs/Verification/S5/Ship/playtest/`, `Docs/Verification/S5/Props/`.
 - Heavy exterior rain replaces particle scan with1600 GPU-animated streaks.12 supported outdoor puddles with ripples.692-triangle oilskin form;3488 rain/puddle triangles;3 renderers total, no new lights/depth/reflection pass. Graphics inspected; shader self-sorting, overly bright puddles and first-control-grace race corrected.
 - Focused cases pass across the documented initial run and targeted fixture/regression reruns;19 final Drowned/Tension checks include real blackout before a ship window. All12 solo/duo workload models pass. Graphics Night2 outage→Drowned→power restore→retreat passes. Live co-op storm4 appearance and restoration/storm1 now pass after the window-gating fix. Evidence: `Docs/Verification/S5/DrownedStorm/`.
 
-Network **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. Both clients update. Current follow-through: build and install only if ADB returns; do NOT launch. Final actual-XRI soloNight3 passes through both steered ships and bed intoNight4, zero errors. ADB currently empty. Previous installed APK8927fb64. The first solo run accidentally used the older passive-beacon fixture and correctly wrecked; preserved as a setup error, no gameplay change.
+Network **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. Both clients update. Delivered source **47f9ee0c**. Final actual-XRI soloNight3 passes through both steered ships and bed intoNight4, zero errors. Live shared Drowned/storm/retreat passes. APK built and verified; **not installed because ADB sees no Quest; not launched**. The older passive-beacon fixture's expected wreck remains preserved as a setup error; no gameplay was relaxed.
+
+APK: `Builds/LighthouseKeepers-Sprint5-Drowned-47f9ee0c.apk`, 124,605,442bytes. SHA-256`0a1da78a7a4d9cab29186d02e124e43d706fe8b798fb1517048bad87b4bbcf6c`. Build/VR manifest/signature receipts: `Docs/Verification/S5/DrownedStorm/apk.*.json`.
 
 After this pass: finish phase3.2 cable reconnect/lens smears (#99), short explanations (#100), phase4 lantern (#101–103), then actual NavMesh hunter/hiding/escape phases (#105–108). Latest user direction makes the Drowned central; do not confuse the shipped saboteur/appearance slice with a finished hunter. `timingApproved=false` until human workload/headroom acceptance.
 
@@ -34,13 +36,15 @@ caffeinate -i python3 artifacts/s5/drowned-storm/crew-appearance-driver.py
 # Current physical-input solo replay includes wheel steering (not older ship/Night3.cs):
 caffeinate -i python3 artifacts/s5/drowned-storm/night3-wheel.py
 # All Editors mute before play; never refresh source while playing.
+# Build a fresh output path from a clean commit:
+LK_APK_OUTPUT="$PWD/Builds/LighthouseKeepers-Sprint5-Drowned-NEW.apk" caffeinate -i /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath "$PWD" -buildTarget Android -executeMethod LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest -logFile "$PWD/artifacts/s5/drowned-storm/build-NEW.log"
+# Install only; no launch command:
+/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Drowned-47f9ee0c.apk
 ```
 
 ## DEVICE CHECKS PENDING
 
-Installed on the connected Quest: **8927fb64**, `Builds/LighthouseKeepers-Sprint5-Beam-8927fb64.apk` (124,535,954bytes), **LK-S5-TRACES1/v27**. SHA-256`a964546b879116dc0451b3de092a790a5bbebbbe7f933d33c0635c2703c44fbb`. Built from clean source with IL2CPP ARM64, zero errors; APK VR manifest/signature checked and installed APK hash matches. **Not launched; app is closed.** Evidence: `Docs/Verification/S5/Ship/playtest/final-apk.*.json` and `install.json`. Earlier005e641 is superseded on this device.
-
-That previously installed APK has sabotage OFF. The new v29 source enables the fair sabotage/appearance loop and heavy rain/puddles; it must be installed before testing this pass.
+Latest APK is **47f9ee0c / LK-S5-DROWNED2 / v29**, path above. Install when ADB returns; **do not launch without a new request**. Previously installed8927fb64/v27 lacks this Drowned/rain pass and cannot join v29. Both players need the same current build.
 
 - Start with **PLAY → HOST / PLAY ALONE → DEV: SELECT NIGHT3 → START** to test active ship steering. Night1 ship is intentionally a safe preview.
 - Check hull consistent at horizon/approach/near; F4 wheel follows bearing, beam holds the ship, deliberately miss then recover. Confirm named wreck/retry and both-player outcomes.
