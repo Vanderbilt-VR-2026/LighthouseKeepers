@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   tensionDirector: 1
   fearFeedback: 1
-  sabotageTraces: 0
+  sabotageTraces: 1
   sabotageWarningSeconds: 3
   sabotageEvidenceSeconds: 20
   minimumProblemGapSeconds: 15
@@ -24,6 +24,7 @@ MonoBehaviour:
   shipVisuals: 1
   shipPassages: 1
   shipWheelTracking: 1
+  shipCrewHoldSeconds: 120
   shipGuidanceLeadSeconds: 45
   shipAimToleranceDegrees: 8
   shipAimSteadySeconds: 0.6

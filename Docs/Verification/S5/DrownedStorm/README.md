@@ -1,0 +1,7 @@
+# Drowned / weather — November 14
+
+Fairness:84 focused checks passed.12 instruction-only task/travel models pass with sabotage enabled; Night1/2/3 outcomes unchanged. Night5 duo137s spare. The prior enabled failure is preserved in artifacts/s5/drowned-storm/fairness-timing.json; it exposed a second bug where the beacon keeper assignment changed during travel. Fixed by preserving that assignment for the passage.
+
+Offshore wait:120s maximum, before danger entry only, only while a two-keeper pipe task is unfinished. The night/flood clocks continue. Host snapshots include the hold; guest cannot change it. Safe tutorial ship unchanged.
+
+No headset performance or comfort result is inferred from these models.

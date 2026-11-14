@@ -9,6 +9,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         readonly WatchState state;
         static readonly PowerCircuit[] shedOrder={PowerCircuit.Pump,PowerCircuit.Radio,PowerCircuit.Lights,PowerCircuit.Beacon};
+        int shipGuideActor,guideShip=-1;
         int actorA,actorB,jobA=-1,jobB=-1;float assignmentUntil;
         public Func<string,Vector3> StationPosition;
         public KeeperStep First {get;private set;}
@@ -21,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.KeepLight;
         public void Apply(int first,int second,int a,int b)
         {if(!state.ReadOnly)return;First=(KeeperStep)first;Second=(KeeperStep)second;actorA=a;actorB=b;}
-        public void Reset(){First=Second=KeeperStep.None;actorA=actorB=0;jobA=jobB=-1;assignmentUntil=0;}
+        public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
         public void Tick(float now,int firstActor,Vector3 firstHead,int secondActor,Vector3 secondHead,bool wrenchHeld)
         {
             if(state.ReadOnly)return;
@@ -30,7 +31,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Complete){First=state.HasNextDay?KeeperStep.Sleep:KeeperStep.Complete;Second=actorB!=0?First:KeeperStep.None;return;}
             if(state.ShipGuidanceDue){
                 var step=BeaconStep();if(step==KeeperStep.None)step=KeeperStep.KeepLight;
-                bool firstNear=actorB==0||firstHead.y>=secondHead.y;
+                // Keep the wheel assignment while its keeper walks upstairs. Re-picking by current
+                // height every frame swaps both jobs mid-stair and can leave the wheel unattended.
+                if(guideShip!=state.AimingShip||roster||shipGuideActor!=actorA&&shipGuideActor!=actorB){guideShip=state.AimingShip;shipGuideActor=actorB==0||firstHead.y>=secondHead.y?actorA:actorB;}
+                bool firstNear=shipGuideActor==actorA;
                 var other=OtherShipJob(wrenchHeld);
                 First=firstNear?step:other;Second=actorB==0?KeeperStep.None:firstNear?other:step;return;
             }

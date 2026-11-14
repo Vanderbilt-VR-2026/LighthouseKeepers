@@ -11,19 +11,11 @@ Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base m
 
 Evidence: `Docs/Verification/S5/Ship/playtest/`, `Docs/Verification/S5/Props/`.
 
-## Current boundary — phase3.1 prototype, not enabled
+## November 14 — Drowned / weather pass in progress
 
-Sabotage warning/evidence receipts are implemented behind `Sprint5Tuning.sabotageTraces`, but the shipped asset is **OFF**.81 focused checks and enabled-prototype graphics Night2 pass. Enabled-prototype Night5 duo fails the workload model: two-person pipe repair overlaps active beam steering. Clock warnings now anticipate the original deadline and respect relief, but dependency-triggered delay still exposes this conflict. Preserve the failure; don't enable the feature or claim a completed phase3 until fixed.
+Step 1 complete: sabotage enabled after the two-keeper pipe/ship conflict was fixed. Captains can wait offshore up to120s while two keepers repair the pipe; water and night clocks continue. A ship already in danger cannot wait. The director keeps the same wheel keeper while they travel upstairs.84 focused checks pass; all12 task/travel models pass with sabotage ON (Night5 duo137s spare). These are models, not new human timing.
 
-With the prototype OFF, all12 workload models pass again. Final first-timer tuning/headroom remains unapproved (`timingApproved=false`). No new human timing evidence. See `Docs/Verification/S5/Sabotage/README.md` and `timing-prototype-failure.json`.
-
-Network is **LK-S5-TRACES1 / LK-Lab-Coop-v27** for ship steering plus the optional receipt schema. Both clients must update. Live two-Mac final regression PASSED: host-alone/latejoin, avatars, mono/AEC/NS configuration, both radios/mute, guest repair, shared ship/sleep, leave/rejoin. Evidence in `Docs/Verification/S5/Sabotage/crew/`. No hunter, apparitions, lantern or cable-reconnect mechanic claimed yet.
-
-## Next implementation, in order
-
-1. Finish3.1 (#98): fix Night5 duo dependency/ship overlap without demanding three simultaneous roles or masking the failed model. Review radio/beacon trace anchors, then test enabled12-run model and both-client warning/evidence transport.
-2. Phase3.2 (#99): cable reconnect, lens handprint wipe and fuel sabotage, reusing existing hands/grab/authority;3.3 (#100) brief harbor-master explanations.
-3. Phase4 lantern (#101–103), then Phase5 Drowned (#104–108), following the **current** Sprint5-Master.md§13. Do not jump to superseded ship-first history below. Re-read relevant sections; commit/push each step and keep all Editors muted.
+Network **LK-S5-DROWNED1 / LK-Lab-Coop-v28**. Both clients must update. Evidence: `Docs/Verification/S5/DrownedStorm/`. Next: visible Drowned sabotage presence, storm feedback, heavy bounded rain and grounded outdoor puddles; graphics/transport/build still due. Previous installed APK remains8927fb64. Never launch without request.
 
 ## Reproduce current checks
 

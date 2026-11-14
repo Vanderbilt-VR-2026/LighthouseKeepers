@@ -7,11 +7,11 @@ namespace LighthouseKeepers.Core.Progression
         public bool enabled;
         public int seen, entered, passed, extended, closeWarned, wreck = -1;
         public double wreckAt;
-        public float[] dark = Array.Empty<float>(), delay = Array.Empty<float>(), steady = Array.Empty<float>();
-        public ShipFrame Copy() { var result = (ShipFrame)MemberwiseClone(); result.dark = (float[])dark.Clone(); result.delay=(float[])delay.Clone(); result.steady=(float[])steady.Clone(); return result; }
+        public float[] dark = Array.Empty<float>(), delay = Array.Empty<float>(), steady = Array.Empty<float>(), hold = Array.Empty<float>();
+        public ShipFrame Copy() { var result = (ShipFrame)MemberwiseClone(); result.hold=(float[])hold.Clone(); result.dark = (float[])dark.Clone(); result.delay=(float[])delay.Clone(); result.steady=(float[])steady.Clone(); return result; }
         public bool Valid()
         {
-            if (dark == null || delay==null || steady==null || delay.Length!=dark.Length || steady.Length!=dark.Length || dark.Length > 4 || !double.IsFinite(wreckAt) || wreckAt < 0) return false;
+            if (hold==null || hold.Length!=dark?.Length || dark == null || delay==null || steady==null || delay.Length!=dark.Length || steady.Length!=dark.Length || dark.Length > 4 || !double.IsFinite(wreckAt) || wreckAt < 0) return false;
             int mask = (1 << dark.Length) - 1;
             if (seen < 0 || entered < 0 || passed < 0 || extended < 0 || closeWarned < 0 ||
                 ((seen | entered | passed | extended | closeWarned) & ~mask) != 0 ||
@@ -20,6 +20,7 @@ namespace LighthouseKeepers.Core.Progression
             if (wreck >= 0 && ((entered & (1 << wreck)) == 0 || (passed & (1 << wreck)) != 0)) return false;
             if (wreck < 0 && wreckAt != 0) return false;
             foreach (float value in dark) if (!float.IsFinite(value) || value < 0 || value > 300) return false;
+            foreach(float value in hold) if(!float.IsFinite(value)||value<0||value>180) return false;
             foreach (float value in delay) if (!float.IsFinite(value) || value<0 || value>3600) return false;
             foreach (float value in steady) if (!float.IsFinite(value) || value<0 || value>2) return false;
             return enabled || dark.Length == 0 && seen == 0 && entered == 0 && passed == 0 && extended == 0 && closeWarned == 0 && wreck == -1;
@@ -40,7 +41,7 @@ namespace LighthouseKeepers.Core.Progression
             this.events = events ?? Array.Empty<NightShipEvent>();
             this.approachDanger = double.IsFinite(approachDanger) ? Math.Clamp(approachDanger,0,30) : 0;
             if (this.events.Length > 4) throw new ArgumentException("At most four ships per night");
-            frame = new ShipFrame { enabled = true, dark = new float[this.events.Length],delay=new float[this.events.Length],steady=new float[this.events.Length] };
+            frame = new ShipFrame { enabled = true, dark = new float[this.events.Length],delay=new float[this.events.Length],steady=new float[this.events.Length],hold=new float[this.events.Length] };
         }
         public int Count => events.Length;
         public int SeenMask => frame.seen;
@@ -51,15 +52,31 @@ namespace LighthouseKeepers.Core.Progression
         public bool Lost => frame.wreck >= 0;
         public bool Finished => frame.passed == (1 << Count) - 1;
         public bool Passed(int i) => (frame.passed & (1 << i)) != 0;
-        double PriorDelay(int i){double sum=0;for(int n=0;n<i;n++)sum+=frame.delay[n];return sum;}
+        double PriorDelay(int i){double sum=0;for(int n=0;n<i;n++)sum+=frame.delay[n]+frame.hold[n];return sum;}
         public double Approach(int i) => PriorDelay(i) + events[i].approachSeconds + ((frame.extended & (1 << i)) != 0 ? events[i].broadcastExtensionSeconds : 0);
-        public double WindowStart(int i) => events[i].sightedAtSeconds + Approach(i);
+        public double WindowStart(int i) => events[i].sightedAtSeconds + Approach(i) + frame.hold[i];
         public double ThreatStart(int i) => Math.Max(events[i].sightedAtSeconds, WindowStart(i)-approachDanger);
         public bool Threatens(int i,double now) => !events[i].safePreview && !Passed(i) && now>=ThreatStart(i) && now<Exit(i);
         public double ThreatRemaining(double now){double result=double.PositiveInfinity;for(int i=0;i<Count;i++)if(Threatens(i,now))result=Math.Min(result,DarkRemaining(i));return result;}
         public double ThreatLimit(double now){double result=0;for(int i=0;i<Count;i++)if(Threatens(i,now))result=Math.Max(result,events[i].darkGraceSeconds);return result;}
         public double Exit(int i) => WindowStart(i) + events[i].windowSeconds + frame.delay[i];
-        public double VisualAge(int i,double now) => now-events[i].sightedAtSeconds-frame.delay[i];
+        public double VisualAge(int i,double now) => now-events[i].sightedAtSeconds-frame.delay[i]-frame.hold[i];
+        // A two-keeper valve job cannot leave a third keeper at the wheel. The captain may
+        // wait OFFSHORE, never after entering danger. This does not stop water or the night clock.
+        public bool CanHoldForCrew(double now, float lead, float limit)
+        {
+            int i=TrackingShip(now);
+            return i>=0 && !Lost && (frame.entered&(1<<i))==0 && frame.hold[i]<Math.Clamp(limit,0,180)
+                && now>=WindowStart(i)-Math.Max(lead,approachDanger+1);
+        }
+        public bool HoldForCrew(double from,double to,float lead,float limit)
+        {
+            if(ReadOnly || !CanHoldForCrew(to,lead,limit) || to<from) return false;
+            int i=TrackingShip(to);
+            frame.hold[i]+= (float)Math.Min(Math.Clamp(limit,0,180)-frame.hold[i],
+                Math.Max(0,to-Math.Max(from,WindowStart(i)-Math.Max(lead,approachDanger+1))));
+            return true;
+        }
         public float Steady(int i) => frame.steady[i]/steadySeconds;
         public int TrackingShip(double now){for(int i=0;i<Count;i++)if(!events[i].safePreview&&!Passed(i)&&now>=events[i].sightedAtSeconds&&now<Exit(i))return i;return -1;}
         public bool InWindow(int i, double now) => !Passed(i) && now >= WindowStart(i) && now < Exit(i);
@@ -118,12 +135,12 @@ namespace LighthouseKeepers.Core.Progression
             for (int i = 0; i < Count; i++)
             {
                 int bit = 1 << i; var e = events[i];
-                double prior=0;for(int n=0;n<i;n++)prior+=source.delay[n];
-                double window = e.WindowStart + prior + ((source.extended & bit) != 0 ? e.broadcastExtensionSeconds : 0);
+                double prior=0;for(int n=0;n<i;n++)prior+=source.delay[n]+source.hold[n];
+                double window = e.WindowStart + prior + source.hold[i] + ((source.extended & bit) != 0 ? e.broadcastExtensionSeconds : 0);
                 double start = Math.Max(e.sightedAtSeconds,window-approachDanger);
                 if (source.wreck == i && (source.dark[i] != e.darkGraceSeconds || source.wreckAt < start || source.wreckAt > window + e.windowSeconds + source.delay[i])) return false;
                 if ((source.passed & bit) != 0 && source.dark[i] != 0) return false;
-                if (source.delay[i]>now+.001 || source.steady[i]>steadySeconds+.001 || (!wheelTracking || e.safePreview)&&(source.delay[i]!=0||source.steady[i]!=0)) return false;
+                if (source.hold[i]>now+.001 || e.safePreview&&source.hold[i]!=0 || source.delay[i]>now+.001 || source.steady[i]>steadySeconds+.001 || (!wheelTracking || e.safePreview)&&(source.delay[i]!=0||source.steady[i]!=0)) return false;
                 if (source.dark[i] > e.darkGraceSeconds + .001 || e.safePreview && (source.dark[i] != 0 || source.wreck == i) ||
                     (source.seen & bit) != 0 && now < e.sightedAtSeconds || (source.entered & bit) != 0 && now < start ||
                     (source.passed & bit) != 0 && now+.001 < window + e.windowSeconds + source.delay[i]) return false;
