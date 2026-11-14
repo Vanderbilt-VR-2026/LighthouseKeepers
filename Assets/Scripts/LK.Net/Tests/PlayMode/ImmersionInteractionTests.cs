@@ -178,6 +178,10 @@ namespace LighthouseKeepers.Net.Tests
                 var controller=hand.transform.parent;controller.SetPositionAndRotation(handle,can.transform.rotation);
                 var direct=hand.Direct;direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);Assert.True(grab.isSelected);
                 var before=can.transform.position;controller.position+=Vector3.right*.25f;yield return new WaitForSeconds(.2f);Assert.Greater(Vector3.Distance(before,can.transform.position),.15f,"Free carry stopped following grip");
+                // Establish an actually distant spout; a fixed world-right displacement
+                // can land beside the filler after the mirrored hand attach rotates the can.
+                controller.position+=filler.position+Vector3.forward*1.5f-tip.position;yield return new WaitForSeconds(.2f);
+                Assert.Greater(Vector3.Distance(tip.position,filler.position),.6f,"Away-pour test setup");
                 Assert.False((bool)Call(controls,"CanPour",true),"Can poured away from filler");
                 controller.rotation=Quaternion.Euler(0,controls.transform.eulerAngles.y,105);yield return new WaitForSeconds(.2f);
                 for(int i=0;i<8;i++){controller.position+=filler.position+Vector3.up*.06f-tip.position;yield return new WaitForSeconds(.05f);}

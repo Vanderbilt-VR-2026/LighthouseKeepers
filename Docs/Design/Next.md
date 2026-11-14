@@ -47,7 +47,7 @@ The six-branch grading cleanup is complete. A teammate merged PR88. Small docs-o
 
 ## Ship playtest follow-up — November13
 
-Consistent full-hull LOD fixed in57e0a6d6. Active beacon steering is implemented and verified:72/72 focused tests,12/12 instruction-only models, physical soloNight3 and live guest-wheel pause/recovery/pass. Existing two-Mac join/avatar/radios/mute/repair/sleep/rejoin regression passed. Protocol **LK-S5-BEAMAIM1 /v26**; both clients update. See `Docs/Playtests/2026-11-13-ship.md`. Next finish generator mesh and watch dial180° correction, build/install, then resumePhase3 sabotage →Phase4 lantern →Phase5 Drowned. New aiming device feel/performance remains pending.
+Consistent full-hull LOD fixed in57e0a6d6. Active beacon steering is implemented and verified:72/72 focused tests,12/12 instruction-only models, physical soloNight3 and live guest-wheel pause/recovery/pass. Existing two-Mac join/avatar/radios/mute/repair/sleep/rejoin regression passed. Protocol **LK-S5-BEAMAIM1 /v26**; both clients update. See `Docs/Playtests/2026-11-13-ship.md`. Generator mesh now verified (physical Night2 start and reviewed3angles;10,072tris). Next commit the verified watch dial180° correction, build/install, then resumePhase3 sabotage →Phase4 lantern →Phase5 Drowned. New aiming device feel/performance remains pending.
 
 ## DEVICE CHECKS PENDING
 
