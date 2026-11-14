@@ -6,6 +6,17 @@ namespace LighthouseKeepers.Editor.Environment.Tests
 {
     public sealed class SteamerTests
     {
+        [Test] public void HorizonAndCloseViewsUseTheSameHullWithAttachedLights()
+        {
+            var view=Object.Instantiate(Resources.Load<SteamerView>("Sprint5Ships/CoastalSteamer"));
+            try{
+                view.Initialize("Mary Ellen");var lods=view.GetComponent<LODGroup>().GetLODs();
+                Assert.AreEqual(2,lods.Length);Assert.AreSame(lods[0].renderers[0],lods[1].renderers[0]);
+                Assert.AreSame(view.hull,lods[1].renderers[0].GetComponent<MeshFilter>().sharedMesh);
+                Assert.IsNull(view.transform.Find("Distant navigation lights"));
+                Assert.Less(lods[1].screenRelativeTransitionHeight,.01f,"No silhouette cull within the 350m camera range");
+            }finally{Object.DestroyImmediate(view.gameObject);}
+        }
         [Test] public void BakedVesselFitsMobileGeometryAndMaterialBudget()
         {
             var prefab=Resources.Load<SteamerView>("Sprint5Ships/CoastalSteamer");Assert.NotNull(prefab);

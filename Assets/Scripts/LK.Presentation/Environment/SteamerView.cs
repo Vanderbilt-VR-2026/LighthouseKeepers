@@ -12,11 +12,13 @@ namespace LighthouseKeepers.Presentation.Environment
             if(built)return;built=true;gameObject.name="Steamer — "+shipName;
             var close=Renderer("Hull, deck, portholes",hull,hullMaterial,transform);
             nameMesh=SteamerGeometry.BuildName(shipName);var lettering=Renderer("Painted hull name",nameMesh,hullMaterial,transform);
-            var far=Renderer("Distant navigation lights",distant,hullMaterial,transform);
             lightPivot=new GameObject("Mechanical searchlight").transform;lightPivot.SetParent(transform,false);lightPivot.localPosition=new Vector3(0,6.8f,8.5f);
             cone=Renderer("Sweeping light cone",beam,effectsMaterial,lightPivot);
             smoke=Renderer("GPU funnel smoke and bow spray",particles,effectsMaterial,transform);
-            var lod=gameObject.AddComponent<LODGroup>();lod.SetLODs(new[]{new LOD(.4f,new[]{close,lettering,cone,smoke}),new LOD(.015f,new[]{far})});lod.RecalculateBounds();lod.size=52;lod.localReferencePoint=new Vector3(0,4,0);
+            // Keep the same silhouette, deck and attached navigation lamps at every visible
+            // range. The former light-cluster proxy popped into a different vessel near shore.
+            // Only lettering and small effects drop out beyond useful headset resolution.
+            var lod=gameObject.AddComponent<LODGroup>();lod.SetLODs(new[]{new LOD(.12f,new[]{close,lettering,cone,smoke}),new LOD(.001f,new[]{close})});lod.RecalculateBounds();lod.size=52;lod.localReferencePoint=new Vector3(0,4,0);
             effects=new MaterialPropertyBlock();
         }
         public void Sample(float age,float approach,float window,float depart,float storm,float sea)

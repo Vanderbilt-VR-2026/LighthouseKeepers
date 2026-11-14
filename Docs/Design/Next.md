@@ -2,6 +2,10 @@
 
 Worktree `~/LighthouseKeepers-M3`, branch `sprint-5`, draft PR #89. Sprint 4 PR #88 was merged by a teammate into main at `14634af`; that merge is included and #89 now targets main. The new Sprint5-Master.md, including §14, supersedes the historical M3 ordering below.
 
+## Latest headset steering — November 13
+
+The lead launched/playtested ship APK005e641 and confirmed the ship appears. Distant box/light LOD, active wheel tracking, generator realism and watch face orientation need correction before continuing toward the Drowned. The distant hull correction passes five focused tests and reviewed graphics views (`Docs/Verification/S5/Ship/playtest`). Next: host-owned beam aiming/hold, generator model, watch face180°, then Phase3 sabotage / Phase4 lantern / Phase5 Drowned. Historical “not launched” receipts below predate the explicitly authorized playtest.
+
 ## Current work
 
 - **1.0 implementation complete; device acceptance OPEN (#90):** active Android QuestPipeline MSAA4/scale1, Vulkan, fixed FFR0.5, on-tile grade, mipmaps/ASTC; one-click menu includes fixed-scene baked lighting/static/probe setup. Progressive GPU powered/emergency bakes: two maps / 4.93 MiB each, 444 probes. See QuestQuality.md.
