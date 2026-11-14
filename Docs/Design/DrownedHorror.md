@@ -28,3 +28,5 @@ November 14. Latest direction: take creative liberty with frightening effects, m
 ## Visual review
 
 The final keeper is 2,131 triangles, one opaque/coverage material with probe-based wet sheen. A separate 68-triangle mesh supplies low mist, coat runoff and cold breath. The head rises 7.5 cm slowly; no rig/player camera motion. Screenshot review rejected the round-mouth mask and replaced it with a gaunt face mostly recessed in the hood. No colliders or new lights. Graphics Night2 verifies Off, cue routing, voice attenuation and power-driven retreat. Device cost and listening remain pending.
+
+Final regression: 62 focused tests pass, physical soloNight3 passes, live two-Mac shared body/audio/score/retreat passes. Face-height exclusion tested with actual runtime head movement. See Docs/Verification/S5/DrownedHorror. Muted Editor and APK packaging are not worn-headset audio/performance acceptance.

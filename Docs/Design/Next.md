@@ -4,11 +4,21 @@ Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base m
 
 ## Current follow-up — Drowned horror presentation
 
-User requested creative liberty with frightening effects/music/sound. Design: `Docs/Design/DrownedHorror.md`. Step1 sound palette and runtime cue/music integration implemented; baseline51/51 and focused57/57 pass. Six original mastered clips; one event+one breath source, existing music decks reused, voice-first attenuation, Off/late-join/retry protected. Network stays **LK-S5-DROWNED2/v29**; no replicated field changes.
+User requested creative liberty with frightening effects/music/sound. Design: `Docs/Design/DrownedHorror.md`. Implemented and pushed in steps:
+- Sound: six original mastered clips, spatial wet approach/breath/reveal/retreat, bowed-metal score reusing the two existing music decks. Voice-first attenuation, no old stings on re-enable/late join, retry receipts clear. Original teammate voice/music untouched.
+- Visuals: gaunt crooked oilskin figure, wet probe sheen/slow head lift, low mist/drips. 2,131 body+68 effect triangles; no new lights. Revised the face after screenshot review.
+- Checks: baseline51/51; final focused62/62. Graphics Night2 outage/appearance/restore/Off/duck pass. Actual-XRI soloNight3 passes pipe, generator, beacon, radio, two steered ships, lens wipe and sleep intoNight4. Live two-Mac host/late-join/manifestation/storm/sound/score/restore/retreat pass. Standing/seated face-height exclusion fixed and tested. Screenshots inspected. Evidence `Docs/Verification/S5/DrownedHorror/`.
 
-Step2 implemented: original 2,131-triangle crooked oilskin keeper, wet material/head lift, 68-triangle mist/drips mesh. Graphics screenshots inspected; face corrected after review. Night2 outage→appearance→power restore passes, including live Off/no-replay/speech-duck assertions. Focused visual+quality61/61, final face rerun61/61.
+Network stays **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. No new synced fields. **Next immediate action: build the current clean commit**, verify APK, install only if ADB returns. Editors muted; never launch Quest without request. After the delivery receipt, resume master-brief #99/#100 → lantern → hunter/hiding; this is still the non-contact apparition slice.
 
-Next: step3 actual-XRI soloNight3 and live two-Mac appearance/audio-route/retreat checks; build clean commit, verify APK, install only if ADB returns. Editor muted; do not launch Quest. No hunter enabled in this presentation pass.
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+# Use a new output name for any rerun.
+caffeinate -i python3 artifacts/remaining/m3/tests.py horror-NEW 'DrownedHorrorTests;DrownedTests;TensionDirectorTests;AudioPassTests;KeeperFearTests;VoicePassTests;QualityBaselineTests'
+caffeinate -i python3 artifacts/s5/drowned-horror/night3.py
+caffeinate -i python3 artifacts/s5/drowned-horror/crew-appearance-driver.py
+# Both graphics scripts must use fresh result directories on a rerun.
+```
 
 ## Latest requested playtest corrections
 
@@ -51,6 +61,8 @@ LK_APK_OUTPUT="$PWD/Builds/LighthouseKeepers-Sprint5-Drowned-NEW.apk" caffeinate
 ```
 
 ## DEVICE CHECKS PENDING
+
+Horror presentation: listen in Night2 after the protected generator step. Verify wet approach direction, reveal/breath/score intensity, speech priority, smooth score return, Sightings Off, stereo mist/face fade and no close-face pop. Profile same view with appearance on/off; 2,199 body/effect triangles is not GPU evidence. Editor audio was muted throughout. Final horror APK is being built; previous APK below remains the last packaged receipt until updated.
 
 Latest APK is **47f9ee0c / LK-S5-DROWNED2 / v29**, path above. Install when ADB returns; **do not launch without a new request**. Previously installed8927fb64/v27 lacks this Drowned/rain pass and cannot join v29. Both players need the same current build.
 

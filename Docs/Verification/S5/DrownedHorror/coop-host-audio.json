@@ -1,0 +1,20 @@
+{
+  "visible": true,
+  "cue": "Reveal",
+  "count": 1,
+  "score": true,
+  "sources": [
+    {
+      "spatial": 1.0,
+      "bus": "SFX_Critical",
+      "clip": "reveal_b",
+      "playing": true
+    },
+    {
+      "spatial": 1.0,
+      "bus": "SFX_Critical",
+      "clip": "breathing",
+      "playing": true
+    }
+  ]
+}

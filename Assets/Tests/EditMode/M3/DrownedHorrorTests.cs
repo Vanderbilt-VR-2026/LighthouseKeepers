@@ -63,6 +63,15 @@ namespace LighthouseKeepers.Tests.M3
                 if(n=="score")Assert.AreEqual(AudioClipLoadType.Streaming,c.loadType);
             }
         }
+        [Test] public void ProximityExclusionUsesFaceHeightForStandingAndSeatedPlayers()
+        {
+            var method=Runtime("DrownedAppearance").GetMethod("HasComfortClearance");
+            bool Clear(Vector3 head)=>(bool)method.Invoke(null,new object[]{head,Vector3.zero});
+            Assert.False(Clear(new Vector3(0,1.7f,.3f)),"Standing beside the face must hide it");
+            Assert.False(Clear(new Vector3(0,1.1f,.6f)),"Seated reach must hide it");
+            Assert.True(Clear(new Vector3(0,1.6f,1.6f)));
+            Assert.True(Clear(new Vector3(0,4.9f,0)),"Another floor is not arm's reach");
+        }
         [Test] public void SculptAndLocalEffectsAreFiniteAndBounded()
         {
             var type=Runtime("DrownedSculpt");

@@ -15,6 +15,7 @@ namespace LighthouseKeepers.WatchDemo
         public const int MaximumTriangles=3000;
         public static void Create(WatchDemoController w){if(w.State.Drowned==null)return;var p=w.gameObject.AddComponent<DrownedAppearance>();p.watch=w;p.Build();}
         public static bool Sightings {get=>PlayerPrefs.GetInt("LK.DrownedSightings",1)!=0;set{PlayerPrefs.SetInt("LK.DrownedSightings",value?1:0);PlayerPrefs.Save();}}
+        public static bool HasComfortClearance(Vector3 viewerHead,Vector3 figureFeet) => (viewerHead-(figureFeet+Vector3.up*1.6f)).sqrMagnitude>=2.25f;
         void Build(){
             block=new MaterialPropertyBlock();mesh=BuildMesh();material=new Material(Resources.Load<Shader>("S5Drowned")){name="Salt-wet oilskin"};
             figure=new GameObject("The Drowned — oilskin saboteur").transform;figure.SetParent(transform,false);figure.gameObject.AddComponent<MeshFilter>().sharedMesh=mesh;body=figure.gameObject.AddComponent<MeshRenderer>();body.sharedMaterial=material;body.shadowCastingMode=ShadowCastingMode.Off;body.receiveShadows=false;body.enabled=false;
@@ -47,7 +48,7 @@ namespace LighthouseKeepers.WatchDemo
             lastElapsed=s.Elapsed;if(d.Phase==DrownedPhase.Manifest)manifestAt=d.Since;
             int station=Station();SafeAnchor=station>=0&&supported[station];
             if(station>=0&&supported[station]){figure.position=places[station];var inward=new Vector3(-figure.position.x,0,-figure.position.z);figure.rotation=Quaternion.LookRotation(inward.sqrMagnitude>.01f?inward:Vector3.forward);}
-            if(Camera.main&&(Camera.main.transform.position-figure.position).sqrMagnitude<2.25f)SafeAnchor=false; // no face pop at arm's length
+            if(Camera.main&&!HasComfortClearance(Camera.main.transform.position,figure.position))SafeAnchor=false; // no face pop at arm's length
             bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
             float wanted=active&&d.Phase==DrownedPhase.Manifest?1:0;visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?1.1f:.5f));
             body.enabled=visibility>.005f;block.SetFloat("_Visibility",visibility);block.SetFloat("_Breath",(float)s.Elapsed);block.SetFloat("_Arrival",(float)System.Math.Max(0,s.Elapsed-manifestAt));body.SetPropertyBlock(block);
