@@ -25,7 +25,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<4;i++){Add((KeeperStep)((int)KeeperStep.PumpOff+i),panel.Control(i).transform);Add((KeeperStep)((int)KeeperStep.PumpOn+i),panel.Control(i).transform);}
             Add(KeeperStep.ResetBreaker,panel.ResetControl.transform);
             foreach(var control in radio.controls){if(control.mainPower)Add(KeeperStep.RadioPower,control.transform);if(control.frequency)Add(KeeperStep.RadioTune,control.transform);}
-            Add(KeeperStep.RadioTransmit,radio.microphone.transform);Add(KeeperStep.BeaconLight,beacon.Ignition.transform);Add(KeeperStep.BeaconAlign,beacon.Wheel.transform);Add(KeeperStep.BeaconWipe,beacon.Rag.transform);
+            Add(KeeperStep.RadioTransmit,radio.microphone.transform);Add(KeeperStep.BeaconLight,beacon.Ignition.transform);Add(KeeperStep.BeaconAlign,beacon.Wheel.transform);Add(KeeperStep.KeepLight,beacon.Wheel.transform);Add(KeeperStep.BeaconWipe,beacon.Rag.transform);
             foreach(var control in radio.controls)if(control.codeColour>=0)FittingFor(control.transform);
             foreach(var text in FindObjectsByType<TextMesh>(FindObjectsInactive.Include,FindObjectsSortMode.None))
             {string key="label."+text.name;if(KeeperStrings.Has(key))labels.Add((text,key));}

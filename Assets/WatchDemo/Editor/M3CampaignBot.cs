@@ -9,7 +9,7 @@ namespace LighthouseKeepers.Editor
  {
   sealed class Crew:ICoopWatchLink {public bool Ready=>true;public bool Send(CoopAction a,float v=0,bool p=false)=>true;public bool RemoteHeld(Component p)=>false;public bool RemoteMicrophone(Component p,out bool t){t=false;return false;}}
   sealed class Worker {public int actor,floor,targetFloor;public KeeperStep step;public double ready,start;public bool busy;}
-  [Serializable] public sealed class Result {public string night,mode;public bool passed;public double seconds,spare,bedTravelSeconds;public float peakWater;public string cause;public List<string> steps=new();}
+  [Serializable] public sealed class Result {public string night,mode;public bool passed;public double seconds,spare,bedTravelSeconds;public float peakWater,endingFuel,endingSoot;public string cause;public List<string> steps=new();}
   [Serializable] public sealed class Report {public List<Result> runs=new();}
   public static void RunBatch()
   {
@@ -44,7 +44,7 @@ namespace LighthouseKeepers.Editor
      // Do not abandon a held valve because the other keeper is still reading the instruction.
      if(next==KeeperStep.HoldValve&&w.floor==1){s.Pressure.Hold(w.actor,true);w.busy=false;continue;}
      if(s.Pressure?.Holder==w.actor)s.Pressure.Hold(w.actor,false);
-     if(next==KeeperStep.KeepLight){if(w.floor!=4){if(!w.busy||w.step!=next){w.busy=true;w.step=next;w.start=clock;w.ready=clock+Math.Abs(4-w.floor)*12+4;}if(clock>=w.ready){w.floor=4;w.busy=false;r.steps.Add($"{clock:F1}s keeper{w.actor} KeepLight (gallery watch)");}}continue;}
+     if(next==KeeperStep.KeepLight){if(w.floor!=4){if(!w.busy||w.step!=next){w.busy=true;w.step=next;w.start=clock;w.ready=clock+Math.Abs(4-w.floor)*12+4;}if(clock>=w.ready){w.floor=4;w.busy=false;r.steps.Add($"{clock:F1}s keeper{w.actor} KeepLight (wheel tracking)");}}if(w.floor==4&&s.AimingShip>=0)s.AlignBeacon(s.ShipWheelTarget);continue;}
      if(!Work(next)&&next!=KeeperStep.HoldValve){w.busy=false;continue;}
      if(!w.busy||w.step!=next)
      {
@@ -82,7 +82,7 @@ namespace LighthouseKeepers.Editor
     r.peakWater=Mathf.Max(r.peakWater,water);clock+=dt;
    }
    if(s.Complete&&!s.Failed){foreach(var w in workers)r.bedTravelSeconds=Math.Max(r.bedTravelSeconds,Math.Abs(3-w.floor)*12+4);s.Tick(r.bedTravelSeconds);clock+=r.bedTravelSeconds;}
-   r.seconds=clock;r.spare=s.Duration-s.Elapsed;r.passed=s.Complete&&!s.Failed;r.cause=r.passed?"tasks and authored ships complete; return-to-bed travel modeled (not human timing or shared-bed transport)":s.Failed?s.FailureMessage:"instruction stalled";return r;
+   r.endingFuel=s.Engine?.Fuel??0;r.endingSoot=s.Beacon?.Soot??0;r.seconds=clock;r.spare=s.Duration-s.Elapsed;r.passed=s.Complete&&!s.Failed;r.cause=r.passed?"tasks and authored ships complete; return-to-bed travel modeled (not human timing or shared-bed transport)":s.Failed?s.FailureMessage:"instruction stalled";return r;
   }
   static float Gesture(KeeperStep k)=>k==KeeperStep.GrabWrench?8:k==KeeperStep.Fuel?12:k==KeeperStep.RadioTune?18:k==KeeperStep.BeaconAlign?14:k==KeeperStep.TightenBolt||k>=KeeperStep.BoltA&&k<=KeeperStep.BoltC?6:k==KeeperStep.Starter?3:k==KeeperStep.Prime?2:1;
  }

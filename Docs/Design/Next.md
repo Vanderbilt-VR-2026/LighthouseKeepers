@@ -45,6 +45,10 @@ Reproduction: `caffeinate -i python3 artifacts/s5/ship/night3.py` (use a fresh o
 
 The six-branch grading cleanup is complete. A teammate merged PR88. Small docs-only PR134 adds the new preview download and removes the private-board link from main; it needs teammate review, not self-merge. Draft PR89 targets main. Sprint5 milestone due date was corrected to December3 (GitHub normalized the earlier midnight input to December2).
 
+## Ship playtest follow-up — November13
+
+Consistent full-hull LOD fixed in57e0a6d6. Active beacon steering is implemented and verified:72/72 focused tests,12/12 instruction-only models, physical soloNight3 and live guest-wheel pause/recovery/pass. Existing two-Mac join/avatar/radios/mute/repair/sleep/rejoin regression passed. Protocol **LK-S5-BEAMAIM1 /v26**; both clients update. See `Docs/Playtests/2026-11-13-ship.md`. Next finish generator mesh and watch dial180° correction, build/install, then resumePhase3 sabotage →Phase4 lantern →Phase5 Drowned. New aiming device feel/performance remains pending.
+
 ## DEVICE CHECKS PENDING
 
 Installed November13: `Builds/LighthouseKeepers-Sprint5-Ships-005e641.apk`, clean source005e641, IL2CPP ARM64/Vulkan, 124,410,010 bytes. SHA-256 `d810d621440287eef54cf33a88d14e3243f21b12ad58d81ce047fd5f85eb33ea`. Non-streamed install succeeded and the installed APK hash matches. **App not launched.** Network **LK-S5-SHIPS1 / v25**; both crew clients need this build. Build/packaging/install receipts: `Docs/Verification/S5/Ship/gallery/final-apk.*.json` and `install.json`. The public quality preview remains v22 and is not this ship build.

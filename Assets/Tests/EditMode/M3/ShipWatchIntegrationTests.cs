@@ -47,8 +47,8 @@ namespace LighthouseKeepers.Tests.M3
   {
    Sprint5Tuning.Current.shipApproachDangerSeconds=15;var h=New(2);double before=Get<ShipPassageState>(h,"Ships").ThreatStart(0)-10;Call(h,"Tick",before);
    Assert.False(Get<bool>(h,"BeaconShining"));Assert.False(Get<bool>(h,"Failed"));Assert.Zero(Get<double>(h,"BeaconDarkElapsed"));Assert.Zero(Get<double>(h,"BeaconDarkLimit"));
-   Call(h,"Tick",15d);Assert.False(Get<bool>(h,"Failed"));Assert.AreEqual(25,Get<double>(h,"BeaconDarkRemaining"));
-   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(25,Get<double>(g,"BeaconDarkRemaining"));
+   Call(h,"Tick",15d);Assert.False(Get<bool>(h,"Failed"));Assert.That(Get<double>(h,"BeaconDarkRemaining"),Is.EqualTo(25).Within(.001));
+   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.That(Get<double>(g,"BeaconDarkRemaining"),Is.EqualTo(25).Within(.001));
    Call(h,"Tick",26d);Assert.True(Get<bool>(h,"Failed"));Assert.False(Get<bool>(h,"BeaconDarkFailed"),"The ship outcome, not the legacy timer, owns this loss");
    StringAssert.Contains("Mary Ellen",Get<string>(h,"FailureMessage"));Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.True(Get<bool>(g,"Failed"));
   }

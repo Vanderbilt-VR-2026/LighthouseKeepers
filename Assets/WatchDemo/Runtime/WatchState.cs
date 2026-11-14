@@ -27,7 +27,7 @@ namespace LighthouseKeepers.WatchDemo
         public BeaconStationState Beacon {get;}
         public HouseFloodState HouseFlood {get;}
         bool resetting;
-        public bool BeaconShining=>Beacon!=null?Beacon.Shining(HasPower(PowerCircuit.Beacon)):HasPower(PowerCircuit.Beacon);
+        public bool BeaconShining=>BeamTrackingMode?BeamEnergized:Beacon!=null?Beacon.Shining(HasPower(PowerCircuit.Beacon)):HasPower(PowerCircuit.Beacon);
         public bool IgniteBeacon(bool lit)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Engaged(Beacon.Ignite(lit,HasPower(PowerCircuit.Beacon)));
         public bool AlignBeacon(float angle)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Engaged(Beacon.Align(angle));
         public void WipeBeacon(float metres){if(!ReadOnly&&!Failed&&!IsPending(BeaconStation))Beacon?.Wipe(metres);}

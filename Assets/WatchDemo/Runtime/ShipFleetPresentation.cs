@@ -42,7 +42,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<ships.Length;i++){
                 float approach=model==null?events[i].approachSeconds:(float)model.Approach(i);
                 bool wrecked=model!=null&&model.WreckIndex==i;
-                float age=(wrecked?(float)model.WreckAt:shownClock)-events[i].sightedAtSeconds;
+                float age=model==null?shownClock-events[i].sightedAtSeconds:(float)model.VisualAge(i,wrecked?model.WreckAt:shownClock);
                 bool visible=age>=0&&age<=approach+events[i].windowSeconds+55;
                 ships[i].gameObject.SetActive(visible);if(!visible)continue;
                 if(!wrecked&&!engines[i].isPlaying&&engine)engines[i].Play();

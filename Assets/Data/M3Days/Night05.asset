@@ -17,7 +17,7 @@ MonoBehaviour:
   beaconDarkLimitSeconds: 150
   powerCapacity: 2.5
   initialCircuitMask: 11
-  fuelDrainPerSecond: 0.0015
+  fuelDrainPerSecond: 0.001
   beaconInitiallyLit: 0
   beaconInitialAlignment: 0.18
   beaconTargetAlignment: 0.5
@@ -81,8 +81,8 @@ MonoBehaviour:
     timingApproved: 0
     stormBaseStage: 3
     peakStormAfterFraction: 0.5
-    soloSeconds: 760
-    crewSeconds: 730
+    soloSeconds: 1050
+    crewSeconds: 930
     soloFloodMultiplier: 0.65
     crewFloodMultiplier: 0.85
     openingSeconds: 45
@@ -183,7 +183,7 @@ MonoBehaviour:
     ships:
     - id: finale-first
       nameKey: m3.ship.northStar
-      sightedAtSeconds: 285
+      sightedAtSeconds: 405
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30
@@ -192,7 +192,7 @@ MonoBehaviour:
       largeFinale: 0
     - id: finale-second
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 355
+      sightedAtSeconds: 475
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30
@@ -201,7 +201,7 @@ MonoBehaviour:
       largeFinale: 0
     - id: finale-large
       nameKey: m3.ship.meridian
-      sightedAtSeconds: 475
+      sightedAtSeconds: 595
       approachSeconds: 75
       windowSeconds: 70
       darkGraceSeconds: 30

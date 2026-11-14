@@ -81,8 +81,8 @@ MonoBehaviour:
     timingApproved: 0
     stormBaseStage: 1
     peakStormAfterFraction: 1
-    soloSeconds: 315
-    crewSeconds: 315
+    soloSeconds: 390
+    crewSeconds: 390
     soloFloodMultiplier: 1
     crewFloodMultiplier: 1
     openingSeconds: 45
@@ -128,7 +128,7 @@ MonoBehaviour:
     ships:
     - id: blackout-passage
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 90
+      sightedAtSeconds: 150
       approachSeconds: 75
       windowSeconds: 45
       darkGraceSeconds: 30

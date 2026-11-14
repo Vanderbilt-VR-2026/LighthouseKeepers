@@ -28,7 +28,12 @@ namespace LighthouseKeepers.WatchDemo
             bool roster=actorA!=firstActor||actorB!=secondActor;actorA=firstActor;actorB=secondActor;
             if(state.Failed){First=Second=KeeperStep.Lost;return;}
             if(state.Complete){First=state.HasNextDay?KeeperStep.Sleep:KeeperStep.Complete;Second=actorB!=0?First:KeeperStep.None;return;}
-            if(state.Ships!=null&&state.Ships.ThreatLimit(state.Elapsed)>0&&!state.BeaconShining){First=BeaconStep();Second=actorB!=0?First:KeeperStep.None;return;}
+            if(state.ShipGuidanceDue){
+                var step=BeaconStep();if(step==KeeperStep.None)step=KeeperStep.KeepLight;
+                bool firstNear=actorB==0||firstHead.y>=secondHead.y;
+                var other=OtherShipJob(wrenchHeld);
+                First=firstNear?step:other;Second=actorB==0?KeeperStep.None:firstNear?other:step;return;
+            }
             if(actorB!=0&&state.Pressure?.CrewRequired==true&&!state.Repaired&&(!state.Campaign||state.BeaconShining||state.IsPending(WatchState.BeaconStation))&&(state.Power==PowerState.On&&(!state.Campaign||state.Engine==null||state.Engine.Settled)||state.IsPending(WatchState.GeneratorStation)))
             {
                 int holder=state.Pressure.Holder;
@@ -50,6 +55,7 @@ namespace LighthouseKeepers.WatchDemo
             if(First==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)First=KeeperStep.KeepLight;
             if(actorB!=0&&Second==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)Second=KeeperStep.KeepLight;
         }
+        KeeperStep OtherShipJob(bool held){for(int i=0;i<state.Definition.tasks.Length;i++)if(Available(i)&&state.Definition.tasks[i].stationId!=WatchState.BeaconStation)return Step(i,held);return KeeperStep.KeepLight;}
         bool Available(int i)=>i>=0&&i<state.Definition.tasks.Length&&!state.IsDone(state.Definition.tasks[i].stationId)&&!state.IsPending(state.Definition.tasks[i].stationId)&&(state.Power==PowerState.On||state.Definition.tasks[i].stationId==WatchState.PipeStation||state.Definition.tasks[i].stationId==WatchState.GeneratorStation);
         float Cost(int i,Vector3 head)
         {
@@ -80,7 +86,7 @@ namespace LighthouseKeepers.WatchDemo
             if(id==WatchState.GeneratorStation)return EngineStep();
             if(id==WatchState.RadioStation&&state.Connected&&state.Connected.dependencies&&!state.BeaconShining)return BeaconStep();
             var circuit=id==WatchState.RadioStation?PowerCircuit.Radio:PowerCircuit.Beacon;
-            if(state.Power==PowerState.Off)return EngineStep();
+            if(state.Power==PowerState.Off||state.Engine?.ChokeClosed==true)return EngineStep();
             if(!state.HasPower(circuit))return BreakerStep(circuit);
             if(id==WatchState.RadioStation)
                 return state.Radio.Completed?KeeperStep.None:state.Radio.Step==0?KeeperStep.RadioPower:state.Radio.Step==1?KeeperStep.RadioTune:state.Radio.Step==2?KeeperStep.RadioCode:KeeperStep.RadioTransmit;
@@ -88,10 +94,10 @@ namespace LighthouseKeepers.WatchDemo
         }
         KeeperStep BeaconStep()
         {
-            if(state.Power==PowerState.Off)return EngineStep();
+            if(state.Power==PowerState.Off||state.Engine?.ChokeClosed==true)return EngineStep();
             if(!state.HasPower(PowerCircuit.Beacon))return BreakerStep(PowerCircuit.Beacon);
             var beacon=state.Beacon;
-            return beacon==null?KeeperStep.None:!beacon.Ignited?KeeperStep.BeaconLight:!beacon.Aligned?KeeperStep.BeaconAlign:beacon.Soot>.5f?KeeperStep.BeaconWipe:KeeperStep.None;
+            return beacon==null?KeeperStep.None:!beacon.Ignited?KeeperStep.BeaconLight:!state.BeamTrackingMode&&!beacon.Aligned?KeeperStep.BeaconAlign:beacon.Soot>.5f?KeeperStep.BeaconWipe:KeeperStep.None;
         }
         KeeperStep PipeStep(bool held)
         {if(!held)return KeeperStep.GrabWrench;if(state.Pressure?.CrewRequired==true)return KeeperStep.TightenBolt;return state.Pipe.ActiveBolt>=0?(KeeperStep)((int)KeeperStep.BoltA+state.Pipe.ActiveBolt):KeeperStep.None;}
@@ -124,7 +130,7 @@ namespace LighthouseKeepers.WatchDemo
             string key=step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
             return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
         }
-        public static string Button(KeeperStep step)=>step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
+        public static string Button(KeeperStep step)=>step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
         public static int Hint(KeeperStep step){string id=Job(step);return id==WatchState.PipeStation?7:id==WatchState.GeneratorStation?8:id=="BREAKER"?9:id==WatchState.BeaconStation?10:id==WatchState.RadioStation?11:id=="BED"?12:0;}
         public string StationInstruction(string station) {
             if(Job(First)==station)return Instruction(First);

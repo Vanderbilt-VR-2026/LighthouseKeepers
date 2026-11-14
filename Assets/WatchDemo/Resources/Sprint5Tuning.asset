@@ -20,4 +20,9 @@ MonoBehaviour:
   blackoutFogDensity: 0.18
   shipVisuals: 1
   shipPassages: 1
+  shipWheelTracking: 1
+  shipGuidanceLeadSeconds: 45
+  shipAimToleranceDegrees: 8
+  shipAimSteadySeconds: 0.6
+  shipMaximumSoot: 0.7
   shipApproachDangerSeconds: 15

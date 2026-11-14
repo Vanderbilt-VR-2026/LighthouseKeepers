@@ -21,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Bind(WatchState state){watch=state;watch.Changed+=Changed;Changed();}
         void Changed()
         {
-            if(watch.Beacon!=null){float angle=watch.Beacon.Alignment;rotor.Rotate(Vector3.up,(angle-previousAlignment)*270,Space.Self);previousAlignment=angle;}
+            if(watch.Beacon!=null&&watch.AimingShip<0){float angle=watch.Beacon.Alignment;rotor.Rotate(Vector3.up,(angle-previousAlignment)*270,Space.Self);previousAlignment=angle;}
             brightness=watch.Beacon?.Brightness??1;bool next=watch.BeaconShining&&(!watch.Immersion||!watch.Failed);if(initialized&&powered==next){if(watch.Beacon!=null)Apply(powered);return;}
             powered=next;Apply(powered);
             audioSource.PlayOneShot(powered?powerUp:powerDown,.35f);
@@ -41,7 +41,13 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!powered)return;
             speed=Mathf.MoveTowards(speed,1,Time.deltaTime/spinUpSeconds);
-            rotor.Rotate(Vector3.up,degreesPerSecond*speed*Time.deltaTime,Space.Self);
+            if(watch.AimingShip>=0){
+                float heading=LighthouseKeepers.Core.Progression.ShipNavigation.Heading(watch.Beacon.Alignment);
+                rotor.rotation=Quaternion.Euler(0,heading,0);
+                var target=watch.ShipPoint(watch.AimingShip,watch.Elapsed);
+                float pitch=Mathf.Atan2(beam.transform.position.y-target.y,new Vector2(target.x,target.z).magnitude)*Mathf.Rad2Deg;
+                beam.transform.rotation=Quaternion.Euler(pitch,heading,0);
+            }else rotor.Rotate(Vector3.up,degreesPerSecond*speed*Time.deltaTime,Space.Self);
             lantern.intensity=1.8f*speed*brightness;beam.intensity=6*speed*brightness;
         }
         public void SetVisibleBeam(Renderer renderer){visibleBeam=renderer;Apply(powered);}

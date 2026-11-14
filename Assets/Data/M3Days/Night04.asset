@@ -81,8 +81,8 @@ MonoBehaviour:
     timingApproved: 0
     stormBaseStage: 3
     peakStormAfterFraction: 1
-    soloSeconds: 540
-    crewSeconds: 510
+    soloSeconds: 780
+    crewSeconds: 750
     soloFloodMultiplier: 0.65
     crewFloodMultiplier: 0.85
     openingSeconds: 45
@@ -169,7 +169,7 @@ MonoBehaviour:
     ships:
     - id: maintenance-first
       nameKey: m3.ship.northStar
-      sightedAtSeconds: 210
+      sightedAtSeconds: 330
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30
@@ -178,7 +178,7 @@ MonoBehaviour:
       largeFinale: 0
     - id: maintenance-second
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 285
+      sightedAtSeconds: 405
       approachSeconds: 60
       windowSeconds: 45
       darkGraceSeconds: 30

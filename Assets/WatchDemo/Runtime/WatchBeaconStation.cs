@@ -8,7 +8,7 @@ namespace LighthouseKeepers.WatchDemo
 {
  public sealed class WatchBeaconStation:MonoBehaviour
  {
-  WatchDemoController watch;WatchBeacon beacon;M2StationParts parts;TextMesh readout;Transform marker;Renderer lamp;MaterialPropertyBlock block;AudioSource sound;AudioClip click;
+  WatchDemoController watch;WatchBeacon beacon;M2StationParts parts;TextMesh readout;Transform marker,targetMarker;Renderer lamp;MaterialPropertyBlock block;AudioSource sound;AudioClip click;
   Vector3 previousRag;bool wasHeld;Mesh beamMesh;Material beamMaterial;
   public BeaconControl Ignition {get;private set;}
   public BeaconControl Wheel {get;private set;}
@@ -29,7 +29,8 @@ namespace LighthouseKeepers.WatchDemo
    parts.Text("Wheel label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.7"),transform,new Vector3(-.14f,.91f,.21f),.0035f);
    marker=M2StationParts.Root("Alignment pointer",transform,new Vector3(-.14f,1.21f,.22f));
    parts.Part("Alignment needle",marker,new Vector3(0,.16f,0),new Vector3(.014f,.11f,.018f),parts.Red);
-   parts.Part("Target alignment mark",transform,new Vector3(-.14f,1.44f,.25f),new Vector3(.045f,.025f,.02f),parts.Green);
+   targetMarker=M2StationParts.Root("Ship bearing marker",transform,new Vector3(-.14f,1.21f,.22f));
+   parts.Part("Target alignment mark",targetMarker,new Vector3(0,.23f,.03f),new Vector3(.045f,.025f,.02f),parts.Green);
    lamp=parts.Part("Alignment green lamp",transform,new Vector3(.25f,1.39f,.20f),new Vector3(.075f,.035f,.02f),parts.Green).GetComponent<Renderer>();
    Rag=M2CarryProp.Create(parts,transform,"BEACON_RAG",new Vector3(.28f,.82f,.25f),true);
    parts.Part("Rag shelf",transform,new Vector3(.28f,.775f,.22f),new Vector3(.22f,.035f,.22f),parts.Brass);
@@ -59,9 +60,10 @@ namespace LighthouseKeepers.WatchDemo
   public void Click(){if(click)sound.PlayOneShot(click,.22f);}
   void Refresh()
   {
-   var b=State.Beacon;marker.localRotation=Quaternion.Euler(0,0,-135+b.Alignment*270);bool powered=State.HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon);
-   readout.text=State.Director!=null?State.Director.StationInstruction(WatchState.BeaconStation):!powered?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.1"):!b.Ignited?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.2"):!b.Aligned?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.3"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.4"),b.Soot*100);
-   var colour=b.Aligned?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.5f);lamp.SetPropertyBlock(block);
+   var b=State.Beacon;marker.localRotation=Quaternion.Euler(0,0,-135+b.Alignment*270);
+   targetMarker.localRotation=Quaternion.Euler(0,0,-135+(State.AimingShip>=0?State.ShipWheelTarget:b.Target)*270);bool powered=State.HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon);
+   readout.text=State.AimingShip>=0?LighthouseKeepers.Core.PlayerStrings.Get(!State.ShipOnBeam?"beacon.shipAim":State.Ships.Steady(State.AimingShip)<1?"beacon.shipHold":"beacon.shipSafe"):State.Director!=null?State.Director.StationInstruction(WatchState.BeaconStation):!powered?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.1"):!b.Ignited?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.2"):!b.Aligned?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.3"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.4"),b.Soot*100);
+   var colour=(State.AimingShip>=0?State.ShipOnBeam:b.Aligned)?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.5f);lamp.SetPropertyBlock(block);
   }
   void Update()
   {
@@ -77,7 +79,7 @@ namespace LighthouseKeepers.WatchDemo
    beamMaterial=new Material(shader){name="S4 sweeping amber beam"};
    var go=new GameObject("Visible outside beacon sweep");go.transform.SetParent(beacon.beam.transform,false);
    const int n=24;var vertices=new Vector3[n*2];var colours=new Color[n*2];var indices=new int[n*6];
-   for(int i=0;i<n;i++){float a=i*Mathf.PI*2/n;var radial=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);vertices[i*2]=radial*.12f;vertices[i*2+1]=radial*4+Vector3.forward*24;colours[i*2]=Color.white;colours[i*2+1]=new Color(1,1,1,.02f);int k=i*6,next=(i+1)%n*2;indices[k]=i*2;indices[k+1]=next;indices[k+2]=i*2+1;indices[k+3]=i*2+1;indices[k+4]=next;indices[k+5]=next+1;}
+   for(int i=0;i<n;i++){float a=i*Mathf.PI*2/n;var radial=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);vertices[i*2]=radial*.12f;vertices[i*2+1]=radial*(Mathf.Tan((State.Sprint5?State.Sprint5.shipAimToleranceDegrees:8)*Mathf.Deg2Rad)*280)+Vector3.forward*280;colours[i*2]=Color.white;colours[i*2+1]=new Color(1,1,1,.02f);int k=i*6,next=(i+1)%n*2;indices[k]=i*2;indices[k+1]=next;indices[k+2]=i*2+1;indices[k+3]=i*2+1;indices[k+4]=next;indices[k+5]=next+1;}
    beamMesh=new Mesh{name="Beacon cone 24 segments"};beamMesh.vertices=vertices;beamMesh.colors=colours;beamMesh.triangles=indices;beamMesh.RecalculateNormals();beamMesh.RecalculateBounds();go.AddComponent<MeshFilter>().sharedMesh=beamMesh;var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=beamMaterial;renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;renderer.receiveShadows=false;beacon.SetVisibleBeam(renderer);
   }
   void OnDestroy(){if(watch&&State!=null)State.Changed-=Refresh;if(beamMesh)Destroy(beamMesh);if(beamMaterial)Destroy(beamMaterial);}
