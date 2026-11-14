@@ -71,5 +71,21 @@ namespace LighthouseKeepers.Tests.M3
             var s = new ShipPassageState(new[] { Event(), second }); s.Tick(0, 140, true, false); Assert.False(s.Finished);
             s.Tick(140, 290, true, false); Assert.True(s.Finished); Assert.AreEqual(3, s.PassedMask);
         }
+        [Test] public void BeaconDarknessHasNoLossPressureBeforeTheNearApproachOrAfterPassage()
+        {
+            var s=new ShipPassageState(new[]{Event()},15);
+            s.Tick(0,69,false,false);Assert.False(s.Lost);Assert.Zero(s.Danger);Assert.AreEqual(double.PositiveInfinity,s.ThreatRemaining(69));
+            s.Tick(69,80,false,false);Assert.AreEqual(20,s.ThreatRemaining(80));Assert.AreEqual(30,s.ThreatLimit(80));
+            s.Tick(80,140,true,false);Assert.True(s.Finished);s.Tick(140,300,false,false);Assert.False(s.Lost);Assert.Zero(s.Danger);Assert.AreEqual(0,s.ThreatLimit(300));
+        }
+        [Test] public void TutorialPreviewNeverRaisesADangerCountdown()
+        {var s=new ShipPassageState(new[]{Event(true)},15);s.Tick(0,90,false,false);Assert.Zero(s.ThreatLimit(90));Assert.AreEqual(double.PositiveInfinity,s.ThreatRemaining(90));}
+        [Test] public void NearApproachDarkTimerAndWarningSurviveSnapshotRoundTrip()
+        {
+            var h=new ShipPassageState(new[]{Event()},15);h.Tick(0,80,false,false);
+            var g=new ShipPassageState(new[]{Event()},15){ReadOnly=true};Assert.True(g.Apply(h.Capture(),80));
+            Assert.AreEqual(h.ThreatRemaining(80),g.ThreatRemaining(80));Assert.AreEqual(1,g.CloseMask);
+            h.Tick(80,110,false,false);Assert.True(h.Lost);Assert.AreEqual(100,h.WreckAt);Assert.True(g.Apply(h.Capture(),110));
+        }
     }
 }

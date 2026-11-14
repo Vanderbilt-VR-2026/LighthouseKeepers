@@ -5,7 +5,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         public ShipPassageState Ships { get; private set; }
         ShipPassageState NewShips(DayDefinition day) => Sprint5 && Sprint5.shipPassages && day.scenario?.configured == true
-            ? new ShipPassageState(day.scenario.ships) { ReadOnly = ReadOnly } : null;
+            ? new ShipPassageState(day.scenario.ships,Sprint5.shipApproachDangerSeconds) { ReadOnly = ReadOnly } : null;
         bool ValidShipSnapshot(DayDefinition day, WatchSnapshot snapshot)
         {
             var model = NewShips(day);

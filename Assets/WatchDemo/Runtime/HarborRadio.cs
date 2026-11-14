@@ -131,7 +131,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var s=watch.State;
             if(id==96)return s.Ships!=null&&!s.Ships.Finished;
-            if(id==97)return s.Ships!=null&&!s.BeaconShining&&s.Ships.AnyWindow(s.Elapsed);
+            if(id==97)return s.Ships!=null&&!s.BeaconShining&&s.Ships.ThreatLimit(s.Elapsed)>0;
             if(id==33)return !watch.WrenchHeld&&!s.Repaired;
             if(id==78)return s.Repaired&&watch.WrenchHeld;
             if(id==79)return s.WatchStartHeld;
@@ -210,10 +210,10 @@ namespace LighthouseKeepers.WatchDemo
             var s=watch.State;
             int id=0,bit=0;
             if(s.WaterDanger>=.9f&&(dangerMask&4)==0){id=29;bit=4;}
-            else if(!s.BeaconShining&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=10&&(dangerMask&32)==0){id=32;bit=32;}
+            else if(!s.BeaconShining&&s.BeaconDarkLimit>0&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=10&&(dangerMask&32)==0){id=32;bit=32;}
             else if(s.WaterDanger>=.75f&&(dangerMask&2)==0){id=28;bit=2;}
             else if(s.WaterDanger>=.5f&&(dangerMask&1)==0){id=27;bit=1;}
-            else if(!s.BeaconShining&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=30&&(dangerMask&16)==0){id=31;bit=16;}
+            else if(!s.BeaconShining&&s.BeaconDarkLimit>0&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=30&&(dangerMask&16)==0){id=31;bit=16;}
             else if(!s.BeaconShining&&(dangerMask&8)==0){id=30;bit=8;}
             bool critical=id==29||id==32;
             if(id>0&&(critical||!FuelExplanationPending)&&(critical?(Cue!=29&&Cue!=32||SilenceSeconds>=0):SilenceSeconds>=s.Master.speechSpacingSeconds)){dangerMask|=bit;Play(id,Serial+1,0);}

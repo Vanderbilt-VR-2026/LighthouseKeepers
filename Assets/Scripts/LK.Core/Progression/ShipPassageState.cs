@@ -28,11 +28,13 @@ namespace LighthouseKeepers.Core.Progression
     public sealed class ShipPassageState
     {
         readonly NightShipEvent[] events;
+        readonly double approachDanger;
         ShipFrame frame;
         public bool ReadOnly { get; set; }
-        public ShipPassageState(NightShipEvent[] events)
+        public ShipPassageState(NightShipEvent[] events, double approachDanger = 0)
         {
             this.events = events ?? Array.Empty<NightShipEvent>();
+            this.approachDanger = double.IsFinite(approachDanger) ? Math.Clamp(approachDanger,0,30) : 0;
             if (this.events.Length > 4) throw new ArgumentException("At most four ships per night");
             frame = new ShipFrame { enabled = true, dark = new float[this.events.Length] };
         }
@@ -47,6 +49,10 @@ namespace LighthouseKeepers.Core.Progression
         public bool Passed(int i) => (frame.passed & (1 << i)) != 0;
         public double Approach(int i) => events[i].approachSeconds + ((frame.extended & (1 << i)) != 0 ? events[i].broadcastExtensionSeconds : 0);
         public double WindowStart(int i) => events[i].sightedAtSeconds + Approach(i);
+        public double ThreatStart(int i) => Math.Max(events[i].sightedAtSeconds, WindowStart(i)-approachDanger);
+        public bool Threatens(int i,double now) => !events[i].safePreview && !Passed(i) && now>=ThreatStart(i) && now<Exit(i);
+        public double ThreatRemaining(double now){double result=double.PositiveInfinity;for(int i=0;i<Count;i++)if(Threatens(i,now))result=Math.Min(result,DarkRemaining(i));return result;}
+        public double ThreatLimit(double now){double result=0;for(int i=0;i<Count;i++)if(Threatens(i,now))result=Math.Max(result,events[i].darkGraceSeconds);return result;}
         public double Exit(int i) => WindowStart(i) + events[i].windowSeconds;
         public bool InWindow(int i, double now) => !Passed(i) && now >= WindowStart(i) && now < Exit(i);
         public bool AnyWindow(double now) { for (int i = 0; i < Count; i++) if (InWindow(i, now)) return true; return false; }
@@ -66,8 +72,8 @@ namespace LighthouseKeepers.Core.Progression
                 int bit = 1 << i; var ship = events[i];
                 if (to >= ship.sightedAtSeconds && (frame.seen & bit) == 0) { frame.seen |= bit; changed = true; }
                 // A warning sent before the rocks makes the captain slow the approach, buying time.
-                if (broadcast && from <= ship.WindowStart && to >= ship.WindowStart && (frame.entered & bit) == 0 && ship.broadcastExtensionSeconds > 0) { frame.extended |= bit; changed = true; }
-                double start = WindowStart(i), end = Exit(i);
+                if (broadcast && to >= ship.sightedAtSeconds && (frame.entered & bit) == 0 && (frame.extended & bit) == 0 && ship.broadcastExtensionSeconds > 0) { frame.extended |= bit; changed = true; }
+                double start = ThreatStart(i), end = Exit(i);
                 if (to < start) continue;
                 if ((frame.entered & bit) == 0) { frame.entered |= bit; changed = true; }
                 double exposed = Math.Max(0, Math.Min(to, end) - Math.Max(from, start));
@@ -94,12 +100,13 @@ namespace LighthouseKeepers.Core.Progression
             for (int i = 0; i < Count; i++)
             {
                 int bit = 1 << i; var e = events[i];
-                double start = e.WindowStart + ((source.extended & bit) != 0 ? e.broadcastExtensionSeconds : 0);
-                if (source.wreck == i && (source.dark[i] != e.darkGraceSeconds || source.wreckAt < start || source.wreckAt > start + e.windowSeconds)) return false;
+                double window = e.WindowStart + ((source.extended & bit) != 0 ? e.broadcastExtensionSeconds : 0);
+                double start = Math.Max(e.sightedAtSeconds,window-approachDanger);
+                if (source.wreck == i && (source.dark[i] != e.darkGraceSeconds || source.wreckAt < start || source.wreckAt > window + e.windowSeconds)) return false;
                 if ((source.passed & bit) != 0 && source.dark[i] != 0) return false;
                 if (source.dark[i] > e.darkGraceSeconds + .001 || e.safePreview && (source.dark[i] != 0 || source.wreck == i) ||
                     (source.seen & bit) != 0 && now < e.sightedAtSeconds || (source.entered & bit) != 0 && now < start ||
-                    (source.passed & bit) != 0 && now < start + e.windowSeconds) return false;
+                    (source.passed & bit) != 0 && now < window + e.windowSeconds) return false;
             }
             return true;
         }

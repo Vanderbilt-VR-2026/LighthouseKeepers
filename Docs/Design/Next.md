@@ -29,13 +29,15 @@ Build done from clean source **805e779** (includes the final Sound-page fix): `B
 
 **2.2 implemented (#95), feature still OFF pending phase gate:** host ship windows/pass/wreck, safe preview, broadcast approach extension, shared sleep gate, P21–P24, horn/crash/flare, named logbook loss and retry. 72/72 focused cases; muted graphics pass and reviewed images (`Docs/Verification/S5/Ship/outcomes`). Snapshot now **LK-S5-SHIPS1 / LK-Lab-Coop-v25**. Both players must update when the phase build is delivered. Latest built APK805e779 is still foundation v24.
 
-**NEXT: 2.3 (#96)** replace global beacon deadline with approaching/window-only pressure; remove inappropriate countdowns outside ship threat. Then2.4 (#97) gallery payoff, normal feature enable, real solo replay and live two-Mac ship/valve/voice regression, phase-end suites/build. Ship-inclusive timing not yet approved; Drowned not implemented. Reproduce focused outcomes: `python3 artifacts/remaining/m3/tests.py ship-integration-fixed 'ShipPassageTests;ShipWatchIntegrationTests;M3RuntimeTests;VoicePassTests;TensionDirectorTests;SteamerTests;QualityBaselineTests'`; `caffeinate -i python3 artifacts/s5/ship/outcomes.py`.
+**2.3 implemented (#96):** 83/83 focused checks and muted graphics Play Mode pass (zero errors). Darkness is a warning outside near-rocks/passage windows; the ship-specific grace owns a named loss inside them. Night1 preview remains safe. Evidence: `Docs/Verification/S5/Ship/window-rules/`. Protocol unchanged from2.2.
+
+**NEXT: 2.4 (#97)** gallery payoff, normal feature enable, real solo replay and live two-Mac ship/valve/voice regression, phase-end suites/build. Ship-inclusive timing not yet approved; Drowned not implemented. Reproduce focused outcomes: `python3 artifacts/remaining/m3/tests.py ship-integration-fixed 'ShipPassageTests;ShipWatchIntegrationTests;M3RuntimeTests;VoicePassTests;TensionDirectorTests;SteamerTests;QualityBaselineTests'`; `caffeinate -i python3 artifacts/s5/ship/outcomes.py`.
 
 The six-branch grading cleanup is complete. A teammate merged PR88. Small docs-only PR134 adds the new preview download and removes the private-board link from main; it needs teammate review, not self-merge. Draft PR89 targets main. Sprint5 milestone due date was corrected to December3 (GitHub normalized the earlier midnight input to December2).
 
 ## DEVICE CHECKS PENDING
 
-ADB reports no devices. Install latest exact-source APK when one returns; **do not launch** without request. Latest foundation APK: `Builds/LighthouseKeepers-Sprint5-Foundation-805e779.apk`, SHA-256 `c1a987c01e4c47e5522adefab7a76ca95dd084d22f641a50e98a636affc2e9a7`. Public quality preview remains v22; this new source is v24.
+Quest reappeared on USB November13; first streamed foundation installation failed with no Android reason. Retrying non-streamed installation; **do not launch** without request. Latest foundation APK: `Builds/LighthouseKeepers-Sprint5-Foundation-805e779.apk`, SHA-256 `c1a987c01e4c47e5522adefab7a76ca95dd084d22f641a50e98a636affc2e9a7`. Public quality preview remains v22; this new source is v24.
 
 OVR Metrics/Profiler: 72Hz, peak-storm GPU≤11ms, CPU main≤9ms; compare MSAA4 to prior2, scale1.0, fixed foveation0.5, on-tile Render Graph passes, text and powered/blackout bake. No Editor FPS substitutes for these measurements. Human two-way voice, controller comfort, offline Wi-Fi-off and current-build two-Quest play remain pending. Ship/lantern/Drowned worst-case profiling follows their implementation.
 

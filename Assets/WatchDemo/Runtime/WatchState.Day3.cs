@@ -15,7 +15,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool Day3Crew=>balanceCrew;
         public float FloodRiseMultiplier=>Campaign?(balanceCrew?Scenario.crewFloodMultiplier:Scenario.soloFloodMultiplier):Day3Balance?(balanceCrew?Tuning.day3CrewFloodMultiplier:Tuning.day3SoloFloodMultiplier):1;
         double Day3GraceSeconds=>Master?(balanceCrew?Master.day3CrewBeaconGraceSeconds:Master.day3SoloBeaconGraceSeconds):(balanceCrew?Tuning.day3CrewBeaconGraceSeconds:Tuning.day3SoloBeaconGraceSeconds);
-        public double BeaconGraceRemaining=>Math.Max(Math.Max(CampaignGraceRemaining,StationGraceRemaining),GeneratorTutorial?Math.Max(0,firstGeneratorGraceUntil-Elapsed):Day3Balance?Math.Max(0,day3GraceUntil-Elapsed):0);
+        public double BeaconGraceRemaining=>Ships!=null?0:Math.Max(Math.Max(CampaignGraceRemaining,StationGraceRemaining),GeneratorTutorial?Math.Max(0,firstGeneratorGraceUntil-Elapsed):Day3Balance?Math.Max(0,day3GraceUntil-Elapsed):0);
         bool RadioAvailable=>HasPower(PowerCircuit.Radio)&&!IsPending(RadioStation);
         public bool IsPending(string station)=>Campaign?(schedule?.Pending(station)??true):GeneratorTutorial&&!NightTwoOutage&&station==GeneratorStation || Day3Balance&&
             (station==GeneratorStation&&day3Stage==1 || (station==RadioStation||station==BeaconStation)&&day3Stage<3);

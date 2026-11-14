@@ -28,7 +28,7 @@ namespace LighthouseKeepers.WatchDemo
             bool roster=actorA!=firstActor||actorB!=secondActor;actorA=firstActor;actorB=secondActor;
             if(state.Failed){First=Second=KeeperStep.Lost;return;}
             if(state.Complete){First=state.HasNextDay?KeeperStep.Sleep:KeeperStep.Complete;Second=actorB!=0?First:KeeperStep.None;return;}
-            if(state.Ships!=null&&state.Ships.AnyWindow(state.Elapsed)&&!state.BeaconShining){First=BeaconStep();Second=actorB!=0?First:KeeperStep.None;return;}
+            if(state.Ships!=null&&state.Ships.ThreatLimit(state.Elapsed)>0&&!state.BeaconShining){First=BeaconStep();Second=actorB!=0?First:KeeperStep.None;return;}
             if(actorB!=0&&state.Pressure?.CrewRequired==true&&!state.Repaired&&(!state.Campaign||state.BeaconShining||state.IsPending(WatchState.BeaconStation))&&(state.Power==PowerState.On&&(!state.Campaign||state.Engine==null||state.Engine.Settled)||state.IsPending(WatchState.GeneratorStation)))
             {
                 int holder=state.Pressure.Holder;

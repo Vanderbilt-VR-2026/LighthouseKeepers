@@ -80,8 +80,8 @@ namespace LighthouseKeepers.WatchDemo
         public RadioState Radio {get;}
         public PipeRepairState Pipe {get;}
         public double BeaconDarkElapsed {get;private set;}
-        public double BeaconDarkLimit=>Definition.beaconDarkLimitSeconds*(Tuning&&Tuning.difficulty?Tuning.beaconLimitMultiplier:1);
-        public double BeaconDarkRemaining=>Math.Max(0,BeaconDarkLimit-BeaconDarkElapsed)+BeaconGraceRemaining;
+        public double BeaconDarkLimit=>Ships!=null?Ships.ThreatLimit(Elapsed):Definition.beaconDarkLimitSeconds*(Tuning&&Tuning.difficulty?Tuning.beaconLimitMultiplier:1);
+        public double BeaconDarkRemaining=>Ships!=null?Ships.ThreatRemaining(Elapsed):Math.Max(0,BeaconDarkLimit-BeaconDarkElapsed)+BeaconGraceRemaining;
         public bool BeaconDarkFailed {get;private set;}
         public string FailureMessage=>Ships?.Lost==true?string.Format(PlayerStrings.Get("loss.ship"),PlayerStrings.Get(Scenario.ships[Ships.WreckIndex].nameKey)):Sea.lost?PlayerStrings.Get("loss.sea"):HighWaterFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.1"):BeaconDarkFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.2"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.3");
         int repairSeed=System.Environment.TickCount;
@@ -164,7 +164,7 @@ namespace LighthouseKeepers.WatchDemo
             Pressure?.Tick((float)seconds);
             simulationSliceEnd=Elapsed+seconds;PaceArrivalFuel();Engine?.Tick((float)seconds);
             Beacon?.Tick((float)seconds,HasPower(PowerCircuit.Beacon));
-            if(!Tutorial&&!BeaconShining && Definition.beaconDarkLimitSeconds>0)
+            if(Ships==null&&!Tutorial&&!BeaconShining && Definition.beaconDarkLimitSeconds>0)
             {BeaconDarkElapsed=Math.Min(BeaconDarkLimit,BeaconDarkElapsed+darkSeconds);BeaconDarkFailed=BeaconDarkElapsed>=BeaconDarkLimit;}
             double shipFrom=Elapsed;
             Elapsed = Math.Min(Duration, Elapsed + seconds);
