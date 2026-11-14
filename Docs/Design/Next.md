@@ -11,11 +11,16 @@ Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base m
 
 Evidence: `Docs/Verification/S5/Ship/playtest/`, `Docs/Verification/S5/Props/`.
 
-## November 14 — Drowned / weather pass in progress
+## November 14 — Drowned / weather pass
 
-Step 1 complete: sabotage enabled after the two-keeper pipe/ship conflict was fixed. Captains can wait offshore up to120s while two keepers repair the pipe; water and night clocks continue. A ship already in danger cannot wait. The director keeps the same wheel keeper while they travel upstairs.84 focused checks pass; all12 task/travel models pass with sabotage ON (Night5 duo137s spare). These are models, not new human timing.
+- Fairness fix3562928f: sabotage enabled; bounded120s offshore crew wait; stable wheel keeper assignment.12 models pass (Night5 duo137s spare).
+- Visible non-contact Drowned: host warning/manifestation/retreat, light/repair repel it, no first-minute/Night1/new-control-grace scares, bounded sightings and local opt-out. Storm follows the phase; independent day-only rain/ocean intensity removed. No hunter/catch/stun claimed.
+- Heavy exterior rain replaces particle scan with1600 GPU-animated streaks.12 supported outdoor puddles with ripples.692-triangle oilskin form;3488 rain/puddle triangles;3 renderers total, no new lights/depth/reflection pass. Graphics inspected; shader self-sorting, overly bright puddles and first-control-grace race corrected.
+-95 focused cases resolved passing;12 solo/duo workload models pass. Graphics Night2 outage→Drowned→power restore→retreat passes. Evidence: `Docs/Verification/S5/DrownedStorm/`.
 
-Network **LK-S5-DROWNED1 / LK-Lab-Coop-v28**. Both clients must update. Evidence: `Docs/Verification/S5/DrownedStorm/`. Next: visible Drowned sabotage presence, storm feedback, heavy bounded rain and grounded outdoor puddles; graphics/transport/build still due. Previous installed APK remains8927fb64. Never launch without request.
+Network **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. Both clients update. Current follow-through: live two-Mac transport regression, build, install only if ADB returns; do NOT launch. ADB currently empty. Previous installed APK8927fb64.
+
+After this pass: finish phase3.2 cable reconnect/lens smears (#99), short explanations (#100), phase4 lantern (#101–103), then actual NavMesh hunter/hiding/escape phases (#105–108). Latest user direction makes the Drowned central; do not confuse the shipped saboteur/appearance slice with a finished hunter. `timingApproved=false` until human workload/headroom acceptance.
 
 ## Reproduce current checks
 

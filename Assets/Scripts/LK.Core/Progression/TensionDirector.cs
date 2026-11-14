@@ -72,7 +72,7 @@ namespace LighthouseKeepers.Core.Progression
         }
         public void Retreat(double now) { if (!ReadOnly) Fixed(now); }
         public void Tick(double now, double remaining, double duration, float danger, float water,
-            bool dark, double darkRemaining, bool complete, bool activeFault, float fear = 0, bool shipWindow = false)
+            bool dark, double darkRemaining, bool complete, bool activeFault, float fear = 0, bool shipWindow = false, DrownedPhase drowned = DrownedPhase.Dormant)
         {
             if (ReadOnly) return;
             if (complete) { frame.hunting = false; CancelPreparation(); }
@@ -81,8 +81,12 @@ namespace LighthouseKeepers.Core.Progression
             int stage = remaining <= 120 || danger >= .9f ? 4 : danger >= .75f || remaining <= duration * .4 ? 3 : danger >= .5f || remaining <= duration * .7 ? 2 : 1;
             stage = Math.Max(stage, night.stormBaseStage);
             if (now >= duration * night.peakStormAfterFraction) stage = 4;
+            // Manifestation drives weather; a repair/retreat visibly releases it. Existing
+            // danger still wins so we never disguise an approaching loss as calm weather.
+            if(drowned==DrownedPhase.Manifest)stage=Math.Max(stage,dark?4:3);
+            if(drowned==DrownedPhase.Retreat)relief=true;
             frame.storm = complete ? 1 : Math.Max(1, stage - (relief ? 1 : 0));
-            frame.phase = (int)(complete ? TensionPhase.Calm : frame.hunting ? TensionPhase.Hunt : relief ? TensionPhase.Relief : frame.lastProblemAt >= 0 && now - frame.lastProblemAt < 3 ? TensionPhase.Sabotage : activeFault || danger > .25f ? TensionPhase.Dread : TensionPhase.Calm);
+            frame.phase = (int)(complete ? TensionPhase.Calm : frame.hunting ? TensionPhase.Hunt : relief ? TensionPhase.Relief : (drowned==DrownedPhase.Warning||drowned==DrownedPhase.Manifest||frame.lastProblemAt >= 0 && now - frame.lastProblemAt < 3) ? TensionPhase.Sabotage : activeFault || danger > .25f ? TensionPhase.Dread : TensionPhase.Calm);
             frame.value = complete ? 0 : Math.Clamp(Math.Max(frame.hunting ? 1 : Math.Max(danger,fear), (frame.storm - 1) / 3f) * (relief ? .65f : 1), 0, 1);
             frame.music = complete ? 0 : frame.hunting || shipWindow && !relief ? 2 : relief ? 0 : fear > .6f || water > .7f || dark && darkRemaining < 20 || remaining < 60 || frame.storm == 4 ? 2 : activeFault ? 1 : 0;
         }

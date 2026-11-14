@@ -5,3 +5,5 @@ Fairness:84 focused checks passed.12 instruction-only task/travel models pass wi
 Offshore wait:120s maximum, before danger entry only, only while a two-keeper pipe task is unfinished. The night/flood clocks continue. Host snapshots include the hold; guest cannot change it. Safe tutorial ship unchanged.
 
 No headset performance or comfort result is inferred from these models.
+
+Rendered Night2 passes: actual fuel outage, protected control grace, supported apparition, stage4 storm, engine restart through existing state actions, restored power and retreat.95 focused cases resolved passing (initial94/95, corrected stale relief-cancellation test fixture, all7 Drowned tests pass). All12 workload models pass. Rain/puddle/appearance screenshots reviewed; no shader errors. Non-contact appearance only; hunter and escape tools remain unimplemented.

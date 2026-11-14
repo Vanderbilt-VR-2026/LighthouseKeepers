@@ -18,7 +18,10 @@ namespace LighthouseKeepers.WatchDemo
    var s=AudioPassSettings.Current;if(!s||!s.audioMix)return;
    var rect=(RectTransform)panel.transform;bool comfort=panel.transform.Find("TurnComfortMode")!=null;rect.sizeDelta=new Vector2(600,800);
    var open=Button(rect,"AudioSettingsButton",KeeperStrings.Get("menu.sound"),comfort?-350:-290,font,ink);
-   var page=Rect(rect,"Sound settings page",Vector2.zero,rect.sizeDelta);Text(page,"Sound settings title",KeeperStrings.Get("menu.sound"),new Vector2(0,280),new Vector2(520,60),font,ink);
+   var page=Rect(rect,"Sound settings page",Vector2.zero,rect.sizeDelta);Text(page,"Sound settings title",KeeperStrings.Get("menu.sound"),new Vector2(0,335),new Vector2(520,60),font,ink);
+   var sightings=Button(page,"DrownedSightings","",245,font,ink);
+   void SightingsLabel()=>sightings.GetComponentInChildren<Text>().text=KeeperStrings.Get(DrownedAppearance.Sightings?"menu.drownedOn":"menu.drownedOff");
+   sightings.onClick.AddListener(()=>{DrownedAppearance.Sightings=!DrownedAppearance.Sightings;SightingsLabel();});SightingsLabel();
    string[] keys={"Music","Effects","Radio","VoiceChat"},labels={KeeperStrings.Get("menu.music"),KeeperStrings.Get("menu.effects"),KeeperStrings.Get("menu.radio"),KeeperStrings.Get("menu.voice")};
    for(int i=0;i<4;i++)
    {

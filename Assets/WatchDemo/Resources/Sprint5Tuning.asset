@@ -15,6 +15,10 @@ MonoBehaviour:
   tensionDirector: 1
   fearFeedback: 1
   sabotageTraces: 1
+  drownedPresence: 1
+  heavyRain: 1
+  drownedIntervalSeconds: 60
+  drownedVisibleSeconds: 12
   sabotageWarningSeconds: 3
   sabotageEvidenceSeconds: 20
   minimumProblemGapSeconds: 15

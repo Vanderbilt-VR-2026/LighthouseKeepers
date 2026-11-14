@@ -6,7 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         public Sprint5Tuning Sprint5 { get; private set; }
         public TensionDirector Tension { get; private set; }
-        public bool TensionQuiet => Tension?.Quiet(Elapsed) == true;
+        public bool TensionQuiet => Tension?.Quiet(Elapsed) == true || Drowned?.Phase==DrownedPhase.Warning;
         public bool SuppressBackgroundNarration => TensionQuiet || Tension?.Phase == TensionPhase.Hunt;
         TensionDirector NewTension(DayDefinition day) => Master && Sprint5 && Sprint5.tensionDirector && day.scenario?.configured == true
             ? new TensionDirector(day.scenario, Sprint5.minimumProblemGapSeconds, Sprint5.preScareQuietSeconds, Sprint5.earliestScareSeconds) { ReadOnly = ReadOnly } : null;
@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
             bool active = false;
             foreach (var job in Definition.tasks) if (!IsDone(job.stationId) && !IsPending(job.stationId)) { active = true; break; }
             float water = Math.Max(0, LatestWater) / (Tuning ? Tuning.failWaterHeightM : .55f);
-            Tension.Tick(Elapsed, Duration - Elapsed, Duration, Danger, water, !BeaconShining && BeaconDarkLimit > 0, BeaconDarkRemaining, Complete, active, Fear?.Peak??0, Ships?.AnyWindow(Elapsed)==true);
+            Tension.Tick(Elapsed, Duration - Elapsed, Duration, Danger, water, !BeaconShining && BeaconDarkLimit > 0, BeaconDarkRemaining, Complete, active, Fear?.Peak??0, Ships?.AnyWindow(Elapsed)==true,Drowned?.Phase??DrownedPhase.Dormant);
         }
         // A recovery window can extend the arrival tank budget. It never cuts a running engine
         // or fakes power: the physical fuel gauge still reaches E, with its last three seconds of sputter.
