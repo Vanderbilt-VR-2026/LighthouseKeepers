@@ -61,7 +61,8 @@ namespace LighthouseKeepers.Net.Tests
             yield return null;var mount=GameObject.Find("Keeper wristwatch").transform;
             Assert.AreEqual("wrist",mount.parent.name);Assert.Greater(Vector3.Dot(mount.forward,mount.parent.up),.99f,"LCD must face out from the back of the wrist");
             Assert.AreEqual(4,mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Watch side button"));
-            Assert.Less(mount.Find("Watch resin case").localScale.x,.06f);Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
+            Assert.Less(mount.Find("Watch resin case").GetComponent<MeshFilter>().sharedMesh.bounds.size.x,.06f);
+            var dial=mount.Find("Watch readable dial");Assert.Less(Vector3.Dot(dial.up,mount.up),-.99f,"Reading direction must be flipped180 degrees");Assert.Greater(Vector3.Dot(dial.forward,mount.forward),.99f,"Face must still face out of the wrist");Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
             var p=Find("PressurePresentation");var original=Field<Transform>(p,"head");var fake=new GameObject("Watch gaze test").transform;p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,fake);
             fake.position=mount.position+mount.forward*.30f;yield return null;Assert.True(Value<bool>(p,"WatchBacklight"));
             fake.position=mount.position-mount.forward*.30f;yield return null;Assert.False(Value<bool>(p,"WatchBacklight"));p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,original);Object.Destroy(fake.gameObject);

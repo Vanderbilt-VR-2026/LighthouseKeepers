@@ -7,3 +7,5 @@ Reviewed front/side screenshots. Focused controls/mount checks passed after corr
 Graphics Night2 sequence passed: host clock advanced through arrival grace, then real XRI can tilt/pour, three primer squeezes, physical choke detents, three cord pulls, choke reopen and warm power return. Zero errors. Screenshots include both accepted starter grips. This isolated physical test is not a human timing run.
 
 Quest visual quality, hand comfort and GPU cost remain pending.
+
+The watch now has a bevelled black resin case, recessed grey-green LCD and four metal side buttons. Its readable dial is rotated180° about the face normal; the mount and accepted hand/controller rotations are unchanged. The dedicated wristwatch test passes: physical size, wrist mounting, face orientation, backlight gaze, timer and two-line objective. Three supplemental normal/oblique accessory views were inspected; these are not evidence of human wrist comfort in a headset. A coincident bezel/LCD surface caught during review was separated before the final images.
