@@ -11,7 +11,7 @@ The existing host-owned encounter now has a wet approach, crooked oilskin figure
 - 2,131 body triangles + 68 effect triangles; one body material and one mist material. Rain remains 3,488 triangles / 12 grounded puddles. Four renderers total across rain/puddles/body/effects, no new light, depth copy or reflection camera.
 - Original audio source/master measurements in audio-analysis.json. Preview is artifacts/s5/drowned-horror/audio/encounter-preview.wav: offline arrangement, not a game recording.
 
-All Editors stayed muted. Routing/peaks and screenshots do not prove subjective horror, voice clarity, stereo comfort or Quest frame cost. Those require worn-headset testing. Live co-op passes below; final APK receipts will follow.
+All Editors stayed muted. Routing/peaks and screenshots do not prove subjective horror, voice clarity, stereo comfort or Quest frame cost. Those require worn-headset testing. Live co-op passes below; final APK receipts are saved below.
 
 ## Solo replay
 
@@ -22,3 +22,9 @@ The proximity guard was corrected to measure from face height, not feet. Standin
 ## Live two-Mac check
 
 Online host Night2 + guest late join, host-owned sabotage/manifestation/storm4, both visible bodies, matching reveal_b cue/breathing on Critical SFX, spatialBlend1, special score on both existing deck sets. The actual standing head was moved within0.3m: body/effects and spatial sound stopped. Actual engine state restored; power, retreat/storm1 and normal music synchronized on both. Both screenshots inspected. Source/audio configuration and transport passed; muted Editors cannot verify human voice clarity or subjective scariness. No new replicated state or version bump.
+
+## APK
+
+APK built from clean **029f9ae9**, IL2CPP ARM64, zero build errors: `Builds/LighthouseKeepers-Sprint5-Horror-029f9ae9.apk` (125,069,482 bytes). SHA-256 `ed2175ecfd0b62c15eef1eefbb9ee92825a7d2e77ef6660f5e888659dafbaafc`. VR manifest, signature and ZIP checks pass. **Not installed: no Quest is visible to ADB. Not launched.** Network remains LK-S5-DROWNED2 / v29.
+
+Build reports eight warnings; reviewed log contains existing obsolete Fusion/unused-field/generated native-code warnings, with no shader error. Generated URP build metadata was restored to the committed settings after packaging. Full audio listening, worn-Quest CPU/GPU and stereo comfort are pending.

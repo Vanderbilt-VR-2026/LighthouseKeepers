@@ -9,7 +9,9 @@ User requested creative liberty with frightening effects/music/sound. Design: `D
 - Visuals: gaunt crooked oilskin figure, wet probe sheen/slow head lift, low mist/drips. 2,131 body+68 effect triangles; no new lights. Revised the face after screenshot review.
 - Checks: baseline51/51; final focused62/62. Graphics Night2 outage/appearance/restore/Off/duck pass. Actual-XRI soloNight3 passes pipe, generator, beacon, radio, two steered ships, lens wipe and sleep intoNight4. Live two-Mac host/late-join/manifestation/storm/sound/score/restore/retreat pass. Standing/seated face-height exclusion fixed and tested. Screenshots inspected. Evidence `Docs/Verification/S5/DrownedHorror/`.
 
-Network stays **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. No new synced fields. **Next immediate action: build the current clean commit**, verify APK, install only if ADB returns. Editors muted; never launch Quest without request. After the delivery receipt, resume master-brief #99/#100 → lantern → hunter/hiding; this is still the non-contact apparition slice.
+Network stays **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. No new synced fields. **Delivered APK built from clean029f9ae9**, VR manifest/signature/ZIP verified, zero build errors. Not installed: ADB empty; not launched. Editors muted throughout. Resume master-brief #99/#100 → lantern → hunter/hiding; this is still the non-contact apparition slice. Never launch Quest without request.
+
+APK built from clean **029f9ae9**, IL2CPP ARM64, zero build errors: `Builds/LighthouseKeepers-Sprint5-Horror-029f9ae9.apk` (125,069,482 bytes). SHA-256 `ed2175ecfd0b62c15eef1eefbb9ee92825a7d2e77ef6660f5e888659dafbaafc`. VR manifest, signature and ZIP checks pass. **Not installed: no Quest is visible to ADB. Not launched.** Network remains LK-S5-DROWNED2 / v29.
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
@@ -57,14 +59,14 @@ caffeinate -i python3 artifacts/s5/drowned-storm/night3-wheel.py
 # Build a fresh output path from a clean commit:
 LK_APK_OUTPUT="$PWD/Builds/LighthouseKeepers-Sprint5-Drowned-NEW.apk" caffeinate -i /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath "$PWD" -buildTarget Android -executeMethod LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest -logFile "$PWD/artifacts/s5/drowned-storm/build-NEW.log"
 # Install only; no launch command:
-/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Drowned-47f9ee0c.apk
+/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Horror-029f9ae9.apk
 ```
 
 ## DEVICE CHECKS PENDING
 
-Horror presentation: listen in Night2 after the protected generator step. Verify wet approach direction, reveal/breath/score intensity, speech priority, smooth score return, Sightings Off, stereo mist/face fade and no close-face pop. Profile same view with appearance on/off; 2,199 body/effect triangles is not GPU evidence. Editor audio was muted throughout. Final horror APK is being built; previous APK below remains the last packaged receipt until updated.
+Horror presentation: listen in Night2 after the protected generator step. Verify wet approach direction, reveal/breath/score intensity, speech priority, smooth score return, Sightings Off, stereo mist/face fade and no close-face pop. Profile same view with appearance on/off; 2,199 body/effect triangles is not GPU evidence. Editor audio was muted throughout. Final horror APK is ready from029f9ae9; package receipt above. ADB empty, no install or launch.
 
-Latest APK is **47f9ee0c / LK-S5-DROWNED2 / v29**, path above. Install when ADB returns; **do not launch without a new request**. Previously installed8927fb64/v27 lacks this Drowned/rain pass and cannot join v29. Both players need the same current build.
+Latest APK is **029f9ae9 / LK-S5-DROWNED2 / v29**, `Builds/LighthouseKeepers-Sprint5-Horror-029f9ae9.apk`. Install when ADB returns; **do not launch without a new request**. Previously installed8927fb64/v27 lacks this Drowned/rain pass and cannot join v29. Both players need the same current build.
 
 - Start with **PLAY → HOST / PLAY ALONE → DEV: SELECT NIGHT3 → START** to test active ship steering. Night1 ship is intentionally a safe preview.
 - Check hull consistent at horizon/approach/near; F4 wheel follows bearing, beam holds the ship, deliberately miss then recover. Confirm named wreck/retry and both-player outcomes.
