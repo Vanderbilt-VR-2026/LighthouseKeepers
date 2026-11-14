@@ -160,6 +160,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
             else if(Book)status.text=state.Failed?(state.HighWaterFailed?KeeperStrings.Get("menu.old_flood"):state.BeaconDarkFailed?KeeperStrings.Get("menu.old_beacon"):KeeperStrings.Get("menu.old_time")):state.Complete&&!state.HasNextDay?KeeperStrings.Get("menu.survived"):string.Format(KeeperStrings.Get("menu.night_status"),state.Day);
             if(state.Sea.lost)status.text=KeeperStrings.Get("loss.sea");
+            if(state.Ships?.Lost==true)status.text=state.FailureMessage;
             // Host snapshots can refresh every frame. Do not bring main-page controls
             // back over the active Sound page when the watch state changes.
             bool settingsOpen=soundPage&&soundPage.gameObject.activeSelf;

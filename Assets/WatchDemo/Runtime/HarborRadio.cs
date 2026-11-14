@@ -39,6 +39,7 @@ namespace LighthouseKeepers.WatchDemo
         Transform head,wrench;WatchPipeRepair pipe;readonly List<int> pending=new();readonly Dictionary<int,float> queuedAt=new();
         bool gripTaught,upperJobsCued;string announcedJob;
         int dangerMask,priorTasks;float nextStatus;
+        int shipSeen,shipPassed,shipClose;
         int ordinaryBurstCount;int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
         readonly HashSet<int> spoken=new();
         Transform generator,radio,beacon,panel;
@@ -92,7 +93,7 @@ namespace LighthouseKeepers.WatchDemo
             if(day!=s.Day)
             {
                 day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();queuedAt.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
-                ResetSituationalLines();ordinaryBurstCount=0;announcedJob=null;
+                ResetSituationalLines();shipSeen=shipPassed=shipClose=0;ordinaryBurstCount=0;announcedJob=null;
                 int tonight=s.Campaign?s.Scenario.tonightCue:TonightCue(s);int opening=s.Campaign?s.Scenario.openingCue:day==2&&tonight==80?80:OpeningCue(day,s.Day3Balance);
                 Enqueue(opening);if(s.WatchStartHeld)Enqueue(79);
                 if(day>1&&tonight>0&&tonight!=opening&&!(day==3&&s.Day3Balance))Enqueue(tonight);
@@ -101,10 +102,10 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(s.Failed)
             {
-                if(!failed){failed=true;pending.Clear();spoken.Add(18);Play(18,Serial+1,0);}
-                var loss=catalog?catalog.Line(18):null;if(!loss||Age>loss.length+Extra+.2f)StopStatic();return;
+                if(!failed){failed=true;pending.Clear();int lossCue=s.Ships?.Lost==true?99:18;spoken.Add(lossCue);Play(lossCue,Serial+1,0);}
+                var loss=catalog?catalog.Line(Cue):null;if(!loss||Age>loss.length+Extra+.2f)StopStatic();return;
             }
-            PruneInstructions();ObserveSituationalLines();
+            PruneInstructions();ObserveSituationalLines();ObserveShips();
             if(s.PressureEnabled)PressureCues();
             if(s.Director!=null&&s.Master.onboarding){
                 var jobName=ObjectiveDirector.Job(s.Director.First);
@@ -115,18 +116,22 @@ namespace LighthouseKeepers.WatchDemo
             bool holding=watch.WrenchHeld;
             if(!(s.Master&&s.Master.onboarding)&&day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
             if(!upperJobsCued&&s.Day3Balance&&s.Day3Stage==3){upperJobsCued=true;Enqueue(UpperJobsCue);}
-            if(s.Complete&&!complete){complete=true;pending.RemoveAll(id=>id!=92&&id!=78);if(s.PeakDanger>.8f)Enqueue(93);
+            if(s.Complete&&!complete){complete=true;pending.RemoveAll(id=>id!=92&&id!=78&&id!=98);if(s.PeakDanger>.8f)Enqueue(93);
                 if(!s.HasNextDay)Enqueue(17);else if(watch.WrenchHeld)Enqueue(78);else if(!broadcastReplyPending)Enqueue(5);}
             if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!WrenchSuppressesHints(holding,s.Repaired)&&!AtStation(job))
                 Enqueue(job);
             var clip=catalog?catalog.Line(Cue):null;
             if(pending.Count>0&&CanPlayQueued(pending[NextPendingIndex()]))
-                while(pending.Count>0){int next=TakeNext();if(Relevant(next)&&(next<76||cueRules.Allows(next,Time.time))){if(next>=44&&next<=75)next=CompositeStatusCue(s);spoken.Add(next);Play(next,Serial+1,0);break;}}
+                while(pending.Count>0){int next=TakeNext();if(Relevant(next)&&AllowedQueued(next)){if(next>=44&&next<=75)next=CompositeStatusCue(s);spoken.Add(next);Play(next,Serial+1,0);break;}}
             if(clip&&Age>clip.length+Extra+.2f)StopStatic();
         }
+        bool AllowedQueued(int id)=>id<76||id>=96&&id<=98||(id>=94?cueRules.AllowsCampaign(id):cueRules.Allows(id,Time.time));
+        void ObserveShips(){var ships=watch.State.Ships;if(ships==null)return;if((ships.SeenMask&~shipSeen)!=0&&!pending.Contains(96))AddPending(96);if((ships.CloseMask&~shipClose)!=0&&!pending.Contains(97))AddPending(97);if((ships.PassedMask&~shipPassed)!=0&&!pending.Contains(98))AddPending(98);shipSeen=ships.SeenMask;shipClose=ships.CloseMask;shipPassed=ships.PassedMask;}
         bool Relevant(int id)
         {
             var s=watch.State;
+            if(id==96)return s.Ships!=null&&!s.Ships.Finished;
+            if(id==97)return s.Ships!=null&&!s.BeaconShining&&s.Ships.AnyWindow(s.Elapsed);
             if(id==33)return !watch.WrenchHeld&&!s.Repaired;
             if(id==78)return s.Repaired&&watch.WrenchHeld;
             if(id==79)return s.WatchStartHeld;
@@ -223,10 +228,11 @@ namespace LighthouseKeepers.WatchDemo
             if(watch.State.SuppressBackgroundNarration&&!HarborCueRules.Danger(id))return false;
             if(Cue==0)return true;
             var clip=catalog?catalog.Line(Cue):null;float silence=Age-(clip?clip.length:0)-Extra;
+            if(id==97)return !HarborCueRules.Danger(Cue)?Age>=Mathf.Min(8,(clip?clip.length:0)+Extra):silence>=0;
             float recovery=watch.State.Master?watch.State.Master.narrationQuietSeconds:20f;
             return HarborCueRules.CanSpeak(ordinaryBurstCount,silence,HarborCueRules.Transition(id),recovery,watch.State.Master?watch.State.Master.speechSpacingSeconds:8f);
         }
-        int NextPendingIndex(){if(FuelExplanationPending){int cause=pending.IndexOf(4);if(cause>=0)return cause;}int index=0; // Keep arrival first, then grace; situational guidance precedes background tutorial prose.
+        int NextPendingIndex(){int danger=pending.FindIndex(id=>id==97);if(danger>=0)return danger;if(FuelExplanationPending){int cause=pending.IndexOf(4);if(cause>=0)return cause;}int index=0; // Keep arrival first, then grace; situational guidance precedes background tutorial prose.
             if(Cue!=0&&pending[0]!=79){int priority=pending.FindIndex(id=>id>=76&&id<=93);if(priority>=0)index=priority;}
             return index;}
         int TakeNext(){int index=NextPendingIndex();int id=pending[index];pending.RemoveAt(index);return id;}

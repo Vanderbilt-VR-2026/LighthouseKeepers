@@ -6,7 +6,7 @@ namespace LighthouseKeepers.Presentation.Environment
     {
         public Mesh hull,distant,beam,particles;
         public Material hullMaterial,effectsMaterial;
-        Transform lightPivot;Mesh nameMesh;MaterialPropertyBlock effects;Renderer smoke,cone;bool built;
+        Transform lightPivot;Mesh nameMesh,flareMesh;MaterialPropertyBlock effects,flareProperties;Renderer smoke,cone,flare;bool built;
         public void Initialize(string shipName)
         {
             if(built)return;built=true;gameObject.name="Steamer — "+shipName;
@@ -28,11 +28,22 @@ namespace LighthouseKeepers.Presentation.Environment
             lightPivot.localRotation=Quaternion.Euler(5,65+Mathf.Sin(age*.11f)*55,0);
             effects.SetFloat("_ShipClock",age);effects.SetFloat("_Storm",storm);smoke.SetPropertyBlock(effects);cone.SetPropertyBlock(effects);
         }
+        public void Wreck(float age)
+        {
+            if(!flare){
+                flareMesh=new Mesh{name="Distress flare card"};flareMesh.vertices=new[]{new Vector3(-1,-1,0),new Vector3(1,-1,0),new Vector3(1,1,0),new Vector3(-1,1,0)};
+                flareMesh.uv=new[]{Vector2.zero,Vector2.right,Vector2.one,Vector2.up};flareMesh.colors=new[]{Color.clear,Color.clear,Color.clear,Color.clear};flareMesh.triangles=new[]{0,1,2,0,2,3};flareMesh.RecalculateNormals();flareMesh.RecalculateBounds();
+                flare=Renderer("Ship distress flare",flareMesh,effectsMaterial,transform);flareProperties=new MaterialPropertyBlock();flareProperties.SetFloat("_Flare",1);flare.SetPropertyBlock(flareProperties);
+            }
+            transform.position+=Vector3.down*Mathf.Min(age*.12f,1.2f);transform.rotation*=Quaternion.Euler(0,0,Mathf.Min(age,6));
+            cone.enabled=false;flare.transform.position=transform.position+Vector3.up*(7+Mathf.Min(age*3,22));flare.transform.localScale=Vector3.one*1.7f;
+            var camera=Camera.main;if(camera)flare.transform.rotation=camera.transform.rotation;
+        }
         static MeshRenderer Renderer(string name,Mesh mesh,Material material,Transform parent)
         {
             var go=new GameObject(name);go.transform.SetParent(parent,false);go.AddComponent<MeshFilter>().sharedMesh=mesh;var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=material;
             renderer.shadowCastingMode=ShadowCastingMode.Off;renderer.receiveShadows=false;renderer.lightProbeUsage=LightProbeUsage.BlendProbes;renderer.reflectionProbeUsage=ReflectionProbeUsage.Off;return renderer;
         }
-        void OnDestroy(){if(nameMesh)Destroy(nameMesh);}
+        void OnDestroy(){if(nameMesh)Destroy(nameMesh);if(flareMesh)Destroy(flareMesh);}
     }
 }

@@ -72,7 +72,7 @@ namespace LighthouseKeepers.Core.Progression
         }
         public void Retreat(double now) { if (!ReadOnly) Fixed(now); }
         public void Tick(double now, double remaining, double duration, float danger, float water,
-            bool dark, double darkRemaining, bool complete, bool activeFault, float fear = 0)
+            bool dark, double darkRemaining, bool complete, bool activeFault, float fear = 0, bool shipWindow = false)
         {
             if (ReadOnly) return;
             if (complete) { frame.hunting = false; CancelPreparation(); }
@@ -84,7 +84,7 @@ namespace LighthouseKeepers.Core.Progression
             frame.storm = complete ? 1 : Math.Max(1, stage - (relief ? 1 : 0));
             frame.phase = (int)(complete ? TensionPhase.Calm : frame.hunting ? TensionPhase.Hunt : relief ? TensionPhase.Relief : frame.lastProblemAt >= 0 && now - frame.lastProblemAt < 3 ? TensionPhase.Sabotage : activeFault || danger > .25f ? TensionPhase.Dread : TensionPhase.Calm);
             frame.value = complete ? 0 : Math.Clamp(Math.Max(frame.hunting ? 1 : Math.Max(danger,fear), (frame.storm - 1) / 3f) * (relief ? .65f : 1), 0, 1);
-            frame.music = complete ? 0 : frame.hunting ? 2 : relief ? 0 : fear > .6f || water > .7f || dark && darkRemaining < 20 || remaining < 60 || frame.storm == 4 ? 2 : activeFault ? 1 : 0;
+            frame.music = complete ? 0 : frame.hunting || shipWindow && !relief ? 2 : relief ? 0 : fear > .6f || water > .7f || dark && darkRemaining < 20 || remaining < 60 || frame.storm == 4 ? 2 : activeFault ? 1 : 0;
         }
         public TensionFrame Capture() => frame.Copy();
         public bool Apply(TensionFrame source, double now)

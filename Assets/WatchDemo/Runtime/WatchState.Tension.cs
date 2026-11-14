@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
             bool active = false;
             foreach (var job in Definition.tasks) if (!IsDone(job.stationId) && !IsPending(job.stationId)) { active = true; break; }
             float water = Math.Max(0, LatestWater) / (Tuning ? Tuning.failWaterHeightM : .55f);
-            Tension.Tick(Elapsed, Duration - Elapsed, Duration, Danger, water, !BeaconShining && BeaconDarkLimit > 0, BeaconDarkRemaining, Complete, active, Fear?.Peak??0);
+            Tension.Tick(Elapsed, Duration - Elapsed, Duration, Danger, water, !BeaconShining && BeaconDarkLimit > 0, BeaconDarkRemaining, Complete, active, Fear?.Peak??0, Ships?.AnyWindow(Elapsed)==true);
         }
         // A recovery window can extend the arrival tank budget. It never cuts a running engine
         // or fakes power: the physical fuel gauge still reaches E, with its last three seconds of sputter.
