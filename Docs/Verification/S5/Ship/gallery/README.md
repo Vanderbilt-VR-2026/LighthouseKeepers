@@ -11,3 +11,5 @@ All12 instruction-only ship/task models pass; raw failing original-arrival trace
 Editors muted. A spot sample has17 playing AudioSources/configured24 real voices. Source clips are original synthesis, no human listening or worst-case Quest CPU measurement. Network LK-S5-SHIPS1 / v25.
 
 Reviewed the complete Night3 board and survived page. The ship row initially pushed the footer below the board: removed spare blank rows only when ships exist, and the final screenshot keeps all jobs, ship ticks and the loss rule on the surface. Crew test launch initially raced Unity shutdown; the runner now waits for the previous process to release the project before opening a new pair. No gameplay workaround was made.
+
+Exact-source APK005e641 built with zero errors; eight build warnings. IL2CPP ARM64/OpenXR/Vulkan packaging and signature checks pass. Installed on Quest2G0YC1ZG32048T without launching; installed hash equals the local APK. See final-apk.build.json, final-apk.verification.json and install.json. Device GPU/CPU and human acceptance remain open.

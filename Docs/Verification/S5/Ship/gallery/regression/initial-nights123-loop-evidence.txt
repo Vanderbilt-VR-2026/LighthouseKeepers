@@ -30,5 +30,5 @@ All authored ships passed: elapsed=390.005s realtime=518.649 day=3 repaired=True
 RADIO complete; board 4/4: elapsed=390.005s realtime=518.758 day=3 repaired=True water=-0.03000m
 SOLO DAY3 SPARE=104.89 seconds
 System.InvalidOperationException: Day 3 sleep failed
-  at LighthouseKeepers.Editor.ImmersionSoloReplay+<Loop>d__18.MoveNext () [0x01e60] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/solo/Nights123.cs:187 
-  at LighthouseKeepers.Editor.ImmersionSoloReplay.Tick () [0x00061] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/solo/Nights123.cs:58 
+  at LighthouseKeepers.Editor.ImmersionSoloReplay+<Loop>d__18.MoveNext () [0x01e60] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/solo/Nights123.cs:187
+  at LighthouseKeepers.Editor.ImmersionSoloReplay.Tick () [0x00061] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/solo/Nights123.cs:58

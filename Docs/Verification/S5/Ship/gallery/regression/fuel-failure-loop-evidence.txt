@@ -17,5 +17,5 @@ RADIO complete; board 4/4: elapsed=390.020s realtime=370.803 day=3 repaired=True
 SOLO DAY3 SPARE=104.86 seconds
 Bed before grip canSleep=False sleeping=False menu=False head=(2.95, 8.20, 0.00) bed=(2.95, 8.20, 0.00): elapsed=410.544s realtime=391.209 day=3 repaired=True water=-0.03000m
 System.InvalidOperationException: Day 3 sleep failed
-  at LighthouseKeepers.Editor.ImmersionSoloReplay+<Loop>d__18.MoveNext () [0x01789] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/night3-final/Nights123.cs:160 
-  at LighthouseKeepers.Editor.ImmersionSoloReplay.Tick () [0x00061] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/night3-final/Nights123.cs:58 
+  at LighthouseKeepers.Editor.ImmersionSoloReplay+<Loop>d__18.MoveNext () [0x01789] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/night3-final/Nights123.cs:160
+  at LighthouseKeepers.Editor.ImmersionSoloReplay.Tick () [0x00061] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/ship/night3-final/Nights123.cs:58
