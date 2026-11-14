@@ -18,7 +18,7 @@ Evidence: `Docs/Verification/S5/Ship/playtest/`, `Docs/Verification/S5/Props/`.
 - Heavy exterior rain replaces particle scan with1600 GPU-animated streaks.12 supported outdoor puddles with ripples.692-triangle oilskin form;3488 rain/puddle triangles;3 renderers total, no new lights/depth/reflection pass. Graphics inspected; shader self-sorting, overly bright puddles and first-control-grace race corrected.
 -95 focused cases resolved passing;12 solo/duo workload models pass. Graphics Night2 outage→Drowned→power restore→retreat passes. Evidence: `Docs/Verification/S5/DrownedStorm/`.
 
-Network **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. Both clients update. Current follow-through: live two-Mac transport regression, build, install only if ADB returns; do NOT launch. ADB currently empty. Previous installed APK8927fb64.
+Network **LK-S5-DROWNED2 / LK-Lab-Coop-v29**. Both clients update. Current follow-through: final live Drowned/weather rerun (existing co-op regression passed; fixed blackout input previously gated by ship windows,19 focused checks pass), soloNight3, build, install only if ADB returns; do NOT launch. ADB currently empty. Previous installed APK8927fb64.
 
 After this pass: finish phase3.2 cable reconnect/lens smears (#99), short explanations (#100), phase4 lantern (#101–103), then actual NavMesh hunter/hiding/escape phases (#105–108). Latest user direction makes the Drowned central; do not confuse the shipped saboteur/appearance slice with a finished hunter. `timingApproved=false` until human workload/headroom acceptance.
 

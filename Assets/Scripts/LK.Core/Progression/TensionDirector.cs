@@ -72,7 +72,7 @@ namespace LighthouseKeepers.Core.Progression
         }
         public void Retreat(double now) { if (!ReadOnly) Fixed(now); }
         public void Tick(double now, double remaining, double duration, float danger, float water,
-            bool dark, double darkRemaining, bool complete, bool activeFault, float fear = 0, bool shipWindow = false, DrownedPhase drowned = DrownedPhase.Dormant)
+            bool dark, double darkRemaining, bool complete, bool activeFault, float fear = 0, bool shipWindow = false, DrownedPhase drowned = DrownedPhase.Dormant, bool drownedDark = false)
         {
             if (ReadOnly) return;
             if (complete) { frame.hunting = false; CancelPreparation(); }
@@ -83,7 +83,7 @@ namespace LighthouseKeepers.Core.Progression
             if (now >= duration * night.peakStormAfterFraction) stage = 4;
             // Manifestation drives weather; a repair/retreat visibly releases it. Existing
             // danger still wins so we never disguise an approaching loss as calm weather.
-            if(drowned==DrownedPhase.Manifest)stage=Math.Max(stage,dark?4:3);
+            if(drowned==DrownedPhase.Manifest)stage=Math.Max(stage,dark||drownedDark?4:3);
             if(drowned==DrownedPhase.Retreat)relief=true;
             frame.storm = complete ? 1 : Math.Max(1, stage - (relief ? 1 : 0));
             frame.phase = (int)(complete ? TensionPhase.Calm : frame.hunting ? TensionPhase.Hunt : relief ? TensionPhase.Relief : (drowned==DrownedPhase.Warning||drowned==DrownedPhase.Manifest||frame.lastProblemAt >= 0 && now - frame.lastProblemAt < 3) ? TensionPhase.Sabotage : activeFault || danger > .25f ? TensionPhase.Dread : TensionPhase.Calm);
