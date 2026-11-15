@@ -1,14 +1,37 @@
-# Active correction pass — November 15
+# Current checkpoint — November 15 visibility corrections
 
-User reports footsteps without a visible Drowned, slow ships, wheel/ship sightline, and a janky generator.
-1. Visible encounters: host chooses a supported clear spot; spatial warning, then rapid reveal only when looked toward. First-person graphics pass, screenshot inspected. Network LK-S5-SCARE3 / LK-Lab-Coop-v30; new anchor fields. Both clients update. Non-contact apparition only. Focused test receipt under artifacts/remaining/m3/nov15-reveal-final.json.
-2. DONE: approach45s, passage30–35s, departure25s; original window starts preserved. West-gallery wheel pedestal, legacy occluders removed.35 focused tests,12 workload models, standing/seated graphics reviewed. Physical-input Night3 and live crew checks pending final run.
-3. DONE: exposed engine castings, alternator, fuel/exhaust lines and narrow supported instrument rail; controls/grips preserved. Six physical PlayMode tests pass; front/oblique screenshots reviewed.9,480 triangles in3 meshes, no added lights/colliders.
-4. DONE checks:53 reveal/voice/quality +35 ship/data +6 physical PlayMode tests,12 workload models. Actual-XRI soloNight3 passes both ships and sleep intoNight4. Live two-Mac shared anchor/reveal/retreat plus guest physical wheel slip/recovery/pass passes. Screenshots reviewed. Final beam graphic checked after reducing hard amber haze. NEXT: build/install clean source, update PR89; do not auto-launch Quest.
+Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Nothing merged to main. Editor muted throughout. Skybox and avatar body unchanged.
 
-DEVICE CHECKS PENDING: surprise visibility/comfort and audio, wheel sightline/reach, generator control reach/readability, GPU/CPU while worn, matching-build Mac+Quest. Evidence: Docs/Verification/S5/Visibility/. Editors muted throughout. PR89, sprint-5; do not merge.
+## Completed and delivered
+
+1. **Drowned visibility:** host picks a supported, unobstructed nearby position; a spatial warning precedes the quick reveal when the selected keeper looks toward it. Face/head/arm movement is more visible. Night 1 and the first minute remain protected. Still a non-contact apparition; hunting/hiding is unfinished.
+2. **Ships and wheel:** approach 45 s, passage 30–35 s, departure 25 s; authored danger-window start times preserved. West-gallery pedestal faces the fairway. Old lever/plate occluders removed; softer beam haze keeps the ship visible. Miss/reacquire and crew preparation rules retained.
+3. **Generator:** exposed cylinder heads, alternator, fuel/exhaust plumbing, tank and narrow supported control rail. Accepted physical inputs/grips preserved. 9,480 triangles in three machinery meshes; no added lights/colliders.
+4. **Verification:** 53 reveal/voice/quality + 35 ship/data + 6 physical PlayMode cases pass. All 12 workload models pass. Actual-XRI solo Night 3 passes both ships and sleep into Night 4. Live two-Mac shared reveal/retreat and guest physical wheel slip/recovery/pass pass. Screenshots inspected; no fresh full-suite claim.
+
+**Installed APK: source `3bbc4030`, network `LK-S5-SCARE3 / LK-Lab-Coop-v30`. Both clients must update.** Built clean with Unity 6000.3.23f1, IL2CPP ARM64, zero build errors. Installed SHA-256 matches the verified APK. **Not launched**, respecting the standing instruction.
+
+APK: `Builds/LighthouseKeepers-Sprint5-Visibility-3bbc4030.apk` (125,075,834 bytes). SHA-256: `98f9656607eb840cd98d710db1fc2250de5a0a556b9fadd6b3ca1a8f7fa6f6af`.
+Evidence and receipts: `Docs/Verification/S5/Visibility/`.
+
+## DEVICE CHECKS PENDING
+
+- Night 2: warning direction, visible reveal, comfort, speech clarity and power-restoration retreat; Sightings Off.
+- Night 3: west-gallery wheel/ship visibility and reach, deliberately miss briefly then reacquire; faster passage pacing.
+- Generator control reach/readability and physical fuel/primer/choke/cord sequence.
+- Worn Quest 72 Hz: GPU ≤11 ms / CPU main ≤9 ms; same-view apparition/beam/generator comparisons. Triangle counts are not GPU evidence.
+- Matching-build Mac+Quest/two-Quest voice, valve, guest wheel, shared sleep and rejoin. Editors were muted; audible conversation is not verified this pass.
+- Preserve pending offline, wall/edge, stereo text and first-timer workload checks. Demo model is tight (5.9 s spare); no human timing approval.
+
+## Resume
+
+Current requested corrections are delivered; wait for headset feedback. Remaining master brief: repair cable/lens work (#99), concise sabotage explanations (#100), lantern (#101–103), then actual hunter/hiding/escape (#105–108). Keep `timingApproved=false` until human acceptance. No auto-launch on Quest.
+
+Latest reproducible scripts/receipts: `artifacts/s5/playtest-nov15/` (build.py, solo-night3/, two-mac/, ship-beam-soft/); focused runner `artifacts/remaining/m3/tests.py`. Use fresh output folders if rerunning. The delivered APK is tied to 3bbc4030; later documentation commits do not change its source.
 
 ---
+
+# Archived checkpoints — superseded by the current checkpoint above
 
 # Sprint 5 checkpoint — November 14
 
