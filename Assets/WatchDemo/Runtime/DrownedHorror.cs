@@ -70,13 +70,15 @@ namespace LighthouseKeepers.WatchDemo
             if (revision != watch.Revision || s.Elapsed < lastElapsed - .01) { revision = watch.Revision; events.Stop(); breathing.Stop(); loopGain = 0; CueCount = 0; cursor.Clear(); }
             lastElapsed = s.Elapsed;
             bool allowed = DrownedAppearance.Sightings && appearance.SafeAnchor && !watch.Sleeping && !s.Failed;
-            var cue = cursor.Poll(revision, d.Phase, d.Since, s.Elapsed, allowed);
+            if (!d.Anchored && DrownedAppearance.Sightings) { events.Stop(); breathing.Stop(); return; }
+            double cueAt = d.Phase==DrownedPhase.Manifest ? d.RevealAt : d.Since;
+            var cue = cursor.Poll(revision, d.Phase, cueAt, s.Elapsed, allowed);
             if (cue != DrownedSoundCue.None)
             {
                 LastCue = cue; CueCount++;
                 events.Stop(); events.clip = cue == DrownedSoundCue.Approach ? approach : cue == DrownedSoundCue.Retreat ? retreat : (d.Fault + s.Day) % 2 == 0 ? revealA : revealB;
                 eventGain = cue == DrownedSoundCue.Reveal ? .5f : .45f;
-                if (events.clip) { events.time = (float)System.Math.Min(s.Elapsed - d.Since, events.clip.length - .01f); events.Play(); }
+                if (events.clip) { events.time = (float)System.Math.Min(s.Elapsed - cueAt, events.clip.length - .01f); events.Play(); }
             }
             if (!allowed) { events.Stop(); breathing.Stop(); loopGain = 0; return; }
             var mix = KeeperAudioMix.Instance;

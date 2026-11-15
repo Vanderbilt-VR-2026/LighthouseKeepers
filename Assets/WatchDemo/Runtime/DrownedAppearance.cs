@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class DrownedAppearance:MonoBehaviour
     {
         WatchDemoController watch;Transform figure;Mesh mesh,mistMesh;Material material,mistMaterial;MeshRenderer body,mist;MaterialPropertyBlock block,mistBlock;
-        readonly Vector3[] places=new Vector3[4]; readonly bool[] supported=new bool[4];
+        DrownedPlacement placement;float nextProbe;
         int revision=-1;float visibility;double manifestAt=-1,lastElapsed;
         public bool SafeAnchor { get; private set; }
         public const int MaximumTriangles=3000;
@@ -24,33 +24,39 @@ namespace LighthouseKeepers.WatchDemo
             mistMesh=DrownedSculpt.Effects();fog.AddComponent<MeshFilter>().sharedMesh=mistMesh;
             mistMaterial=new Material(Resources.Load<Shader>("S5DrownedMist")){name="Bounded cold breath and runoff"};
             mist=fog.AddComponent<MeshRenderer>();mist.sharedMaterial=mistMaterial;mist.shadowCastingMode=ShadowCastingMode.Off;mist.receiveShadows=false;mist.enabled=false;mistBlock=new MaterialPropertyBlock();
-            var anchors=new[]{FindAnyObjectByType<WatchPipeRepair>().transform,FindAnyObjectByType<WatchGenerator>().transform,FindAnyObjectByType<WatchRadioConsole>().transform,FindAnyObjectByType<WatchBeacon>().transform};
-            Physics.SyncTransforms();
-            for(int i=0;i<4;i++){
-                float y=i==0?0:i==1?3.3f:9.9f;
-                var radial=new Vector3(anchors[i].position.x,0,anchors[i].position.z).normalized;
-                if(radial==Vector3.zero)radial=Vector3.right;
-                for(int n=0;n<32;n++){
-                    float angle=(35+n/2*12)*(n%2==0?1:-1);
-                    var p=Quaternion.Euler(0,angle,0)*radial*(i>=2?2.2f:3.1f);p.y=y;
-                    if(Physics.Raycast(p+Vector3.up*.8f,Vector3.down,out var hit,1.2f,~0,QueryTriggerInteraction.Ignore)&&hit.normal.y>.9f&&Mathf.Abs(hit.point.y-y)<.45f){
-                        p.y=hit.point.y+.015f;
-                        if(!Physics.CheckCapsule(p+Vector3.up*.35f,p+Vector3.up*1.9f,.35f,~0,QueryTriggerInteraction.Ignore)){places[i]=p;supported[i]=true;break;}
-                    }
-                }
-            }
-
+            var rig=Camera.main?Camera.main.GetComponentInParent<Unity.XR.CoreUtils.XROrigin>():null;
+            placement=new DrownedPlacement(figure,rig?rig.transform:null);watch.State.DrownedViewReady=false;
         }
-        int Station(){var d=watch.State.Drowned;if(d==null||d.Fault<0)return -1;string id=watch.State.Scenario.faults[d.Fault].stationId;return id==WatchState.PipeStation?0:id==WatchState.GeneratorStation?1:id==WatchState.RadioStation?2:3;}
+        void PositionReveal(){
+            var s=watch.State;var d=s.Drowned;
+            if(s.ReadOnly||d.Phase!=DrownedPhase.Warning)return;
+            watch.DrownedViewers(out int a,out var p,out var f,out int b,out var q,out var g);
+            bool second=false;
+            if(b!=0){var id=s.Scenario.faults[d.Fault].stationId;var point=id==WatchState.GeneratorStation?FindAnyObjectByType<WatchGenerator>().transform.position+Vector3.up*1.5f:id==WatchState.PipeStation?FindAnyObjectByType<WatchPipeRepair>().transform.position+Vector3.up:FindAnyObjectByType<WatchBeacon>().transform.position;
+                second=(q-point).sqrMagnitude<(p-point).sqrMagnitude;}
+            int actor=second?b:a;var head=second?q:p;var forward=second?g:f;var other=second?p:q;
+            var feet=new Vector3(d.X,d.Y,d.Z);
+            s.DrownedViewReady=d.Anchored&&d.Actor==actor&&placement.Visible(head,forward,feet);
+            if(d.Anchored&&(head-feet).sqrMagnitude<64&&placement.ClearSight(head,feet+Vector3.up*1.65f))return;
+            if(Time.unscaledTime<nextProbe)return;nextProbe=Time.unscaledTime+.35f;
+            if(placement.Find(head,forward,other,b!=0,out feet)){
+                var toward=Vector3.ProjectOnPlane(head-feet,Vector3.up);float yaw=Quaternion.LookRotation(toward).eulerAngles.y;
+                d.SetAnchor(actor,feet.x,feet.y,feet.z,yaw,s.Elapsed);s.DrownedViewReady=true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"DROWNED_REVEAL_ANCHOR actor={actor} feet={feet} view={head} phase={d.Phase}");
+#endif
+            }
+        }
         void Update(){
             var s=watch.State;var d=s.Drowned;if(d==null)return;
-            if(revision!=watch.Revision||s.Elapsed<lastElapsed-.01){revision=watch.Revision;visibility=0;manifestAt=-1;}
-            lastElapsed=s.Elapsed;if(d.Phase==DrownedPhase.Manifest)manifestAt=d.Since;
-            int station=Station();SafeAnchor=station>=0&&supported[station];
-            if(station>=0&&supported[station]){figure.position=places[station];var inward=new Vector3(-figure.position.x,0,-figure.position.z);figure.rotation=Quaternion.LookRotation(inward.sqrMagnitude>.01f?inward:Vector3.forward);}
-            if(Camera.main&&!HasComfortClearance(Camera.main.transform.position,figure.position))SafeAnchor=false; // no face pop at arm's length
+            if(revision!=watch.Revision||s.Elapsed<lastElapsed-.01){revision=watch.Revision;visibility=0;manifestAt=-1;nextProbe=0;if(!s.ReadOnly)s.DrownedViewReady=false;}
+            lastElapsed=s.Elapsed;PositionReveal();if(d.Phase==DrownedPhase.Manifest)manifestAt=d.RevealAt;
+            SafeAnchor=d.Anchored;
+            if(d.Anchored)figure.SetPositionAndRotation(new Vector3(d.X,d.Y,d.Z),Quaternion.Euler(0,d.Yaw,0));
+            if(Camera.main&&!HasComfortClearance(Camera.main.transform.position,figure.position))SafeAnchor=false;
             bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
-            float wanted=active&&d.Phase==DrownedPhase.Manifest?1:0;visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?1.1f:.5f));
+            float wanted=active&&d.Phase==DrownedPhase.Manifest?1:0;
+            visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?12f:.6f));
             body.enabled=visibility>.005f;block.SetFloat("_Visibility",visibility);block.SetFloat("_Breath",(float)s.Elapsed);block.SetFloat("_Arrival",(float)System.Math.Max(0,s.Elapsed-manifestAt));body.SetPropertyBlock(block);
             mist.enabled=body.enabled;mistBlock.SetFloat("_Visibility",visibility);mistBlock.SetFloat("_Clock",(float)s.Elapsed);mist.SetPropertyBlock(mistBlock);
         }

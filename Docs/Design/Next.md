@@ -1,3 +1,15 @@
+# Active correction pass — November 15
+
+User reports footsteps without a visible Drowned, slow ships, wheel/ship sightline, and a janky generator.
+1. Visible encounters: host chooses a supported clear spot; spatial warning, then rapid reveal only when looked toward. First-person graphics pass, screenshot inspected. Network LK-S5-SCARE3 / LK-Lab-Coop-v30; new anchor fields. Both clients update. Non-contact apparition only. Focused test receipt under artifacts/remaining/m3/nov15-reveal-final.json.
+2. NEXT: faster ship approach/passage/departure preserving window start; outward-facing F4 wheel pedestal so wheel and ship share a view. Verify physical input and task timings.
+3. NEXT: exposed engine castings, alternator and restrained instrument rail; preserve accepted generator inputs/grips. Review images and run physical controls.
+4. NEXT: live two-Mac anchor/wheel regression, solo Night3, clean APK build/install. Do not auto-launch Quest.
+
+DEVICE CHECKS PENDING: surprise visibility/comfort and audio, wheel sightline/reach, generator control reach/readability, GPU/CPU while worn, matching-build Mac+Quest. Evidence: Docs/Verification/S5/Visibility/. Editors muted throughout. PR89, sprint-5; do not merge.
+
+---
+
 # Sprint 5 checkpoint — November 14
 
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base main after teammate merge of PR88. Main-folder branch untouched. Editor muted. Never launch Quest without request; installing is allowed.
