@@ -3,6 +3,7 @@ namespace LighthouseKeepers.Core.Progression
 {
  public static class ShipNavigation
  {
+        public const float DepartSeconds=25;
         // Eight-metre fairway outside the island even for the full hull at every sampled turn.
         public static Pose Route(float age,float approach,float window,float depart,float sea=-.5f)
         {

@@ -79,7 +79,7 @@ namespace LighthouseKeepers.WatchDemo
             if(controls)
             {
                 var t=controls.transform;
-                parts.Part("Beacon instruction plate",t,new Vector3(0,1.53f,.179f),new Vector3(.73f,.10f,.016f),parts.Metal);
+                // The gallery pedestal carries its own compact instrument plate.
                 var ring=M2StationParts.Root("Engraved wheel alignment legend",t,new Vector3(-.14f,.91f,.215f));
                 parts.Part("Wheel brass legend plate",ring,Vector3.zero,new Vector3(.39f,.09f,.015f),parts.Brass);
                 parts.Text("Wheel alignment engraving",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.9"),ring,new Vector3(0,0,.01f),.0027f).color=new Color(.1f,.07f,.03f);

@@ -183,27 +183,27 @@ MonoBehaviour:
     ships:
     - id: finale-first
       nameKey: m3.ship.northStar
-      sightedAtSeconds: 405
-      approachSeconds: 60
-      windowSeconds: 45
+      sightedAtSeconds: 420
+      approachSeconds: 45
+      windowSeconds: 30
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 0
       safePreview: 0
       largeFinale: 0
     - id: finale-second
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 475
-      approachSeconds: 60
-      windowSeconds: 45
+      sightedAtSeconds: 490
+      approachSeconds: 45
+      windowSeconds: 30
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 0
       safePreview: 0
       largeFinale: 0
     - id: finale-large
       nameKey: m3.ship.meridian
-      sightedAtSeconds: 595
-      approachSeconds: 75
-      windowSeconds: 70
+      sightedAtSeconds: 625
+      approachSeconds: 45
+      windowSeconds: 35
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 0
       safePreview: 0

@@ -39,7 +39,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
             }
             foreach(var root in scene.GetRootGameObjects())Apply(root);
             var bunk=GameObject.Find("Third-floor bed frame");if(bunk)BunkPlacement.Apply(bunk.transform);
-            var beacon=GameObject.Find("STN_BEACON_CONTROL");if(beacon){beacon.transform.position=new Vector3(1f,9.9f,2.4f);beacon.transform.rotation=Quaternion.Euler(0,202.62f,0);}
+            var beacon=GameObject.Find("STN_BEACON_CONTROL");if(beacon){beacon.transform.position=new Vector3(-4.02f,9.9f,0);beacon.transform.rotation=Quaternion.Euler(0,90f,0);}
             foreach(string part in new[]{"F2","F3","F4"}){
                 string path="Assets/Prefabs/Environment/PF_Shell_"+part+".prefab";var prefab=PrefabUtility.LoadPrefabContents(path);
                 try{Apply(prefab);PrefabUtility.SaveAsPrefabAsset(prefab,path);}finally{PrefabUtility.UnloadPrefabContents(prefab);}}

@@ -43,14 +43,14 @@ namespace LighthouseKeepers.WatchDemo
                 float approach=model==null?events[i].approachSeconds:(float)model.Approach(i);
                 bool wrecked=model!=null&&model.WreckIndex==i;
                 float age=model==null?shownClock-events[i].sightedAtSeconds:(float)model.VisualAge(i,wrecked?model.WreckAt:shownClock);
-                bool visible=age>=0&&age<=approach+events[i].windowSeconds+55;
+                bool visible=age>=0&&age<=approach+events[i].windowSeconds+ShipNavigation.DepartSeconds;
                 ships[i].gameObject.SetActive(visible);if(!visible)continue;
                 if(!wrecked&&!engines[i].isPlaying&&engine)engines[i].Play();
                 if(wrecked)engines[i].Stop();
                 // A bounded approach call every 24 simulation seconds, spatially carried by the vessel.
                 int call=(int)(age/24);if(!wrecked&&age<approach+events[i].windowSeconds&&call!=hornBeat[i]){hornBeat[i]=call;if(age%24<3)Play(i,horn);}
                 if(!windowCue[i]&&age>=approach){windowCue[i]=true;if(age-approach<3&&atmosphere)atmosphere.ShipPassageLightning();}
-                ships[i].Sample(age,approach,events[i].windowSeconds,55,((watch.State.Storm?.Stage??1)-1)/3f,sea);
+                ships[i].Sample(age,approach,events[i].windowSeconds,ShipNavigation.DepartSeconds,((watch.State.Storm?.Stage??1)-1)/3f,sea);
                 if(wrecked){if(wreck!=i){wreck=i;wreckAge=0;Play(i,crash);}wreckAge+=Time.deltaTime;ships[i].Wreck(wreckAge);}
                 int bit=1<<i;
                 if(model!=null&&(model.SeenMask&bit)!=0&&(seen&bit)==0){seen|=bit;}

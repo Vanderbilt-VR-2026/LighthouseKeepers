@@ -157,18 +157,18 @@ MonoBehaviour:
     ships:
     - id: first-passage
       nameKey: m3.ship.northStar
-      sightedAtSeconds: 270
-      approachSeconds: 75
-      windowSeconds: 45
+      sightedAtSeconds: 300
+      approachSeconds: 45
+      windowSeconds: 30
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 0
       safePreview: 0
       largeFinale: 0
     - id: warned-passage
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 345
-      approachSeconds: 75
-      windowSeconds: 45
+      sightedAtSeconds: 375
+      approachSeconds: 45
+      windowSeconds: 30
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 15
       safePreview: 0

@@ -128,9 +128,9 @@ MonoBehaviour:
     ships:
     - id: blackout-passage
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 150
-      approachSeconds: 75
-      windowSeconds: 45
+      sightedAtSeconds: 180
+      approachSeconds: 45
+      windowSeconds: 30
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 0
       safePreview: 0

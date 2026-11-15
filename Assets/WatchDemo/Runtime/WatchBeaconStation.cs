@@ -16,13 +16,16 @@ namespace LighthouseKeepers.WatchDemo
   public Vector3 LensPoint=>beacon.transform.TransformPoint(new Vector3(0,1.3f,.43f));
   public WatchState State=>watch.State;
   public static WatchBeaconStation Create(WatchDemoController watch,WatchBeacon beacon)
-  {var anchor=GameObject.Find("STN_BEACON_CONTROL");if(!anchor)throw new System.InvalidOperationException("Missing F4 beacon control anchor");var root=new GameObject("S4 beacon station");root.SetActive(false);root.transform.SetParent(anchor.transform,false);var c=root.AddComponent<WatchBeaconStation>();c.watch=watch;c.beacon=beacon;c.Build();root.SetActive(true);return c;}
+  {var anchor=GameObject.Find("STN_BEACON_CONTROL");if(!anchor)throw new System.InvalidOperationException("Missing F4 beacon control anchor");foreach(Transform legacy in anchor.transform)legacy.gameObject.SetActive(false);anchor.transform.SetPositionAndRotation(new Vector3(-4.02f,9.9f,0),Quaternion.Euler(0,90,0));var root=new GameObject("S4 beacon station");root.SetActive(false);root.transform.SetParent(anchor.transform,false);var c=root.AddComponent<WatchBeaconStation>();c.watch=watch;c.beacon=beacon;c.Build();root.SetActive(true);return c;}
   void Build()
   {
    parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();block=new MaterialPropertyBlock();
-   parts.Part("Beacon control cabinet",transform,new Vector3(0,1.3f,.10f),new Vector3(.8f,.85f,.13f),parts.Dark);
-   parts.Text("Beacon heading",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.5"),transform,new Vector3(0,1.65f,.18f),.0045f);
-   readout=parts.Text("Beacon instructions","",transform,new Vector3(0,1.53f,.19f),.003f);
+   parts.Part("Beacon pedestal foot",transform,new Vector3(0,.04f,.08f),new Vector3(.52f,.08f,.38f),parts.Dark);
+   parts.Part("Beacon pedestal column",transform,new Vector3(0,.58f,.08f),new Vector3(.13f,.54f,.13f),parts.Metal,PrimitiveType.Cylinder);
+   parts.Part("Beacon control cabinet",transform,new Vector3(0,1.18f,.10f),new Vector3(.8f,.45f,.13f),parts.Dark);
+   parts.Part("Ship bearing instrument plate",transform,new Vector3(.24f,1.49f,.12f),new Vector3(.34f,.18f,.06f),parts.Dark);
+   parts.Text("Beacon heading",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.5"),transform,new Vector3(.24f,1.54f,.18f),.0045f);
+   readout=parts.Text("Beacon instructions","",transform,new Vector3(.24f,1.46f,.19f),.003f);
    Ignition=Control("SWITCH_BeaconIgnition",new Vector3(.25f,1.20f,.19f),false);
    parts.Text("Ignition label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.6"),transform,new Vector3(.25f,1.05f,.20f),.003f);
    Wheel=Control("GRIP_BeaconWheel",new Vector3(-.14f,1.21f,.23f),true);

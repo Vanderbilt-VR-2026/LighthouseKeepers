@@ -145,7 +145,7 @@ namespace LighthouseKeepers.Editor.Environment
             foreach(var s in Layout.stations.Where(s=>s.floor==floor).OrderBy(s=>s.id,StringComparer.Ordinal))
             {
                 var p=new GameObject(s.id).transform;p.SetParent(root,false);p.position=V(s.anchor.position);p.rotation=Quaternion.Euler(V(s.anchor.rotationEuler));
-                if(s.id=="STN_BEACON_CONTROL"&&AssetDatabase.IsValidFolder("Assets/WatchDemo/PoleShaftMeshes")){p.position=new Vector3(1f,9.9f,2.4f);p.rotation=Quaternion.Euler(0,202.62f,0);}
+                if(s.id=="STN_BEACON_CONTROL"&&AssetDatabase.IsValidFolder("Assets/WatchDemo/PoleShaftMeshes")){p.position=new Vector3(-4.02f,9.9f,0);p.rotation=Quaternion.Euler(0,90f,0);}
                 foreach(var a in s.interactiveAnchors){var t=new GameObject(a.name).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);}
                 foreach(var a in s.legacySockets){var t=new GameObject(a.socketName).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);new GameObject(a.anchorName).transform.SetParent(t,false);}
             }

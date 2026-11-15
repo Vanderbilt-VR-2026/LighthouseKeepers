@@ -11,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo
         bool CrewPipeHold => Pressure?.CrewRequired==true&&!Repaired;
         public bool ShipGuidanceDue => !(CrewPipeHold&&Ships!=null&&Ships.CanHoldForCrew(Elapsed,Sprint5.shipGuidanceLeadSeconds,Sprint5.shipCrewHoldSeconds))&&AimingShip>=0&&Elapsed>=Ships.WindowStart(AimingShip)-Sprint5.shipGuidanceLeadSeconds;
         public bool BeamEnergized => Beacon!=null&&HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon)&&Beacon.Ignited&&Beacon.Soot<=Sprint5.shipMaximumSoot;
-        public UnityEngine.Vector3 ShipPoint(int i,double now) => ShipNavigation.Route((float)Ships.VisualAge(i,now),(float)Ships.Approach(i),Scenario.ships[i].windowSeconds,55).position+UnityEngine.Vector3.up*4;
+        public UnityEngine.Vector3 ShipPoint(int i,double now) => ShipNavigation.Route((float)Ships.VisualAge(i,now),(float)Ships.Approach(i),Scenario.ships[i].windowSeconds,ShipNavigation.DepartSeconds).position+UnityEngine.Vector3.up*4;
         public float ShipWheelTarget => AimingShip<0?Beacon.Target:ShipNavigation.WheelFor(ShipPoint(AimingShip,Elapsed));
         public bool ShipOnBeam => AimingShip>=0&&IlluminatesShip(AimingShip,Elapsed);
         bool IlluminatesShip(int i,double now) => BeamEnergized&&ShipNavigation.Aimed(Beacon.Alignment,ShipPoint(i,now),Sprint5.shipAimToleranceDegrees);
