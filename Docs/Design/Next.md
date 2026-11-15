@@ -2,6 +2,10 @@
 
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**, base main after teammate merge of PR88. Main-folder branch untouched. Editor muted. Never launch Quest without request; installing is allowed.
 
+## Latest device delivery — November 14 evening
+
+Installed `LighthouseKeepers-Sprint5-Horror-029f9ae9.apk` on the connected Quest3. The installed APK SHA-256 matches the verified local build. **Not launched**, respecting the standing no-auto-launch instruction. Worn-headset listening, comfort and GPU checks remain pending. This supersedes the earlier “ADB empty / not installed” build-time notes below. Receipt: `Docs/Verification/S5/DrownedHorror/install.json`.
+
 ## Current follow-up — Drowned horror presentation
 
 User requested creative liberty with frightening effects/music/sound. Design: `Docs/Design/DrownedHorror.md`. Implemented and pushed in steps:
