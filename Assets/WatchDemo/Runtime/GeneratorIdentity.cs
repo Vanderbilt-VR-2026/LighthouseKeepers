@@ -10,7 +10,7 @@ namespace LighthouseKeepers.WatchDemo
         void Build()
         {
             var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();
-            yellow=new Material(parts.Metal){name="Worn diesel yellow"};yellow.SetTexture("_BaseMap",parts.Brass.GetTexture("_BaseMap"));yellow.SetColor("_BaseColor",new Color(.95f,.66f,.14f));yellow.DisableKeyword("_METALLICSPECGLOSSMAP");yellow.SetColor("_EmissionColor",Color.black);yellow.SetFloat("_Metallic",.25f);yellow.SetFloat("_Smoothness",.28f);
+            yellow=new Material(parts.Metal){name="Worn diesel yellow"};yellow.SetColor("_BaseColor",new Color(.95f,.74f,.14f));yellow.DisableKeyword("_METALLICSPECGLOSSMAP");yellow.SetColor("_EmissionColor",Color.black);yellow.SetFloat("_Metallic",.12f);yellow.SetFloat("_Smoothness",.28f);
             foreach(var r in GetComponentsInChildren<Renderer>())if(r.name=="Diesel crankcase"||r.name=="Alternator cover"||r.name=="Generator service fascia")r.sharedMaterial=yellow;
             ReplaceMachinery(parts);
             if(Resources.Load<TowerWiringAsset>("TowerWiring/Layout"))return; // Full baked route replaces this older single feed.
@@ -35,7 +35,7 @@ namespace LighthouseKeepers.WatchDemo
             // service lamps, guides, starter transform and its mirrored grip anchors.
             var retired=new HashSet<string>{"Concrete plinth","Crisp plinth top edge","Fuel tank","Filler cap","Resilient mounting foot","DIESEL enamel plaque","Paint wear at service edge","Lagged exhaust riser","Lagged exhaust wall elbow","Exhaust lagging band","Diesel crankcase","Alternator cover","Radiator grille","Generator service fascia"};
             foreach(var r in GetComponentsInChildren<Renderer>(true))if(retired.Contains(r.name)||r.transform.parent&&r.transform.parent.name=="DIESEL enamel plaque")r.enabled=false;
-            machinery=GeneratorMachinery.Build();engineIron=new Material(parts.Metal){name="Oil darkened diesel iron"};engineIron.SetColor("_BaseColor",new Color(.12f,.14f,.14f));engineIron.SetColor("_EmissionColor",Color.black);engineIron.SetFloat("_Smoothness",.35f);
+            machinery=GeneratorMachinery.Build();engineIron=new Material(parts.Metal){name="Oil darkened diesel iron"};engineIron.SetColor("_BaseColor",new Color(.38f,.40f,.40f));engineIron.SetColor("_EmissionColor",Color.black);engineIron.SetFloat("_Smoothness",.35f);engineIron.DisableKeyword("_METALLICSPECGLOSSMAP");engineIron.SetFloat("_Metallic",.35f);engineIron.SetFloat("_GlossyReflections",1);
             var materials=new[]{yellow,engineIron,parts.Brass};var names=new[]{"Rounded diesel castings","Ribbed alternator skid and flywheel","Diesel plumbing and fasteners"};
             var parent=transform.Find("Engine feedback");if(!parent)parent=transform;
             for(int i=0;i<machinery.Length;i++){

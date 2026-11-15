@@ -9,8 +9,16 @@ namespace LighthouseKeepers.WatchDemo
         {
             var paint=new WorkshopMesh();var iron=new WorkshopMesh();var brass=new WorkshopMesh();
             paint.Case(new Vector3(-.26f,.70f,.30f),new Vector3(1.18f,.64f,.90f),.14f);
-            paint.Case(new Vector3(0,1.23f,.91f),new Vector3(1.58f,.82f,.16f),.085f);
-            paint.Case(new Vector3(0,1.27f,.25f),new Vector3(1.64f,.48f,1.05f),.14f);
+            iron.Case(new Vector3(0,1.18f,.91f),new Vector3(1.58f,.22f,.12f),.035f);
+            // Open engine: no broad slab concealing the cylinders. A narrow bolted rail holds controls.
+            iron.Case(new Vector3(0,.94f,.94f),new Vector3(1.58f,.16f,.06f),.025f);
+            for(int side=-1;side<=1;side+=2){
+                iron.Pipe(.026f,new Vector3(side*.74f,.25f,.77f),new Vector3(side*.74f,1.47f,.77f),new Vector3(side*.74f,1.47f,.94f));
+                iron.Case(new Vector3(side*.62f,1.39f,.94f),new Vector3(.19f,.17f,.06f),.025f);
+            }
+            iron.Case(new Vector3(.20f,1.39f,.94f),new Vector3(.19f,.17f,.06f),.025f);
+            iron.Pipe(.022f,new Vector3(.20f,1.18f,.87f),new Vector3(.20f,1.41f,.87f));
+            iron.Tube(new Vector3(-.62f,1.18f,.80f),new Vector3(-.62f,1.18f,.99f),.11f,20);
             // Rounded horizontal tank behind the controls, with two retaining straps.
             paint.Tube(new Vector3(-.49f,1.53f,.20f),new Vector3(.49f,1.53f,.20f),.19f,24);
             for(int side=-1;side<=1;side+=2){
@@ -37,11 +45,15 @@ namespace LighthouseKeepers.WatchDemo
             brass.Tube(new Vector3(-.43f,.56f,.79f),new Vector3(-.43f,.56f,.87f),.06f,6);
             // Exhaust ends at the original smoke anchor. Fuel pipe visibly feeds tank from cap.
             iron.Pipe(.065f,new Vector3(-.65f,1.0f,.10f),new Vector3(-.72f,1.22f,.10f),new Vector3(-.72f,1.84f,.10f),new Vector3(-.72f,2.03f,-.05f));
-            for(int i=0;i<8;i++)brass.Tube(new Vector3(-.72f,1.40f+i*.055f,.10f),new Vector3(-.72f,1.42f+i*.055f,.10f),.069f,12);
+            for(int i=0;i<8;i++)iron.Tube(new Vector3(-.72f,1.40f+i*.055f,.10f),new Vector3(-.72f,1.42f+i*.055f,.10f),.069f,12);
             brass.Pipe(.035f,new Vector3(.62f,1.08f,1.08f),new Vector3(.72f,1.08f,.78f),new Vector3(.72f,1.47f,.40f),new Vector3(.49f,1.53f,.20f));
             // Fasteners and shallow louvres; no fake floating boxes.
-            for(int x=-1;x<=1;x+=2)foreach(float y in new[]{.86f,1.43f})brass.Tube(new Vector3(x*.72f,y,.982f),new Vector3(x*.72f,y,1.003f),.022f,6);
-            for(int i=0;i<9;i++)iron.Case(new Vector3(-.77f+i*.19f,.78f,.94f),new Vector3(.13f,.022f,.015f),.008f);
+            for(int x=-1;x<=1;x+=2)foreach(float y in new[]{.92f,1.23f})brass.Tube(new Vector3(x*.72f,y,.982f),new Vector3(x*.72f,y,1.003f),.022f,6);
+            // Exposed bolted cast sump, oil filler, manifold and cooling pipes.
+            for(int i=0;i<6;i++)brass.Tube(new Vector3(-.77f+i*.19f,.48f,.756f),new Vector3(-.77f+i*.19f,.48f,.78f),.018f,6);
+            iron.Tube(new Vector3(-.47f,.91f,.80f),new Vector3(-.47f,.91f,.89f),.052f,12);
+            iron.Pipe(.04f,new Vector3(-.64f,1.10f,.08f),new Vector3(-.34f,1.10f,.02f),new Vector3(-.04f,1.10f,.08f));
+            iron.Pipe(.023f,new Vector3(-.38f,.48f,-.14f),new Vector3(.30f,.48f,-.14f),new Vector3(.36f,.80f,-.14f));
             return new[]{paint.Finish("Diesel castings and painted shroud"),iron.Finish("Skid alternator and exhaust"),brass.Finish("Fuel lines and brass fasteners")};
         }
     }

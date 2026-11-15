@@ -3,7 +3,7 @@
 User reports footsteps without a visible Drowned, slow ships, wheel/ship sightline, and a janky generator.
 1. Visible encounters: host chooses a supported clear spot; spatial warning, then rapid reveal only when looked toward. First-person graphics pass, screenshot inspected. Network LK-S5-SCARE3 / LK-Lab-Coop-v30; new anchor fields. Both clients update. Non-contact apparition only. Focused test receipt under artifacts/remaining/m3/nov15-reveal-final.json.
 2. DONE: approach45s, passage30–35s, departure25s; original window starts preserved. West-gallery wheel pedestal, legacy occluders removed.35 focused tests,12 workload models, standing/seated graphics reviewed. Physical-input Night3 and live crew checks pending final run.
-3. NEXT: exposed engine castings, alternator and restrained instrument rail; preserve accepted generator inputs/grips. Review images and run physical controls.
+3. DONE: exposed engine castings, alternator, fuel/exhaust lines and narrow supported instrument rail; controls/grips preserved. Six physical PlayMode tests pass; front/oblique screenshots reviewed.9,480 triangles in3 meshes, no added lights/colliders.
 4. NEXT: live two-Mac anchor/wheel regression, solo Night3, clean APK build/install. Do not auto-launch Quest.
 
 DEVICE CHECKS PENDING: surprise visibility/comfort and audio, wheel sightline/reach, generator control reach/readability, GPU/CPU while worn, matching-build Mac+Quest. Evidence: Docs/Verification/S5/Visibility/. Editors muted throughout. PR89, sprint-5; do not merge.

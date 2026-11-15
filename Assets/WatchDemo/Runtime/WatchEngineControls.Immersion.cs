@@ -17,21 +17,21 @@ namespace LighthouseKeepers.WatchDemo
             parts.Part("Generator service fascia",transform,new Vector3(0,1.23f,.91f),new Vector3(1.55f,.82f,.16f),parts.Dark);
             foreach(var name in new[]{"Generator sequence panel","Starter pull label","Primer label","Choke label","Filler label"})
             {var t=transform.Find(name);if(t)t.gameObject.SetActive(false);}
-            parts.Part("Riveted starting instructions",transform,new Vector3(0,1.56f,1.012f),new Vector3(1.55f,.17f,.035f),parts.Brass);
-            parts.Text("Engraved starting order",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.3"),transform,new Vector3(0,1.56f,1.034f),.0036f).color=Color.black;
+            parts.Part("Riveted starting instructions",transform,new Vector3(0,1.56f,.73f),new Vector3(1.18f,.105f,.025f),parts.Brass);
+            parts.Text("Engraved starting order",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.3"),transform,new Vector3(0,1.56f,.746f),.0028f).color=Color.black;
             for(int x=-1;x<=1;x+=2)for(int y=-1;y<=1;y+=2)
-                parts.Part("Plate rivet",transform,new Vector3(x*.745f,1.56f+y*.060f,1.040f),Vector3.one*.016f,parts.Metal,PrimitiveType.Sphere);
+                parts.Part("Plate rivet",transform,new Vector3(x*.56f,1.56f+y*.034f,.75f),Vector3.one*.012f,parts.Metal,PrimitiveType.Sphere);
             // Existing four lamps still show fuel, priming, choke and running; fifth confirms reopening.
             finalChokeLamp=parts.Part("Choke reopened lamp",transform,new Vector3(-.20f,.88f,1.02f),new Vector3(.065f,.035f,.025f),parts.Green).GetComponent<Renderer>();
             parts.Text("Final choke lamp label","5",transform,new Vector3(-.20f,.93f,1.02f),.0032f);
             MountedLabel("Primer plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.4"),new Vector3(.20f,.99f,1.04f),new Vector2(.30f,.13f));
             MountedLabel("Choke plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.5"),new Vector3(-.20f,.99f,1.04f),new Vector2(.30f,.13f));
             MountedLabel("Starter plate",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.Immersion.6"),new Vector3(-.62f,.99f,1.04f),new Vector2(.31f,.13f));
-            parts.Part("Primer mounting plate",Primer.transform,new Vector3(0,0,-.07f),new Vector3(.16f,.20f,.16f),parts.Metal);
+            var primerSocket=parts.Part("Primer mounting plate",Primer.transform,new Vector3(0,0,-.05f),new Vector3(.145f,.045f,.145f),parts.Metal,PrimitiveType.Cylinder);primerSocket.transform.localRotation=Quaternion.Euler(90,0,0);
             var collar=parts.Part("Primer retaining collar",Primer.transform,new Vector3(0,0,.008f),new Vector3(.125f,.026f,.125f),parts.Brass,PrimitiveType.Cylinder);
             collar.transform.localRotation=Quaternion.Euler(90,0,0);
             parts.Part("Primer fuel hose",Primer.transform,new Vector3(0,-.16f,-.045f),new Vector3(.022f,.25f,.022f),parts.Dark,PrimitiveType.Cylinder);
-            parts.Part("Choke pivot housing",Choke.transform,new Vector3(0,0,-.025f),new Vector3(.13f,.13f,.08f),parts.Metal);
+            var chokeSocket=parts.Part("Choke pivot housing",Choke.transform,new Vector3(0,0,-.025f),new Vector3(.13f,.04f,.13f),parts.Metal,PrimitiveType.Cylinder);chokeSocket.transform.localRotation=Quaternion.Euler(90,0,0);
             // Recess counter bodies behind the starter sightline; keep their numbered faces exposed.
             primerTally=Counter("Primer tally",new Vector3(.20f,1.40f,1.00f),out primerDrum);
             starterTally=Counter("Starter tally",new Vector3(-.62f,1.40f,1.00f),out starterDrum);
