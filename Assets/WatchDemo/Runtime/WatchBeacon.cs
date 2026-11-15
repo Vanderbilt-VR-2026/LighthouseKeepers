@@ -35,7 +35,7 @@ namespace LighthouseKeepers.WatchDemo
             block.SetColor("_BaseColor",on?new Color(.8f,.42f,.12f,lensAlpha):new Color(.07f,.065f,.05f,lensAlpha));
             block.SetColor("_EmissionColor",on?new Color(1,.30f,.045f)*(.7f*brightness):Color.black);
             foreach(var lens in lenses)lens.SetPropertyBlock(block);
-            if(visibleBeam){block.SetColor("_BaseColor",new Color(1,.55f,.16f,.12f*brightness));visibleBeam.SetPropertyBlock(block);}
+            if(visibleBeam){block.SetColor("_BaseColor",new Color(1,.76f,.40f,.025f*brightness));visibleBeam.SetPropertyBlock(block);}
         }
         void Update()
         {

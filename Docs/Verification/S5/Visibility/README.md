@@ -6,4 +6,4 @@ Graphics check: stand at the actual generator, turn toward the warning without r
 
 First two graphics attempts are preserved in artifacts/s5/playtest-nov15/reveal-1 and reveal-2: off-screen placement, then overly restrictive search. reveal-3 passes. Source mutation during Play Mode was avoided.
 
-Network: LK-S5-SCARE3 / LK-Lab-Coop-v30, new host anchor fields; both clients must update. Live two-client check follows the rest of this playtest correction pass. Device readability, surprise intensity, sound and GPU remain pending.
+Network: LK-S5-SCARE3 / LK-Lab-Coop-v30, new host anchor fields; both clients must update. Live two-client anchor/reveal/retreat and guest physical wheel slip/recovery/pass now pass; see Coop/. Actual-XRI soloNight3 through both ships and sleep intoNight4 passes; see Solo/. Device readability, surprise intensity, sound and GPU remain pending.
