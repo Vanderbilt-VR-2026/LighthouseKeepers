@@ -1,60 +1,70 @@
 using UnityEngine;
 namespace LighthouseKeepers.WatchDemo
 {
-    // A coherent skid-mounted engine, bolted service face, ribbed alternator and fuel plumbing.
-    // Existing interactive transforms stay exactly where they were accepted in the headset.
+    // Original portable diesel set: continuous tubular cage, rounded tank, recessed fascia,
+    // engine/alternator and transport wheels. Existing accepted control anchors are untouched.
     public static class GeneratorMachinery
     {
         public static Mesh[] Build()
         {
             var paint=new WorkshopMesh();var iron=new WorkshopMesh();var brass=new WorkshopMesh();
-            paint.Case(new Vector3(-.26f,.70f,.30f),new Vector3(1.18f,.64f,.90f),.14f);
-            iron.Case(new Vector3(0,1.18f,.91f),new Vector3(1.58f,.22f,.12f),.035f);
-            // Open engine: no broad slab concealing the cylinders. A narrow bolted rail holds controls.
-            iron.Case(new Vector3(0,.94f,.94f),new Vector3(1.58f,.16f,.06f),.025f);
+            // Protective end frames have continuous rounded bends, not square floating posts.
+            foreach(float x in new[]{-.86f,.86f}){
+                RoundedLoop(iron,x,.18f,1.71f,-.30f,.98f,.12f,.035f);
+                iron.Tube(new Vector3(x,.30f,-.27f),new Vector3(x,.30f,.89f),.030f,12);
+                iron.Tube(new Vector3(x,.23f,-.02f),new Vector3(x+Mathf.Sign(x)*.095f,.23f,-.02f),.07f,12);
+                // Rubber tire with shallow sidewall beads and recessed steel wheel.
+                iron.Tube(new Vector3(x,.245f,-.02f),new Vector3(x+Mathf.Sign(x)*.10f,.245f,-.02f),.23f,32);
+                paint.Tube(new Vector3(x+Mathf.Sign(x)*.101f,.245f,-.02f),new Vector3(x+Mathf.Sign(x)*.111f,.245f,-.02f),.145f,24);
+                brass.Tube(new Vector3(x+Mathf.Sign(x)*.113f,.245f,-.02f),new Vector3(x+Mathf.Sign(x)*.130f,.245f,-.02f),.040f,6);
+            }
+            foreach(float y in new[]{.20f,1.62f})foreach(float z in new[]{-.26f,.94f})iron.Tube(new Vector3(-.84f,y,z),new Vector3(.84f,y,z),.030f,12);
+            iron.Case(new Vector3(0,.25f,.35f),new Vector3(1.52f,.10f,1.09f),.035f);
+            // Wide domed tank and its folded seam. Controls below remain open to either hand.
+            paint.Case(new Vector3(0,1.48f,.28f),new Vector3(1.46f,.30f,.91f),.13f);
+            iron.Case(new Vector3(0,1.36f,.28f),new Vector3(1.49f,.035f,.94f),.012f);
             for(int side=-1;side<=1;side+=2){
-                iron.Pipe(.026f,new Vector3(side*.74f,.25f,.77f),new Vector3(side*.74f,1.47f,.77f),new Vector3(side*.74f,1.47f,.94f));
-                iron.Case(new Vector3(side*.62f,1.39f,.94f),new Vector3(.19f,.17f,.06f),.025f);
+                iron.Case(new Vector3(side*.53f,1.49f,.28f),new Vector3(.026f,.305f,.915f),.010f);
+                iron.Tube(new Vector3(side*.65f,.28f,.68f),new Vector3(side*.65f,.37f,.68f),.075f,12);
+                brass.Tube(new Vector3(side*.65f,.37f,.68f),new Vector3(side*.65f,.39f,.68f),.026f,6);
             }
-            iron.Case(new Vector3(.20f,1.39f,.94f),new Vector3(.19f,.17f,.06f),.025f);
-            iron.Pipe(.022f,new Vector3(.20f,1.18f,.87f),new Vector3(.20f,1.41f,.87f));
-            iron.Tube(new Vector3(-.62f,1.18f,.80f),new Vector3(-.62f,1.18f,.99f),.11f,20);
-            // Rounded horizontal tank behind the controls, with two retaining straps.
-            paint.Tube(new Vector3(-.49f,1.53f,.20f),new Vector3(.49f,1.53f,.20f),.19f,24);
-            for(int side=-1;side<=1;side+=2){
-                iron.Case(new Vector3(side*.76f,.14f,.35f),new Vector3(.15f,.18f,1.34f),.025f);
-                iron.Case(new Vector3(0,.14f,.35f+side*.49f),new Vector3(1.82f,.13f,.13f),.025f);
-                for(int end=-1;end<=1;end+=2){iron.Tube(new Vector3(side*.70f,.21f,.35f+end*.39f),new Vector3(side*.70f,.34f,.35f+end*.39f),.085f,12);brass.Tube(new Vector3(side*.70f,.34f,.35f+end*.39f),new Vector3(side*.70f,.36f,.35f+end*.39f),.035f,6);}
-                iron.Tube(new Vector3(side*.33f-.015f,1.53f,.20f),new Vector3(side*.33f+.015f,1.53f,.20f),.198f,24);
+            // Recessed front instrument panel: one supported continuous service face.
+            paint.Case(new Vector3(0,1.15f,.84f),new Vector3(1.61f,.43f,.15f),.045f);
+            iron.Case(new Vector3(0,1.16f,.923f),new Vector3(1.52f,.34f,.018f),.035f);
+            for(int side=-1;side<=1;side+=2)foreach(float y in new[]{1.01f,1.31f})brass.Tube(new Vector3(side*.71f,y,.94f),new Vector3(side*.71f,y,.951f),.016f,6);
+            // Compact cast engine and rounded valve cover; layered cooling fins read at arm's reach.
+            iron.Case(new Vector3(-.34f,.66f,.25f),new Vector3(.67f,.59f,.70f),.12f);
+            paint.Case(new Vector3(-.34f,.95f,.24f),new Vector3(.67f,.17f,.70f),.07f);
+            for(int i=0;i<7;i++)iron.Case(new Vector3(-.34f,.67f+i*.037f,.34f),new Vector3(.69f,.018f,.66f),.008f);
+            // Recoil starter shroud is part of the engine, behind the existing cord housing.
+            paint.Tube(new Vector3(-.37f,.59f,.62f),new Vector3(-.37f,.59f,.76f),.255f,32);
+            iron.Tube(new Vector3(-.37f,.59f,.762f),new Vector3(-.37f,.59f,.779f),.20f,32);
+            for(int i=0;i<9;i++){float x=-.53f+i*.04f;float h=Mathf.Sqrt(.18f*.18f-(x+.37f)*(x+.37f));paint.Case(new Vector3(x,.59f,.79f),new Vector3(.010f,h*2,.012f),.003f);}
+            brass.Tube(new Vector3(-.37f,.59f,.78f),new Vector3(-.37f,.59f,.81f),.055f,6);
+            // Alternator: one ribbed body, end cap and fan guard; its axis aligns with engine shaft.
+            iron.Tube(new Vector3(.45f,.62f,-.08f),new Vector3(.45f,.62f,.68f),.26f,24);
+            for(int i=0;i<9;i++)paint.Tube(new Vector3(.45f,.62f,-.05f+i*.075f),new Vector3(.45f,.62f,-.027f+i*.075f),.273f,24);
+            iron.Tube(new Vector3(.45f,.62f,.685f),new Vector3(.45f,.62f,.72f),.24f,24);
+            for(int i=0;i<9;i++){float x=.28f+i*.042f;float h=Mathf.Sqrt(.21f*.21f-(x-.45f)*(x-.45f));paint.Case(new Vector3(x,.62f,.73f),new Vector3(.011f,h*2,.014f),.003f);}
+            // Air filter, silencer, feed hose and mounted filler neck. No disconnected pipework.
+            iron.Tube(new Vector3(-.67f,.91f,.08f),new Vector3(-.67f,1.19f,.08f),.10f,20);
+            iron.Pipe(.037f,new Vector3(-.58f,.89f,-.07f),new Vector3(-.72f,.94f,-.14f),new Vector3(-.72f,1.84f,-.14f),new Vector3(-.72f,2.03f,-.05f));
+            iron.Tube(new Vector3(-.72f,1.44f,-.14f),new Vector3(-.72f,1.82f,-.14f),.082f,20);
+            brass.Pipe(.027f,new Vector3(.62f,1.10f,1.08f),new Vector3(.62f,1.10f,.81f),new Vector3(.66f,1.35f,.65f),new Vector3(.56f,1.48f,.65f));
+            iron.Pipe(.014f,new Vector3(-.23f,1.33f,.18f),new Vector3(-.23f,1.02f,.05f),new Vector3(-.51f,.86f,.05f));
+            iron.Pipe(.012f,new Vector3(.20f,1.18f,.87f),new Vector3(.20f,1.00f,.84f),new Vector3(-.20f,.89f,.65f));
+            for(int i=0;i<5;i++)brass.Tube(new Vector3(-.60f+i*.13f,.43f,.61f),new Vector3(-.60f+i*.13f,.43f,.64f),.015f,6);
+            return new[]{paint.Finish("Weathered tank fascia and alternator"),iron.Finish("Continuous cage diesel and wheels"),brass.Finish("Filler fasteners and wheel hubs")};
+        }
+        static void RoundedLoop(WorkshopMesh mesh,float x,float bottom,float top,float back,float front,float radius,float tube)
+        {
+            var points=new Vector3[33];int n=0;
+            for(int corner=0;corner<4;corner++)for(int j=0;j<8;j++){
+                float angle=(corner*90+j*90f/7)*Mathf.Deg2Rad;
+                float y=corner<2?top-radius:bottom+radius,z=corner==0||corner==3?front-radius:back+radius;
+                points[n++]=new Vector3(x,y+Mathf.Sin(angle)*radius,z+Mathf.Cos(angle)*radius);
             }
-            // Separate iron cylinder heads, injection lines, yellow valve covers.
-            for(int i=0;i<3;i++){
-                float x=-.64f+i*.30f;
-                iron.Case(new Vector3(x,1.05f,.35f),new Vector3(.24f,.40f,.57f),.05f);
-                paint.Case(new Vector3(x,1.25f,.35f),new Vector3(.26f,.10f,.60f),.04f);
-                brass.Pipe(.012f,new Vector3(x,.62f,.80f),new Vector3(x-.05f,.88f,.80f),new Vector3(x-.05f,1.08f,.65f));
-            }
-            // Ribbed cylindrical alternator below the front service panel.
-            iron.Tube(new Vector3(.51f,.56f,-.12f),new Vector3(.51f,.56f,.73f),.29f,24);
-            for(int i=0;i<11;i++)paint.Tube(new Vector3(.51f,.56f,-.11f+i*.075f),new Vector3(.51f,.56f,-.085f+i*.075f),.31f,24);
-            iron.Tube(new Vector3(.51f,.56f,.73f),new Vector3(.51f,.56f,.755f),.255f,24);
-            for(int i=0;i<10;i++){float x=.51f-.20f+i*.044f;float h=Mathf.Sqrt(.24f*.24f-(x-.51f)*(x-.51f));paint.Case(new Vector3(x,.56f,.766f),new Vector3(.014f,h*2,.015f),.003f);}
-            // Flywheel with central axle, spokes and rim; visible below the fascia.
-            for(int i=0;i<32;i++){float a=i*Mathf.PI*2/32,b=(i+1)*Mathf.PI*2/32;iron.Tube(new Vector3(-.43f+Mathf.Cos(a)*.25f,.56f+Mathf.Sin(a)*.25f,.81f),new Vector3(-.43f+Mathf.Cos(b)*.25f,.56f+Mathf.Sin(b)*.25f,.81f),.038f,8);}
-            for(int i=0;i<6;i++){float a=i*Mathf.PI/3;iron.Tube(new Vector3(-.43f,.56f,.81f),new Vector3(-.43f+Mathf.Cos(a)*.23f,.56f+Mathf.Sin(a)*.23f,.81f),.026f,8);}
-            brass.Tube(new Vector3(-.43f,.56f,.79f),new Vector3(-.43f,.56f,.87f),.06f,6);
-            // Exhaust ends at the original smoke anchor. Fuel pipe visibly feeds tank from cap.
-            iron.Pipe(.065f,new Vector3(-.65f,1.0f,.10f),new Vector3(-.72f,1.22f,.10f),new Vector3(-.72f,1.84f,.10f),new Vector3(-.72f,2.03f,-.05f));
-            for(int i=0;i<8;i++)iron.Tube(new Vector3(-.72f,1.40f+i*.055f,.10f),new Vector3(-.72f,1.42f+i*.055f,.10f),.069f,12);
-            brass.Pipe(.035f,new Vector3(.62f,1.08f,1.08f),new Vector3(.72f,1.08f,.78f),new Vector3(.72f,1.47f,.40f),new Vector3(.49f,1.53f,.20f));
-            // Fasteners and shallow louvres; no fake floating boxes.
-            for(int x=-1;x<=1;x+=2)foreach(float y in new[]{.92f,1.23f})brass.Tube(new Vector3(x*.72f,y,.982f),new Vector3(x*.72f,y,1.003f),.022f,6);
-            // Exposed bolted cast sump, oil filler, manifold and cooling pipes.
-            for(int i=0;i<6;i++)brass.Tube(new Vector3(-.77f+i*.19f,.48f,.756f),new Vector3(-.77f+i*.19f,.48f,.78f),.018f,6);
-            iron.Tube(new Vector3(-.47f,.91f,.80f),new Vector3(-.47f,.91f,.89f),.052f,12);
-            iron.Pipe(.04f,new Vector3(-.64f,1.10f,.08f),new Vector3(-.34f,1.10f,.02f),new Vector3(-.04f,1.10f,.08f));
-            iron.Pipe(.023f,new Vector3(-.38f,.48f,-.14f),new Vector3(.30f,.48f,-.14f),new Vector3(.36f,.80f,-.14f));
-            return new[]{paint.Finish("Diesel castings and painted shroud"),iron.Finish("Skid alternator and exhaust"),brass.Finish("Fuel lines and brass fasteners")};
+            points[32]=points[0];for(int i=1;i<points.Length;i++)if((points[i]-points[i-1]).sqrMagnitude>.000001f)mesh.Tube(points[i-1],points[i],tube,10);
         }
     }
 }
