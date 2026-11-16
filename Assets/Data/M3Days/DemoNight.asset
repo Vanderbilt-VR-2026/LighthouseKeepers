@@ -98,15 +98,15 @@ MonoBehaviour:
       repeat: 0
     - id: outage
       stationId: STN_GENERATOR
-      afterStationId: STN_PIPE_LEAK
-      gate: 1
-      atSeconds: 75
+      afterStationId: 
+      gate: 0
+      atSeconds: 0
       graceSeconds: 60
       repeat: 0
     - id: beacon
       stationId: STN_BEACON_CONTROL
       afterStationId: 
-      gate: 2
+      gate: 0
       atSeconds: 0
       graceSeconds: 60
       repeat: 0

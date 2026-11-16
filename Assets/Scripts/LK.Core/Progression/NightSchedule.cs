@@ -35,7 +35,7 @@ namespace LighthouseKeepers.Core.Progression
                     f.gate==NightEventGate.ClockOrJobComplete?now>=f.atSeconds||done(f.afterStationId):
                     f.gate==NightEventGate.JobComplete?done(f.afterStationId):SawPowerOff&&powerRestored;
                 // Initial leak is the tutorial's immediate job; later faults respect the calm opening.
-                bool initial=f.gate==NightEventGate.Clock&&f.atSeconds==0&&(tension==null||FiredMask==0);
+                bool initial=f.gate==NightEventGate.Clock&&f.atSeconds==0;
                 bool finale=data.finaleFaultPileup&&f.repeat&&f.kind==NightFaultKind.StationFailure;
                 if(f.kind==NightFaultKind.LowFuel&&!powerRestored)continue;
                 // Telegraph authored clock faults before their due time, preserving the established
@@ -49,6 +49,7 @@ namespace LighthouseKeepers.Core.Progression
                 if(!ready||!initial&&!exhaustion&&(now<data.openingSeconds||
                     (tension!=null?!tension.CanProblem(now,finale):now<ReliefUntil||!finale&&now<NextFaultAt)))continue;
                 if(sabotage!=null&&!sabotage.BeforeFault(i,now,initial||exhaustion))continue;
+                if(initial&&!data.noFail)sabotage?.Warn(i,now);
                 sabotage?.Broke(i,now);
                 FiredMask|=1<<i;GraceUntil=Math.Max(GraceUntil,now+f.graceSeconds);
                 if(tension!=null)tension.Problem(now);else if(!initial)nextFaultAt=now+data.faultSpacingSeconds;

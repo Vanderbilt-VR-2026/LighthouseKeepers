@@ -1,0 +1,20 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=8.712 day=3 repaired=False water=0.02000m
+Focused Night 3 replay; prior Nights 1–2 already passed: elapsed=0.000s realtime=8.712 day=3 repaired=False water=0.02000m
+START focused fast Night3 XRI replay; original paced actions passed before the late fuel exhaustion: elapsed=0.000s realtime=8.712 day=3 repaired=False water=0.02000m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=8.796 day=3 repaired=False water=0.02007m
+day-three physical bolt 2 complete; inflow=0.6666667: elapsed=8.382s realtime=17.158 day=3 repaired=False water=0.03796m
+Released wrench: position=(3.11, 0.01, 0.75) kinematic=False water=0.04069049: elapsed=10.071s realtime=18.912 day=3 repaired=False water=0.04069m
+day-three physical bolt 0 complete; inflow=0.3333333: elapsed=16.504s realtime=25.280 day=3 repaired=False water=0.04939m
+day-three physical bolt 1 complete; inflow=0: elapsed=22.588s realtime=31.363 day=3 repaired=True water=0.05260m
+PIPE finished: elapsed=22.601s realtime=31.436 day=3 repaired=True water=0.05260m
+Three actual generator XRI pulls: elapsed=44.693s realtime=53.471 day=3 repaired=True water=0.01876m
+GENERATOR settled; already-broken beacon and radio can now use power: elapsed=44.707s realtime=53.476 day=3 repaired=True water=0.01860m
+BEACON shining: elapsed=47.596s realtime=56.366 day=3 repaired=True water=0.01860m
+Rag wiped lens during ship watch: elapsed=148.421s realtime=96.362 day=3 repaired=True water=0.01860m
+All authored ships passed: elapsed=465.011s realtime=201.886 day=3 repaired=True water=0.01860m
+RADIO complete; board 4/4: elapsed=465.011s realtime=202.003 day=3 repaired=True water=0.01860m
+SOLO DAY3 SPARE=139.87 seconds
+Bed before grip canSleep=True sleeping=False menu=False head=(2.95, 8.20, 0.00) bed=(2.95, 8.20, 0.00): elapsed=485.554s realtime=222.435 day=3 repaired=True water=0.01860m
+BED passed next day: elapsed=0.000s realtime=227.013 day=4 repaired=False water=0.02383m
+PASS: current actual-XRI solo regression. This functional replay is not a first-timer timing approval; its input helpers are faster than a new player.

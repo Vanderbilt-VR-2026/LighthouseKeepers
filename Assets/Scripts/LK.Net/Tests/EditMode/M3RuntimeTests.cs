@@ -28,11 +28,14 @@ namespace LighthouseKeepers.Net.Tests
    Call(s,"SetChoke",true);for(int i=0;i<3;i++){Call(s,"StarterPulled");Tick(s,.4);}Call(s,"SetChoke",false);
   }
   [TestCase(1)][TestCase(2)][TestCase(3)][TestCase(4)][TestCase(5)]
-  public void AuthoredNightsStartWithOnlyThePipeAndRetryRestoresIt(int day)
+    public void AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(int day)
   {
-   var s=New(day);Assert.True(Get<bool>(s,"Campaign"));Assert.False(Get<bool>(s,"Day3Balance"));Assert.False(Get<bool>(s,"Repaired"));Assert.True(Get<bool>(s,"BeaconShining"));
-   Assert.AreEqual(1,Get<int>(s,"CampaignFaultMask"));Tick(s,30);Assert.False((bool)Call(s,"Sleep"));
-   Call(s,"CompleteRepair");Tick(s,50);Call(s,"Retry");Assert.Zero(Get<double>(s,"Elapsed"));Assert.AreEqual(1,Get<int>(s,"CampaignFaultMask"));Assert.False(Get<bool>(s,"Repaired"));
+   var s=New(day);Assert.True(Get<bool>(s,"Campaign"));Assert.False(Get<bool>(s,"Repaired"));
+   int arrival=Get<int>(s,"CampaignFaultMask");Assert.AreEqual(day==1?1:day==2?3:15,arrival);
+   Assert.AreEqual(day==1,Get<bool>(s,"BeaconShining"));
+   var def=Get<object>(s,"Definition");foreach(var task in (Array)def.GetType().GetField("tasks").GetValue(def))Assert.False((bool)Call(s,"IsPending",task.GetType().GetField("stationId").GetValue(task)));
+   Tick(s,30);Assert.False((bool)Call(s,"Sleep"));Call(s,"CompleteRepair");Tick(s,10);Call(s,"Retry");
+   Assert.Zero(Get<double>(s,"Elapsed"));Assert.AreEqual(arrival,Get<int>(s,"CampaignFaultMask"));Assert.False(Get<bool>(s,"Repaired"));
   }
   [TestCase(1,false)][TestCase(2,false)][TestCase(3,true)][TestCase(4,true)][TestCase(5,true)]
   public void ValveUsesCurrentRosterAndAuthoredNightWithoutRestoringSoloClamp(int day,bool required)
@@ -45,38 +48,40 @@ namespace LighthouseKeepers.Net.Tests
    var guest=New(day);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(s,"Capture",.1f)));
    Call(guest,"SetKeeperCount",2);Assert.False(Get<bool>(Get<object>(guest,"Pressure"),"CrewRequired"));
   }
-  [Test] public void PipeCompletionWaitsForOpeningThenEngineThenUpperJobsWithBreathers()
+  [Test]   public void PipeOrGeneratorCanBeFixedFirstWithoutUnlockingOrBreakingAnotherStation()
   {
-   var s=New();Tick(s,20);Call(s,"CompleteRepair");Tick(s,24);Assert.AreEqual("On",Get<object>(s,"Power").ToString());Tick(s,1);
-   Assert.AreEqual("Off",Get<object>(s,"Power").ToString());Assert.True((bool)Call(s,"IsPending","STN_RADIO_CONSOLE"));Start(s);
-   Assert.AreEqual("On",Get<object>(s,"Power").ToString());Assert.True((bool)Call(s,"IsPending","STN_BEACON_CONTROL"));
-   Tick(s,16);Assert.False((bool)Call(s,"IsPending","STN_BEACON_CONTROL"));Tick(s,12);Assert.True((bool)Call(s,"IsPending","STN_RADIO_CONSOLE"),"Sprint5 requires at least fifteen seconds between faults");Tick(s,3);Assert.False((bool)Call(s,"IsPending","STN_RADIO_CONSOLE"));
-   Assert.False(Get<bool>(s,"Complete"));Assert.False(Get<bool>(s,"Failed"));
+   foreach(bool pipeFirst in new[]{true,false}){
+    var s=New();int arrival=Get<int>(s,"CampaignFaultMask");
+    Assert.AreEqual("Off",Get<object>(s,"Power").ToString());
+    Assert.False((bool)Call(s,"IsPending","STN_RADIO_CONSOLE"));Assert.False((bool)Call(s,"IsPending","STN_BEACON_CONTROL"));
+    if(pipeFirst)Call(s,"CompleteRepair");Start(s);if(!pipeFirst)Call(s,"CompleteRepair");Tick(s,20);
+    Assert.AreEqual(arrival,Get<int>(s,"CampaignFaultMask"));Assert.AreEqual("On",Get<object>(s,"Power").ToString());
+    Assert.True(Get<bool>(s,"Repaired"));Assert.False((bool)Call(s,"IsDone","STN_RADIO_CONSOLE"));Assert.False(Get<bool>(s,"Failed"));
+   }
   }
   [Test] public void CrewSnapshotAndRetryCarryScheduleAndGuestsCannotFireEvents()
   {
    var h=New(3,true);Tick(h,80);var g=New();Call(g,"SetRemoteReplica",true);
-   Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(Get<int>(h,"CampaignFaultMask"),Get<int>(g,"CampaignFaultMask"));Assert.AreEqual(510,Get<double>(g,"Duration"));
+   Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(Get<int>(h,"CampaignFaultMask"),Get<int>(g,"CampaignFaultMask"));Assert.AreEqual(Get<double>(h,"Duration"),Get<double>(g,"Duration"));
    Tick(g,100);Call(g,"CompleteRepair");Assert.AreEqual(80,Get<double>(g,"Elapsed"));Assert.False(Get<bool>(g,"Repaired"));
    foreach(var field in new[]{"nightFaultMask","nightGraceUntil","campaignEnabled"})
    {var snap=Call(h,"Capture",.1f);var f=snap.GetType().GetField(field);f.SetValue(snap,field=="nightFaultMask"?(object)int.MaxValue:field=="campaignEnabled"?false:(object)999d);Assert.False((bool)Call(g,"ApplyRemote",snap));}
-   Call(h,"Retry");Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.AreEqual(1,Get<int>(g,"CampaignFaultMask"));
+   Call(h,"Retry");Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.AreEqual(15,Get<int>(g,"CampaignFaultMask"));
   }
   [Test] public void DemoConsumesItsOwnDataAndNightOneCannotLose()
   {
    var demo=New(3,false,true);Assert.AreEqual(360,Get<double>(demo,"Duration"));Tick(demo,75);Assert.AreEqual("Off",Get<object>(demo,"Power").ToString());
    var one=New(1);Call(one,"EngageWatch");Tick(one,400);Call(one,"ObserveWater",10d,1f);Assert.False(Get<bool>(one,"Failed"));
   }
-  [Test] public void NightTwoActuallyConsumesFuelSputtersThenCutsEveryCircuitAndReplicates()
+  [Test]   public void NightTwoStartsFuelEmptyWithPipeBrokenAndBothReplicate()
   {
-   var s=New(2);Tick(s,72.5);Assert.True(Get<bool>(s,"FuelSputtering"));Assert.AreEqual("On",Get<object>(s,"Power").ToString());
-   var engine=Get<object>(s,"Engine");Assert.Greater(Get<float>(engine,"Fuel"),0);
-   Tick(s,3);Assert.Zero(Get<float>(engine,"Fuel"));Assert.True(Get<bool>(s,"NightTwoOutage"));Assert.False(Get<bool>(s,"BeaconShining"));
+   var s=New(2);var engine=Get<object>(s,"Engine");Assert.Less(Get<float>(engine,"Fuel"),.1f);
+   Assert.False(Get<bool>(engine,"Running"));Assert.False(Get<bool>(s,"BeaconShining"));
    foreach(PowerCircuit circuit in Enum.GetValues(typeof(PowerCircuit)))Assert.False((bool)Call(s,"HasPower",circuit));
-   Assert.False((bool)Call(s,"IsPending","STN_GENERATOR"));
    Assert.AreEqual("Fuel",Call(Get<object>(s,"Director"),"StepForStation","STN_GENERATOR",false).ToString());
-   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(s,"Capture",.1f)));Assert.True(Get<bool>(g,"NightTwoOutage"));
-   Start(s);Assert.AreEqual("On",Get<object>(s,"Power").ToString());Assert.True((bool)Call(s,"IsDone","STN_GENERATOR"));
+   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(s,"Capture",.1f)));
+   Assert.AreEqual("Off",Get<object>(g,"Power").ToString());Assert.False(Get<bool>(g,"Repaired"));
+   Start(s);Assert.AreEqual("On",Get<object>(s,"Power").ToString());Assert.True((bool)Call(s,"IsDone","STN_GENERATOR"));Assert.False(Get<bool>(s,"Repaired"));
   }
   [Test] public void LowFuelEventDoesNotRestartEngineAndCannotCompleteBeforeRefilling()
   {
@@ -85,13 +90,13 @@ namespace LighthouseKeepers.Net.Tests
    var director=Get<object>(s,"Director");Assert.AreEqual("Fuel",Call(director,"StepForStation","STN_GENERATOR",false).ToString());
    for(int i=0;i<100;i++)Call(s,"PourFuel",.1f);Tick(s,.3);Assert.False(Get<bool>(s,"FuelJobPending"));Assert.True((bool)Call(s,"IsDone","STN_GENERATOR"));
   }
-  [Test] public void RepairReliefExtendsPhysicalFuelBudgetWithoutFakingPowerAndReplicatesConsumption()
+  [Test]   public void RepairDoesNotStartAnEngineOrRefillItsTankAndRealFuelConsumptionReplicates()
   {
-   var h=New(2);Tick(h,70);Call(h,"CompleteRepair");Tick(h,15.5);
-   var engine=Get<object>(h,"Engine");Assert.True(Get<bool>(engine,"Running"));Assert.Greater(Get<float>(engine,"Fuel"),0);Assert.False(Get<bool>(h,"NightTwoOutage"));Assert.True(Get<bool>(h,"FuelSputtering"));
-   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.02f)));Assert.True(Get<bool>(g,"FuelSputtering"));Assert.AreEqual(Get<float>(engine,"Consumption"),Get<float>(Get<object>(g,"Engine"),"Consumption"));
-   Tick(h,4);Assert.Zero(Get<float>(engine,"Fuel"));Assert.False(Get<bool>(engine,"Running"));Assert.True(Get<bool>(h,"NightTwoOutage"));
-   foreach(PowerCircuit circuit in Enum.GetValues(typeof(PowerCircuit)))Assert.False((bool)Call(h,"HasPower",circuit));
+   var h=New(2);Call(h,"CompleteRepair");Assert.AreEqual("Off",Get<object>(h,"Power").ToString());Start(h);
+   var engine=Get<object>(h,"Engine");float fuel=Get<float>(engine,"Fuel");Tick(h,30);Assert.Less(Get<float>(engine,"Fuel"),fuel);
+   var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.02f)));
+   Assert.AreEqual(Get<float>(engine,"Consumption"),Get<float>(Get<object>(g,"Engine"),"Consumption"));
+   Assert.AreEqual(Get<float>(engine,"Fuel"),Get<float>(Get<object>(g,"Engine"),"Fuel"));
   }
   [Test] public void TensionSnapshotRejectsMismatchedStageAndGuestCannotAdvanceItsPacing()
   {

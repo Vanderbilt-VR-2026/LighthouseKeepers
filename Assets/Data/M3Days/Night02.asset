@@ -70,7 +70,7 @@ MonoBehaviour:
   crankCooldownSeconds: 2
   chokeReleaseSeconds: 10
   isolationFreshnessSeconds: 0.3
-  initialFuelFraction: 0.8
+  initialFuelFraction: 0.04
   scenario:
     id: night-2
     nameKey: m3.night2
@@ -90,7 +90,7 @@ MonoBehaviour:
     startGraceSeconds: 45
     firstStationGraceSeconds: 60
     openingCue: 13
-    tonightCue: 80
+    tonightCue: 0
     faults:
     - id: leak
       stationId: STN_PIPE_LEAK
@@ -101,10 +101,10 @@ MonoBehaviour:
       repeat: 0
     - id: outage
       stationId: STN_GENERATOR
-      afterStationId: STN_PIPE_LEAK
-      kind: 2
+      afterStationId: 
+      kind: 0
       gate: 0
-      atSeconds: 75
+      atSeconds: 0
       graceSeconds: 60
       repeat: 0
     stations:
