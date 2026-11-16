@@ -24,8 +24,8 @@ namespace LighthouseKeepers.WatchDemo
             }
             return true;
         }
-        public bool Visible(Vector3 head,Vector3 forward,Vector3 feet)=>InView(head,forward,feet)&&ClearSight(head,feet+Vector3.up*1.65f)&&ClearSight(head,feet+Vector3.up*1.15f);
-        public bool Find(Vector3 head,Vector3 forward,Vector3 other,bool two,out Vector3 feet)
+        public bool Visible(Vector3 head,Vector3 forward,Vector3 feet,float face=1.65f)=>InView(head,forward,feet)&&ClearSight(head,feet+Vector3.up*face)&&ClearSight(head,feet+Vector3.up*(face*.65f));
+        public bool Find(Vector3 head,Vector3 forward,Vector3 other,bool two,out Vector3 feet,float face=1.65f,float height=2.1f)
         {
             feet=default;float floor=Mathf.Clamp(Mathf.Round((head.y-1.45f)/3.3f)*3.3f,0,9.9f);
             var facing=Vector3.ProjectOnPlane(forward,Vector3.up).normalized;if(facing.sqrMagnitude<.5f)facing=Vector3.forward;
@@ -34,8 +34,8 @@ namespace LighthouseKeepers.WatchDemo
                 if(!Physics.Raycast(candidate+Vector3.up*.7f,Vector3.down,out var ground,1.1f,~0,QueryTriggerInteraction.Ignore)||ground.normal.y<.95f||Mathf.Abs(ground.point.y-floor)>.3f)continue;
                 candidate.y=ground.point.y+.015f;
                 if(!DrownedAppearance.HasComfortClearance(head,candidate)||two&&!DrownedAppearance.HasComfortClearance(other,candidate))continue;
-                if(Physics.CheckCapsule(candidate+Vector3.up*.45f,candidate+Vector3.up*1.90f,.42f,~0,QueryTriggerInteraction.Ignore))continue;
-                if(!ClearSight(head,candidate+Vector3.up*1.65f)||!ClearSight(head,candidate+Vector3.up*1.15f))continue;
+                if(Physics.CheckCapsule(candidate+Vector3.up*.45f,candidate+Vector3.up*(height-.22f),.42f,~0,QueryTriggerInteraction.Ignore))continue;
+                if(!ClearSight(head,candidate+Vector3.up*face)||!ClearSight(head,candidate+Vector3.up*(face*.65f)))continue;
                 feet=candidate;return true;
             }
             return false;

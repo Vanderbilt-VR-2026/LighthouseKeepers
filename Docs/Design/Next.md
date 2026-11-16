@@ -1,3 +1,30 @@
+# Current checkpoint — November 16 finish/reference pass
+
+Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editors muted. Do not launch Quest. No main/sky/avatar edits.
+
+## Current step
+
+Three original Drowned forms implemented: sea hag, soaked doll and gaunt creature. Same shared encounter rules, deterministic night/fault selection, one active renderer, height-aware safe placement and mist. Graphics inspected and revised; 53 focused tests pass. Evidence: `Docs/Verification/S5/Forms/`. These are still non-contact apparitions, not a hunter.
+
+In progress this turn: original flare pistol/host-owned ammo and repulsion; co-op guest shot is being diagnosed after initial rejection. Generator continuous cage/tank rebuild has graphics evidence; physical regression pending. Do not label the current old installed APK as these changes.
+
+## DEVICE CHECKS PENDING
+
+- Install the latest clean-source APK when ADB is available; **do not launch** without permission.
+- All three forms in blackout/stereo; reach/comfort, no face intrusion, Sightings Off.
+- Left/right flare grip, trigger, wall obstruction, limited ammo, repulsion, drop/return.
+- Generator fuel/primer/choke/starter reach and silhouette/material acceptance.
+- Worn Quest 72 Hz GPU ≤11 ms / CPU main ≤9 ms with entity/flare/generator. Geometry counts are not GPU evidence.
+- Matching-build Mac+Quest/two-Quest voice, props, tasks, ship wheel, shared sleep/rejoin.
+
+## Next
+
+Finish flare guest-shot validation, generator physical regression, actual-XRI solo Night3, then clean commit/build/push and update this checkpoint. After this reference pass, the real hunter/hiding/recovery and final campaign polish remain. Do not add lantern/bell/trap defenses: the latest user chose the flare pistol as the only active defense. Keep timingApproved=false pending human first-timer acceptance.
+
+Commands and scripts: `artifacts/s5/finish/` (`review-2.py`, `crew-driver.py`, `crew-flare.py`); focused runner `artifacts/remaining/m3/tests.py`. Use new output folders on repeats. Baseline before edits: 142/146 focused tests (four existing stale fixtures), actual-XRI Night3 pass/errors0 in `artifacts/s5/finish/before/`.
+
+---
+
 # Current checkpoint — November 15 visibility corrections
 
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Nothing merged to main. Editor muted throughout. Skybox and avatar body unchanged.

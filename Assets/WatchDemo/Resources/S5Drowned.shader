@@ -24,7 +24,14 @@ Shader "Lighthouse/S5 Drowned oilskin" {
  half3 light=clamp(SampleSH(n),half3(.22,.26,.28),half3(.42,.42,.42));
  half wet=.35+.65*pow(saturate(sin(i.world.x*73+i.world.z*61+sin(i.world.y*5))),8);
  half3 reflection=GlossyEnvironmentReflection(reflect(-view,n),.28,1);
- half3 colour=i.colour.rgb*(light*2);
+ Light key=GetMainLight();
+ // Directional form remains legible in a blackout without a new realtime light.
+ half diffuse=.22+.52*saturate(dot(n,key.direction))+.26*saturate(dot(n,normalize(half3(-.45,.8,.25))));
+ half grain=sin(i.world.x*47+sin(i.world.z*32))*sin(i.world.y*61+i.world.z*19);
+ half salt=.89+.11*grain;
+ half3 colour=i.colour.rgb*(light*1.55)*diffuse*salt;
+ if(i.kind>.5&&i.kind<1.5){half vein=pow(saturate(sin(i.world.y*28+sin(i.world.x*18)*2+i.world.z*13)),18);colour*=1-vein*.10;}
+
  if(i.kind<1.5)colour+=min(reflection,half3(.4,.4,.4))*.075*wet+rim*half3(.012,.025,.028);
  return half4(colour,_Visibility);}
  ENDHLSL

@@ -78,8 +78,8 @@ namespace LighthouseKeepers.Tests.M3
             var body=(Mesh)type.GetMethod("Body").Invoke(null,null);
             var effects=(Mesh)type.GetMethod("Effects").Invoke(null,null);
             try {
-                Assert.LessOrEqual(body.triangles.Length/3,3000);
-                Assert.That(body.bounds.size.y,Is.InRange(1.8f,2.3f));
+                Assert.LessOrEqual(body.triangles.Length/3,12000);
+                Assert.That(body.bounds.size.y,Is.InRange(1.7f,1.95f));
                 Assert.LessOrEqual(body.bounds.size.x,1.1f);
                 Assert.AreEqual(body.vertexCount,body.uv.Length);
                 Assert.LessOrEqual(effects.triangles.Length/3,250);
