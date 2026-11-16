@@ -91,12 +91,13 @@ def room(layout,f):
   arc('SM_Guard_'+id+'_Rail',ir-.0475,ir-.0025,y+1.0275,y+1.0725,a0,a1,'Metal',collision=False)
   ob=arc('SM_Safety_'+id+'_Opening',ir-.045,ir-.005,y,y+1.05,a0,a1,'Metal');ob['collision_only']=True
  # Lamp housings belong to the shell; their baked Light components are added by the editor builder.
- for k,a in enumerate([30,150,270]):
-  p=polar(a,r-.11,y+2.35);box('SM_Fixture_'+id+'_'+str(k),p,(.22,.32,.12),'Metal',a,False)
-  box('SM_Lamp_'+id+'_'+str(k),polar(a,r-.18,y+2.35),(.13,.22,.035),'Lamp',a,False)
- for k,a in enumerate([90,270]):
-  box('SM_EmergencyFixture_'+id+'_'+str(k),polar(a,r-.10,y+2.45),(.20,.16,.09),'Metal',a,False)
-  box('SM_EmergencyLamp_'+id+'_'+str(k),polar(a,r-.16,y+2.45),(.14,.10,.025),'Emergency',a,False)
+ if id!='F4':  # Glazing/door is not a mounting surface. No floating fixtures.
+  for k,a in enumerate([30,150,270]):
+   p=polar(a,r-.11,y+2.35);box('SM_Fixture_'+id+'_'+str(k),p,(.22,.32,.12),'Metal',a,False)
+   box('SM_Lamp_'+id+'_'+str(k),polar(a,r-.18,y+2.35),(.13,.22,.035),'Lamp',a,False)
+  for k,a in enumerate([90,270]):
+   box('SM_EmergencyFixture_'+id+'_'+str(k),polar(a,r-.10,y+2.45),(.20,.16,.09),'Metal',a,False)
+   box('SM_EmergencyLamp_'+id+'_'+str(k),polar(a,r-.16,y+2.45),(.14,.10,.025),'Emergency',a,False)
  if id=='F4':
   # No unsupported hanging balcony fixtures; interior lamps light the exit.
   g=layout['gallery'];arc('SM_Gallery_Deck',g['innerRadius'],g['outerRadius'],y-.18,y,0,360,'Metal')

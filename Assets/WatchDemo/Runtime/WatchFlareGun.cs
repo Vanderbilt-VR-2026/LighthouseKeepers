@@ -29,8 +29,9 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Build()
         {
-            // A small wall-mounted rack beside the House door; each gun has a deterministic network path.
-            home=new Vector3(-2.20f,.98f,-5.82f-Slot*.38f);homeRotation=Quaternion.Euler(0,90,0);
+            // One shared pistol lies on the wooden bench beside the wrench. Preserve its lease path.
+            var bench=GameObject.Find("Wrench table top").GetComponent<Collider>().bounds;
+            home=new Vector3(bench.center.x+.43f,bench.max.y+.035f,bench.center.z-.14f);homeRotation=Quaternion.Euler(0,25,90);
             transform.SetPositionAndRotation(home,homeRotation);
             var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();
             var iron=new Material(parts.Metal){name="Flare pistol worn blue iron"};iron.SetColor("_BaseColor",new Color(.12f,.16f,.18f));iron.SetFloat("_Metallic",.75f);iron.SetFloat("_Smoothness",.36f);iron.SetColor("_EmissionColor",Color.black);

@@ -25,6 +25,18 @@ namespace LighthouseKeepers.WatchDemo
             return true;
         }
         public bool Visible(Vector3 head,Vector3 forward,Vector3 feet,float face=1.65f)=>InView(head,forward,feet)&&ClearSight(head,feet+Vector3.up*face)&&ClearSight(head,feet+Vector3.up*(face*.65f));
+        public bool Ceiling(Vector3 head,Vector3 forward,Vector3 other,bool two,out Vector3 point,out float yaw)
+        {
+            point=default;yaw=0;var horizontal=Vector3.ProjectOnPlane(forward,Vector3.up).normalized;
+            foreach(float distance in new[]{3.4f,3.8f,4.2f})foreach(float angle in new[]{0f,25f,-25f,45f,-45f}){
+                var direction=Quaternion.Euler(0,angle,0)*horizontal;var origin=head+direction*distance;
+                if(!Physics.Raycast(origin,Vector3.up,out var hit,2.5f,~0,QueryTriggerInteraction.Ignore)||hit.normal.y>-.8f||!hit.collider.name.Contains("Floor"))continue;
+                var p=hit.point-Vector3.up*.35f;var facing=Quaternion.LookRotation(-direction)*Quaternion.Euler(90,0,0);var face=p+facing*(Vector3.up*1.55f);
+                if((head-face).sqrMagnitude<4||two&&(other-face).sqrMagnitude<4||!ClearSight(head,face))continue;
+                if(Physics.CheckCapsule(p,face,.23f,~0,QueryTriggerInteraction.Ignore))continue;
+                point=p;yaw=Quaternion.LookRotation(-direction).eulerAngles.y;return true;
+            }return false;
+        }
         public bool Find(Vector3 head,Vector3 forward,Vector3 other,bool two,out Vector3 feet,float face=1.65f,float height=2.1f)
         {
             feet=default;float floor=Mathf.Clamp(Mathf.Round((head.y-1.45f)/3.3f)*3.3f,0,9.9f);

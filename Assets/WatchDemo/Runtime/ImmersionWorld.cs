@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;M2StationParts parts;Transform bed;
         Light[] bunk=new Light[2];readonly List<Light> stair=new();readonly List<Light> station=new();
         readonly List<AudioSource> faultAudio=new();
-        readonly List<(Light light,Renderer lens)> lenses=new();MaterialPropertyBlock lensBlock;
+        readonly List<(Light light,Renderer lens,float baseline,bool driven)> lenses=new();MaterialPropertyBlock lensBlock;
         readonly TextMesh[] bunkLabels=new TextMesh[2];int shownBedState=-1;
         Font chalk;Material boardEnamel;int bedMask;HarborRadio narrator;
         public HarborRadio Narrator=>narrator;
@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
             p.chalk=Resources.Load<Font>("Fonts/Kalam-Regular");
             if(watch.State.Immersion.physicalGuidance)p.Build(head,board,wrench,pipe,generator,radio,beacon);
             var cabinet=p.HouseRadio(board);
-            foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>()));}
+            foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>(),l.intensity,p.stair.Contains(l)||p.station.Contains(l)||System.Array.IndexOf(p.bunk,l)>=0));}
             if(watch.State.Immersion.radioNarration)p.narrator=HarborRadio.Create(watch,head,wrench,pipe,cabinet);
             if(watch.State.Immersion.faultMist)FaultVapour.Create(watch,pipe,generator);
             if(watch.State.Immersion.atmosphere)p.gameObject.AddComponent<ImmersionAtmosphere>().Initialize(watch,head);
@@ -59,7 +59,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<4;i++)
             {
                 var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,Vector3.zero);
-                WallFixtureMount.Place(t,i*3.3f+2.15f,i==3?315:320,false);
+                if(!WallFixtureMount.Place(t,i*3.3f+2.15f,i==3?315:320,false)){Destroy(t.gameObject);continue;}
                 parts.Part("Stair lamp wall bracket",t,new Vector3(0,0,-.012f),new Vector3(.17f,.23f,.025f),parts.Metal);
                 stair.Add(Fixture(parts,t,Vector3.zero,"Shielded stair lamp"));
             }
@@ -144,7 +144,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(fault&&!s.Failed){if(!a.isPlaying)a.Play();}else if(a.isPlaying)a.Stop();
             }
             foreach(var fitting in lenses)
-            {lensBlock.Clear();lensBlock.SetColor("_BaseColor",new Color(.7f,.42f,.15f));lensBlock.SetColor("_EmissionColor",fitting.light.color*fitting.light.intensity*2);fitting.lens.SetPropertyBlock(lensBlock);}
+            {if(!fitting.driven)fitting.light.intensity=fitting.baseline;if(s.Sprint5&&s.Sprint5.groundedHorror)fitting.light.intensity*=DrownedMotion.LampDip(s.Elapsed,s.Day,Mathf.FloorToInt(fitting.light.transform.position.y/3.3f)+1);lensBlock.Clear();lensBlock.SetColor("_BaseColor",new Color(.7f,.42f,.15f));lensBlock.SetColor("_EmissionColor",fitting.light.color*fitting.light.intensity*2);fitting.lens.SetPropertyBlock(lensBlock);}
         }
     }
 }

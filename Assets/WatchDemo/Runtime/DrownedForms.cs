@@ -48,7 +48,7 @@ namespace LighthouseKeepers.WatchDemo
                 float length=.40f+.24f*(.5f+.5f*Mathf.Sin(i*2.7f));
                 var top=centre+rotation*new Vector3(side*.142f,.10f,front*.127f);
                 float veil=front>.25f?.075f:0;
-                s.Tube(new[]{top,top+new Vector3(side*.025f+.018f*Mathf.Sin(i*2),-.17f,.025f),top+new Vector3(side*.05f-.020f*Mathf.Cos(i*3),-length*.65f,.05f+veil),top+new Vector3(side*.024f,-length,.09f+veil)},new[]{.013f,.014f,.010f,.001f},new[]{.008f,.010f,.007f,.001f},Hair,6,0);
+                s.Tube(new[]{top,top+new Vector3(side*.025f+.018f*Mathf.Sin(i*2),-.17f,.025f),top+new Vector3(side*.05f-.020f*Mathf.Cos(i*3),-length*.65f,.05f+veil),top+new Vector3(side*.024f,-length,.09f+veil)},new[]{.005f,.006f,.003f,.0006f},new[]{.002f,.003f,.002f,.0005f},Hair,6,0);
             }
             // Damp hem streaks, loose torn ends and a collar seam, all part of the same mesh.
             for(int i=0;i<13;i++){
@@ -76,7 +76,7 @@ namespace LighthouseKeepers.WatchDemo
             // Uneven bob, individual clumped strands. Keep the eyes open to the viewer.
             for(int i=0;i<24;i++){
                 float a=.76f+i*(Mathf.PI*2-1.52f)/23;var p=centre+rotation*new Vector3(Mathf.Sin(a)*.142f,.045f,Mathf.Cos(a)*.121f);
-                s.Tube(new[]{p,p+new Vector3(Mathf.Sin(a)*.007f,-.12f,.012f),p+new Vector3(Mathf.Sin(a)*.012f,-.24f+.022f*Mathf.Sin(i*3),.025f)},new[]{.020f,.019f,.003f},new[]{.012f,.013f,.003f},Hair,6);
+                s.Tube(new[]{p,p+new Vector3(Mathf.Sin(a)*.007f,-.12f,.012f),p+new Vector3(Mathf.Sin(a)*.012f,-.24f+.022f*Mathf.Sin(i*3),.025f)},new[]{.006f,.005f,.001f},new[]{.003f,.002f,.0005f},Hair,6);
             }
             // A few painted cracks; no emissive eyes or bright circular mask.
             for(int side=-1;side<=1;side+=2){
@@ -118,18 +118,18 @@ namespace LighthouseKeepers.WatchDemo
         {
             Vector3 P(float x,float y,float z)=>c+q*new Vector3(x,y,z);
             var skin=doll?Bone:Skin;
-            s.Ellipsoid(c,radius,skin,24,14,1,q,true);
+            s.Head(c,radius,skin,q);
             // Jaw and cheek planes, sunken sockets, lids, non-glowing small eyes.
             for(int side=-1;side<=1;side+=2){
                 float x=side*radius.x*.48f;float eye=radius.z*.88f;
-                s.Ellipsoid(P(x,.025f,eye),new Vector3(doll?.040f:.033f,doll?.029f:.021f,.014f),Hollow,14,6,2,q,true);
-                s.Ellipsoid(P(x,.022f,eye+.012f),new Vector3(doll?.011f:.005f,doll?.013f:.005f,.006f),doll?Skin*.42f:Skin*.10f,12,6,1,q,true);
-                s.Ellipsoid(P(x,.020f,eye+.017f),new Vector3(.005f,.007f,.002f),Hollow,8,4,2,q,true);
+                s.Ellipsoid(P(x,.025f,eye),new Vector3(doll?.028f:.027f,doll?.012f:.009f,.004f),skin*.25f,14,6,2,q,true);
+                s.Ellipsoid(P(x,.022f,eye+.012f),new Vector3(.010f,.006f,.003f),Skin*.55f,12,6,1,q,true);
+                s.Ellipsoid(P(x,.020f,eye+.017f),new Vector3(.004f,.004f,.001f),Hollow,8,4,2,q,true);
                 s.Tube(new[]{P(side*.018f,.052f,eye),P(x,.061f,eye+.001f),P(side*radius.x*.78f,.047f,eye-.02f)},new[]{.008f,.012f,.004f},new[]{.006f,.008f,.003f},skin*.72f,8,1,trueHead:true);
                 // Salt/dark runoff under each eye, flush against the cheek.
                 s.Tube(new[]{P(x,-.008f,eye+.009f),P(x+side*.004f,-.05f,eye+.006f),P(x+side*.012f,-.081f,eye-.004f)},new[]{.004f,.003f,.0005f},new[]{.002f,.002f,.001f},Damp*.35f,5,2,trueHead:true);
             }
-            s.Ellipsoid(P(.004f,-.018f,radius.z+.009f),new Vector3(.018f,.041f,.026f),skin*.88f,10,6,1,q,true);
+            s.Ellipsoid(P(.004f,-.018f,radius.z+.009f),new Vector3(.015f,.030f,.018f),skin*.88f,10,6,1,q,true);
             if(open){
                 s.Ellipsoid(P(0,-.085f,radius.z*.86f),new Vector3(.046f,.074f,.017f),Hollow,18,10,2,q,true);
                 s.Tube(new[]{P(-.045f,-.045f,radius.z*.90f),P(-.042f,-.125f,radius.z*.89f),P(0,-.165f,radius.z*.86f),P(.042f,-.125f,radius.z*.89f),P(.045f,-.045f,radius.z*.90f)},new[]{.006f,.007f,.009f,.007f,.006f},new[]{.004f,.004f,.006f,.004f,.004f},skin*.65f,8,1,trueHead:true);
@@ -164,6 +164,17 @@ namespace LighthouseKeepers.WatchDemo
             public void Grid(Vector3[,] p,Color colour,float kind=0,bool head=false,bool reverse=false){int start=vertices.Count,rows=p.GetLength(0),cols=p.GetLength(1);for(int r=0;r<rows;r++)for(int j=0;j<cols;j++){vertices.Add(p[r,j]);colours.Add(colour);uv.Add(new Vector2(kind,head?1:0));}for(int r=0;r<rows-1;r++)for(int j=0;j<cols-1;j++){int a=start+r*cols+j,b=a+1,d=a+cols,e=d+1;if(reverse){triangles.AddRange(new[]{a,e,b,a,d,e});}else triangles.AddRange(new[]{a,b,e,a,e,d});}}
             public void Tube(Vector3[] c,float[] widths,float[] depths,Color colour,int sides=12,float kind=0,bool folds=false,bool trueHead=false){var p=new Vector3[c.Length,sides+1];for(int r=0;r<c.Length;r++){var along=(c[Mathf.Min(r+1,c.Length-1)]-c[Mathf.Max(0,r-1)]).normalized;var right=Vector3.Cross(along,Vector3.forward).normalized;if(right.sqrMagnitude<.01f)right=Vector3.right;var forward=Vector3.Cross(right,along).normalized;for(int j=0;j<=sides;j++){float a=j*Mathf.PI*2/sides,f=folds?1+.055f*Mathf.Cos(a*9+r*.25f):1;p[r,j]=c[r]+right*(Mathf.Sin(a)*widths[r]*f)+forward*(Mathf.Cos(a)*depths[r]*f);}}Grid(p,colour,kind,trueHead,false);}
             public void Ellipsoid(Vector3 c,Vector3 radius,Color colour,int sides=16,int rings=8,float kind=0,Quaternion q=default,bool head=false){if(q==default)q=Quaternion.identity;var p=new Vector3[rings+1,sides+1];for(int r=0;r<=rings;r++)for(int j=0;j<=sides;j++){float a=j*Mathf.PI*2/sides,b=r*Mathf.PI/rings;p[r,j]=c+q*Vector3.Scale(radius,new Vector3(Mathf.Sin(a)*Mathf.Sin(b),Mathf.Cos(b),Mathf.Cos(a)*Mathf.Sin(b)));}Grid(p,colour,kind,head,true);}
+            public void Head(Vector3 c,Vector3 radius,Color skin,Quaternion q)
+            {
+                const int rows=22,cols=36;var p=new Vector3[rows+1,cols+1];
+                for(int r=0;r<=rows;r++)for(int j=0;j<=cols;j++){
+                    float a=j*Mathf.PI*2/cols,b=r*Mathf.PI/rows;float y=Mathf.Cos(b),x=Mathf.Sin(a)*Mathf.Sin(b),z=Mathf.Cos(a)*Mathf.Sin(b);
+                    float jaw=y<-.25f?Mathf.Lerp(.68f,1,Mathf.InverseLerp(-1,-.25f,y)):1;
+                    x*=jaw;
+                    if(z>0){float sockets=Mathf.Exp(-Mathf.Pow((Mathf.Abs(x)-.46f)*6,2)-Mathf.Pow((y-.13f)*8,2));float cheeks=Mathf.Exp(-Mathf.Pow((Mathf.Abs(x)-.62f)*6,2)-Mathf.Pow((y+.22f)*7,2));float brow=Mathf.Exp(-Mathf.Pow((y-.30f)*12,2));z+=-.14f*sockets+.09f*cheeks+.06f*brow;}
+                    p[r,j]=c+q*Vector3.Scale(radius,new Vector3(x,y,z));
+                }Grid(p,skin,1,true,true);
+            }
             public Mesh Finish(string name){var m=new Mesh{name=name};m.SetVertices(vertices);m.SetColors(colours);m.SetUVs(0,uv);m.SetTriangles(triangles,0);m.RecalculateNormals();m.RecalculateBounds();return m;}
         }
     }

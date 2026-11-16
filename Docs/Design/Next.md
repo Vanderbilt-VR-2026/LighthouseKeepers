@@ -1,3 +1,27 @@
+# Active checkpoint — November 16 brief scares / physical cleanup
+
+Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editor muted. Never launch Quest automatically. Main untouched. Network **LK-S5-DREAD1 / LK-Lab-Coop-v33**, both clients update.
+
+- Implemented: pictured F4 fixture and all exposed lantern cable loops removed at source; floors restored after pole removal; single bench flare; fuel-can gravity/8s recovery; front-facing wheel needle; arm-swing run; brief host-selected lunge/watcher/ceiling poses; darker lighting/voltage sags; music retained beneath speech; three sparse placeholder narration cues. Details: [DreadPlaytestPass.md](DreadPlaytestPass.md).
+- Verified: 89 focused checks; graphics both-hand can drop/recovery; final wiring audit zero unexpected contacts; solo Night3 stations/two ships/sleep toNight4. Two-Mac guest flare/repulsion and host-owned dropped-can/recovery pass. Evidence: `Docs/Verification/S5/Dread/`. APK build/install is next.
+- Latest `adb devices` has no headset. Do not wait or launch it. Build a clean-source APK; install if it returns.
+
+## Next: new keeper avatar (user requested AFTER this pass)
+
+References: `/Users/aneeshvasamreddy/Downloads/lighthouse keeper reference.jpeg` and `/Users/aneeshvasamreddy/Downloads/300px-LighthouseKeeper.webp`. Human workwear proportions from photo; stylized navy coat/cap/scarf/leather equipment from illustration. Author in Blender. Reuse Will's existing `CrewHumanoidAvatar`/51-bone rig export, improve inferred planted feet/knees/stairs, retain local tan hands and existing pose transport. No real leg tracking claim. Preserve existing art as fallback; inspect Blender + Unity front/side/back and co-op views. User explicitly authorized body changes with these new references.
+
+Blender: `/Users/aneeshvasamreddy/Applications/Blender.app/Contents/MacOS/Blender`. Existing art builder: `tools/Avatars/build_reference_fisherman.py`, export `export_fisherman_skin.py`; existing procedural footsteps/IK: `Assets/Scripts/LK.Net/CrewHumanoidAvatar.cs`. Build on these rather than replace networking.
+
+## DEVICE CHECKS PENDING — current pass
+
+- Install latest APK without launching; user starts it.
+- Worn-headset F4 door/wire sweep; fuel can both hands/drop/8s return; one flare on bench; wheel pointer in front; restored floors/no pole.
+- Alternating free arm swings while moving: +60% run, no run from standing waving or holding tools; comfort and collision unchanged.
+- Brief encounters/ceiling visibility in stereo, Sightings Off, no face intrusion; darkness/stairs readability, radio/music balance and TTS placeholders.
+- Matching v33 Mac+Quest/two-Quest join, human voice, guest interactions/shared sleep/rejoin, sustained72Hz CPU/GPU profiling. Editor evidence cannot certify these.
+
+---
+
 # Current checkpoint — November 16 demo/choices pass
 
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editors muted; do not auto-launch Quest. Main untouched. New network identity **LK-S5-CHOICES1 / LK-Lab-Coop-v32**: both players update.

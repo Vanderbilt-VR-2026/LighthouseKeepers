@@ -72,7 +72,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!initialized)return;
             bool sputter=state.FuelSputtering;
-            if(power&&warm>=1&&Time.time-recoveryStart>2&&!sputter&&!wasSputtering)return;
+            if(power&&warm>=1&&Time.time-recoveryStart>2&&!sputter&&!wasSputtering&&!(state.Sprint5&&state.Sprint5.groundedHorror&&state.Day>=2))return;
             wasSputtering=sputter;
             if(!power)alarm.volume=Mathf.Lerp(tuning&&tuning.soundPass?tuning.alarmVolume:.09f,tuning&&tuning.soundPass?tuning.alarmHumVolume:.02f,Mathf.SmoothStep(0,1,(Time.unscaledTime-outageStart)/(tuning&&tuning.soundPass?tuning.alarmFadeSeconds:10f)));
             warm=Mathf.MoveTowards(warm,power?1:0,Time.deltaTime/(power?recoverySeconds:.5f));Apply();
@@ -84,6 +84,8 @@ namespace LighthouseKeepers.WatchDemo
             var tint=blackout?tuning.emergencyTint:new Color(1,.82f,.68f,1);
             float atmosphere=state.Immersion&&state.Immersion.atmosphere?state.Immersion.interiorLightMultiplier:1;
             float sputter=state.FuelSputtering?.85f+.15f*Mathf.Cos((float)state.FuelRunoutRemaining*Mathf.PI*2/1.5f):1;
+            float dread=state.Sprint5&&state.Sprint5.groundedHorror?DrownedMotion.LampDip(state.Elapsed,state.Day,2):1;
+            atmosphere*=dread;
             var illumination=Color.Lerp(tint*pulse,Color.white*atmosphere,Mathf.SmoothStep(0,1,warm))*sputter;
             for(int i=0;i<materials.Count;i++)
             {

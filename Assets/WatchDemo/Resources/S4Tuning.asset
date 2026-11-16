@@ -44,8 +44,8 @@ MonoBehaviour:
   houseDoorFlowCoefficient: 1.7
   failWaterHeightM: 0.55
   failWaterSustainSeconds: 3
-  emergencyMinimum: 0.115
-  emergencyMaximum: 0.1725
+  emergencyMinimum: 0.065
+  emergencyMaximum: 0.10
   emergencyCycleSeconds: 2
   warmRecoverySeconds: 1
   emergencyTint: {r: 1, g: 0.22, b: 0.13, a: 1}

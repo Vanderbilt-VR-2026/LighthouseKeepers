@@ -4,10 +4,11 @@ namespace LighthouseKeepers.Core.Progression
     public enum DrownedPhase { Dormant, Warning, Manifest, Retreat }
     [Serializable] public sealed class DrownedFrame
     {
+        public int poseKind;
         public bool enabled; public int phase, fault=-1, appearances, consumed;
         public double since, nextAt, anchorAt;
         public bool anchored; public int actor; public float x,y,z,yaw;
-        public bool ValidAnchor(double now)=>double.IsFinite(anchorAt)&&anchorAt>=0&&anchorAt<=now+.001&&actor>=0&&float.IsFinite(x)&&Math.Abs(x)<=40&&float.IsFinite(y)&&y>=-2&&y<=18&&float.IsFinite(z)&&Math.Abs(z)<=40&&float.IsFinite(yaw)&&Math.Abs(yaw)<=360&&(anchored||actor==0&&x==0&&y==0&&z==0&&yaw==0&&anchorAt==0);
+        public bool ValidAnchor(double now)=>poseKind>=0&&poseKind<=2&&double.IsFinite(anchorAt)&&anchorAt>=0&&anchorAt<=now+.001&&actor>=0&&float.IsFinite(x)&&Math.Abs(x)<=40&&float.IsFinite(y)&&y>=-2&&y<=18&&float.IsFinite(z)&&Math.Abs(z)<=40&&float.IsFinite(yaw)&&Math.Abs(yaw)<=360&&(anchored||actor==0&&x==0&&y==0&&z==0&&yaw==0&&anchorAt==0);
         public DrownedFrame Copy()=>(DrownedFrame)MemberwiseClone();
         public bool Valid(double now,int faults)=>ValidAnchor(now)&&phase>=0&&phase<=3&&fault>=-1&&fault<faults&&appearances>=0&&appearances<=3&&consumed>=0&&(consumed&~((1<<faults)-1))==0&&double.IsFinite(since)&&since>=0&&since<=now+.001&&double.IsFinite(nextAt)&&nextAt>=0&&nextAt<=now+120.01&&(phase==0||fault>=0)&&(enabled||!anchored&&phase==0&&fault==-1&&appearances==0&&consumed==0&&since==0&&nextAt==0);
     }
@@ -16,23 +17,24 @@ namespace LighthouseKeepers.Core.Progression
     public sealed class DrownedState
     {
         readonly SabotageState traces; readonly bool tutorial; readonly int maximum;
-        readonly double first, interval, duration;
+        readonly double first, interval, duration;readonly bool brief;
         DrownedFrame frame=new(){enabled=true};
         public bool ReadOnly{get;set;}
         public DrownedPhase Phase=>(DrownedPhase)frame.phase;
         public int Fault=>frame.fault;
+        public int PoseKind=>frame.poseKind;
         public double Since=>frame.since;
         public bool Anchored=>frame.anchored;
         public float X=>frame.x; public float Y=>frame.y; public float Z=>frame.z; public float Yaw=>frame.yaw; public int Actor=>frame.actor;
         public double RevealAt=>Math.Max(frame.since,frame.anchorAt);
-        public bool SetAnchor(int actor,float x,float y,float z,float yaw,double now)
+        public bool SetAnchor(int actor,float x,float y,float z,float yaw,double now,int poseKind=0)
         {
             if(ReadOnly||(Phase!=DrownedPhase.Warning&&Phase!=DrownedPhase.Manifest))return false;
-            var candidate=frame.Copy();candidate.anchored=true;candidate.actor=actor;candidate.x=x;candidate.y=y;candidate.z=z;candidate.yaw=yaw;candidate.anchorAt=now;
+            var candidate=frame.Copy();candidate.poseKind=poseKind;candidate.anchored=true;candidate.actor=actor;candidate.x=x;candidate.y=y;candidate.z=z;candidate.yaw=yaw;candidate.anchorAt=now;
             if(!candidate.ValidAnchor(now))return false;frame=candidate;return true;
         }
-        public DrownedState(SabotageState traces,bool tutorial,int maximum=3,double first=60,double interval=60,double duration=12)
-        {this.traces=traces;this.tutorial=tutorial;this.maximum=Math.Clamp(maximum,0,3);this.first=Math.Max(60,first);this.interval=Math.Clamp(interval,30,120);this.duration=Math.Clamp(duration,4,15);}
+        public DrownedState(SabotageState traces,bool tutorial,int maximum=3,double first=60,double interval=60,double duration=12,bool brief=false)
+        {this.brief=brief;this.traces=traces;this.tutorial=tutorial;this.maximum=Math.Clamp(maximum,0,3);this.first=Math.Max(60,first);this.interval=Math.Clamp(interval,30,120);this.duration=Math.Clamp(duration,4,15);}
         void Move(DrownedPhase phase,double now){frame.phase=(int)phase;frame.since=now;if(phase==DrownedPhase.Warning||phase==DrownedPhase.Dormant){frame.anchored=false;frame.actor=0;frame.x=frame.y=frame.z=frame.yaw=0;frame.anchorAt=0;}}
         public void Tick(double now,bool dark,bool relief,bool ended,bool protectedStep=false,bool viewReady=true)
         {
@@ -41,7 +43,7 @@ namespace LighthouseKeepers.Core.Progression
             if(Phase!=DrownedPhase.Dormant){
                 bool fixedJob=traces.FixedAt(frame.fault)>=0;
                 if(protectedStep){Move(DrownedPhase.Dormant,now);return;}
-                if(ended||relief||fixedJob||Phase==DrownedPhase.Manifest&&(!dark||now-frame.since>=duration)){
+                if(ended||relief||fixedJob||Phase==DrownedPhase.Manifest&&(!dark||now-frame.since>=(brief?(frame.poseKind==0?1.15:frame.poseKind==2?1.8:4.8):duration))){
                     Move(DrownedPhase.Retreat,now);frame.nextAt=now+interval;return;
                 }
                 if(Phase==DrownedPhase.Warning){

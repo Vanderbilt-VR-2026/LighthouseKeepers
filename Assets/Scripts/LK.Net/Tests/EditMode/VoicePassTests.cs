@@ -11,9 +11,9 @@ namespace LighthouseKeepers.Net.Tests
   [Serializable] public class Entry {public int id,number;public string file,caption;public float duration;public float[] wordStarts;public int[] characterEnds;public bool longSingleTake;}
   [Serializable] public class Table {public Entry[] entries;}
   static Table Read()=>JsonUtility.FromJson<Table>(File.ReadAllText("Assets/WatchDemo/Resources/HarborVoiceTiming.json"));
-  [Test] public void All94MappedClipsExistWithExactScriptCaptionsAndTimedSingleCuts()
+  [Test] public void AllRecordedAndNewPlaceholderClipsExistWithExactCaptionsAndSingleCuts()
   {
-   var table=Read();Assert.AreEqual(94,table.entries.Length);int longCount=0;
+   var table=Read();Assert.AreEqual(97,table.entries.Length);int longCount=0;
    var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");var caption=catalog.GetType().GetMethod("Caption");
    var strings=JsonUtility.FromJson<StringTable>(File.ReadAllText("Assets/Data/Strings/Resources/KeeperStrings.json"));
    foreach(var e in table.entries)
@@ -45,7 +45,7 @@ namespace LighthouseKeepers.Net.Tests
   }
   [Test] public void NewCueDomainIsVersionedAndAllImportedPClipsAreAddressable()
   {
-   Assert.AreEqual("LK-S5-CHOICES1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
+   Assert.AreEqual("LK-S5-DREAD1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
    var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");foreach(var e in Read().entries){Assert.NotNull(catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{e.id}),e.file);Assert.AreEqual(e.caption,catalog.GetType().GetMethod("Caption").Invoke(catalog,new object[]{e.id}));}
   }
   [Test] public void ObjectiveTransitionsAllowTwoLinesThenRequireAQuietStretch()

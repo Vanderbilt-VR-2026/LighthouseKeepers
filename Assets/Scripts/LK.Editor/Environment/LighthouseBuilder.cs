@@ -152,7 +152,7 @@ namespace LighthouseKeepers.Editor.Environment
         }
         static void AddLights(Transform root,string floor)
         {
-            if(floor=="Exterior")return;
+            if(floor=="Exterior"||floor=="F4")return;
             var f=Layout.floors.FirstOrDefault(x=>x.id==floor);float y=f==null?0:f.floorY,r=f==null?0:f.interiorRadius;
             Vector3[] positions=f==null?new[]{new Vector3(-2.4f,2.35f,-5.05f),new Vector3(2.4f,2.35f,-5.05f),new Vector3(0,2.32f,-7.35f)}:new[]{Polar(30,r-.23f,y+2.35f),Polar(150,r-.23f,y+2.35f),Polar(270,r-.23f,y+2.35f)};
             foreach(var pos in positions){var g=new GameObject(f==null&&pos.x<0?"Oil fixture light":"Mains fixture light");g.transform.SetParent(root,false);g.transform.position=pos;var l=g.AddComponent<Light>();l.type=LightType.Point;l.color=new Color(1,.78f,.52f);l.intensity=f==null?5:4;l.range=8;l.shadows=LightShadows.Hard;l.lightmapBakeType=LightmapBakeType.Baked;}

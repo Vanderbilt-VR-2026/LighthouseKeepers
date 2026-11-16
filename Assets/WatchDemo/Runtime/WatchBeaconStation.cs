@@ -30,8 +30,8 @@ namespace LighthouseKeepers.WatchDemo
    parts.Text("Ignition label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.6"),transform,new Vector3(.25f,1.05f,.20f),.003f);
    Wheel=Control("GRIP_BeaconWheel",new Vector3(-.14f,1.21f,.23f),true);
    parts.Text("Wheel label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.7"),transform,new Vector3(-.14f,.91f,.21f),.0035f);
-   marker=M2StationParts.Root("Alignment pointer",transform,new Vector3(-.14f,1.21f,.22f));
-   parts.Part("Alignment needle",marker,new Vector3(0,.16f,0),new Vector3(.014f,.11f,.018f),parts.Red);
+   marker=M2StationParts.Root("Alignment pointer",transform,new Vector3(-.14f,1.21f,.30f));
+   parts.Part("Alignment needle",marker,new Vector3(0,.185f,0),new Vector3(.018f,.15f,.018f),parts.Red);
    targetMarker=M2StationParts.Root("Ship bearing marker",transform,new Vector3(-.14f,1.21f,.22f));
    parts.Part("Target alignment mark",targetMarker,new Vector3(0,.23f,.03f),new Vector3(.045f,.025f,.02f),parts.Green);
    lamp=parts.Part("Alignment green lamp",transform,new Vector3(.25f,1.39f,.20f),new Vector3(.075f,.035f,.02f),parts.Green).GetComponent<Renderer>();

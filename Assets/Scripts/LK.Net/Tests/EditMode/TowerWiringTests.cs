@@ -36,10 +36,10 @@ namespace LighthouseKeepers.Net.Tests
             var meshes=(Mesh[])Field(layout,"floors");Assert.AreEqual(5,meshes.Length);int count=meshes.Sum(m=>m.triangles.Length/3);Assert.AreEqual((int)Field(layout,"triangles"),count);Assert.LessOrEqual(count,15000);
             Assert.True(((Material)Field(layout,"material")).mainTexture);
             var runs=(Array)Field(layout,"runs");var circuits=new System.Collections.Generic.HashSet<int>();
-            foreach(var r in runs){circuits.Add((int)Field(r,"circuit"));var p=(Vector3[])Field(r,"points");Assert.GreaterOrEqual(p.Length,2);Assert.True(p.All(v=>float.IsFinite(v.x)&&float.IsFinite(v.y)&&float.IsFinite(v.z)));}
+            foreach(var r in runs){circuits.Add((int)Field(r,"circuit"));var p=(Vector3[])Field(r,"points");Assert.GreaterOrEqual(p.Length,2);Assert.AreNotEqual(4,Field(r,"floor"),"No exposed cable runs across the lantern glazing");Assert.True(p.All(v=>float.IsFinite(v.x)&&float.IsFinite(v.y)&&float.IsFinite(v.z)));}
             CollectionAssert.AreEquivalent(new[]{0,1,2,3,4},circuits);
             var endpoints=(Array)Field(layout,"endpoints");var names=endpoints.Cast<object>().Select(e=>(string)Field(e,"name")).ToArray();
-            Assert.False(names.Any(n=>n.StartsWith("SM_Gallery_")),"Unsupported gallery lights must not regain floating cable feeds");
+            Assert.False(names.Any(n=>n.StartsWith("SM_Gallery_")||n.StartsWith("SM_Lamp_F4_")||n.StartsWith("SM_EmergencyLamp_F4_")),"Unsupported gallery lights must not regain floating cable feeds");
             Assert.Contains("F1 electric pump terminal",names);Assert.Contains("Beacon motor terminal",names);Assert.Contains("Radio cabinet terminal",names);
             for(int i=0;i<6;i++)Assert.Contains("Brass PA speaker "+i,names);
         }

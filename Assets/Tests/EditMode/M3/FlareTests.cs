@@ -5,16 +5,16 @@ namespace LighthouseKeepers.Tests.M3
 {
     public sealed class FlareTests
     {
-        [Test] public void EachGunHasOneRoundAndInvalidRequestsDoNotSpendIt()
+        [Test] public void SharedGunHasOneRoundAndReservedSlotCannotFire()
         {
             var s=new FlareState();Assert.False(s.Fire(2,Vector3.zero,Vector3.forward,10));Assert.False(s.Fire(0,Vector3.zero,Vector3.zero,10));Assert.False(s.Fire(0,new Vector3(float.NaN,0,0),Vector3.forward,10));Assert.True(s.Loaded(0));
-            Assert.True(s.Fire(0,new Vector3(0,1,0),Vector3.forward,10));Assert.False(s.Fire(0,Vector3.zero,Vector3.forward,10));Assert.True(s.Loaded(1));Assert.True(s.Fire(1,Vector3.zero,Vector3.forward,11));
+            Assert.True(s.Fire(0,new Vector3(0,1,0),Vector3.forward,10));Assert.False(s.Fire(0,Vector3.zero,Vector3.forward,10));Assert.False(s.Loaded(1));Assert.False(s.Fire(1,Vector3.zero,Vector3.forward,11));
         }
         [Test] public void ReplicaCannotFireSpendOrMoveAFlareAndRejectsMalformedFrames()
         {
-            var h=new FlareState();h.Fire(1,new Vector3(1,2,3),Vector3.forward,20);var g=new FlareState{ReadOnly=true};Assert.True(g.Apply(h.Capture(),20));Assert.False(g.Fire(0,Vector3.zero,Vector3.forward,21));Assert.False(g.Stop(1,Vector3.one,1,true));
-            var f=h.Capture();f.second.direction=new Vector3(float.NaN,0,0);Assert.False(g.Apply(f,21));Assert.False(g.Loaded(1));f=h.Capture();f.second.at=22;Assert.False(g.Apply(f,21));
-            h.Stop(1,new Vector3(1,2,5),.2f,true);Assert.True(g.Apply(h.Capture(),21));Assert.True(g.Shot(1).repelled);Assert.AreEqual(h.Shot(1).stop,g.Shot(1).stop);
+            var h=new FlareState();h.Fire(0,new Vector3(1,2,3),Vector3.forward,20);var g=new FlareState{ReadOnly=true};Assert.True(g.Apply(h.Capture(),20));Assert.False(g.Fire(0,Vector3.zero,Vector3.forward,21));Assert.False(g.Stop(0,Vector3.one,1,true));
+            var f=h.Capture();f.first.direction=new Vector3(float.NaN,0,0);Assert.False(g.Apply(f,21));Assert.False(g.Loaded(0));f=h.Capture();f.first.at=22;Assert.False(g.Apply(f,21));
+            h.Stop(0,new Vector3(1,2,5),.2f,true);Assert.True(g.Apply(h.Capture(),21));Assert.True(g.Shot(0).repelled);Assert.AreEqual(h.Shot(0).stop,g.Shot(0).stop);
         }
         [Test] public void ImpactStopsTrajectoryAndOnlyFirstImpactWins()
         {

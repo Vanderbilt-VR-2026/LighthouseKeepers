@@ -109,9 +109,9 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Storm!=null)StormPresentation.Create(this);
             if(state.Master&&state.Master.onboarding)OnboardingPresentation.Create(this,head,bed,pipeRepair);
             if(state.Master&&state.Master.worldSafety)MasterWorldSafety.Create(this);
-            if(state.Master&&state.Master.movement)KeeperMovement.Create(this);
+            if(state.Master&&state.Master.movement)KeeperMovement.Create(this);ArmSwingRun.Create(this);
             // Aperture guards are structural even when optional movement features are disabled.
-            PoleSlide.Create(this,FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>());
+            // The retired descent pole is removed; all shaft floors are restored by PoleShaftAuthoring.
             ObjectiveHud.Create(this,head);
             KeeperFearPresentation.Create(this,head);
             ShipFleetPresentation.Create(this);

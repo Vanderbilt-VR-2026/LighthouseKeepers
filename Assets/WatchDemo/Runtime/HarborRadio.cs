@@ -105,7 +105,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(!failed){failed=true;pending.Clear();int lossCue=s.Ships?.Lost==true?99:18;spoken.Add(lossCue);Play(lossCue,Serial+1,0);}
                 var loss=catalog?catalog.Line(Cue):null;if(!loss||Age>loss.length+Extra+.2f)StopStatic();return;
             }
-            PruneInstructions();ObserveSituationalLines();ObserveShips();
+            PruneInstructions();ObserveSituationalLines();ObserveShips();ObserveDread();
             if(s.PressureEnabled)PressureCues();
             if(s.Director!=null&&s.Master.onboarding){
                 var jobName=ObjectiveDirector.Job(s.Director.First);
@@ -139,7 +139,9 @@ namespace LighthouseKeepers.WatchDemo
             if(id==83)return s.Pressure?.CrewRequired==true&&!s.Repaired&&s.Pressure.Holder==0;
             if(id==84)return false; // Retired solo-clamp instruction.
             if(id==85)return KeepersSeparated();
-            if(id==86)return UsefulPoleNearby();
+            if(id==102||id==104)return s.Day>=2&&s.Drowned?.Phase==LighthouseKeepers.Core.Progression.DrownedPhase.Dormant;
+            if(id==103)return s.Flares?.Loaded(0)==true;
+            if(id==86)return false; // Retired pole cue.
             if(id==87)return s.Grid?.Tripped==true;
             if(id==88)return s.Engine?.LowFuel==true&&!s.IsPending(WatchState.GeneratorStation);
             if(id==89)return s.Engine!=null&&!s.Engine.Running;

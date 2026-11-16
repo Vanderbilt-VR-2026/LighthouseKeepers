@@ -17,26 +17,16 @@ namespace LighthouseKeepers.WatchDemo.Editor
         public static void Apply(GameObject root)
         {
             foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))if(Floor(f.name))
-            {var m=AssetDatabase.LoadAssetAtPath<Mesh>(Folder+"/"+f.name+".asset");if(m)f.sharedMesh=m;}
+            {var m=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Art/VisualPass/UV/"+Sources[f.name]+".asset");if(m)f.sharedMesh=m;}
             foreach(var c in root.GetComponentsInChildren<MeshCollider>(true))
             {var key=c.name.StartsWith("UCX_")?c.name.Substring(4):c.name; if(key.EndsWith("_01"))key=key.Substring(0,key.Length-3);if(!Floor(key))continue;
-             var m=AssetDatabase.LoadAssetAtPath<Mesh>(Folder+"/"+key+".asset");if(m){c.convex=false;c.sharedMesh=m;}}
+             var m=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Art/VisualPass/UV/"+Sources[key]+".asset");if(m){c.convex=false;c.sharedMesh=m;}}
         }
-        [MenuItem("Lighthouse Keepers/Rebuild continuous pole openings")]
+        [MenuItem("Lighthouse Keepers/Restore floors after pole removal")]
         public static void Build()
         {
             if(EditorApplication.isPlaying)throw new InvalidOperationException("Stop Play Mode first.");
             var scene=EditorSceneManager.OpenScene("Assets/Scenes/Lab/LK_Lab_Environment.unity");
-            Directory.CreateDirectory(Folder);AssetDatabase.Refresh();
-            foreach(var root in scene.GetRootGameObjects())foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))if(Floor(f.name))
-            {
-                var path=Folder+"/"+f.name+".asset";
-                // Always cut the original UV-corrected source, never a previous aperture.
-                var source=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Art/VisualPass/UV/"+Sources[f.name]+".asset");
-                var mesh=Cut(source,f.transform);mesh.name=f.name+" circular pole opening";
-                var existing=AssetDatabase.LoadAssetAtPath<Mesh>(path);
-                if(existing){EditorUtility.CopySerialized(mesh,existing);UnityEngine.Object.DestroyImmediate(mesh);}else AssetDatabase.CreateAsset(mesh,path);
-            }
             foreach(var root in scene.GetRootGameObjects())Apply(root);
             var bunk=GameObject.Find("Third-floor bed frame");if(bunk)BunkPlacement.Apply(bunk.transform);
             var beacon=GameObject.Find("STN_BEACON_CONTROL");if(beacon){beacon.transform.position=new Vector3(-4.02f,9.9f,0);beacon.transform.rotation=Quaternion.Euler(0,90f,0);}

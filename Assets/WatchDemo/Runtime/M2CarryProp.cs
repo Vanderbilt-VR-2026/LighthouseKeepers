@@ -8,9 +8,12 @@ using LighthouseKeepers.Core;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed class M2CarryProp : MonoBehaviour,IHandPoseTarget,INetworkPropRelease
+    [DefaultExecutionOrder(500)]
+    public sealed class M2CarryProp : MonoBehaviour,IHandPoseTarget,INetworkPropRelease,INetworkReleasedBody
     {
         public HandPose RequiredPose=>HandPose.WrapGrip;
+        public bool ReleasedBodyIsKinematic=>!released;
+        bool released;
         public XRGrabInteractable Grab {get;private set;}
         public Transform Tip {get;private set;}
         Transform left,right;Rigidbody body;Vector3 home;Quaternion rotation;float dropped;INetworkPropStatus network;
@@ -26,7 +29,7 @@ namespace LighthouseKeepers.WatchDemo
                 parts.Part("Pour spout",t,new Vector3(.1f,.235f,.055f),new Vector3(.035f,.12f,.035f),parts.Brass);
                 parts.Text("Fuel can label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.M2CarryProp.1"),t,new Vector3(0,0,.083f),.005f);
             }
-            var body=t.gameObject.AddComponent<Rigidbody>();body.mass=rag?.15f:1.2f;body.isKinematic=true;body.interpolation=RigidbodyInterpolation.Interpolate;
+            var body=t.gameObject.AddComponent<Rigidbody>();body.mass=rag?.15f:1.2f;body.isKinematic=true;body.useGravity=true;body.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;body.interpolation=RigidbodyInterpolation.Interpolate;
             var col=t.gameObject.AddComponent<BoxCollider>();col.size=size;
             bool improved=!rag&&ImmersionTuning.Current&&ImmersionTuning.Current.physicalGuidance;
             var grab=improved?t.gameObject.AddComponent<FuelCanGrab>():t.gameObject.AddComponent<XRGrabInteractable>();grab.colliders.Add(col);grab.movementType=XRBaseInteractable.MovementType.Kinematic;grab.useDynamicAttach=false;
@@ -43,16 +46,17 @@ namespace LighthouseKeepers.WatchDemo
         void Awake(){Grab.selectEntered.AddListener(OnGrab);Grab.selectExited.AddListener(OnRelease);}
         void OnGrab(SelectEnterEventArgs e){var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();Grab.attachTransform=hand&&hand.Node==XRNode.LeftHand?left:right;if(hand){hand.SetPose(RequiredPose,this);hand.Pulse(.35f,.07f);}}
         void OnRelease(SelectExitEventArgs e){var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.ClearPose();OnNetworkReleased();}
-        public void OnNetworkReleased(){dropped=Time.time;body.isKinematic=false;}
+        public void OnNetworkReleased(){dropped=Time.time;released=true;network??=GetComponent<INetworkPropStatus>();if(network?.CanSimulateReleased!=false){body.isKinematic=false;body.useGravity=true;}}
         public void SetHome(Vector3 position,Quaternion orientation){home=position;rotation=orientation;ResetHome();}
-        public void ResetHome(){if(Grab.isSelected)Grab.interactionManager.CancelInteractableSelection((IXRSelectInteractable)Grab);body.isKinematic=true;transform.SetPositionAndRotation(home,rotation);dropped=0;}
-        void Update(){network??=GetComponent<INetworkPropStatus>();if(Grab.isSelected||network?.CanSimulateReleased==false)return;if(dropped>0&&Time.time-dropped>8)ResetHome();}
+        public void ResetHome(){if(Grab.isSelected)Grab.interactionManager.CancelInteractableSelection((IXRSelectInteractable)Grab);if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,rotation);dropped=0;}
+        void LateUpdate(){network??=GetComponent<INetworkPropStatus>();if(Grab.isSelected||network?.CanSimulateReleased==false)return;body.isKinematic=!released;if(released){body.useGravity=true;if(Time.time-dropped>8||transform.position.y<-.8f)ResetHome();}}
         void OnDestroy(){if(Grab){Grab.selectEntered.RemoveListener(OnGrab);Grab.selectExited.RemoveListener(OnRelease);}}
     }
     // Choose the mirrored attach before XRI calculates its target pose.
     public sealed class FuelCanGrab : XRGrabInteractable
     {
         Transform left,right;
+        protected override void OnSelectEntering(SelectEnterEventArgs e){GetComponent<Rigidbody>().isKinematic=false;base.OnSelectEntering(e);}
         public void Configure(Transform l,Transform r){left=l;right=r;}
         public override Transform GetAttachTransform(IXRInteractor interactor)
         {

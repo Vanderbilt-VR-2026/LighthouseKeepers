@@ -25,7 +25,7 @@ namespace LighthouseKeepers.Core.Progression
         public FlareShot first = new(), second = new();
         public bool Valid(double now) => first != null && second != null && first.Valid(now) && second.Valid(now) && (enabled || !first.fired && !second.fired);
     }
-    // Two physical guns share the night's limited supply. Only the host spends rounds and
+    // One physical gun with one round. The second frame slot stays reserved for schema stability. Only the host spends rounds and
     // resolves obstruction/repulsion. Clients reproduce the last flight from its timestamp.
     public sealed class FlareState
     {
@@ -33,7 +33,7 @@ namespace LighthouseKeepers.Core.Progression
         public bool ReadOnly { get; set; }
         FlareFrame frame = new() { enabled = true };
         public FlareShot Shot(int slot) => slot == 0 ? frame.first.Copy() : slot == 1 ? frame.second.Copy() : null;
-        public bool Loaded(int slot) => slot >= 0 && slot < 2 && !Shot(slot).fired;
+        public bool Loaded(int slot) => slot == 0 && !Shot(slot).fired;
         public bool Fire(int slot, Vector3 muzzle, Vector3 direction, double now)
         {
             if (ReadOnly || !Loaded(slot) || !FlareShot.Finite(direction) || direction.sqrMagnitude < .9f || !FlareShot.Finite(muzzle)) return false;

@@ -11,6 +11,8 @@ namespace LighthouseKeepers.Core.Progression
         public bool drownedPresence = true;
         public bool flareDefense = true;
         public bool heavyRain = true;
+        public bool armSwingRun = true;
+        public bool groundedHorror = true;
         [Range(30,120)] public float drownedIntervalSeconds = 60;
         [Range(4,15)] public float drownedVisibleSeconds = 12;
         [Range(2,5)] public float sabotageWarningSeconds = 3;

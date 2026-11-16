@@ -40,7 +40,7 @@ namespace LighthouseKeepers.WatchDemo
                 }
                 if(blocked)b=a+delta.normalized*nearest;
                 var d=watch.State.Drowned;
-                bool struck=d!=null&&d.Anchored&&d.Phase==DrownedPhase.Manifest&&FlareState.NearSegment(a,b,new Vector3(d.X,d.Y+DrownedForms.Height(DrownedForms.Select(watch.State.Day,d.Fault))*.58f,d.Z),.60f);
+                bool struck=d!=null&&d.Anchored&&d.Phase==DrownedPhase.Manifest&&FlareState.NearSegment(a,b,DrownedMotion.Centre(d,watch.State.Elapsed,DrownedForms.Height(DrownedForms.Select(watch.State.Day,d.Fault))),.60f);
                 if(struck){bool repelled=watch.State.RepelWithFlare();watch.State.Flares.Stop(slot,b,end,repelled);return;}
                 if(blocked||end>=FlareState.FlightSeconds){watch.State.Flares.Stop(slot,b,end,false);return;}
             }
