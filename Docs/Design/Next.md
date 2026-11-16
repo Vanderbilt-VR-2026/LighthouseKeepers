@@ -1,27 +1,37 @@
-# Current checkpoint — November 16 finish/reference pass
+# Current checkpoint — November 16 demo/choices pass
 
-Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editors muted. Do not launch Quest. No main/sky/avatar edits.
+Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editors muted; do not auto-launch Quest. Main untouched. New network identity **LK-S5-CHOICES1 / LK-Lab-Coop-v32**: both players update.
 
-## Current step
+## Completed this pass
 
-Three original Drowned forms implemented: sea hag, soaked doll and gaunt creature. Same shared encounter rules, deterministic night/fault selection, one active renderer, height-aware safe placement and mist. Graphics inspected and revised; 53 focused tests pass. Evidence: `Docs/Verification/S5/Forms/`. These are still non-contact apparitions, not a hunter.
+- Three original low-poly Drowned forms (hag, soaked doll, gaunt creature), still non-contact apparitions. Height-aware placement, common state/comfort rules. Existing stairwell reveal mechanism retained.
+- Original held flare pistol: one round per pistol/night, host-owned trajectory/impact/ammo, guest grab lease, wall obstruction, apparition retreat. Replaces planned multiple active defenses. Fixed pre-compression sample limit that silently dropped larger impact snapshots; compressed wire budget stays 4 KiB.
+- Generator cage/tank/engine rebuild preserving all accepted controls and grips: 12,144 triangles, three meshes. Six physical PlayMode checks pass.
+- Supplied demo soundtrack source + edited loops **committed to GitHub as requested**. 0:40–1:10 tension, quiet bed, crisis section, ~1:11 short scare hit. Same music decks/ducking; original score remains a switchable fallback. Sources/analysis: `Docs/Design/DemoSoundtrack.md`.
+- Night 1 unchanged; Nights 2–5 + Demo open with their required jobs already broken. Choose pipe or generator first; electrical dependencies still matter. No completion-triggered opening faults. Updated contradictory opening announcements without altering recordings.
+- Fixed weather fast-forward by decoupling absolute animation clocks from intensity. Darker reflective puddles, eight on the supported gallery deck. Removed unsupported gallery lamps and their cable branches at source; 13,262-triangle wiring rebake.
+- 85 final focused tests pass. Actual-XRI solo Night3 completes stations, steered ships and bed intoNight4 (zero errors). Live two-Mac late join/shared form/guest flare/repulsion and subsequent state delivery pass. The first blocked-shot fixture was corrected to choose a supported clear firing position; wall collision preserved. Screenshots inspected. No full-suite or first-timer timing claim.
 
-In progress this turn: original flare pistol/host-owned ammo and repulsion; co-op guest shot is being diagnosed after initial rejection. Generator continuous cage/tank rebuild has graphics evidence; physical regression pending. Do not label the current old installed APK as these changes.
+## Delivery
+
+Current verified source is being packaged by `artifacts/s5/finish/build.py`. Check `artifacts/s5/finish/build-result.json` for the exact commit/APK/hash and `Docs/Verification/S5/Choices/` for receipts. Install only if ADB sees the Quest; never launch without the user's request. Update this paragraph with final build/install receipt before ending.
 
 ## DEVICE CHECKS PENDING
 
-- Install the latest clean-source APK when ADB is available; **do not launch** without permission.
-- All three forms in blackout/stereo; reach/comfort, no face intrusion, Sightings Off.
-- Left/right flare grip, trigger, wall obstruction, limited ammo, repulsion, drop/return.
-- Generator fuel/primer/choke/starter reach and silhouette/material acceptance.
-- Worn Quest 72 Hz GPU ≤11 ms / CPU main ≤9 ms with entity/flare/generator. Geometry counts are not GPU evidence.
-- Matching-build Mac+Quest/two-Quest voice, props, tasks, ship wheel, shared sleep/rejoin.
+- Matching-build Quest install; no automatic launch.
+- PLAY → HOST / PLAY ALONE → Night2/3. Choose either pipe or generator first; confirm no new job breaks just because you repaired one. Night1 remains tutorial.
+- B objective recall, watch/hands, both-hand flare grip/trigger/drop and one-round limit. Shoot an apparition from a clear line; walls should stop the flare.
+- Three forms in blackout/stereo, liked F4→F3 reveal, Sightings Off; no face intrusion.
+- Generator controls/reach and visual acceptance; current geometry is original stylized low-poly, not a purchased photoreal asset.
+- Gallery/outdoor puddles dark and grounded, no dangling exit lamp/wires. Ship view: storm intensifies smoothly without time-speed jumps.
+- Listen to the supplied sample's loops/scare transition and radio/voice clarity. Editors were muted, so human listening remains unverified.
+- Worn Quest72Hz GPU≤11ms / CPU main≤9ms; matching-build Mac+Quest/two-Quest voice, task, wheel, sleep and rejoin.
 
-## Next
+## Next after this correction pass
 
-Finish flare guest-shot validation, generator physical regression, actual-XRI solo Night3, then clean commit/build/push and update this checkpoint. After this reference pass, the real hunter/hiding/recovery and final campaign polish remain. Do not add lantern/bell/trap defenses: the latest user chose the flare pistol as the only active defense. Keep timingApproved=false pending human first-timer acceptance.
+Actual hunter/navigation, hiding/recovery and remaining campaign finale/progression polish are unfinished. Do not describe the apparition layer as a completed hunter. Flare pistol is the only requested active defense; do not add lantern/bell/trap defenses. `timingApproved=false` until human first-timer acceptance.
 
-Commands and scripts: `artifacts/s5/finish/` (`review-2.py`, `crew-driver.py`, `crew-flare.py`); focused runner `artifacts/remaining/m3/tests.py`. Use new output folders on repeats. Baseline before edits: 142/146 focused tests (four existing stale fixtures), actual-XRI Night3 pass/errors0 in `artifacts/s5/finish/before/`.
+Reproduce from this worktree: `caffeinate -i python3 artifacts/remaining/m3/tests.py NEW 'TowerWiringTests;QualityBaselineTests;M3RuntimeTests;AudioPassTests;DrownedTests;DrownedHorrorTests;VoicePassTests;FlareTests;LatestSampleBatchTests'`; graphics `artifacts/s5/finish/choices-night3.py`, `weather-review.py`, `crew-driver.py`. Always use fresh output directories and keep both Editors muted. Peer changes were backed up before synchronization. Build from a clean commit using `artifacts/s5/finish/build.py` with a fresh backup directory.
 
 ---
 

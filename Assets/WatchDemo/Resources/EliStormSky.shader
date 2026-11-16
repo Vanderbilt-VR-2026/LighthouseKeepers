@@ -54,7 +54,7 @@ Shader "LighthouseKeepers/Eli Storm Sky (opt in)" {
   float up=saturate(h);
   float2 uv=d.xz/(up+0.16)*_CloudScale;
   float wind=radians(_WindAzimuth);float2 w=float2(sin(wind),cos(wind));
-  float t=_Time.y*(1+storm*1.5);
+  float t=_Time.y;
   float n=vnoise(uv*1.3+w*t*_CloudSpeed*10)*0.65+vnoise(uv*3.1-w.yx*t*_CloudSpeed*16)*0.35;
   float scud=vnoise(uv*2.2*float2(1,0.6)+w*t*_ScudSpeed*10);
   float cover=_CloudDensity+storm*0.18;

@@ -16,11 +16,11 @@ Shader "Lighthouse/S5 outdoor rain puddles" {
  V vert(A a){V o;UNITY_SETUP_INSTANCE_ID(a);UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);o.world=TransformObjectToWorld(a.positionOS.xyz);o.positionCS=TransformWorldToHClip(o.world);o.uv=a.uv;return o;}
  half4 frag(V i):SV_Target{UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
  float2 cell=frac(i.world.xz*3.1)-.5;float seed=frac(sin(dot(floor(i.world.xz*3.1),float2(12.9898,78.233)))*43758.5453);
- cell-=float2(seed-.5,frac(seed*17)-.5)*.42;float life=frac(_Time.y*lerp(.8,1.5,_Storm)+seed),r=length(cell);float ring=exp(-abs(r-life*.55)*75)*(1-life)*step(.35,seed);float2 ripple=normalize(cell+.001)*ring*.025;
+ cell-=float2(seed-.5,frac(seed*17)-.5)*.42;float life=frac(_Time.y*1.1+seed),r=length(cell);float ring=exp(-abs(r-life*.55)*75)*(1-life)*step(.35,seed);float2 ripple=normalize(cell+.001)*ring*.025;
  half3 n=normalize(half3(ripple.x+.008*sin(i.world.z*29+_Time.y),1,ripple.y));half3 view=GetWorldSpaceNormalizeViewDir(i.world);half fresnel=pow(1-saturate(dot(n,view)),4);
- half3 reflected=GlossyEnvironmentReflection(reflect(-view,n),.22,1);half3 base=half3(.025,.042,.045);
- half3 colour=lerp(base,max(reflected,half3(.055,.075,.085)),.06+fresnel*.60)+ring*half3(.018,.025,.028);
- half edge=saturate((1-length(i.uv))*8);return half4(colour,edge*lerp(.66,.82,_Storm));}
+ half3 reflected=GlossyEnvironmentReflection(reflect(-view,n),.22,1);half3 base=half3(.002,.004,.005);
+ half3 colour=lerp(base,min(reflected,half3(.10,.14,.15)),.04+fresnel*.24)+ring*half3(.006,.008,.009);
+ half edge=saturate((1-length(i.uv))*8);return half4(colour,edge*lerp(.72,.86,_Storm));}
  ENDHLSL
  }}
 }

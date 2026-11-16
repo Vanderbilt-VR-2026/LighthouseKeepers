@@ -20,4 +20,4 @@ Exterior puddles use a darker water tint and restrained probe reflections. Eight
 
 Graphics reviewed: gallery puddles, exit fixtures, sea, exterior puddles and Night-3 ship passage. Muted two-Mac final verification and APK delivery are recorded in Next.md. Headset feel, auditory loop acceptance, worn stereo/weather motion and GPU budgets remain device checks.
 
-A repeat live flare test correctly hit scenery when its preselected firing position put the generator in the way. Both clients agreed on the blocked impact; the fixture now selects a supported, obstruction-free position using the same collision classes. Gameplay obstruction checks were not weakened. Earlier failure receipts are preserved under `artifacts/s5/finish/two-mac-5/`.
+A repeat live flare test correctly hit scenery when its preselected firing position put the pole gate bar beside the generator in the way. Both clients agreed on the blocked impact; the fixture now selects a supported, obstruction-free position using the same collision classes. Gameplay obstruction checks were not weakened. Earlier failure receipts are preserved under `artifacts/s5/finish/two-mac-5/`.

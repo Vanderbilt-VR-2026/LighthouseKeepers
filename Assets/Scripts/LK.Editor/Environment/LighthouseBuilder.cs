@@ -157,11 +157,7 @@ namespace LighthouseKeepers.Editor.Environment
             Vector3[] positions=f==null?new[]{new Vector3(-2.4f,2.35f,-5.05f),new Vector3(2.4f,2.35f,-5.05f),new Vector3(0,2.32f,-7.35f)}:new[]{Polar(30,r-.23f,y+2.35f),Polar(150,r-.23f,y+2.35f),Polar(270,r-.23f,y+2.35f)};
             foreach(var pos in positions){var g=new GameObject(f==null&&pos.x<0?"Oil fixture light":"Mains fixture light");g.transform.SetParent(root,false);g.transform.position=pos;var l=g.AddComponent<Light>();l.type=LightType.Point;l.color=new Color(1,.78f,.52f);l.intensity=f==null?5:4;l.range=8;l.shadows=LightShadows.Hard;l.lightmapBakeType=LightmapBakeType.Baked;}
             if(f!=null)foreach(float a in new[]{90f,270f}) {var g=new GameObject("Emergency fixture light");g.transform.SetParent(root,false);g.transform.position=Polar(a,r-.21f,y+2.45f);var l=g.AddComponent<Light>();l.type=LightType.Point;l.color=new Color(.62f,.77f,.84f);l.intensity=f.id=="F2"?3.6f:(f.id=="F3"?1.2f:.5f);l.range=8;l.shadows=LightShadows.Hard;l.lightmapBakeType=LightmapBakeType.Baked;}
-            if(floor=="F4")foreach(float a in new[]{45f,225f})
-            {
-                var g=new GameObject("Emergency gallery fixture light");g.transform.SetParent(root,false);g.transform.position=Polar(a,3.2f,y+2.59f);
-                var light=g.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(.62f,.77f,.84f);light.intensity=1.2f;light.range=7;light.shadows=LightShadows.Hard;light.lightmapBakeType=LightmapBakeType.Baked;
-            }
+            // Unsupported gallery fixtures removed with their hanging cable feeds.
             var probes=new GameObject("Hand light probes").AddComponent<LightProbeGroup>();probes.transform.SetParent(root,false);var points=new List<Vector3>();
             for(float x=-2.5f;x<=2.5f;x+=1.25f)for(float z=-2.5f;z<=2.5f;z+=1.25f)if(f==null||new Vector2(x,z).magnitude<r-.25f)foreach(float h in new[]{.5f,1.5f,2.3f})points.Add(new Vector3(x,y+h,z+(f==null?-7.35f:0)));
             probes.probePositions=points.ToArray();

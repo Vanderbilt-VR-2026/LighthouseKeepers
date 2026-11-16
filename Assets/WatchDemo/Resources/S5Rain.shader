@@ -14,7 +14,7 @@ Shader "Lighthouse/S5 heavy exterior rain" {
  struct V{float4 positionCS:SV_POSITION;float2 uv:TEXCOORD0;half alpha:TEXCOORD1;UNITY_VERTEX_OUTPUT_STEREO};
  bool Roof(float3 p){float radius=p.y<9.9?4.4:3.1;return (p.y<14.8&&dot(p.xz,p.xz)<radius*radius)||(abs(p.x)<3.95&&p.z>-10.3&&p.z<-4.4&&p.y<4.4)||(abs(p.x)<.8&&p.z>-5.6&&p.z<-3.8&&p.y<2.9)||(p.y>9.4&&p.y<9.9&&dot(p.xz,p.xz)<18.1);}
  V vert(A a){V o;UNITY_SETUP_INSTANCE_ID(a);UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
- float speed=lerp(6.5,10,_Storm)*(1+a.seed.x*.3);float3 p=a.positionOS.xyz+float3(_Time.y*(.65+_Storm),-_Time.y*speed,_Time.y*.2);
+ float speed=8.0*(1+a.seed.x*.3);float3 p=a.positionOS.xyz+float3(_Time.y*.9,-_Time.y*speed,_Time.y*.2);
  float3 head=GetCameraPositionWS();p=head+(frac((p-head+float3(10,7,10))/float3(20,14,20))-.5)*float3(20,14,20);
  float d=distance(p,head);o.alpha=(Roof(p)||a.seed.y>lerp(.6,1,_Storm))?0:saturate((d-.55)*2)*saturate((16-d)/3)*lerp(.22,.38,_Storm)*_Quiet;
  float3 right=float3(UNITY_MATRIX_I_V[0][0],UNITY_MATRIX_I_V[1][0],UNITY_MATRIX_I_V[2][0]);

@@ -778,74 +778,6 @@ MonoBehaviour:
     - {x: -2.6491861, y: 12.530001, z: -0.021047885}
     - {x: -2.54, y: 12.415, z: 0}
     - {x: -2.54, y: 12.35, z: 0}
-  - name: SM_Gallery_EmergencyLamp_0 conduit
-    circuit: 3
-    floor: 4
-    radius: 0.012
-    points:
-    - {x: 1.8881408, y: 12.75, z: 1.858375}
-    - {x: 1.844015, y: 13.25, z: 1.8453721}
-    - {x: 2.2627416, y: 13.25, z: 2.2627416}
-    - {x: 2.2627416, y: 12.64, z: 2.2627416}
-  - name: SM_Gallery_EmergencyLamp_0 braided lamp drop
-    circuit: 3
-    floor: 4
-    radius: 0.0035
-    points:
-    - {x: 2.2627416, y: 12.64, z: 2.2627416}
-    - {x: 2.2627416, y: 12.605, z: 2.2627416}
-    - {x: 2.2627416, y: 12.54, z: 2.2627416}
-  - name: SM_Gallery_EmergencyLamp_1 conduit
-    circuit: 3
-    floor: 4
-    radius: 0.012
-    points:
-    - {x: -1.8583753, y: 12.75, z: -1.8881407}
-    - {x: -1.8440149, y: 13.25, z: -1.8453721}
-    - {x: -2.2627416, y: 13.25, z: -2.2627416}
-    - {x: -2.2627416, y: 12.64, z: -2.2627416}
-  - name: SM_Gallery_EmergencyLamp_1 braided lamp drop
-    circuit: 3
-    floor: 4
-    radius: 0.0035
-    points:
-    - {x: -2.2627416, y: 12.64, z: -2.2627416}
-    - {x: -2.2627416, y: 12.605, z: -2.2627416}
-    - {x: -2.2627416, y: 12.54, z: -2.2627416}
-  - name: SM_Gallery_LampHousing_0 conduit
-    circuit: 3
-    floor: 4
-    radius: 0.012
-    points:
-    - {x: 1.8881408, y: 12.75, z: 1.858375}
-    - {x: 1.844015, y: 13.25, z: 1.8453721}
-    - {x: 2.2627418, y: 13.25, z: 2.2627418}
-    - {x: 2.2627418, y: 12.700001, z: 2.2627418}
-  - name: SM_Gallery_LampHousing_0 braided lamp drop
-    circuit: 3
-    floor: 4
-    radius: 0.0035
-    points:
-    - {x: 2.2627418, y: 12.700001, z: 2.2627418}
-    - {x: 2.2627418, y: 12.665, z: 2.2627418}
-    - {x: 2.2627418, y: 12.6, z: 2.2627418}
-  - name: SM_Gallery_LampHousing_1 conduit
-    circuit: 3
-    floor: 4
-    radius: 0.012
-    points:
-    - {x: -1.8583753, y: 12.75, z: -1.8881407}
-    - {x: -1.8440149, y: 13.25, z: -1.8453721}
-    - {x: -2.2627418, y: 13.25, z: -2.2627418}
-    - {x: -2.2627418, y: 12.700001, z: -2.2627418}
-  - name: SM_Gallery_LampHousing_1 braided lamp drop
-    circuit: 3
-    floor: 4
-    radius: 0.0035
-    points:
-    - {x: -2.2627418, y: 12.700001, z: -2.2627418}
-    - {x: -2.2627418, y: 12.665, z: -2.2627418}
-    - {x: -2.2627418, y: 12.6, z: -2.2627418}
   - name: SM_Lamp_F1_0 conduit
     circuit: 3
     floor: 1
@@ -1310,18 +1242,6 @@ MonoBehaviour:
   - name: SM_EmergencyLamp_F4_1
     circuit: 3
     position: {x: -2.54, y: 12.35, z: 0}
-  - name: SM_Gallery_EmergencyLamp_0
-    circuit: 3
-    position: {x: 2.2627416, y: 12.54, z: 2.2627416}
-  - name: SM_Gallery_EmergencyLamp_1
-    circuit: 3
-    position: {x: -2.2627416, y: 12.54, z: -2.2627416}
-  - name: SM_Gallery_LampHousing_0
-    circuit: 3
-    position: {x: 2.2627418, y: 12.6, z: 2.2627418}
-  - name: SM_Gallery_LampHousing_1
-    circuit: 3
-    position: {x: -2.2627418, y: 12.6, z: -2.2627418}
   - name: SM_Lamp_F1_0
     circuit: 3
     position: {x: 1.8599999, y: 2.35, z: 3.2216144}
@@ -1386,5 +1306,5 @@ MonoBehaviour:
   - {x: -2.063118, y: 9.18, z: 2.944763}
   - {x: -1.4999027, y: 12.48, z: 2.1420822}
   breaker: {x: 3.43, y: 4.8, z: -0.000000029802322}
-  triangles: 13894
+  triangles: 13262
   pulseSeconds: 1.5

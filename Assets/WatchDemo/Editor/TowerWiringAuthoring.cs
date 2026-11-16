@@ -54,6 +54,7 @@ namespace LighthouseKeepers.Editor
             var transforms=UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsSortMode.None);
             foreach(var t in transforms.OrderBy(t=>t.name).ThenBy(t=>t.position.x).ThenBy(t=>t.position.y))
             {
+                if(!t.gameObject.activeInHierarchy||t.name.StartsWith("SM_Gallery_Lamp")||t.name.StartsWith("SM_Gallery_EmergencyLamp"))continue;
                 bool lamp=t.name=="Caged practical bulb"||t.name=="Frosted service lamp"||t.name.StartsWith("SM_Lamp_")||t.name.StartsWith("SM_EmergencyLamp_")||t.name.StartsWith("SM_Gallery_LampHousing_")||t.name.StartsWith("SM_Gallery_EmergencyLamp_");
                 bool pa=t.name.StartsWith("Brass PA speaker ");if(!lamp&&!pa)continue;
                 var renderer=t.GetComponent<Renderer>();var pos=renderer?renderer.bounds.center:t.position;int floor=Floor(pos);int circuit=lamp?3:2;

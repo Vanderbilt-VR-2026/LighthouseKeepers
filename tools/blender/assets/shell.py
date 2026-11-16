@@ -98,10 +98,7 @@ def room(layout,f):
   box('SM_EmergencyFixture_'+id+'_'+str(k),polar(a,r-.10,y+2.45),(.20,.16,.09),'Metal',a,False)
   box('SM_EmergencyLamp_'+id+'_'+str(k),polar(a,r-.16,y+2.45),(.14,.10,.025),'Emergency',a,False)
  if id=='F4':
-  for k,a in enumerate([45,225]):
-   rod('SM_Gallery_LampArm_'+str(k),polar(a,2.73,y+2.75),polar(a,3.2,y+2.75),.025,'Metal',collision=False)
-   box('SM_Gallery_LampHousing_'+str(k),polar(a,3.2,y+2.70),(.24,.10,.24),'Metal',a,False)
-   box('SM_Gallery_EmergencyLamp_'+str(k),polar(a,3.2,y+2.64),(.18,.035,.18),'Emergency',a,False)
+  # No unsupported hanging balcony fixtures; interior lamps light the exit.
   g=layout['gallery'];arc('SM_Gallery_Deck',g['innerRadius'],g['outerRadius'],y-.18,y,0,360,'Metal')
   arc('SM_Gallery_Toeboard',4.20,4.25,y,y+.12,0,360,'Metal')
   for i in range(120):
