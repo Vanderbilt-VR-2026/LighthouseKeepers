@@ -52,6 +52,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             AudioClip Load(string name) => Resources.Load<AudioClip>("S5Audio/DrownedHorror/" + name);
             approach = Load("approach"); revealA = Load("reveal_a"); revealB = Load("reveal_b"); retreat = Load("retreat");
+            if(AudioPassSettings.Current&&AudioPassSettings.Current.demoSoundtrack){var hit=Resources.Load<AudioClip>("DemoHorror/scare");if(hit)revealA=revealB=hit;}
             events = Source("Drowned footsteps and reveal", false);
             breathing = Source("Drowned wet breathing", true); breathing.clip = Load("breathing");
         }

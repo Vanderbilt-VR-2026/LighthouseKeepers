@@ -5,6 +5,11 @@ namespace LighthouseKeepers.Net.Tests
 {
     public sealed class AudioPassTests
     {
+        [Test] public void DemoScoreUsesStreamedStereoLoopsAndOneBoundedSpatialScare()
+        {
+            foreach(var name in new[]{"calm","tension","crisis"}){var c=Resources.Load<AudioClip>("DemoHorror/"+name);Assert.NotNull(c);Assert.AreEqual(2,c.channels);Assert.AreEqual(AudioClipLoadType.Streaming,c.loadType);Assert.That(c.length,Is.InRange(10,32));}
+            var hit=Resources.Load<AudioClip>("DemoHorror/scare");Assert.NotNull(hit);Assert.AreEqual(1,hit.channels);Assert.That(hit.length,Is.InRange(3,4));
+        }
         [Test] public void Phase2RadioClipsContainOneShortRecordedTake()
         {
             var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");Assert.NotNull(catalog);

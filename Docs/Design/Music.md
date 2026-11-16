@@ -19,3 +19,6 @@ Crisis omits the slow build and starts at the detected bar nearest 1:22. Loops u
 | lost | 27.0, 40.0, 13.5 | 1 | 3.5 s |
 
 Candidates are in gitignored `Recordings/Music/sting-candidates/`. Defaults choose the strongest energy window, with fast attack and a naturalizing tail fade. Listening acceptance is pending. Runtime: any unfinished task → tension; water >70% loss height, <20 s beacon darkness allowance, or <60 s remaining → crisis; all fixed → calm after the current bar. Each task completion plays fixed; shared sleep plays survived; loss plays lost. Guest state comes from the authenticated host snapshot.
+
+## November 16 demo replacement
+The default demo now uses the supplied sample and edited loops documented in [DemoSoundtrack.md](DemoSoundtrack.md). Earlier Gemini/Lyria tracks remain as the fallback; their original attribution still applies to them.

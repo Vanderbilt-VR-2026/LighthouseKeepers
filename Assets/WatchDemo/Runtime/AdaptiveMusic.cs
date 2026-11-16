@@ -21,7 +21,8 @@ namespace LighthouseKeepers.WatchDemo
   void Setup(AudioPassSettings s)
   {
    settings=s;clips=new[]{Resources.Load<AudioClip>("AudioPass/calm"),Resources.Load<AudioClip>("AudioPass/tension"),Resources.Load<AudioClip>("AudioPass/crisis")};
-   drownedScore=Resources.Load<AudioClip>("S5Audio/DrownedHorror/score");
+   if(s.demoSoundtrack)for(int i=0;i<3;i++)clips[i]=Resources.Load<AudioClip>("DemoHorror/"+new[]{"calm","tension","crisis"}[i])??clips[i];
+   drownedScore=s.demoSoundtrack?clips[2]:Resources.Load<AudioClip>("S5Audio/DrownedHorror/score");
    deck=new[]{Source("Adaptive music A"),Source("Adaptive music B")};foreach(var d in deck){d.loop=true;d.priority=180;KeeperAudioMix.Route(d,"Music");}
    stings=Source("Short watch stings");stings.priority=50;
    fixedClip=Resources.Load<AudioClip>("AudioPass/sting_fixed");survivedClip=Resources.Load<AudioClip>("AudioPass/sting_survived");lostClip=Resources.Load<AudioClip>("AudioPass/sting_lost");
@@ -42,7 +43,7 @@ namespace LighthouseKeepers.WatchDemo
     if(mode<0)Transition(wanted,s.Elapsed,0);
     if(wanted!=mode&&wanted!=pending)
     {
-     pending=wanted;float bar=settings.barSeconds[Mathf.Clamp(mode,0,2)];
+     pending=wanted;float bar=settings.demoSoundtrack?2:settings.barSeconds[Mathf.Clamp(mode,0,2)];
      nextChange=since+(System.Math.Floor((s.Elapsed-since)/bar)+1)*bar;
     }
     if(wanted==mode)pending=-1;
@@ -51,7 +52,7 @@ namespace LighthouseKeepers.WatchDemo
    bool wantedHorror=drownedScore&&s.Drowned!=null&&DrownedHorror.ScoreWanted(s.Drowned.Phase,DrownedAppearance.Sightings,watch.Sleeping||s.Failed);
    if(wantedHorror!=horrorDeck){horrorDeck=wantedHorror;if(horrorDeck)SetDeck(drownedScore,(float)System.Math.Max(0,s.Elapsed-s.Drowned.Since));else if(mode>=0)SetDeck(clips[mode],(float)System.Math.Max(0,s.Elapsed-since));}
    fadeAge+=Time.unscaledDeltaTime;float t=Mathf.Clamp01(fadeAge/settings.crossfadeSeconds);
-   float restTarget=!horrorDeck&&StormRest(s.Day,s.Elapsed,mode)?0:1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
+   float restTarget=!horrorDeck&&StormRest(s.Day,s.Elapsed,mode)?(settings.demoSoundtrack?.3f:0):1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
    deck[active].volume=rest*settings.musicVolume*Mathf.Sin(t*Mathf.PI*.5f);deck[1-active].volume=rest*settings.musicVolume*Mathf.Cos(t*Mathf.PI*.5f);
    if(t>=1)deck[1-active].Stop();
    int shipMask=s.Ships?.PassedMask??0;
