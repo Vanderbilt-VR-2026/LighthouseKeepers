@@ -3,7 +3,7 @@
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editor muted. Never launch Quest automatically. Main untouched. Network **LK-S5-DREAD1 / LK-Lab-Coop-v33**, both clients update.
 
 - Implemented: pictured F4 fixture and all exposed lantern cable loops removed at source; floors restored after pole removal; single bench flare; fuel-can gravity/8s recovery; front-facing wheel needle; arm-swing run; brief host-selected lunge/watcher/ceiling poses; darker lighting/voltage sags; music retained beneath speech; three sparse placeholder narration cues. Details: [DreadPlaytestPass.md](DreadPlaytestPass.md).
-- Verified: 89 focused checks; graphics both-hand can drop/recovery; final wiring audit zero unexpected contacts; solo Night3 stations/two ships/sleep toNight4. Two-Mac guest flare/repulsion and host-owned dropped-can/recovery pass. Evidence: `Docs/Verification/S5/Dread/`. APK build/install is next.
+- Verified: 89 focused checks; graphics both-hand can drop/recovery; final wiring audit zero unexpected contacts; solo Night3 stations/two ships/sleep toNight4. Two-Mac guest flare/repulsion and host-owned dropped-can/recovery pass. Evidence: `Docs/Verification/S5/Dread/`. APK built from clean `745410f8`: `Builds/LighthouseKeepers-Sprint5-Dread-745410f8.apk` (125,085,198 bytes), SHA-256 `5c1013e6daaf505678ac571c92757dcc605803f9ddd8bb8812a22c4ba77ff739`. ARM64/VR manifest/signature/ZIP verified. ADB empty: not installed or launched.
 - Latest `adb devices` has no headset. Do not wait or launch it. Build a clean-source APK; install if it returns.
 
 ## Next: new keeper avatar (user requested AFTER this pass)
