@@ -14,11 +14,11 @@ Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editor
 
 ## Delivery
 
-Current verified source is being packaged by `artifacts/s5/finish/build.py`. Check `artifacts/s5/finish/build-result.json` for the exact commit/APK/hash and `Docs/Verification/S5/Choices/` for receipts. Install only if ADB sees the Quest; never launch without the user's request. Update this paragraph with final build/install receipt before ending.
+**Built and installed from clean source `93acb696`. Not launched.** Unity 6000.3.23f1 IL2CPP ARM64; build success, VR manifest/signature/ZIP verified. Installed APK hash matches. APK: `Builds/LighthouseKeepers-Sprint5-Choices-93acb696.apk` (125,711,650 bytes). SHA-256: `0acba1e7867b3e1c25a9f205ca5f781ac5ce3a6002c473713598d75e7adca9c5`. Receipts: `Docs/Verification/S5/Choices/`. Later documentation commits do not change this APK source.
 
 ## DEVICE CHECKS PENDING
 
-- Matching-build Quest install; no automatic launch.
+- Installed build awaits user launch and worn-headset checks; no automatic launch.
 - PLAY → HOST / PLAY ALONE → Night2/3. Choose either pipe or generator first; confirm no new job breaks just because you repaired one. Night1 remains tutorial.
 - B objective recall, watch/hands, both-hand flare grip/trigger/drop and one-round limit. Shoot an apparition from a clear line; walls should stop the flare.
 - Three forms in blackout/stereo, liked F4→F3 reveal, Sightings Off; no face intrusion.
