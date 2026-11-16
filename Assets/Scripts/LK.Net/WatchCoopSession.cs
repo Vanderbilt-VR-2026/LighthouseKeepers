@@ -227,7 +227,7 @@ namespace LighthouseKeepers.Net
             var target=watch.Target(c.action,c.value);if(!target)return -1;
             if(!poses.NearHand(actor,target.transform.position,c.action==CoopAction.Microphone?1.2f:.85f))return -1;
             if(c.action==CoopAction.PressureValve)return c.value==0&&PressureView?.PressureCommand(actor,c.pressed)==true?1:-1;
-            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch||c.action==CoopAction.HandheldRadio)
+            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch||c.action==CoopAction.HandheldRadio||c.action==CoopAction.FlareFire)
             {
                 var binding=target.GetComponent<FusionGrabBinding>();
                 if(!binding||!props.HasFreshLease(actor,binding.Id))return -1;

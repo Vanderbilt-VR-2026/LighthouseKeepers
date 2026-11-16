@@ -14,7 +14,7 @@ namespace LighthouseKeepers.Net
     public sealed class FusionMessageChannel : MonoBehaviour, INetworkRunnerCallbacks
     {
         const int Channel = 0x4C4B5333;
-        // v18 carries the integrated host-owned grace state. Keep a bounded 4 KiB envelope.
+        // Compressed wire messages remain bounded at 4 KiB.
         public const int MaxBytes = LatestSampleBatch.MaxPayloadBytes;
         FusionLobbyTransport transport;
         NetworkRunner runner;
@@ -119,7 +119,7 @@ namespace LighthouseKeepers.Net
         int sampleSequence;float nextSamples;
         void QueueSample(int target,int kind,int slot,byte[] payload)
         {
-            if(payload==null||payload.Length==0||payload.Length>MaxBytes)return;
+            if(payload==null||payload.Length==0||payload.Length>LatestSampleBatch.MaxSampleBytes)return;
             if(!samples.TryGetValue(target,out var batch))samples[target]=batch=new LatestSampleBatch();
             batch.Put(kind,slot,payload);
         }

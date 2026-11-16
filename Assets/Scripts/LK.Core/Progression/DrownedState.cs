@@ -59,6 +59,13 @@ namespace LighthouseKeepers.Core.Progression
                 frame.fault=i;Move(DrownedPhase.Warning,now);break;
             }
         }
+        public bool Repel(double now)
+        {
+            if(ReadOnly || !double.IsFinite(now) || now < frame.since || Phase != DrownedPhase.Manifest) return false;
+            frame.consumed |= 1 << frame.fault;
+            Move(DrownedPhase.Retreat, now); frame.nextAt = now + interval;
+            return true;
+        }
         public DrownedFrame Capture()=>frame.Copy();
         public bool ValidReplica(DrownedFrame source,double now)=>source!=null&&source.enabled&&source.Valid(now,traces.Count)&&source.appearances<=maximum&&(!tutorial||source.phase==0)&& (source.fault<0||traces.Warning(source.fault)>=0||source.phase==0||source.phase==3)&& (source.phase!=2||traces.Broken(source.fault)>=0&&(source.consumed&(1<<source.fault))!=0);
         public bool Apply(DrownedFrame source,double now){if(!ReadOnly||!ValidReplica(source,now))return false;frame=source.Copy();return true;}

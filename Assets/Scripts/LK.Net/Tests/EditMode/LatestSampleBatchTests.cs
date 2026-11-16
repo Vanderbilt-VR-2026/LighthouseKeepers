@@ -22,6 +22,21 @@ namespace LighthouseKeepers.Net.Tests
             Assert.AreEqual(18,sequence);Assert.AreEqual(41,samples[0].Kind);
             CollectionAssert.AreEqual(payload,samples[0].Data);
         }
+        [Test] public void ExpandedSnapshotAndPartnerPosesSurviveCompressionWithoutRelaxingWireBudget()
+        {
+            // JSON snapshots contain repeated names and numeric arrays; the flare impact added
+            // enough fields to cross the old pre-compression limit and silently freeze guests.
+            string field="\"first\":{\"fired\":true,\"stopped\":true,\"repelled\":true,\"at\":79.35,\"stopAge\":0.4},";
+            var json="{"+string.Concat(System.Linq.Enumerable.Repeat(field,60))+"\"day\":3}";
+            var payload=System.Text.Encoding.UTF8.GetBytes(json);
+            Assert.Greater(payload.Length,LatestSampleBatch.MaxPayloadBytes);
+            Assert.LessOrEqual(payload.Length,LatestSampleBatch.MaxSampleBytes);
+            var q=new LatestSampleBatch();q.Put(41,0,payload);q.Put(11,2,new byte[300]);
+            Assert.AreEqual(2,q.Count);var wire=q.Pack(31);
+            Assert.LessOrEqual(wire.Length,FusionMessageChannel.MaxBytes);
+            Assert.IsTrue(LatestSampleBatch.TryUnpack(wire,out var sequence,out var samples));
+            Assert.AreEqual(31,sequence);CollectionAssert.AreEqual(payload,samples.Find(x=>x.Kind==41).Data);
+        }
         [Test] public void VisualMayHoldLastPoseWhileGameplayRejectsTheStaleHand()
         {
             var buffer=new KeeperPoseBuffer();var q=UnityEngine.Quaternion.identity;
@@ -32,7 +47,7 @@ namespace LighthouseKeepers.Net.Tests
         [Test] public void TruncatedOversizedAndNonSampleTrafficIsRejected()
         {
             var q=new LatestSampleBatch();q.Put(42,0,new byte[]{1});Assert.AreEqual(0,q.Count);
-            q.Put(10,0,new byte[LatestSampleBatch.MaxPayloadBytes+1]);Assert.AreEqual(0,q.Count);
+            q.Put(10,0,new byte[LatestSampleBatch.MaxSampleBytes+1]);Assert.AreEqual(0,q.Count);
             Assert.IsFalse(LatestSampleBatch.TryUnpack(new byte[LatestSampleBatch.MaxPayloadBytes+1],out _,out _));
             Assert.IsFalse(LatestSampleBatch.TryUnpack(new byte[]{1,2,3},out _,out _));
             q.Put(10,0,new byte[]{1,2,3});var wire=q.Pack(1);

@@ -9,6 +9,7 @@ namespace LighthouseKeepers.Core.Progression
         [Tooltip("Host-owned warnings and evidence for scheduled sabotage.")]
         public bool sabotageTraces = true;
         public bool drownedPresence = true;
+        public bool flareDefense = true;
         public bool heavyRain = true;
         [Range(30,120)] public float drownedIntervalSeconds = 60;
         [Range(4,15)] public float drownedVisibleSeconds = 12;
