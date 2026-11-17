@@ -8,6 +8,13 @@ namespace LighthouseKeepers.Net.Tests {
   const int Bot=2147483646;
   [Test]public void PartnerEnablesPairedSupportWithoutTakingAwaySoloTime(){var s=New();double budget=Get<double>(s,"Duration");Call(s,"SetScriptedPartner",true);Assert.True(Get<bool>(s,"RadioRelay"));Assert.True(Get<bool>(Get<object>(s,"Pressure"),"CrewRequired"));Assert.AreEqual(budget,Get<double>(s,"Duration"));Assert.AreEqual(1,Get<int>(s,"HumanKeeperCount"));}
   [Test]public void HumanJoinReleasesBotBeforeAcceptingHumanValve(){var s=New();Call(s,"SetScriptedPartner",true);var p=Get<PressureValveState>(s,"Pressure");Assert.True(p.Hold(Bot,true));Assert.True(p.Allows(1));Assert.False(p.Allows(Bot));Call(s,"SetKeeperCount",2);Assert.False(Get<bool>(s,"ScriptedPartner"));Assert.Zero(p.Holder);Assert.True(p.Hold(2,true));Call(s,"SetScriptedPartner",true);Assert.False(Get<bool>(s,"ScriptedPartner"));Assert.AreEqual(2,p.Holder);}
+  [Test]public void CompanionDoesNotReassignHumanObjectiveOnEveryHeadMovement(){
+   var s=New();Call(s,"SetScriptedPartner",true);var d=Get<object>(s,"Director");
+   d.GetType().GetField("StationPosition").SetValue(d,new Func<string,Vector3>(id=>id=="STN_PIPE_LEAK"?Vector3.zero:Vector3.right*100));
+   Call(d,"Tick",0f,1,Vector3.zero,0,Vector3.zero,true);var first=Get<object>(d,"First");
+   Call(d,"Tick",.1f,1,Vector3.right*100,0,Vector3.zero,true);Assert.AreEqual(first,Get<object>(d,"First"),"A moving human retains the current instruction for the authored assignment hold.");
+   Call(d,"Tick",10f,1,Vector3.right*100,0,Vector3.zero,true);Assert.AreNotEqual(first,Get<object>(d,"First"),"After the hold, the nearer urgent station may be reassigned.");
+  }
   [Test]public void ReplicaCannotSpawnPartnerOrChangeAuthority(){var h=New();Call(h,"SetScriptedPartner",true);var packet=Call(h,"Capture",.1f);Assert.True((bool)Call(packet,"Valid"));var g=New();Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",packet));Assert.True(Get<bool>(g,"ScriptedPartner"));Call(g,"SetScriptedPartner",false);Assert.True(Get<bool>(g,"ScriptedPartner"));packet.GetType().GetField("keepers").SetValue(packet,2);Assert.False((bool)Call(packet,"Valid"));}
  }
 }

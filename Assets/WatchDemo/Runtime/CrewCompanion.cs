@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo {
   WatchDemoController watch;Transform head;CrewCompanionTuning tuning;HunterNavigation navigation;NavMeshAgent agent;
   GameObject actor;CrewAvatarModel model;TextMeshPro slate;Transform slateRoot;Material slateMaterial;
   readonly RaycastHit[] floorHits=new RaycastHit[24];
-  WatchPressureValve valve;CompanionCommand command;float nextPath,readFor,still;Vector3 lastPosition,goal;bool hasGoal,reading,holding;int night;string learnedCode="",statusKey="companion.follow";
+  WatchPressureValve valve;CompanionCommand command;float nextPath,readFor,still;Vector3 lastPosition,goal;bool hasGoal,reading,holding;int night;string learnedCode="",statusKey="companion.follow",shownSlate;
   public bool Active=>actor&&actor.activeSelf;
   public string LearnedCode=>learnedCode;
   public string Status=>KeeperStrings.Get(statusKey);
@@ -31,7 +31,7 @@ namespace LighthouseKeepers.WatchDemo {
   }
   void Release(){holding=false;if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.Pressure?.Hold(WatchState.CompanionActor,false);if(agent&&agent.isOnNavMesh)agent.ResetPath();}
   void Retire(){Release();if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.SetScriptedPartner(false);DestroyVisual();}
-  void DestroyVisual(){if(actor){actor.SetActive(false);Destroy(actor);}navigation?.Dispose();navigation=null;if(slateMaterial)Destroy(slateMaterial);actor=null;agent=null;learnedCode="";hasGoal=false;}
+  void DestroyVisual(){if(actor){actor.SetActive(false);Destroy(actor);}navigation?.Dispose();navigation=null;if(slateMaterial)Destroy(slateMaterial);actor=null;agent=null;learnedCode="";shownSlate=null;hasGoal=false;}
   bool FloorPoint(Vector3 near,out Vector3 floor){
    floor=near;int count=Physics.RaycastNonAlloc(near+Vector3.up*.15f,Vector3.down,floorHits,3,~0,QueryTriggerInteraction.Ignore);float best=float.NegativeInfinity;
    if(count==floorHits.Length)return false;
@@ -87,7 +87,8 @@ namespace LighthouseKeepers.WatchDemo {
    if(holding&&valve)r=valve.transform.position+valve.transform.forward*.09f;
    model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation,RightRotation=rotation,LeftGrip=.5f,RightGrip=holding?1:.5f},Time.deltaTime,Position.y);
    slateRoot.SetPositionAndRotation((holding?left:(left+r)*.5f)+forward*.04f,rotation*Quaternion.Euler(0,180,0));
-   slate.text=KeeperStrings.Get("companion.name")+"\n"+(learnedCode.Length>0&&!holding&&!reading?learnedCode:Status);
+   string content=learnedCode.Length>0&&!holding&&!reading?learnedCode:Status;
+   if(shownSlate!=content){shownSlate=content;slate.text=KeeperStrings.Get("companion.name")+"\n"+content;}
   }
   // The companion shares the controller lifetime. Scene teardown must not publish changes
   // to already-destroyed station listeners; normal human handoff uses Retire instead.

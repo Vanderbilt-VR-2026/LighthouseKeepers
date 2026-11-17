@@ -28,10 +28,13 @@ namespace LighthouseKeepers.WatchDemo
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
         public void Tick(float now,int firstActor,Vector3 firstHead,int secondActor,Vector3 secondHead,bool wrenchHeld)
         {
+            // The helper is shown as a partner, but is not a second human assignment candidate.
+            // Restore that input before comparing rosters so movement keeps the normal assignment hold.
+            if(state.ScriptedPartner&&actorB==WatchState.CompanionActor)actorB=0;
             TickCore(now,firstActor,firstHead,secondActor,secondHead,wrenchHeld);
             if(!state.ReadOnly&&state.ScriptedPartner){
                 actorB=WatchState.CompanionActor;
-                Second=state.Repaired?state.Radio.Step==2?KeeperStep.ReadCode:KeeperStep.None:state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.None;
+                Second=state.Failed||state.Complete?KeeperStep.None:state.Repaired?state.Radio.Step==2?KeeperStep.ReadCode:KeeperStep.None:state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.None;
             }
         }
         void TickCore(float now,int firstActor,Vector3 firstHead,int secondActor,Vector3 secondHead,bool wrenchHeld)

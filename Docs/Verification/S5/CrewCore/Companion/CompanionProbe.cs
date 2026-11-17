@@ -13,6 +13,7 @@ public sealed class CompanionProbe:MonoBehaviour {
   while(w.State.Pressure.Holder!=WatchState.CompanionActor&&Time.realtimeSinceStartup<until)yield return new WaitForSecondsRealtime(.25f);
   Need(w.State.Pressure.Holder==WatchState.CompanionActor,"Valve failed: "+bot.Status+" at "+bot.Position);Need(Vector3.Distance(bot.Position+Vector3.up,valve.transform.position)<1.2f,"Remote valve cheat");
   w.State.PipeWorkerActor=1;Need(w.State.PipeReady,"Human cannot tighten under bot support");Capture("valve",bot.Position);File.AppendAllText(folder+"/events.txt","Reached and held actual valve. Human permitted; bot cannot wrench.\n");
+  stage="sustained valve hold";until=Time.realtimeSinceStartup+12;while(Time.realtimeSinceStartup<until){Need(w.State.Pressure.Holder==WatchState.CompanionActor&&w.State.PipeReady,"Valve support dropped during repair");yield return new WaitForSecondsRealtime(.1f);}File.AppendAllText(folder+"/events.txt","Valve support remained valid for 12 seconds.\n");
   bot.SetCommand(CompanionCommand.Wait);yield return null;Need(w.State.Pressure.Holder==0&&!w.State.PipeReady,"Wait did not release valve");
   w.State.CompleteRepair();w.State.SetCircuit(0,false);w.State.SetCircuit(2,true);w.State.ResetBreaker();w.State.Radio.ToggleMain();w.State.Radio.Tune(w.State.Radio.Program.targetMHz);w.State.Tick(2);
   Need(w.State.Radio.Step==2,"Radio fixture not at code");FindAnyObjectByType<XROrigin>().MoveCameraToWorldLocation(new Vector3(1,11.5f,0));bot.SetCommand(CompanionCommand.Work);stage="fetch telegram";until=Time.realtimeSinceStartup+55;
