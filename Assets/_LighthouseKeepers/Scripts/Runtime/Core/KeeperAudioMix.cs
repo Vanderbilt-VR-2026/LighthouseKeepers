@@ -77,12 +77,12 @@ namespace LighthouseKeepers.Core
    VoiceActive=localPeak>.012f;RadioActive=false;
    for(int i=meters.Count-1;i>=0;i--){var m=meters[i];if(!m){meters.RemoveAt(i);continue;}if(!m.Active)continue;if(m.Voice)VoiceActive=true;else RadioActive=true;}
    bool duck=VoiceActive||RadioActive;
-   musicDuck=Fade(musicDuck,MusicSpeechDuck(VoiceActive,RadioActive),duck,6);worldDuck=Fade(worldDuck,RadioActive?-5:duck?-3:0,duck,RadioActive?5:3);radioDuck=Fade(radioDuck,VoiceActive?-3:0,VoiceActive,3);
+   musicDuck=Fade(musicDuck,MusicSpeechDuck(VoiceActive,RadioActive),duck,7);worldDuck=Fade(worldDuck,RadioActive?-5:duck?-3:0,duck,RadioActive?5:3);radioDuck=Fade(radioDuck,VoiceActive?-6:0,VoiceActive,6);
    quietGain=Fade(quietGain,PreScareQuiet?-24:0,PreScareQuiet,24);
    Set("VoiceChat",0,gains["VoiceChat"]);Set("Radio",1.7f+radioDuck,gains["Radio"]);Set("Music",-2+musicDuck+quietGain*.25f,gains["Music"]);Set("Ambience",-6.5f+worldDuck+quietGain,gains["Effects"]);Set("SFX_Critical",-3,gains["Effects"]);Set("SFX_World",-6,gains["Effects"]);
    if(saveAt>=0&&Time.unscaledTime>=saveAt){PlayerPrefs.Save();saveAt=-1;}
   }
-  public static float MusicSpeechDuck(bool voice,bool radio)=>voice?-6:radio?-3:0;
+  public static float MusicSpeechDuck(bool voice,bool radio)=>voice||radio?-7:0;
   static float Fade(float v,float target,bool attack,float range)=>Mathf.MoveTowards(v,target,Time.unscaledDeltaTime*range/(attack?.05f:.6f));
   void Set(string bus,float db,float gain){float value=db+(gain<=0?-80:20*Mathf.Log10(gain));if(last.TryGetValue(bus,out var old)&&Mathf.Abs(old-value)<.01f)return;last[bus]=value;mixer.SetFloat(exposed[bus],value);}
   void OnDestroy(){SceneManager.sceneLoaded-=SceneLoaded;if(Instance==this)Instance=null;}

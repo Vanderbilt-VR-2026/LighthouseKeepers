@@ -23,12 +23,12 @@ namespace LighthouseKeepers.WatchDemo.Editor
         }
         // Arguments are passed directly to a process, never evaluated by a shell.
         static string Quote(string value)=>"\""+value.Replace("\\","\\\\").Replace("\"","\\\"")+"\"";
-        public static void Convert(string executable,string source,string destination,bool reportedLongTake=false)
+        public static void Convert(string executable,string source,string destination,bool reportedLongTake=false,bool antagonist=false)
         {
             string temporary=destination+".importing.wav";
             try
             {
-                var start=new ProcessStartInfo(executable,"-hide_banner -loglevel error -nostdin -y -i "+Quote(Path.GetFullPath(source))+" -vn -af "+Quote(Filter)+" -ac 1 -ar 44100 -c:a pcm_s16le "+Quote(Path.GetFullPath(temporary)))
+                var start=new ProcessStartInfo(executable,"-hide_banner -loglevel error -nostdin -y -i "+Quote(Path.GetFullPath(source))+" -vn -af "+Quote(antagonist?Filter.Replace("I=-18","I=-24"):Filter)+" -ac 1 -ar 44100 -c:a pcm_s16le "+Quote(Path.GetFullPath(temporary)))
                 {UseShellExecute=false,CreateNoWindow=true,RedirectStandardError=true};
                 var errors=new StringBuilder();using var process=new Process{StartInfo=start};
                 process.ErrorDataReceived+=(s,e)=>{if(e.Data!=null)lock(errors)errors.AppendLine(e.Data);};
@@ -66,7 +66,17 @@ namespace LighthouseKeepers.WatchDemo.Editor
                 var mapped=Entries;int count=0;var ignored=new System.Collections.Generic.List<string>();
                 foreach(var file in files)
                 {
-                    var name=Path.GetFileNameWithoutExtension(file).ToLowerInvariant();var entry=mapped.FirstOrDefault(e=>Path.GetFileNameWithoutExtension(e.file)==name);if(entry==null){ignored.Add(Path.GetFileName(file));continue;}
+                    var name=Path.GetFileNameWithoutExtension(file).ToLowerInvariant();var entry=mapped.FirstOrDefault(e=>Path.GetFileNameWithoutExtension(e.file)==name);if(entry==null){
+                        var story=LighthouseKeepers.Core.Progression.StoryVoiceCatalog.Get(name.ToUpperInvariant());
+                        if(story==null){ignored.Add(Path.GetFileName(file));continue;}
+                        Directory.CreateDirectory(Path.GetDirectoryName(story.file));
+                        Convert(executable,file,story.file,false,story.Antagonist);
+                        AssetDatabase.ImportAsset(story.file,ImportAssetOptions.ForceUpdate);
+                        var importer=(AudioImporter)AssetImporter.GetAtPath(story.file);importer.forceToMono=true;
+                        var settings=importer.defaultSampleSettings;settings.loadType=AudioClipLoadType.DecompressOnLoad;settings.compressionFormat=AudioCompressionFormat.Vorbis;settings.quality=.8f;importer.defaultSampleSettings=settings;importer.SaveAndReimport();
+                        // New actor recordings have no forced alignment yet; subtitle even-reveal is explicit.
+                        count++;continue;
+                    }
                     if(EditorUtility.DisplayCancelableProgressBar("Import radio recordings",name,(float)count/Mathf.Max(1,files.Length)))break;
                     string destination=entry.file;Convert(executable,file,destination,entry.longSingleTake);
                     if(entry.longSingleTake)Debug.LogWarning("Reported long single take: "+name+". Review duration; do not speed speech up.");
@@ -78,7 +88,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
                 }
                 File.WriteAllText("Assets/WatchDemo/Resources/HarborVoiceTiming.json",JsonUtility.ToJson(new Mapping{entries=mapped},true)+"\n");
                 AssetDatabase.ImportAsset("Assets/WatchDemo/Resources/HarborVoiceTiming.json");HarborVoiceTiming.Invalidate();
-                string message=$"Imported {count} radio recordings. Mono 44.1 kHz; trimmed, gently denoised and normalized. Unity references preserved.";
+                string message=$"Imported {count} radio recordings. Mono 44.1 kHz; trimmed, gently denoised and normalized (HM -18 / ANT -24 LUFS targets). Unity references preserved. New story timing uses even reveal until aligned.";
                 if(ignored.Count>0)message+="\nUnrecognized filenames (unchanged): "+string.Join(", ",ignored);
                 Debug.Log(message);EditorUtility.DisplayDialog("Radio recordings",message,"OK");
             }

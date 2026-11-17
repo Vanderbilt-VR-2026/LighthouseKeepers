@@ -60,6 +60,6 @@ namespace LighthouseKeepers.Tests.M3
             for(int i=0;i<600;i++){float t=i*.05f;Assert.AreEqual(1,(float)method.Invoke(null,new object[]{(double)t,1,2}));float v=(float)method.Invoke(null,new object[]{(double)t,2,2});Assert.That(v,Is.InRange(.61f,1.001f));Assert.Less(Mathf.Abs(v-last),.06f);last=v;min=Mathf.Min(min,v);}Assert.Less(min,.7f);
         }
         [Test]public void NarrationDucksMusicButDoesNotSilenceIt()
-        {var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("LighthouseKeepers.Core.KeeperAudioMix")).First(t=>t!=null);var m=type.GetMethod("MusicSpeechDuck");Assert.AreEqual(-3f,m.Invoke(null,new object[]{false,true}));Assert.AreEqual(-6f,m.Invoke(null,new object[]{true,true}));}
+        {var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("LighthouseKeepers.Core.KeeperAudioMix")).First(t=>t!=null);var m=type.GetMethod("MusicSpeechDuck");Assert.AreEqual(-7f,m.Invoke(null,new object[]{false,true}));Assert.AreEqual(-7f,m.Invoke(null,new object[]{true,true}));Assert.AreEqual(0f,m.Invoke(null,new object[]{false,false}));}
     }
 }

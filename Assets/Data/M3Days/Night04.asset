@@ -168,7 +168,7 @@ MonoBehaviour:
       soloLocalInformation: 1
     ships:
     - id: maintenance-first
-      nameKey: m3.ship.northStar
+      nameKey: m3.ship.gannet
       sightedAtSeconds: 345
       approachSeconds: 45
       windowSeconds: 30
@@ -177,7 +177,7 @@ MonoBehaviour:
       safePreview: 0
       largeFinale: 0
     - id: maintenance-second
-      nameKey: m3.ship.maryEllen
+      nameKey: m3.ship.wexfordLass
       sightedAtSeconds: 420
       approachSeconds: 45
       windowSeconds: 30

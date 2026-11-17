@@ -63,6 +63,7 @@ namespace LighthouseKeepers.WatchDemo
         public SeaRecoveryState Sea {get;private set;}=new();
         public void ObserveSea(int a,Vector3 p,int b,Vector3 q,float dt){if(ReadOnly||Failed)return;Sea.Tick(a,p,b,q,dt);if(Sea.lost)Changed?.Invoke();}
         int keeperCount=1;
+        public int HumanKeeperCount=>keeperCount;
         public void SetKeeperCount(int count){if(!ReadOnly){keeperCount=Math.Max(1,count);Pressure?.SetCrew(keeperCount>1&&RequiresCrewValve);if(Elapsed==0)balanceCrew=keeperCount>1;}}
         readonly HashSet<string> faults = new HashSet<string>();
         int index;

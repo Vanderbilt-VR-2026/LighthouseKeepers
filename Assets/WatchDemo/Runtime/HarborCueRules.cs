@@ -13,7 +13,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool Allows(int id,float now)=>id>=76&&id<=93&&(Cooldown(id)>0?now>=next[id]:!played[id]);
         public bool AllowsCampaign(int id)=>id>=94&&id<=104&&!played[id];
         public void Played(int id,float now){if(id<76||id>104)return;played[id]=true;next[id]=now+Cooldown(id);}
-        public static bool Danger(int id)=>id==97||id==99||id==18||id>=27&&id<=32||id==83||id>=87&&id<=89;
+        public static bool Danger(int id)=>LighthouseKeepers.Core.Progression.StoryVoiceCatalog.Get(id)?.priority==1||id==97||id==99||id==18||id>=27&&id<=32||id==83||id>=87&&id<=89;
         public static int Tonight(bool pipe,bool generator,bool beacon,bool radio,int count)=>pipe&&generator&&beacon&&radio&&count==4?81:pipe&&generator&&count==2?80:0;
         public struct Context
         {

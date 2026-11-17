@@ -1,5 +1,7 @@
 # Harbor master radio lines
 
+Sprint5 Kettle Rock direction: [approved112-line script](../Story/02-Voice-Script.md), [recording sheets](../Story/03-Recording-Sheets.md), [implemented triggers and pending features](../Story/Implementation.md). The table below remains the legacy recording fallback. Story IDs are additive; no old recording/GUID renamed.
+
 Plain voice recordings; Unity adds the radio filter, static and squelch in 3D. Each cue plays at most once per night. Hints require 90 seconds without progress, at most one per job per night; holding the wrench or standing at the station suppresses hints. The host chooses cues for everyone.
 
 | Filename | Cue ID | Spoken line |

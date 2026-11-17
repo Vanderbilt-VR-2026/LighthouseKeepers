@@ -34,3 +34,17 @@ This is a staged implementation, not an assertion that hunter, lantern, notes, o
 ## Verification boundaries
 
 Core unit tests prove queue policy and protection decisions, not navigation, actor performance, headset fear, audio intelligibility or network execution. Renderer screenshots must be inspected. Worn Quest72Hz GPU<=11ms / CPU<=9ms remains device-only evidence; do not call Editor frame time device equivalent. Both clients update when a cue domain/shared state changes.
+
+## First playable story slice — implemented
+
+- Four optional grip-to-read papers: Standing Orders beside the House board, Lucy Gale letter on the existing workbench, Walter's engine log on a bracket at the F2 generator, Tom's letter on the F3 bunk from Night2. One mipmapped2K paper atlas, ASTC4x4, no live text/billboarding. Either hand; gravity on release;20s/unreachable return. Existing host prop leases carry poses. No read flags or lore-trigger completion yet.
+- Authored ship name keys now match all five nights and Demo: Mary Ellen, Northern Star, Halcyon, Saint Brendan, Gannet, Wexford Lass, Kittiwake, Albion Rose, Providence. Existing timings/tasks/steering unchanged in this slice.
+- Import menu accepts all112 lowercase IDs in `Recordings/Radio/` (gitignored), writes the mapped StoryRadio resource alongside preserved legacy assets. HM-18LUFS, ANT-24LUFS target; mono44.1kHz16bit, <=10s, existing cleaning/presence chain. New actor timing uses explicit even-reveal fallback until aligned. **No new actor files supplied/imported yet.** Restart Play Mode after importing.
+- Only matching new files activate: crew arrival, N2–5 openings, pipe fault, actual fuel failure, crew watch completion, early-bed refusal, generator recovery, water/beacon warnings, radio receipt, ship close/pass/wreck loss. Pipe repair acknowledgement plus N1 rule, N2 Walter recollection, N4 Tom reveal and four ordered N5 confession beats use the tested story queue. Generator recovery waits until the final choke step settles the engine. Confessions recheck calm/fresh faults and prerequisite lines, with delays measured from speech end. Old playback receipts remain attached to the original trigger, preventing repeated broadcast acknowledgements after replacement.
+- All112 rows have exact captions and reserved cue IDs200–311. PA snapshot validation accepts HM only: ANT and undefined gaps are rejected. ANT playback/targeting remains pending; do not broadcast private whispers through PA.
+- Runtime additions use the existing cue/age/serial and prop ownership transport. **LK-S5-STORY1 / LK-Lab-Coop-v34**; both players update.
+- Updated speech mix: voice chat ducks HM6dB, all speech ducks Music7dB; music never stops. No human listening claim (Editors muted).
+
+## Still required before the complete story campaign
+
+Lantern/oil/HIGH defense; cable and radio-wire physical repairs; actual hunter/navigation/telegraph/hiding/catches; host witness observations; Owen commands/slate/LOS and two-player replacement; remaining15 props and read flags; private ANT voice/subtitles; full night/encounter scheduling including N1 dawn glimpse, wrong knock, lens handprints, candle-lit city and completed Demo. No unsupported cue is enabled as a substitute for implementing its mechanic. All story-budget/headset/audio checks remain open.

@@ -122,6 +122,7 @@ namespace LighthouseKeepers.WatchDemo
             HeavyStormRain.Create(this);
             // Exterior sea/coast comes from Eli's StormSeascape; no second coastline.
             StoryDressing.Create(this);
+            KettleStoryPapers.Create(this);
             WorldAudioGaps.Create(this);
             IslandSafety.Create(this);
             GeneratorIdentity.Create();

@@ -47,12 +47,12 @@ namespace LighthouseKeepers.WatchDemo.Editor
             if(n==5){faults.Add(Fault("final-outage",WatchState.GeneratorStation,225,repeat:true));faults.Add(Fault("final-rupture",WatchState.PipeStation,225,repeat:true));}
             if(n==2&&!demo)faults.Find(f=>f.id=="outage").kind=NightFaultKind.FuelExhaustion;
             p.faults=faults.ToArray();
-            p.ships=demo?new[]{Ship("demo-passage","m3.ship.maryEllen",210,75,55)}:
+            p.ships=demo?new[]{Ship("demo-passage","m3.ship.northernStar",210,75,55)}:
                 n==1?new[]{Ship("preview","m3.ship.maryEllen",180,75,45,true)}:
-                n==2?new[]{Ship("blackout-passage","m3.ship.maryEllen",175,75,55)}:
-                n==3?new[]{Ship("first-passage","m3.ship.northStar",90),Ship("warned-passage","m3.ship.maryEllen",210,60,45,extension:15)}:
-                n==4?new[]{Ship("maintenance-first","m3.ship.northStar",120,60),Ship("maintenance-second","m3.ship.maryEllen",230,60)}:
-                new[]{Ship("finale-first","m3.ship.northStar",75,60),Ship("finale-second","m3.ship.maryEllen",185,60),Ship("finale-large","m3.ship.meridian",300,75,70,large:true)};
+                n==2?new[]{Ship("blackout-passage","m3.ship.northernStar",175,75,55)}:
+                n==3?new[]{Ship("first-passage","m3.ship.halcyon",90),Ship("warned-passage","m3.ship.saintBrendan",210,60,45,extension:15)}:
+                n==4?new[]{Ship("maintenance-first","m3.ship.gannet",120,60),Ship("maintenance-second","m3.ship.wexfordLass",230,60)}:
+                new[]{Ship("finale-first","m3.ship.kittiwake",75,60),Ship("finale-second","m3.ship.albionRose",185,60),Ship("finale-large","m3.ship.providence",300,75,70,large:true)};
             p.cues=new[]{new NightRadioCue{eventId="ship-sighted",cue=96},new NightRadioCue{eventId="ship-close",cue=97},new NightRadioCue{eventId="ship-passed",cue=98},new NightRadioCue{eventId="ship-wrecked",cue=99},new NightRadioCue{eventId="rescue",cue=100}};
             if(demo){d.tasks=d.tasks.Where(t=>t.stationId!=WatchState.RadioStation).ToArray();d.startingFaults=d.startingFaults.Where(t=>t!=WatchState.RadioStation).ToArray();}
             d.dayLengthSeconds=p.soloSeconds;

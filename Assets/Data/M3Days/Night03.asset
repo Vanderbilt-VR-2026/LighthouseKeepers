@@ -156,7 +156,7 @@ MonoBehaviour:
       soloLocalInformation: 1
     ships:
     - id: first-passage
-      nameKey: m3.ship.northStar
+      nameKey: m3.ship.halcyon
       sightedAtSeconds: 300
       approachSeconds: 45
       windowSeconds: 30
@@ -165,7 +165,7 @@ MonoBehaviour:
       safePreview: 0
       largeFinale: 0
     - id: warned-passage
-      nameKey: m3.ship.maryEllen
+      nameKey: m3.ship.saintBrendan
       sightedAtSeconds: 375
       approachSeconds: 45
       windowSeconds: 30

@@ -1,20 +1,31 @@
-# Active checkpoint — November 16 Kettle Rock story implementation
+# Active checkpoint — November16 Kettle Rock first story slice
 
-Branch **sprint-5**, draft **PR #89**. Editors muted, main untouched, no automatic Quest launch. User accepted corrected body; arm-swing run remains unconfirmed.
+Branch **sprint-5**, draft **PR #89**. Main untouched; Editors muted and capped72fps. User accepted body. Never auto-launch Quest.
 
-- Approved canon saved in `Docs/Story/01-Story-Bible.md`; all112 exact dialogue captions (HM89/ANT23) in `02-Voice-Script.md` and generated runtime catalogue/recording sheets. Existing recordings untouched.
-- Core speech policy implemented: stale-condition cancellation, priorities, per-run/night/ship receipts, two-instruction burst/8s recovery, calm story, voice-chat priority, isolated-dark ANT90s/6-night budget. Witness/light safety contract added; **not yet a live hunter or companion**.
-- Baseline53 focused checks (VoicePass23, Drowned9, M3Runtime21) pass; new22 story-policy checks pass. `Docs/Verification/S5/Story/`. The first semicolon-filter attempt discovered zero tests; corrected to individual class runs, not counted as coverage.
-- Next: integrate supported story audio/import/captions with the existing host PA transport; add first physical lore papers/ship names; validate graphics/solo/co-op before delivery. Then lantern/repairs, verified hunt+hiding, Owen, remaining story/ANT/finale per `Docs/Story/Implementation.md`.
-- Network still **LK-S5-DREAD1 / v33** at this core-only checkpoint. New cue IDs200–311 are data only until transport accepts them; bump before activating.
+## Done
 
-Exact commands: `python3 Tools/Story/build_catalog.py --check`; muted Editor bridge `run_tests` with `filter=StoryRulesTests`, `filter_type=testName`, `mode=editor`. Do not combine class names with semicolons in this bridge. Editor log `artifacts/s5/story/editor.log`; baseline/core receipts beside it.
+- Canon,112 exact voice rows (HM89/ANT23), recording sheets and stable additive cue catalogue preserved in `Docs/Story/`. Core speech/witness safety rules tested.
+- Supported new-recording triggers connected to existing host PA and subtitles, original legacy receipts preserved. Missing performances keep existing audio; no new actor recordings installed. Ordered calm confession/rule/recovery hooks are ready for files. No Owen/two-wheel valve/missing hide instruction falsely enabled.
+- Four physical story papers, either-hand pickup, drop/recovery and shared ownership; actual ship names from the bible. New cue/prop identity **LK-S5-STORY1 / LK-Lab-Coop-v34**.
+- Focused checks pass; actual-XRI solo Night1 pipe/preview ship/sleep→Night2 passes. Two-Mac avatars/crouch/wrists, guest note pose/release, new-cue exact captions (silent test fixture), shared pipe/sleep→Night2 pass. Eight both-hand paper cases pass. Screenshots personally inspected. `Docs/Verification/S5/Story/`.
+- Build/install next from clean committed source using `artifacts/s5/story/build.py`, then `install.py`. Quest currently authorized. Do not launch.
+
+## Next / exact commands
+
+1. Finish clean-source APK delivery receipt, PR89 update. `python3 Tools/Story/build_catalog.py --check`; `python3 artifacts/s5/story/build.py`; `python3 artifacts/s5/story/install.py`. Build requires Editors closed and fresh backup folder; never reuse a backup silently.
+2. Next gameplay slice: lantern/oil and physical cable repair. Read `Docs/Story/01-Story-Bible.md` §§3–4 and `Implementation.md` first. Extend existing host WatchState/WatchSnapshot/CoopAction validation and bump protocol for new fields. Keep accepted grip-only pipe and physical generator intact.
+3. Connect actual keeper LOS/light observations; then escape-verified hunter+hiding before enabling catches. Next Owen (no voice), remaining props/read flags, private ANT adapter, encounter schedule/finale/Demo. Do not call current apparition a hunter.
+4. New recordings go in gitignored `Recordings/Radio/hm_*.wav` / `ant_*.wav`; menu **Lighthouse Keepers → Import Radio Recordings**. Exact112 performances in `Docs/Story/03-Recording-Sheets.md`; human recordings are still needed. Conflicting valve/compass phrases are documented/inactive.
+
+Repro tools: muted bridge `run_tests` individually with `StoryImportTests`, `StoryRulesTests`, `VoicePassTests`, `M3RuntimeTests`, `DreadPlaytestTests`. Solo driver `artifacts/s5/keeper-fix/SoloNight1.cs`, untouched lobby PlayMode; crew driver `python3 artifacts/s5/story/crew.py` (new output directory on rerun), peer backup `artifacts/s5/story/peer-backup/`. Do not treat zero-test/failed-fixture attempts as coverage.
 
 ## DEVICE CHECKS PENDING
 
-- Latest installed build remains body correction **ad642404**; story changes not yet built/installed.
-- Body accepted; run input/comfort/stereo edge cases, human co-op voice, worn72Hz GPU<=11ms/CPU<=9ms pending.
-- Story recordings not supplied. No claim of new actor audio, live hunter/hiding/Owen, or finished story campaign. Keep impossible instructions inactive.
+- Install verified new APK, never auto-launch. Worn72Hz GPU<=11ms/CPU<=9ms not measured.
+- Grip/read all four notes with either hand, short/seated reach, stereo readability in blackout, release/gravity/recovery. No rig head pop from paper collision.
+- Matchingv34 co-op: partner note ownership/drop, valve, real voice listening/radios, rejoin and shared sleep. Two-Mac Night1 did not exercise the Night3 valve gate.
+- Accepted body retained; arm-swing run/comfort remains unconfirmed.
+- New HM/ANT listening, exact word alignment, private ANT captions, Owen, hunter/hiding,19-prop/full story and Demo acceptance remain pending implementation/recordings.
 
 ---
 

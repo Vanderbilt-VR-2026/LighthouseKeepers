@@ -182,7 +182,7 @@ MonoBehaviour:
       soloLocalInformation: 1
     ships:
     - id: finale-first
-      nameKey: m3.ship.northStar
+      nameKey: m3.ship.kittiwake
       sightedAtSeconds: 420
       approachSeconds: 45
       windowSeconds: 30
@@ -191,7 +191,7 @@ MonoBehaviour:
       safePreview: 0
       largeFinale: 0
     - id: finale-second
-      nameKey: m3.ship.maryEllen
+      nameKey: m3.ship.albionRose
       sightedAtSeconds: 490
       approachSeconds: 45
       windowSeconds: 30
@@ -200,7 +200,7 @@ MonoBehaviour:
       safePreview: 0
       largeFinale: 0
     - id: finale-large
-      nameKey: m3.ship.meridian
+      nameKey: m3.ship.providence
       sightedAtSeconds: 625
       approachSeconds: 45
       windowSeconds: 35

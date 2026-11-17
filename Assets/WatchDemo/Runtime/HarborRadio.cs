@@ -93,7 +93,7 @@ namespace LighthouseKeepers.WatchDemo
             if(day!=s.Day)
             {
                 day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();queuedAt.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
-                ResetSituationalLines();shipSeen=shipPassed=shipClose=0;ordinaryBurstCount=0;announcedJob=null;
+                ResetSituationalLines();ResetStorySpeech();shipSeen=shipPassed=shipClose=0;ordinaryBurstCount=0;announcedJob=null;
                 int tonight=s.Campaign?s.Scenario.tonightCue:TonightCue(s);int opening=s.Campaign?s.Scenario.openingCue:day==2&&tonight==80?80:OpeningCue(day,s.Day3Balance);
                 Enqueue(opening);if(s.WatchStartHeld)Enqueue(79);
                 if(day>1&&tonight>0&&tonight!=opening&&!(day==3&&s.Day3Balance))Enqueue(tonight);
@@ -124,6 +124,7 @@ namespace LighthouseKeepers.WatchDemo
             if(pending.Count>0&&CanPlayQueued(pending[NextPendingIndex()]))
                 while(pending.Count>0){int next=TakeNext();if(Relevant(next)&&AllowedQueued(next)){if(next>=44&&next<=75)next=CompositeStatusCue(s);spoken.Add(next);Play(next,Serial+1,0);break;}}
             if(clip&&Age>clip.length+Extra+.2f)StopStatic();
+            ObserveStorySpeech();
         }
         bool AllowedQueued(int id)=>id<76||id>=96&&id<=98||(id>=94?cueRules.AllowsCampaign(id):cueRules.Allows(id,Time.time));
         void ObserveShips(){var ships=watch.State.Ships;if(ships==null)return;if((ships.SeenMask&~shipSeen)!=0&&!pending.Contains(96))AddPending(96);if((ships.CloseMask&~shipClose)!=0&&!pending.Contains(97))AddPending(97);if((ships.PassedMask&~shipPassed)!=0&&!pending.Contains(98))AddPending(98);shipSeen=ships.SeenMask;shipClose=ships.CloseMask;shipPassed=ships.PassedMask;}
@@ -249,9 +250,11 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Play(int id,int serial,float age)
         {
+            int requested=id;
+            if(!watch.State.RemoteReplica)id=StoryVoiceBridge.Resolve(id,watch.State,catalog);
             localReplayCue=0;recallHistory.Remember(id);
             if(!watch.State.RemoteReplica){
-                cueRules.Played(id,Time.time);
+                cueRules.Played(requested,Time.time);NoteStoryPlayback(id);
                 if(SilenceSeconds>=(watch.State.Master?watch.State.Master.narrationQuietSeconds:20f))ordinaryBurstCount=0;
                 if(!HarborCueRules.Danger(id))ordinaryBurstCount++;
             }
