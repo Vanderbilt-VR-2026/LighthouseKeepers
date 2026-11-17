@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "fixture": "Earlier tasks restored on host to isolate the relay; not a full Night3 run",
+  "checks": [
+    "host House clue matches guest",
+    "Lightkeeper operator / Machinist reader",
+    "no HUD/button answer",
+    "wrong symbol recovery",
+    "XRI button input replicated",
+    "actual leave/rejoin preserves duty and partial code",
+    "companion replaces departed keeper, then retires on human rejoin; no duplicate owner",
+    "guest leased microphone transmits shared report"
+  ],
+  "voice": "NOT VERIFIED: Editors muted"
+}

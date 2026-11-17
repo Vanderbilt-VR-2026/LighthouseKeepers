@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "exception": false,
+  "leakedNavMesh": false,
+  "change": "Actual active-companion scene exit frees navigation and visuals without broadcasting changes to destroyed station listeners."
+}

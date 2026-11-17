@@ -16,7 +16,8 @@ namespace LighthouseKeepers.WatchDemo
     {
         const string LobbyScene = "LK_NetworkLobby";
         WatchDemoController watch;
-        Transform head, soundPage;
+        Transform head, soundPage, companionPage;
+        Button companionOrders;
         GameObject panel, ownedEventSystem;
         Canvas canvas;
         Text status;
@@ -88,7 +89,20 @@ namespace LighthouseKeepers.WatchDemo
             if(watch.State.Master&&watch.State.Master.movement){turnMode=Action("TurnComfortMode",KeeperStrings.Get("turn.snap"),-285,()=>{if(KeeperMovement.Current){KeeperMovement.Current.Toggle();turnMode.GetComponentInChildren<Text>().text=KeeperStrings.Get(KeeperMovement.Current.Smooth?"turn.smooth":"turn.snap");}});((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);}
             WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
             soundPage=panel.transform.Find("Sound settings page");
+            AddCompanionControls();
             panel.SetActive(false);
+        }
+
+        void AddCompanionControls()
+        {
+            var entry=companionOrders=Action("CompanionOrders",KeeperStrings.Get("companion.orders"),255,()=>{});
+            var page=Rect("Companion page",Vector2.zero,((RectTransform)panel.transform).sizeDelta);companionPage=page;page.gameObject.SetActive(false);
+            var saved=new Dictionary<GameObject,bool>();
+            foreach(var choice in new[]{CompanionCommand.Work,CompanionCommand.Follow,CompanionCommand.Wait,CompanionCommand.Help}){
+                var local=choice;var b=Action("Companion"+choice,KeeperStrings.Get("companion.command."+choice),120-(int)choice*75,()=>{var c=watch.GetComponent<CrewCompanion>();if(c)c.SetCommand(local);});b.transform.SetParent(page,false);
+            }
+            var back=Action("CompanionBack",KeeperStrings.Get("menu.back"),-200,()=>{foreach(var pair in saved)if(pair.Key)pair.Key.SetActive(pair.Value);page.gameObject.SetActive(false);Refresh();});back.transform.SetParent(page,false);
+            entry.onClick.AddListener(()=>{saved.Clear();foreach(Transform child in panel.transform)if(child!=page){saved[child.gameObject]=child.gameObject.activeSelf;child.gameObject.SetActive(false);}page.gameObject.SetActive(true);});
         }
 
         Text Label(string name, string text, float y, float height, int size)
@@ -125,6 +139,7 @@ namespace LighthouseKeepers.WatchDemo
             bool keyboard = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
             if ((pressed && !previousMenu) || keyboard) { if (IsOpen) Close(); else Open(); }
             previousMenu = pressed;
+            if(IsOpen&&companionOrders&&(!companionPage||!companionPage.gameObject.activeSelf)&&(!soundPage||!soundPage.gameObject.activeSelf))companionOrders.gameObject.SetActive(watch.GetComponent<CrewCompanion>()?.Active==true);
             if(IsOpen&&mute&&voice!=null)mute.GetComponentInChildren<Text>().text=voice.StatusText;
         }
 
@@ -163,7 +178,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Ships?.Lost==true)status.text=state.FailureMessage;
             // Host snapshots can refresh every frame. Do not bring main-page controls
             // back over the active Sound page when the watch state changes.
-            bool settingsOpen=soundPage&&soundPage.gameObject.activeSelf;
+            bool settingsOpen=soundPage&&soundPage.gameObject.activeSelf||(companionPage&&companionPage.gameObject.activeSelf);
             retry.gameObject.SetActive(!settingsOpen && !state.NetworkRehearsal && state.Failed);
             close.gameObject.SetActive(!settingsOpen && (!Book||!state.Failed));
             replay.gameObject.SetActive(!settingsOpen && !state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);

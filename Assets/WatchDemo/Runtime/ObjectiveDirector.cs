@@ -28,6 +28,14 @@ namespace LighthouseKeepers.WatchDemo
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
         public void Tick(float now,int firstActor,Vector3 firstHead,int secondActor,Vector3 secondHead,bool wrenchHeld)
         {
+            TickCore(now,firstActor,firstHead,secondActor,secondHead,wrenchHeld);
+            if(!state.ReadOnly&&state.ScriptedPartner){
+                actorB=WatchState.CompanionActor;
+                Second=state.Repaired?state.Radio.Step==2?KeeperStep.ReadCode:KeeperStep.None:state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.None;
+            }
+        }
+        void TickCore(float now,int firstActor,Vector3 firstHead,int secondActor,Vector3 secondHead,bool wrenchHeld)
+        {
             if(state.ReadOnly)return;
             bool roster=actorA!=firstActor||actorB!=secondActor;actorA=firstActor;actorB=secondActor;
             if(state.Failed){First=Second=KeeperStep.Lost;return;}
@@ -99,7 +107,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(state.Failed)return KeeperStep.Lost;
             if(state.IsDone(id)||state.IsPending(id))return KeeperStep.None;
-            if(id==WatchState.PipeStation)return state.Pressure?.CrewRequired==true?KeeperStep.HoldValve:PipeStep(held);
+            if(id==WatchState.PipeStation)return state.Pressure?.CrewRequired==true&&!state.ScriptedPartner?KeeperStep.HoldValve:PipeStep(held);
             if(id==WatchState.GeneratorStation)return EngineStep();
             if(id==WatchState.RadioStation&&state.Connected&&state.Connected.dependencies&&!state.BeaconShining)return BeaconStep();
             var circuit=id==WatchState.RadioStation?PowerCircuit.Radio:PowerCircuit.Beacon;

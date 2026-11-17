@@ -4,7 +4,7 @@ The user redirected the next work toward the **core paired gameplay**, before mo
 
 - Two lobby duties: **Lightkeeper** (ships/beacon/radio) and **Machinist** (engine/pump/repairs). Everyone may use every tool. One human gets a simple scripted partner in the other duty; the extended Owen story/animation treatment remains stretch.
 - Next playable target: one short crew scenario with useful split information, physical support, a shared ship payoff and reachable rescue. Restore basic companion work to Sprint 5; do not continue directly into hunter production from the older checkpoint below.
-- Remaining gaps: engine/bearing relay, runtime companion and downed/revive. The radio relay is implemented below. Existing valve, lantern and navigation foundations can be reused.
+- Remaining gaps: engine/bearing relay, companion power/light/rescue and downed/revive. The radio relay is implemented below. Existing valve, lantern and navigation foundations can be reused.
 - Keep the simple Saltmere/two-keepers premise, four notes and optional visual clues. No expanded lore/readable system or new large voice recording pass. Companion lines stay held until a visible, working bot exists.
 
 ## Implemented this continuation
@@ -13,23 +13,29 @@ The user redirected the next work toward the **core paired gameplay**, before mo
 
 - Lobby duties implemented and checked: host assignment, mutual swaps, per-player routing; 18 focused tests, offline start and live two-Editor shared repair/sleep. `Docs/Verification/S5/CrewCore/Roles/`. Network was **LK-S5-CREW1 / v36**. Live reconnect subsequently passed in the relay fixture; headset acceptance remains pending.
 
-- House → F4 radio relay implemented: numbered symbols, no HUD/correct-button answer, stable night/retry code, wrong-code recovery, actual leave/rejoin with partial code and duties. Four new relay tests plus related focused tests pass; live two-Editor relay/mic completes. Final paper placement screenshots inspected. Evidence: `Docs/Verification/S5/CrewCore/Relay/`. Current network **LK-S5-RELAY1 / LK-Lab-Coop-v37**.
+- House → F4 radio relay implemented: numbered symbols, no HUD/correct-button answer, stable night/retry code, wrong-code recovery, actual leave/rejoin with partial code and duties. Four new relay tests plus related focused tests pass; live two-Editor relay/mic completes. Final paper placement screenshots inspected. Evidence: `Docs/Verification/S5/CrewCore/Relay/`. Network at that checkpoint **LK-S5-RELAY1 / LK-Lab-Coop-v37**.
 - Instruction timing model with duties passes solo Nights 1–5 and duo Nights 1–3/Demo. Duo N4/N5 and solo Demo still fail identically with the new relay disabled. These are open campaign pacing/model investigations, not a claim of whole-campaign acceptance.
 - November 17 user steering: finish paired loop first, then remaining issues in dependency order. Final voice recordings LAST; captions remain active and no AI voice plays. New requested replacement: **#137, three timed physical starter pulls**, replacing primer/choke after comparison in headset. Keep current controls until replacement passes. User plans detailed playtest 18:00–20:00; do not launch Quest automatically.
+
+- Bounded partner #135 implemented: opposite duty, fully offline, Watch Menu orders, real valve hold/release, House clue read and stair delivery. Both human duties and actual two-Editor leave/rejoin pass; partial code and duty persist. No remote task solving. New **LK-S5-CREW2 / LK-Lab-Coop-v38** for scripted-partner state. Evidence: `Docs/Verification/S5/CrewCore/Companion/`. Human avatar files unchanged. Rescue, power/light support and full-campaign solo parity are still unfinished.
 
 ## Next implementation order
 
 1. Lobby duties (#136) and telegram relay portion of #112 implemented. Remaining acceptance: worn headset UI and paired usefulness. Engine/panel relay must use the pending timed-starter design (#137), not add another primer/choke dependency.
-2. Preserve current valve/radio relay; next deliver the bounded partner below, then rescue. Investigate campaign model failures in #109/#110 before claiming all-night balance. Neither duty should be a passive reader all night.
-3. Bounded solo partner: follow/wait/help/work, actual routes and clue reading, support holds/power/light, both human duties, offline parity and safe bot/human handoff. No instant remote repairs or tool-owner duplication.
+2. Preserve current valve/radio relay and the implemented bounded partner; next deliver shared rescue. Investigate campaign model failures in #109/#110 before claiming all-night balance. Neither duty should be a passive reader all night.
+3. Bounded solo partner: follow/wait/help/work, physical valve support, routes/clue reading, both-duty fixtures and bot/human handoff pass. Remaining support: power/light/bearing and rescue; full offline campaign parity is not yet established. No instant remote repairs or tool-owner duplication.
 4. Common downed/hand-revive for human or bot rescue; measure F4→F1 reach against the proposed 40-second window. Then integrate a warned hunter; never enable catches before escape/recovery works.
 5. Muted Editor checks and matching two-Mac run, clean build/install without launch, then a paired headset playtest. Expand across nights only after the short loop is understandable and fun.
 
 ## Delivery / DEVICE CHECKS PENDING
 
-Caption/role/relay source has changed; APK not rebuilt yet. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles and radio split are implemented; bot, engine/bearing information split and revive remain upcoming.
+Caption/role/relay/companion source has changed; APK not rebuilt yet. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles, radio split and bounded companion are implemented; engine/bearing information split, companion power/light/rescue and revive remain upcoming.
 
 Local Git workaround (iCloud evicted Desktop pack files): prefix every Git/build script with `GIT_OBJECT_DIRECTORY=/Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/loop/git-recovery/remote.git/objects`. M3 worktree metadata was rebuilt after preserving placeholders; original branches/main checkout were not changed. Do not delete the backup objects or placeholder files. New commit objects are also copied back into the original common object directory.
+
+Re-run companion slice: `python3 artifacts/s5/crew-core/check.py CrewCompanionTests`; `python3 artifacts/s5/crew-core/companion-machinist.py` (fresh lobby/output), `python3 artifacts/s5/crew-core/companion-crew.py` (both Editors ready, source overlay matched), `python3 artifacts/s5/crew-core/solo.py`. Evidence drivers are copied under CrewCore/Companion. Always stop Play Mode before editing Assets. Preserve prior output or choose a fresh folder so an old receipt cannot be mistaken for a new pass.
+
+Device checks: both lobby duties, text-only/B recall, partner slate at 2 m, personal space and stairs, Wait/Help at valve, both humans replacing the bot, Quest sustained GPU/CPU. Human voice remains NOT VERIFIED in muted tests.
 
 Local audit: `git status --short`; `rg -n 'NightCrewVariant|crewVariant|informationSite' Assets --glob '*.cs'`; inspect `CrewLobbyBoard.cs`, `FusionLobbyState.cs`, `LobbyPlayer.cs`, `WatchState.Campaign.cs`, `ObjectiveDirector.cs`, `WatchDemoCoop.cs`. Existing bridge/build paths and evidence remain below. Keep Editors muted; never rebuild or install unchanged runtime just for this documentation commit.
 

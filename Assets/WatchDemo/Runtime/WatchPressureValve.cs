@@ -45,7 +45,7 @@ namespace LighthouseKeepers.WatchDemo
         void Send(bool held)
         {
             var s=watch.State;if(s.Coop!=null)s.Coop.Send(CoopAction.PressureValve,0,held);
-            else watch.PressureCommand(0,held);
+            else watch.PressureCommand(1,held);
         }
         void Update()
         {
