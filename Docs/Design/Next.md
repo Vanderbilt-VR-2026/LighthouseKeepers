@@ -1,3 +1,28 @@
+# Active direction — November 17: two keepers first
+
+The user redirected the next work toward the **core paired gameplay**, before more horror production. Read [CoopCoreLoop.md](CoopCoreLoop.md) first. It records the concrete design and source audit; this checkpoint changes planning, not the installed game.
+
+- Two lobby duties: **Lightkeeper** (ships/beacon/radio) and **Machinist** (engine/pump/repairs). Everyone may use every tool. One human gets a simple scripted partner in the other duty; the extended Owen story/animation treatment remains stretch.
+- Next playable target: one short crew scenario with useful split information, physical support, a shared ship payoff and reachable rescue. Restore basic companion work to Sprint 5; do not continue directly into hunter production from the older checkpoint below.
+- Actual gaps: roster has no duty field; relay variants are metadata; the radio HUD reveals code answers; no runtime companion or downed/revive flow. The existing valve, lantern and hunter/navigation foundations can be reused.
+- Keep the simple Saltmere/two-keepers premise, four notes and optional visual clues. No expanded lore/readable system or new large voice recording pass. Companion lines stay held until a visible, working bot exists.
+
+## Next implementation order
+
+1. Lobby duty choice (#136) → host-authoritative stable assignments → per-player Objective Director routing; test both choices and rejoin. New replicated fields require a network bump.
+2. Actual House telegram → F4 radio information split, no answer in operator HUD/PA; pipe support and meaningful engine/panel coordination. Neither role is a passive reader all night.
+3. Bounded solo partner: follow/wait/help/work, actual routes and clue reading, support holds/power/light, both human duties, offline parity and safe bot/human handoff. No instant remote repairs or tool-owner duplication.
+4. Common downed/hand-revive for human or bot rescue; measure F4→F1 reach against the proposed 40-second window. Then integrate a warned hunter; never enable catches before escape/recovery works.
+5. Muted Editor checks and matching two-Mac run, clean build/install without launch, then a paired headset playtest. Expand across nights only after the short loop is understandable and fun.
+
+## Delivery / DEVICE CHECKS PENDING
+
+No runtime changes in this design checkpoint. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles, bot, split clues and revive are upcoming implementation, not available features.
+
+Local audit: `git status --short`; `rg -n 'NightCrewVariant|crewVariant|informationSite' Assets --glob '*.cs'`; inspect `CrewLobbyBoard.cs`, `FusionLobbyState.cs`, `LobbyPlayer.cs`, `WatchState.Campaign.cs`, `ObjectiveDirector.cs`, `WatchDemoCoop.cs`. Existing bridge/build paths and evidence remain below. Keep Editors muted; never rebuild or install unchanged runtime just for this documentation commit.
+
+---
+
 # Active checkpoint — November 17: fun horror loop
 
 Branch **sprint-5 / draft PR #89**. Editors muted. Accepted body and hands unchanged. **Install only; never auto-launch Quest.** Network: **LK-S5-LANTERN1 / LK-Lab-Coop-v35**.

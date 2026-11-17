@@ -1,6 +1,6 @@
 # Felt story / horror loop — November17 scope
 
-This user-approved trim overrides the expansive bible's production list. Keep Rule14, Lucy Gale's letter, Walter's engine log and Tom's unsent letter. No additional readable-note interaction or15-paper expansion. Owen is Post-course/stretch; no companion-dependent gameplay in the course build. Solo is protected by room light, nearby HIGH lantern, unseen hiding, flare/bell retreat. Co-op also protects a keeper whom the other actually sees.
+This user-approved trim overrides the expansive bible's production list. Keep Rule14, Lucy Gale's letter, Walter's engine log and Tom's unsent letter. No additional readable-note interaction or15-paper expansion. The later co-op focus restores a minimal scripted second keeper to Sprint 5; the elaborate Owen narrative remains stretch. See `Docs/Design/CoopCoreLoop.md`. Until that partner is physically present and functional, companion-dependent lines stay inactive. The target uses the same light/hiding/defense and witnessed-safety rules for human and bot crews; none of the new catches are enabled yet.
 
 Six visual clues (Tier2, after the whole Tier1 loop): wet prints from sabotage to exit; Walter/Tom photo above F3bunk with shoulder patch; matching dripping oilskin on F2hook fromN3; lantern-readable NEVER ALONE IN THE DARK aboveF2door; tank/lens black wet handprints; doll onF3bunk thenHousebench thenstairbottom. Preserve world-space placement and room paths.
 
@@ -12,7 +12,7 @@ Availability is not trigger eligibility. Do not play cues for a mechanic which i
 
 ## Recording-sheet conflicts — held, not silently rewritten
 
-- `HM_N1_ARRIVAL_SOLO` says “You and Teague got across”; `HM_TASKS_DONE_SOLO` says “Teague will take the first hour.” Placeholders are generated exactly, but no solo trigger uses them while Owen is deferred. Existing accurate solo arrival/sleep lines remain. Future replacement: “You got across. Good.” / “Get some sleep. Bunk's on Three.” Requires an agreed recording/caption change.
+- `HM_N1_ARRIVAL_SOLO` says “You and Teague got across”; `HM_TASKS_DONE_SOLO` says “Teague will take the first hour.” Placeholders are generated exactly, but no solo trigger uses them while no functional companion exists. Existing accurate solo arrival/sleep lines remain. Future replacement: “You got across. Good.” / “Get some sleep. Bunk's on Three.” Requires an agreed recording/caption change.
 - `HM_SHIP_SIGHTED` says south; current ship path is not south. Keep accurate existing ship-sighted cue until path/script agrees.
 - The default confession starts at selected `HM_N5_TRUTH_2` after a safe ship; optional TRUTH1 is only a prerequisite if it is enabled. This avoids deadlocking the selected story on an inactive optional line.
 - Missing hunt/hiding/cable/radio-wire triggers stay inactive until their systems exist. Selected does not mean all52 play in today's build.
