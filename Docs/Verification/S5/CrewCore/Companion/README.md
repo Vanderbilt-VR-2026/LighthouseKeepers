@@ -15,3 +15,5 @@ The helper walks the existing baked routes; it must reach the valve or paper bef
 Network: **LK-S5-CREW2 / LK-Lab-Coop-v38**. New scripted-partner snapshot state; both clients must update.
 
 Final review: the helper display actor was being mistaken for a fresh human roster on each objective tick. Restoring the human-only assignment input preserves the authored five-second objective hold; a regression test checks movement before/after that interval. Twelve seconds of uninterrupted real valve support pass, followed by release, clue retrieval and F4 return. Slate text now rebuilds only on content changes.
+
+Replica guidance is immutable: receiving a scripted-partner snapshot does not let a guest locally reassign or erase the partner actor. Covered in the authority regression.

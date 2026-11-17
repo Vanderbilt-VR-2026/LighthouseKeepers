@@ -30,7 +30,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             // The helper is shown as a partner, but is not a second human assignment candidate.
             // Restore that input before comparing rosters so movement keeps the normal assignment hold.
-            if(state.ScriptedPartner&&actorB==WatchState.CompanionActor)actorB=0;
+            if(!state.ReadOnly&&state.ScriptedPartner&&actorB==WatchState.CompanionActor)actorB=0;
             TickCore(now,firstActor,firstHead,secondActor,secondHead,wrenchHeld);
             if(!state.ReadOnly&&state.ScriptedPartner){
                 actorB=WatchState.CompanionActor;
