@@ -3,7 +3,7 @@
 Branch sprint-5 / PR #89. Editor muted. Quest unavailable: build, do not wait, do not launch.
 
 - Shared human/bot hand rescue is implemented and verified in muted Editor fixtures. Network **LK-S5-RESCUE1 / LK-Lab-Coop-v39**. Evidence: `Docs/Verification/S5/CrewCore/Recovery/Implementation.md`. Catches remain OFF; DEV rescue drill only.
-- Next apply the prepared three-page personal wartime briefing (`artifacts/s5/briefing/apply.py`), test each page/skip/reopen and live lobby, commit Refs #138.
+- Three-page personal wartime briefing implemented: context, jobs and controls, Skip/Back/reopen. Two tests and actual lobby page rendering pass; evidence `Docs/Verification/S5/CrewCore/Briefing/`. No new network state.
 - Latest user requests: beanies and realistic possession/revive face/body presentation (#139), safe full-station Night 1 plus Night 2 false-call rescue teaching event and later-night in-world events (#140). Visible body may rise within ceiling clearance; never animate the tracked camera. Dialogue remains captions only. Preserve accepted hands/height/legs. Update WartimeDirection.md to this new arc.
 - #137 timed starter remains queued. Engine/bearing relay, partner power/light support, hunter and full campaign acceptance remain unfinished. Voice recordings #122 LAST.
 - No new APK yet for rescue. Previous crew APK827679a0 is older and must not be called current.

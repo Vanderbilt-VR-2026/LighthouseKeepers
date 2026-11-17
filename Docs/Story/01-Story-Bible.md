@@ -1,3 +1,5 @@
+> Active setting/night-arc overrides: [WartimeDirection.md](WartimeDirection.md), November 17 user steering. Original bible preserved below.
+
 # Lighthouse Keepers — story bible (Sprint 5)
 
 Approved direction supplied by Aneesh on November 16, 2026. Companion: [voice script](02-Voice-Script.md), [recording sheets](03-Recording-Sheets.md), [implementation status](Implementation.md). This document records the approved fiction and design, **not a claim that all features exist**. Existing game locations win over proposed locations. New directions here supersede the earlier disconnected scares/flare-only-defense plan. Existing controls and accepted avatar remain protected.

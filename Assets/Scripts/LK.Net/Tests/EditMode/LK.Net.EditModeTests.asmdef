@@ -1,6 +1,17 @@
 {
   "name": "LK.Net.EditModeTests",
-  "references": ["LK.Net", "LK.Networking", "LK.Lobby", "LighthouseKeepers.Runtime", "LK.Core.Progression"],
-  "includePlatforms": ["Editor"],
-  "optionalUnityReferences": ["TestAssemblies"]
+  "references": [
+    "LK.Net",
+    "LK.Networking",
+    "LK.Lobby",
+    "LighthouseKeepers.Runtime",
+    "LK.Core.Progression",
+    "Unity.TextMeshPro"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
 }
