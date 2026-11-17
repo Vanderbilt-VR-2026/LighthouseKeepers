@@ -1,3 +1,31 @@
+# Active checkpoint — November17 fun horror loop
+
+Branch **sprint-5 / draft PR#89**. Editor muted. Accepted body/hands intact. **Install only; never auto-launch Quest.** Network currently **LK-S5-LANTERN1 / LK-Lab-Coop-v35**.
+
+## Done
+
+- Story scope trimmed: four existing notes only; no15-readable expansion. Six visual clues deferred toTier2. Owen **Post-course / stretch #135**. Solo protection no longer depends on an absent companion.
+- User's updated recording sheets copied exactly.52 SHEET0 offlineTTS placeholders (45HM/7ANT), exact captions, mono44.1kHz16bit, under10s. Other60 remain catalogued/off unless explicit real-recording import succeeds. No new fake actor recordings. Unsupported Teague/south/missing mechanic triggers stay held.
+-54 focused EditMode checks passed; measured audio and scope evidence `Docs/Verification/S5/StoryTrim/`. No new synced fields; no version bump at this content checkpoint.
+- Previous lantern APK33c2bf35 remains installed, not launched. Lantern/body acceptance history below.
+
+## Next — Tier1 in this exact order
+
+1. Hunter: inspect actual floor/stair navigation; single Walter rig, hostFSM, LOS/light observations, telegraph+silence. No catches enabled until escape/hiding/recovery tested. Add `HorrorTuning` as one source for all new horror numbers; then migrate existing lantern/fear/sabotage consumers without duplicated knobs. Refs#105,#113.
+2. Sprint/hide/breath (#105,#106); defenses (#107); caught/revive (#107); fear (#93); sabotage/evidence/physical repairs (#98–100); ship-window attack (#95,#99); night data/telemetry (#109,#110); exactsix-minute Demo (#116).
+3. After ALL Tier1: Tier2 apparitions,6visual clues,privateANT,scareoptions,morninglogbook. Tier3doors/mirror/save/credits only iftime beforeNov29. Owen outside course scope.
+4. At every completed Tier1 checkpoint: build clean source, install ifADB present without launching, inspect evidence, commit/push with issue reference and keep headset-only acceptance open.
+
+Exact commands: `python3 Tools/Story/build_catalog.py --check`; `python3 Tools/Story/build_placeholders.py --verify`; scope test driver `python3 artifacts/s5/loop/test_scope.py`. Unity bridge helpers in `~/LighthouseKeepers-Coop-Basics/artifacts/coop/mac_pair.py`; explicit `EditorUtility.audioMasterMute=true` and72fps before eachPlay. Fresh build backups/output required (previous lantern scripts are reference only).
+
+## DEVICE CHECKS PENDING
+
+- No fresh hunter build yet. Last installed33c2bf35: lantern wick/oil/hooks, seated reach, stereo glass, body/Brecall, twoHIGHlamp GPU≤11ms/CPU≤9ms at72Hz.
+- Matchingv35 Mac+Quest: guestfuel/refill/valve/rejoin/sharedsleep and humanvoice. MutedEditor tests do not prove voice clarity.
+- NewTTS intelligibility/timing needs listening after the next build; no misleading Owen/direction cues. Fullhunter/hiding/catches/privateANT remain implementation work.
+
+---
+
 # Active checkpoint — November16 Kettle Rock oil lanterns
 
 Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main untouched. Editor muted/capped72fps. Accepted body/hands retained. **Never auto-launch Quest.**

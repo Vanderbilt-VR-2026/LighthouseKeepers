@@ -35,16 +35,6 @@ def main():
         assert DEST.read_text() == text, 'Run python3 Tools/Story/build_catalog.py'
         print(f'Approved script matches {len(entries)} unique runtime captions (HM89 / ANT23).');return
     DEST.parent.mkdir(parents=True,exist_ok=True);DEST.write_text(text)
-    lines=['# Kettle Rock recording sheets','',
-      'Generated from [the approved script](02-Voice-Script.md). 89 harbor-master lines +23 antagonist lines. Owen has no voice. These are new recordings; existing 94 recorded clips remain untouched.', '',
-      '**Read `Implementation.md` before recording the held lines.** Two-wheel valve, ship direction, missing final choke instruction and Owen dependencies are explicitly tracked. No silent text rewrites.', '',
-      'Record one clean take per filename, mono 44.1 kHz WAV (16-bit), no spoken ID. Leave a little room tone. Keep each under10s naturally; flag a longer good take instead of speeding it up. Put files in `Recordings/Radio/` (gitignored), then Lighthouse Keepers → Import Radio Recordings. Keep raw originals elsewhere.', '',
-      'Elias: helpful, dry, tired, clear names and numbers. ANT: quiet, close, patient; no shouting/distortion in the recording. The engine adds its restrained spatial treatment. Humming: record an original performance, not a commercial recording.','']
-    for speaker,title in [('HM','Elias Merrow — harbor master'),('M','Margaret — old woman'),('L','Lottie — child'),('W','Walter — low man')]:
-        lines += ['## '+title,'','| Filename | Exact words | Delivery |','|---|---|---|']
-        for e in entries:
-            if e['speaker']==speaker:lines.append(f"| {e['id'].lower()}.wav | {e['text']} | {e['delivery']} |")
-        lines.append('')
-    (ROOT/'Docs/Story/03-Recording-Sheets.md').write_text('\n'.join(lines)+'\n')
+    # Recording sheets are user-authored; never regenerate or overwrite SHEET 0.
     print(f'Wrote {len(entries)} lines; cue range {entries[0]["cue"]}–{entries[-1]["cue"]}. No audio was generated or relabelled.')
 if __name__=='__main__':main()

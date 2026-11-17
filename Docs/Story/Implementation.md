@@ -1,3 +1,7 @@
+# Current scope override
+
+Read [Scope.md](Scope.md):52 selected placeholders, only four readables, six visual clues later; Owen deferred to Post-course. The historical ledger below is not the current build order.
+
 # Kettle Rock implementation ledger
 
 Approved bible and exact script: November16,2026. Worktree `~/LighthouseKeepers-M3`, `sprint-5`, draft PR89. Body fit accepted by user; retain existing hands and corrected avatar. Arm-swing run still needs human confirmation. Editor muted; never auto-launch Quest.

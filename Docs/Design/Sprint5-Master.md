@@ -322,6 +322,16 @@ dawn glimpse, dawn rescue variant. Use TTS placeholders until I record them with
 ---------------------------------------------------------------------------------------------------
 ## 13. PHASES (do in order; commit + push per step)
 
+**November17 priority override — FUN HORROR LOOP FIRST.** This ordering supersedes the phase order below. Story is felt through sound, machinery and six visual clues. Keep the four existing notes; cancel the other15 readables. Owen is **Post-course / stretch**. In solo, darkness alone permits a catch; co-op additionally requires that the partner cannot see the target. No compulsory solo valve clamp.
+
+- Story trim: Sheet0's52 IDs have temporary TTS; other60 catalogue IDs are off until an explicit matching recording import. Recording availability never bypasses a missing/inaccurate trigger. See `Docs/Story/Scope.md`.
+- **Tier1, in order:** (1) hunter/nav/LOS [#105, #113]; (2) sprint/hide/breath [#105, #106]; (3) HIGH/flare/bell [#107]; (4) catch/revive [#107]; (5) fear/haptics [#93]; (6) sabotage tells/evidence/repairs [#98–100]; (7) ship-window attack [#95, #99]; (8) night pacing/data/bot telemetry [#109, #110]; (9) six-minute Demo [#116].
+- **Tier2:** apparitions/private ANT/scare options [#104, #108, #122], six visual clues [#120], morning logbook [#114].
+- **Tier3 only if time before Nov29:** doors [#117], mirror [#118], save/continue [#115], credits [#111]. Retain already-working features.
+- Every completed Tier1 item: focused checks, build/install without launch, five-step headset route, issue evidence. No unverified catches enabled. All timings in `HorrorTuning`, with per-night overrides. Device-only acceptance stays open. Nov29: disable unstable features rather than expanding scope.
+
+### Historical phase/issue mapping (priority override above wins)
+
 **PHASE 1 — FOUNDATION:** 1.0 [#90](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/90) QUEST QUALITY BASELINE FIRST (§14): audit every setting, apply the
 baseline via an editor menu, add QualityBaselineTests, measure on device, write QuestQuality.md — so
 everything after is built and measured against the right settings. 1.1 [#91](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/91) Sprint5.md + FeelChecklist.md + SoundMap.md skeletons. 1.2 [#92](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/issues/92) TensionDirector

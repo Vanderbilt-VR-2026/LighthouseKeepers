@@ -37,7 +37,7 @@ namespace LighthouseKeepers.WatchDemo
                 case "HM_N2_WALTER":return s.Day==2&&s.Engine?.Settled==true;
                 case "HM_N4_TOM":return s.Day==4;
                 case "HM_N5_TRUTH_1":return s.Day==5&&s.Ships?.PassedMask>0;
-                case "HM_N5_TRUTH_2":return s.Day==5&&storyPlayedAt.ContainsKey("HM_N5_TRUTH_1");
+                case "HM_N5_TRUTH_2":return s.Day==5&&(storyPlayedAt.ContainsKey("HM_N5_TRUTH_1")||!StoryVoiceAvailability.Enabled("HM_N5_TRUTH_1")&&s.Ships?.PassedMask>0);
                 case "HM_N5_TRUTH_3":return s.Day==5&&storyPlayedAt.ContainsKey("HM_N5_TRUTH_2");
                 case "HM_N5_TRUTH_4":return s.Day==5&&storyPlayedAt.ContainsKey("HM_N5_TRUTH_3");
                 default:return false;
@@ -58,7 +58,7 @@ namespace LighthouseKeepers.WatchDemo
             OfferStory("HM_N2_WALTER",s.Day==2&&Time.time-engineRestoredAt>=30&&running&&float.IsFinite(engineRestoredAt));
             OfferStory("HM_N4_TOM",s.Day==4&&s.Elapsed>=60);
             OfferStory("HM_N5_TRUTH_1",s.Day==5&&s.Ships?.PassedMask>0);
-            OfferStory("HM_N5_TRUTH_2",s.Day==5&&StoryDelay("HM_N5_TRUTH_1",10));
+            OfferStory("HM_N5_TRUTH_2",s.Day==5&&(StoryDelay("HM_N5_TRUTH_1",10)||!StoryVoiceAvailability.Enabled("HM_N5_TRUTH_1")&&s.Ships?.PassedMask>0));
             OfferStory("HM_N5_TRUTH_3",s.Day==5&&StoryDelay("HM_N5_TRUTH_2",30));
             OfferStory("HM_N5_TRUTH_4",s.Day==5&&StoryDelay("HM_N5_TRUTH_3",8));
             // Exactly one PA program owns playback. Existing urgent/mechanical requests win this frame.

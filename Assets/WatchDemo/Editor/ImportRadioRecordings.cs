@@ -74,6 +74,13 @@ namespace LighthouseKeepers.WatchDemo.Editor
                         AssetDatabase.ImportAsset(story.file,ImportAssetOptions.ForceUpdate);
                         var importer=(AudioImporter)AssetImporter.GetAtPath(story.file);importer.forceToMono=true;
                         var settings=importer.defaultSampleSettings;settings.loadType=AudioClipLoadType.DecompressOnLoad;settings.compressionFormat=AudioCompressionFormat.Vorbis;settings.quality=.8f;importer.defaultSampleSettings=settings;importer.SaveAndReimport();
+                        // Successful explicit import enables optional lines, keeping the stable cue/GUID.
+                        const string availabilityPath="Assets/Data/Strings/Resources/StoryVoiceAvailability.json";
+                        var availability=JsonUtility.FromJson<LighthouseKeepers.Core.Progression.StoryVoiceAvailability.Manifest>(File.ReadAllText(availabilityPath));
+                        availability.MarkRecorded(story.id);
+                        File.WriteAllText(availabilityPath,JsonUtility.ToJson(availability,true)+"\n");
+                        AssetDatabase.ImportAsset(availabilityPath,ImportAssetOptions.ForceUpdate);
+                        LighthouseKeepers.Core.Progression.StoryVoiceAvailability.Invalidate();
                         // New actor recordings have no forced alignment yet; subtitle even-reveal is explicit.
                         count++;continue;
                     }
