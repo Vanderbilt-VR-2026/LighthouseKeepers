@@ -1,3 +1,23 @@
+# Active checkpoint — November 16 Kettle Rock story implementation
+
+Branch **sprint-5**, draft **PR #89**. Editors muted, main untouched, no automatic Quest launch. User accepted corrected body; arm-swing run remains unconfirmed.
+
+- Approved canon saved in `Docs/Story/01-Story-Bible.md`; all112 exact dialogue captions (HM89/ANT23) in `02-Voice-Script.md` and generated runtime catalogue/recording sheets. Existing recordings untouched.
+- Core speech policy implemented: stale-condition cancellation, priorities, per-run/night/ship receipts, two-instruction burst/8s recovery, calm story, voice-chat priority, isolated-dark ANT90s/6-night budget. Witness/light safety contract added; **not yet a live hunter or companion**.
+- Baseline53 focused checks (VoicePass23, Drowned9, M3Runtime21) pass; new22 story-policy checks pass. `Docs/Verification/S5/Story/`. The first semicolon-filter attempt discovered zero tests; corrected to individual class runs, not counted as coverage.
+- Next: integrate supported story audio/import/captions with the existing host PA transport; add first physical lore papers/ship names; validate graphics/solo/co-op before delivery. Then lantern/repairs, verified hunt+hiding, Owen, remaining story/ANT/finale per `Docs/Story/Implementation.md`.
+- Network still **LK-S5-DREAD1 / v33** at this core-only checkpoint. New cue IDs200–311 are data only until transport accepts them; bump before activating.
+
+Exact commands: `python3 Tools/Story/build_catalog.py --check`; muted Editor bridge `run_tests` with `filter=StoryRulesTests`, `filter_type=testName`, `mode=editor`. Do not combine class names with semicolons in this bridge. Editor log `artifacts/s5/story/editor.log`; baseline/core receipts beside it.
+
+## DEVICE CHECKS PENDING
+
+- Latest installed build remains body correction **ad642404**; story changes not yet built/installed.
+- Body accepted; run input/comfort/stereo edge cases, human co-op voice, worn72Hz GPU<=11ms/CPU<=9ms pending.
+- Story recordings not supplied. No claim of new actor audio, live hunter/hiding/Owen, or finished story campaign. Keep impossible instructions inactive.
+
+---
+
 # Active checkpoint — November 16 keeper headset correction
 
 Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main untouched. Editors muted; **never auto-launch Quest**. Network remains **LK-S5-DREAD1 / LK-Lab-Coop-v33**; no new synced state.
@@ -8,7 +28,7 @@ Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main u
 - Identified the flat "board" as the legacy **Stabilized chest proxy**. Disabled in the shared prefab, authoring source and old scene overrides; no new avatar mesh change needed.
 - Arm-swing running: late hand binding, empty squeezed grips allowed, normal reversal pauses accepted, direction follows head yaw. Existing +60% easing and no run while holding props/standing retained.
 - 27 focused EditMode +3 PlayMode checks pass. Inspected real-lobby graphics at1.35/1.65/1.9m eye height, turns and crouching. Solo Night1 physical pipe/sleep→Night2 passes. Two-Mac avatar/movement/shared pipe/shared sleep→Night2 passes with test Editors capped72fps. First uncapped attempt disconnected; no networking code changed. Human voice listening unverified (muted).
-- Evidence: `Docs/Verification/S5/KeeperFix/`. Diagnostic630fe719 was not a fix. Correction **ad642404** built clean and installed/hash verified on Quest3; not auto-launched. APK `Builds/LighthouseKeepers-Sprint5-KeeperFix-ad642404.apk`, SHA-256 `dcf431c8e059faf6bc31656bcdc2164377d0b41b614b9aa3752991603d8b187c`. User body/run checks requested; acceptance pending.
+- Evidence: `Docs/Verification/S5/KeeperFix/`. Diagnostic630fe719 was not a fix. Correction **ad642404** built clean and installed/hash verified on Quest3; not auto-launched. APK `Builds/LighthouseKeepers-Sprint5-KeeperFix-ad642404.apk`, SHA-256 `dcf431c8e059faf6bc31656bcdc2164377d0b41b614b9aa3752991603d8b187c`. User subsequently confirmed “body looks good.” Arm-swing running, stereo edge cases and profiling remain unconfirmed.
 
 ## Next actions / exact commands
 

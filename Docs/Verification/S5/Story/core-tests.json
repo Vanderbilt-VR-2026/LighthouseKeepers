@@ -1,0 +1,171 @@
+{
+  "Summary": {
+    "Total": 22,
+    "Passed": 22,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.ApprovedCatalogHasAllExactUniqueRolesAndNoLegacyIds",
+      "Status": "Passed",
+      "Duration": 0.0092707,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.CooldownMeasuredFromActualPlayAndMissingAudioDoesNotConsumeReceipt",
+      "Status": "Passed",
+      "Duration": 0.0019446,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.HelpNeverInterruptsActionAndRequiresNearIdleOrTwoFailures",
+      "Status": "Passed",
+      "Duration": 7.93e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.HuntNeedsTutorialProtectionAndVerifiedEscape",
+      "Status": "Passed",
+      "Duration": 0.0001701,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.NoTakingWithoutKnownUnwatchedDarkUnhiddenVictim(False,False,False,False,False)",
+      "Status": "Passed",
+      "Duration": 0.0001066,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.NoTakingWithoutKnownUnwatchedDarkUnhiddenVictim(True,True,False,False,False)",
+      "Status": "Passed",
+      "Duration": 2.91e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.NoTakingWithoutKnownUnwatchedDarkUnhiddenVictim(True,False,True,False,False)",
+      "Status": "Passed",
+      "Duration": 2.71e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.NoTakingWithoutKnownUnwatchedDarkUnhiddenVictim(True,False,False,True,False)",
+      "Status": "Passed",
+      "Duration": 2.99e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.NoTakingWithoutKnownUnwatchedDarkUnhiddenVictim(True,False,False,False,True)",
+      "Status": "Passed",
+      "Duration": 2.98e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.RepairedFaultIsDiscardedEvenWhileAnotherLinePlays",
+      "Status": "Passed",
+      "Duration": 0.0001611,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.RunReceiptsSurviveWakingButResetForNewCampaign",
+      "Status": "Passed",
+      "Duration": 0.0001854,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.SabotageNeedsUnwatchedEvidenceAndSpacing",
+      "Status": "Passed",
+      "Duration": 8.08e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.SameShipIsNotAnnouncedTwiceButAnotherShipIs",
+      "Status": "Passed",
+      "Duration": 0.0010168,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.StoryWaitsForCalmAndSpecificPrerequisiteStillHasToHold",
+      "Status": "Passed",
+      "Duration": 0.0001764,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.TwoInstructionsThenEightSecondsOfBreathingRoom",
+      "Status": "Passed",
+      "Duration": 0.0001758,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.UrgentDangerCancelsQueuedStoryInterruptsLowerButNeverVoiceChat",
+      "Status": "Passed",
+      "Duration": 0.0001651,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.WhisperBudgetIsSixEvenWhenAllDifferentLines",
+      "Status": "Passed",
+      "Duration": 0.0008806,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.WhisperRequiresNightTwoFullDarkAndAlone(1,True,True,True)",
+      "Status": "Passed",
+      "Duration": 0.0001798,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.WhisperRequiresNightTwoFullDarkAndAlone(3,False,True,True)",
+      "Status": "Passed",
+      "Duration": 3.67e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.WhisperRequiresNightTwoFullDarkAndAlone(3,True,False,True)",
+      "Status": "Passed",
+      "Duration": 4.03e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.WhisperRequiresNightTwoFullDarkAndAlone(3,True,True,False)",
+      "Status": "Passed",
+      "Duration": 3.44e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.StoryRulesTests.WhisperWaitsForHarborQueueFourSecondsThenNinetySecondCooldown",
+      "Status": "Passed",
+      "Duration": 0.0001526,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.65,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: StoryRulesTests",
+  "success": true,
+  "result": null
+}

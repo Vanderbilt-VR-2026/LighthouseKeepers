@@ -1,0 +1,424 @@
+{
+  "VoicePassTests": {
+    "Summary": {
+      "Total": 23,
+      "Passed": 23,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "Results": [
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.AllRecordedAndNewPlaceholderClipsExistWithExactCaptionsAndSingleCuts",
+        "Status": "Passed",
+        "Duration": 0.2123439,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.NewCueDomainIsVersionedAndAllImportedPClipsAreAddressable",
+        "Status": "Passed",
+        "Duration": 0.0048888,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.ObjectiveTransitionsAllowTwoLinesThenRequireAQuietStretch",
+        "Status": "Passed",
+        "Duration": 0.0004526,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(76,\"pipeOpening\")",
+        "Status": "Passed",
+        "Duration": 0.00186,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(77,\"upperJobs\")",
+        "Status": "Passed",
+        "Duration": 0.0001098,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(78,\"wrenchDown\")",
+        "Status": "Passed",
+        "Duration": 9.02e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(79,\"startGrace\")",
+        "Status": "Passed",
+        "Duration": 8.21e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(80,\"tonightPair\")",
+        "Status": "Passed",
+        "Duration": 8.53e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(81,\"tonightFull\")",
+        "Status": "Passed",
+        "Duration": 8.18e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(82,\"valvePuzzle\")",
+        "Status": "Passed",
+        "Duration": 8.66e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(83,\"valveReleased\")",
+        "Status": "Passed",
+        "Duration": 9.17e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(84,\"soloClamp\")",
+        "Status": "Passed",
+        "Duration": 8.22e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(85,\"crewRadios\")",
+        "Status": "Passed",
+        "Duration": 8.17e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(86,\"pole\")",
+        "Status": "Passed",
+        "Duration": 0.0001198,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(87,\"breakerTripped\")",
+        "Status": "Passed",
+        "Duration": 0.000106,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(88,\"lowFuel\")",
+        "Status": "Passed",
+        "Duration": 9.28e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(89,\"engineStalled\")",
+        "Status": "Passed",
+        "Duration": 8.68e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(90,\"lensSoot\")",
+        "Status": "Passed",
+        "Duration": 9.33e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(91,\"wrongCode\")",
+        "Status": "Passed",
+        "Duration": 9.44e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(92,\"broadcast\")",
+        "Status": "Passed",
+        "Duration": 8.13e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SituationalTriggerUsesOncePerNightOrExplicitCooldown(93,\"closeCall\")",
+        "Status": "Passed",
+        "Duration": 8.27e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.SubtitleSdfRendersAboveItsDarkBackingAndKeepsAtlasReference",
+        "Status": "Passed",
+        "Duration": 0.0141964,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.VoicePassTests.WordRevealNeverRewindsAndFinishesAtAudioEnd",
+        "Status": "Passed",
+        "Duration": 0.027002,
+        "Message": null,
+        "StackTrace": null
+      }
+    ],
+    "Duration": 0.63,
+    "StatusPath": null,
+    "Mode": "EditMode",
+    "FilterApplied": "testname: VoicePassTests",
+    "success": true,
+    "result": null
+  },
+  "DrownedTests": {
+    "Summary": {
+      "Total": 9,
+      "Passed": 9,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "Results": [
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.BlackoutDrivesDrownedStormEvenBeforeAShipThreatens",
+        "Status": "Passed",
+        "Duration": 0.0223145,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.DarknessMakesWeatherWorseAndRetreatEasesIt",
+        "Status": "Passed",
+        "Duration": 0.0001743,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.FirstControlGraceDefersAppearanceUntilItIsSafe",
+        "Status": "Passed",
+        "Duration": 0.0001642,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.GuestCannotInventOrExtendAppearance",
+        "Status": "Passed",
+        "Duration": 0.0004202,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.NoAppearanceInTutorialOrFirstMinute",
+        "Status": "Passed",
+        "Duration": 9.63e-05,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.ProceduralEffectsStayInsideGeometryBudget",
+        "Status": "Passed",
+        "Duration": 0.0164792,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.ReliefCancelsAndOldWarningsDoNotReplay",
+        "Status": "Passed",
+        "Duration": 0.0002069,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.WarningPrecedesManifestationAndPowerReturnsForceRetreat",
+        "Status": "Passed",
+        "Duration": 0.0001097,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Tests.M3.DrownedTests.WarningWaitsForVisibleSpotAndGuestCannotMoveIt",
+        "Status": "Passed",
+        "Duration": 0.0004489,
+        "Message": null,
+        "StackTrace": null
+      }
+    ],
+    "Duration": 0.28,
+    "StatusPath": null,
+    "Mode": "EditMode",
+    "FilterApplied": "testname: DrownedTests",
+    "success": true,
+    "result": null
+  },
+  "M3RuntimeTests": {
+    "Summary": {
+      "Total": 21,
+      "Passed": 21,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "Results": [
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(1)",
+        "Status": "Passed",
+        "Duration": 0.0038748,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(2)",
+        "Status": "Passed",
+        "Duration": 0.0005866,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(3)",
+        "Status": "Passed",
+        "Duration": 0.0007172,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(4)",
+        "Status": "Passed",
+        "Duration": 0.0007019,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(5)",
+        "Status": "Passed",
+        "Duration": 0.000744,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.CrewSnapshotAndRetryCarryScheduleAndGuestsCannotFireEvents",
+        "Status": "Passed",
+        "Duration": 0.0067869,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.DemoConsumesItsOwnDataAndNightOneCannotLose",
+        "Status": "Passed",
+        "Duration": 0.0054833,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.FearComfortControlsStayInsideTheLogbookPage",
+        "Status": "Passed",
+        "Duration": 0.0246461,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.HostSamplesFearByFloorAndGuestCannotSubmitItsOwnFear",
+        "Status": "Passed",
+        "Duration": 0.0032031,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.LiveWatchRefreshDoesNotOverlayMainButtonsOnTheSoundPage",
+        "Status": "Passed",
+        "Duration": 0.0013455,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.LowFuelEventDoesNotRestartEngineAndCannotCompleteBeforeRefilling",
+        "Status": "Passed",
+        "Duration": 0.0036978,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.NightTwoStartsFuelEmptyWithPipeBrokenAndBothReplicate",
+        "Status": "Passed",
+        "Duration": 0.0009781,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.PipeOrGeneratorCanBeFixedFirstWithoutUnlockingOrBreakingAnotherStation",
+        "Status": "Passed",
+        "Duration": 0.0013396,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.RepairDoesNotStartAnEngineOrRefillItsTankAndRealFuelConsumptionReplicates",
+        "Status": "Passed",
+        "Duration": 0.0008106,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.TensionSnapshotRejectsMismatchedStageAndGuestCannotAdvanceItsPacing",
+        "Status": "Passed",
+        "Duration": 0.0015042,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.ValveUsesCurrentRosterAndAuthoredNightWithoutRestoringSoloClamp(1,False)",
+        "Status": "Passed",
+        "Duration": 0.0004841,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.ValveUsesCurrentRosterAndAuthoredNightWithoutRestoringSoloClamp(2,False)",
+        "Status": "Passed",
+        "Duration": 0.0001559,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.ValveUsesCurrentRosterAndAuthoredNightWithoutRestoringSoloClamp(3,True)",
+        "Status": "Passed",
+        "Duration": 0.0001519,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.ValveUsesCurrentRosterAndAuthoredNightWithoutRestoringSoloClamp(4,True)",
+        "Status": "Passed",
+        "Duration": 0.0001472,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.ValveUsesCurrentRosterAndAuthoredNightWithoutRestoringSoloClamp(5,True)",
+        "Status": "Passed",
+        "Duration": 0.0001479,
+        "Message": null,
+        "StackTrace": null
+      },
+      {
+        "FullName": "LighthouseKeepers.Net.Tests.M3RuntimeTests.WorldFilterNeverAttachesToSharedCameraOrMultipleSourceObjects",
+        "Status": "Passed",
+        "Duration": 0.0005725,
+        "Message": null,
+        "StackTrace": null
+      }
+    ],
+    "Duration": 0.34,
+    "StatusPath": null,
+    "Mode": "EditMode",
+    "FilterApplied": "testname: M3RuntimeTests",
+    "success": true,
+    "result": null
+  }
+}
