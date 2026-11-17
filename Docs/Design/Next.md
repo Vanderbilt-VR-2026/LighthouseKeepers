@@ -9,7 +9,7 @@ Branch **sprint-5 / draft PR #89**. Editors muted. Quest unavailable: build only
 - Night2 false call: gather both keepers on the actual F2 floor, lock two stairs, threat, co-op guest / solo bot possession, direct hand rescue, gates reopen after relief. Watch/flood/ship clocks pause; no deadline in the lesson. Roster changes safely regather.
 - Antagonist speaker is **Unknown**, including the false call, “You’ll die here like the others.”, live subtitles and B recall. Dialogue remains text only.
 - **LK-S5-POSSESSION1 / LK-Lab-Coop-v40**. Both clients must update. 75 focused tests, offline lesson and live two-Editor lesson pass; evidence `Docs/Verification/S5/CrewCore/Possession/`. Full hunter/catches stay OFF.
-- APK build pending for this source checkpoint; the delivery receipt below will identify the new file when completed. Older 827679a0 is not this build.
+- Clean **fcfa8bd4** APK built and verified (IL2CPP ARM64, package/signature/VR/CRC). **Not installed or launched.** `Builds/LighthouseKeepers-Sprint5-Possession-fcfa8bd4.apk`; SHA-256 `8670c7850997e358ab251336d83096902dfa982e6a6bbd171a8ae781616e4d42`. Receipt and five-step check: `Docs/Verification/S5/CrewCore/Possession/`. Older 827679a0 is not this build.
 
 ## Next, in order
 

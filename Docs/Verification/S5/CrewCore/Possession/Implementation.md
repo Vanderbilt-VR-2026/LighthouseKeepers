@@ -19,3 +19,7 @@ The host owns the lesson phase, victim and elapsed phase time inside the existin
 - Quest hand reach, seated comfort, eye readability, wall/gate placement and sustained performance require a person in the headset. Muted Editor checks do not verify human voice.
 - This is a scripted rescue lesson, not a finished hunter/catch system. Full catches remain disabled.
 - Night 1 still needs the requested safe full-station rehearsal. Night 3/4 bespoke scenes and the revised Night 5 finale remain work on #140. The queued three-timed-pulls engine change is #137.
+
+## APK delivery
+
+Clean source `fcfa8bd4` built successfully: `Builds/LighthouseKeepers-Sprint5-Possession-fcfa8bd4.apk` (129,950,078 bytes). Verified package `com.lighthousekeepers.game`, IL2CPP ARM64, VR manifest, signing and ZIP CRC. SHA-256 `8670c7850997e358ab251336d83096902dfa982e6a6bbd171a8ae781616e4d42`. Not installed or launched; Quest unavailable. See `delivery.json` and `Headset.md`. The earlier preflight attempt encountered the Editor shutdown lock; the clean retry completed after the Editors exited.
