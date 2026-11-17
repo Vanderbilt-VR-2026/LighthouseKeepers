@@ -25,6 +25,7 @@ namespace LighthouseKeepers.Lobby
         int LocalActor {get;}
         void Locations(out int first,out Vector3 firstHead,out int second,out Vector3 secondHead);
     }
+    public interface ICoopKeeperDuties { CrewDuty Duty(int actor); }
     public interface ICoopKeeperViews { bool View(int actor,out Vector3 forward); }
     public interface ICoopRadioView
     {

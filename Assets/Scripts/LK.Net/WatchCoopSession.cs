@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     // Shared Lab commands and snapshots use Will's existing authenticated Fusion channel.
-    public sealed class WatchCoopSession : MonoBehaviour, ICoopKeeperLocations, ICoopKeeperViews, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
+    public sealed class WatchCoopSession : MonoBehaviour, ICoopKeeperDuties, ICoopKeeperLocations, ICoopKeeperViews, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
     {
         const int HelloKind=40,SnapshotKind=41,CommandKind=42,ResultKind=43;
         const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
@@ -62,6 +62,15 @@ namespace LighthouseKeepers.Net
                 else {second=player.RawEncoded;secondHead=pose.Head;break;}
             }
             if(second!=0&&second<first){(first,second)=(second,first);(firstHead,secondHead)=(secondHead,firstHead);}
+        }
+        public CrewDuty Duty(int actor)
+        {
+            if(detached||!channel||!channel.Runner||!crew)return CrewDuty.None;
+            foreach(var player in channel.Runner.ActivePlayers)if(player.RawEncoded==actor){
+                string id=player.PlayerId.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                foreach(var entry in crew.Players)if(entry.Id==id)return entry.Duty;
+            }
+            return CrewDuty.None;
         }
         public bool View(int actor,out Vector3 forward) {forward=Vector3.forward;if(!poses||!poses.Sample(actor,out var pose))return false;forward=pose.HeadRotation*Vector3.forward;return true;}
         public bool NearKeeper(Vector3 point,float radius)

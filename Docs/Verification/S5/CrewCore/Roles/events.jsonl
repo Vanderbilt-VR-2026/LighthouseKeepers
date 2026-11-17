@@ -1,0 +1,6 @@
+{"time": 1794939797.022036, "event": "FAIL", "data": "timed out"}
+{"time": 1794939957.6254458, "event": "FAIL", "data": "{\"success\":false,\"error\":\"Internal Server Error\",\"errorDetails\":\"Main thread operation timed out after 5000ms\"}"}
+{"time": 1794940039.5647402, "event": "Mutual swap replicated", "data": [{"duty": "Machinist", "players": [{"Id": "1", "duty": "Machinist", "wish": "None"}, {"Id": "2", "duty": "Lightkeeper", "wish": "None"}]}, {"duty": "Lightkeeper", "players": [{"Id": "1", "duty": "Machinist", "wish": "None"}, {"Id": "2", "duty": "Lightkeeper", "wish": "None"}]}]}
+{"time": 1794940047.0067441, "event": "Machinist", "data": {"duty": "Machinist", "step": "GrabWrench", "avatars": 2, "muted": true}}
+{"time": 1794940047.0454001, "event": "Lightkeeper", "data": {"duty": "Lightkeeper", "step": "GrabWrench", "avatars": 2, "muted": true}}
+{"time": 1794940105.838222, "event": "Shared pipe + sleep into Night2; duty persisted", "data": [{"duty": "Machinist", "players": [{"Id": "1", "duty": "Machinist", "wish": "None"}, {"Id": "2", "duty": "Lightkeeper", "wish": "None"}]}, {"duty": "Lightkeeper", "players": [{"Id": "1", "duty": "Machinist", "wish": "None"}, {"Id": "2", "duty": "Lightkeeper", "wish": "None"}]}]}

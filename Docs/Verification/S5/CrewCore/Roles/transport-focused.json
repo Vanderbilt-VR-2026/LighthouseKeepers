@@ -1,0 +1,87 @@
+{
+  "Summary": {
+    "Total": 10,
+    "Passed": 10,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.BadSnapshotsLeaveExistingRosterUntouched",
+      "Status": "Passed",
+      "Duration": 0.0011147,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.CapacityAndLeaveRejoinAreEnforced",
+      "Status": "Passed",
+      "Duration": 0.00045,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.ExplicitWatchAdmissionRestoresVacantSlotWithoutRestartingOrUnreadyingHost",
+      "Status": "Passed",
+      "Duration": 0.0014635,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.LateJoinSnapshotContainsCurrentNamesAndReadyStates",
+      "Status": "Passed",
+      "Duration": 0.0002958,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.MalformedOversizedAndWrongVersionPacketsAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0014948,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.NamesAndRoomNamesHaveBoundedInput",
+      "Status": "Passed",
+      "Duration": 0.0002869,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.OlderSnapshotsDoNotResurrectDisconnectedPlayers",
+      "Status": "Passed",
+      "Duration": 0.0001005,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.ReorderedReadyRequestsDoNotRestoreOldState",
+      "Status": "Passed",
+      "Duration": 8.31e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.SenderIdentityControlsOnlyItsOwnRow",
+      "Status": "Passed",
+      "Duration": 0.0001276,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.FusionLobbyTests.StartRequiresMinimumCrewAndEveryReadyPlayer",
+      "Status": "Passed",
+      "Duration": 0.0001049,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.29,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: FusionLobbyTests",
+  "success": true,
+  "result": null
+}

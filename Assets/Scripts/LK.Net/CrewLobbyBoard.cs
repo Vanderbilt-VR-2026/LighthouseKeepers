@@ -14,6 +14,7 @@ namespace LighthouseKeepers.Net
         enum Page {Main,Choice,Host,Join,Settings}
         Page page;GameObject[] pages=new GameObject[5];GameObject keypad;TMP_InputField codeInput;
         TMP_Text codeLabel,roster,joinStatus,hostStatus;Button start,join;float nextRefresh;
+        GameObject joinDuties; readonly System.Collections.Generic.List<(Button button,CrewDuty duty)> dutyButtons=new();
         static string S(string key)=>PlayerStrings.Get("lobby."+key);
         void Start()
         {
@@ -29,13 +30,15 @@ namespace LighthouseKeepers.Net
             Key(pages[0].transform,"Quit",new Vector2(165,-130),new Vector2(300,65),Application.Quit);Text("Quit",S("quit"));
             Key(pages[1].transform,"HostPlay",new Vector2(0,90),new Vector2(650,100),()=>{Show(Page.Host);manager.Host();Refresh();});Text("HostPlay",S("host"));
             Key(pages[1].transform,"JoinChoice",new Vector2(0,-65),new Vector2(650,100),()=>Show(Page.Join));Text("JoinChoice",S("join"));
-            codeLabel=Label(pages[2].transform,"CrewCode",new Vector2(0,170),new Vector2(1100,80),56);
-            roster=Label(pages[2].transform,"JoinedKeepers",new Vector2(0,35),new Vector2(1000,130),30);roster.textWrappingMode=TextWrappingModes.Normal;
-            hostStatus=Label(pages[2].transform,"HostStatus",new Vector2(0,-90),new Vector2(1100,70),23);hostStatus.textWrappingMode=TextWrappingModes.Normal;
+            codeLabel=Label(pages[2].transform,"CrewCode",new Vector2(0,225),new Vector2(1100,80),48);
+            roster=Label(pages[2].transform,"JoinedKeepers",new Vector2(0,145),new Vector2(1000,70),24);roster.textWrappingMode=TextWrappingModes.Normal;
+            hostStatus=Label(pages[2].transform,"HostStatus",new Vector2(0,-120),new Vector2(1100,60),21);hostStatus.textWrappingMode=TextWrappingModes.Normal;
             Key(pages[2].transform,"StartCrew",new Vector2(0,-205),new Vector2(580,85),()=>transport.StartOrOffline());start=Find("StartCrew");Text("StartCrew",S("start"));
+            BuildDuties(pages[2].transform,"HostDuty");
             codeInput=CreateInput(pages[3].transform);
-            joinStatus=Label(pages[3].transform,"JoinStatus",new Vector2(0,255),new Vector2(1100,65),23);joinStatus.textWrappingMode=TextWrappingModes.Normal;
+            joinStatus=Label(pages[3].transform,"JoinStatus",new Vector2(0,230),new Vector2(1100,110),23);joinStatus.textWrappingMode=TextWrappingModes.Normal;
             BuildKeypad(pages[3].transform);
+            joinDuties=BuildDuties(pages[3].transform,"GuestDuty");
             Key(pages[3].transform,"JoinCrewCode",new Vector2(0,-245),new Vector2(580,75),()=>{manager.Join(codeInput.text);Refresh();});join=Find("JoinCrewCode");Text("JoinCrewCode",S("join"));
             Key(pages[4].transform,"LowerBoard",new Vector2(0,20),new Vector2(650,85),()=>screen.SetLowered(!screen.IsLowered));Text("LowerBoard",S("height"));
             Key(root,"FlowBack",new Vector2(0,-355),new Vector2(300,55),()=>{if(page==Page.Host||page==Page.Join)transport.LeaveGame();Show(page==Page.Main||page==Page.Choice||page==Page.Settings?Page.Main:Page.Choice);});Text("FlowBack",S("back"));
@@ -58,13 +61,35 @@ namespace LighthouseKeepers.Net
         void Refresh()
         {
             if(!codeLabel)return;
-            string names=string.Join("\n",transport.Players.Select(p=>p.DisplayName+(p.IsHost?" · HOST":" · GUEST")));
+            string names=string.Join("\n",transport.Players.Select(p=>p.DisplayName+" · "+S(p.Duty.ToString())));
             codeLabel.text=transport.IsOnline?S("code")+"  "+transport.SessionName:transport.IsBusy?S("connecting"):S("offline");
             roster.text=names;hostStatus.text=transport.IsOnline?S("startHint"):transport.IsBusy?S("cancelHint"):S("offline");
+            var local=transport.Players.FirstOrDefault(p=>p.Id==transport.LocalPlayerId);
+            if(transport.IsOnline)hostStatus.text=local!=null&&local.RequestedDuty!=CrewDuty.None?S("dutyPending"):S("dutyHint");
+            foreach(var card in dutyButtons){
+                var owner=transport.Players.FirstOrDefault(p=>p.Duty==card.duty);
+                string who=owner==null?(transport.IsOnline?S("dutyOpen"):transport.LocalDuty==card.duty?S("dutyYou"):S("dutyOpen")):owner.Id==transport.LocalPlayerId?S("dutyYou"):owner.DisplayName;
+                bool offered=local!=null&&transport.Players.Any(p=>p.Id!=local.Id&&p.RequestedDuty==local.Duty)&&card.duty!=local.Duty;
+                card.button.GetComponentInChildren<TMP_Text>().text=S(card.duty.ToString())+"\n"+S(card.duty+"Work")+"\n"+(offered?S("dutySwap"):who);
+                bool selected=transport.LocalDuty==card.duty;card.button.GetComponent<Image>().color=selected?new Color(.34f,.30f,.20f):new Color(.12f,.20f,.20f);
+                card.button.interactable=!transport.IsBusy&&!transport.IsStarting;
+            }
             start.interactable=!transport.IsStarting;start.GetComponentInChildren<TMP_Text>().text=transport.IsStarting?S("entering"):transport.IsBusy?S("startOffline"):S("start");
-            bool connected=transport.IsOnline;codeInput.gameObject.SetActive(!connected);if(keypad&&(connected||transport.IsBusy))keypad.SetActive(false);
+            bool connected=transport.IsOnline;if(joinDuties)joinDuties.SetActive(connected);codeInput.gameObject.SetActive(!connected);if(keypad&&(connected||transport.IsBusy))keypad.SetActive(false);
             join.gameObject.SetActive(!connected);join.interactable=!transport.IsBusy&&CrewConnectionPolicy.TryCode(codeInput.text,out _);
             joinStatus.text=connected?names+"\n"+S("waitHost"):transport.IsBusy?S("connecting"):string.IsNullOrEmpty(transport.LastError)?S("enterCode"):transport.LastError;
+        }
+        GameObject BuildDuties(Transform parent,string prefix)
+        {
+            var root=Rect(prefix,parent,Vector2.zero,new Vector2(1100,250));
+            Label(root,"Duty heading",new Vector2(0,83),new Vector2(1000,40),23).text=S("dutyTitle");
+            foreach(var duty in new[]{CrewDuty.Lightkeeper,CrewDuty.Machinist}){
+                string name=prefix+duty;
+                Key(root,name,new Vector2(duty==CrewDuty.Lightkeeper?-263:263,0),new Vector2(500,115),()=>{transport.SetLocalDuty(duty);Refresh();});
+                var button=Find(name);var label=button.GetComponentInChildren<TMP_Text>();label.fontSize=22;label.textWrappingMode=TextWrappingModes.Normal;
+                dutyButtons.Add((button,duty));
+            }
+            return root.gameObject;
         }
         void BuildKeypad(Transform root)
         {

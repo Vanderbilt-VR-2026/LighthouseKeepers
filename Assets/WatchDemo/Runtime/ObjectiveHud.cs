@@ -126,6 +126,7 @@ namespace LighthouseKeepers.WatchDemo
    inputIcon.gameObject.SetActive(near);inputLabel.gameObject.SetActive(near);
    if(near){inputIcon.Set(button=="TRIGGER");inputLabel.text=KeeperStrings.Get("input."+button);}
 
+   label.text=KeeperStrings.Get("duty."+watch.CurrentDuty);
    icon.Set(station);
    bool showVoice=radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
    bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using LighthouseKeepers.Core;
+using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo
 {
     public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight }
@@ -12,6 +13,8 @@ namespace LighthouseKeepers.WatchDemo
         int shipGuideActor,guideShip=-1;
         int actorA,actorB,jobA=-1,jobB=-1;float assignmentUntil;
         public Func<string,Vector3> StationPosition;
+        public Func<int,CrewDuty> DutyForActor;
+        CrewDuty Duty(int actor)=>DutyForActor?.Invoke(actor)??CrewDuty.None;
         public KeeperStep First {get;private set;}
         public KeeperStep Second {get;private set;}
         public int FirstActor=>actorA;
@@ -33,7 +36,7 @@ namespace LighthouseKeepers.WatchDemo
                 var step=BeaconStep();if(step==KeeperStep.None)step=KeeperStep.KeepLight;
                 // Keep the wheel assignment while its keeper walks upstairs. Re-picking by current
                 // height every frame swaps both jobs mid-stair and can leave the wheel unattended.
-                if(guideShip!=state.AimingShip||roster||shipGuideActor!=actorA&&shipGuideActor!=actorB){guideShip=state.AimingShip;shipGuideActor=actorB==0||firstHead.y>=secondHead.y?actorA:actorB;}
+                if(guideShip!=state.AimingShip||roster||shipGuideActor!=actorA&&shipGuideActor!=actorB){guideShip=state.AimingShip;shipGuideActor=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper?actorA:Duty(actorB)==CrewDuty.Lightkeeper?actorB:firstHead.y>=secondHead.y?actorA:actorB;}
                 bool firstNear=shipGuideActor==actorA;
                 var other=OtherShipJob(wrenchHeld);
                 First=firstNear?step:other;Second=actorB==0?KeeperStep.None:firstNear?other:step;return;
@@ -41,7 +44,7 @@ namespace LighthouseKeepers.WatchDemo
             if(actorB!=0&&state.Pressure?.CrewRequired==true&&!state.Repaired&&(!state.Campaign||state.BeaconShining||state.IsPending(WatchState.BeaconStation))&&(state.Power==PowerState.On&&(!state.Campaign||state.Engine==null||state.Engine.Settled)||state.IsPending(WatchState.GeneratorStation)))
             {
                 int holder=state.Pressure.Holder;
-                if(holder!=actorA&&holder!=actorB||state.Campaign&&holder==state.PipeWorkerActor){int worker=state.PipeWorkerActor;var valve=StationPosition!=null?StationPosition("STN_PRESSURE_VALVE"):new Vector3(2.7f,1,2.5f);holder=worker==actorA?actorB:worker==actorB?actorA:Vector3.Distance(firstHead,valve)<=Vector3.Distance(secondHead,valve)?actorA:actorB;}
+                if(holder!=actorA&&holder!=actorB||state.Campaign&&holder==state.PipeWorkerActor){int worker=state.PipeWorkerActor;var valve=StationPosition!=null?StationPosition("STN_PRESSURE_VALVE"):new Vector3(2.7f,1,2.5f);holder=worker==actorA?actorB:worker==actorB?actorA:Duty(actorA)==CrewDuty.Lightkeeper?actorA:Duty(actorB)==CrewDuty.Lightkeeper?actorB:Vector3.Distance(firstHead,valve)<=Vector3.Distance(secondHead,valve)?actorA:actorB;}
                 First=holder==actorA?KeeperStep.HoldValve:PipeStep(wrenchHeld);Second=holder==actorB?KeeperStep.HoldValve:PipeStep(wrenchHeld);return;
             }
             if(roster||now>=assignmentUntil||!Available(jobA)||actorB!=0&&!Available(jobB))
@@ -49,9 +52,9 @@ namespace LighthouseKeepers.WatchDemo
                 float best=float.PositiveInfinity;int a=-1,b=-1;
                 for(int i=0;i<state.Definition.tasks.Length;i++)if(Available(i))
                 {
-                    if(actorB==0){float cost=Cost(i,firstHead);if(cost<best){best=cost;a=i;}continue;}
+                    if(actorB==0){float cost=Cost(i,firstHead,actorA);if(cost<best){best=cost;a=i;}continue;}
                     for(int j=0;j<state.Definition.tasks.Length;j++)if(Available(j))
-                    {float cost=Cost(i,firstHead)+Cost(j,secondHead)+(i==j?10000:0);if(cost<best){best=cost;a=i;b=j;}}
+                    {float cost=Cost(i,firstHead,actorA)+Cost(j,secondHead,actorB)+(i==j?10000:0);if(cost<best){best=cost;a=i;b=j;}}
                 }
                 jobA=a;jobB=b;assignmentUntil=now+state.Master.assignmentSeconds;
             }
@@ -61,11 +64,14 @@ namespace LighthouseKeepers.WatchDemo
         }
         KeeperStep OtherShipJob(bool held){for(int i=0;i<state.Definition.tasks.Length;i++)if(Available(i)&&state.Definition.tasks[i].stationId!=WatchState.BeaconStation)return Step(i,held);return KeeperStep.KeepLight;}
         bool Available(int i)=>i>=0&&i<state.Definition.tasks.Length&&!state.IsDone(state.Definition.tasks[i].stationId)&&!state.IsPending(state.Definition.tasks[i].stationId)&&(state.Power==PowerState.On||state.Definition.tasks[i].stationId==WatchState.PipeStation||state.Definition.tasks[i].stationId==WatchState.GeneratorStation);
-        float Cost(int i,Vector3 head)
+        float Cost(int i,Vector3 head,int actor)
         {
             string id=state.Definition.tasks[i].stationId;float floor=id==WatchState.PipeStation?1:id==WatchState.GeneratorStation?2:4;
             var point=StationPosition!=null?StationPosition(id):new Vector3(0,(floor-1)*3.3f+1.6f,0);
             float cost=Vector3.Distance(head,point);
+            var duty=Duty(actor);
+            if(duty==CrewDuty.Machinist&&(id==WatchState.PipeStation||id==WatchState.GeneratorStation)||duty==CrewDuty.Lightkeeper&&(id==WatchState.RadioStation||id==WatchState.BeaconStation))cost-=18;
+            if(duty==CrewDuty.Machinist&&id==WatchState.GeneratorStation)cost-=8;
             if(id==WatchState.GeneratorStation&&(state.Power==PowerState.Off||state.Campaign&&state.Engine!=null&&(!state.Engine.Settled||state.FuelJobPending)))cost-=45;
             if(id==WatchState.BeaconStation&&!state.BeaconShining)cost-=state.BeaconDarkRemaining<30?65:15;
             if(id==WatchState.PipeStation)cost-=12;
