@@ -2,6 +2,21 @@
 using System;using System.Collections;using System.Linq;using NUnit.Framework;using UnityEditor.SceneManagement;using UnityEngine;using UnityEngine.SceneManagement;using UnityEngine.TestTools;
 namespace LighthouseKeepers.Presentation.Environment.Tests {
  public sealed class MasterSafetyTests {
+  [UnityTest] public IEnumerator HandLanternsSurviveTheLightBudgetGuard()
+  {
+   UnityEditor.EditorUtility.audioMasterMute=true;
+   var launch=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("LighthouseKeepers.StormWatch.WatchDayLaunch")).First(t=>t!=null);
+   launch.GetProperty("RequestedDay").SetValue(null,2);
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   var type=Type.GetType("LighthouseKeepers.WatchDemo.WatchDemoController, Assembly-CSharp",true);var controller=UnityEngine.Object.FindAnyObjectByType(type);var state=type.GetProperty("State").GetValue(controller);var cycle=state.GetType().GetMethod("CycleLantern");
+   for(int i=0;i<2;i++){Assert.True((bool)cycle.Invoke(state,new object[]{i}));Assert.True((bool)cycle.Invoke(state,new object[]{i}));}
+   yield return new WaitForSeconds(.5f);
+   var lights=UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Where(l=>l.enabled&&l.lightmapBakeType==LightmapBakeType.Realtime).ToArray();Assert.LessOrEqual(lights.Length,2);
+   Assert.AreEqual(2,lights.Count(l=>l.name=="Lantern shadowless warm pool"));Assert.True(lights.All(l=>l.shadows==LightShadows.None));
+   var can=GameObject.Find("LANTERN_OIL_CAN");Assert.NotNull(can);
+   foreach(var rig in UnityEngine.Object.FindObjectsByType<CharacterController>(FindObjectsSortMode.None))foreach(var c in can.GetComponents<Collider>())Assert.True(Physics.GetIgnoreCollision(c,rig),"Oil can must not lift the player capsule");
+   launch.GetProperty("RequestedDay").SetValue(null,1);
+  }
   [UnityTest] public IEnumerator BakedPracticalLightingLeavesAtMostOneRealtimeSource(){
    yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
    Assert.That(UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l=>l.enabled&&l.lightmapBakeType==LightmapBakeType.Realtime),Is.LessThanOrEqualTo(1));Assert.That(LightmapSettings.lightmaps.Length,Is.GreaterThan(0));Assert.That(UnityEngine.Object.FindObjectsByType<ReflectionProbe>(FindObjectsSortMode.None).Count(p=>p.bakedTexture||p.customBakedTexture),Is.GreaterThanOrEqualTo(5));

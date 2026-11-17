@@ -61,11 +61,11 @@ namespace LighthouseKeepers.Core.Progression
                 frame.fault=i;Move(DrownedPhase.Warning,now);break;
             }
         }
-        public bool Repel(double now)
+        public bool Repel(double now,double retreatSeconds=-1)
         {
-            if(ReadOnly || !double.IsFinite(now) || now < frame.since || Phase != DrownedPhase.Manifest) return false;
+            if(ReadOnly || !double.IsFinite(now) || !double.IsFinite(retreatSeconds) || now < frame.since || Phase != DrownedPhase.Manifest) return false;
             frame.consumed |= 1 << frame.fault;
-            Move(DrownedPhase.Retreat, now); frame.nextAt = now + interval;
+            Move(DrownedPhase.Retreat, now); frame.nextAt = now + (retreatSeconds<0?interval:Math.Clamp(retreatSeconds,1,120));
             return true;
         }
         public DrownedFrame Capture()=>frame.Copy();

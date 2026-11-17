@@ -15,7 +15,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchState watch;bool powered,initialized;float speed;
         MaterialPropertyBlock block;
         Renderer visibleBeam;float brightness=1,previousAlignment=.5f;
-        public bool Lit=>lantern.enabled;
+        public bool Lit=>powered;
         public float SpinFraction=>speed;
         void Awake(){block=new MaterialPropertyBlock();Apply(false);}
         public void Bind(WatchState state){watch=state;watch.Changed+=Changed;Changed();}

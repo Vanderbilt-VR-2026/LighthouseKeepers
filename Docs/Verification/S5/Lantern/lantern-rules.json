@@ -1,0 +1,66 @@
+{
+  "Summary": {
+    "Total": 7,
+    "Passed": 7,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.HighNeedsContinuousHeldAimAndCostsFifteenPercent",
+      "Status": "Passed",
+      "Duration": 0.0058228,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.InvalidFrameAndSlotAreRejectedWithoutMutation",
+      "Status": "Passed",
+      "Duration": 0.0005943,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.LowAndEmptyCannotRepel",
+      "Status": "Passed",
+      "Duration": 7.69e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.OneCanRefillsOnlyOneLampAndCannotBeReused",
+      "Status": "Passed",
+      "Duration": 0.0002024,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.ReplicasCannotSpendOilChangeWickOrStun",
+      "Status": "Passed",
+      "Duration": 9.1e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.SnapshotIsCopiedAndNightStartsFullUnlit",
+      "Status": "Passed",
+      "Duration": 0.0004297,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.WickOffUsesNoOilAndLowLastsTwiceHigh",
+      "Status": "Passed",
+      "Duration": 8.44e-05,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.65,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: LanternTests",
+  "success": true,
+  "result": null
+}

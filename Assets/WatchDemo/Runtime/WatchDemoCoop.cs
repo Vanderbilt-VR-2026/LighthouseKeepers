@@ -18,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.LanternWick)return LanternTarget(value);
             if(action==CoopAction.FlareFire)return FlareTarget(value);
             if(action==CoopAction.HandheldRadio)return value==(int)value&&value>=0&&value<2&&crewRadios[(int)value]?crewRadios[(int)value].Grab:null;
             if(action==CoopAction.PressureValve)return pressureValve?pressureValve.Grip:null;
@@ -41,6 +42,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly||sleeping)return -1;
             switch(action)
             {
+                case CoopAction.LanternWick:return pressed&&value==(int)value&&state.CycleLantern((int)value)?1:-1;
                 case CoopAction.FlareFire:return pressed&&value==(int)value&&FireFlare((int)value)?1:-1;
                 case CoopAction.StatusRequest:
                 case CoopAction.PAReplay:return immersionWorld&&immersionWorld.Narrator&&immersionWorld.Narrator.RequestReplay()?1:-1;

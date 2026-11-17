@@ -20,7 +20,7 @@ namespace LighthouseKeepers.Net.Tests
             foreach(var e in StoryVoiceCatalog.Lines)Assert.AreEqual(!e.Antagonist,valid.Invoke(null,new object[]{e.cue}),e.id);
             foreach(int unknown in new[]{-1,105,150,199,312,999})Assert.False((bool)valid.Invoke(null,new object[]{unknown}));
             Assert.True((bool)valid.Invoke(null,new object[]{0}));Assert.True((bool)valid.Invoke(null,new object[]{104}));
-            Assert.AreEqual("LK-S5-STORY1",Type.GetType("LighthouseKeepers.Core.CrewNetworkVersion, LighthouseKeepers.Runtime",true).GetField("Matchmaking").GetRawConstantValue());
+            Assert.AreEqual("LK-S5-LANTERN1",Type.GetType("LighthouseKeepers.Core.CrewNetworkVersion, LighthouseKeepers.Runtime",true).GetField("Matchmaking").GetRawConstantValue());
         }
         [Test] public void ExistingRecordingsStillResolveWithTheirOriginalExactCaptions()
         {

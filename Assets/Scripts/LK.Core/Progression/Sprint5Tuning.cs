@@ -10,6 +10,11 @@ namespace LighthouseKeepers.Core.Progression
         public bool sabotageTraces = true;
         public bool drownedPresence = true;
         public bool flareDefense = true;
+        public bool oilLanterns = true;
+        [Min(1)] public float lanternHighSeconds = 90, lanternLowSeconds = 180, lanternPourSeconds = 4;
+        [Min(.1f)] public float lanternStunSeconds = 2, lanternRetreatSeconds = 20;
+        [Range(.01f,1)] public float lanternStunCost = .15f;
+        [Min(.5f)] public float lanternLowRange = 2.5f, lanternHighRange = 4;
         public bool heavyRain = true;
         public bool armSwingRun = true;
         public bool groundedHorror = true;

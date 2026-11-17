@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.XR;
 namespace LighthouseKeepers.WatchDemo {
  public sealed partial class PressurePresentation {
-  Transform watchMount;readonly System.Collections.Generic.List<Mesh> watchMeshes=new();TextMesh nightLabel;Material resin,lcd;int shownNight;
+  Transform watchMount,oilBar;readonly System.Collections.Generic.List<Mesh> watchMeshes=new();TextMesh nightLabel;Material resin,lcd;int shownNight;
   public bool WatchBacklight {get;private set;}
   void BuildWatch(M2StationParts parts){
    var left=System.Array.Find(FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None),h=>h.Node==XRNode.LeftHand);if(!left)return;
@@ -26,6 +26,7 @@ namespace LighthouseKeepers.WatchDemo {
     var band=parts.Part("Resin wrist strap",watchMount,(p+q)*.5f,new Vector3(.003f,.020f,Vector3.Distance(p,q)+.001f),resin);band.transform.localRotation=Quaternion.LookRotation(q-p,Vector3.up);
    }
    for(int side=-1;side<=1;side+=2)for(int end=-1;end<=1;end+=2)parts.Part("Watch side button",watchMount,new Vector3(side*.026f,end*.016f,0),new Vector3(.005f,.007f,.006f),parts.Metal);
+   oilBar=parts.Part("Lantern oil on watch",dial,new Vector3(0,-.019f,.009f),new Vector3(.032f,.0013f,.001f),resin).transform;oilBar.gameObject.SetActive(false);
    nightLabel=parts.Text("Watch night","",dial,new Vector3(0,.015f,.009f),.00060f);nightLabel.color=new Color(.07f,.10f,.06f);
    clock=parts.Text("Time to dawn","",dial,new Vector3(0,.003f,.009f),.0011f);clock.color=nightLabel.color;
    var face=new GameObject("Wrist current objective",typeof(RectTransform),typeof(TextMeshPro));face.transform.SetParent(dial,false);face.transform.localPosition=new Vector3(0,-.013f,.009f);face.transform.localScale=Vector3.one*.0001f;face.transform.localRotation=Quaternion.Euler(0,180,0);
@@ -33,6 +34,7 @@ namespace LighthouseKeepers.WatchDemo {
   }
   void UpdateWatch(WatchState s){
    if(!watchMount)return;
+   int lamp=watch.HeldLantern;oilBar.gameObject.SetActive(lamp>=0&&s.Lanterns!=null);if(lamp>=0&&s.Lanterns!=null){float level=s.Lanterns.Oil(lamp);oilBar.localScale=new Vector3(.032f*level,.0013f,.001f);oilBar.localPosition=new Vector3(-.016f+.016f*level,-.019f,.009f);}
    var instruction=KeeperStrings.Get("step."+watch.CurrentInstruction);if(objective.text!=instruction)objective.text=instruction;
    int left=Mathf.Max(0,(int)(s.Duration-s.Elapsed));if(left!=shownSecond||s.Day!=shownNight){shownSecond=left;shownNight=s.Day;clock.text=$"{left/60:00}:{left%60:00}";nightLabel.text=$"N{s.Day}";}
    var toEyes=head.position-watchMount.position;WatchBacklight=toEyes.sqrMagnitude<.8f*.8f&&Vector3.Dot(watchMount.forward,toEyes.normalized)>.65f;

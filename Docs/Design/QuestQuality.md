@@ -19,7 +19,7 @@ The menu is **Lighthouse Keepers → Apply Quest Quality Baseline**. It audits t
 | 14.2 | Render scale | 1.0 | 1.0, authored once; never below 1.0 | QuestPipeline | Pending; raise only with ≥2 ms peak-storm GPU headroom |
 | 14.2 | Main light | Per pixel, shadows supported, 20 m | Per pixel; shadows OFF, 15 m ceiling, one cascade, 1024 | QuestPipeline | Pending |
 | 14.2 | Soft realtime shadows | Off | Off | QuestPipeline | Pending |
-| 14.2 | Additional lights | Per vertex, limit 2, no shadows | Per pixel, reserved for two future oil lanterns only | QuestPipeline | Pending; vertex fallback first if lantern cost exceeds budget |
+| 14.2 | Additional lights | Per vertex, limit 2, no shadows | Per pixel, limit2, two shadowless oil lanterns now implemented | QuestPipeline | Pending; vertex fallback first if lantern cost exceeds budget |
 | 14.3 | Renderer path | Forward | Forward | QuestRenderer.asset | Pending |
 | 14.3 | Depth priming | Disabled | Disabled | QuestRenderer.asset | Pending |
 | 14.3 | Integrated post | PostProcessData assigned | Null / OFF | QuestRenderer.asset | Pending |
@@ -53,7 +53,7 @@ Unity 6.3's installed OnTilePostProcessFeature checks the **camera** post-proces
 
 The vapour shader had an unconditional camera-depth lookup even though the pipeline depth copy was off. The baseline removes that hidden dependency in favor of radial/near-camera fading. Smoke remains a small translucent effect; it does not justify a full-screen depth copy.
 
-The oil lanterns do not exist yet. Their two no-shadow per-pixel lights are an explicit future exception, not permission for new realtime wall lights. Existing baked-room probes and emissive fixtures remain the lighting foundation. Skybox and avatar-body assets are not edited.
+The two oil lanterns now exist (November16 story slice). They use the documented no-shadow per-pixel exception. The runtime guard admits those two lights and disables the beacon's supplementary point light when both burn, retaining its emissive glass/visible beam; total enabled realtime lights stays ≤2. A PlayMode regression covers this. This is not permission for new realtime wall lights. Existing baked-room probes and emissive fixtures remain the lighting foundation. Skybox and avatar-body assets are not edited.
 
 ## Bake and validation evidence
 

@@ -47,4 +47,14 @@ Core unit tests prove queue policy and protection decisions, not navigation, act
 
 ## Still required before the complete story campaign
 
-Lantern/oil/HIGH defense; cable and radio-wire physical repairs; actual hunter/navigation/telegraph/hiding/catches; host witness observations; Owen commands/slate/LOS and two-player replacement; remaining15 props and read flags; private ANT voice/subtitles; full night/encounter scheduling including N1 dawn glimpse, wrong knock, lens handprints, candle-lit city and completed Demo. No unsupported cue is enabled as a substitute for implementing its mechanic. All story-budget/headset/audio checks remain open.
+Full hunter light-pool/LOW slowdown observations; cable and radio-wire physical repairs; actual hunter/navigation/telegraph/hiding/catches; host witness observations; Owen commands/slate/LOS and two-player replacement; remaining15 props and read flags; private ANT voice/subtitles; full night/encounter scheduling including N1 dawn glimpse, wrong knock, lens handprints, candle-lit city and completed Demo. No unsupported cue is enabled as a substitute for implementing its mechanic. All story-budget/headset/audio checks remain open.
+
+## Oil-lantern slice — implemented November16
+
+- Two original tin/glass hurricane lanterns on actual House wall hooks, available from Night2 and in Demo; grip handle, trigger cycles OFF → LOW → HIGH. Five further supported station hooks free both hands, including each F4 station. Release away from hooks falls; unreachable/20s unattended returns home, host physics replicated. No tracked hand/avatar changes.
+- LOW2.5m/180s, HIGH4m/90s per tank. Flame/oil sight gauge dim below20%; held-lantern bar on existing watch. One shared F2 oil can: tilt over filler,4s/full refill, one lamp once/night. Fixed shelf position uses generator-local coordinates.
+- Host-owned fuel/wick/refill and authenticated leased-prop wick commands; replicas cannot spend fuel. Reset/retry and snapshots tested. **LK-S5-LANTERN1 / LK-Lab-Coop-v35** requires both players to update.
+- Held HIGH with clear aim for2s repels the existing manifested apparition for20s and spends15% oil. Wall hits interrupt exposure; nonalloc raycast. This is a defensive foundation, **not a completed hunter**, and LOW slowing / HIGH catch protection still require the future live witness/hunter adapter.
+- Adds file-gated HM_N2_LANTERN_INTRO, HM_N2_LANTERN_OIL, HM_LANTERN_LOW_OIL. No invented performance; actor files remain outstanding. Existing radio continues.
+- No shadows on either lamp. Runtime budget guard caps enabled realtime sources at2; beacon mesh/emission remains visible. Original mesh, reused licensed M2 surface materials, no external asset download. See `Docs/Verification/S5/Lantern/`.
+- Natural pendulum refinement, held stereo readability, oil economy across a full first-timer run, human co-op/voice and Quest GPU cost are still pending. The current handle uses XRI smoothed pose, not a physical pendulum constraint.
