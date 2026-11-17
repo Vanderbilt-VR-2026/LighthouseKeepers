@@ -9,7 +9,7 @@ The user redirected the next work toward the **core paired gameplay**, before mo
 
 ## Implemented this continuation
 
-- Caption-only harbor narration: no AI/legacy fallback speech or PA static; full text with reading time and B replay. Assets preserved for the final recording pass. 30 focused checks and a 24-second actual Play Mode silence/caption probe pass; `Docs/Verification/S5/CrewCore/Captions/`. New APK not yet built. Current role/bot implementation work follows below.
+- Caption-only harbor narration: no AI/legacy fallback speech or PA static; full text with reading time and B replay. Assets preserved for the final recording pass. 30 focused checks and a 24-second actual Play Mode silence/caption probe pass; `Docs/Verification/S5/CrewCore/Captions/`. Delivered in APK 827679a0; see the current delivery section below.
 
 - Lobby duties implemented and checked: host assignment, mutual swaps, per-player routing; 18 focused tests, offline start and live two-Editor shared repair/sleep. `Docs/Verification/S5/CrewCore/Roles/`. Network was **LK-S5-CREW1 / v36**. Live reconnect subsequently passed in the relay fixture; headset acceptance remains pending.
 
@@ -33,7 +33,11 @@ Actual F4→F1 route measured at helper speed 1.8 m/s: **33.34 m / 19.45 s**. Ex
 
 ## Delivery / DEVICE CHECKS PENDING
 
-The initial companion APK built successfully; the final stability/replica follow-up is being rebuilt from a clean commit. Delivery receipt below will identify the exact final APK. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles, radio split and bounded companion are implemented; engine/bearing information split, companion power/light/rescue and revive remain upcoming.
+Final crew-core APK **827679a0** built and verified: `Builds/LighthouseKeepers-Sprint5-CrewCore-827679a0.apk`, **LK-S5-CREW2 / LK-Lab-Coop-v38**. Not installed: ADB showed no authorized Quest. Latest known installed APK remains **a270bea1**, **LK-S5-LANTERN1 / v35**; no launch. Receipt/checklist: `Docs/Verification/S5/CrewCore/Delivery/`. All prior lantern/body/voice/GPU checks remain pending. Roles, radio split and bounded companion are implemented; engine/bearing information split, companion power/light/rescue and revive remain upcoming.
+
+Resume from here: the bounded helper slice is committed/pushed. Implement #107 hand-rescue next; do not restart roles/relay/voice work. #137 timed generator starter is created and still unimplemented. Final playtest acceptance, all-night timing model failures and companion power/light/bearing remain open. Do not enable lethal catches to fill the gap.
+
+Exact final build script: `python3 artifacts/s5/crew-core/build-final.py` (already consumed its unique backup; use a fresh output/backup for another build). Install the existing verified APK without rebuilding via `python3 artifacts/s5/crew-core/install-final.py`; it verifies package, signature, CRC and installed hash, and never launches. Check `adb devices` first; do not wait for an absent headset. Current device checklist: `Docs/Verification/S5/CrewCore/Delivery/Headset.md`.
 
 Local Git workaround (iCloud evicted Desktop pack files): prefix every Git/build script with `GIT_OBJECT_DIRECTORY=/Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/loop/git-recovery/remote.git/objects`. M3 worktree metadata was rebuilt after preserving placeholders; original branches/main checkout were not changed. Do not delete the backup objects or placeholder files. New commit objects are also copied back into the original common object directory.
 
