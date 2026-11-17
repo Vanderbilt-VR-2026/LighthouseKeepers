@@ -12,19 +12,19 @@ Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main u
 
 ## Delivery
 
-**APK built from clean `7c02e858`**, Unity6000.3.23f1 development IL2CPP ARM64; zero build errors. `LighthouseKeepers-Sprint5-Keeper-7c02e858.apk` (123,874,874 bytes), SHA-256 `909c0a37aabf81baed334ad6ed041114cb7a1dc10dff9c349e2108c82679bc2e`. VR manifest/ARM64/signature/ZIP verified. Not installed: no Quest is visible to ADB. Not launched.
+**APK built from clean `7c02e858`**, Unity6000.3.23f1 development IL2CPP ARM64; zero build errors. `LighthouseKeepers-Sprint5-Keeper-7c02e858.apk` (123,874,874 bytes), SHA-256 `909c0a37aabf81baed334ad6ed041114cb7a1dc10dff9c349e2108c82679bc2e`. VR manifest/ARM64/signature/ZIP verified. Installed on the connected Quest 3; installed APK SHA-256 matches. Not launched.
 
 Source commit `7c02e858` is pushed. The subsequent test/documentation commit updates the intentionally shared costume assertion and delivery receipts; it does not change player code/assets.
 
 ## Next actions
 
 1. Draft PR89 and issue129 updated with the receipts; issue stays open for headset acceptance. Nothing merged to main.
-2. If ADB returns: `python3 artifacts/s5/keeper/install.py`. Never auto-launch. Follow the device list below when the user is available.
+2. Latest keeper APK is installed and awaits user launch. Follow the device list below; never auto-launch.
 3. Remaining hunter/navigation/hiding and campaign polish stay pending; apparition work is not a finished hunter. No further gameplay expansion in this avatar pass.
 
 ## DEVICE CHECKS PENDING — keeper body
 
-- Install latest verified APK; user launches. ADB currently empty.
+- Latest verified APK installed; user launches. Stereo, feel, performance and human co-op checks remain pending.
 - Two matching headsets: friend full body/head/arms/legs; wave/grip each hand, crouch, walk/backstep, turn, stairs and rejoin. Same networkv33.
 - Look down: coat/arms/legs, no head or extra gloves; verify waist/sleeve fit in stereo. Confirm local hand alignment, wrench/grab and watch remain correct.
 - 72Hz GPU≤11ms/CPU main≤9ms with both skins, plus sustained ship/storm. Mesh counts are not profiling.

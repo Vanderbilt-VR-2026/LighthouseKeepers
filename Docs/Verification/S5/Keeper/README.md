@@ -10,7 +10,7 @@ The user requested a Blender keeper combining historical workwear proportions wi
 | Unity graphics pose review | Pass, zero errors | Monoscopic Editor views |
 | Two live Mac clients | Join, both skins, remote crouch/wrist, guest physical pipe, both bed votes → Night2 | Muted; Night1 valve not required |
 | Solo Night3 actual-XRI replay | All stations, two steered ships, sleep → Night4; zero errors | Automated, not first-timer timing |
-| Quest | Pending | No connected device; no stereo, comfort or GPU claim |
+| Quest | Installed; SHA-256 matches | Not launched; stereo, comfort and GPU checks pending |
 
 The Blender and Unity screenshots here were visually inspected. Initial material/shoulder and local waist-cap issues were corrected before these final views. The legs are inferred from head/controller tracking with planted feet, alternating turn/walk steps, crouch knees and supported landings; they are not tracked feet or a physics ragdoll.
 
@@ -26,6 +26,6 @@ The first final-asset invocation failed before tests started because Unity could
 
 ## Delivery
 
-**APK built from clean `7c02e858`**, Unity6000.3.23f1 development IL2CPP ARM64; zero build errors. `LighthouseKeepers-Sprint5-Keeper-7c02e858.apk` (123,874,874 bytes), SHA-256 `909c0a37aabf81baed334ad6ed041114cb7a1dc10dff9c349e2108c82679bc2e`. VR manifest/ARM64/signature/ZIP verified. Not installed: no Quest is visible to ADB. Not launched.
+**APK built from clean `7c02e858`**, Unity6000.3.23f1 development IL2CPP ARM64; zero build errors. `LighthouseKeepers-Sprint5-Keeper-7c02e858.apk` (123,874,874 bytes), SHA-256 `909c0a37aabf81baed334ad6ed041114cb7a1dc10dff9c349e2108c82679bc2e`. VR manifest/ARM64/signature/ZIP verified. Installed on the connected Quest 3; installed SHA-256 matches. Not launched.
 
 The legacy asset test expected captain and guest to be different costume assets. That expectation intentionally changed to the newly requested common keeper design; validation for both role slots remains, and role/ownership tests are unchanged. The old assertion failed as expected (3/4); the updated contract passed4/4 in the peer worktree. Both receipts are retained. This is an art-contract update, not a gameplay workaround.
