@@ -114,3 +114,13 @@ MonoBehaviour:
     shipAttack: 1
     beatMin: 60
     beatMax: 120
+  possessionLesson: 1
+  lessonStartSeconds: 60
+  lessonCallSeconds: 8
+  lessonSealSeconds: 4
+  lessonThreatSeconds: 6
+  lessonReliefSeconds: 6
+  possessionLift: 0.32
+  possessionRiseSpeed: 0.10
+  ceilingClearance: 0.18
+  lessonPartnerSpot: {x: 1, y: 3.3, z: 0}

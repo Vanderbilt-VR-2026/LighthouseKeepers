@@ -29,7 +29,9 @@ namespace LighthouseKeepers.Lobby
     public interface ICoopKeeperViews { bool View(int actor,out Vector3 forward); }
     public interface ICoopRecoveryHands { bool HandForDuty(CrewDuty duty,out Vector3 hand); }
     public interface ICoopRecoveryView {
+        float PossessionRiseSpeed {get;}
         bool KeeperDown(int actor);
+        bool PossessionView(int actor,out float progress,out float maxLift);
         bool RescueDrill(int actor);
         bool RecoveryCommand(int actor,int victim,bool held,Vector3 left,Vector3 right);
     }

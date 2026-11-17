@@ -20,6 +20,8 @@ namespace LighthouseKeepers.Net
         {public string world,nonce;public int sequence,revision;public CoopAction action;public float value;public bool pressed;}
         [Serializable] sealed class Result {public string world,nonce;public int sequence,result;public CoopAction action;}
         ICoopWatchView watch;
+        public float PossessionRiseSpeed=>watch is ICoopRecoveryView recovery?recovery.PossessionRiseSpeed:.1f;
+        public bool PossessionView(int actor,out float progress,out float maxLift){progress=maxLift=0;return watch is ICoopRecoveryView recovery&&recovery.PossessionView(actor,out progress,out maxLift);}
         FusionLobbyTransport crew;
         FusionMessageChannel channel;
         CrewPoseStream poses;

@@ -24,26 +24,74 @@ def band(name,levels,mat,region,weights,sides=32):
 
 
 def cap():
-    # Separate fitted band, softly sloped crown and a real projecting leather peak.
-    band('Cap fitted wool band',[(1.724,.090,.095),(1.753,.098,.102)],'Ink','Head',{'Head':1})
-    band('Weathered peaked cap',[(1.750,.101,.104),(1.783,.118,.118),(1.806,.103,.101),(1.814,.018,.018)],'Oilskin','Head',{'Head':1})
-    vs=[];fs=[]
-    for y in (1.736,1.743):
-        for row in range(2):
-            for i in range(17):
-                a=-math.pi/2+math.pi*i/16
-                vs.append((.10*math.sin(a),y-.013*row,.025+(.078+.073*row)*math.cos(a)))
-    for i in range(16):
-        fs.extend([(i,i+1,i+18,i+17),(34+i,51+i,52+i,35+i),(17+i,18+i,52+i,51+i)])
-    F.custom('Leather cap peak',vs,fs,'Rubber','Head',{'Head':1})
-    F.line('Cap braid',[(-.09,1.752,.06),(-.055,1.748,.096),(0,1.746,.107),(.055,1.748,.096),(.09,1.752,.06)],.003,'Metal','Head',{'Head':1})
-    # Small maritime badge; no brand or copyrighted insignia.
-    F.ellipsoid('Cap badge',(0,1.774,.119),(.013,.017,.003),'Metal','Head',{'Head':1},12,8)
-    F.line('Badge anchor',[(0,1.784,.123),(0,1.763,.123),(-.008,1.769,.123)],.0015,'Ink','Head',{'Head':1})
-    F.line('Badge anchor right',[(0,1.763,.123),(.008,1.769,.123)],.0015,'Ink','Head',{'Head':1})
-    # Grey hair at the temples below the cap, rather than a helmet-like hood.
-    for s in (-1,1):
-        F.ellipsoid('Grey temple',(s*.076,1.691,-.012),(.012,.037,.053),'Hair','Head',{'Head':1},16,8)
+    # Fitted rib-knit watch cap, without the old projecting peak or badge.
+    band('Beanie folded cuff',[(1.722,.092,.097),(1.735,.099,.104),(1.768,.099,.104),(1.778,.093,.098)],'Knit','Head',{'Head':1},40)
+    band('Beanie wool crown',[(1.760,.096,.101),(1.790,.099,.103),(1.821,.088,.092),(1.844,.058,.061),(1.853,.005,.005)],'Knit','Head',{'Head':1},40)
+    for i in range(48):
+        a=2*math.pi*i/48
+        F.line('Knitted cuff rib',[(.100*math.cos(a),y,.105*math.sin(a)) for y in (1.732,1.75,1.769)],.0011,'Trim','Head',{'Head':1},4)
+    for side in (-1,1):
+        F.ellipsoid('Grey temple',(side*.076,1.691,-.012),(.012,.037,.053),'Hair','Head',{'Head':1},16,8)
+
+
+def expressive_face():
+    F.face()
+    # Anatomical eyelids remain on the head; iris and sclera rotate inside their sockets.
+    for ob in F.OBJECTS:
+        if ob.name.startswith(('Eye white','Iris','Pupil')):
+            x=sum(M.unity(ob.matrix_world@v.co)[0] for v in ob.data.vertices)/len(ob.data.vertices)
+            joint='EyeL' if x<0 else 'EyeR'
+            for g in list(ob.vertex_groups):
+                if not g.name.startswith('VIS_'):ob.vertex_groups.remove(g)
+            ob.vertex_groups.new(name=joint).add(list(range(len(ob.data.vertices))),1,'REPLACE')
+        if ob.name == 'Anatomical fisherman head':
+            jaw=ob.vertex_groups.get('Jaw') or ob.vertex_groups.new(name='Jaw')
+            for v in ob.data.vertices:
+                x,y,z=M.unity(ob.matrix_world@v.co)
+                if y<1.600 and y>1.55 and z>-.02:
+                    w=max(0,min(1,(1.600-y)/.003))*max(0,min(1,(z+.02)/.055))
+                    if w>0:
+                        for g in list(v.groups):
+                            group=ob.vertex_groups[g.group]
+                            if not group.name.startswith('VIS_'):group.remove([v.index])
+                        jaw.add([v.index],w,'REPLACE');ob.vertex_groups['Head'].add([v.index],1-w,'REPLACE')
+    # Beard shell follows exactly the weights of its source skin vertices: no
+    # differential jaw movement / crossing triangles through the cheek surface.
+    head=next(o for o in F.OBJECTS if o.name=='Anatomical fisherman head')
+    beard=next(o for o in F.OBJECTS if o.name=='Fitted beard')
+    from mathutils.kdtree import KDTree
+    tree=KDTree(len(head.data.vertices))
+    for v in head.data.vertices:tree.insert(head.matrix_world@v.co,v.index)
+    tree.balance()
+    for v in beard.data.vertices:
+        _,index,_=tree.find(beard.matrix_world@v.co)
+        for group in list(v.groups):
+            g=beard.vertex_groups[group.group]
+            if not g.name.startswith('VIS_'):g.remove([v.index])
+        for group in head.data.vertices[index].groups:
+            name=head.vertex_groups[group.group].name
+            if name.startswith('VIS_'):continue
+            g=beard.vertex_groups.get(name) or beard.vertex_groups.new(name=name)
+            g.add([v.index],group.weight,'REPLACE')
+    # Mouth interior is concealed by the closed lips, exposed by the lowered jaw.
+    F.ellipsoid('Mouth interior',(0,1.592,.077),(.022,.025,.013),'Mouth','Head',{'Head':1},20,12)
+    for side,joint in ((-1,'EyeL'),(1,'EyeR')):
+        x=side*.030775
+        F.BONES[joint]=((x,1.665,.064535),(x,1.685,.064535),'Head')
+        tear='TearL' if side<0 else 'TearR'
+        F.BONES[tear]=((x,1.651,.076),(x,1.621,.071),'Head')
+        points=[]
+        for y in (1.651,1.640,1.627,1.611):
+            samples=sorted(( ((px-x)**2+(py-y)**2,pz) for px,py,pz in (M.unity(head.matrix_world@v.co) for v in head.data.vertices) if pz>.015))[:4]
+            z=sum(pz/(d+1e-7) for d,pz in samples)/sum(1/(d+1e-7) for d,pz in samples)
+            points.append((x,y,z+.002))
+        F.line('Dark tear trail',points,.0014,'Tear','Head',{tear:1},6)
+        # Tiny iris spokes and corneal highlight stay with the moving eyeball.
+        for i in range(16):
+            a=i*math.pi/8
+            F.line('Iris fibre',[(x+math.cos(a)*r,1.665+math.sin(a)*r,.080) for r in (.0036,.0052)],.00018,'IrisLight','Head',{joint:1},4)
+        F.ellipsoid('Eye catchlight',(x-.0018,1.668,.0804),(.0008,.0008,.0004),'EyeWhite','Head',{joint:1},8,6)
+    F.BONES['Jaw']=((0,1.618,.015),(0,1.58,.04),'Head')
 
 
 def clothes():
@@ -146,9 +194,10 @@ def main():
        'EyeWhite':((.75,.73,.66),.35),'Iris':((.20,.29,.28),.3),'Ink':((.035,.043,.045),.65),
        'Knit':((.15,.21,.21),.9),'Scarf':((.20,.29,.26),.92),'Leather':((.50,.33,.18),.63),
        'LeatherSeam':((.23,.14,.08),.7),'Rubber':((.095,.09,.07),.62),'Sole':((.033,.034,.03),.85),
+       'Mouth':((.055,.012,.015),.5),'Tear':((.17,.012,.014),.22),'IrisLight':((.33,.38,.24),.3),
        'Metal':((.49,.36,.17),.38)}
     M.MATERIALS={n:F.surface(n,c,r,.13,.001 if n not in ('EyeWhite','Iris','Skin') else .0002) for n,(c,r) in colours.items()}
-    F.face();cap();clothes();F.arms_and_hands();legs()
+    expressive_face();cap();clothes();F.arms_and_hands();legs()
     # The sleeve itself overlaps the jacket shoulder. Detached sphere caps read as armour.
     for ob in list(F.OBJECTS):
         if 'rounded shoulder' in ob.name:
@@ -180,6 +229,7 @@ def main():
     s=re.sub(r'(- _OcclusionMap:\n        m_Texture:) \{[^}]*\}',r'\1 {fileID: 0}',s)
     s=s.replace('  - _OCCLUSIONMAP\n','').replace('- _Cull: 0','- _Cull: 2');mat.write_text('\n'.join(l.rstrip() for l in s.splitlines())+'\n')
     rig=F.skeleton();rig.name='HarborKeeper_Rig';facts=F.rig_checks(obj,rig)
+    for name in ('TearL','TearR'):rig.pose.bones[name].scale=(.001,.001,.001)
     path=ART/'HarborKeeperRig.bytes';result=export_unity_skin(obj,rig,path);M.meta(path,'TextScriptImporter')
     # First-person mesh has no head or duplicated gloves. Same bone/pose solver, visual only.
     local=obj.copy();local.data=obj.data.copy();bpy.context.collection.objects.link(local)

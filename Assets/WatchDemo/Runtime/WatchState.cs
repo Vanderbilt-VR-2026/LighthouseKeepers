@@ -110,7 +110,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         public bool IsDone(string station) => !faults.Contains(station);
         public int CompletedTasks { get { int n = 0; foreach (var task in Definition.tasks) if (IsDone(task.stationId)) n++; return n; } }
-        public bool Complete => Recovery?.AnyDown!=true && CompletedTasks == Definition.tasks.Length && (schedule==null||schedule.Finished) && (Ships==null||Ships.Finished);
+        public bool Complete => Recovery?.LessonActive!=true && Recovery?.AnyDown!=true && CompletedTasks == Definition.tasks.Length && (schedule==null||schedule.Finished) && (Ships==null||Ships.Finished);
         public bool HasNextDay => index + 1 < days.Length;
         public bool Failed => Recovery?.Failed==true || Ships?.Lost==true || Sea.lost || !Tutorial&&(HighWaterFailed || BeaconDarkFailed || (Elapsed >= Duration && !Complete));
         public WatchState() : this(Resources.Load<DayCatalog>("WatchDays").days, 1) { }
@@ -154,6 +154,7 @@ namespace LighthouseKeepers.WatchDemo
             if(wasFailed||ReadOnly)return;
             // Substep only the campaign so event time and grace do not depend on frame size.
             if(Campaign&&seconds>.25){while(seconds>.25&&!Failed){Tick(.25);seconds-=.25;}if(seconds>0&&!Failed)Tick(seconds);return;}
+            if(Recovery.LessonActive){Recovery.Tick((float)seconds);Drowned?.Tick(Elapsed,false,true,false);return;}
             AdvanceSchedule();
             // Split only the scheduled Day 3 boundary; a long simulation tick must not skip the stage.
             if(Day3Balance&&day3Stage==1)
@@ -181,6 +182,7 @@ namespace LighthouseKeepers.WatchDemo
         {if(!ReadOnly&&!Failed)HouseFlood?.Step(seconds,height,Repaired&&HasPower(PowerCircuit.Pump));}
         public void ObserveWater(double seconds,float height)
         {
+            if(Recovery.LessonActive)return;
             if(!double.IsFinite(seconds)||seconds<0||!float.IsFinite(height))throw new ArgumentOutOfRangeException();
             if(!ReadOnly){LatestWater=height;ObservePressure();}
             if(Tutorial||ReadOnly||Failed||!Tuning||!Tuning.highWaterLoss)return;

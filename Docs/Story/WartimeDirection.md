@@ -49,3 +49,7 @@ These are proposed replacements for existing IDs, not additional lines to stack 
 | HM_N5_DAWN | “First light. The ships are in. I'm bringing the relief boat myself.” | Won final watch, rescue boat enabled. |
 
 The solo arrival will name Owen only while the real helper is present. Further historic dates and any old recordings must be audited before voice is re-enabled. Do not imply convoy combat, submarines, naval command or military systems that the game does not simulate.
+
+## Day 2 speaker identity
+
+The antagonist in the false-call scene is always labelled **Unknown**, including the threat and B recall. The true harbor master remains HARBOR MASTER. The solo victim is the scripted partner; the human rescues him on Floor 2. Both exits stay locked until the hand rescue and relief beat complete. This lesson is captions-only until final recordings.

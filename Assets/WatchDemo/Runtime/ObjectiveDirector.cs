@@ -4,7 +4,7 @@ using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo
 {
-    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper }
+    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2 }
     // Sole instruction policy. The host assigns jobs; presentation never invents a next action.
     public sealed class ObjectiveDirector
     {
@@ -22,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         public ObjectiveDirector(WatchState owner){state=owner;}
         public KeeperStep ForActor(int actor)=>actorB!=0&&actor==actorB?Second:First;
         public KeeperStep Partner(int actor)=>actorB==0?KeeperStep.None:actor==actorB?First:Second;
-        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.ReviveKeeper;
+        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.AwaitRescueF2;
         public void Apply(int first,int second,int a,int b)
         {if(!state.ReadOnly)return;First=(KeeperStep)first;Second=(KeeperStep)second;actorA=a;actorB=b;}
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
@@ -34,7 +34,7 @@ namespace LighthouseKeepers.WatchDemo
             TickCore(now,firstActor,firstHead,secondActor,secondHead,wrenchHeld);
             if(!state.ReadOnly&&state.ScriptedPartner){
                 actorB=WatchState.CompanionActor;
-                Second=state.Recovery.AnyDown&&!state.Failed?KeeperStep.ReviveKeeper:state.Failed||state.Complete?KeeperStep.None:state.Repaired?state.Radio.Step==2?KeeperStep.ReadCode:KeeperStep.None:state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.None;
+                Second=state.Recovery.LessonActive?(state.Recovery.Lesson==4?KeeperStep.AwaitRescueF2:KeeperStep.GatherF2):state.Recovery.AnyDown&&!state.Failed?KeeperStep.ReviveKeeper:state.Failed||state.Complete?KeeperStep.None:state.Repaired?state.Radio.Step==2?KeeperStep.ReadCode:KeeperStep.None:state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.None;
             }
         }
         void TickCore(float now,int firstActor,Vector3 firstHead,int secondActor,Vector3 secondHead,bool wrenchHeld)
@@ -42,6 +42,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly)return;
             bool roster=actorA!=firstActor||actorB!=secondActor;actorA=firstActor;actorB=secondActor;
             if(state.Failed){First=Second=KeeperStep.Lost;return;}
+            if(state.Recovery.LessonActive){
+                var step=state.Recovery.Lesson==1?KeeperStep.GatherF2:state.Recovery.Lesson==4?KeeperStep.RescueF2:KeeperStep.WatchPartner;
+                First=state.Recovery.Downed((int)Duty(actorA))?KeeperStep.AwaitRescueF2:step;Second=actorB==0?KeeperStep.None:state.Recovery.Downed((int)Duty(actorB))?KeeperStep.AwaitRescueF2:step;return;
+            }
             if(state.Recovery.AnyDown){First=state.Recovery.Downed((int)Duty(actorA))?KeeperStep.AwaitRescue:KeeperStep.ReviveKeeper;Second=actorB==0?KeeperStep.None:state.Recovery.Downed((int)Duty(actorB))?KeeperStep.AwaitRescue:KeeperStep.ReviveKeeper;return;}
             if(state.Complete){First=state.HasNextDay?KeeperStep.Sleep:KeeperStep.Complete;Second=actorB!=0?First:KeeperStep.None;return;}
             if(state.ShipGuidanceDue){
@@ -145,6 +149,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         public static string Job(KeeperStep step)
         {
+            if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return "LESSON";
             if(step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper)return "RESCUE";
             if(step==KeeperStep.HoldValve||step==KeeperStep.ClampValve||step==KeeperStep.TightenBolt||step>=KeeperStep.GrabWrench&&step<=KeeperStep.BoltC)return WatchState.PipeStation;
             if(step==KeeperStep.CheckFuel||step>=KeeperStep.Fuel&&step<=KeeperStep.OpenChoke)return WatchState.GeneratorStation;
@@ -154,13 +159,13 @@ namespace LighthouseKeepers.WatchDemo
             if(step>=KeeperStep.BeaconLight&&step<=KeeperStep.BeaconWipe)return WatchState.BeaconStation;
             return step==KeeperStep.Sleep?"BED":"";
         }
-        public static int Floor(KeeperStep step){if(step==KeeperStep.ReadCode)return 0;string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
+        public static int Floor(KeeperStep step){if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return 2;if(step==KeeperStep.ReadCode)return 0;string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
         public static string Location(KeeperStep step)
         {
             string key=step==KeeperStep.ReadCode?"where.telegram":step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
             return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
         }
-        public static string Button(KeeperStep step)=>step==KeeperStep.AwaitRescue||step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
+        public static string Button(KeeperStep step)=>step==KeeperStep.GatherF2||step==KeeperStep.WatchPartner||step==KeeperStep.AwaitRescueF2||step==KeeperStep.AwaitRescue||step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
         public static int Hint(KeeperStep step){string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?7:id==WatchState.GeneratorStation?8:id=="BREAKER"?9:id==WatchState.BeaconStation?10:id==WatchState.RadioStation?11:id=="BED"?12:0;}
         public string StationInstruction(string station) {
             if(First!=KeeperStep.ReadCode&&Job(First)==station)return Instruction(First);

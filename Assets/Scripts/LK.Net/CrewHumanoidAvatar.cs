@@ -37,6 +37,8 @@ namespace LighthouseKeepers.Net
         Vector3 eyeInHead,lastHead;
         Quaternion leftWristOffset,rightWristOffset;
         float floorY,lastPoseTime,statureScale=1;
+        public float Possession {get;set;}
+        public float VisualLift {get;set;}
         bool placed,attempted;
         public SkinnedMeshRenderer Skin {get;private set;}
         public float ReferenceEyeHeight=>rig==null?1.665f:rig.eyeReference.y-rig.floorHeight;
@@ -152,8 +154,8 @@ namespace LighthouseKeepers.Net
             rotations[head]=pose.HeadRotation*rig.joints[head].rotation;
             positions[head]=pose.Head-rotations[head]*(eyeInHead*statureScale);
             Aim(neck,head,1.3f);
-            Limb(leftArm,leftElbow,leftWrist,pose.Left,positions[leftArm]+rotation*new Vector3(-.3f,-.3f,-.25f),maximumArmStretch);
-            Limb(rightArm,rightElbow,rightWrist,pose.Right,positions[rightArm]+rotation*new Vector3(.3f,-.3f,-.25f),maximumArmStretch);
+            Limb(leftArm,leftElbow,leftWrist,pose.Left-Vector3.up*VisualLift,positions[leftArm]+rotation*new Vector3(-.3f,-.3f,-.25f),maximumArmStretch);
+            Limb(rightArm,rightElbow,rightWrist,pose.Right-Vector3.up*VisualLift,positions[rightArm]+rotation*new Vector3(.3f,-.3f,-.25f),maximumArmStretch);
             rotations[leftWrist]=pose.LeftRotation*Quaternion.Euler(leftWristCorrection)*leftWristOffset;
             rotations[rightWrist]=pose.RightRotation*Quaternion.Euler(rightWristCorrection)*rightWristOffset;
             var leftGoal=FootGoal(leftAnkle,velocity,out var leftFacing);var rightGoal=FootGoal(rightAnkle,velocity,out var rightFacing);
@@ -192,7 +194,8 @@ namespace LighthouseKeepers.Net
             for(int i=0;i<bones.Length;i++)
             {
                 var joint=rig.joints[i];int channel=curlChannels[i];bool finger=channel>0;
-                if(finger||i==leftToes||i==rightToes)
+                bool face=joint.name=="EyeL"||joint.name=="EyeR"||joint.name=="Jaw"||joint.name=="TearL"||joint.name=="TearR";
+                if(finger||i==leftToes||i==rightToes||face)
                 {
                     int parent=joint.parent;
                     positions[i]=positions[parent]+rotations[parent]*(localPositions[i]*statureScale);
@@ -200,7 +203,13 @@ namespace LighthouseKeepers.Net
                     float curl=finger?curls[(channel-1)%3]:0;
                     rotations[i]=rotations[parent]*localRotations[i]*Quaternion.AngleAxis(curl*75,joint.curlAxis);
                 }
-                bones[i].SetPositionAndRotation(positions[i],rotations[i]);bones[i].localScale=new Vector3(1,stretches[i],1);
+                if(face){
+                    float amount=Mathf.Clamp01(Possession);
+                    if(joint.name=="EyeL"||joint.name=="EyeR")rotations[i]=Quaternion.AngleAxis(-112*amount,rotations[head]*Vector3.right)*rotations[i];
+                    if(joint.name=="Jaw")rotations[i]=Quaternion.AngleAxis(24*amount,rotations[head]*Vector3.right)*rotations[i];
+                }
+                bones[i].SetPositionAndRotation(positions[i]+Vector3.up*Mathf.Max(0,VisualLift),rotations[i]);
+                bones[i].localScale=joint.name.StartsWith("Tear")?Vector3.one*Mathf.Max(.001f,Mathf.Clamp01(Possession)):new Vector3(1,stretches[i],1);
             }
             placed=true;
         }

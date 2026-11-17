@@ -11,6 +11,8 @@ namespace LighthouseKeepers.WatchDemo {
   public bool Active=>actor&&actor.activeSelf;
   public string LearnedCode=>learnedCode;
   public string Status=>KeeperStrings.Get(statusKey);
+  bool lessonMode;CompanionCommand lessonReturn;float possession,lift;readonly RaycastHit[] ceilingHits=new RaycastHit[24];
+  public Vector3 OfferedHand=>model&&model.FullBody&&model.FullBody.Joint("LeftHand")?model.FullBody.Joint("LeftHand").position:Position+Vector3.up;
   public Vector3 Position=>actor?actor.transform.position:Vector3.zero;
   public CrewDuty Duty=>watch.CurrentDuty==CrewDuty.Lightkeeper?CrewDuty.Machinist:CrewDuty.Lightkeeper;
   public CompanionCommand Command=>command;
@@ -55,6 +57,13 @@ namespace LighthouseKeepers.WatchDemo {
    if(!Active){if(Time.time<nextPath)return;nextPath=Time.time+3;if(!Spawn())return;}
    if(night!=s.Day){night=s.Day;learnedCode="";SetCommand(CompanionCommand.Work);}
    if(watch.Sleeping||s.Failed){Release();statusKey="companion.wait";return;}
+   if(s.Recovery.LessonActive){
+    if(!lessonMode){lessonMode=true;lessonReturn=command;Release();hasGoal=false;nextPath=0;}reading=false;statusKey="companion.follow";
+    if(s.Recovery.Lesson==1){if(MoveTo(HorrorTuning.Current.lessonPartnerSpot)){statusKey="companion.wait";still=0;return;}}else if(agent.isOnNavMesh)agent.ResetPath();
+    if(s.Recovery.Downed((int)Duty))statusKey="companion.possessed";
+    CheckRoute();return;
+   }
+   if(lessonMode){lessonMode=false;SetCommand(lessonReturn);}
    bool rescueNeeded=s.Recovery.AnyDown;
    if(rescueNeeded&&!rescuing){rescueReturn=command;Release();hasGoal=false;nextPath=0;}
    else if(!rescueNeeded&&rescuing)SetCommand(rescueReturn);
@@ -102,6 +111,10 @@ namespace LighthouseKeepers.WatchDemo {
    var left=Position+Vector3.up*1.05f-right*.22f+forward*(.32f+swing);var r=Position+Vector3.up*1.05f+right*.22f+forward*(.32f-swing);
    if(rescuing&&statusKey=="companion.rescuing")r=rescueHand;
    else if(holding&&valve)r=valve.transform.position+valve.transform.forward*.09f;
+   var recovery=watch.State.Recovery;bool down=recovery.Downed((int)Duty);float amount=down&&DrownedAppearance.Sightings?1-recovery.Slot((int)Duty).progress:0;
+   possession=Mathf.MoveTowards(possession,amount,Time.deltaTime*.65f);float maximum=PossessionLesson.SafeLift(Position+Vector3.up*1.8f,HorrorTuning.Current.possessionLift,HorrorTuning.Current.ceilingClearance,ceilingHits);
+   lift=Mathf.Min(maximum,Mathf.MoveTowards(lift,amount*maximum,Time.deltaTime*(down?HorrorTuning.Current.possessionRiseSpeed:HorrorTuning.Current.possessionRiseSpeed*1.8f)));model.FullBody.Possession=possession;model.FullBody.VisualLift=lift;
+   if(down){left=Position+Vector3.up*1.05f-right*.22f+forward*.55f;r=Position+Vector3.up*.85f+right*.25f;}slateRoot.gameObject.SetActive(!down);
    model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation,RightRotation=rotation,LeftGrip=.5f,RightGrip=holding||rescuing?1:.5f},Time.deltaTime,Position.y);
    slateRoot.SetPositionAndRotation((holding?left:(left+r)*.5f)+forward*.04f,rotation*Quaternion.Euler(0,180,0));
    string content=learnedCode.Length>0&&!holding&&!reading&&!rescuing?learnedCode:Status;

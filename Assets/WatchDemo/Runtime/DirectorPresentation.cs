@@ -46,6 +46,8 @@ namespace LighthouseKeepers.WatchDemo
         }
         public Transform Target(KeeperStep step)
         {
+            if(step==KeeperStep.RescueF2){var recovery=watch.GetComponent<CrewRecovery>();var hand=recovery?recovery.Target(watch.State.Recovery.LessonVictim):null;if(hand)return hand.transform;}
+            if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return engine?engine.transform:null;
             if(step==KeeperStep.TightenBolt)return pipe.PipeIndexForGuide();
             if(step==KeeperStep.ReadCode)return CodeSource.Active?CodeSource.Active.transform:null;
             // All four buttons are equally available. Never illuminate the correct answer.

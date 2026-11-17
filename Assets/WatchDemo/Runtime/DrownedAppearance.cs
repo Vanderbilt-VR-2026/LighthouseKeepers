@@ -57,9 +57,9 @@ namespace LighthouseKeepers.WatchDemo
             SafeAnchor=d.Anchored;
             if(d.Anchored){DrownedMotion.Pose(d,s.Elapsed,out var position,out var rotation);figure.SetPositionAndRotation(position,rotation);}
             if(Camera.main){var head=Camera.main.transform.position;float face=DrownedForms.FaceHeight(activeForm);if((head-figure.TransformPoint(Vector3.up*face)).sqrMagnitude<2.25f)SafeAnchor=false;}
-            bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
+            bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&!s.Recovery.LessonActive&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
             float wanted=active&&d.Phase==DrownedPhase.Manifest?1:0;
-            visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?16f:10f));
+            visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed||s.Recovery.LessonActive)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?16f:10f));
             body.enabled=visibility>.005f;block.SetFloat("_Visibility",visibility);block.SetFloat("_Style",d.PoseKind);block.SetFloat("_Height",DrownedForms.Height(activeForm));block.SetFloat("_Breath",(float)s.Elapsed);block.SetFloat("_Arrival",(float)System.Math.Max(0,s.Elapsed-manifestAt));body.SetPropertyBlock(block);
             mist.enabled=body.enabled;mistBlock.SetFloat("_Visibility",visibility);mistBlock.SetFloat("_Clock",(float)s.Elapsed);mistBlock.SetFloat("_Height",DrownedForms.Height(activeForm));mistBlock.SetFloat("_FaceHeight",DrownedForms.FaceHeight(activeForm));mist.SetPropertyBlock(mistBlock);
         }

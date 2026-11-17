@@ -13,7 +13,10 @@ namespace LighthouseKeepers.WatchDemo
         readonly HarborRecallHistory recallHistory=new();
         int localReplayCue;float localReplayAge,nextLocalReplay;
         public System.Collections.Generic.IReadOnlyList<int> RecentCues=>recallHistory.Cues;
-        public string LastCaption=>catalog&&recallHistory.Latest>0?catalog.Caption(recallHistory.Latest):"";
+        string sceneCaption,sceneSpeaker;
+        public string LastSpeaker=>!string.IsNullOrEmpty(sceneCaption)?sceneSpeaker:KeeperStrings.Get("subtitle.speaker");
+        public void RecordSilentLine(string text,string speaker){sceneCaption=text;sceneSpeaker=speaker;}
+        public string LastCaption=>!string.IsNullOrEmpty(sceneCaption)?sceneCaption:catalog&&recallHistory.Latest>0?catalog.Caption(recallHistory.Latest):"";
         public int SubtitleCue=>localReplayCue>0?localReplayCue:Cue;
         public bool CaptionsOnly=>catalog&&catalog.captionsOnly;
         float PresentationSeconds(int id)=>catalog?catalog.PresentationSeconds(id):0;
@@ -21,6 +24,7 @@ namespace LighthouseKeepers.WatchDemo
         public int SubtitlePage(int pages)=>Mathf.Clamp(1+Mathf.FloorToInt(Mathf.Max(0,SpeechAge)/Mathf.Max(.1f,PresentationSeconds(SubtitleCue))*pages),1,Mathf.Max(1,pages));
         public bool ReplayLastLocally()
         {
+            if(!string.IsNullOrEmpty(sceneCaption))return true;
             int id=recallHistory.Latest;var clip=catalog?catalog.Line(id):null;
             if(!catalog||!catalog.HasLine(id)||(!CaptionsOnly&&!clip)||Time.unscaledTime<nextLocalReplay)return false;
             nextLocalReplay=Time.unscaledTime+3;localReplayCue=id;localReplayAge=0;
@@ -92,6 +96,7 @@ namespace LighthouseKeepers.WatchDemo
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
             belt.volume=intercom?0:tuning.beltRadioVolume*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
             beltNoise.volume=.003f*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
+            if(s.Recovery.LessonActive){SilencePlayback();return;}
             if(s.RemoteReplica)return;
             Age+=Time.deltaTime;
             if(day!=s.Day)
@@ -254,6 +259,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Play(int id,int serial,float age)
         {
+            sceneCaption=sceneSpeaker=null;
             int requested=id;
             if(!watch.State.RemoteReplica)id=StoryVoiceBridge.Resolve(id,watch.State,catalog);
             localReplayCue=0;recallHistory.Remember(id);

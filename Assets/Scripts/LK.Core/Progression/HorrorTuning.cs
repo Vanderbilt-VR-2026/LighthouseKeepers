@@ -37,6 +37,11 @@ namespace LighthouseKeepers.Core.Progression
         public float reviveHoldSeconds=3,reviveGripLease=.35f,reviveGraceSeconds=10;
         public float reviveHandReach=.28f,reviveFadeSeconds=.45f;
         public Vector3 recoveryFloorPosition=new(2.6f,.04f,0);
+        [Header("Night 2 possession lesson")]
+        public bool possessionLesson=true;
+        public float lessonStartSeconds=60,lessonCallSeconds=8,lessonSealSeconds=4,lessonThreatSeconds=6,lessonReliefSeconds=6;
+        public float possessionLift=.32f,possessionRiseSpeed=.10f,ceilingClearance=.18f;
+        public Vector3 lessonPartnerSpot=new(1,3.3f,0);
         [Header("Fear / voice")]
         public float calmBpm=62,panicBpm=140,clearFog=.02f,darkFog=.06f,highFear=.6f;
         public float antagonistSpacing=90,harborQuietBeforeWhisper=4;

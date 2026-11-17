@@ -26,13 +26,21 @@ namespace LighthouseKeepers.Net.Tests
         }
         [Test] public void OriginalRigContractAndNoGameplayComponents()
         {
-            Assert.AreEqual(51,avatar.Skin.bones.Length);Assert.AreEqual(1,avatar.Skin.sharedMaterials.Length);
+            Assert.AreEqual(56,avatar.Skin.bones.Length);Assert.AreEqual(1,avatar.Skin.sharedMaterials.Length);
             Assert.Less(avatar.Skin.sharedMesh.GetIndexCount(0)/3,25000);
             Assert.IsEmpty(model.GetComponentsInChildren<Collider>());Assert.IsEmpty(model.GetComponentsInChildren<Camera>());
             Assert.IsEmpty(model.GetComponentsInChildren<AudioListener>());
             var pose=Pose();avatar.ApplyPose(pose,1f/60);
             Assert.Less(Vector3.Distance(avatar.EyePosition,pose.Head),.001f);
             Assert.Less(Vector3.Distance(avatar.Joint("LeftHand").position,pose.Left),.001f);
+        }
+        [Test] public void PossessionMovesFaceAndBodyButLeavesOfferedHandsReachable()
+        {
+            var p=Pose();avatar.ApplyPose(p,1f/60);var eye=avatar.Joint("EyeL");var jaw=avatar.Joint("Jaw");var normal=eye.rotation;var jawRest=jaw.rotation;
+            avatar.Possession=1;avatar.VisualLift=.3f;avatar.ApplyPose(p,1f/60);
+            Assert.Greater(Quaternion.Angle(normal,eye.rotation),100);Assert.Greater(Quaternion.Angle(jawRest,jaw.rotation),20);
+            Assert.That(avatar.EyePosition.y,Is.EqualTo(p.Head.y+.3f).Within(.001));Assert.Less(Vector3.Distance(avatar.Joint("LeftHand").position,p.Left),.001f);
+            avatar.Possession=avatar.VisualLift=0;avatar.ApplyPose(p,1f/60);Assert.Less(Quaternion.Angle(normal,eye.rotation),.01f);Assert.Less(avatar.Joint("TearL").localScale.x,.002f);
         }
         [Test] public void SurfaceUsesBakedClothMapsAndAndroidAstcMipmaps()
         {

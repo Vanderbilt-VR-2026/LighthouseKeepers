@@ -75,7 +75,7 @@ def export_skin(obj, rig, path=DEST):
                 result['boneIndices'].extend(ids); result['boneWeights'].extend(key[16:20])
             result['triangles'].append(unique[key])
     result['floorHeight'] = min(result['vertices'][1::3])
-    assert len(unique) < 65536 and len(bones) == 51
+    assert len(unique) < 65536 and 51 <= len(bones) <= 56
     path = Path(path)
     path.write_text(json.dumps(result, separators=(',', ':'), allow_nan=False) + '\n')
     print('UNITY SKIN:', len(unique), 'vertices,', len(result['triangles']) // 3, 'triangles,', len(bones), 'bones:', path)

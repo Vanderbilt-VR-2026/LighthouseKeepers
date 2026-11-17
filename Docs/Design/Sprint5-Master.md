@@ -481,3 +481,5 @@ one setting → measure → keep or revert. Write every result to QuestQuality.m
   Sprint 5 asset folders has mipmaps + ASTC on Android.
 - QuestQuality.md: before/after table (setting · old · new · where · measured ms) + bake stats + the
   final OVR Metrics numbers at storm peak.
+
+**November 17 recovery/scene checkpoint:** shared hand rescue (#107), personal three-page briefing (#138), beanies/possessed presentation (#139), and the N2 F2 rescue lesson (#140) are implemented. N2 antagonist is always **Unknown**, including B recall; narration remains captions-only. LK-S5-POSSESSION1 / v40. 75 focused checks plus offline/live two-Editor lesson pass. Night1 all-station rehearsal and bespoke later-night scenes remain next; full hunter/catches OFF, recordings last. See Next.md and CrewCore/Possession evidence.

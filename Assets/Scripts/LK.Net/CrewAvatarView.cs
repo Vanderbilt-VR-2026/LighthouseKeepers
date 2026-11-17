@@ -28,6 +28,7 @@ namespace LighthouseKeepers.Net
         CrewAvatarRole role;
         int appearanceActor;
         float nextAppearance;
+        WatchCoopSession recoverySession;float possession,lift;
         void Awake()
         {
             identity = GetComponent<NetworkObject>();
@@ -110,7 +111,14 @@ namespace LighthouseKeepers.Net
             visuals.SetActive(visible);
             if (!visible || !stream.SampleVisual(identity.InputAuthority.RawEncoded,out var pose)) return;
             RefreshAppearance(stream, identity.InputAuthority.RawEncoded);
-            if (customModel && customModel.FullBody) customModel.FullBody.ApplyPose(pose,Time.unscaledDeltaTime);
+            if (customModel && customModel.FullBody){
+                if(!recoverySession)recoverySession=FindAnyObjectByType<WatchCoopSession>();
+                float progress=0,maximum=0;bool down=recoverySession&&recoverySession.PossessionView(identity.InputAuthority.RawEncoded,out progress,out maximum);
+                possession=Mathf.MoveTowards(possession,down?1-progress:0,Time.unscaledDeltaTime*.65f);
+                lift=Mathf.MoveTowards(lift,down?maximum*(1-progress):0,Time.unscaledDeltaTime*(recoverySession?recoverySession.PossessionRiseSpeed:.1f)*(down?1:1.8f));
+                lift=Mathf.Min(lift,maximum);customModel.FullBody.Possession=possession;customModel.FullBody.VisualLift=lift;
+                customModel.FullBody.ApplyPose(pose,Time.unscaledDeltaTime);
+            }
             else ApplyModularPose(pose);
             LeftPoseChanged.Invoke(pose.LeftPose,pose.LeftGrip,pose.LeftTrigger);
             RightPoseChanged.Invoke(pose.RightPose,pose.RightGrip,pose.RightTrigger);

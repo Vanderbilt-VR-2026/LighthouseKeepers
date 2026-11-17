@@ -20,7 +20,7 @@ namespace LighthouseKeepers.WatchDemo
         readonly XRSimpleInteractable[] targets=new XRSimpleInteractable[2];
         readonly LineRenderer[] rings=new LineRenderer[2];
         readonly bool[] selected=new bool[2];
-        readonly List<Behaviour> disabled=new();
+        readonly List<Behaviour> disabled=new();readonly List<Behaviour> roomDisabled=new();bool roomLocked;
         AudioSource sound;readonly bool[] wasDown=new bool[2];float nextPulse;
         Material material;int seenSerial,revision=-1;bool blocked,moved;float fade,nextSend;
         readonly RaycastHit[] hits=new RaycastHit[24];
@@ -31,6 +31,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool HandPoint(int duty,out Vector3 point)
         {
             point=default;
+            var helper=watch.GetComponent<CrewCompanion>();if(helper&&helper.Active&&(int)helper.Duty==duty){point=helper.OfferedHand;return true;}
             if(duty==LocalDuty){foreach(var hand in hands)if(hand&&hand.Node==XRNode.LeftHand){point=hand.transform.parent.position;return true;}return false;}
             if(watch.State.Coop is ICoopRecoveryHands views)return views.HandForDuty((CrewDuty)duty,out point);
             return false;
@@ -75,8 +76,10 @@ namespace LighthouseKeepers.WatchDemo
             if(!watch||watch.State?.Recovery==null||!rig)return;
             var s=watch.State;var slot=s.Recovery.Slot(LocalDuty);
             if(revision!=watch.Revision){revision=watch.Revision;seenSerial=0;fade=0;moved=false;}
+            bool locked=s.Recovery.RoomSealed&&!s.Failed;
+            if(locked!=roomLocked){roomLocked=locked;if(locked){foreach(var b in rig.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationProvider>(true))if(b.enabled){roomDisabled.Add(b);b.enabled=false;}}else{foreach(var b in roomDisabled)if(b)b.enabled=true;roomDisabled.Clear();}}
             bool down=slot?.down==true&&!s.Failed;
-            if(down&&(!blocked||slot.serial!=seenSerial)){seenSerial=slot.serial;moved=false;fade=0;}
+            if(down&&(!blocked||slot.serial!=seenSerial)){seenSerial=slot.serial;moved=s.Recovery.Lesson==4;fade=0;}
             SetBlocked(down);
             if(down&&!moved){fade=Mathf.MoveTowards(fade,1,Time.unscaledDeltaTime/tune.reviveFadeSeconds);if(fade>=1){Relocate();moved=true;}}
             else fade=Mathf.MoveTowards(fade,0,Time.unscaledDeltaTime/tune.reviveFadeSeconds);
@@ -110,11 +113,13 @@ namespace LighthouseKeepers.WatchDemo
             if(c)c.enabled=enabled;Physics.SyncTransforms();
         }
         void Pulse(float strength,float seconds){foreach(var h in hands)if(h)InputDevices.GetDeviceAtXRNode(h.Node).SendHapticImpulse(0,strength,seconds);}
-        void OnDestroy(){SetBlocked(false);if(material)Destroy(material);}
+        void OnDestroy(){foreach(var b in roomDisabled)if(b)b.enabled=true;SetBlocked(false);if(material)Destroy(material);}
     }
     public sealed partial class WatchDemoController:ICoopRecoveryView
     {
-        CrewRecovery recoveryView;bool recoveryFading;
+        CrewRecovery recoveryView;bool recoveryFading;readonly RaycastHit[] possessionHits=new RaycastHit[24];
+        public float PossessionRiseSpeed=>HorrorTuning.Current.possessionRiseSpeed;
+        public bool PossessionView(int actor,out float progress,out float maxLift){var slot=state.Recovery.Slot(RecoveryDuty(actor));progress=slot?.progress??0;maxLift=0;if(!DrownedAppearance.Sightings)return false;DrownedViewers(out int a,out var p,out _,out int b,out var q,out _);var h=actor==b?q:p;maxLift=PossessionLesson.SafeLift(h,HorrorTuning.Current.possessionLift,HorrorTuning.Current.ceilingClearance,possessionHits);return slot?.down==true;}
         public bool KeeperDown(int actor)=>state.Recovery.Downed(RecoveryDuty(actor));
         int RecoveryDuty(int actor)=>actor==LocalKeeper||coop==null?(int)CurrentDuty:(int)((coop as ICoopKeeperDuties)?.Duty(actor)??CrewDuty.None);
         public bool RecoveryCommand(int actor,int victim,bool held,Vector3 left,Vector3 right)

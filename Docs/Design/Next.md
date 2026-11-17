@@ -1,12 +1,32 @@
-# Current checkpoint — shared rescue implemented, tutorial and possession next
+# Current checkpoint — Night 2 possession / Unknown speaker
 
-Branch sprint-5 / PR #89. Editor muted. Quest unavailable: build, do not wait, do not launch.
+Branch **sprint-5 / draft PR #89**. Editors muted. Quest unavailable: build only, do not wait or launch.
 
-- Shared human/bot hand rescue is implemented and verified in muted Editor fixtures. Network **LK-S5-RESCUE1 / LK-Lab-Coop-v39**. Evidence: `Docs/Verification/S5/CrewCore/Recovery/Implementation.md`. Catches remain OFF; DEV rescue drill only.
-- Three-page personal wartime briefing implemented: context, jobs and controls, Skip/Back/reopen. Two tests and actual lobby page rendering pass; evidence `Docs/Verification/S5/CrewCore/Briefing/`. No new network state.
-- Latest user requests: beanies and realistic possession/revive face/body presentation (#139), safe full-station Night 1 plus Night 2 false-call rescue teaching event and later-night in-world events (#140). Visible body may rise within ceiling clearance; never animate the tracked camera. Dialogue remains captions only. Preserve accepted hands/height/legs. Update WartimeDirection.md to this new arc.
-- #137 timed starter remains queued. Engine/bearing relay, partner power/light support, hunter and full campaign acceptance remain unfinished. Voice recordings #122 LAST.
-- No new APK yet for rescue. Previous crew APK827679a0 is older and must not be called current.
+## Done
+
+- Shared hand rescue, both human directions and helper takeover/rejoin, committed in 671792d8. Three-page personal WWII1942 briefing, Skip and reopen, committed in cce8a5f0.
+- Beanies and possession face/body presentation: eye roll, jaw, dark tears and bounded visual lift; accepted controller hands, local headless body/height/leg solver retained. No camera animation.
+- Night2 false call: gather both keepers on the actual F2 floor, lock two stairs, threat, co-op guest / solo bot possession, direct hand rescue, gates reopen after relief. Watch/flood/ship clocks pause; no deadline in the lesson. Roster changes safely regather.
+- Antagonist speaker is **Unknown**, including the false call, “You’ll die here like the others.”, live subtitles and B recall. Dialogue remains text only.
+- **LK-S5-POSSESSION1 / LK-Lab-Coop-v40**. Both clients must update. 75 focused tests, offline lesson and live two-Editor lesson pass; evidence `Docs/Verification/S5/CrewCore/Possession/`. Full hunter/catches stay OFF.
+- APK build pending for this source checkpoint; the delivery receipt below will identify the new file when completed. Older 827679a0 is not this build.
+
+## Next, in order
+
+1. Finish #140: safe Night1 full-station rehearsal (pipe, generator, aiming at a preview ship, radio); existing Night1 is still pipe/preview/sleep. Reuse the actual current controls until #137 is done. Design notes: `artifacts/s5/possession/night1-plan.md`. Then distinct N3/N4 scenes and revised N5 outcomes; do not claim the full hunter works.
+2. #137: three timed physical starter pulls, replacing primer/choke only after focused control/tutorial tests. Then remaining paired engine/power/bearing support and the issue queue. Recordings #122 LAST.
+3. Worn acceptance: beanie/face, body clearance, reachable left hand and gate comfort, both player duties, briefings and B recall. Human voice and sustained Quest timing remain unverified. Do not infer these from muted Editor runs.
+
+## Reproduction / delivery
+
+- Focused tests: `python3 artifacts/s5/rescue/check.py CrewRecoveryTests HarborKeeperTests CrewHumanoidAvatarTests VoicePassTests M3RuntimeTests InstructionsStayShortAndTableHasEveryStep EveryActionHasAnObjectLocationAndOneButton` (fresh receipt folders when rerunning).
+- Actual offline lesson: adapt `artifacts/s5/possession/solo.py` to a fresh destination. Live pair: `artifacts/s5/possession/crew.py`, both Editors muted, runInBackground=true; preserve peer overlays before syncing.
+- Preview: `artifacts/s5/possession/FacePreview.cs`; tests exercise ceiling clearance and exclude rig capsules when recognizing the F2 floor.
+- Clean-source Android build: `python3 artifacts/s5/possession/build.py`. Use a new backup/output folder on any later build, close Editors first, restore only documented builder churn. Never reuse an old build receipt for new source.
+
+## DEVICE CHECKS PENDING
+
+Install the latest verified APK when available; do not auto-launch. Test both roles, solo bot possession, F2 gates/hand reach/release/regrip, no camera rise, seated comfort, eyes/mouth/tear readability, ceiling clearance, post-rescue objectives, human voice and sustained GPU/CPU. Night1 full rehearsal/N3–5 scenes and complete hunter are implementation work, not merely device checks.
 
 ## Local Git metadata
 

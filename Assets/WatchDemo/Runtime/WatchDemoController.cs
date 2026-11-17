@@ -129,7 +129,7 @@ namespace LighthouseKeepers.WatchDemo
             SabotagePresentation.Create(this);
             DrownedAppearance.Create(this);
             ConnectedMachinePresentation.Create(this);
-            CrewCompanion.Create(this,head);CrewRecovery.Create(this);recoveryView=GetComponent<CrewRecovery>();
+            CrewCompanion.Create(this,head);CrewRecovery.Create(this);PossessionLesson.Create(this);recoveryView=GetComponent<CrewRecovery>();
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
         }
@@ -189,12 +189,12 @@ namespace LighthouseKeepers.WatchDemo
             // Original Day 1 net rise/drain remains unchanged. Outage disables pumping.
             if(!state.Failed)
             {
-                flood.Paused=state.Repaired||!watchRunning;
+                flood.Paused=state.Recovery.LessonActive||state.Repaired||!watchRunning;
                 flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.LeakStrength*state.FloodRiseMultiplier;
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
-            if(watchRunning)state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
+            if(watchRunning&&!state.Recovery.LessonActive)state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
             previousGrip=grip;previousTrigger=trigger;
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
