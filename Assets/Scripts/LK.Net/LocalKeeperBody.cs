@@ -12,6 +12,9 @@ namespace LighthouseKeepers.Net
         CrewHumanoidAvatar body;
         Transform left,right;
         float nextScan;
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        float diagnosticAt;int diagnosticCount;
+#endif
         static LocalKeeperBody instance;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Reset()=>instance=null;
@@ -43,6 +46,15 @@ namespace LighthouseKeepers.Net
                 Right=right?right.position:head.TransformPoint(new Vector3(.25f,-.4f,.2f)),
                 LeftRotation=left?left.rotation:head.rotation,RightRotation=right?right.rotation:head.rotation};
             body.ApplyPose(pose,Time.unscaledDeltaTime);
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            if(diagnosticCount<3&&Time.unscaledTime>=diagnosticAt)
+            {
+                diagnosticAt=Time.unscaledTime+8;diagnosticCount++;
+                var baked=new Mesh();body.Skin.BakeMesh(baked);baked.RecalculateBounds();
+                Debug.Log($"KEEPER_BODY poseValid={pose.Valid} origin={origin.name} rootScale={origin.transform.lossyScale} head={head.position:F3} headRot={head.eulerAngles:F1} left={pose.Left:F3} right={pose.Right:F3} body={body.transform.position:F3} bodyScale={body.transform.lossyScale} mesh={baked.bounds} verts={baked.vertexCount} hip={body.Joint("Hips").position:F3} foot={body.Joint("LeftFoot").position:F3} wrist={body.Joint("LeftHand").position:F3} graphics={SystemInfo.graphicsDeviceType}");
+                Destroy(baked);
+            }
+#endif
         }
     }
 }
