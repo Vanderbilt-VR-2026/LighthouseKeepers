@@ -27,9 +27,13 @@ The user redirected the next work toward the **core paired gameplay**, before mo
 4. Common downed/hand-revive for human or bot rescue; measure F4→F1 reach against the proposed 40-second window. Then integrate a warned hunter; never enable catches before escape/recovery works.
 5. Muted Editor checks and matching two-Mac run, clean build/install without launch, then a paired headset playtest. Expand across nights only after the short loop is understandable and fun.
 
+## Rescue preparation (#107)
+
+Actual F4→F1 route measured at helper speed 1.8 m/s: **33.34 m / 19.45 s**. Existing 40-second allowance minus travel and a proposed three-second hand hold leaves **17.55 s**. Evidence: `Docs/Verification/S5/CrewCore/Recovery/`. This is an actual navigation-agent measurement, not a working rescue or human usability result. Next: host-owned downed frames, local fade/recovery anchor, nearby hand hold/release/regrip, companion override, timeout/both-down/retry/rejoin; bump network when integrated. Catches remain OFF. Reproduce with `Tools/Coop/MeasureRecoveryRoute.cs` in Night 3, via the muted Editor bridge.
+
 ## Delivery / DEVICE CHECKS PENDING
 
-Caption/role/relay/companion source has changed; APK not rebuilt yet. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles, radio split and bounded companion are implemented; engine/bearing information split, companion power/light/rescue and revive remain upcoming.
+The initial companion APK built successfully; the final stability/replica follow-up is being rebuilt from a clean commit. Delivery receipt below will identify the exact final APK. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles, radio split and bounded companion are implemented; engine/bearing information split, companion power/light/rescue and revive remain upcoming.
 
 Local Git workaround (iCloud evicted Desktop pack files): prefix every Git/build script with `GIT_OBJECT_DIRECTORY=/Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/loop/git-recovery/remote.git/objects`. M3 worktree metadata was rebuilt after preserving placeholders; original branches/main checkout were not changed. Do not delete the backup objects or placeholder files. New commit objects are also copied back into the original common object directory.
 
