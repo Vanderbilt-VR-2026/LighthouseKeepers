@@ -9,3 +9,7 @@ Two-Mac: authenticated join, both avatars, remote crouch/wrist, guest letter own
 Test fixture corrections: first paper under-floor test wrote Transform instead of Rigidbody.position; corrected the fixture, not game physics. First cue transport check froze Age=0 during the normal0.3s squelch, so both subtitles were intentionally blank; corrected fixture to age0.7 and passed. One test-run HTTP request disconnected during Editor reload; reran it successfully. These failed/zero-test attempts are not counted.
 
 NOT VERIFIED: worn Quest readability/performance, new actor recordings/listening, private ANT audio, live witness/hunt/hiding/Owen, all19 props, final story pacing/Demo. No new speech files supplied. Old recordings remain fallback. New protocol LK-S5-STORY1/v34 requires both clients updated.
+
+## APK delivery
+
+Built from clean **3e6867b7**, development IL2CPP ARM64, normal package `com.lighthousekeepers.game`. `LighthouseKeepers-Sprint5-Story-3e6867b7.apk` (127,489,798 bytes). ZIP CRC, signature, ARM64 and VR manifest verified. Installed on the connected Quest3; installed APK SHA-256 matches **d4f116e6d470b8f7f4a36edf5cfa85a77c77f1d29841abfdd2dbba98274fc44d**. **Not launched.** Later documentation commits do not change this binary. [Headset checklist](Headset.md).

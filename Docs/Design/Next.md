@@ -8,11 +8,11 @@ Branch **sprint-5**, draft **PR #89**. Main untouched; Editors muted and capped7
 - Supported new-recording triggers connected to existing host PA and subtitles, original legacy receipts preserved. Missing performances keep existing audio; no new actor recordings installed. Ordered calm confession/rule/recovery hooks are ready for files. No Owen/two-wheel valve/missing hide instruction falsely enabled.
 - Four physical story papers, either-hand pickup, drop/recovery and shared ownership; actual ship names from the bible. New cue/prop identity **LK-S5-STORY1 / LK-Lab-Coop-v34**.
 - Focused checks pass; actual-XRI solo Night1 pipe/preview ship/sleep→Night2 passes. Two-Mac avatars/crouch/wrists, guest note pose/release, new-cue exact captions (silent test fixture), shared pipe/sleep→Night2 pass. Eight both-hand paper cases pass. Screenshots personally inspected. `Docs/Verification/S5/Story/`.
-- Build/install next from clean committed source using `artifacts/s5/story/build.py`, then `install.py`. Quest currently authorized. Do not launch.
+- Built clean **3e6867b7**, verified and installed `Builds/LighthouseKeepers-Sprint5-Story-3e6867b7.apk`; installed hash matches. **Not launched.** Receipt and headset checklist in `Docs/Verification/S5/Story/`. PR89 updated; issues100/122 remain open for unfinished scope/recordings.
 
 ## Next / exact commands
 
-1. Finish clean-source APK delivery receipt, PR89 update. `python3 Tools/Story/build_catalog.py --check`; `python3 artifacts/s5/story/build.py`; `python3 artifacts/s5/story/install.py`. Build requires Editors closed and fresh backup folder; never reuse a backup silently.
+1. Delivery complete; do not rebuild/reinstall unchanged source. Catalogue check: `python3 Tools/Story/build_catalog.py --check`. For future builds adapt `artifacts/s5/story/build.py` to a NEW backup/output folder, close Editors, build clean source, verify/install via adapted `install.py`; never auto-launch or reuse a backup silently.
 2. Next gameplay slice: lantern/oil and physical cable repair. Read `Docs/Story/01-Story-Bible.md` §§3–4 and `Implementation.md` first. Extend existing host WatchState/WatchSnapshot/CoopAction validation and bump protocol for new fields. Keep accepted grip-only pipe and physical generator intact.
 3. Connect actual keeper LOS/light observations; then escape-verified hunter+hiding before enabling catches. Next Owen (no voice), remaining props/read flags, private ANT adapter, encounter schedule/finale/Demo. Do not call current apparition a hunter.
 4. New recordings go in gitignored `Recordings/Radio/hm_*.wav` / `ant_*.wav`; menu **Lighthouse Keepers → Import Radio Recordings**. Exact112 performances in `Docs/Story/03-Recording-Sheets.md`; human recordings are still needed. Conflicting valve/compass phrases are documented/inactive.
@@ -21,7 +21,7 @@ Repro tools: muted bridge `run_tests` individually with `StoryImportTests`, `Sto
 
 ## DEVICE CHECKS PENDING
 
-- Install verified new APK, never auto-launch. Worn72Hz GPU<=11ms/CPU<=9ms not measured.
+- Latest APK3e6867b7 installed, not launched. Worn72Hz GPU<=11ms/CPU<=9ms not measured. See `Docs/Verification/S5/Story/Headset.md`.
 - Grip/read all four notes with either hand, short/seated reach, stereo readability in blackout, release/gravity/recovery. No rig head pop from paper collision.
 - Matchingv34 co-op: partner note ownership/drop, valve, real voice listening/radios, rejoin and shared sleep. Two-Mac Night1 did not exercise the Night3 valve gate.
 - Accepted body retained; arm-swing run/comfort remains unconfirmed.
