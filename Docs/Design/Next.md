@@ -8,11 +8,13 @@ Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main u
 - Two host-owned oil lanterns from Night2/Demo: grip handle, trigger OFF/LOW/HIGH,90sHIGH/180sLOW, watch/sight oil gauges, shared one-use tilted oil can on F2. Seven supported hooks across House/stations, gravity/20s recovery. Two shadowless lights maximum, no new realtime wall lights.
 - HIGH clear held aim2s spends15%oil and repels the current non-contact apparition20s. Full hunter/light-protection/LOW slowing is still pending.
 - **LK-S5-LANTERN1 / LK-Lab-Coop-v35** for new shared fuel/wick/frame/action. Both clients update.
--67focused EditMode +1PlayMode guard,5physical XRI cases, actual soloNight1→Night2 and live two-Mac shared repair/sleep/lanterns pass. Evidence `Docs/Verification/S5/Lantern/`. New recordings, human audio and worn-device performance not claimed.
+- 67focused EditMode +1PlayMode guard,5physical XRI cases, actual soloNight1→Night2 and live two-Mac shared repair/sleep/lanterns pass. Evidence `Docs/Verification/S5/Lantern/`. New recordings, human audio and worn-device performance not claimed.
+
+- Clean **33c2bf35** APK built/verified/installed on Quest3, hash matched; **not launched**. Receipt `Docs/Verification/S5/Lantern/install.json`; headset route `Headset.md`.
 
 ## Next / exact commands
 
-1. Finish clean checkpoint APK: adapt/run `python3 artifacts/s5/lantern/build-fixed.py` once from clean committed source with both Editors closed. Output `Builds/LighthouseKeepers-Sprint5-Lantern-<sha>.apk`; preserve/restore three known build settings from its NEW `build-backup`. Verify/install with `python3 artifacts/s5/lantern/install-fixed.py`; never launch. Record receipt, push docs, update PR89/issues101–103. Do not reuse an existing backup or silently install an older binary.
+1. Delivery complete. Do not rebuild unchanged source. Prior build commands for reference only: `artifacts/s5/lantern/build-fixed.py` and `install-fixed.py` used `artifacts/s5/lantern/rebuild/`. Future changes require NEW backup/output folders, clean source, closed Editors and APK hash verification. Do not reuse that backup or overwrite the installed binary with an older build.
 2. Next gameplay slice: physical torn-cable/radio-wire repairs + evidence and prerequisites. Read `Docs/Story/01-Story-Bible.md`, `Implementation.md` and Sprint5-Master relevant phase. Keep accepted coexisting tasks/player choice; never reintroduce solo clamp or trigger wrench.
 3. Then live witness/light observations → navigating hunter + reachable hiding → catches only after escape tests. One entity, three opaque wet forms; Lottie apparitions only. Owen must exist/see player before enabling any solo lines about Teague.
 4. Remaining15 lore props/read flags, ANT private spatial playback/captions, full narrative encounters/Demo/finale and recordings. Actor files still needed: exact112 takes in `Docs/Story/03-Recording-Sheets.md`. Import menu accepts lowercase IDs, keeps old GUIDs. Incompatible two-wheel/compass instructions stay inactive.
@@ -21,7 +23,7 @@ Commands: `python3 Tools/Story/build_catalog.py --check`; focused filters `Lante
 
 ## DEVICE CHECKS PENDING
 
-- Install latest verified lantern APK when build completes; do not launch. Worn72Hz GPU<=11ms/CPU<=9ms with two HIGH lamps, ship/entity/peak storm; budget-first per-vertex fallback if needed. No device-equivalent claims from Editor.
+- Latest **33c2bf35** lantern APK is installed; do not launch automatically. Worn72Hz GPU<=11ms/CPU<=9ms with two HIGH lamps, ship/entity/peak storm; budget-first per-vertex fallback if needed. No device-equivalent claims from Editor.
 - Night2: grip either House lantern, trigger LOW/HIGH/OFF; check stereo glass, warmth and wrist oil bar; short/seated reach and both hands.
 - Hang at F1/F2/F4 hooks, release into water/onto floor; test20s/unreachable recovery. Oil can beside F2 engine log: tilt over filler; one refill shared/night. Walk over dropped can/lantern without head pop.
 - Matchingv35 Mac+Quest: real voice/radios, guest wick/fuel/refill/drop, Night3 valve, rejoin, shared sleep. Existing two-Mac tests are not a worn headset acceptance.

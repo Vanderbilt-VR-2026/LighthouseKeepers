@@ -16,6 +16,6 @@ Screenshots inspected personally: House lanterns, globe/flame, oil shelf, both s
 
 **NOT VERIFIED / unfinished:** worn Quest72Hz/GPU<=11ms/CPU<=9ms, hand comfort/seated reach/true pendulum motion, human voice listening, actual HIGH defense usability and oil balance. Core tests cover2s uninterrupted HIGH and15%cost/20s retreat; the runtime connects it to the existing non-contact apparition. LOW slowdown, protected catch rules, navigating hunter/hiding, Owen and complete story are future work. New actor files remain absent; legacy voices continue.
 
-Network **LK-S5-LANTERN1 / LK-Lab-Coop-v35**. Both clients must update. See `install.json` when packaging completes. Never auto-launch the headset.
+Network **LK-S5-LANTERN1 / LK-Lab-Coop-v35**. Both clients must update. Clean source **33c2bf35** built and installed; ARM64, VR manifest, signature, ZIP and installed SHA verified. `Builds/LighthouseKeepers-Sprint5-Lantern-33c2bf35.apk` (127,514,958bytes), SHA256 `46e5bede06b07abc0ab2dc2b7eea4fe5226a86d6c852433487caa18972c2acd1`. See `install.json` and `Headset.md`. App **not launched**. Never auto-launch the headset.
 
 Repro: `artifacts/s5/lantern/final-check.py`, `crew.py` (new output directory on rerun), `Physical.cs`, `Review.cs`; focused bridge test filters listed above. Peer previous work is backed up under `artifacts/s5/lantern/peer-backup/`; do not reset it blindly.
