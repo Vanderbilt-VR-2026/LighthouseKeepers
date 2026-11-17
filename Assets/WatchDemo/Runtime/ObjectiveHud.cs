@@ -21,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
   public static bool PromptWrenchDown(bool repaired,bool held)=>repaired&&held;
   public static int StationFloor(string station)=>station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
   public static int FloorAt(float y)=>y<3.4f?1:y<6.7f?2:y<10?3:4;
-  public static string FloorDirection(int target,int here,string gap=" ")=>string.Format(PlayerStrings.Get(target>here?"integrated.floorUp":target<here?"integrated.floorDown":"integrated.floorHere"),target);
+  public static string FloorDirection(int target,int here,string gap=" ")=>target==0?KeeperStrings.Get("floor.house"):string.Format(PlayerStrings.Get(target>here?"integrated.floorUp":target<here?"integrated.floorDown":"integrated.floorHere"),target);
   string FloorCaption(int value)=>FloorDirection(watch.State.Director!=null?ObjectiveDirector.Floor((KeeperStep)value):StationFloor(value>=0?watch.State.Definition.tasks[value].stationId:"BED"),FloorAt(head.position.y));
   void Place(){var q=ObjectiveHudSettings.Facing(head.rotation);root.SetPositionAndRotation(head.position+q*Vector3.forward*ObjectiveHudSettings.Distance,q);}
   void LateUpdate(){if(!root||!head||group.alpha<=0)return;var q=ObjectiveHudSettings.Facing(head.rotation);float blend=1-Mathf.Exp(-Time.unscaledDeltaTime*5);root.SetPositionAndRotation(Vector3.Lerp(root.position,head.position+q*Vector3.forward*ObjectiveHudSettings.Distance,blend),Quaternion.Slerp(root.rotation,q,blend));}

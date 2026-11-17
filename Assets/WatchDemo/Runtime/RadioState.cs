@@ -17,6 +17,11 @@ namespace LighthouseKeepers.WatchDemo
         public float LockElapsed {get;private set;}
         public float TransmitElapsed {get;private set;}
         public int CodeProgress {get;private set;}
+        int codeNight;
+        public int CodeLength=>Program.callCode.Length;
+        // Derived from the already replicated night; retry/rejoin keeps the same telegram.
+        public void SetNight(int night)=>codeNight=Math.Max(0,night);
+        public int CodeSymbol(int index)=>Program.callCode[(index+(codeNight>=3?codeNight-3:0))%CodeLength];
         bool power, held, trigger;
         public bool Held=>held;
         public bool Trigger=>trigger;
@@ -54,7 +59,7 @@ namespace LighthouseKeepers.WatchDemo
         public int PressCode(int colour)
         {
             if(ReadOnly||!power||!MainOn||!Locked||Completed||CodeAccepted)return -1;
-            if(colour!=Program.callCode[CodeProgress]){CodeProgress=0;TransmitElapsed=0;CodeRejected?.Invoke();return 0;}
+            if(colour!=CodeSymbol(CodeProgress)){CodeProgress=0;TransmitElapsed=0;CodeRejected?.Invoke();return 0;}
             CodeProgress++;return 1;
         }
         public void SetMicrophone(bool isHeld,bool isTriggered){if(ReadOnly)return;held=isHeld;trigger=isTriggered;if(!held||!trigger)TransmitElapsed=0;}

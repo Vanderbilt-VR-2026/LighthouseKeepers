@@ -13,6 +13,8 @@ namespace LighthouseKeepers.WatchDemo
   public NightScenario Scenario=>Definition.scenario?.configured==true?Definition.scenario:null;
   public bool Campaign=>Scenario!=null;
   public bool RequiresCrewValve=>!Campaign||Array.Exists(Scenario.stations,s=>s.stationId==PipeStation&&s.crewVariant==NightCrewVariant.HoldValve);
+  public bool RadioRelay=>keeperCount>1&&HasRadioRelay;
+  public bool HasRadioRelay=>Campaign&&Array.Exists(Scenario.stations,s=>s.stationId==RadioStation&&s.crewVariant==NightCrewVariant.RelayRadioCode);
   public int CampaignFaultMask=>schedule?.FiredMask??0;
   public double CampaignReliefRemaining=>schedule==null?0:Math.Max(0,schedule.ReliefUntil-Elapsed);
   double CampaignGraceRemaining=>schedule==null?0:Math.Max(0,schedule.GraceUntil-Elapsed);

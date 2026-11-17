@@ -54,7 +54,7 @@
     },
     {
       "key": "step.RadioCode",
-      "text": "Press {0}"
+      "text": "Enter the telegram code"
     },
     {
       "key": "step.RadioTransmit",
@@ -2090,7 +2090,7 @@
     },
     {
       "key": "step.KeepLight",
-      "text": "Aim at ship — beacon wheel, Floor 4"
+      "text": "Keep the beam on the ship"
     },
     {
       "key": "where.SHIP",
@@ -2283,6 +2283,62 @@
     {
       "key": "lobby.dutyHint",
       "text": "Both keepers can use every tool."
+    },
+    {
+      "key": "step.ReadCode",
+      "text": "Read the telegram to your partner"
+    },
+    {
+      "key": "step.RadioCodeLocal",
+      "text": "Read the code beside the radio"
+    },
+    {
+      "key": "step.RadioCodeRelay",
+      "text": "Enter your partner’s telegram code"
+    },
+    {
+      "key": "where.telegram",
+      "text": "Telegram by the House job board"
+    },
+    {
+      "key": "floor.house",
+      "text": "HOUSE"
+    },
+    {
+      "key": "code.telegram",
+      "text": "SALTMERE HARBOR · NIGHT {0}"
+    },
+    {
+      "key": "code.share",
+      "text": "CALL CODE — READ TO YOUR PARTNER"
+    },
+    {
+      "key": "code.local",
+      "text": "CALL CODE — ENTER IN ORDER"
+    },
+    {
+      "key": "code.symbol",
+      "text": "{0} {1}"
+    },
+    {
+      "key": "code.button",
+      "text": "{0}\n{1}"
+    },
+    {
+      "key": "label.Code label 0",
+      "text": "1 RED"
+    },
+    {
+      "key": "label.Code label 1",
+      "text": "2 AMBER"
+    },
+    {
+      "key": "label.Code label 2",
+      "text": "3 BLUE"
+    },
+    {
+      "key": "label.Code label 3",
+      "text": "4 GREEN"
     }
   ]
 }

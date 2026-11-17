@@ -44,10 +44,12 @@ namespace LighthouseKeepers.WatchDemo
             var r=go.GetComponent<Renderer>();r.sharedMaterial=material;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
             found=new Fitting{cap=go.transform,renderer=r};fittings.Add(target,found);return found;
         }
-        Transform Target(KeeperStep step)
+        public Transform Target(KeeperStep step)
         {
             if(step==KeeperStep.TightenBolt)return pipe.PipeIndexForGuide();
-            if(step==KeeperStep.RadioCode){int colour=watch.State.Radio.Program.callCode[Mathf.Min(watch.State.Radio.CodeProgress,watch.State.Radio.Program.callCode.Length-1)];foreach(var c in radio.controls)if(c.codeColour==colour)return c.transform;}
+            if(step==KeeperStep.ReadCode)return CodeSource.Active?CodeSource.Active.transform:null;
+            // All four buttons are equally available. Never illuminate the correct answer.
+            if(step==KeeperStep.RadioCode)return radio.transform;
             return targets.TryGetValue(step,out var target)?target:null;
         }
         public Vector3 HintPosition(KeeperStep step)=>step==KeeperStep.Sleep?watch.BedPosition:Target(step)?Target(step).position:Vector3.positiveInfinity;
@@ -61,7 +63,7 @@ namespace LighthouseKeepers.WatchDemo
             if(now!=stamp||previous!=current){untouched=0;stamp=now;}else if(!watch.WrenchHeld)untouched+=Time.deltaTime;
             if(previous!=current&&ObjectiveDirector.Job(previous)==ObjectiveDirector.Job(current)&&target&&Target(previous) is Transform old&&old!=target)
             {
-                fittings[old].completed=true;sound.transform.position=old.position;if(click)sound.PlayOneShot(click,.5f);if(positive)sound.PlayOneShot(positive,.12f);
+                if(fittings.TryGetValue(old,out var oldFitting))oldFitting.completed=true;sound.transform.position=old.position;if(click)sound.PlayOneShot(click,.5f);if(positive)sound.PlayOneShot(positive,.12f);
                 foreach(var node in new[]{XRNode.LeftHand,XRNode.RightHand}){var device=InputDevices.GetDeviceAtXRNode(node);if(device.isValid)device.SendHapticImpulse(0,.18f,.05f);}
             }
             previous=current;

@@ -8,7 +8,7 @@ namespace LighthouseKeepers.Editor
  public static class M3CampaignBot
  {
   sealed class Crew:ICoopWatchLink {public bool Ready=>true;public bool Send(CoopAction a,float v=0,bool p=false)=>true;public bool RemoteHeld(Component p)=>false;public bool RemoteMicrophone(Component p,out bool t){t=false;return false;}}
-  sealed class Worker {public int actor,floor,targetFloor;public KeeperStep step;public double ready,start;public bool busy;}
+  sealed class Worker {public int actor,floor,targetFloor;public KeeperStep step;public double ready,start;public bool busy;public int[] knownCode;public double heardAt;}
   [Serializable] public sealed class Result {public string night,mode;public bool passed;public double seconds,spare,bedTravelSeconds;public float peakWater,endingFuel,endingSoot;public string cause;public List<string> steps=new();}
   [Serializable] public sealed class Report {public List<Result> runs=new();}
   public static void RunBatch()
@@ -31,6 +31,7 @@ namespace LighthouseKeepers.Editor
   static Result One(DayDefinition[] all,DayDefinition day,bool crew)
   {
    var s=new WatchState(all,day.day,S4Tuning.Current,S4M2Tuning.Current,ImmersionTuning.Current);if(crew){s.Coop=new Crew();s.SetKeeperCount(2);}s.Pressure?.SetCrew(crew&&s.RequiresCrewValve);
+   if(crew)s.Director.DutyForActor=actor=>actor==1?CrewDuty.Machinist:CrewDuty.Lightkeeper;
    var r=new Result{night=day.scenario.id,mode=crew?"duo":"solo"};var workers=crew?new[]{new Worker{actor=1},new Worker{actor=2}}:new[]{new Worker{actor=1}};
    int wrench=0;float water=.02f;const float dt=.1f;double clock=0;
    bool Work(KeeperStep k)=>k!=KeeperStep.KeepLight&&k!=KeeperStep.None&&k!=KeeperStep.HoldValve&&k!=KeeperStep.Sleep&&k!=KeeperStep.Complete&&k!=KeeperStep.Lost;
@@ -69,7 +70,8 @@ namespace LighthouseKeepers.Editor
      else if(next>=KeeperStep.PumpOn&&next<=KeeperStep.LightsOn)s.SetCircuit((int)next-(int)KeeperStep.PumpOn,true);
      else if(next==KeeperStep.RadioPower)s.Radio.ToggleMain();
      else if(next==KeeperStep.RadioTune)s.Radio.Tune(s.Radio.Program.targetMHz);
-     else if(next==KeeperStep.RadioCode)s.Radio.PressCode(s.Radio.Program.callCode[s.Radio.CodeProgress]);
+     else if(next==KeeperStep.ReadCode){if(w.knownCode==null){w.knownCode=new int[s.Radio.CodeLength];for(int i=0;i<w.knownCode.Length;i++)w.knownCode[i]=s.Radio.CodeSymbol(i);w.heardAt=clock+3;}else {w.busy=false;continue;}}
+     else if(next==KeeperStep.RadioCode){if(s.RadioRelay){var reader=Array.Find(workers,x=>x!=w&&x.knownCode!=null&&clock>=x.heardAt);if(reader==null)continue;s.Radio.PressCode(reader.knownCode[s.Radio.CodeProgress]);}else s.Radio.PressCode(s.Radio.CodeSymbol(s.Radio.CodeProgress));}
      else if(next==KeeperStep.RadioTransmit)s.Radio.SetMicrophone(true,true);
      else if(next==KeeperStep.BeaconLight)s.IgniteBeacon(true);
      else if(next==KeeperStep.BeaconAlign)s.AlignBeacon(s.Beacon.Target);

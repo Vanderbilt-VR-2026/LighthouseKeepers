@@ -1,0 +1,73 @@
+{
+  "Summary": {
+    "Total": 8,
+    "Passed": 8,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.DuplicateDutiesRejectSnapshotWithoutMutation",
+      "Status": "Passed",
+      "Duration": 0.0208606,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.HostAloneCanChooseEitherAndGuestReceivesVacantDuty",
+      "Status": "Passed",
+      "Duration": 0.0004853,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.HostDirectorRoutesEngineToMachinistWithoutLockingTools",
+      "Status": "Passed",
+      "Duration": 0.0158233,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.OccupiedDutiesOnlySwapAfterBothKeepersAgree",
+      "Status": "Passed",
+      "Duration": 0.0002288,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.OldLobbyWireVersionRejected",
+      "Status": "Passed",
+      "Duration": 0.0003359,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.SelectingCurrentDutyCancelsPendingSwap",
+      "Status": "Passed",
+      "Duration": 8.49e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.SpoofedAndStaleDutyRequestsCannotMovePartner",
+      "Status": "Passed",
+      "Duration": 7.53e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewDutyTests.StartFreezesDutiesAndRejoinRestoresVacancy",
+      "Status": "Passed",
+      "Duration": 0.000585,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 9.03,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: CrewDutyTests",
+  "success": true,
+  "result": null
+}

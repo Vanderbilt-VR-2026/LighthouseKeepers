@@ -4,7 +4,7 @@ using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo
 {
-    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight }
+    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode }
     // Sole instruction policy. The host assigns jobs; presentation never invents a next action.
     public sealed class ObjectiveDirector
     {
@@ -22,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         public ObjectiveDirector(WatchState owner){state=owner;}
         public KeeperStep ForActor(int actor)=>actorB!=0&&actor==actorB?Second:First;
         public KeeperStep Partner(int actor)=>actorB==0?KeeperStep.None:actor==actorB?First:Second;
-        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.KeepLight;
+        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.ReadCode;
         public void Apply(int first,int second,int a,int b)
         {if(!state.ReadOnly)return;First=(KeeperStep)first;Second=(KeeperStep)second;actorA=a;actorB=b;}
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
@@ -47,6 +47,13 @@ namespace LighthouseKeepers.WatchDemo
                 if(holder!=actorA&&holder!=actorB||state.Campaign&&holder==state.PipeWorkerActor){int worker=state.PipeWorkerActor;var valve=StationPosition!=null?StationPosition("STN_PRESSURE_VALVE"):new Vector3(2.7f,1,2.5f);holder=worker==actorA?actorB:worker==actorB?actorA:Duty(actorA)==CrewDuty.Lightkeeper?actorA:Duty(actorB)==CrewDuty.Lightkeeper?actorB:Vector3.Distance(firstHead,valve)<=Vector3.Distance(secondHead,valve)?actorA:actorB;}
                 First=holder==actorA?KeeperStep.HoldValve:PipeStep(wrenchHeld);Second=holder==actorB?KeeperStep.HoldValve:PipeStep(wrenchHeld);return;
             }
+            // Once the engine and pipe are safe, two keepers have different halves of this task.
+            // A ship window still takes priority above; no clue answer is put in the operator HUD.
+            if(actorB!=0&&state.RadioRelay&&state.Repaired&&state.Power==PowerState.On&&state.Engine?.Settled!=false&&StepForStation(WatchState.RadioStation,true)==KeeperStep.RadioCode)
+            {
+                bool firstOperates=Duty(actorA)==CrewDuty.Lightkeeper||Duty(actorB)!=CrewDuty.Lightkeeper;
+                First=firstOperates?KeeperStep.RadioCode:KeeperStep.ReadCode;Second=firstOperates?KeeperStep.ReadCode:KeeperStep.RadioCode;return;
+            }
             if(roster||now>=assignmentUntil||!Available(jobA)||actorB!=0&&!Available(jobB))
             {
                 float best=float.PositiveInfinity;int a=-1,b=-1;
@@ -62,7 +69,7 @@ namespace LighthouseKeepers.WatchDemo
             if(First==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)First=KeeperStep.KeepLight;
             if(actorB!=0&&Second==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)Second=KeeperStep.KeepLight;
         }
-        KeeperStep OtherShipJob(bool held){for(int i=0;i<state.Definition.tasks.Length;i++)if(Available(i)&&state.Definition.tasks[i].stationId!=WatchState.BeaconStation)return Step(i,held);return KeeperStep.KeepLight;}
+        KeeperStep OtherShipJob(bool held){for(int i=0;i<state.Definition.tasks.Length;i++)if(Available(i)&&state.Definition.tasks[i].stationId!=WatchState.BeaconStation){var step=Step(i,held);return state.RadioRelay&&step==KeeperStep.RadioCode?KeeperStep.ReadCode:step;}return KeeperStep.KeepLight;}
         bool Available(int i)=>i>=0&&i<state.Definition.tasks.Length&&!state.IsDone(state.Definition.tasks[i].stationId)&&!state.IsPending(state.Definition.tasks[i].stationId)&&(state.Power==PowerState.On||state.Definition.tasks[i].stationId==WatchState.PipeStation||state.Definition.tasks[i].stationId==WatchState.GeneratorStation);
         float Cost(int i,Vector3 head,int actor)
         {
@@ -129,22 +136,22 @@ namespace LighthouseKeepers.WatchDemo
             if(step==KeeperStep.HoldValve||step==KeeperStep.ClampValve||step==KeeperStep.TightenBolt||step>=KeeperStep.GrabWrench&&step<=KeeperStep.BoltC)return WatchState.PipeStation;
             if(step==KeeperStep.CheckFuel||step>=KeeperStep.Fuel&&step<=KeeperStep.OpenChoke)return WatchState.GeneratorStation;
             if(step>=KeeperStep.PumpOff&&step<=KeeperStep.ResetBreaker)return "BREAKER";
-            if(step>=KeeperStep.RadioPower&&step<=KeeperStep.RadioTransmit)return WatchState.RadioStation;
+            if(step==KeeperStep.ReadCode||step>=KeeperStep.RadioPower&&step<=KeeperStep.RadioTransmit)return WatchState.RadioStation;
             if(step==KeeperStep.KeepLight)return "SHIP";
             if(step>=KeeperStep.BeaconLight&&step<=KeeperStep.BeaconWipe)return WatchState.BeaconStation;
             return step==KeeperStep.Sleep?"BED":"";
         }
-        public static int Floor(KeeperStep step){string id=Job(step);return id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
+        public static int Floor(KeeperStep step){if(step==KeeperStep.ReadCode)return 0;string id=Job(step);return id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
         public static string Location(KeeperStep step)
         {
-            string key=step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
+            string key=step==KeeperStep.ReadCode?"where.telegram":step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
             return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
         }
-        public static string Button(KeeperStep step)=>step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
+        public static string Button(KeeperStep step)=>step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
         public static int Hint(KeeperStep step){string id=Job(step);return id==WatchState.PipeStation?7:id==WatchState.GeneratorStation?8:id=="BREAKER"?9:id==WatchState.BeaconStation?10:id==WatchState.RadioStation?11:id=="BED"?12:0;}
         public string StationInstruction(string station) {
-            if(Job(First)==station)return Instruction(First);
-            if(Job(Second)==station)return Instruction(Second);
+            if(First!=KeeperStep.ReadCode&&Job(First)==station)return Instruction(First);
+            if(Second!=KeeperStep.ReadCode&&Job(Second)==station)return Instruction(Second);
             return "";
         }
         public string Instruction(KeeperStep step)
@@ -153,7 +160,7 @@ namespace LighthouseKeepers.WatchDemo
             if(step==KeeperStep.Prime)text=string.Format(text,Mathf.Max(0,state.PowerTuning.primerSqueezes-state.Engine.Primer));
             if(step==KeeperStep.Starter)text=string.Format(text,Mathf.Max(0,state.PowerTuning.starterPulls-(state.Engine?.Pulls??state.StarterPulls)));
             if(step==KeeperStep.RadioTune)text=string.Format(text,state.Radio.Program.targetMHz.ToString("F1"));
-            if(step==KeeperStep.RadioCode)text=string.Format(text,KeeperStrings.Get("colour."+state.Radio.Program.callCode[Mathf.Min(state.Radio.CodeProgress,state.Radio.Program.callCode.Length-1)]));
+            if(step==KeeperStep.RadioCode)text=KeeperStrings.Get(state.RadioRelay?"step.RadioCodeRelay":"step.RadioCodeLocal");
             return text;
         }
     }

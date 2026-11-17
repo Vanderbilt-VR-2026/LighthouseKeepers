@@ -23,7 +23,7 @@ namespace LighthouseKeepers.Editor {
       case KeeperStep.ResetBreaker:s.ResetBreaker();break;
       case KeeperStep.RadioPower:s.Radio.ToggleMain();break;
       case KeeperStep.RadioTune:s.Radio.Tune(s.Radio.Program.targetMHz);Advance(18);break;
-      case KeeperStep.RadioCode:s.Radio.PressCode(s.Radio.Program.callCode[s.Radio.CodeProgress]);Advance(1);break;
+      case KeeperStep.RadioCode:s.Radio.PressCode(s.Radio.CodeSymbol(s.Radio.CodeProgress));Advance(1);break;
       case KeeperStep.RadioTransmit:s.Radio.SetMicrophone(true,true);Advance(4);s.Radio.SetMicrophone(false,false);break;
       case KeeperStep.BeaconLight:s.IgniteBeacon(true);break;
       case KeeperStep.BeaconAlign:Advance(14);s.AlignBeacon(s.Beacon.Target);break;

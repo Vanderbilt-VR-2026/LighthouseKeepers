@@ -1,29 +1,35 @@
 # Active direction — November 17: two keepers first
 
-The user redirected the next work toward the **core paired gameplay**, before more horror production. Read [CoopCoreLoop.md](CoopCoreLoop.md) first. It records the concrete design and source audit; this checkpoint changes planning, not the installed game.
+The user redirected the next work toward the **core paired gameplay**, before more horror production. Read [CoopCoreLoop.md](CoopCoreLoop.md) first. It records the concrete design and source audit; the implementation/evidence checkpoint below takes precedence over older entries.
 
 - Two lobby duties: **Lightkeeper** (ships/beacon/radio) and **Machinist** (engine/pump/repairs). Everyone may use every tool. One human gets a simple scripted partner in the other duty; the extended Owen story/animation treatment remains stretch.
 - Next playable target: one short crew scenario with useful split information, physical support, a shared ship payoff and reachable rescue. Restore basic companion work to Sprint 5; do not continue directly into hunter production from the older checkpoint below.
-- Actual gaps: relay variants are metadata; the radio HUD still reveals code answers; no runtime companion or downed/revive flow. The existing valve, lantern and hunter/navigation foundations can be reused.
+- Remaining gaps: engine/bearing relay, runtime companion and downed/revive. The radio relay is implemented below. Existing valve, lantern and navigation foundations can be reused.
 - Keep the simple Saltmere/two-keepers premise, four notes and optional visual clues. No expanded lore/readable system or new large voice recording pass. Companion lines stay held until a visible, working bot exists.
 
 ## Implemented this continuation
 
 - Caption-only harbor narration: no AI/legacy fallback speech or PA static; full text with reading time and B replay. Assets preserved for the final recording pass. 30 focused checks and a 24-second actual Play Mode silence/caption probe pass; `Docs/Verification/S5/CrewCore/Captions/`. New APK not yet built. Current role/bot implementation work follows below.
 
-- Lobby duties implemented and checked: host assignment, mutual swaps, per-player routing; 18 focused tests, offline start and live two-Editor shared repair/sleep. `Docs/Verification/S5/CrewCore/Roles/`. Network **LK-S5-CREW1 / v36**. Live reconnect/headset check pending.
+- Lobby duties implemented and checked: host assignment, mutual swaps, per-player routing; 18 focused tests, offline start and live two-Editor shared repair/sleep. `Docs/Verification/S5/CrewCore/Roles/`. Network was **LK-S5-CREW1 / v36**. Live reconnect subsequently passed in the relay fixture; headset acceptance remains pending.
+
+- House → F4 radio relay implemented: numbered symbols, no HUD/correct-button answer, stable night/retry code, wrong-code recovery, actual leave/rejoin with partial code and duties. Four new relay tests plus related focused tests pass; live two-Editor relay/mic completes. Final paper placement screenshots inspected. Evidence: `Docs/Verification/S5/CrewCore/Relay/`. Current network **LK-S5-RELAY1 / LK-Lab-Coop-v37**.
+- Instruction timing model with duties passes solo Nights 1–5 and duo Nights 1–3/Demo. Duo N4/N5 and solo Demo still fail identically with the new relay disabled. These are open campaign pacing/model investigations, not a claim of whole-campaign acceptance.
+- November 17 user steering: finish paired loop first, then remaining issues in dependency order. Final voice recordings LAST; captions remain active and no AI voice plays. New requested replacement: **#137, three timed physical starter pulls**, replacing primer/choke after comparison in headset. Keep current controls until replacement passes. User plans detailed playtest 18:00–20:00; do not launch Quest automatically.
 
 ## Next implementation order
 
-1. Lobby duties (#136) implemented; remaining acceptance: live rejoin and worn headset UI. Continue with the relay next.
-2. Actual House telegram → F4 radio information split, no answer in operator HUD/PA; pipe support and meaningful engine/panel coordination. Neither role is a passive reader all night.
+1. Lobby duties (#136) and telegram relay portion of #112 implemented. Remaining acceptance: worn headset UI and paired usefulness. Engine/panel relay must use the pending timed-starter design (#137), not add another primer/choke dependency.
+2. Preserve current valve/radio relay; next deliver the bounded partner below, then rescue. Investigate campaign model failures in #109/#110 before claiming all-night balance. Neither duty should be a passive reader all night.
 3. Bounded solo partner: follow/wait/help/work, actual routes and clue reading, support holds/power/light, both human duties, offline parity and safe bot/human handoff. No instant remote repairs or tool-owner duplication.
 4. Common downed/hand-revive for human or bot rescue; measure F4→F1 reach against the proposed 40-second window. Then integrate a warned hunter; never enable catches before escape/recovery works.
 5. Muted Editor checks and matching two-Mac run, clean build/install without launch, then a paired headset playtest. Expand across nights only after the short loop is understandable and fun.
 
 ## Delivery / DEVICE CHECKS PENDING
 
-Caption/role source has changed; APK not rebuilt yet. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles are implemented; bot, split clues and revive remain upcoming.
+Caption/role/relay source has changed; APK not rebuilt yet. Latest installed APK remains **a270bea1**, **LK-S5-LANTERN1 / LK-Lab-Coop-v35**, not launched by the agent. All prior lantern/body/voice/GPU checks remain pending. Roles and radio split are implemented; bot, engine/bearing information split and revive remain upcoming.
+
+Local Git workaround (iCloud evicted Desktop pack files): prefix every Git/build script with `GIT_OBJECT_DIRECTORY=/Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/loop/git-recovery/remote.git/objects`. M3 worktree metadata was rebuilt after preserving placeholders; original branches/main checkout were not changed. Do not delete the backup objects or placeholder files. New commit objects are also copied back into the original common object directory.
 
 Local audit: `git status --short`; `rg -n 'NightCrewVariant|crewVariant|informationSite' Assets --glob '*.cs'`; inspect `CrewLobbyBoard.cs`, `FusionLobbyState.cs`, `LobbyPlayer.cs`, `WatchState.Campaign.cs`, `ObjectiveDirector.cs`, `WatchDemoCoop.cs`. Existing bridge/build paths and evidence remain below. Keep Editors muted; never rebuild or install unchanged runtime just for this documentation commit.
 

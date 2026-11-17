@@ -28,7 +28,7 @@ Deliver three pair interactions before expanding across all five nights. Teach e
 | Pair interaction | What one player knows/does | What the other knows/does | Recovery / fairness |
 | --- | --- | --- | --- |
 | Pipe / pressure | Lightkeeper holds the adjacent valve and reads the pressure response. | Machinist sees active bolt, grips wrench and pulls to tighten. | Release surges pressure and pauses progress; completed work stays. Neither player just waits for a long bar. |
-| Engine / power panel | Lightkeeper reads the panel's starting indication and sees whether the circuit receives power. | Machinist operates the physical fuel, primer, choke and cord controls on the engine. | Retain the accepted physical sequence. The observer's information must affect a real decision; do not invent a remote gauge that only repeats a fixed HUD instruction. Introduce one variable at a time, with feedback and no instant punishment for a wrong call. |
+| Engine / power panel | Lightkeeper reads the panel's starting indication and sees whether the circuit receives power. | Machinist fuels and operates the physical starter. The requested replacement is three timed starter pulls (#137). | Keep the existing sequence working until the timed-starter replacement passes. The observer's information must affect a real decision; do not invent a remote gauge that only repeats a fixed HUD instruction. Introduce one variable at a time, with feedback and no instant punishment for a wrong call. |
 | Ship / radio | Lightkeeper sees the ship, keeps the beam on it and sends the report. | Machinist reads the House telegram and repeater, reports code/bearing and balances pump versus beacon power. | Clear numbers/symbols, repeatable information, handheld radios that work across floors. An off-target beam gives a warning and recoverable window. A fixed compass call must match the actual sea path. |
 
 The telegram is the first information split: the House holds the code, F4 holds the input. **The operator HUD and harbor master must not print/speak the answer.** They may say where the clue is and whom to ask. Keep code clues in the world for both humans to inspect; no magical role-only invisibility. Vary the short code between watches, hold it stable for retries, and use symbols as well as color.
@@ -100,11 +100,11 @@ Record paired human playtest data: time until first useful callout; time spent u
 | Area | Actual status | Evidence / relevant source |
 | --- | --- | --- |
 | Valve + wrench | Live two-person hold/operate gate; accepted physical wrench. | `WatchState.Connected.cs`, `WatchDemoCoop.cs`, earlier connected/co-op evidence. |
-| Role selection | Not implemented; roster currently stores host/name/readiness only. | `LobbyPlayer.cs`, `FusionLobbyState.cs`, `CrewLobbyBoard.cs`. |
-| Split clues | `NightCrewVariant` and information locations are authored, but only valve selection consumes the variants at runtime. Radio objective currently reveals the next code color. | `NightScenario.cs`, `WatchState.Campaign.cs`, `ObjectiveDirector.Instruction`. |
+| Role selection | Implemented: duties, mutual swaps, host assignment, start/rejoin, soft objective preferences. Live two-Editor tests pass; worn acceptance pending. | `LobbyPlayer.cs`, `FusionLobbyState.cs`, `CrewLobbyBoard.cs`. |
+| Split clues | Radio telegram relay implemented and transport-tested; numbered buttons, no answer in HUD/glow. Engine/panel and bearing relay remain pending. | `NightScenario.cs`, `WatchState.Campaign.cs`, `ObjectiveDirector.Instruction`. |
 | Solo companion | No runtime companion. | Latest `Next.md`, story trigger holds; #135. |
 | Revive | A 40-second tuning value exists, but no live downed/hand-revive flow. | `HorrorTuning.cs`, current `WatchSnapshot` and command adapter. |
 | Hunter | Tested isolated FSM, baked routes and rig; not attached to gameplay or replicated. | `Docs/Verification/S5/HunterFoundation/`. |
 | Lantern | Existing shared oil/wick/hooks/refill and apparition stun; worn acceptance still pending. | `Docs/Verification/S5/Lantern/`. |
 
-This design update changes **no runtime state, APK or network protocol**. Installed build remains a270bea1, LK-S5-LANTERN1 / v35. No new gameplay or headset test is claimed.
+Current source: LK-S5-RELAY1 / v37. Evidence in `Docs/Verification/S5/CrewCore/`. Installed binary is tracked separately in Next.md; no headset acceptance is inferred from Editor tests. Voice recordings are last; all guidance is caption-only while mechanics are changing. User requested timed generator pulls in #137; add interaction feedback everywhere, while keeping spoken guidance selective to avoid the previous narration spam.
