@@ -18,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.RecoveryGrip)return value==(int)value&&recoveryView?recoveryView.Target((int)value):null;
             if(action==CoopAction.LanternWick)return LanternTarget(value);
             if(action==CoopAction.FlareFire)return FlareTarget(value);
             if(action==CoopAction.HandheldRadio)return value==(int)value&&value>=0&&value<2&&crewRadios[(int)value]?crewRadios[(int)value].Grab:null;

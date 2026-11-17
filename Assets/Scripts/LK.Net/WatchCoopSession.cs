@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     // Shared Lab commands and snapshots use Will's existing authenticated Fusion channel.
-    public sealed class WatchCoopSession : MonoBehaviour, ICoopKeeperDuties, ICoopKeeperLocations, ICoopKeeperViews, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
+    public sealed class WatchCoopSession : MonoBehaviour, ICoopKeeperDuties, ICoopKeeperLocations, ICoopKeeperViews, ICoopRecoveryHands, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
     {
         const int HelloKind=40,SnapshotKind=41,CommandKind=42,ResultKind=43;
         const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
@@ -72,6 +72,7 @@ namespace LighthouseKeepers.Net
             }
             return CrewDuty.None;
         }
+        public bool HandForDuty(CrewDuty duty,out Vector3 hand){hand=default;if(!channel||!channel.Runner||!poses)return false;foreach(var p in channel.Runner.ActivePlayers)if(Duty(p.RawEncoded)==duty&&poses.Sample(p.RawEncoded,out var pose)){hand=pose.Left;return true;}return false;}
         public bool View(int actor,out Vector3 forward) {forward=Vector3.forward;if(!poses||!poses.Sample(actor,out var pose))return false;forward=pose.HeadRotation*Vector3.forward;return true;}
         public bool NearKeeper(Vector3 point,float radius)
         {
@@ -223,6 +224,14 @@ namespace LighthouseKeepers.Net
         int Apply(int actor,Command c)
         {
             if(!Ready)return -1;
+            if(watch is ICoopRecoveryView recovery){
+                if(c.action==CoopAction.RecoveryDrill)return c.value==0&&poses.Sample(actor,out _)&&recovery.RescueDrill(actor)?1:-1;
+                if(c.action==CoopAction.RecoveryGrip){
+                    if(c.value!=1&&c.value!=2||!poses.Sample(actor,out var hands))return -1;
+                    return recovery.RecoveryCommand(actor,(int)c.value,c.pressed,hands.Left,hands.Right)?1:-1;
+                }
+                if(recovery.KeeperDown(actor)&&c.action!=CoopAction.Retry&&c.action!=CoopAction.StatusRequest)return -1;
+            }
             if(c.action==CoopAction.Bed)
             {
                 if(!poses.Sample(actor,out var pose)||Vector3.Distance(pose.Head,watch.BedPosition)>=1.8f)return -1;

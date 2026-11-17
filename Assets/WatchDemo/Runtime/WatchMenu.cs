@@ -90,12 +90,17 @@ namespace LighthouseKeepers.WatchDemo
             WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
             soundPage=panel.transform.Find("Sound settings page");
             AddCompanionControls();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            var drill=Action("DevRescueDrill",KeeperStrings.Get("rescue.drill"),285,()=>{watch.RequestRescueDrill();Close();});
+            drill.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
+            ((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);
+#endif
             panel.SetActive(false);
         }
 
         void AddCompanionControls()
         {
-            var entry=companionOrders=Action("CompanionOrders",KeeperStrings.Get("companion.orders"),255,()=>{});
+            var entry=companionOrders=Action("CompanionOrders",KeeperStrings.Get("companion.orders"),235,()=>{});
             var page=Rect("Companion page",Vector2.zero,((RectTransform)panel.transform).sizeDelta);companionPage=page;page.gameObject.SetActive(false);
             var saved=new Dictionary<GameObject,bool>();
             foreach(var choice in new[]{CompanionCommand.Work,CompanionCommand.Follow,CompanionCommand.Wait,CompanionCommand.Help}){
@@ -174,6 +179,7 @@ namespace LighthouseKeepers.WatchDemo
                 string.Format(KeeperStrings.Get("menu.day_status"),state.Day);
             if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
             else if(Book)status.text=state.Failed?(state.HighWaterFailed?KeeperStrings.Get("menu.old_flood"):state.BeaconDarkFailed?KeeperStrings.Get("menu.old_beacon"):KeeperStrings.Get("menu.old_time")):state.Complete&&!state.HasNextDay?KeeperStrings.Get("menu.survived"):string.Format(KeeperStrings.Get("menu.night_status"),state.Day);
+            if(state.Recovery.Failed)status.text=state.FailureMessage;
             if(state.Sea.lost)status.text=KeeperStrings.Get("loss.sea");
             if(state.Ships?.Lost==true)status.text=state.FailureMessage;
             // Host snapshots can refresh every frame. Do not bring main-page controls

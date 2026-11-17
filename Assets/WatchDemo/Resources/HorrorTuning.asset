@@ -59,6 +59,12 @@ MonoBehaviour:
   soloTimeLost: 45
   reviveSeconds: 40
   soloCatchLimit: 2
+  reviveHoldSeconds: 3
+  reviveGripLease: 0.35
+  reviveGraceSeconds: 10
+  reviveHandReach: 0.28
+  reviveFadeSeconds: 0.45
+  recoveryFloorPosition: {x: 2.6, y: 0.04, z: 0}
   calmBpm: 62
   panicBpm: 140
   clearFog: 0.02

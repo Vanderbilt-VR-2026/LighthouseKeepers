@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo {
   WatchDemoController watch;Transform head;CrewCompanionTuning tuning;HunterNavigation navigation;NavMeshAgent agent;
   GameObject actor;CrewAvatarModel model;TextMeshPro slate;Transform slateRoot;Material slateMaterial;
   readonly RaycastHit[] floorHits=new RaycastHit[24];
-  WatchPressureValve valve;CompanionCommand command;float nextPath,readFor,still;Vector3 lastPosition,goal;bool hasGoal,reading,holding;int night;string learnedCode="",statusKey="companion.follow",shownSlate;
+  WatchPressureValve valve;CompanionCommand command;float nextPath,readFor,still;Vector3 lastPosition,goal;bool hasGoal,reading,holding,rescuing;CompanionCommand rescueReturn;Vector3 rescueHand;int night;string learnedCode="",statusKey="companion.follow",shownSlate;
   public bool Active=>actor&&actor.activeSelf;
   public string LearnedCode=>learnedCode;
   public string Status=>KeeperStrings.Get(statusKey);
@@ -55,6 +55,20 @@ namespace LighthouseKeepers.WatchDemo {
    if(!Active){if(Time.time<nextPath)return;nextPath=Time.time+3;if(!Spawn())return;}
    if(night!=s.Day){night=s.Day;learnedCode="";SetCommand(CompanionCommand.Work);}
    if(watch.Sleeping||s.Failed){Release();statusKey="companion.wait";return;}
+   bool rescueNeeded=s.Recovery.AnyDown;
+   if(rescueNeeded&&!rescuing){rescueReturn=command;Release();hasGoal=false;nextPath=0;}
+   else if(!rescueNeeded&&rescuing)SetCommand(rescueReturn);
+   rescuing=rescueNeeded;
+   if(rescuing){
+    if(holding)Release();reading=false;readFor=0;statusKey="companion.rescueGoing";
+    var rescue=watch.GetComponent<CrewRecovery>();
+    if(rescue.HandPoint((int)watch.CurrentDuty,out var hand)){
+     var toward=Vector3.ProjectOnPlane(Position-hand,Vector3.up).normalized;if(toward.sqrMagnitude<.1f)toward=Vector3.right;
+     MoveTo(hand+toward*.65f);
+     if(Vector3.Distance(Position+Vector3.up,hand)<tuning.reach){agent.ResetPath();rescueHand=Vector3.MoveTowards(Position+Vector3.up*1.15f,hand,tuning.reach);if(watch.CompanionRescue(rescueHand))statusKey="companion.rescuing";}
+    }
+    CheckRoute();return;
+   }
    if(command==CompanionCommand.Wait){Release();if(statusKey!="companion.blocked")statusKey="companion.wait";return;}
    reading=false;bool support=command==CompanionCommand.Work||command==CompanionCommand.Help;
    if(support&&s.Pressure?.CrewRequired==true&&!s.Repaired&&valve&&(watch.CurrentInstruction==KeeperStep.TightenBolt||Vector3.Distance(head.position,valve.transform.position)<3)){
@@ -73,7 +87,9 @@ namespace LighthouseKeepers.WatchDemo {
      if(Vector3.Distance(Position+Vector3.up*1.6f,head.position)>tuning.followDistance+.3f)MoveTo(head.position+offset);else {agent.ResetPath();hasGoal=false;}
     }
    }
-   var moved=Position-lastPosition;
+   CheckRoute();
+  }
+  void CheckRoute(){var moved=Position-lastPosition;
    if(agent.hasPath&&!agent.pathPending&&moved.sqrMagnitude<.000001f)still+=Time.deltaTime;else still=0;
    if(!navigation.SegmentClear(lastPosition,Position)||still>tuning.stuckSeconds){agent.Warp(lastPosition);SetCommand(CompanionCommand.Wait);statusKey="companion.blocked";}
    lastPosition=Position;
@@ -84,10 +100,11 @@ namespace LighthouseKeepers.WatchDemo {
    if(!agent.hasPath){var look=Vector3.ProjectOnPlane((holding&&valve?valve.transform.position:head.position)-Position,Vector3.up);if(look.sqrMagnitude>.01f){rotation=Quaternion.RotateTowards(rotation,Quaternion.LookRotation(look),120*Time.deltaTime);actor.transform.rotation=rotation;forward=rotation*Vector3.forward;right=rotation*Vector3.right;}}
    float swing=Mathf.Sin(Time.time*5)*Mathf.Clamp01(agent.velocity.magnitude)*.10f;
    var left=Position+Vector3.up*1.05f-right*.22f+forward*(.32f+swing);var r=Position+Vector3.up*1.05f+right*.22f+forward*(.32f-swing);
-   if(holding&&valve)r=valve.transform.position+valve.transform.forward*.09f;
-   model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation,RightRotation=rotation,LeftGrip=.5f,RightGrip=holding?1:.5f},Time.deltaTime,Position.y);
+   if(rescuing&&statusKey=="companion.rescuing")r=rescueHand;
+   else if(holding&&valve)r=valve.transform.position+valve.transform.forward*.09f;
+   model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation,RightRotation=rotation,LeftGrip=.5f,RightGrip=holding||rescuing?1:.5f},Time.deltaTime,Position.y);
    slateRoot.SetPositionAndRotation((holding?left:(left+r)*.5f)+forward*.04f,rotation*Quaternion.Euler(0,180,0));
-   string content=learnedCode.Length>0&&!holding&&!reading?learnedCode:Status;
+   string content=learnedCode.Length>0&&!holding&&!reading&&!rescuing?learnedCode:Status;
    if(shownSlate!=content){shownSlate=content;slate.text=KeeperStrings.Get("companion.name")+"\n"+content;}
   }
   // The companion shares the controller lifetime. Scene teardown must not publish changes

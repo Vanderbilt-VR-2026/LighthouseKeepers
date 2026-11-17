@@ -34,6 +34,9 @@ namespace LighthouseKeepers.Core.Progression
         [Header("Catch / recovery")]
         public float soloTimeLost=45,reviveSeconds=40;
         public int soloCatchLimit=2;
+        public float reviveHoldSeconds=3,reviveGripLease=.35f,reviveGraceSeconds=10;
+        public float reviveHandReach=.28f,reviveFadeSeconds=.45f;
+        public Vector3 recoveryFloorPosition=new(2.6f,.04f,0);
         [Header("Fear / voice")]
         public float calmBpm=62,panicBpm=140,clearFog=.02f,darkFog=.06f,highFear=.6f;
         public float antagonistSpacing=90,harborQuietBeforeWhisper=4;

@@ -1,0 +1,73 @@
+{
+  "Summary": {
+    "Total": 8,
+    "Passed": 8,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.AStaleGripOrSelfRescueCannotFinish",
+      "Status": "Passed",
+      "Duration": 0.011393,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.BothDownLosesAndBotIsNotACatchableEscort",
+      "Status": "Passed",
+      "Duration": 0.0003687,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.DisconnectReleasesHoldAndAbsentTargetWithoutFailingRemainingKeeper",
+      "Status": "Passed",
+      "Duration": 0.0002449,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.MalformedFrameRejectedWithoutChangingReplica",
+      "Status": "Passed",
+      "Duration": 0.0001382,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.ReleaseRetainsWorkButDeadlineAndLeaseKeepRunning",
+      "Status": "Passed",
+      "Duration": 0.0018433,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.ReplicaCannotDownTickHoldOrChangeRosterAndSnapshotsAreCopies",
+      "Status": "Passed",
+      "Duration": 0.0003585,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.RescueLossReportsItsCauseAndRetryRestoresTheNight",
+      "Status": "Passed",
+      "Duration": 0.0171665,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.WatchLateJoinRestoresDownProgressAndRetryClearsIt",
+      "Status": "Passed",
+      "Duration": 0.0056275,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 9.02,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: CrewRecoveryTests",
+  "success": true,
+  "result": null
+}
