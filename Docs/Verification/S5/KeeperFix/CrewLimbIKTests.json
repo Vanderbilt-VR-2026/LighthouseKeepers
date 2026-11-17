@@ -1,0 +1,59 @@
+{
+  "Summary": {
+    "Total": 6,
+    "Passed": 6,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLimbIKTests.AnActiveFootstepCannotBeRetargetedAndTeleportResetCancelsIt",
+      "Status": "Passed",
+      "Duration": 0.0007146,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLimbIKTests.APlantedFootStaysStillAndAStepLiftsThenLandsExactly",
+      "Status": "Passed",
+      "Duration": 0.0001874,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLimbIKTests.FoldedAndCollinearTargetsStillProduceFiniteValidBones",
+      "Status": "Passed",
+      "Duration": 0.0005046,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLimbIKTests.InvalidArtistLengthsAndNonfiniteTargetsAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0007839,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLimbIKTests.OutOfReachTargetsRespectTheMaximumStretch",
+      "Status": "Passed",
+      "Duration": 0.0004679,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewLimbIKTests.ReachableHandKeepsBothSegmentLengthsAndBendsTowardThePole",
+      "Status": "Passed",
+      "Duration": 0.0003268,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.32,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: CrewLimbIKTests",
+  "success": true,
+  "result": null
+}

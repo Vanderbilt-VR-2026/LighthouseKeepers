@@ -19,6 +19,31 @@ namespace LighthouseKeepers.Tests.M3
             float prior=Step(0,0,false);for(int i=0;i<20;i++){float value=Step(0,0,false);Assert.LessOrEqual(value,prior);prior=value;}Assert.AreEqual(1,prior);
             for(int i=0;i<40;i++)Assert.AreEqual(1,Step(i%2==0?1:-1,i%2==0?-1:1,true,false));
         }
+        [Test]public void NaturalArmSwingsBuildRunningThroughBriefReversalPauses()
+        {
+            var type=Runtime("ArmSwingRun+Gait");var gait=Activator.CreateInstance(type);var tick=type.GetMethod("Tick");
+            float speed=1; const float dt=1f/72;
+            // Opposite arm pendulums include zero velocity at both ends; this is not continuous digital input.
+            for(int i=0;i<360;i++)
+            {
+                float velocity=.75f*Mathf.Sin(i*dt*Mathf.PI*2*1.3f);
+                speed=(float)tick.Invoke(gait,new object[]{velocity,-velocity,true,true,dt});
+            }
+            Assert.Greater(speed,1.45f);
+            for(int i=0;i<72;i++)speed=(float)tick.Invoke(gait,new object[]{0f,0f,false,true,dt});
+            Assert.AreEqual(1,speed);
+        }
+        [Test]public void SwingSignalFollowsPlayerFacingRatherThanOriginForward()
+        {
+            var method=Runtime("ArmSwingRun+Gait").GetMethod("ForwardSpeed");
+            foreach(float yaw in new[]{0f,90f,180f,270f})
+            {
+                var facing=Quaternion.Euler(30,yaw,0)*Vector3.forward;
+                var velocity=Quaternion.Euler(0,yaw,0)*new Vector3(0,.2f,.8f);
+                Assert.That((float)method.Invoke(null,new object[]{velocity,facing}),Is.EqualTo(.8f).Within(.001f));
+                Assert.That((float)method.Invoke(null,new object[]{Vector3.up,facing}),Is.EqualTo(0).Within(.001f));
+            }
+        }
         [Test]public void BriefEncounterEndsWithoutWaitingTwelveSecondsAndReplicasSharePose()
         {
             var traces=new SabotageState(new NightScenario{faults=new[]{new NightFault{stationId="engine"}}});traces.Warn(0,80);traces.Broke(0,83);

@@ -1,7 +1,9 @@
 using UnityEngine;
 namespace LighthouseKeepers.Player {
+// Retained for old scene references/validation. The rigged keeper now supplies body presence.
+// Hide even serialized scene overrides: the old cube otherwise appears as a board through the coat.
 public sealed class BodyPresence:MonoBehaviour {
  [SerializeField] Transform head;
  [SerializeField] float yawSmoothing=3;
- void LateUpdate(){if(!head)return;transform.position=head.position-Vector3.up*0.55f-head.forward*0.08f;var forward=Vector3.ProjectOnPlane(head.forward,Vector3.up);if(forward.sqrMagnitude>0.2f)transform.rotation=Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(forward),1-Mathf.Exp(-yawSmoothing*Time.deltaTime));}
+ void Awake(){foreach(var visual in GetComponentsInChildren<Renderer>(true))visual.enabled=false;enabled=false;}
 }}

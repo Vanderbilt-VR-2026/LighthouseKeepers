@@ -75,6 +75,12 @@ namespace LighthouseKeepers.Net.Tests
                 Assert.That(avatar.Joint("LeftFoot").position.x,Is.EqualTo(Location.x+2.9f).Within(.02f));
             }finally{Object.DestroyImmediate(step);}
         }
+        [Test] public void LegacyChestProxyCannotShowThroughTheKeeper()
+        {
+            var player=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_LighthouseKeepers/Prefabs/Player/LK_QuestPlayer.prefab");
+            var proxy=player.transform.Find("Stabilized chest proxy");Assert.NotNull(proxy);
+            Assert.IsFalse(proxy.GetComponent<Renderer>().enabled);
+        }
         [Test] public void FirstPersonSkinHasNoFaceOrGlovesAndBothNetworkRolesUseNewModel()
         {
             var local=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Avatars/Resources/PF_HarborKeeperBody.prefab");

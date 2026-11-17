@@ -1,3 +1,32 @@
+# Active checkpoint — November 16 keeper headset correction
+
+Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main untouched. Editors muted; **never auto-launch Quest**. Network remains **LK-S5-DREAD1 / LK-Lab-Coop-v33**; no new synced state.
+
+## Done
+
+- Reproduced the headset startup-height failure: guessed floor stays airborne after a transient HMD height. Local skin now takes the locomotion floor, waits for tracked/stable height, scales to standing stature and preserves crouching. Sleeves follow actual glove wrists; original tracked hand rotations/inputs unchanged.
+- Identified the flat "board" as the legacy **Stabilized chest proxy**. Disabled in the shared prefab, authoring source and old scene overrides; no new avatar mesh change needed.
+- Arm-swing running: late hand binding, empty squeezed grips allowed, normal reversal pauses accepted, direction follows head yaw. Existing +60% easing and no run while holding props/standing retained.
+- 27 focused EditMode +3 PlayMode checks pass. Inspected real-lobby graphics at1.35/1.65/1.9m eye height, turns and crouching. Solo Night1 physical pipe/sleep→Night2 passes. Two-Mac avatar/movement/shared pipe/shared sleep→Night2 passes with test Editors capped72fps. First uncapped attempt disconnected; no networking code changed. Human voice listening unverified (muted).
+- Evidence: `Docs/Verification/S5/KeeperFix/`. Diagnostic630fe719 was not a fix; new correction build/install receipt follows this source commit.
+
+## Next actions / exact commands
+
+1. Clean-source APK: `python3 artifacts/s5/keeper-fix/build-correction.py` (close the M3 Editor first). Restore only the three backed-up generated build settings from `artifacts/s5/keeper-fix/correction-build-backup/` afterward.
+2. Verify/install, never launch: `python3 artifacts/s5/keeper-fix/install.py`. Capture logcat before asking user to open the app (`KEEPER_BODY_FIXED`, `ARM_SWING_RUN`).
+3. Get user acceptance, update delivery receipt/PR89/issue129. Keep issue129 open until headset fit is accepted. No merge.
+4. Actual hunter/navigation/hiding and remaining campaign polish are still unfinished. Do not expand gameplay while this regression is under review.
+
+## DEVICE CHECKS PENDING
+
+- User opens correction, stands naturally in lobby for2s, looks down: no flat proxy board or lifted legs; sleeves attach to original gloves.
+- Raise each hand, crouch/stand, turn, recenter, restart. Standing must not look crouched. Check seated start then standing refit.
+- PLAY → HOST / PLAY ALONE → START. In the House, empty hands, hold left stick forward and swing arms alternately; squeezing empty grips is okay. Test while facing another direction; speed eases back when swings stop. Run is not active in lobby.
+- Original watch/hands/wrench grip intact; two matching clients check remote body, shared task/sleep/rejoin and human voice.
+- Worn72Hz GPU≤11ms/CPU main≤9ms and stereo comfort remain unverified.
+
+---
+
 # Active checkpoint — November 16 keeper body
 
 Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main untouched. Editors muted; never auto-launch Quest. Network remains **LK-S5-DREAD1 / LK-Lab-Coop-v33** (avatar adds no replicated fields).
