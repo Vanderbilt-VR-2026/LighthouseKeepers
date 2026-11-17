@@ -54,10 +54,10 @@ def main():
    def measured_output():
     log=subprocess.run([str(ffmpeg),'-hide_banner','-nostdin','-i',str(dest),'-af','loudnorm=print_format=json','-f','null','-'],capture_output=True,text=True,check=True).stderr
     return json.JSONDecoder().raw_decode(log[log.rindex('{'):])[0]
-   actual=measured_output();gain=min(target-float(actual['input_i']),-1.5-float(actual['input_tp']))
+   actual=measured_output();gain=target-float(actual['input_i'])
    if abs(gain)>.2:
     corrected=cache/(name+'-level.wav')
-    subprocess.run([str(ffmpeg),'-hide_banner','-loglevel','error','-nostdin','-y','-i',str(dest),'-af',f'volume={gain}dB','-ac','1','-ar','44100','-c:a','pcm_s16le',str(corrected)],check=True)
+    subprocess.run([str(ffmpeg),'-hide_banner','-loglevel','error','-nostdin','-y','-i',str(dest),'-af',f'volume={gain}dB,aresample=176400,alimiter=limit=0.8414:level=0:latency=1,aresample=44100','-ac','1','-ar','44100','-c:a','pcm_s16le',str(corrected)],check=True)
     dest.write_bytes(corrected.read_bytes())
   with wave.open(str(dest),'rb') as w:
    duration=w.getnframes()/w.getframerate();assert w.getnchannels()==1 and w.getframerate()==44100 and w.getsampwidth()==2

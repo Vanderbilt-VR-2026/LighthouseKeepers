@@ -7,3 +7,5 @@ Four existing notes retained. No15-readable expansion. Owen moved to Post-course
 This checkpoint does not claim live hunter, hiding, private ANT or all52 triggers complete. Last installed APK is33c2bf35; no new Quest launch. Hunter work follows next.
 
 Reproduce: `python3 Tools/Story/build_catalog.py --check`; `python3 Tools/Story/build_placeholders.py --verify`; bridge filters StoryScopeTests, StoryImportTests, StoryRulesTests, VoicePassTests. Explicit conversion reuses the existing import menu. Audio source originals untouched.
+
+Audio follow-up: the first peak-limited normalization left one short line below the target. An oversampled limiter and measured gain correction fixed it; all52 output measurements now pass (see audio.json). No source recordings altered.
