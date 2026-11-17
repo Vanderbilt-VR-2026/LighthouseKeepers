@@ -1,0 +1,11 @@
+{
+    "passed": true,
+    "detail": "House→F1→F2→F3→F4→House actual agent, 1.2m/s, no blocked/teleport/stuck steps",
+    "rows": [
+        "stop=1 goal=(2.60, 0.03, 0.00) actual=(2.53, 0.03, -0.12) walked=7.59m seconds=6.37",
+        "stop=2 goal=(-1.00, 3.33, -1.00) actual=(-1.05, 3.33, -1.14) walked=12.14m seconds=10.25",
+        "stop=3 goal=(1.00, 6.63, 0.00) actual=(0.90, 6.63, -0.11) walked=13.03m seconds=10.94",
+        "stop=4 goal=(1.00, 9.93, 0.00) actual=(1.01, 9.93, -0.15) walked=8.89m seconds=7.57",
+        "stop=5 goal=(-0.50, 0.03, -7.00) actual=(-0.48, 0.03, -6.86) walked=37.22m seconds=31.36"
+    ]
+}

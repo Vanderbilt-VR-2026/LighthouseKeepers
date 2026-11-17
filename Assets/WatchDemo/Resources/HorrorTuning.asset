@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 814698e8f44248aa83ed620fe9467d7e, type: 3}
+  m_Name: HorrorTuning
+  m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.HorrorTuning
+  hunterEnabled: 0
+  catchesEnabled: 0
+  standingHeight: 2.3
+  navigationHeight: 1.8
+  radius: 0.2
+  walkSpeed: 1.2
+  chaseSpeed: 3.4
+  sightRange: 9
+  sightHalfAngle: 65
+  telegraphSeconds: 2
+  quietSeconds: 2.5
+  searchSeconds: 12
+  stalkSeconds: 10
+  maxChaseSeconds: 24
+  catchRange: 0.65
+  navRepathSeconds: 0.35
+  stuckSeconds: 2
+  retreatSeconds: 20
+  navVoxel: 0.05
+  navClimb: 0.35
+  navSlope: 55
+  navSampleRange: 0.3
+  earliestScare: 60
+  problemGap: 15
+  reliefMin: 10
+  reliefMax: 20
+  tellMin: 3
+  tellMax: 6
+  maximumEscapeSeconds: 10
+  lungesPerNight: 1
+  sprintMultiplier: 1.6
+  sprintSeconds: 4
+  sprintCooldown: 6
+  breathingHearingRange: 2
+  highOilSeconds: 90
+  lowOilSeconds: 180
+  pourSeconds: 4
+  lowRange: 2.5
+  highRange: 4
+  highExposure: 2
+  highOilCost: 0.15
+  highRetreat: 20
+  flareRetreat: 60
+  bellRetreat: 45
+  soloTimeLost: 45
+  reviveSeconds: 40
+  soloCatchLimit: 2
+  calmBpm: 62
+  panicBpm: 140
+  clearFog: 0.02
+  darkFog: 0.06
+  highFear: 0.6
+  antagonistSpacing: 90
+  harborQuietBeforeWhisper: 4
+  antagonistPerNight: 6
+  nights:
+  - night: 1
+    sabotages: 1
+    apparitions: 0
+    hunts: 0
+    dawnGlimpse: 1
+    shipAttack: 0
+    beatMin: 60
+    beatMax: 120
+  - night: 2
+    sabotages: 2
+    apparitions: 3
+    hunts: 0
+    dawnGlimpse: 0
+    shipAttack: 0
+    beatMin: 60
+    beatMax: 120
+  - night: 3
+    sabotages: 3
+    apparitions: 2
+    hunts: 1
+    dawnGlimpse: 0
+    shipAttack: 0
+    beatMin: 60
+    beatMax: 120
+  - night: 4
+    sabotages: 5
+    apparitions: 2
+    hunts: 2
+    dawnGlimpse: 0
+    shipAttack: 1
+    beatMin: 60
+    beatMax: 120
+  - night: 5
+    sabotages: 5
+    apparitions: 3
+    hunts: 3
+    dawnGlimpse: 0
+    shipAttack: 1
+    beatMin: 60
+    beatMax: 120

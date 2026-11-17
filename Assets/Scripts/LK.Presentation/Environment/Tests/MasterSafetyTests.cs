@@ -2,6 +2,24 @@
 using System;using System.Collections;using System.Linq;using NUnit.Framework;using UnityEditor.SceneManagement;using UnityEngine;using UnityEngine.SceneManagement;using UnityEngine.TestTools;
 namespace LighthouseKeepers.Presentation.Environment.Tests {
  public sealed class MasterSafetyTests {
+  [UnityTest] public IEnumerator HunterRoutesRespectFloorsAndClearTheActualWalls()
+  {
+   UnityEditor.EditorUtility.audioMasterMute=true;
+   var launch=Type.GetType("LighthouseKeepers.StormWatch.WatchDayLaunch, LighthouseKeepers.Runtime",false)??AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("LighthouseKeepers.StormWatch.WatchDayLaunch")).First(t=>t!=null);
+   launch.GetProperty("RequestedDay").SetValue(null,3);
+   yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return new WaitForSeconds(3);
+   launch.GetProperty("RequestedDay").SetValue(null,1);
+   var type=Type.GetType("LighthouseKeepers.WatchDemo.HunterNavigation, Assembly-CSharp",true);
+   var tuning=Resources.Load("HorrorTuning");var data=Resources.Load<UnityEngine.AI.NavMeshData>("HunterNavigation");Assert.NotNull(tuning);Assert.NotNull(data);
+   using var nav=(IDisposable)Activator.CreateInstance(type,tuning,data);
+   var points=new[]{new Vector3(-.5f,0,-7),new Vector3(2.6f,0,0),new Vector3(-1,3.3f,-1),new Vector3(1,6.6f,0),new Vector3(1,9.9f,0)};
+   for(int i=0;i<points.Length;i++)for(int j=0;j<points.Length;j++)if(i!=j){
+    object[] args={points[i],points[j],null};Assert.True((bool)type.GetMethod("Route").Invoke(nav,args),$"Missing {i}->{j}");var corners=(Vector3[])args[2];
+    Assert.Less(Mathf.Abs(corners[0].y-points[i].y),.35f);Assert.Less(Mathf.Abs(corners[^1].y-points[j].y),.35f);
+    for(int k=1;k<corners.Length;k++)Assert.True((bool)type.GetMethod("SegmentClear").Invoke(nav,new object[]{corners[k-1],corners[k]}),$"Blocked {i}->{j}, segment{k}");
+   }
+   object[] wrongFloor={new Vector3(-1,6.6f,-1),null};Assert.False((bool)type.GetMethod("SampleFloor").Invoke(nav,wrongFloor),"Bunk target must not snap to stairs above it");
+  }
   [UnityTest] public IEnumerator HandLanternsSurviveTheLightBudgetGuard()
   {
    UnityEditor.EditorUtility.audioMasterMute=true;

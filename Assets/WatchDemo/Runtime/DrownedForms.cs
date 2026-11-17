@@ -24,6 +24,20 @@ namespace LighthouseKeepers.WatchDemo
             if(form==DrownedForm.SeaHag)Hag(s);else if(form==DrownedForm.Doll)Doll(s);else Gaunt(s);
             return s.Finish("Drowned "+form+" — original single-material sculpt");
         }
+        public static Mesh BuildWalter()
+        {
+            var s=new Sculpt();Gaunt(s);s.RemoveCoveredSkin();
+            var coat=new Color(.035f,.045f,.035f);
+            s.Tube(new[]{new Vector3(0,.65f,-.03f),new Vector3(0,1.03f,-.03f),new Vector3(0,1.4f,-.07f),new Vector3(0,1.68f,-.02f),new Vector3(0,1.79f,.04f)},new[]{.25f,.21f,.22f,.31f,.095f},new[]{.18f,.16f,.17f,.20f,.09f},coat,24,0,true);
+            for(int side=-1;side<=1;side+=2){
+                s.Tube(new[]{new Vector3(side*.255f,1.69f,0),new Vector3(side*.4f,1.13f,.045f),new Vector3(side*.43f,.62f,.16f)},new[]{.105f,.07f,.045f},new[]{.11f,.075f,.05f},coat,16,0,true);
+                s.Tube(new[]{new Vector3(side*.13f,1.0f,0),new Vector3(side*.16f,.58f,.09f),new Vector3(side*.18f,.10f,.025f)},new[]{.092f,.064f,.042f},new[]{.1f,.069f,.044f},Damp*.6f,14,0,true);
+            }
+            // The photograph's pale square repair patch, sewn onto the left shoulder, not a glowing badge.
+            s.PaintShoulderPatch();
+            for(int i=0;i<5;i++)s.Ellipsoid(new Vector3(.025f,1.55f-i*.14f,.18f),new Vector3(.012f,.012f,.006f),Cloth*.5f,8,4);
+            return s.Finish("Walter Brennick — patched soaked oilskin");
+        }
         static void Hag(Sculpt s)
         {
             // Bent neck and rounded back under a ragged soaked shift. The head leans towards you.
@@ -174,6 +188,16 @@ namespace LighthouseKeepers.WatchDemo
                     if(z>0){float sockets=Mathf.Exp(-Mathf.Pow((Mathf.Abs(x)-.46f)*6,2)-Mathf.Pow((y-.13f)*8,2));float cheeks=Mathf.Exp(-Mathf.Pow((Mathf.Abs(x)-.62f)*6,2)-Mathf.Pow((y+.22f)*7,2));float brow=Mathf.Exp(-Mathf.Pow((y-.30f)*12,2));z+=-.14f*sockets+.09f*cheeks+.06f*brow;}
                     p[r,j]=c+q*Vector3.Scale(radius,new Vector3(x,y,z));
                 }Grid(p,skin,1,true,true);
+            }
+            public void PaintShoulderPatch()
+            {
+                for(int i=0;i<vertices.Count;i++){var p=vertices[i];if(p.x<-.14f&&p.x>-.30f&&p.y>1.50f&&p.y<1.78f&&p.z>.045f)colours[i]=new Color(.22f,.20f,.14f);}
+            }
+            public void RemoveCoveredSkin()
+            {
+                for(int i=triangles.Count-3;i>=0;i-=3){var c=(vertices[triangles[i]]+vertices[triangles[i+1]]+vertices[triangles[i+2]])/3;
+                    if(c.y>.10f&&c.y<1.80f&&!(Mathf.Abs(c.x)>.32f&&c.y<.72f))triangles.RemoveRange(i,3);
+                }
             }
             public Mesh Finish(string name){var m=new Mesh{name=name};m.SetVertices(vertices);m.SetColors(colours);m.SetUVs(0,uv);m.SetTriangles(triangles,0);m.RecalculateNormals();m.RecalculateBounds();return m;}
         }

@@ -9,9 +9,17 @@ Branch **sprint-5 / draft PR#89**. Editor muted. Accepted body/hands intact. **I
 -54 focused EditMode checks passed; measured audio and scope evidence `Docs/Verification/S5/StoryTrim/`. No new synced fields; no version bump at this content checkpoint.
 - Previous lantern APK33c2bf35 remains installed, not launched. Lantern/body acceptance history below.
 
+## Tier1 item1 foundation — partial, not enabled
+
+- `HorrorTuning.asset` created (hunterEnabled=0, catchesEnabled=0);17pure FSM tests. Do not mistake the independent frame/copy contract for live snapshot replication.
+- Baked `HunterNavigation.asset`;20/20 directed routes capsule-clear; actual1.2m/s agent completed House→allfloors→House.1PlayMode route regression passes. `Tools/Horror/VerifyAgentRoute.cs` is the replayable driver.
+- `WalterRig` prototype: one5,373-triangle skin/material, patched coat, walking joints and hunch. Inspected3views; fixed coat skin/finger bindings. `WalterRigTests` +existing form tests pass. Evidence `Docs/Verification/S5/HunterFoundation/`.
+- **Next exact implementation:** add Hunter to WatchState.Reset/ReadOnly/Capture/Apply and snapshot validation; bump protocol to a new version when that transport field is added. Add a host-only adapter supplying actual keeper positions/forward/LOS, room circuit+nearbyHIGH light, current tutorial/grace and reachable safe exit; move NavMeshAgent at configuredspeed with SegmentClear guard/stuck timeout, replicatepose; one Walter body/guest interpolation, suppress duplicate old apparition while hunteractive. Drive hunch from headroom, warning2s thenquiet2.5s, sound/light/haptics. Do not enable catch until Tier1 item4. Live escape validation precedes enabling hunter.
+- Then sprint/hide, defenses, catch/revive; current globalflag remainsOFF. Existing lantern and apparition behaviour unchanged.
+
 ## Next — Tier1 in this exact order
 
-1. Hunter: inspect actual floor/stair navigation; single Walter rig, hostFSM, LOS/light observations, telegraph+silence. No catches enabled until escape/hiding/recovery tested. Add `HorrorTuning` as one source for all new horror numbers; then migrate existing lantern/fear/sabotage consumers without duplicated knobs. Refs#105,#113.
+1. Finish live hunter integration above: single Walter rig, hostFSM, LOS/light observations, telegraph+silence. No catches enabled until escape/hiding/recovery tested. Add `HorrorTuning` as one source for all new horror numbers; then migrate existing lantern/fear/sabotage consumers without duplicated knobs. Refs#105,#113.
 2. Sprint/hide/breath (#105,#106); defenses (#107); caught/revive (#107); fear (#93); sabotage/evidence/physical repairs (#98–100); ship-window attack (#95,#99); night data/telemetry (#109,#110); exactsix-minute Demo (#116).
 3. After ALL Tier1: Tier2 apparitions,6visual clues,privateANT,scareoptions,morninglogbook. Tier3doors/mirror/save/credits only iftime beforeNov29. Owen outside course scope.
 4. At every completed Tier1 checkpoint: build clean source, install ifADB present without launching, inspect evidence, commit/push with issue reference and keep headset-only acceptance open.
