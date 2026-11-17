@@ -8,13 +8,13 @@ Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main u
 - Identified the flat "board" as the legacy **Stabilized chest proxy**. Disabled in the shared prefab, authoring source and old scene overrides; no new avatar mesh change needed.
 - Arm-swing running: late hand binding, empty squeezed grips allowed, normal reversal pauses accepted, direction follows head yaw. Existing +60% easing and no run while holding props/standing retained.
 - 27 focused EditMode +3 PlayMode checks pass. Inspected real-lobby graphics at1.35/1.65/1.9m eye height, turns and crouching. Solo Night1 physical pipe/sleep→Night2 passes. Two-Mac avatar/movement/shared pipe/shared sleep→Night2 passes with test Editors capped72fps. First uncapped attempt disconnected; no networking code changed. Human voice listening unverified (muted).
-- Evidence: `Docs/Verification/S5/KeeperFix/`. Diagnostic630fe719 was not a fix; new correction build/install receipt follows this source commit.
+- Evidence: `Docs/Verification/S5/KeeperFix/`. Diagnostic630fe719 was not a fix. Correction **ad642404** built clean and installed/hash verified on Quest3; not auto-launched. APK `Builds/LighthouseKeepers-Sprint5-KeeperFix-ad642404.apk`, SHA-256 `dcf431c8e059faf6bc31656bcdc2164377d0b41b614b9aa3752991603d8b187c`. User body/run checks requested; acceptance pending.
 
 ## Next actions / exact commands
 
-1. Clean-source APK: `python3 artifacts/s5/keeper-fix/build-correction.py` (close the M3 Editor first). Restore only the three backed-up generated build settings from `artifacts/s5/keeper-fix/correction-build-backup/` afterward.
-2. Verify/install, never launch: `python3 artifacts/s5/keeper-fix/install.py`. Capture logcat before asking user to open the app (`KEEPER_BODY_FIXED`, `ARM_SWING_RUN`).
-3. Get user acceptance, update delivery receipt/PR89/issue129. Keep issue129 open until headset fit is accepted. No merge.
+1. Corrected APK is already installed and PR89/issue129 updated. User launch/acceptance is pending. Quest dropped from ADB after installation; installed hash had already been verified. Never auto-launch.
+2. Read answers to the two pending questions (body fit, then running in House). If USB returns, inspect `artifacts/s5/keeper-fix/quest-live.log` for `KEEPER_BODY_FIXED` and `ARM_SWING_RUN`; restart capture if its process exited. ADB: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb devices`.
+3. Record the actual headset outcome in `Docs/Verification/S5/KeeperFix/`; issue129 stays open for device acceptance/profiling. If another correction is needed, rerun only affected focused tests and use a NEW backup directory/output for `artifacts/s5/keeper-fix/build-correction.py`. Reinstall verified APK with `python3 artifacts/s5/keeper-fix/install.py`; never silently reuse the diagnostic build.
 4. Actual hunter/navigation/hiding and remaining campaign polish are still unfinished. Do not expand gameplay while this regression is under review.
 
 ## DEVICE CHECKS PENDING

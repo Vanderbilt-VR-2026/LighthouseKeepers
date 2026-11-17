@@ -32,3 +32,9 @@ The diagnostic-only APK 630fe719 did not fix either issue. A fresh user launch l
 ![Guest body in live co-op](crew-host-friend.png)
 
 Device acceptance remains pending: user must open the installed correction, look down, raise hands, crouch/stand, and then move with alternating arm swings in the House. Worn-device CPU/GPU and stereo fit are not inferred from these tests.
+
+## Delivery
+
+Built from clean **ad642404**, Unity6000.3.23f1, IL2CPP ARM64 development build, zero build errors. APK `LighthouseKeepers-Sprint5-KeeperFix-ad642404.apk` (123,876,442 bytes). SHA-256 `dcf431c8e059faf6bc31656bcdc2164377d0b41b614b9aa3752991603d8b187c`.
+
+VR manifest, ARM64 ABI, signature and ZIP integrity pass. Installed to authorized Quest3 `2G0YC1ZG32048T`; device APK hash matches. **Not auto-launched.** Device log capture was started before the user's acceptance check, but the Quest subsequently dropped off USB; no corrected-build tracking samples have been recovered yet. User asked to stand naturally, look down, raise hands/crouch, then start Night1 and test moving with alternating empty-arm swings.
