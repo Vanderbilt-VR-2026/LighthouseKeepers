@@ -2,7 +2,7 @@
 
 The historical photograph supplies human proportions, canvas bib overalls, rolled cuffs and a working cap. The illustrated keeper supplies a dark sea coat, scarf, grey facial hair and belt kit. The result is an original Blender model with a quiet, worn workwear palette. The two supplied pictures are references, not textures pasted on the model. The anatomical head reuses the existing MakeHuman CC0 subset; provenance remains in `Tools/Avatars/Sources/`.
 
-The previous fisherman assets remain available. Both host and guest appearance slots now use `PF_HarborKeeper`. It shares the existing 51-bone, tracked-head-and-wrist adapter, pose interpolation, finger curls and network identity. Local tracked hand geometry, hand rotations, grips and interactions are unchanged. No replicated field was added: network remains **LK-S5-DREAD1 / LK-Lab-Coop-v33**.
+The previous fisherman assets remain available. Both host and guest appearance slots now use `PF_HarborKeeper`. Both roles intentionally share this costume; names and host/guest identity remain separate. It shares the existing 51-bone, tracked-head-and-wrist adapter, pose interpolation, finger curls and network identity. Local tracked hand geometry, hand rotations, grips and interactions are unchanged. No replicated field was added: network remains **LK-S5-DREAD1 / LK-Lab-Coop-v33**.
 
 ## Legs and first-person embodiment
 

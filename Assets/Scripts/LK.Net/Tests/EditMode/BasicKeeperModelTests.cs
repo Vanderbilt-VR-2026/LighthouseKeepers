@@ -40,14 +40,15 @@ namespace LighthouseKeepers.Net.Tests
             Assert.That(triangles,Is.GreaterThan(0).And.LessThan(triangleLimit));
         }
 
-        [Test] public void NetworkAvatarDefaultsProvideValidDistinctModelsForBothRoles()
+        [Test] public void NetworkAvatarDefaultsProvideValidModelsForBothRoles()
         {
             var player=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Network/Resources/PF_PlayerRig.prefab");
             Assert.NotNull(player);
             using var fields=new SerializedObject(player.GetComponent<CrewAvatarView>());
             var captain=fields.FindProperty("captainModel").objectReferenceValue as GameObject;
             var fisherman=fields.FindProperty("fishermanModel").objectReferenceValue as GameObject;
-            Assert.NotNull(captain);Assert.NotNull(fisherman);Assert.AreNotSame(captain,fisherman);
+            // Both roles intentionally share the new reference keeper costume; role/name identity is separate.
+            Assert.NotNull(captain);Assert.NotNull(fisherman);
             foreach(var prefab in new[]{captain,fisherman})
             {
                 var model=prefab.GetComponent<CrewAvatarModel>();Assert.NotNull(model);

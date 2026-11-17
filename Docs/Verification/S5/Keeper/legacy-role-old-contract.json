@@ -1,0 +1,16 @@
+{
+  "exit": 2,
+  "counts": {
+    "total": "4",
+    "passed": "3",
+    "failed": "1",
+    "duration": "0.1761174"
+  },
+  "failures": [
+    {
+      "name": "LighthouseKeepers.Net.Tests.BasicKeeperModelTests.NetworkAvatarDefaultsProvideValidDistinctModelsForBothRoles",
+      "message": "  Expected: not same as <PF_HarborKeeper (UnityEngine.GameObject)>\n  But was:  <PF_HarborKeeper (UnityEngine.GameObject)>\n",
+      "stack": "at LighthouseKeepers.Net.Tests.BasicKeeperModelTests.NetworkAvatarDefaultsProvideValidDistinctModelsForBothRoles () [0x00053] in /Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer/Assets/Scripts/LK.Net/Tests/EditMode/BasicKeeperModelTests.cs:50\n"
+    }
+  ]
+}

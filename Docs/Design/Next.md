@@ -10,11 +10,17 @@ Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main u
 - Verified: baseline14, final37 focused checks; graphics front/side/back/crouch/walk/landing/local look-down. Final local-body asset recheck6/6. Live two-Mac join/new skins/remote crouch+wrist/guest pipe/shared sleep→Night2 PASS. Night1 does not require the co-op valve; this is not a new valve-gate test.
 - Actual-XRI solo Night3 all stations/two steered ships/shared progression toNight4 PASS, zero errors. Editors muted; human voice listening not verified. Screenshots inspected. Receipts: `Docs/Verification/S5/Keeper/`.
 
+## Delivery
+
+**APK built from clean `7c02e858`**, Unity6000.3.23f1 development IL2CPP ARM64; zero build errors. `LighthouseKeepers-Sprint5-Keeper-7c02e858.apk` (123,874,874 bytes), SHA-256 `909c0a37aabf81baed334ad6ed041114cb7a1dc10dff9c349e2108c82679bc2e`. VR manifest/ARM64/signature/ZIP verified. Not installed: no Quest is visible to ADB. Not launched.
+
+Source commit `7c02e858` is pushed. The subsequent test/documentation commit updates the intentionally shared costume assertion and delivery receipts; it does not change player code/assets.
+
 ## Next actions
 
-1. Commit/push avatar source/evidence with `Refs #129`. Build from clean source: `caffeinate -i python3 artifacts/s5/keeper/build.py`. Uses a fresh `keeper-build-backup`; do not overwrite an existing build's backup.
-2. Restore only build-generated settings from that backup, then `python3 artifacts/s5/keeper/install.py` for ARM64/VR/signature/ZIP checks and install if ADB returns. Never launch. Record build/hash/installation receipt; commit/push docs.
-3. Update PR89 and issue129, leave issue open for headset acceptance. No skybox changes. Remaining hunter/navigation/hiding and campaign polish stay pending; apparition work is not a finished hunter.
+1. Draft PR89 and issue129 updated with the receipts; issue stays open for headset acceptance. Nothing merged to main.
+2. If ADB returns: `python3 artifacts/s5/keeper/install.py`. Never auto-launch. Follow the device list below when the user is available.
+3. Remaining hunter/navigation/hiding and campaign polish stay pending; apparition work is not a finished hunter. No further gameplay expansion in this avatar pass.
 
 ## DEVICE CHECKS PENDING — keeper body
 

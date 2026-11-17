@@ -23,3 +23,9 @@ Reproduce from `~/LighthouseKeepers-M3`: focused runner `artifacts/remaining/m3/
 Look down and crouch without a floating board/extra gloves; check sleeve seams and watch, walk/backstep/turn/climb beside a friend, confirm grab/hand alignment and rejoin, profile at 72Hz with the ship/storm. Human two-way voice also remains pending. Do not auto-launch the headset.
 
 The first final-asset invocation failed before tests started because Unity could not connect to its local licensing/package services. Restarting the stale service allowed the unchanged retry to run: 6/6 passed. This was a tool startup failure, not a game-test failure.
+
+## Delivery
+
+**APK built from clean `7c02e858`**, Unity6000.3.23f1 development IL2CPP ARM64; zero build errors. `LighthouseKeepers-Sprint5-Keeper-7c02e858.apk` (123,874,874 bytes), SHA-256 `909c0a37aabf81baed334ad6ed041114cb7a1dc10dff9c349e2108c82679bc2e`. VR manifest/ARM64/signature/ZIP verified. Not installed: no Quest is visible to ADB. Not launched.
+
+The legacy asset test expected captain and guest to be different costume assets. That expectation intentionally changed to the newly requested common keeper design; validation for both role slots remains, and role/ownership tests are unchanged. The old assertion failed as expected (3/4); the updated contract passed4/4 in the peer worktree. Both receipts are retained. This is an art-contract update, not a gameplay workaround.
