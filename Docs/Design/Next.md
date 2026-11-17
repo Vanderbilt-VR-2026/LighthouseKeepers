@@ -1,3 +1,31 @@
+# Active checkpoint — November 16 keeper body
+
+Branch **sprint-5**, draft **PR #89**, worktree `~/LighthouseKeepers-M3`. Main untouched. Editors muted; never auto-launch Quest. Network remains **LK-S5-DREAD1 / LK-Lab-Coop-v33** (avatar adds no replicated fields).
+
+## Completed
+
+- Previous cleanup/horror pass committed and pushed (`745410f8`): the photographed F4 lamp/cables removed at source; brief animated encounters, gravity/recovery and the other accepted corrections. Verified Dread APK and evidence: `Docs/Verification/S5/Dread/`.
+- New reference keeper authored in Blender: historical proportions/canvas overalls plus navy coat, cap, scarf, grey hair and belt pouch. Editable source `SourceArt/Avatars/HarborKeeper.blend`; builder `Tools/Avatars/build_harbor_keeper.py`. Original Will fisherman preserved as fallback.
+- Both network appearance slots use the new full-body skin. Local tracked tan hands/rotations unchanged; VR has a separate coat/arm/leg skin without duplicate head/gloves. Planted boots, turn steps, crouching knees, slope orientation and landing/teleport reset reuse the established solver.
+- Verified: baseline14, final37 focused checks; graphics front/side/back/crouch/walk/landing/local look-down. Final local-body asset recheck6/6. Live two-Mac join/new skins/remote crouch+wrist/guest pipe/shared sleep→Night2 PASS. Night1 does not require the co-op valve; this is not a new valve-gate test.
+- Actual-XRI solo Night3 all stations/two steered ships/shared progression toNight4 PASS, zero errors. Editors muted; human voice listening not verified. Screenshots inspected. Receipts: `Docs/Verification/S5/Keeper/`.
+
+## Next actions
+
+1. Commit/push avatar source/evidence with `Refs #129`. Build from clean source: `caffeinate -i python3 artifacts/s5/keeper/build.py`. Uses a fresh `keeper-build-backup`; do not overwrite an existing build's backup.
+2. Restore only build-generated settings from that backup, then `python3 artifacts/s5/keeper/install.py` for ARM64/VR/signature/ZIP checks and install if ADB returns. Never launch. Record build/hash/installation receipt; commit/push docs.
+3. Update PR89 and issue129, leave issue open for headset acceptance. No skybox changes. Remaining hunter/navigation/hiding and campaign polish stay pending; apparition work is not a finished hunter.
+
+## DEVICE CHECKS PENDING — keeper body
+
+- Install latest verified APK; user launches. ADB currently empty.
+- Two matching headsets: friend full body/head/arms/legs; wave/grip each hand, crouch, walk/backstep, turn, stairs and rejoin. Same networkv33.
+- Look down: coat/arms/legs, no head or extra gloves; verify waist/sleeve fit in stereo. Confirm local hand alignment, wrench/grab and watch remain correct.
+- 72Hz GPU≤11ms/CPU main≤9ms with both skins, plus sustained ship/storm. Mesh counts are not profiling.
+- Preserve prior pending darkness, arm-swing run, flare, water/can, F4 floating-fixture sweep, voice and shared-bed human checks.
+
+---
+
 # Active checkpoint — November 16 brief scares / physical cleanup
 
 Worktree `~/LighthouseKeepers-M3`, branch **sprint-5**, draft **PR #89**. Editor muted. Never launch Quest automatically. Main untouched. Network **LK-S5-DREAD1 / LK-Lab-Coop-v33**, both clients update.

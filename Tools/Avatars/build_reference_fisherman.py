@@ -365,11 +365,11 @@ def skeleton():
     return rig
 
 
-def blend_coat_shoulders():
+def blend_coat_shoulders(part_names=None):
     """Join the main coat volumes into a continuous shoulder surface before baking."""
     import bmesh
     from mathutils.kdtree import KDTree
-    names={"Oilskin coat body","Left rain sleeve","Right rain sleeve","Left rounded shoulder","Right rounded shoulder"}
+    names=part_names or {"Oilskin coat body","Left rain sleeve","Right rain sleeve","Left rounded shoulder","Right rounded shoulder"}
     parts=[o for o in OBJECTS if o.name in names]
     samples=[]
     for obj in parts:
@@ -418,14 +418,14 @@ def join_and_unwrap():
     obj.data.update();return obj
 
 
-def bake(obj):
+def bake(obj,resolution=2048):
     scene=bpy.context.scene;scene.render.engine="CYCLES";scene.cycles.device="CPU"
     scene.cycles.samples=4;scene.cycles.use_denoising=False
     scene.render.bake.use_pass_direct=False;scene.render.bake.use_pass_indirect=False;scene.render.bake.use_pass_color=True
     scene.render.bake.margin=6
     result={}
     for kind,space in [("Albedo","sRGB"),("Normal","Non-Color"),("Roughness","Non-Color")]:
-        image=bpy.data.images.new("Fisherman_"+kind,width=2048,height=2048,alpha=False)
+        image=bpy.data.images.new("Fisherman_"+kind,width=resolution,height=resolution,alpha=False)
         image.colorspace_settings.name=space
         for material in obj.data.materials:
             nodes=material.node_tree.nodes
@@ -444,9 +444,9 @@ def bake(obj):
     roughness=nodes.new("ShaderNodeTexImage");roughness.image=result["Roughness"];links.new(roughness.outputs["Color"],bsdf.inputs["Roughness"])
     # Unity's metallic workflow stores smoothness in alpha. This is a baked data map.
     import numpy as np
-    pixels=np.empty(2048*2048*4,dtype=np.float32);result["Roughness"].pixels.foreach_get(pixels)
+    pixels=np.empty(resolution*resolution*4,dtype=np.float32);result["Roughness"].pixels.foreach_get(pixels)
     pixels=pixels.reshape((-1,4));pixels[:,3]=1-pixels[:,0];pixels[:,:3]=0
-    smooth=bpy.data.images.new("Fisherman_Smoothness",width=2048,height=2048,alpha=True)
+    smooth=bpy.data.images.new("Fisherman_Smoothness",width=resolution,height=resolution,alpha=True)
     smooth.colorspace_settings.name="Non-Color";smooth.pixels.foreach_set(pixels.reshape(-1))
     smooth.filepath_raw=str(ART/"Fisherman_Smoothness.png");smooth.file_format="PNG";smooth.save();result["Smoothness"]=smooth
     obj.data.materials.clear();obj.data.materials.append(material)
