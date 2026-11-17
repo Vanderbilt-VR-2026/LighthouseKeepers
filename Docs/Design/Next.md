@@ -1,36 +1,44 @@
-# Active checkpoint — November17 fun horror loop
+# Active checkpoint — November 17: fun horror loop
 
-Branch **sprint-5 / draft PR#89**. Editor muted. Accepted body/hands intact. **Install only; never auto-launch Quest.** Network currently **LK-S5-LANTERN1 / LK-Lab-Coop-v35**.
+Branch **sprint-5 / draft PR #89**. Editors muted. Accepted body and hands unchanged. **Install only; never auto-launch Quest.** Network: **LK-S5-LANTERN1 / LK-Lab-Coop-v35**.
 
 ## Done
 
-- Story scope trimmed: four existing notes only; no15-readable expansion. Six visual clues deferred toTier2. Owen **Post-course / stretch #135**. Solo protection no longer depends on an absent companion.
-- User's updated recording sheets copied exactly.52 SHEET0 offlineTTS placeholders (45HM/7ANT), exact captions, mono44.1kHz16bit, under10s. Other60 remain catalogued/off unless explicit real-recording import succeeds. No new fake actor recordings. Unsupported Teague/south/missing mechanic triggers stay held.
--54 focused EditMode checks passed; measured audio and scope evidence `Docs/Verification/S5/StoryTrim/`. No new synced fields; no version bump at this content checkpoint.
-- Previous lantern APK33c2bf35 remains installed, not launched. Lantern/body acceptance history below.
+- Story scope trimmed to the four existing notes. No additional readable-note system. The six visual clues are Tier 2, after the playable loop. Owen is deferred to **Post-course / stretch #135**; future solo protection uses light and hiding, without requiring an absent companion.
+- Updated recording sheets copied exactly. All 52 SHEET 0 IDs have offline TTS placeholders (45 HM, seven ANT): exact captions, mono 44.1 kHz / 16-bit, under ten seconds. The other 60 IDs remain catalogued but disabled until a matching real recording imports successfully. Unsupported Teague, compass-direction and missing-mechanic triggers remain held; file availability is not proof of trigger integration.
+- 74 distinct focused EditMode tests and one PlayMode route regression passed. An actual navigation agent traversed every floor; a fresh solo Night 1 repair, ship preview and sleep-to-Night-2 run passed. Evidence: `Docs/Verification/S5/StoryTrim/` and `Docs/Verification/S5/HunterFoundation/`.
+- Clean **a270bea1** APK built, verified and installed without launch: `Builds/LighthouseKeepers-Sprint5-LoopFoundation-a270bea1.apk`. Installed SHA-256 matches the build. This delivers selected voice content; the new hunter and catches remain **OFF**. Receipt and five-step listening check are in `Docs/Verification/S5/StoryTrim/`.
+- Scope/issues/PR #89 updated. No new replicated fields at this checkpoint, so no network version bump.
 
-## Tier1 item1 foundation — partial, not enabled
+## Tier 1, item 1 — foundation only; not complete or enabled
 
-- `HorrorTuning.asset` created (hunterEnabled=0, catchesEnabled=0);17pure FSM tests. Do not mistake the independent frame/copy contract for live snapshot replication.
-- Baked `HunterNavigation.asset`;20/20 directed routes capsule-clear; actual1.2m/s agent completed House→allfloors→House.1PlayMode route regression passes. `Tools/Horror/VerifyAgentRoute.cs` is the replayable driver.
-- `WalterRig` prototype: one5,373-triangle skin/material, patched coat, walking joints and hunch. Inspected3views; fixed coat skin/finger bindings. `WalterRigTests` +existing form tests pass. Evidence `Docs/Verification/S5/HunterFoundation/`.
-- **Next exact implementation:** add Hunter to WatchState.Reset/ReadOnly/Capture/Apply and snapshot validation; bump protocol to a new version when that transport field is added. Add a host-only adapter supplying actual keeper positions/forward/LOS, room circuit+nearbyHIGH light, current tutorial/grace and reachable safe exit; move NavMeshAgent at configuredspeed with SegmentClear guard/stuck timeout, replicatepose; one Walter body/guest interpolation, suppress duplicate old apparition while hunteractive. Drive hunch from headroom, warning2s thenquiet2.5s, sound/light/haptics. Do not enable catch until Tier1 item4. Live escape validation precedes enabling hunter.
-- Then sprint/hide, defenses, catch/revive; current globalflag remainsOFF. Existing lantern and apparition behaviour unchanged.
+- `HorrorTuning.asset`: hunterEnabled=0, catchesEnabled=0. Seventeen pure FSM tests cover the new rules. Its independent frame/copy contract is **not** live snapshot replication.
+- Baked `HunterNavigation.asset`: all 20 directed floor-pair routes pass capsule clearance. An actual agent at 1.2 m/s completed House → F1 → F2 → F3 → F4 → House. One PlayMode route regression passes. Replay driver: `Tools/Horror/VerifyAgentRoute.cs`.
+- `WalterRig` prototype: one skinned renderer/material, 5,373 triangles, patched wet coat, walking joints and hunch. Three rendered views inspected; exposed skin and finger weights corrected. Prototype art is not final headset acceptance.
+- Existing lantern and apparition behavior remains intact. Existing lantern/fear/sabotage consumers still need migration to the unified tuning asset.
 
-## Next — Tier1 in this exact order
+## Next implementation — finish Tier 1 in order
 
-1. Finish live hunter integration above: single Walter rig, hostFSM, LOS/light observations, telegraph+silence. No catches enabled until escape/hiding/recovery tested. Add `HorrorTuning` as one source for all new horror numbers; then migrate existing lantern/fear/sabotage consumers without duplicated knobs. Refs#105,#113.
-2. Sprint/hide/breath (#105,#106); defenses (#107); caught/revive (#107); fear (#93); sabotage/evidence/physical repairs (#98–100); ship-window attack (#95,#99); night data/telemetry (#109,#110); exactsix-minute Demo (#116).
-3. After ALL Tier1: Tier2 apparitions,6visual clues,privateANT,scareoptions,morninglogbook. Tier3doors/mirror/save/credits only iftime beforeNov29. Owen outside course scope.
-4. At every completed Tier1 checkpoint: build clean source, install ifADB present without launching, inspect evidence, commit/push with issue reference and keep headset-only acceptance open.
+1. **Live hunter (#105, #113):** add Hunter to WatchState reset/read-only/capture/apply and snapshot validation; bump the protocol when the transport field is added. Implement the host-only scene adapter using real keeper positions, forward vectors, physics line of sight, floor-circuit light, nearby HIGH lantern, tutorial/grace and reachable escape checks. Raycast the floor below each head; never subtract guessed player height. Move a NavMeshAgent with capsule clearance and stuck timeout; replicate pose and interpolate guests. Render one Walter, suppress duplicate old apparitions while active, hunch for low headroom. Deliver two seconds of warning then 2.5 seconds of quiet through sound, light and haptics. Keep catches OFF until recovery and escape checks pass.
+2. Sprint, hiding and breath (#105, #106); defenses and caught/revive (#107); fear (#93); sabotage evidence and physical repairs (#98–100); ship-window attack (#95, #99); nightly pacing/telemetry (#109, #110); exact six-minute Demo (#116).
+3. Only after all Tier 1: Tier 2 apparitions, six visual clues, private ANT playback, scare options and morning logbook. Tier 3 doors/mirror/save/credits only if time remains before November 29. Owen stays outside course scope.
+4. After each completed Tier 1 item: focused checks, clean build, install if ADB is available **without launch**, commit/push with issue refs. Keep headset acceptance open until a person verifies it.
 
-Exact commands: `python3 Tools/Story/build_catalog.py --check`; `python3 Tools/Story/build_placeholders.py --verify`; scope test driver `python3 artifacts/s5/loop/test_scope.py`. Unity bridge helpers in `~/LighthouseKeepers-Coop-Basics/artifacts/coop/mac_pair.py`; explicit `EditorUtility.audioMasterMute=true` and72fps before eachPlay. Fresh build backups/output required (previous lantern scripts are reference only).
+## Commands and local handoff
+
+- `python3 Tools/Story/build_catalog.py --check`
+- `python3 Tools/Story/build_placeholders.py --verify`
+- Scope checks: `python3 artifacts/s5/loop/test_scope.py`; foundation driver: `artifacts/s5/loop/verify_foundation.py` (inspect its destinations and use fresh evidence folders).
+- Unity bridge: `~/LighthouseKeepers-Coop-Basics/artifacts/coop/mac_pair.py`. Set `EditorUtility.audioMasterMute=true` and cap at 72 fps before every Play Mode run.
+- Build/install scripts for reference: `artifacts/s5/loop/build.py` and `install.py`. Their output/backup is `artifacts/s5/loop/build/`; **never reuse that backup for later source**. No rebuild is needed for documentation-only delivery commits.
+- Local Git suffered an iCloud-evicted pack-index read failure during the final documentation commit. Two indices were rebuilt from intact packs; original placeholders preserved. Reads recovered after hydration. A bare remote backup is in `artifacts/s5/loop/git-recovery/remote.git`. No branch history or main checkout changed.
 
 ## DEVICE CHECKS PENDING
 
-- No fresh hunter build yet. Last installed33c2bf35: lantern wick/oil/hooks, seated reach, stereo glass, body/Brecall, twoHIGHlamp GPU≤11ms/CPU≤9ms at72Hz.
-- Matchingv35 Mac+Quest: guestfuel/refill/valve/rejoin/sharedsleep and humanvoice. MutedEditor tests do not prove voice clarity.
-- NewTTS intelligibility/timing needs listening after the next build; no misleading Owen/direction cues. Fullhunter/hiding/catches/privateANT remain implementation work.
+- Latest **a270bea1** is installed and not launched. Follow `Docs/Verification/S5/StoryTrim/Headset.md` for body/B recall, selected voice timing, pipe, generator and lantern regression checks.
+- Worn headset: lantern wick/oil/hooks, seated reach, stereo glass, two HIGH lamps; sustained GPU ≤11 ms / CPU ≤9 ms at 72 Hz.
+- Matching v35 Mac + Quest: guest fuel/refill/valve, rejoin, shared sleep and human voice. No fresh two-Mac regression or human voice check was run for this checkpoint; muted Editor tests cannot establish audio clarity.
+- New live hunter, hiding, catches and private ANT speech are still implementation work, not merely pending headset checks.
 
 ---
 
