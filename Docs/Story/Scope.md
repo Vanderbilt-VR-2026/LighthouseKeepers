@@ -1,3 +1,5 @@
+> Latest user instruction: no AI narration while mechanics are developed. `HarborRadioLines.captionsOnly` is ON: selected cues are shown as readable text, without PA speech/static, including legacy fallback voices. Keep files/GUIDs for the final recording pass. Voice availability and trigger rules below still govern which text may appear; no optional ID is enabled merely because playback is silent.
+
 # Felt story / horror loop — November17 scope
 
 This user-approved trim overrides the expansive bible's production list. Keep Rule14, Lucy Gale's letter, Walter's engine log and Tom's unsent letter. No additional readable-note interaction or15-paper expansion. The later co-op focus restores a minimal scripted second keeper to Sprint 5; the elaborate Owen narrative remains stretch. See `Docs/Design/CoopCoreLoop.md`. Until that partner is physically present and functional, companion-dependent lines stay inactive. The target uses the same light/hiding/defense and witnessed-safety rules for human and bot crews; none of the new catches are enabled yet.

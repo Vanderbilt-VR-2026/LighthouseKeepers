@@ -47,6 +47,7 @@ namespace LighthouseKeepers.WatchDemo
   public bool Replay(){if(Time.unscaledTime<nextReplay||program.Cue==0)return false;nextReplay=Time.unscaledTime+3;if(watch.State.PressureEnabled)return program.StatusUpdate();program.ReplayLast();return true;}
   public void Play(int id,AudioClip value,float offset,int serial)
   {
+   if(catalog.captionsOnly){Stop();return;}
    clip=value;variant=serial;line=id;age=offset;active=true;closing=false;double start=AudioSettings.dspTime+System.Math.Max(0,.3-offset);
    for(int i=0;i<voice.Length;i++){voice[i].Stop();noise[i].Stop();voice[i].clip=clip;if(clip&&offset<clip.length+.3f){voice[i].time=Mathf.Clamp(offset-.3f,0,clip.length-.01f);voice[i].PlayScheduled(start);}noise[i].Play();if(offset<.1f&&click)noise[i].PlayOneShot(click,.25f);}
   }

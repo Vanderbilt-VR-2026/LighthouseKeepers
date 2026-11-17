@@ -36,7 +36,7 @@ namespace LighthouseKeepers.WatchDemo
         public static int Resolve(int legacy,WatchState state,RadioLineCatalog catalog)
         {
             var entry=StoryVoiceCatalog.Get(Replacement(legacy,state));
-            return entry!=null&&catalog.Line(entry.cue)?entry.cue:legacy;
+            return entry!=null&&catalog.HasLine(entry.cue)?entry.cue:legacy;
         }
         public static bool RadioCue(int cue)=>StoryVoiceCatalog.Get(cue) is {Antagonist:false};
     }

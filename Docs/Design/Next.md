@@ -7,6 +7,10 @@ The user redirected the next work toward the **core paired gameplay**, before mo
 - Actual gaps: roster has no duty field; relay variants are metadata; the radio HUD reveals code answers; no runtime companion or downed/revive flow. The existing valve, lantern and hunter/navigation foundations can be reused.
 - Keep the simple Saltmere/two-keepers premise, four notes and optional visual clues. No expanded lore/readable system or new large voice recording pass. Companion lines stay held until a visible, working bot exists.
 
+## Implemented this continuation
+
+- Caption-only harbor narration: no AI/legacy fallback speech or PA static; full text with reading time and B replay. Assets preserved for the final recording pass. 30 focused checks and a 24-second actual Play Mode silence/caption probe pass; `Docs/Verification/S5/CrewCore/Captions/`. New APK not yet built. Current role/bot implementation work follows below.
+
 ## Next implementation order
 
 1. Lobby duty choice (#136) → host-authoritative stable assignments → per-player Objective Director routing; test both choices and rejoin. New replicated fields require a network bump.

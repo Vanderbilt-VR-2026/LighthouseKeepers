@@ -4,7 +4,23 @@ namespace LighthouseKeepers.WatchDemo
     // Plain recordings retain their GUID when replaced by human voice with the same filenames.
     public sealed class RadioLineCatalog : ScriptableObject
     {
+        [Tooltip("Temporary production mode: show readable lines without playing narration or PA static.")]
+        public bool captionsOnly = true;
+        [Min(1)] public float readingWordsPerSecond = 2.6f;
+        [Min(1)] public float minimumReadingSeconds = 4;
+        [Min(1)] public float maximumReadingSeconds = 18;
         public AudioClip[] lines;
+        public bool HasLine(int id) => id>=200
+            ? LighthouseKeepers.Core.Progression.StoryVoiceCatalog.Get(id) is {Antagonist:false} line && LighthouseKeepers.Core.Progression.StoryVoiceAvailability.Enabled(line.id) && !string.IsNullOrWhiteSpace(line.text)
+            : ValidCue(id) && id>0 && !string.IsNullOrWhiteSpace(Caption(id));
+        public float PresentationSeconds(int id)
+        {
+            if(!HasLine(id))return 0;
+            if(!captionsOnly)return Line(id)?Line(id).length:0;
+            string text=Caption(id);int words=0;bool inWord=false;
+            foreach(char c in text){bool next=!char.IsWhiteSpace(c);if(next&&!inWord)words++;inWord=next;}
+            return Mathf.Clamp(1+words/Mathf.Max(1,readingWordsPerSecond),minimumReadingSeconds,Mathf.Max(minimumReadingSeconds,maximumReadingSeconds));
+        }
         readonly System.Collections.Generic.Dictionary<int,AudioClip> extra=new();
         public const int LastLegacyLine=104;
         public const int LastLine=LighthouseKeepers.Core.Progression.StoryVoiceCatalog.LastCue;

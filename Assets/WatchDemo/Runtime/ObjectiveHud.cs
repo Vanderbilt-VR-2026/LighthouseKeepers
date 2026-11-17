@@ -127,7 +127,7 @@ namespace LighthouseKeepers.WatchDemo
    if(near){inputIcon.Set(button=="TRIGGER");inputLabel.text=KeeperStrings.Get("input."+button);}
 
    icon.Set(station);
-   bool showVoice=HarborSubtitleSettings.Enabled&&radio&&radio.SubtitleAlpha>0;
+   bool showVoice=radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
    bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
    string display=remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
@@ -139,6 +139,7 @@ namespace LighthouseKeepers.WatchDemo
    // Paginate long recordings into two readable lines rather than shrinking or clipping text.
    var info=subtitle.textInfo;
    for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
+   if(showVoice&&radio.CaptionsOnly&&!remembered)page=radio.SubtitlePage(info.pageCount);
    subtitle.pageToDisplay=remembered?1:page;subtitle.maxVisibleCharacters=visible;
    float alpha=remembered?Mathf.Clamp01((recall.Until-Time.unscaledTime)/.8f):showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;

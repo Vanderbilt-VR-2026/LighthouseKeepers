@@ -15,25 +15,29 @@ namespace LighthouseKeepers.WatchDemo
         public System.Collections.Generic.IReadOnlyList<int> RecentCues=>recallHistory.Cues;
         public string LastCaption=>catalog&&recallHistory.Latest>0?catalog.Caption(recallHistory.Latest):"";
         public int SubtitleCue=>localReplayCue>0?localReplayCue:Cue;
-        public float SpeechAge=>(localReplayCue>0?localReplayAge:Age)-(intercom ? .3f : 0);
+        public bool CaptionsOnly=>catalog&&catalog.captionsOnly;
+        float PresentationSeconds(int id)=>catalog?catalog.PresentationSeconds(id):0;
+        public float SpeechAge=>(localReplayCue>0?localReplayAge:Age)-(!CaptionsOnly&&intercom ? .3f : 0);
+        public int SubtitlePage(int pages)=>Mathf.Clamp(1+Mathf.FloorToInt(Mathf.Max(0,SpeechAge)/Mathf.Max(.1f,PresentationSeconds(SubtitleCue))*pages),1,Mathf.Max(1,pages));
         public bool ReplayLastLocally()
         {
             int id=recallHistory.Latest;var clip=catalog?catalog.Line(id):null;
-            if(!clip||Time.unscaledTime<nextLocalReplay)return false;
+            if(!catalog||!catalog.HasLine(id)||(!CaptionsOnly&&!clip)||Time.unscaledTime<nextLocalReplay)return false;
             nextLocalReplay=Time.unscaledTime+3;localReplayCue=id;localReplayAge=0;
+            if(CaptionsOnly){SilencePlayback();return true;}
             if(intercom)intercom.Play(id,clip,0,Serial);
             else{foreach(var source in new[]{wall,belt}){source.Stop();source.clip=clip;source.time=0;source.Play();}wallNoise.Play();beltNoise.Play();staticActive=true;}
             return true;
         }
-        public float SubtitleAlpha=>catalog&&catalog.Line(SubtitleCue)&&SpeechAge>=0?Mathf.Clamp01((catalog.Line(SubtitleCue).length+1.85f-SpeechAge)/.35f):0;
+        public float SubtitleAlpha=>catalog&&catalog.HasLine(SubtitleCue)&&SpeechAge>=0?Mathf.Clamp01((PresentationSeconds(SubtitleCue)+1.85f-SpeechAge)/.35f):0;
         public string Subtitle=>SubtitleAlpha>0?catalog.Caption(SubtitleCue):"";
-        public int SubtitleCharacters=>HarborVoiceTiming.Get(SubtitleCue)?.VisibleCharacters(SpeechAge)??Mathf.CeilToInt(Subtitle.Length*Mathf.Clamp01(SpeechAge/Mathf.Max(.1f,catalog&&catalog.Line(SubtitleCue)?catalog.Line(SubtitleCue).length:1)));
+        public int SubtitleCharacters=>CaptionsOnly?Subtitle.Length:HarborVoiceTiming.Get(SubtitleCue)?.VisibleCharacters(SpeechAge)??Mathf.CeilToInt(Subtitle.Length*Mathf.Clamp01(SpeechAge/Mathf.Max(.1f,catalog&&catalog.Line(SubtitleCue)?catalog.Line(SubtitleCue).length:1)));
         public bool DangerSubtitle=>HarborCueRules.Danger(SubtitleCue);
         public Component ReplayButton(int i)=>intercom?intercom.Button(i):null;
         public bool RequestReplay(){if(watch.State.RemoteReplica)return watch.State.Coop?.Send(LighthouseKeepers.Lobby.CoopAction.StatusRequest)==true;return intercom&&intercom.Replay();}
         public void ReplayLast(){if(Cue>0)Play(Cue,Serial+1,0);}
         public float SilenceSeconds=>Time.time-quietSince;
-        float Extra=>intercom ? .7f : 0;
+        float Extra=>!CaptionsOnly&&intercom ? .7f : 0;
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
         Transform head,wrench;WatchPipeRepair pipe;readonly List<int> pending=new();readonly Dictionary<int,float> queuedAt=new();
@@ -83,7 +87,7 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             var s=watch.State;
-            if(localReplayCue>0){localReplayAge+=Time.deltaTime;var localClip=catalog.Line(localReplayCue);if(!localClip||localReplayAge>localClip.length+2.2f){localReplayCue=0;StopStatic();}}
+            if(localReplayCue>0){localReplayAge+=Time.deltaTime;if(localReplayAge>PresentationSeconds(localReplayCue)+2.2f){localReplayCue=0;StopStatic();}}
             var yaw=Quaternion.Euler(0,head.eulerAngles.y,0);belt.transform.parent.SetPositionAndRotation(head.position+Vector3.down*.75f+yaw*new Vector3(.18f,0,.02f),yaw);
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
             belt.volume=intercom?0:tuning.beltRadioVolume*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
@@ -230,8 +234,8 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(watch.State.SuppressBackgroundNarration&&!HarborCueRules.Danger(id))return false;
             if(Cue==0)return true;
-            var clip=catalog?catalog.Line(Cue):null;float silence=Age-(clip?clip.length:0)-Extra;
-            if(id==97)return !HarborCueRules.Danger(Cue)?Age>=Mathf.Min(8,(clip?clip.length:0)+Extra):silence>=0;
+            var clip=catalog?catalog.Line(Cue):null;float silence=Age-PresentationSeconds(Cue)-Extra;
+            if(id==97)return !HarborCueRules.Danger(Cue)?Age>=Mathf.Min(8,PresentationSeconds(Cue)+Extra):silence>=0;
             float recovery=watch.State.Master?watch.State.Master.narrationQuietSeconds:20f;
             return HarborCueRules.CanSpeak(ordinaryBurstCount,silence,HarborCueRules.Transition(id),recovery,watch.State.Master?watch.State.Master.speechSpacingSeconds:8f);
         }
@@ -258,14 +262,16 @@ namespace LighthouseKeepers.WatchDemo
                 if(SilenceSeconds>=(watch.State.Master?watch.State.Master.narrationQuietSeconds:20f))ordinaryBurstCount=0;
                 if(!HarborCueRules.Danger(id))ordinaryBurstCount++;
             }
-            Debug.Log($"[HarborVoice] {(watch.State.RemoteReplica?"guest":"host")} night={watch.State.Day} time={Time.time:F2} cue={id} serial={serial} age={age:F2} previous={Cue} remaining={Mathf.Max(0,(catalog&&catalog.Line(Cue)?catalog.Line(Cue).length:0)+Extra-Age):F2}");
-            Cue=id;Serial=serial;Age=age;quietSince=Time.time+(catalog&&catalog.Line(id)?catalog.Line(id).length+Extra:0);
+            Debug.Log($"[HarborVoice] {(watch.State.RemoteReplica?"guest":"host")} night={watch.State.Day} time={Time.time:F2} cue={id} serial={serial} age={age:F2} previous={Cue} remaining={Mathf.Max(0,PresentationSeconds(Cue)+Extra-Age):F2}");
+            Cue=id;Serial=serial;Age=age;quietSince=Time.time+PresentationSeconds(id)+Extra;
+            if(CaptionsOnly){SilencePlayback();return;}
             var clip=catalog?catalog.Line(id):null;
             if(!clip||age>=clip.length+Extra)return;
             if(intercom){intercom.Play(id,clip,age,Serial);return;}
             foreach(var source in new[]{wall,belt}){source.Stop();source.clip=clip;source.time=Mathf.Min(age,clip.length-.01f);source.Play();}
             staticActive=true;wallNoise.Play();beltNoise.Play();if(age<.1f&&click)wallNoise.PlayOneShot(click,.5f);
         }
+        void SilencePlayback(){if(wall)wall.Stop();if(belt)belt.Stop();if(wallNoise)wallNoise.Stop();if(beltNoise)beltNoise.Stop();if(intercom)intercom.Stop();staticActive=false;}
         void StopStatic(){if(!staticActive)return;staticActive=false;wallNoise.Stop();beltNoise.Stop();if(click)wallNoise.PlayOneShot(click,.25f);}
         void OnDestroy(){if(watch!=null&&watch.State!=null){watch.State.Radio.CodeRejected-=WrongCode;watch.State.Radio.BroadcastCompleted-=BroadcastReply;}if(noise)Destroy(noise);if(belt)Destroy(belt.transform.parent.gameObject);}
     }
