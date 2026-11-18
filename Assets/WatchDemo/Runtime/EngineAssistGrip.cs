@@ -7,13 +7,13 @@ namespace LighthouseKeepers.WatchDemo {
  public sealed class EngineAssistGrip:MonoBehaviour {
   WatchDemoController watch;XRSimpleInteractable grip;Transform lever;bool held;float next;
   public static EngineAssistGrip Create(WatchDemoController w,Transform parent,M2StationParts parts){
-   var t=M2StationParts.Root("GRIP_StartAssist",parent,new Vector3(.48f,1.10f,1.06f));t.gameObject.SetActive(false);
+   var t=M2StationParts.Root("GRIP_StartAssist",parent,new Vector3(.28f,1.10f,1.10f));t.gameObject.SetActive(false);
    var c=t.gameObject.AddComponent<EngineAssistGrip>();c.watch=w;
    parts.Part("Compression cable socket",t,Vector3.zero,new Vector3(.08f,.12f,.06f),parts.Metal);
    c.lever=M2StationParts.Root("Compression release lever",t,new Vector3(0,0,.06f));
    parts.Part("Lever steel shaft",c.lever,new Vector3(0,.05f,0),new Vector3(.018f,.12f,.018f),parts.Metal);
    parts.Part("Lever red grip",c.lever,new Vector3(0,.12f,0),new Vector3(.13f,.035f,.035f),parts.Red);
-   parts.Text("Start assist brass stencil",KeeperStrings.Get("starter.assistPlate"),t,new Vector3(0,-.13f,.025f),.002f);
+   parts.Text("Start assist brass stencil",KeeperStrings.Get("starter.assistPlate"),t,new Vector3(0,-.13f,.025f),.0018f);
    var col=t.gameObject.AddComponent<BoxCollider>();col.isTrigger=true;col.center=new Vector3(0,.07f,.07f);col.size=new Vector3(.20f,.20f,.17f);
    c.grip=t.gameObject.AddComponent<XRSimpleInteractable>();c.grip.colliders.Add(col);
    t.gameObject.AddComponent<PhysicalGrip>().Configure(c.lever,HandPose.WrapGrip);

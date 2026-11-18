@@ -187,7 +187,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Power==PowerState.Off||state.Engine?.ChokeClosed==true)return EngineStep();
             if(!state.HasPower(PowerCircuit.Beacon))return BreakerStep(PowerCircuit.Beacon);
             var beacon=state.Beacon;
-            return beacon==null?KeeperStep.None:!beacon.Ignited?KeeperStep.BeaconLight:!state.BeamTrackingMode&&!beacon.Aligned?KeeperStep.BeaconAlign:beacon.Soot>.5f?KeeperStep.BeaconWipe:KeeperStep.None;
+            return beacon==null?KeeperStep.None:!beacon.Ignited?KeeperStep.BeaconLight:!state.BeamTrackingMode&&!beacon.Aligned?KeeperStep.BeaconAlign:KeeperStep.None;
         }
         KeeperStep PipeStep(bool held)
         {if(!held)return KeeperStep.GrabWrench;if(state.Pressure?.CrewRequired==true)return KeeperStep.TightenBolt;return state.Pipe.ActiveBolt>=0?(KeeperStep)((int)KeeperStep.BoltA+state.Pipe.ActiveBolt):KeeperStep.None;}

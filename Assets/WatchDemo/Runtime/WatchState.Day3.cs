@@ -29,7 +29,7 @@ namespace LighthouseKeepers.WatchDemo
         void ActivateDay3UpperJobs()
         {
             day3Stage=3;
-            Beacon.Reset(Definition.beaconInitiallyLit,Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,Definition.beaconInitialSoot,Definition.beaconSootPerSecond);
+            Beacon.Reset(Definition.beaconInitiallyLit,Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,0,0);
             Radio.SetPower(RadioAvailable);
         }
         double SnapshotDuration(DayDefinition day,bool crew)=>day.scenario?.configured==true?(crew?day.scenario.crewSeconds:day.scenario.soloSeconds):Tuning&&Tuning.day3Balance&&day.day==3&&Engine!=null&&Grid!=null&&Beacon!=null

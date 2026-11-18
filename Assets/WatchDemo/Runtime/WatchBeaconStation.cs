@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class WatchBeaconStation:MonoBehaviour
  {
   WatchDemoController watch;WatchBeacon beacon;M2StationParts parts;TextMesh readout;Transform marker,targetMarker;Renderer lamp;MaterialPropertyBlock block;AudioSource sound;AudioClip click;
-  Vector3 previousRag;bool wasHeld;int beamDay;Mesh beamMesh;Material beamMaterial;
+  int beamDay;Mesh beamMesh;Material beamMaterial;
   public BeaconControl Ignition {get;private set;}
   public BeaconControl Wheel {get;private set;}
   public M2CarryProp Rag {get;private set;}
@@ -35,10 +35,6 @@ namespace LighthouseKeepers.WatchDemo
    targetMarker=M2StationParts.Root("Ship bearing marker",transform,new Vector3(-.14f,1.21f,.22f));
    parts.Part("Target alignment mark",targetMarker,new Vector3(0,.23f,.03f),new Vector3(.045f,.025f,.02f),parts.Green);
    lamp=parts.Part("Alignment green lamp",transform,new Vector3(.25f,1.39f,.20f),new Vector3(.075f,.035f,.02f),parts.Green).GetComponent<Renderer>();
-   Rag=M2CarryProp.Create(parts,transform,"BEACON_RAG",new Vector3(.28f,.82f,.25f),true);
-   parts.Part("Rag shelf",transform,new Vector3(.28f,.775f,.22f),new Vector3(.22f,.035f,.22f),parts.Brass);
-   parts.Text("Rag instruction",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.8"),transform,new Vector3(.25f,.64f,.22f),.003f);
-   var wipeLabel=parts.Text("Lens wipe label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.9"),beacon.transform,new Vector3(0,.72f,.46f),.003f);
    sound=gameObject.AddComponent<AudioSource>();sound.spatialBlend=1;sound.minDistance=.4f;sound.maxDistance=10;sound.playOnAwake=false;click=Resources.Load<AudioClip>("S4Audio/breaker");
    BuildBeam();State.Changed+=Refresh;Refresh();
   }
@@ -69,14 +65,7 @@ namespace LighthouseKeepers.WatchDemo
    readout.text=State.AimingShip>=0?LighthouseKeepers.Core.PlayerStrings.Get(!State.ShipOnBeam?"beacon.shipAim":State.Ships.Steady(State.AimingShip)<1?"beacon.shipHold":"beacon.shipSafe"):State.Director!=null?State.Director.StationInstruction(WatchState.BeaconStation):!powered?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.1"):!b.Ignited?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.2"):!b.Aligned?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.3"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.4"),b.Soot*100);
    var colour=(State.AimingShip>=0?State.ShipOnBeam:b.Aligned)?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.5f);lamp.SetPropertyBlock(block);
   }
-  void Update()
-  {
-   var point=Rag.Tip.position;bool held=Rag.Grab.isSelected||State.Coop?.RemoteHeld(Rag.Grab)==true;
-   if(!State.ReadOnly&&!State.Failed&&held&&wasHeld&&Vector3.Distance(point,LensPoint)<.58f)
-   {float distance=Vector3.Distance(point,previousRag);if(distance>=State.PowerTuning.wipeStrokeMetres){if(distance<.15f)State.WipeBeacon(distance);previousRag=point;}}
-   else previousRag=point;wasHeld=held;
-  }
-  public void ResetProps(){if(!Rag.Grab.isSelected&&State.Coop?.RemoteHeld(Rag.Grab)!=true)Rag.ResetHome();wasHeld=false;}
+  public void ResetProps(){}
   void BuildBeam()
   {
    var shader=Resources.Load<Shader>("S4BeaconBeam");if(!shader)throw new System.InvalidOperationException("Missing included beacon beam shader");

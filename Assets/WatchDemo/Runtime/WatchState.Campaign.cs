@@ -45,7 +45,7 @@ namespace LighthouseKeepers.WatchDemo
    else if(f.kind==NightFaultKind.LowFuel){Engine?.SetFuel(Math.Min(Engine.Fuel,f.fuelFraction));}
    else if(f.stationId==PipeStation)Pipe.Reset(unchecked(++repairSeed),false);
    else if(f.stationId==GeneratorStation)Engine?.Reset(Definition.initialFuelFraction,Definition.fuelDrainPerSecond,false);
-   else if(f.stationId==BeaconStation)Beacon?.Reset(Definition.beaconInitiallyLit,Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,Definition.beaconInitialSoot,Definition.beaconSootPerSecond);
+   else if(f.stationId==BeaconStation)Beacon?.Reset(false,Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,0,0);
    else if(f.stationId==RadioStation)Radio.Reset(RadioAvailable);
    Changed?.Invoke();
   }

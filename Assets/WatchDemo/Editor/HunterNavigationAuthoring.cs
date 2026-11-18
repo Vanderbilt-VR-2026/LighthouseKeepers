@@ -20,6 +20,9 @@ namespace LighthouseKeepers.WatchDemo.Editor
    NavMeshBuilder.CollectSources(bounds,~0,NavMeshCollectGeometry.PhysicsColliders,0,marks,sources);
    var settings=NavMesh.GetSettingsByIndex(0);settings.agentRadius=tuning.radius;settings.agentHeight=tuning.navigationHeight;settings.agentClimb=tuning.navClimb;settings.agentSlope=tuning.navSlope;settings.overrideVoxelSize=true;settings.voxelSize=tuning.navVoxel;settings.minRegionArea=.1f;
    var data=NavMeshBuilder.BuildNavMeshData(settings,sources,bounds,Vector3.zero,Quaternion.identity);if(!data)throw new InvalidOperationException("No navigation baked");
+   // Do not overwrite a native navigation asset while live agents still have it registered.
+   // Restart Play Mode after this authoring operation to recreate their handles.
+   NavMesh.RemoveAllNavMeshData();
    var existing=AssetDatabase.LoadAssetAtPath<NavMeshData>(Path);
    if(existing){EditorUtility.CopySerialized(data,existing);UnityEngine.Object.DestroyImmediate(data);data=existing;EditorUtility.SetDirty(data);}else AssetDatabase.CreateAsset(data,Path);
    AssetDatabase.SaveAssets();Directory.CreateDirectory(output);

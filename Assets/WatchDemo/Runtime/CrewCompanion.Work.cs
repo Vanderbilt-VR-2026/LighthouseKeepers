@@ -112,7 +112,7 @@ namespace LighthouseKeepers.WatchDemo {
      }
      var wheel=workBeacon.Wheel.transform;
      if(AtControl(KeeperStep.KeepLight,wheel,wheel.position+workBeacon.transform.forward*.65f)){
-      s.IgniteBeacon(true);s.WipeBeacon(Time.deltaTime*.15f);
+      s.IgniteBeacon(true);
       s.AlignBeacon(Mathf.MoveTowards(s.Beacon.Alignment,s.ShipWheelTarget,tuning.beaconTurnsPerSecond*Time.deltaTime));
      }return true;
     }

@@ -36,6 +36,10 @@ def cap():
 
 def expressive_face():
     F.face()
+    # No separate whisker tubes protruding through the nostrils; retain the fitted beard.
+    for ob in list(F.OBJECTS):
+        if ob.name.startswith("Moustache"):
+            F.OBJECTS.remove(ob);bpy.data.objects.remove(ob,do_unlink=True)
     # Anatomical eyelids remain on the head; iris and sclera rotate inside their sockets.
     for ob in F.OBJECTS:
         if ob.name.startswith(('Eye white','Iris','Pupil')):
@@ -55,32 +59,18 @@ def expressive_face():
                             group=ob.vertex_groups[g.group]
                             if not group.name.startswith('VIS_'):group.remove([v.index])
                         jaw.add([v.index],w,'REPLACE');ob.vertex_groups['Head'].add([v.index],1-w,'REPLACE')
-    # Beard shell follows exactly the weights of its source skin vertices: no
-    # differential jaw movement / crossing triangles through the cheek surface.
+    # Bake the beard into the skin atlas. A duplicate beard shell was intersecting
+    # the nostrils and jaw during animation; the head alone deforms reliably.
     head=next(o for o in F.OBJECTS if o.name=='Anatomical fisherman head')
     beard=next(o for o in F.OBJECTS if o.name=='Fitted beard')
-    from mathutils.kdtree import KDTree
-    tree=KDTree(len(head.data.vertices))
-    for v in head.data.vertices:tree.insert(head.matrix_world@v.co,v.index)
-    tree.balance()
-    for v in beard.data.vertices:
-        _,index,_=tree.find(beard.matrix_world@v.co)
-        for group in list(v.groups):
-            g=beard.vertex_groups[group.group]
-            if not g.name.startswith('VIS_'):g.remove([v.index])
-        for group in head.data.vertices[index].groups:
-            name=head.vertex_groups[group.group].name
-            if name.startswith('VIS_'):continue
-            g=beard.vertex_groups.get(name) or beard.vertex_groups.new(name=name)
-            g.add([v.index],group.weight,'REPLACE')
-    # Clear the lips and mouth opening in the beard shell, rather than stretching a
-    # beard sheet across the opening. The accepted torso, arms and legs are unchanged.
-    import bmesh
-    bm=bmesh.new();bm.from_mesh(beard.data)
-    bmesh.ops.delete(bm,geom=[f for f in bm.faces if abs(M.unity(f.calc_center_median())[0])<.026 and 1.582<M.unity(f.calc_center_median())[1]<1.618],context='FACES')
-    bm.to_mesh(beard.data);bm.free()
+    head.data.materials.append(M.MATERIALS['Hair']);hair_index=len(head.data.materials)-1
+    for face in head.data.polygons:
+        x,y,z=M.unity(face.center);top=F.EYES-.045+.015*min(1,abs(x)/.07)
+        if F.EYES-.14<y<top and z>.005 and abs(x)<.085 and not (abs(x)<.045 and y>1.61):
+            face.material_index=hair_index
+    F.OBJECTS.remove(beard);bpy.data.objects.remove(beard,do_unlink=True)
     # Mouth interior is concealed by the closed lips, exposed by the lowered jaw.
-    F.ellipsoid('Mouth interior',(0,1.592,.062),(.024,.026,.013),'Mouth','Head',{'Head':1},20,12)
+    F.ellipsoid('Mouth interior',(0,1.585,.050),(.020,.018,.010),'Mouth','Head',{'Head':1},20,12)
     from mathutils.bvhtree import BVHTree
     skin_tree=BVHTree.FromPolygons([Vector(M.unity(head.matrix_world@v.co)) for v in head.data.vertices],[list(f.vertices) for f in head.data.polygons])
     for side,joint in ((-1,'EyeL'),(1,'EyeR')):

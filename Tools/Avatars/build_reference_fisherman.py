@@ -123,10 +123,11 @@ def face():
     for index,weights in keep_weights.items():
         for name,weight in weights.items():head.vertex_groups[name].add([index],weight,"REPLACE")
     points=[M.unity(v.co) for v in head.data.vertices]
+    from mathutils.bvhtree import BVHTree
+    skin_tree=BVHTree.FromPolygons([Vector(p) for p in points],[list(f.vertices) for f in head.data.polygons])
     def skin_z(x,y):
-        nearby=sorted(( ((px-x)**2+(py-y)**2,pz) for px,py,pz in points if pz>.015),key=lambda q:q[0])[:4]
-        total=sum(1/(d+1e-7) for d,z in nearby)
-        return sum(z/(d+1e-7) for d,z in nearby)/total
+        hit=skin_tree.ray_cast(Vector((x,y,.3)),Vector((0,0,-1)))
+        return hit[0].z if hit[0] is not None else .06
     for side in (-1,1):
         x=side*.030775
         ellipsoid("Eye white",(x,EYES,.064535),(.0138,.0138,.0145),"EyeWhite","Head",{"Head":1},20,12)
@@ -139,7 +140,7 @@ def face():
         line("Fitted eyebrow",brow,.003,"Hair","Head",{"Head":1})
         moustache=[]
         for i in range(9):
-            xx=side*(.003+.024*i/8);yy=EYES-.030-.004*i/8
+            xx=side*(.003+.024*i/8);yy=EYES-.047-.002*i/8
             moustache.append((xx,yy,skin_z(xx,yy)+.002))
         line("Moustache",moustache,.003,"Hair","Head",{"Head":1})
     beard_faces=[]

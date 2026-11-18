@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Build()
         {
-            var p=gameObject.AddComponent<M2StationParts>();p.Initialize();block=new MaterialPropertyBlock();
+            var p=gameObject.AddComponent<M2StationParts>();p.Initialize();p.Metal.SetColor("_BaseColor",new Color(.14f,.17f,.14f));p.Metal.SetColor("_EmissionColor",Color.black);block=new MaterialPropertyBlock();
             pipe=watch.GetComponentInChildren<WatchPipeRepair>();if(!pipe)pipe=FindAnyObjectByType<WatchPipeRepair>();
             PlaceFixed();
             p.Part("Cast pressure bypass body",transform,new Vector3(0,0,-.055f),new Vector3(.12f,.19f,.12f),p.Metal,PrimitiveType.Cylinder);

@@ -270,7 +270,7 @@ namespace LighthouseKeepers.WatchDemo
             if(snapshot.directorEnabled!=(Director!=null)||snapshot.valveEnabled!=(Pressure!=null)||snapshot.handheldEnabled!=(CrewRadio!=null))return false;
             if(snapshot.gridEnabled!=(Grid!=null)||snapshot.engineEnabled!=(Engine!=null)||snapshot.beaconStationEnabled!=(Beacon!=null))return false;
             if(Grid!=null&&!Grid.ApplyReplica(snapshot.gridCapacity,snapshot.gridMask,snapshot.power==1,snapshot.gridTripped))return false;
-            Beacon?.ApplyReplica(snapshot.beaconIgnited,snapshot.beaconAlignment,snapshot.beaconTarget,snapshot.beaconSoot,target.beaconSootPerSecond);
+            Beacon?.ApplyReplica(snapshot.beaconIgnited,snapshot.beaconAlignment,snapshot.beaconTarget,0,0);
             Engine?.ApplyReplica(snapshot.fuel,snapshot.primer,snapshot.enginePulls,snapshot.chokeClosed,snapshot.power==1,snapshot.engineSettled,snapshot.chokeRemaining,snapshot.engineFloodRemaining,snapshot.coughSerial,snapshot.engineConsumption,snapshot.engineClosedPulls);
             BriefingHeld=snapshot.briefingHeld;
             Authenticity=new RadioAuthenticityState(HorrorTuning.Current){ReadOnly=true};Authenticity.Apply(snapshot.authenticity);
@@ -317,7 +317,7 @@ namespace LighthouseKeepers.WatchDemo
             if(Campaign){faults.Clear();foreach(var task in Definition.tasks)faults.Add(task.stationId);}
             day3Stage=Day3Balance?1:0;day3GraceUntil=0;balanceCrew=keeperCount>1;
             Power = !Campaign&&!GeneratorTutorial&&!Day3Balance&&faults.Contains(GeneratorStation) ? PowerState.Off : PowerState.On;
-            Beacon?.Reset(Campaign||Day3Balance||Definition.beaconInitiallyLit,Campaign||Day3Balance?Definition.beaconTargetAlignment:Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,Campaign?0:Definition.beaconInitialSoot,Campaign?0:Definition.beaconSootPerSecond);
+            Beacon?.Reset(Campaign||Day3Balance||Definition.beaconInitiallyLit,Campaign||Day3Balance?Definition.beaconTargetAlignment:Definition.beaconInitialAlignment,Definition.beaconTargetAlignment,0,0);
             Engine?.Reset(Campaign?Scenario.arrivalFuelFraction:Day3Balance?Tuning.day3ArrivalFuel:Definition.initialFuelFraction,Day3Balance?Tuning.day3FuelDrainPerSecond:NightTwoFuelFailure?TutorialFuelDrain:Definition.fuelDrainPerSecond,Power==PowerState.On);
             if(Grid!=null)Grid.Reset(Definition.powerCapacity,Definition.initialCircuitMask,Power==PowerState.On);
             Radio.SetNight(Campaign?Day:0);Radio.Reset(RadioAvailable);

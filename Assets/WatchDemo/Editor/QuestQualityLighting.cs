@@ -52,13 +52,13 @@ public static class QuestQualityLighting
         var used=new HashSet<int>();
         foreach(var l in lights.OrderBy(x=>EnvironmentLightingBake.PathOf(x.transform),StringComparer.Ordinal)){
             if(l.name.Contains("beacon")||l.name=="Powered lantern light")continue;
-            if(l.name=="Baked cold window spill"){l.enabled=true;l.intensity=.035f;continue;}
+            if(l.name=="Baked cold window spill"){l.enabled=true;l.intensity=.012f;continue;}
             bool room=l.name.StartsWith("Mains fixture");int floor=LighthouseKeepers.WatchDemo.LanternRoomLighting.Room(l.transform.position);
             l.enabled=room&&used.Add(floor);
-            if(l.enabled){l.transform.position=LighthouseKeepers.WatchDemo.LanternRoomLighting.RoomLights[floor];l.intensity=.5f;l.range=2.7f;l.color=new Color(1,.64f,.32f);}
+            if(l.enabled){l.transform.position=LighthouseKeepers.WatchDemo.LanternRoomLighting.RoomLights[floor];l.intensity=.18f;l.range=2.1f;l.color=new Color(1,.64f,.32f);}
             EditorUtility.SetDirty(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l.transform);
         }
-        RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.006f,.008f,.011f);
+        RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.002f,.003f,.004f);
     }
     [MenuItem("Lighthouse Keepers/Quality/Rebake Quest Lighting")]
     public static void Bake()
