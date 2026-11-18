@@ -7,8 +7,13 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class AdaptiveMusic:MonoBehaviour
  {
   WatchDemoController watch;AudioPassSettings settings;AudioSource[] deck;AudioSource stings;
+  bool continuous,accentObserved;int previousWindows,previousLesson;bool previousPower;
+  AudioClip mainLoop,intenseHit;readonly MusicAccentGate accentGate=new();
+  public bool ContinuousScore=>continuous;public int OverlayCount {get;private set;}
+  public bool OverlayPlaying=>continuous&&deck[1].isPlaying;public float MainTime=>continuous?deck[0].time:0;
+  public string MainClip=>continuous?mainLoop.name:"legacy";
   AudioClip[] clips;AudioClip fixedClip,survivedClip,lostClip,drownedScore;bool horrorDeck;
-  int passedShips;int mode=-1,pending=-1,active,day,tasks;double since,nextChange,lastElapsed;float restGain=1;float fadeAge=100,nextSting;int pendingFixed;bool failed,sleeping,lobby;
+  int passedShips;int mode=-1,pending=-1,active,day,tasks;double since,nextChange,lastElapsed;float restGain=1,bedOverlayGain=1;float fadeAge=100,nextSting;int pendingFixed;bool failed,sleeping,lobby;
   public int Mode=>mode;public double Since=>since;
   public static int Choose(bool fault,float waterFraction,double darkRemaining,bool dark,double timeRemaining)
    =>!fault?0:waterFraction>.7f||dark&&darkRemaining<20||timeRemaining<60?2:fault?1:0;
@@ -24,6 +29,9 @@ namespace LighthouseKeepers.WatchDemo
    if(s.demoSoundtrack)for(int i=0;i<3;i++)clips[i]=Resources.Load<AudioClip>("DemoHorror/"+new[]{"calm","tension","crisis"}[i])??clips[i];
    drownedScore=s.demoSoundtrack?clips[2]:Resources.Load<AudioClip>("S5Audio/DrownedHorror/score");
    deck=new[]{Source("Adaptive music A"),Source("Adaptive music B")};foreach(var d in deck){d.loop=true;d.priority=180;KeeperAudioMix.Route(d,"Music");}
+   mainLoop=s.providedSoundtrack?Resources.Load<AudioClip>("PlayerScore/main-loop"):null;intenseHit=s.providedSoundtrack?Resources.Load<AudioClip>("PlayerScore/intense-hit"):null;
+   continuous=mainLoop&&intenseHit;
+   if(continuous){deck[0].clip=mainLoop;deck[1].clip=intenseHit;deck[1].loop=false;}
    stings=Source("Short watch stings");stings.priority=50;
    fixedClip=Resources.Load<AudioClip>("AudioPass/sting_fixed");survivedClip=Resources.Load<AudioClip>("AudioPass/sting_survived");lostClip=Resources.Load<AudioClip>("AudioPass/sting_lost");
   }
@@ -32,7 +40,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    if(lobby){if(!deck[0].isPlaying&&deck[0].clip)deck[0].Play();return;}
    var s=watch.State;if(s==null)return;
-   if(day!=s.Day||s.Elapsed<lastElapsed-.01){day=s.Day;tasks=s.CompletedTasks;passedShips=s.Ships?.PassedMask??0;failed=sleeping=false;pendingFixed=0;pending=-1;mode=-1;horrorDeck=false;foreach(var d in deck)d.Stop();}
+   if(day!=s.Day||s.Elapsed<lastElapsed-.01){day=s.Day;tasks=s.CompletedTasks;passedShips=s.Ships?.PassedMask??0;failed=sleeping=false;pendingFixed=0;pending=-1;mode=-1;horrorDeck=false;accentObserved=false;if(!continuous)foreach(var d in deck)d.Stop();}
    lastElapsed=s.Elapsed;
    if(!s.RemoteReplica)
    {
@@ -49,12 +57,15 @@ namespace LighthouseKeepers.WatchDemo
     if(wanted==mode)pending=-1;
     if(pending>=0&&s.Elapsed>=nextChange){Transition(pending,nextChange,0);pending=-1;}
    }
-   bool wantedHorror=drownedScore&&s.Drowned!=null&&DrownedHorror.ScoreWanted(s.Drowned.Phase,DrownedAppearance.Sightings,watch.Sleeping||s.Failed);
+   bool wantedHorror=!continuous&&drownedScore&&s.Drowned!=null&&DrownedHorror.ScoreWanted(s.Drowned.Phase,DrownedAppearance.Sightings,watch.Sleeping||s.Failed);
    if(wantedHorror!=horrorDeck){horrorDeck=wantedHorror;if(horrorDeck)SetDeck(drownedScore,(float)System.Math.Max(0,s.Elapsed-s.Drowned.Since));else if(mode>=0)SetDeck(clips[mode],(float)System.Math.Max(0,s.Elapsed-since));}
+   if(continuous){PollIntenseBeats();bedOverlayGain=Mathf.MoveTowards(bedOverlayGain,OverlayPlaying?.85f:1,Time.unscaledDeltaTime*(OverlayPlaying?2:.25f));deck[0].volume=settings.providedMusicVolume*bedOverlayGain;deck[1].volume=settings.intenseOverlayVolume;}
+   else {
    fadeAge+=Time.unscaledDeltaTime;float t=Mathf.Clamp01(fadeAge/settings.crossfadeSeconds);
    float restTarget=!horrorDeck&&StormRest(s.Day,s.Elapsed,mode)?(settings.demoSoundtrack?.3f:0):1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
    deck[active].volume=rest*settings.musicVolume*Mathf.Sin(t*Mathf.PI*.5f);deck[1-active].volume=rest*settings.musicVolume*Mathf.Cos(t*Mathf.PI*.5f);
    if(t>=1)deck[1-active].Stop();
+   }
    int shipMask=s.Ships?.PassedMask??0;
    if((shipMask&~passedShips)!=0&&survivedClip){stings.Stop();stings.PlayOneShot(survivedClip,settings.stingVolume);nextSting=Time.unscaledTime+survivedClip.length;}
    passedShips=shipMask;
@@ -64,9 +75,28 @@ namespace LighthouseKeepers.WatchDemo
   }
   void Transition(int next,double at,float age)
   {
-   if(!clips[next])return;mode=next;since=at;if(!horrorDeck){SetDeck(clips[next],age);fadeAge=age;}
+   if(!clips[next]&&!continuous)return;bool impact=mode>=0&&mode!=2&&next==2;mode=next;since=at;if(!horrorDeck){SetDeck(clips[next],age);fadeAge=age;}if(impact&&continuous)RequestAccent(age);
   }
-  void SetDeck(AudioClip clip,float age){if(!clip)return;active=1-active;var a=deck[active];a.Stop();a.clip=clip;a.time=age%clip.length;a.volume=0;a.Play();fadeAge=0;}
+  void SetDeck(AudioClip clip,float age){if(continuous){if(!deck[0].isPlaying){deck[0].time=age%mainLoop.length;deck[0].Play();}return;}if(!clip)return;active=1-active;var a=deck[active];a.Stop();a.clip=clip;a.time=age%clip.length;a.volume=0;a.Play();fadeAge=0;}
+  // The second existing deck is the five-second accent, never another looping song.
+  public bool RequestAccent(double eventAge=0)
+  {
+   if(!continuous||lobby||!accentGate.Try(Time.unscaledTime,eventAge,settings.intenseOverlaySpacing,deck[1].isPlaying))return false;
+   deck[1].time=(float)eventAge;deck[1].volume=settings.intenseOverlayVolume;deck[1].Play();OverlayCount++;return true;
+  }
+  void PollIntenseBeats()
+  {
+   var s=watch.State;int windows=0;double age=0;
+   if(s.Ships!=null)for(int i=0;i<s.Ships.Count;i++)if(!s.Scenario.ships[i].safePreview&&s.Ships.InWindow(i,s.Elapsed)){windows|=1<<i;if((previousWindows&(1<<i))==0)age=System.Math.Max(0,s.Elapsed-s.Ships.WindowStart(i));}
+   int lesson=s.Recovery.Lesson;bool power=s.Power==PowerState.On;
+   if(accentObserved){
+    if((windows&~previousWindows)!=0)RequestAccent(age);
+    if(previousPower&&!power)RequestAccent();
+    if(lesson==3&&previousLesson!=3&&DrownedAppearance.Sightings)RequestAccent(s.Recovery.LessonAge);
+    if(s.Failed&&!failed)RequestAccent();
+   }
+   accentObserved=true;previousWindows=windows;previousPower=power;previousLesson=lesson;
+  }
   public void Capture(WatchSnapshot s)
   {
    s.musicMode=Mathf.Max(0,mode);s.musicSince=System.Math.Clamp(since,0,s.elapsed);
@@ -87,7 +117,7 @@ namespace LighthouseKeepers.WatchDemo
   {
    var s=AudioPassSettings.Current;if(!s||!s.adaptiveMusic||scene.name!="LK_NetworkLobby")return;
    var m=new GameObject("Quiet lobby calm drone").AddComponent<AdaptiveMusic>();m.lobby=true;m.Setup(s);
-   var a=m.deck[0];a.clip=m.clips[0];a.volume=s.lobbyVolume;a.Play();
+   var a=m.deck[0];a.clip=m.continuous?m.mainLoop:m.clips[0];a.volume=s.lobbyVolume;a.Play();
   }
  }
 }

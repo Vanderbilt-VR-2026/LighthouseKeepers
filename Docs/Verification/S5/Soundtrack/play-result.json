@@ -1,0 +1,130 @@
+{
+  "passed": true,
+  "lobby": [
+    {
+      "name": "Adaptive music A",
+      "clip": "main-loop",
+      "volume": 0.025
+    }
+  ],
+  "initial": {
+    "ContinuousScore": true,
+    "MainClip": "main-loop",
+    "MainTime": 5.339864,
+    "OverlayCount": 0,
+    "OverlayPlaying": false,
+    "sources": [
+      {
+        "name": "Adaptive music A",
+        "clip": "main-loop",
+        "isPlaying": true,
+        "loop": true,
+        "volume": 0.32
+      },
+      {
+        "name": "Adaptive music B",
+        "clip": "intense-hit",
+        "isPlaying": false,
+        "loop": false,
+        "volume": 0.55
+      }
+    ]
+  },
+  "accent": {
+    "first": true,
+    "duplicate": false,
+    "facts": {
+      "ContinuousScore": true,
+      "MainClip": "main-loop",
+      "MainTime": 5.361202,
+      "OverlayCount": 1,
+      "OverlayPlaying": true,
+      "sources": [
+        {
+          "name": "Adaptive music A",
+          "clip": "main-loop",
+          "isPlaying": true,
+          "loop": true,
+          "volume": 0.32
+        },
+        {
+          "name": "Adaptive music B",
+          "clip": "intense-hit",
+          "isPlaying": true,
+          "loop": false,
+          "volume": 0.55
+        }
+      ]
+    }
+  },
+  "crisis": {
+    "ContinuousScore": true,
+    "MainClip": "main-loop",
+    "MainTime": 6.40653038,
+    "OverlayCount": 1,
+    "OverlayPlaying": true,
+    "sources": [
+      {
+        "name": "Adaptive music A",
+        "clip": "main-loop",
+        "isPlaying": true,
+        "loop": true,
+        "volume": 0.272
+      },
+      {
+        "name": "Adaptive music B",
+        "clip": "intense-hit",
+        "isPlaying": true,
+        "loop": false,
+        "volume": 0.55
+      }
+    ]
+  },
+  "after": {
+    "ContinuousScore": true,
+    "MainClip": "main-loop",
+    "MainTime": 14.4492064,
+    "OverlayCount": 1,
+    "OverlayPlaying": false,
+    "sources": [
+      {
+        "name": "Adaptive music A",
+        "clip": "main-loop",
+        "isPlaying": true,
+        "loop": true,
+        "volume": 0.32
+      },
+      {
+        "name": "Adaptive music B",
+        "clip": "intense-hit",
+        "isPlaying": false,
+        "loop": false,
+        "volume": 0.55
+      }
+    ]
+  },
+  "possession": {
+    "ContinuousScore": true,
+    "MainClip": "main-loop",
+    "MainTime": 15.558526,
+    "OverlayCount": 2,
+    "OverlayPlaying": true,
+    "sources": [
+      {
+        "name": "Adaptive music A",
+        "clip": "main-loop",
+        "isPlaying": true,
+        "loop": true,
+        "volume": 0.272
+      },
+      {
+        "name": "Adaptive music B",
+        "clip": "intense-hit",
+        "isPlaying": true,
+        "loop": false,
+        "volume": 0.55
+      }
+    ]
+  },
+  "scope": "Muted actual lobby and offline Play Mode; injected crisis/possession events, no headset listening acceptance."
+}

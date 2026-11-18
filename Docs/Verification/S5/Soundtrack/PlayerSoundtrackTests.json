@@ -1,0 +1,52 @@
+{
+  "Summary": {
+    "Total": 5,
+    "Passed": 5,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PlayerSoundtrackTests.InvalidTimingNeverConsumesTheNextValidBeat",
+      "Status": "Passed",
+      "Duration": 0.0041663,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PlayerSoundtrackTests.LateJoinAndStaleScareNeverProduceDelayedStingers",
+      "Status": "Passed",
+      "Duration": 8.88e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PlayerSoundtrackTests.LongBedStreamsStereoAndAccentIsExactlyFiveSeconds",
+      "Status": "Passed",
+      "Duration": 0.0058413,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PlayerSoundtrackTests.NewScoreKeepsExistingMusicSliderAndSevenDbSpeechDucking",
+      "Status": "Passed",
+      "Duration": 0.0006794,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.PlayerSoundtrackTests.RepeatedFramesAndOverlappingEventsDoNotStackOrRestart",
+      "Status": "Passed",
+      "Duration": 9.6e-05,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.8,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: PlayerSoundtrackTests",
+  "success": true,
+  "result": null
+}

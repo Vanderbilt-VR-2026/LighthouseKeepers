@@ -1,3 +1,5 @@
+> Current November 17 score: [continuous supplied soundtrack + five-second overlay](PlayerSoundtrack.md). This supersedes the older three-loop demo replacement and periodic silence for the selected score. Existing speech ducking and buses remain.
+
 # Audio mix
 
 ## Sources

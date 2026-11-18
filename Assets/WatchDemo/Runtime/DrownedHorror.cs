@@ -52,7 +52,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             AudioClip Load(string name) => Resources.Load<AudioClip>("S5Audio/DrownedHorror/" + name);
             approach = Load("approach"); revealA = Load("reveal_a"); revealB = Load("reveal_b"); retreat = Load("retreat");
-            if(AudioPassSettings.Current&&AudioPassSettings.Current.demoSoundtrack){var hit=Resources.Load<AudioClip>("DemoHorror/scare");if(hit)revealA=revealB=hit;}
+            if(AudioPassSettings.Current&&AudioPassSettings.Current.demoSoundtrack&&!AudioPassSettings.Current.providedSoundtrack){var hit=Resources.Load<AudioClip>("DemoHorror/scare");if(hit)revealA=revealB=hit;}
             events = Source("Drowned footsteps and reveal", false);
             breathing = Source("Drowned wet breathing", true); breathing.clip = Load("breathing");
         }
@@ -77,6 +77,7 @@ namespace LighthouseKeepers.WatchDemo
             if (cue != DrownedSoundCue.None)
             {
                 LastCue = cue; CueCount++;
+                if(cue==DrownedSoundCue.Reveal)watch.GetComponent<AdaptiveMusic>()?.RequestAccent(s.Elapsed-cueAt);
                 events.Stop(); events.clip = cue == DrownedSoundCue.Approach ? approach : cue == DrownedSoundCue.Retreat ? retreat : (d.Fault + s.Day) % 2 == 0 ? revealA : revealB;
                 eventGain = cue == DrownedSoundCue.Reveal ? .5f : .45f;
                 if (events.clip) { events.time = (float)System.Math.Min(s.Elapsed - cueAt, events.clip.length - .01f); events.Play(); }

@@ -6,6 +6,9 @@ namespace LighthouseKeepers.Core
  {
   public bool objectiveHud=true,paSpeakers=true;
   public bool demoSoundtrack=false;
+  public bool providedSoundtrack=false;
+  [Range(0,1)] public float providedMusicVolume=.32f,intenseOverlayVolume=.55f;
+  [Min(5)] public float intenseOverlaySpacing=8;
   public bool adaptiveMusic=true,layeredRain=true,audioMix=true;
   [Min(.1f)]public float crossfadeSeconds=2;
   public float[] barSeconds={3.3436735f,1.6718367f,3.3436735f};

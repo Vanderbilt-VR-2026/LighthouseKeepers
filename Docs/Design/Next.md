@@ -1,4 +1,4 @@
-# Current checkpoint — House briefing complete; new music requested
+# Current checkpoint — House briefing and soundtrack complete; APK delivery next
 
 **sprint-5 / draft PR #89**. Quest connected. Install the next verified APK without launching it. Keep Editors muted; force asset refresh + finish compilation BEFORE Play to avoid the Fusion Editor recompile-hook crash.
 
@@ -8,7 +8,7 @@ House arrival replaces lobby briefing. Three pages (WWII context, duties, contro
 
 ## Next, in order
 
-1. Latest user request: `/Users/aneeshvasamreddy/Downloads/Lighthouse keepers soundtrack.mp3` becomes the near-continuous loop. Overlay the previous provided `IT Trailer Music Version.mp3` segment **01:11–01:16** for intense beats, without stopping the new bed; avoid stacking, preserve speech ducking. Work on copies. Then source build/install, comprehensive three-night checklist for Wispr Flow feedback. No auto-launch.
+1. Music implementation complete: supplied main loop (6:36.593, four-second seam overlap), exact prior sample **01:11–01:16** accent, existing two music decks, eight-second cooldown/no stacking/stale replay, speech ducking retained. 18 focused tests and muted offline Play Mode passed; `Docs/Verification/S5/Soundtrack/`. Build from the next clean committed tip, verify ARM64/signature/package/CRC, install on connected Quest without launch, record receipt + three-night checklist. Build helper: adapt `artifacts/s5/day3/build.py` to a fresh backup/output folder and new APK name; restore only documented builder churn.
 2. Shared scare kit and Night 3 bunk → warned hunter → hiding/hold breath → final ship remain unfinished (see prior checkpoint). Night 1 remains pipe/preview/sleep, not the requested full-station rehearsal. Do not claim those are in the APK.
 
 ## DEVICE CHECKS PENDING

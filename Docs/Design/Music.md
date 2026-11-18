@@ -1,3 +1,5 @@
+> Current November 17 score: [continuous supplied soundtrack + five-second overlay](PlayerSoundtrack.md). This supersedes the older three-loop demo replacement and periodic silence for the selected score. Existing speech ducking and buses remain.
+
 # Music
 
 Tracks and stings supplied by the team, AI-generated with Google Gemini/Lyria. Original MP3s are untouched and excluded from the build. Reprocess with `Tools/S4/process_music.py <source-folder>` after beat analysis.
