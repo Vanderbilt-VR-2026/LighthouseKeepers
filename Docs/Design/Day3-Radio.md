@@ -16,4 +16,4 @@ Reuse Day 2's locks, lights, surface-bound stains, caption channel and possessio
 
 ## Delivery boundaries
 
-Radio authentication is the first independently verifiable slice. The bunk sequence and live hunter are not enabled until their escape, witness/light, hiding, replication and recovery checks pass. The existing Night 1 remains pipe/preview/sleep; its requested full-station tutorial is still pending. Do not report design text as implemented gameplay.
+Radio authentication is the first independently verifiable slice. The bunk sequence and live hunter are not enabled until their escape, witness/light, hiding, replication and recovery checks pass. Night 1 now rehearses pipe, fuel/timed starter, beacon ignition, radio clearance and actual ship aiming; see `Docs/Verification/S5/Unfinished/Tutorial/`. Do not report design text as implemented gameplay.

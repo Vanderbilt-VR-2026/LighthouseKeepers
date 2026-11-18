@@ -16,5 +16,17 @@ namespace LighthouseKeepers.Net.Tests {
    Call(d,"Tick",10f,1,Vector3.right*100,0,Vector3.zero,true);Assert.AreEqual(first,Get<object>(d,"First"),"Campaign dependencies stay stable until the engine is repaired, regardless of head position.");
   }
   [Test]public void ReplicaCannotSpawnPartnerOrChangeAuthority(){var h=New();Call(h,"SetScriptedPartner",true);Call(Get<object>(h,"Director"),"Tick",0f,1,Vector3.zero,0,Vector3.zero,true);var packet=Call(h,"Capture",.1f);Assert.True((bool)Call(packet,"Valid"));var g=New();Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",packet));Assert.True(Get<bool>(g,"ScriptedPartner"));Call(Get<object>(g,"Director"),"Tick",1f,42,Vector3.zero,0,Vector3.zero,false);Assert.AreEqual(Bot,Get<int>(Get<object>(g,"Director"),"SecondActor"));Call(g,"SetScriptedPartner",false);Assert.True(Get<bool>(g,"ScriptedPartner"));packet.GetType().GetField("keepers").SetValue(packet,2);Assert.False((bool)Call(packet,"Valid"));}
+  [Test]public void HelperShedsLoadBeforeResetAndKeepsTheRequestedCircuit(){
+   var s=New();var grid=Get<PowerGrid>(s,"Grid");var method=T("CrewCompanion").GetMethod("WorkCircuitMask");
+   Call(s,"CompleteRepair");
+   foreach(float capacity in new[]{2.5f,3.25f})foreach(PowerCircuit priority in new[]{PowerCircuit.Pump,PowerCircuit.Radio,PowerCircuit.Beacon}){
+    grid.Reset(capacity,15,true);int wanted=(int)method.Invoke(null,new object[]{s,priority});
+    Assert.AreNotEqual(0,wanted&(1<<(int)priority));
+    for(int n=0;n<4;n++)if((wanted&(1<<n))==0)grid.SetCircuit((PowerCircuit)n,false);
+    for(int n=0;n<4;n++)if((wanted&(1<<n))!=0)grid.SetCircuit((PowerCircuit)n,true);
+    Assert.LessOrEqual(grid.Demand,capacity+.0001f);if(grid.Tripped)Assert.True(grid.ResetBreaker());Assert.True(grid.Powered(priority));
+    Assert.AreEqual(wanted,(int)method.Invoke(null,new object[]{s,priority}),"Plan must remain stable rather than oscillating switches");
+   }
+  }
  }
 }

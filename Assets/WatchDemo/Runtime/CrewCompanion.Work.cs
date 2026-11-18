@@ -1,7 +1,6 @@
 using UnityEngine;using LighthouseKeepers.Core;using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo {
  public sealed partial class CrewCompanion {
-  static readonly PowerCircuit[] workCircuits={PowerCircuit.Pump,PowerCircuit.Radio,PowerCircuit.Beacon,PowerCircuit.Lights};
   WatchEngineControls workEngine;WatchPipeRepair workPipe;WatchPowerPanel workPanel;WatchRadioConsole workRadio;WatchBeaconStation workBeacon;
   GameObject workWrench;Vector3 workHand;bool working,workingPipe,clearanceRequested,clearanceOffered,carryingFuel;
   float workFor;double lastWatchElapsed;KeeperStep workStep;
@@ -24,6 +23,29 @@ namespace LighthouseKeepers.WatchDemo {
    if(workStep!=step){workStep=step;workFor=0;nextPath=0;}working=false;workingPipe=false;statusKey="companion.work";
    if(!MoveTo(standing)||Vector3.Distance(Position+Vector3.up*1.2f,target.position)>tuning.reach+.25f)return false;
    agent.ResetPath();working=true;workHand=target.position;workFor+=Time.deltaTime;return true;
+  }
+  // Choose a feasible circuit set; never try to restore every switch on a scarce-power night.
+  public static int WorkCircuitMask(WatchState s,PowerCircuit priority){
+   int mask=0;float remaining=s.Grid.Capacity;
+   void Add(PowerCircuit circuit){int bit=1<<(int)circuit;if((mask&bit)!=0)return;
+    float cost=circuit==PowerCircuit.Pump?s.PowerTuning.pumpLoad:circuit==PowerCircuit.Beacon?s.PowerTuning.beaconLoad:circuit==PowerCircuit.Radio?s.PowerTuning.radioLoad:s.PowerTuning.lightsLoad;
+    if(cost<=remaining+.0001f){mask|=bit;remaining-=cost;}}
+   Add(priority);if(!s.Repaired)Add(PowerCircuit.Pump);if(!s.Radio.Completed)Add(PowerCircuit.Radio);
+   Add(PowerCircuit.Beacon);Add(PowerCircuit.Lights);Add(PowerCircuit.Pump);return mask;
+  }
+  bool WorkPanelPlan(PowerCircuit priority){
+   var s=watch.State;int wanted=WorkCircuitMask(s,priority);int circuit=-1;bool selected=false;
+   // Shed load first, then restore the needed branch, then reset once it is safe.
+   for(int i=0;i<4;i++)if(s.Grid.Selected((PowerCircuit)i)&&(wanted&(1<<i))==0){circuit=i;break;}
+   if(circuit<0)for(int i=0;i<4;i++)if(!s.Grid.Selected((PowerCircuit)i)&&(wanted&(1<<i))!=0){circuit=i;selected=true;break;}
+   bool reset=circuit<0&&s.Grid.Tripped;if(circuit<0&&!reset)return false;
+   for(int i=0;i<4;i++)if(workPanel.Control(i).GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>().isSelected){StopStationWork();return false;}
+   if(workPanel.ResetControl.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>().isSelected){StopStationWork();return false;}
+   var key=reset?workPanel.ResetControl:workPanel.Control(circuit);
+   var step=reset?KeeperStep.ResetBreaker:(KeeperStep)((int)(selected?KeeperStep.PumpOn:KeeperStep.PumpOff)+circuit);
+   if(AtControl(step,key.transform,key.transform.position+workPanel.transform.forward*.65f)&&workFor>=tuning.controlSeconds){
+    if(reset)s.ResetBreaker();else s.SetCircuit(circuit,selected);workFor=0;
+   }return true;
   }
   bool WorkStation(){
    var s=watch.State;working=workingPipe=false;
@@ -48,6 +70,7 @@ namespace LighthouseKeepers.WatchDemo {
       }
      }return true;
     }
+    if(s.Grid.Tripped&&WorkPanelPlan(s.ShipGuidanceDue||s.Radio.Completed?PowerCircuit.Beacon:!s.Repaired?PowerCircuit.Pump:PowerCircuit.Radio))return true;
     if(!s.Repaired&&!workPipe.wrench.isSelected){
      var bolt=workPipe.bolts[Mathf.Max(0,s.Pipe.ActiveBolt)];var normal=Vector3.ProjectOnPlane(bolt.up,Vector3.up).normalized;if(normal.sqrMagnitude<.1f)normal=Vector3.left;
      if(AtControl(KeeperStep.TightenBolt,bolt,workPipe.ActivePosition+normal*.75f)){
@@ -56,15 +79,12 @@ namespace LighthouseKeepers.WatchDemo {
      }return true;
     }
     if(s.PipeWorkerActor==WatchState.CompanionActor)s.PipeWorkerActor=0;
-    foreach(var circuit in workCircuits)if(!s.HasPower(circuit)){
-     var control=workPanel.Control((int)circuit);var step=(KeeperStep)((int)KeeperStep.PumpOn+(int)circuit);
-     if(AtControl(step,control.transform,control.transform.position+workPanel.transform.forward*.65f)&&workFor>=tuning.controlSeconds){s.SetCircuit((int)circuit,true);if(s.Grid.Tripped)s.ResetBreaker();workFor=0;}return true;
-    }
+    if(WorkPanelPlan(s.ShipGuidanceDue||s.Radio.Completed?PowerCircuit.Beacon:PowerCircuit.Radio))return true;
    }else if(s.Engine.Settled&&s.Repaired){
     if(s.HasRadioRelay&&learnedCode.Length==0){StopStationWork();return false;}
     if(!s.Radio.Completed){
      if(!s.HasPower(PowerCircuit.Radio)){
-      var key=workPanel.Control((int)PowerCircuit.Radio);if(AtControl(KeeperStep.RadioOn,key.transform,key.transform.position+workPanel.transform.forward*.65f)&&workFor>=tuning.controlSeconds){s.SetCircuit(2,true);if(s.Grid.Tripped)s.ResetBreaker();workFor=0;}return true;
+      if(WorkPanelPlan(PowerCircuit.Radio))return true;
      }
      var r=s.Radio;var step=r.Step==0?KeeperStep.RadioPower:r.Step==1?KeeperStep.RadioTune:r.Step==2?KeeperStep.RadioCode:KeeperStep.RadioTransmit;
      var target=r.Step==3?workRadio.microphone.transform:workRadio.controls[0].transform;
@@ -81,7 +101,7 @@ namespace LighthouseKeepers.WatchDemo {
     }
     if(s.ShipGuidanceDue){
      if(!s.HasPower(PowerCircuit.Beacon)){
-      var key=workPanel.Control(1);if(AtControl(KeeperStep.BeaconOn,key.transform,key.transform.position+workPanel.transform.forward*.65f)&&workFor>=tuning.controlSeconds){s.SetCircuit(1,true);if(s.Grid.Tripped)s.ResetBreaker();workFor=0;}return true;
+      if(WorkPanelPlan(PowerCircuit.Beacon))return true;
      }
      var wheel=workBeacon.Wheel.transform;
      if(AtControl(KeeperStep.KeepLight,wheel,wheel.position+workBeacon.transform.forward*.65f)){
