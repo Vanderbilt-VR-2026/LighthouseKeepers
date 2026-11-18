@@ -11,3 +11,5 @@ User feedback, issue #142: pipe valve hard to locate and teleports after release
 ## Evidence so far
 
 Radio/recall changes compile; 20 focused EditMode checks pass (RadioRelay 5, CampaignOrder 5, SurvivalMode 7, RadioBelt 3). Worn readability and physical reach remain pending. No new APK delivered yet.
+
+Props: removed the 20-second automatic return for lantern/walkie (out-of-world recovery remains); host extinguishes submerged flame without deleting oil; two hand-specific bail poses, static pressure bypass and visible belt holster. 15 focused rule tests pass (Lantern 8, PressureValve 4, RadioBelt 3). Physical headset acceptance pending.

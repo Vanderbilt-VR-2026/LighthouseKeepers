@@ -10,7 +10,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease, INetworkPropCarry
     {
         WatchDemoController watch;int index;XRGrabInteractable grab;INetworkPropStatus lease;Transform head;Renderer lamp;TextMesh status;MaterialPropertyBlock block;
-        bool trigger,previous,released,carried,taughtCarry;
+        bool trigger,previous,released,carried,taughtCarry;AudioSource carrySound;AudioClip carryClick;Transform beltClip;
         public bool Carried=>carried;
         public void DropCarry(){if(carried)released=true;carried=false;}
         public bool ReleasedBodyIsKinematic=>carried||!released;
@@ -53,6 +53,8 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var c in FindObjectsByType<CharacterController>(FindObjectsSortMode.None))Physics.IgnoreCollision(col,c,true);
             grab.selectEntered.AddListener(e=>{carried=false;if(!taughtCarry){taughtCarry=true;FindAnyObjectByType<HarborRadio>()?.RecordSilentLine(KeeperStrings.Get("radio.belt"),"");watch.GetComponent<ObjectiveHud>()?.RevealFor(5);}});grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
             head=Camera.main?Camera.main.transform:null;
+            carrySound=gameObject.AddComponent<AudioSource>();carrySound.playOnAwake=false;carrySound.spatialBlend=1;carrySound.minDistance=.3f;carrySound.maxDistance=3;KeeperAudioMix.Route(carrySound,"SFX_World");carryClick=Resources.Load<AudioClip>("Hands/clunk");
+            if(index==0){beltClip=M2StationParts.Root("Right hip walkie belt clip",watch.transform,Vector3.zero);p.Part("Leather radio holster",beltClip,new Vector3(0,-.045f,0),new Vector3(.09f,.08f,.066f),p.Dark);p.Part("Brass belt clip",beltClip,new Vector3(.05f,0,0),new Vector3(.014f,.10f,.065f),p.Brass);}
         }
         void Activate(ActivateEventArgs e){if(!Held)return;trigger=true;if(watch.State.ScriptedPartner)watch.GetComponent<CrewCompanion>()?.RequestReport();}
         void Deactivate(DeactivateEventArgs e)=>trigger=false;
@@ -60,6 +62,8 @@ namespace LighthouseKeepers.WatchDemo
             // Retain the existing prop lease while clipped; the host checks the carry pose at the belt.
             if(head&&RadioBeltPose.Near(transform.position,head.position,head.rotation)&&!OtherOnBelt()){
                 carried=true;released=false;body.isKinematic=true;
+                if(carryClick)carrySound.PlayOneShot(carryClick,.25f);
+                e.interactorObject.transform.GetComponentInParent<HandRig>()?.Pulse(.25f,.05f);
                 watch.GetComponent<ObjectiveHud>()?.RevealFor(3);
             }else OnNetworkReleased();
         }
@@ -68,6 +72,7 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             if(lease==null)lease=GetComponent<INetworkPropStatus>();
+            if(beltClip&&head)beltClip.SetPositionAndRotation(RadioBeltPose.Position(head.position,head.rotation),Quaternion.Euler(0,head.eulerAngles.y,0));
             bool allowed=CrewVoiceBridge.Current is ICrewVoiceCapture capture&&capture.MicrophoneAllowed&&!capture.Muted;
             bool active=allowed&&WantsTransmit;
             if(watch.State.Coop!=null&&(Time.unscaledTime>=nextSend||active!=previous)&&(active||previous))Send(active);
@@ -77,7 +82,7 @@ namespace LighthouseKeepers.WatchDemo
             if(carried&&head&&!Held){body.isKinematic=true;transform.SetPositionAndRotation(RadioBeltPose.Position(head.position,head.rotation),Quaternion.Euler(0,head.eulerAngles.y,0));return;}
             if(Held||lease!=null&&lease.Owner!=0)unheld=0;else unheld+=Time.deltaTime;
             if((lease==null||lease.CanSimulateReleased)&&!Held){body.isKinematic=!released;
-                if(unheld>20||transform.position.y< -1){if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,homeRotation);unheld=0;}}
+                if(transform.position.y< -2){if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,homeRotation);unheld=0;}}
         }
         void OnDisable(){if(previous&&watch)Send(false);trigger=false;}
     }

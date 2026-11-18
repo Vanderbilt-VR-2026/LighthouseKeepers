@@ -8,7 +8,7 @@ namespace LighthouseKeepers.WatchDemo
 {
     public sealed class WatchPressureValve : MonoBehaviour
     {
-        WatchDemoController watch;XRSimpleInteractable grip;Transform bar;WatchPipeRepair pipe;Transform presentation;Collider[] colliders;bool shown=true;int placedBolt=-1;Renderer lamp;MaterialPropertyBlock block;TextMesh instruction;float nextSend;bool selected;
+        WatchDemoController watch;XRSimpleInteractable grip;Transform bar;WatchPipeRepair pipe;Transform presentation;Collider[] colliders;bool shown=true;Renderer lamp;MaterialPropertyBlock block;TextMesh instruction;float nextSend;bool selected;
         public XRSimpleInteractable Grip=>grip;
         public Transform GuidanceRoot=>presentation;
         public static WatchPressureValve Create(WatchDemoController w)
@@ -21,14 +21,16 @@ namespace LighthouseKeepers.WatchDemo
         {
             var p=gameObject.AddComponent<M2StationParts>();p.Initialize();block=new MaterialPropertyBlock();
             pipe=watch.GetComponentInChildren<WatchPipeRepair>();if(!pipe)pipe=FindAnyObjectByType<WatchPipeRepair>();
-            PlaceBesideActiveBolt();
-            p.Part("Pressure valve wall plate",transform,new Vector3(0,.08f,-.08f),new Vector3(.40f,.48f,.04f),p.Dark);
+            PlaceFixed();
+            p.Part("Cast pressure bypass body",transform,new Vector3(0,0,-.055f),new Vector3(.12f,.19f,.12f),p.Metal,PrimitiveType.Cylinder);
+            p.Part("Bypass flange upper",transform,new Vector3(0,.11f,-.055f),new Vector3(.17f,.018f,.17f),p.Metal,PrimitiveType.Cylinder);
+            p.Part("Bypass flange lower",transform,new Vector3(0,-.11f,-.055f),new Vector3(.17f,.018f,.17f),p.Metal,PrimitiveType.Cylinder);
             var hub=p.Part("Pressure valve hub",transform,Vector3.zero,new Vector3(.13f,.07f,.13f),p.Metal,PrimitiveType.Cylinder);hub.transform.localRotation=Quaternion.Euler(90,0,0);
             bar=M2StationParts.Root("Spring loaded valve handle",transform,new Vector3(0,0,.08f));
-            p.Part("Valve grip bar",bar,Vector3.zero,new Vector3(.20f,.035f,.035f),p.Red);
+            p.Part("Valve grip bar",bar,Vector3.zero,new Vector3(.18f,.035f,.035f),p.Red);
             p.Part("Valve stem",transform,new Vector3(0,0,.04f),new Vector3(.025f,.025f,.08f),p.Metal);
             var tube=p.Part("Bypass return pipe",transform,new Vector3(0,-.30f,-.015f),new Vector3(.055f,.25f,.055f),p.Metal,PrimitiveType.Cylinder);
-            instruction=p.Text("Valve fixed instruction","",transform,new Vector3(0,.235f,-.052f),.0030f);
+            instruction=p.Text("Valve fixed instruction","",transform,new Vector3(0,.205f,.06f),.0017f);
             lamp=p.Part("Pressure indicator",transform,new Vector3(0,.14f,-.04f),new Vector3(.04f,.04f,.025f),p.Brass).GetComponent<Renderer>();
             var col=gameObject.AddComponent<BoxCollider>();col.isTrigger=true;col.center=new Vector3(0,0,.07f);col.size=new Vector3(.26f,.14f,.15f);
             grip=gameObject.AddComponent<XRSimpleInteractable>();grip.colliders.Add(col);
@@ -51,11 +53,10 @@ namespace LighthouseKeepers.WatchDemo
         {
             var s=watch.State;var v=s.Pressure;
             SetVisible(v.CrewRequired);if(!v.CrewRequired)return;
-            // Never teleport a held control. Move beside the next bolt after the keeper lets go.
-            if(!selected&&v.Holder==0&&placedBolt!=s.Pipe.ActiveBolt)PlaceBesideActiveBolt();
+            // A single upstream bypass serves all bolts; its transform never follows repair progress.
             if(selected&&Time.unscaledTime>=nextSend){nextSend=Time.unscaledTime+.1f;Send(true);}
             float angle=v.Reduced?55:0;bar.localRotation=Quaternion.Slerp(bar.localRotation,Quaternion.Euler(0,0,angle),1-Mathf.Exp(-12*Time.deltaTime));
-            instruction.text=KeeperStrings.Get(s.Repaired?"connected.pressure":v.Reduced?"connected.pressureHeld":"step.HoldValve");
+            instruction.text=KeeperStrings.Get(v.Reduced&&!s.Repaired?"connected.pressureHeld":"connected.pressure");
             var colour=v.Reduced?new Color(.15f,.6f,.25f):new Color(.75f,.43f,.1f);
             bool urgent=!s.Repaired&&(watch.CurrentInstruction==KeeperStep.HoldValve||watch.PartnerInstruction==KeeperStep.HoldValve);
             block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*(s.Repaired?0:v.Reduced?.2f:urgent?.35f+.15f*Mathf.Sin(Time.time*5.2f):0));lamp.SetPropertyBlock(block);
@@ -68,10 +69,10 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var collider in colliders)collider.enabled=visible;
             grip.enabled=visible;
         }
-        void PlaceBesideActiveBolt()
+        void PlaceFixed()
         {
             if(!pipe||pipe.bolts==null||pipe.bolts.Length<3)return;
-            int index=Mathf.Max(0,watch.State.Pipe.ActiveBolt);placedBolt=watch.State.Pipe.ActiveBolt;
+            const int index=1; // Middle of the fixed pipe manifold, never the current bolt.
             var bolt=pipe.bolts[index];var normal=Vector3.ProjectOnPlane(bolt.up,Vector3.up).normalized;
             if(normal.sqrMagnitude<.1f)normal=Vector3.left;
             var side=Vector3.Cross(Vector3.up,normal);

@@ -8,7 +8,7 @@ Radio code is one complete ordered line (including Owen reply/B recall); House c
 
 ## Next, in order
 
-1. Fixed visible pipe pressure-release handle; lantern proper handle pose, persistence and water extinguish; belt carry feedback.
+1. IMPLEMENTED: fixed compact pipe bypass, handle-constrained lantern grip, dropped lamps/walkies stay put, host-owned water extinguish, visible hip clip with click/haptic. 15 focused prop rule tests pass. Physical input/scene checks still due below.
 2. Generator partner compression-release hold while the other keeper makes the same three timed pulls; Owen support, authenticated co-op, version bump.
 3. Remove cloth/lens-wipe progression from both modes; inspect/fix Owen face and F3 bedroom wall/nav; darker lantern-led lighting.
 4. Focused tests and muted live solo/co-op checks, screenshots inspected, build + install if attached (do not launch). Update PR #89 and issue #142 with evidence.

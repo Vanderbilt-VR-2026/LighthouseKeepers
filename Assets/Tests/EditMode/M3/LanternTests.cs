@@ -3,6 +3,7 @@ using LighthouseKeepers.Core.Progression;
 namespace LighthouseKeepers.Tests.M3
 {
  public sealed class LanternTests {
+  [Test] public void WaterExtinguishesWithoutLosingOilAndReplicates(){var s=new LanternState();s.Cycle(0);s.Cycle(0);Assert.True(s.Extinguish(0));Assert.False(s.Lit(0));Assert.AreEqual(1,s.Oil(0));Assert.False(s.Extinguish(-1));var r=new LanternState{ReadOnly=true};Assert.True(r.Apply(s.Capture()));Assert.False(r.Lit(0));Assert.False(r.Extinguish(0));Assert.True(s.Cycle(0));Assert.True(s.Lit(0));}
   [Test] public void WickOffUsesNoOilAndLowLastsTwiceHigh(){var s=new LanternState();s.Tick(100);Assert.AreEqual(1,s.Oil(0));s.Cycle(0);s.Cycle(1);s.Cycle(1);s.Tick(90);Assert.AreEqual(.5f,s.Oil(0),.0001);Assert.AreEqual(0,s.Oil(1),.0001);Assert.False(s.Lit(1));s.Tick(90);Assert.False(s.Lit(0));}
   [Test] public void OneCanRefillsOnlyOneLampAndCannotBeReused(){var s=new LanternState();s.Cycle(0);s.Cycle(1);s.Tick(90);Assert.True(s.Pour(0,.5f));Assert.False(s.Pour(1,4));Assert.True(s.Pour(0,4));Assert.AreEqual(1,s.Oil(0));Assert.AreEqual(0,s.CanOil);s.Tick(30);Assert.False(s.Pour(0,4));}
   [Test] public void ReplicasCannotSpendOilChangeWickOrStun(){var s=new LanternState();s.Cycle(0);s.Cycle(0);var r=new LanternState{ReadOnly=true};Assert.True(r.Apply(s.Capture()));Assert.False(r.Cycle(0));r.Tick(900);Assert.AreEqual(1,r.Oil(0));Assert.False(r.Pour(0,4));Assert.False(r.Expose(0,2,true,true,true));}

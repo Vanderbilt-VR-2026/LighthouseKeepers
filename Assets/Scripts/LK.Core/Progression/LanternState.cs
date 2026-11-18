@@ -28,6 +28,7 @@ namespace LighthouseKeepers.Core.Progression
         void Oil(int slot,float value){if(slot==0)frame.oil0=Math.Clamp(value,0,1);else frame.oil1=Math.Clamp(value,0,1);}
         public bool Cycle(int slot)
         {if(ReadOnly||!Slot(slot))return false;int next=((int)Wick(slot)+1)%3;if(slot==0)frame.wick0=next;else frame.wick1=next;exposure[slot]=0;return true;}
+        public bool Extinguish(int slot){if(ReadOnly||!Slot(slot)||Wick(slot)==LanternWick.Off)return false;if(slot==0)frame.wick0=0;else frame.wick1=0;exposure[slot]=0;return true;}
         public void Tick(float dt)
         {if(ReadOnly||!float.IsFinite(dt)||dt<=0)return;for(int i=0;i<2;i++)if(Lit(i))Oil(i,Oil(i)-dt/(Wick(i)==LanternWick.High?highSeconds:lowSeconds));}
         public bool Pour(int slot,float dt)
