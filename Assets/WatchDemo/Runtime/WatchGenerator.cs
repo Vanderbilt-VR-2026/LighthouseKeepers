@@ -39,7 +39,7 @@ namespace LighthouseKeepers.WatchDemo
         public void ResetInteraction() { starter.ResetInteraction(); shakeTime = 0; engine.localPosition = engineRest; Refresh(); }
         void Pulled()
         {
-            if(state!=null&&state.RemoteReplica&&state.Coop!=null)
+            if(state!=null&&state.Coop!=null)
             {state.Coop.Send(LighthouseKeepers.Lobby.CoopAction.Starter);shakeTime=.22f;return;}
             ApplyPull();
         }

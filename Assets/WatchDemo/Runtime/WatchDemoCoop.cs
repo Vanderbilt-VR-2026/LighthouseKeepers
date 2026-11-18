@@ -7,6 +7,9 @@ namespace LighthouseKeepers.WatchDemo
     public sealed partial class WatchDemoController
     {
         WatchPressureValve pressureValve;
+        public bool EngineAssistCommand(int actor,bool held)=>!sleeping&&state.HoldStartAssist(actor,held);
+        public int EnginePullCommand(int actor)=>!sleeping&&state.PullStarterAs(actor)?1:-1;
+        public void EngineActorLeft(int actor)=>state.StartAssist.Hold(actor,false);
         public bool PressureCommand(int actor,bool held){bool accepted=state.Pressure!=null&&!state.ReadOnly&&!sleeping&&!state.Failed&&!state.Repaired&&state.Pressure.CrewRequired&&state.Pressure.Hold(actor,held);if(accepted&&held)state.EngageWatch();return accepted;}
         public void PressureWorker(int actor){if(!state.ReadOnly&&!(actor==0&&state.ScriptedPartner&&state.PipeWorkerActor==WatchState.CompanionActor))state.PipeWorkerActor=actor;}
         public void PressureActorLeft(int actor){state.Pressure?.Hold(actor,false);}
@@ -23,6 +26,7 @@ namespace LighthouseKeepers.WatchDemo
             if(action==CoopAction.LanternWick)return LanternTarget(value);
             if(action==CoopAction.FlareFire)return FlareTarget(value);
             if(action==CoopAction.HandheldRadio)return value==(int)value&&value>=0&&value<2&&crewRadios[(int)value]?crewRadios[(int)value].Grab:null;
+            if(action==CoopAction.EngineAssist)return engineControls?engineControls.Assist:null;
             if(action==CoopAction.PressureValve)return pressureValve?pressureValve.Grip:null;
             if(action==CoopAction.PAReplay)return value==(int)value&&immersionWorld&&immersionWorld.Narrator?immersionWorld.Narrator.ReplayButton((int)value):null;
             if(action==CoopAction.GridCircuit)return powerPanel?powerPanel.Control((int)value):null;

@@ -36,7 +36,7 @@ namespace LighthouseKeepers.WatchDemo {
    parts.Part("Owen radio aerial",radioProp.transform,new Vector3(-.02f,.12f,0),new Vector3(.008f,.12f,.008f),parts.Dark);
    PrepareStationWork();valve=FindAnyObjectByType<WatchPressureValve>();command=CompanionCommand.Work;readFor=still=0;hasGoal=holding=false;lastPosition=start;night=watch.State.Day;watch.State.SetScriptedPartner(true);return true;
   }
-  void Release(){StopStationWork();holding=false;if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.Pressure?.Hold(WatchState.CompanionActor,false);if(agent&&agent.isOnNavMesh)agent.ResetPath();}
+  void Release(){StopStationWork();holding=false;if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.Pressure?.Hold(WatchState.CompanionActor,false);if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.StartAssist.Hold(WatchState.CompanionActor,false);if(agent&&agent.isOnNavMesh)agent.ResetPath();}
   void Retire(){Release();if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.SetScriptedPartner(false);DestroyVisual();}
   void DestroyVisual(){if(actor){actor.SetActive(false);Destroy(actor);}navigation?.Dispose();navigation=null;actor=null;agent=null;learnedCode="";hasGoal=false;}
   bool FloorPoint(Vector3 near,out Vector3 floor){
@@ -97,6 +97,7 @@ namespace LighthouseKeepers.WatchDemo {
    if(command==CompanionCommand.Wait){Release();if(statusKey!="companion.blocked")statusKey="companion.wait";return;}
    if((s.Day>1||s.Survival)&&!dutyExplained&&!s.Recovery.LessonActive&&!s.Recovery.AnyDown){dutyExplained=true;Report(KeeperStrings.Get(Duty==CrewDuty.Machinist?"companion.dutyMachinist":"companion.dutyLightkeeper"));}
    bool support=command==CompanionCommand.Work||command==CompanionCommand.Help;
+   if(support&&AssistEngine()){CheckRoute();return;}
    if(support&&WorkStation()){CheckRoute();return;}
    if(support&&s.Pressure?.CrewRequired==true&&!s.Repaired&&valve&&(watch.CurrentInstruction==KeeperStep.TightenBolt||Vector3.Distance(head.position,valve.transform.position)<3)){
     statusKey="companion.valveGoing";var target=valve.transform.position+valve.transform.forward*.62f+valve.transform.right*.42f;

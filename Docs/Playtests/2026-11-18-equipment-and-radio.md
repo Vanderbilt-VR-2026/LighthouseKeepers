@@ -13,3 +13,5 @@ User feedback, issue #142: pipe valve hard to locate and teleports after release
 Radio/recall changes compile; 20 focused EditMode checks pass (RadioRelay 5, CampaignOrder 5, SurvivalMode 7, RadioBelt 3). Worn readability and physical reach remain pending. No new APK delivered yet.
 
 Props: removed the 20-second automatic return for lantern/walkie (out-of-world recovery remains); host extinguishes submerged flame without deleting oil; two hand-specific bail poses, static pressure bypass and visible belt holster. 15 focused rule tests pass (Lantern 8, PressureValve 4, RadioBelt 3). Physical headset acceptance pending.
+
+Generator: red START ASSIST lever on the engine. Partner holds while operator makes three timed pulls; refilling stays a simple tilt. Solo Owen assists the human or makes the pulls for the Machinist duty. Host checks proximity and distinct actors; release/timeout/leave reset hold. Network LK-S5-COOPFIX1 / LK-Lab-Coop-v50. 39 focused tests pass, including required hold, same-actor rejection, replica, timeout, retry and lone-human fallback. Live co-op/headset pending.

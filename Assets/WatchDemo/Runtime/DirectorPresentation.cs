@@ -23,6 +23,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<2;i++)if(watch.Lantern(i))FittingFor(watch.Lantern(i).transform);
             var valve=FindAnyObjectByType<WatchPressureValve>();if(valve){Add(KeeperStep.HoldValve,valve.GuidanceRoot);}
             for(int i=0;i<3;i++)Add((KeeperStep)((int)KeeperStep.BoltA+i),pipe.bolts[i]);
+            if(engine.Assist)Add(KeeperStep.HoldStarterAssist,engine.Assist.transform);
             Add(KeeperStep.CheckFuel,engine.Filler);Add(KeeperStep.Fuel,engine.FuelCan.transform);FittingFor(engine.Filler);Add(KeeperStep.Prime,engine.Primer.transform);Add(KeeperStep.CloseChoke,engine.Choke.transform);Add(KeeperStep.OpenChoke,engine.Choke.transform);Add(KeeperStep.Starter,FindAnyObjectByType<WatchGenerator>().Starter.transform);
             for(int i=0;i<4;i++){Add((KeeperStep)((int)KeeperStep.PumpOff+i),panel.Control(i).transform);Add((KeeperStep)((int)KeeperStep.PumpOn+i),panel.Control(i).transform);}
             Add(KeeperStep.ResetBreaker,panel.ResetControl.transform);

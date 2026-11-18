@@ -7,7 +7,7 @@ using LighthouseKeepers.Flood;
 using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation, LighthouseKeepers.Lobby.ICoopPressureView, LighthouseKeepers.Lobby.ICoopRadioView
+    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation, LighthouseKeepers.Lobby.ICoopPressureView, LighthouseKeepers.Lobby.ICoopRadioView, LighthouseKeepers.Lobby.ICoopEngineAssistView
     {
         [SerializeField] FloodController flood;
         [SerializeField] Transform head,repairPoint,bed,wrenchVisual;

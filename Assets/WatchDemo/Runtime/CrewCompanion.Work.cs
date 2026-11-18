@@ -47,6 +47,13 @@ namespace LighthouseKeepers.WatchDemo {
     if(reset)s.ResetBreaker();else s.SetCircuit(circuit,selected);workFor=0;
    }return true;
   }
+  bool AssistEngine(){
+   var s=watch.State;bool supports=Duty==CrewDuty.Lightkeeper||s.Day==1&&!s.Survival;
+   if(!supports||!s.RequiresStartAssist||s.Engine.Running||!s.Engine.EnoughFuel||!workEngine.Assist){s.StartAssist.Hold(WatchState.CompanionActor,false);return false;}
+   var lever=workEngine.Assist.transform;
+   if(AtControl(KeeperStep.HoldStarterAssist,lever,lever.position+workEngine.transform.forward*.65f))s.HoldStartAssist(WatchState.CompanionActor,true);
+   return true;
+  }
   bool WorkStation(){
    var s=watch.State;working=workingPipe=false;
    // Night 1 is the player's hands-on rehearsal; the helper supports rather than skipping it.
@@ -66,7 +73,7 @@ namespace LighthouseKeepers.WatchDemo {
       var starter=workEngine.GetComponentInParent<WatchGenerator>().Starter;
       if(AtControl(KeeperStep.Starter,starter.transform,starter.transform.position+workEngine.transform.forward*.65f)){
        workHand+=workEngine.transform.forward*(Mathf.Sin(workFor*5)*.12f);
-       if(workFor>=tuning.controlSeconds&&s.StarterInWindow){s.StarterPulled();workFor=0;}
+       if(workFor>=tuning.controlSeconds&&s.StarterInWindow){s.PullStarterAs(WatchState.CompanionActor);workFor=0;}
       }
      }return true;
     }

@@ -249,9 +249,11 @@ namespace LighthouseKeepers.Net
             if(c.action==CoopAction.StatusRequest){if(c.value!=0||!poses.Sample(actor,out _))return -1;return watch.ApplyCommand(c.action,0,false);}
             if(c.action==CoopAction.Retry||c.action==CoopAction.Replay)return watch.ApplyCommand(c.action,c.value,c.pressed);
             if(c.action==CoopAction.HandheldRadio&&!c.pressed)return c.value==(int)c.value&&ConnectedView?.RadioCommand(actor,(int)c.value,false)==true?1:-1;
+            if(c.action==CoopAction.EngineAssist&&!c.pressed)return (watch as ICoopEngineAssistView)?.EngineAssistCommand(actor,false)==true?1:-1;
             if(c.action==CoopAction.PressureValve&&!c.pressed)return PressureView?.PressureCommand(actor,false)==true?1:-1;
             var target=watch.Target(c.action,c.value);if(!target)return -1;
             if(!poses.NearHand(actor,target.transform.position,c.action==CoopAction.Microphone?1.2f:.85f))return -1;
+            if(c.action==CoopAction.EngineAssist)return c.value==0&&(watch as ICoopEngineAssistView)?.EngineAssistCommand(actor,c.pressed)==true?1:-1;
             if(c.action==CoopAction.PressureValve)return c.value==0&&PressureView?.PressureCommand(actor,c.pressed)==true?1:-1;
             if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch||c.action==CoopAction.HandheldRadio||c.action==CoopAction.FlareFire||c.action==CoopAction.LanternWick)
             {
@@ -263,6 +265,7 @@ namespace LighthouseKeepers.Net
             {
                 if(lastPull.TryGetValue(actor,out var time)&&Time.unscaledTime-time<.25f)return -1;
                 lastPull[actor]=Time.unscaledTime;
+                if(watch is ICoopEngineAssistView assist)return assist.EnginePullCommand(actor);
             }
             if(c.action==CoopAction.Microphone)
             {micActor=actor;micSeen=Time.unscaledTime;micPressed=c.pressed;return 1;}
@@ -287,7 +290,7 @@ namespace LighthouseKeepers.Net
         }
         void Left(int actor)
         {
-            PressureView?.PressureActorLeft(actor);ConnectedView?.RadioActorLeft(actor);
+            (watch as ICoopEngineAssistView)?.EngineActorLeft(actor);PressureView?.PressureActorLeft(actor);ConnectedView?.RadioActorLeft(actor);
             nonces.Remove(actor);acknowledged.Remove(actor);commands.Remove(actor);beds.Remove(actor);lastPull.Remove(actor);rateStart.Remove(actor);rateCount.Remove(actor);
             if(micActor==actor){micActor=0;micPressed=false;}
             if(wrenchActor==actor){wrenchActor=0;wrenchPressed=false;}

@@ -4,8 +4,10 @@ namespace LighthouseKeepers.WatchDemo
     public sealed partial class WatchEngineControls
     {
         Transform timingNeedle;TextMesh timingCaption;
+        public EngineAssistGrip Assist {get;private set;}
         void BuildTimedStarter()
         {
+            Assist=EngineAssistGrip.Create(watch,transform,parts);
             Primer.gameObject.SetActive(false);Choke.gameObject.SetActive(false);
             foreach(Transform t in transform){
                 if(t.name.Contains("Primer")||t.name.Contains("Choke")||t.name=="Final choke lamp label"||t.name=="PRIMED lamp"||t.name=="CHOKE lamp")t.gameObject.SetActive(false);
@@ -25,7 +27,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!timingNeedle)return;
             timingNeedle.localPosition=new Vector3(-.39f+State.StarterPhase*.46f,1.23f,1.061f);
-            timingCaption.text=KeeperStrings.Get(State.Engine.Running?"starter.timed.running":State.StarterInWindow?"starter.timed.ready":"starter.timed.wait");
+            timingCaption.text=KeeperStrings.Get(State.Engine.Running?"starter.timed.running":State.RequiresStartAssist&&State.StartAssist.Holder==0?"starter.assistNeeded":State.StarterInWindow?"starter.timed.ready":"starter.timed.wait");
         }
     }
 }

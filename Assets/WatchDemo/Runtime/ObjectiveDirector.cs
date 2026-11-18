@@ -4,7 +4,7 @@ using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo
 {
-    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2, ChallengeCall, JudgeCall, HelpPartner, ReadyShip, GrabWalkie, GrabLantern, LanternWick }
+    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2, ChallengeCall, JudgeCall, HelpPartner, ReadyShip, GrabWalkie, GrabLantern, LanternWick, HoldStarterAssist }
     // Sole instruction policy. The host assigns jobs; presentation never invents a next action.
     public sealed class ObjectiveDirector
     {
@@ -23,7 +23,7 @@ namespace LighthouseKeepers.WatchDemo
         public ObjectiveDirector(WatchState owner){state=owner;}
         public KeeperStep ForActor(int actor)=>actorB!=0&&actor==actorB?Second:First;
         public KeeperStep Partner(int actor)=>actorB==0?KeeperStep.None:actor==actorB?First:Second;
-        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.ReadyShip;
+        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.HoldStarterAssist;
         public void Apply(int first,int second,int a,int b)
         {if(!state.ReadOnly)return;First=(KeeperStep)first;Second=(KeeperStep)second;actorA=a;actorB=b;}
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
@@ -40,6 +40,8 @@ namespace LighthouseKeepers.WatchDemo
                     var work=CompanionStep?.Invoke()??KeeperStep.None;
                     if(work!=KeeperStep.None){Second=work;
                         if(work==KeeperStep.TightenBolt)First=state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.HelpPartner;
+                        else if(work==KeeperStep.HoldStarterAssist)First=KeeperStep.Starter;
+                        else if(work==KeeperStep.Starter&&state.RequiresStartAssist)First=KeeperStep.HoldStarterAssist;
                         else if(work==KeeperStep.RadioTransmit)First=KeeperStep.ReadyShip;
                         else if(ObjectiveDirector.Job(First)==ObjectiveDirector.Job(work)||work==KeeperStep.Fuel||work==KeeperStep.Starter)First=KeeperStep.HelpPartner;
                     }
@@ -104,7 +106,7 @@ namespace LighthouseKeepers.WatchDemo
         void OrderedCampaign(bool held)
         {
             Second=KeeperStep.None;
-            if(state.Power==PowerState.Off||state.Engine?.Settled==false||state.FuelJobPending){First=EngineStep();if(actorB!=0)Second=First;return;}
+            if(state.Power==PowerState.Off||state.Engine?.Settled==false||state.FuelJobPending){First=EngineStep();if(actorB!=0){Second=First;if(First==KeeperStep.Starter&&state.RequiresStartAssist){bool firstWorks=Duty(actorA)==CrewDuty.Machinist||Duty(actorB)!=CrewDuty.Machinist;First=firstWorks?KeeperStep.Starter:KeeperStep.HoldStarterAssist;Second=firstWorks?KeeperStep.HoldStarterAssist:KeeperStep.Starter;}}return;}
             if(state.ShipGuidanceDue){
                 var beam=BeaconStep();if(beam==KeeperStep.None)beam=KeeperStep.KeepLight;
                 bool first=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper||Duty(actorB)!=CrewDuty.Lightkeeper;
@@ -208,7 +210,7 @@ namespace LighthouseKeepers.WatchDemo
             if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return "LESSON";
             if(step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper)return "RESCUE";
             if(step==KeeperStep.HoldValve||step==KeeperStep.ClampValve||step==KeeperStep.TightenBolt||step>=KeeperStep.GrabWrench&&step<=KeeperStep.BoltC)return WatchState.PipeStation;
-            if(step==KeeperStep.CheckFuel||step>=KeeperStep.Fuel&&step<=KeeperStep.OpenChoke)return WatchState.GeneratorStation;
+            if(step==KeeperStep.HoldStarterAssist||step==KeeperStep.CheckFuel||step>=KeeperStep.Fuel&&step<=KeeperStep.OpenChoke)return WatchState.GeneratorStation;
             if(step>=KeeperStep.PumpOff&&step<=KeeperStep.ResetBreaker)return "BREAKER";
             if(step==KeeperStep.ChallengeCall||step==KeeperStep.JudgeCall||step==KeeperStep.ReadCode||step>=KeeperStep.RadioPower&&step<=KeeperStep.RadioTransmit)return WatchState.RadioStation;
             if(step==KeeperStep.KeepLight)return "SHIP";

@@ -7,8 +7,8 @@ namespace LighthouseKeepers.WatchDemo {
   public void SetScriptedPartner(bool present){
    if(ReadOnly)return;present=present&&keeperCount==1;
    if(ScriptedPartner==present)return;
-   Pressure?.Hold(CompanionActor,false);ScriptedPartner=present;
-   Pressure?.SetCrew(PairedCrew&&RequiresCrewValve);Changed?.Invoke();
+   Pressure?.Hold(CompanionActor,false);StartAssist.Hold(CompanionActor,false);ScriptedPartner=present;
+   Pressure?.SetCrew(PairedCrew&&RequiresCrewValve);StartAssist.SetCrew(RequiresStartAssist);Changed?.Invoke();
   }
  }
 }

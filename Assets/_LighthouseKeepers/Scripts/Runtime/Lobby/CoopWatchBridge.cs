@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 namespace LighthouseKeepers.Lobby
 {
-    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest, PressureValve, HandheldRadio, FlareFire, LanternWick, RecoveryGrip, RecoveryDrill, AuthenticateCall, BriefingComplete }
+    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest, PressureValve, HandheldRadio, FlareFire, LanternWick, RecoveryGrip, RecoveryDrill, AuthenticateCall, BriefingComplete, EngineAssist }
     public interface ICoopBriefingView { bool BriefingHeld {get;} void HoldBriefing(bool held); }
     public interface ILobbyReadyPolicy { bool RequiresReady {get;} }
     public interface ICoopWatchView
@@ -43,6 +43,7 @@ namespace LighthouseKeepers.Lobby
         void RadioActorLeft(int actor);
         Transform LocalRadio {get;}
     }
+    public interface ICoopEngineAssistView {bool EngineAssistCommand(int actor,bool held);int EnginePullCommand(int actor);void EngineActorLeft(int actor);}
     public interface ICoopPressureView
     {
         bool PressureCommand(int actor,bool held);

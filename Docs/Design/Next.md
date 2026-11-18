@@ -9,7 +9,7 @@ Radio code is one complete ordered line (including Owen reply/B recall); House c
 ## Next, in order
 
 1. IMPLEMENTED: fixed compact pipe bypass, handle-constrained lantern grip, dropped lamps/walkies stay put, host-owned water extinguish, visible hip clip with click/haptic. 15 focused prop rule tests pass. Physical input/scene checks still due below.
-2. Generator partner compression-release hold while the other keeper makes the same three timed pulls; Owen support, authenticated co-op, version bump.
+2. IMPLEMENTED: generator compression-release assist; distinct keeper required for timed pulls, leased hold/release/timeout, bot support/duty instructions, replicated holder. Network LK-S5-COOPFIX1 / LK-Lab-Coop-v50. 39 focused checks pass (TimedStarter 4, Companion 5, Survival 7, VoicePass 23); live two-Editor check still due.
 3. Remove cloth/lens-wipe progression from both modes; inspect/fix Owen face and F3 bedroom wall/nav; darker lantern-led lighting.
 4. Focused tests and muted live solo/co-op checks, screenshots inspected, build + install if attached (do not launch). Update PR #89 and issue #142 with evidence.
 
