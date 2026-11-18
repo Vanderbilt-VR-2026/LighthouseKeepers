@@ -19,7 +19,8 @@ namespace LighthouseKeepers.Editor
         // upper meshes rather than span glass/doorways/guard rails; services enter below deck.
         public static void NormalizeLanternRoutes(LighthouseKeepers.WatchDemo.TowerWiringAsset data)
         {
-            data.runs=data.runs.Where(r=>!Unsupported(r.name)&&r.floor!=4).ToArray();
+            data.runs=data.runs.Where(r=>!Unsupported(r.name)&&r.floor!=4&&(r.circuit!=3||r.name.Contains("riser"))).ToArray();
+            data.endpoints=data.endpoints.Where(e=>e.circuit!=3).ToArray();
             foreach(var r in data.runs)if(r.floor==3&&r.name.Contains("riser"))
                 for(int i=0;i<r.points.Length;i++)if(r.points[i].y>9.7f){var p=Quaternion.Euler(0,315,0)*Vector3.forward*2.60f+Quaternion.Euler(0,315,0)*Vector3.right*((r.circuit-2)*.018f);r.points[i]=new Vector3(p.x,Mathf.Min(r.points[i].y,9.88f),p.z);}
         }

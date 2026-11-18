@@ -118,6 +118,7 @@ namespace LighthouseKeepers.WatchDemo
             QuestRenderQuality.Create(this);
             WorldLabelRaster.Create(this);
             PracticalAtmosphere.Create(this);
+            LanternRoomLighting.Create(this);
             WorldWaterPresentation.Create(this);
             HeavyStormRain.Create(this);
             // Exterior sea/coast comes from Eli's StormSeascape; no second coastline.

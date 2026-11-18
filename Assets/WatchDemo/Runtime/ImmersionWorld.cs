@@ -98,7 +98,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             // The board has its back to the wall; its text's -Z points into the House.
             var t=M2StationParts.Root("House harbor radio",transform,Vector3.zero);
-            t.SetPositionAndRotation(board.transform.position+board.transform.right*1.95f+board.transform.up*-.35f+board.transform.forward*.065f,board.transform.rotation*Quaternion.Euler(0,180,0));
+            t.SetPositionAndRotation(board.transform.position+board.transform.right*2.18f+board.transform.up*-.35f+board.transform.forward*.065f,board.transform.rotation*Quaternion.Euler(0,180,0));
             parts.Part("Harbor radio walnut cabinet",t,Vector3.zero,new Vector3(.46f,.27f,.14f),parts.Dark);
             for(int i=0;i<9;i++)parts.Part("Radio speaker grille",t,new Vector3(-.11f+i*.021f,0,.075f),new Vector3(.006f,.17f,.006f),parts.Metal);
             parts.Part("Radio frequency glass",t,new Vector3(.135f,.055f,.075f),new Vector3(.14f,.045f,.01f),parts.Brass);

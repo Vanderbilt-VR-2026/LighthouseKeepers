@@ -13,7 +13,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         WatchDemoController watch;XROrigin rig;HorrorTuning tuning;CrewCompanion bot;
         readonly List<GameObject> gates=new();readonly List<LineRenderer> stains=new();
-        Material iron,blood;int lastStage=-1;float soundAfter;AudioSource sound;
+        Material iron,blood;int lastStage=-1;float soundAfter;AudioSource sound,rising;
         readonly RaycastHit[] clearance=new RaycastHit[24];
         public static void Create(WatchDemoController w){var c=w.gameObject.AddComponent<PossessionLesson>();c.watch=w;c.rig=FindAnyObjectByType<XROrigin>();c.tuning=HorrorTuning.Current;}
         static readonly RaycastHit[] floorHits=new RaycastHit[24];
@@ -40,6 +40,7 @@ namespace LighthouseKeepers.WatchDemo
         void Start()
         {
             bot=watch.GetComponent<CrewCompanion>();
+            rising=new GameObject("Possessed keeper — wet cloth strain").AddComponent<AudioSource>();rising.transform.SetParent(transform,false);rising.playOnAwake=false;rising.loop=true;rising.spatialBlend=1;rising.minDistance=.7f;rising.maxDistance=9;rising.dopplerLevel=0;rising.volume=.7f;rising.clip=Resources.Load<AudioClip>("S5Audio/possession-rise");LighthouseKeepers.Core.KeeperAudioMix.Route(rising,"SFX_World");
             iron=new Material(Shader.Find("Universal Render Pipeline/Lit"));iron.SetColor("_BaseColor",new Color(.085f,.085f,.07f));
             blood=new Material(Shader.Find("Universal Render Pipeline/Lit"));blood.SetColor("_BaseColor",new Color(.16f,.008f,.012f));blood.SetFloat("_Smoothness",.8f);
             using(var navigation=new HunterNavigation(tuning,Resources.Load<NavMeshData>("HunterNavigation"))){
@@ -85,6 +86,10 @@ namespace LighthouseKeepers.WatchDemo
             if(lastStage!=r.Lesson){lastStage=r.Lesson;if(r.LessonActive){var narrator=watch.GetComponentInChildren<HarborRadio>();if(!narrator)narrator=FindAnyObjectByType<HarborRadio>();if(narrator)narrator.RecordSilentLine(Caption,Speaker);}if(lastStage==2||lastStage==5){sound.clip=Resources.Load<AudioClip>("S4Audio/bolt-clunk");if(sound.clip)sound.Play();}}
             float amount=DrownedAppearance.Sightings&&r.Lesson>=3&&r.Lesson<=5?Mathf.Clamp01((r.Lesson==3?r.LessonAge:8)/8f):0;
             if(r.Lesson==5)amount*=1-Mathf.Clamp01(r.LessonAge/tuning.lessonReliefSeconds);
+            bool lifting=DrownedAppearance.Sightings&&!s.Failed&&(r.Lesson==3||r.Lesson==4);
+            var recovery=watch.GetComponent<CrewRecovery>();if(recovery&&recovery.HandPoint(r.LessonVictim,out var hand))rising.transform.position=hand;
+            if(lifting&&rising.clip&&!rising.isPlaying)rising.Play();else if(!lifting&&rising.isPlaying)rising.Stop();
+            rising.volume=r.Lesson==3?.7f:.28f;
             for(int i=0;i<stains.Count;i++){var l=stains[i];l.enabled=amount>0;if(!l.enabled)continue;var top=l.GetPosition(0);l.SetPosition(1,top+Vector3.down*(.22f+ i%4*.07f)*amount);l.SetPosition(2,top+Vector3.down*(.65f+i%3*.14f)*amount);}
         }
         void OnDestroy(){if(iron)Destroy(iron);if(blood)Destroy(blood);}

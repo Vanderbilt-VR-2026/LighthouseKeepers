@@ -18,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         void Start(){grab.useDynamicAttach=false;grab.throwOnDetach=false;}float nextSend,unheld;Vector3 home;Quaternion homeRotation;Rigidbody body;
         public XRGrabInteractable Grab=>grab;
         public bool Held=>grab&&grab.isSelected;
+        public bool Available=>!Held&&!Carried&&(lease==null||lease.Owner==0);
         public bool WantsTransmit=>Held&&(trigger||head&&Vector3.Distance(transform.position,head.position)<=watch.State.Connected.radioHeadDistance);
         public static HandheldCrewRadio Create(WatchDemoController w,int index)
         {

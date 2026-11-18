@@ -11,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo
             !radioTaken?KeeperStep.GrabWalkie:!lanternTaken?KeeperStep.GrabLantern:!lit?KeeperStep.LanternWick:KeeperStep.None;
         public Transform Target {
             get {
-                if(Step==KeeperStep.GrabWalkie)foreach(var r in radios)if(!r.Held&&!r.Carried)return r.transform;
+                if(Step==KeeperStep.GrabWalkie)foreach(var r in radios)if(r.Available)return r.transform;
                 if(Step==KeeperStep.GrabLantern)foreach(var l in lanterns)if(l&&!l.Held)return l.transform;
                 return slot>=0&&lanterns[slot]?lanterns[slot].transform:null;
             }

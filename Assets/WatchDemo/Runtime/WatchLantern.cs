@@ -17,6 +17,15 @@ namespace LighthouseKeepers.WatchDemo {
    Grab=gameObject.AddComponent<XRGrabInteractable>();Grab.colliders.Add(c);Grab.colliders.Add(bail);Grab.movementType=XRBaseInteractable.MovementType.Kinematic;Grab.attachTransform=M2StationParts.Root("Bail grip",transform,LanternMesh.Handle);Grab.useDynamicAttach=false;Grab.throwOnDetach=false;Grab.smoothPosition=true;Grab.smoothPositionAmount=14;Grab.smoothRotation=true;Grab.smoothRotationAmount=10;Grab.selectEntered.AddListener(Hold);Grab.selectExited.AddListener(Release);Grab.activated.AddListener(Wick);
    surfaces=GetComponentsInChildren<Renderer>();sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.25f;sound.maxDistance=8;sound.dopplerLevel=0;KeeperAudioMix.Route(sound,"SFX_World");clunk=Resources.Load<AudioClip>("Hands/clunk");}
   Transform Surface(string name,Mesh m,Material material){var g=new GameObject(name);g.transform.SetParent(transform,false);g.AddComponent<MeshFilter>().sharedMesh=m;var r=g.AddComponent<MeshRenderer>();r.sharedMaterial=material;r.shadowCastingMode=ShadowCastingMode.Off;return g.transform;}
+  Cubemap cageCookie;
+  void Start(){
+   // A small reusable cage mask adds a shaped pool without six point-shadow renders.
+   cageCookie=new Cubemap(32,TextureFormat.RGBA32,false){name="Lantern cage light cookie",wrapMode=TextureWrapMode.Clamp,filterMode=FilterMode.Bilinear};
+   for(int face=0;face<6;face++){var pixels=new Color[32*32];for(int y=0;y<32;y++)for(int x=0;x<32;x++){
+    float u=(x+.5f)/16-1,v=(y+.5f)/16-1;var d=face==0?new Vector3(1,-v,-u):face==1?new Vector3(-1,-v,u):face==2?new Vector3(u,1,v):face==3?new Vector3(u,-1,-v):face==4?new Vector3(u,-v,1):new Vector3(-u,-v,-1);d.Normalize();
+    float rib=Mathf.SmoothStep(.2f,1,Mathf.Clamp01(Mathf.Abs(Mathf.Sin(Mathf.Atan2(d.x,d.z)*3))*3));float cap=Mathf.Lerp(.25f,1,1-Mathf.Abs(d.y));float value=rib*cap;pixels[y*32+x]=new Color(value,value,value,1);
+   }cageCookie.SetPixels(pixels,(CubemapFace)face);}cageCookie.Apply(false,true);pool.cookie=cageCookie;
+  }
   void Hold(SelectEnterEventArgs e){if(PlayerPrefs.GetInt("LK.Lantern.InputLearned",0)==0){watch.GetComponent<ObjectiveHud>()?.ShowHint(KeeperStrings.Get("lantern.firstGrip"),8);PlayerPrefs.SetInt("LK.Lantern.InputLearned",1);PlayerPrefs.Save();}hand=e.interactorObject.transform.GetComponentInParent<HandRig>();hand?.SetPose(RequiredPose,this);hand?.Pulse(.2f,.04f);}
   void Release(SelectExitEventArgs e){hand?.ClearPose();hand=null;OnNetworkReleased();}
   public void OnNetworkReleased(){released=true;dropped=Time.time;}
@@ -25,7 +34,7 @@ namespace LighthouseKeepers.WatchDemo {
    if(usable!=active){foreach(var r in surfaces)r.enabled=active;foreach(var c in Grab.colliders)c.enabled=active;Grab.enabled=active;usable=active;}
    bool lit=active&&state.Lit(Slot);pool.enabled=lit&&!watch.Sleeping&&!watch.State.Failed;var wick=state?.Wick(Slot)??LanternWick.Off;
    pool.range=wick==LanternWick.High?watch.State.Sprint5.lanternHighRange:watch.State.Sprint5.lanternLowRange;
-   float flicker=1+.06f*Mathf.Sin(Time.time*2.7f+Slot)*Mathf.Sin(Time.time*1.3f);float fuel=Mathf.InverseLerp(0,.2f,Oil);pool.intensity=(wick==LanternWick.High?1.25f:.65f)*flicker*Mathf.Lerp(.25f,1,fuel);
+   float flicker=1+.06f*Mathf.Sin(Time.time*2.7f+Slot)*Mathf.Sin(Time.time*1.3f);float fuel=Mathf.InverseLerp(0,.2f,Oil);pool.intensity=(wick==LanternWick.High?watch.State.Sprint5.lanternHighIntensity:watch.State.Sprint5.lanternLowIntensity)*flicker*Mathf.Lerp(.25f,1,fuel);
    block.SetColor("_BaseColor",lit?new Color(.9f,.45f,.06f):new Color(.08f,.04f,.015f));block.SetColor("_EmissionColor",lit?new Color(1,.42f,.04f)*3*flicker*fuel:Color.black);flameRenderer.SetPropertyBlock(block);flame.gameObject.SetActive(lit);oil.localScale=new Vector3(.016f,.028f*Mathf.Max(.02f,Oil),.003f);oil.localPosition=new Vector3(0,.031f+.014f*Oil,-.087f);
    if(lastWick!=(int)wick){if(lastWick>=0&&clunk)sound.PlayOneShot(clunk,.12f);hand?.Pulse(.18f,.04f);lastWick=(int)wick;}
    if(!Held&&(lease==null||lease.CanSimulateReleased)&&released){body.isKinematic=false;var hook=watch.NearestLanternHook(transform.TransformPoint(LanternMesh.Handle));if(hook.HasValue)SetRest(hook.Value-LanternMesh.Handle);else if(Time.time-dropped>20||transform.position.y<-.8f)SetRest(home);}
@@ -35,6 +44,6 @@ namespace LighthouseKeepers.WatchDemo {
    if(aim){int count=Physics.RaycastNonAlloc(from,delta.normalized,sightHits,delta.magnitude,~0,QueryTriggerInteraction.Ignore);if(count==sightHits.Length)aim=false;for(int i=0;i<count&&aim;i++){var h=sightHits[i];if(!h.transform.IsChildOf(transform)&&!h.collider.GetComponentInParent<HandRig>()&&!h.collider.GetComponentInParent<Unity.XR.CoreUtils.XROrigin>())aim=false;}}
    watch.State.RepelWithLantern(Slot,Time.deltaTime,Held,aim);}
   void SetRest(Vector3 p){if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;body.position=p;body.rotation=Quaternion.identity;if(clunk)sound.PlayOneShot(clunk,.12f);}
-  void OnDestroy(){foreach(var m in new[]{metal,glass,fire})if(m)Destroy(m);if(mesh)Destroy(mesh);if(globe)Destroy(globe);if(flameMesh)Destroy(flameMesh);}
+  void OnDestroy(){foreach(var m in new[]{metal,glass,fire})if(m)Destroy(m);if(cageCookie)Destroy(cageCookie);if(mesh)Destroy(mesh);if(globe)Destroy(globe);if(flameMesh)Destroy(flameMesh);}
  }
 }

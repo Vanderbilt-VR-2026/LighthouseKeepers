@@ -11,7 +11,7 @@ namespace LighthouseKeepers.WatchDemo {
   public bool Active=>actor&&actor.activeSelf;
   public string LearnedCode=>learnedCode;public bool CodeDelivered {get;private set;}
   public string Status=>KeeperStrings.Get(statusKey);
-  bool wantsCode;float reportUntil,radioPoseUntil,nextReport;string reportLine="";GameObject radioProp;
+  bool dutyExplained;bool wantsCode;float reportUntil,radioPoseUntil,nextReport;string reportLine="";GameObject radioProp;
   public bool ReportActive=>Time.unscaledTime<reportUntil;public string ReportLine=>reportLine;
   public void RequestReport(){if(!Active||Time.unscaledTime<nextReport)return;if(RequestClearance())return;nextReport=Time.unscaledTime+tuning.reportCooldown;if(watch.State.HasRadioRelay&&learnedCode.Length==0){wantsCode=true;SetCommand(CompanionCommand.Work);Report(KeeperStrings.Get("companion.fetchReply"));}else Report(learnedCode.Length>0?KeeperStrings.Get("companion.codeReply")+"\n"+learnedCode:KeeperStrings.Get("companion.readyReply"));}
   void Report(string text){if(learnedCode.Length>0&&text.Contains(learnedCode))CodeDelivered=true;reportLine=text;reportUntil=Time.unscaledTime+tuning.reportSeconds;radioPoseUntil=Time.unscaledTime+tuning.radioGestureSeconds;var n=FindAnyObjectByType<HarborRadio>();if(n)n.RecordSilentLine(text,KeeperStrings.Get("companion.name"));watch.GetComponent<ObjectiveHud>()?.RevealFor(tuning.reportSeconds);}
@@ -70,7 +70,7 @@ namespace LighthouseKeepers.WatchDemo {
    if(!watch||watch.State==null)return;var s=watch.State;
    if(s.ReadOnly||s.HumanKeeperCount>1||!tuning.enabled){if(Active)Retire();return;}
    if(!Active){if(Time.time<nextPath)return;nextPath=Time.time+3;if(!Spawn())return;}
-   if(night!=s.Day||s.Elapsed<lastWatchElapsed){ClearStationMemory();night=s.Day;learnedCode="";wantsCode=false;reportUntil=0;SetCommand(CompanionCommand.Work);}
+   if(night!=s.Day||s.Elapsed<lastWatchElapsed){ClearStationMemory();dutyExplained=false;night=s.Day;learnedCode="";wantsCode=false;reportUntil=0;SetCommand(CompanionCommand.Work);}
    lastWatchElapsed=s.Elapsed;if(s.BriefingHeld){Release();return;}
    if(watch.Sleeping||s.Failed){Release();statusKey="companion.wait";return;}
    if(s.Recovery.LessonActive){
@@ -95,6 +95,7 @@ namespace LighthouseKeepers.WatchDemo {
     CheckRoute();return;
    }
    if(command==CompanionCommand.Wait){Release();if(statusKey!="companion.blocked")statusKey="companion.wait";return;}
+   if(s.Day>1&&!dutyExplained&&!s.Recovery.LessonActive&&!s.Recovery.AnyDown){dutyExplained=true;Report(KeeperStrings.Get(Duty==CrewDuty.Machinist?"companion.dutyMachinist":"companion.dutyLightkeeper"));}
    bool support=command==CompanionCommand.Work||command==CompanionCommand.Help;
    if(support&&WorkStation()){CheckRoute();return;}
    if(support&&s.Pressure?.CrewRequired==true&&!s.Repaired&&valve&&(watch.CurrentInstruction==KeeperStep.TightenBolt||Vector3.Distance(head.position,valve.transform.position)<3)){

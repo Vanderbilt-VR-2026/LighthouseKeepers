@@ -12,7 +12,7 @@ Focused checks and a real physics-hover/input fixture are being recorded in `Doc
 
 ## Next, in order
 
-1. Finish this pass: per-night beam difficulty; try 1.5× later-night flood against the timing model; paired radio clues from Night 1; explain Owen's job handoff; sourced possession-rise sound; one dim room fixture + lantern-led darkness/fog and removal of room-light cable drops. Inspect screenshots and Owen neck/pose.
+1. Core pass implemented and verified: nightly beam tolerance, modeled flood retune, paired N1 code, Owen role/pose, possession rise sound, freshly baked dim fixtures, lantern cookie and exterior fog, lamp cable drops removed. Evidence in AndrewFeedback/README.md. Final build/transport delivery follows.
 2. Northern Star watcher/clown: visible gaze encounter, disappears after five seconds observed, respects scare setting; no camera motion or near-face spawn.
 3. Muted solo route, real two-Editor regression, build current source, install if Quest connected (DO NOT launch). Update PR #89 and detailed headset checklist.
 4. Then resume older missing Night 3 warned hunter/hiding lesson and Demo pacing. Neither is accepted or enabled by these playtest fixes. Recordings #122 LAST.

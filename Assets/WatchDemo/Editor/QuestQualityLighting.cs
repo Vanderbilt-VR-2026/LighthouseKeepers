@@ -38,11 +38,27 @@ public static class QuestQualityLighting
         for(int i=0;i<10;i++)points.Add(new Vector3(-3.8f+i*.8f,1.3f,-11.8f));probe.probePositions=points.ToArray();
         var lights=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<Light>(true));
         foreach(var l in lights){l.lightmapBakeType=LightmapBakeType.Baked;l.shadows=LightShadows.Soft;}
+        ApplyLanternRooms(lights.ToArray());
         var settings=Lightmapping.lightingSettings;
         if(!settings)throw new Exception("Missing existing LightingSettings");
         settings.lightmapper=LightingSettings.Lightmapper.ProgressiveGPU;settings.bakedGI=true;settings.realtimeGI=false;
         settings.lightmapResolution=10;settings.lightmapMaxSize=1024;settings.directSampleCount=64;settings.indirectSampleCount=128;settings.environmentSampleCount=64;
         EditorUtility.SetDirty(settings);
+    }
+    static void ApplyLanternRooms(Light[] lights)
+    {
+        // Repeatable one-fixture bake, using the same five runtime service-lamp mounts.
+        // Keep the beacon's bake. Windows supply only a trace of cold exterior spill.
+        var used=new HashSet<int>();
+        foreach(var l in lights.OrderBy(x=>EnvironmentLightingBake.PathOf(x.transform),StringComparer.Ordinal)){
+            if(l.name.Contains("beacon")||l.name=="Powered lantern light")continue;
+            if(l.name=="Baked cold window spill"){l.enabled=true;l.intensity=.035f;continue;}
+            bool room=l.name.StartsWith("Mains fixture");int floor=LighthouseKeepers.WatchDemo.LanternRoomLighting.Room(l.transform.position);
+            l.enabled=room&&used.Add(floor);
+            if(l.enabled){l.transform.position=LighthouseKeepers.WatchDemo.LanternRoomLighting.RoomLights[floor];l.intensity=.5f;l.range=2.7f;l.color=new Color(1,.64f,.32f);}
+            EditorUtility.SetDirty(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l.transform);
+        }
+        RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.006f,.008f,.011f);
     }
     [MenuItem("Lighthouse Keepers/Quality/Rebake Quest Lighting")]
     public static void Bake()

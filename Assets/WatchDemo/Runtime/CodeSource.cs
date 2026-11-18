@@ -31,7 +31,7 @@ namespace LighthouseKeepers.WatchDemo
             stamp=s.Day;relay=house;placed=true;
             // Same fixed paper changes location as the crew changes. A lone human retains a local
             // clue until the actual companion can fetch it; never require an absent bot.
-            transform.SetPositionAndRotation(house?new Vector3(-3.34f,1.12f,-6.4f):localSite,house?Quaternion.Euler(0,270,0):localRotation);
+            transform.SetPositionAndRotation(house?new Vector3(-3.34f,1.25f,-7.95f):localSite,house?Quaternion.Euler(0,270,0):localRotation);
             transform.localScale=Vector3.one;
             var paper=transform.GetChild(0);paper.localPosition=Vector3.zero;paper.localRotation=Quaternion.identity;paper.localScale=new Vector3(.62f,.32f,.016f);
             var renderer=paper.GetComponent<Renderer>();if(renderer){if(!paperMaterial){paperMaterial=new Material(Shader.Find("Universal Render Pipeline/Unlit")){name="Weathered telegram paper"};paperMaterial.SetColor("_BaseColor",new Color(.57f,.54f,.42f));}renderer.sharedMaterial=paperMaterial;renderer.SetPropertyBlock(null);}

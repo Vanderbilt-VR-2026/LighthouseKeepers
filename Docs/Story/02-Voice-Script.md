@@ -21,13 +21,13 @@ Filename = lowercase ID + `.wav`. Mono 44.1 kHz, 16-bit, one take, under 10 s; n
 
 | ID | Speaker | Exact text | Delivery | Trigger | Prerequisite | Priority | Repeat | Cancel/suppress | Mode |
 |---|---|---|---|---|---|---|---|---|---|
-| HM_N1_ARRIVAL_COOP | HM | Kettle Rock, this is Saltmere harbor. Elias Merrow. Glad you two got across before the weather. | warm, businesslike, a little tired | N1 start +3 s | — | P2 | 1/run | — | C |
-| HM_N1_ARRIVAL_SOLO | HM | Kettle Rock, this is Saltmere harbor. Elias Merrow. You and Teague got across. Good. | warm, businesslike | N1 start +3 s | — | P2 | 1/run | — | S |
+| HM_N1_ARRIVAL_COOP | HM | Kettle Rock, Saltmere port office. We have your arrival. Keep the passage lit, and report anything the last crew left behind. | warm, businesslike, a little tired | N1 start +3 s | — | P2 | 1/run | — | C |
+| HM_N1_ARRIVAL_SOLO | HM | Kettle Rock, Saltmere port office. We have your arrival. Keep the passage lit, and report anything the last crew left behind. | warm, businesslike | N1 start +3 s | — | P2 | 1/run | — | S |
 | HM_N1_OWEN_INTRO | HM | Owen Teague lost his hearing in the war. Sharpest eyes on the coast. Point, and he'll follow. | fond, matter-of-fact | after ARRIVAL_SOLO | — | P2 | 1/run | — | S |
 | HM_N1_RULE | HM | One rule on the Kettle above all the others. Two keepers. Always together after dark. | firm, slower | after arrival | — | P2 | 1/run | — | B |
 | HM_N1_RULE_REASON | HM | The Board will tell you it's the machinery. Needs two pairs of hands. Well. It does. | dry, a beat too long before Well | 20 s after RULE, calm | — | P3 | 1/run | any fault active | B |
 | HM_N1_FIRST_JOB | HM | Job board's by the door. Start with what's leaking. There's always something leaking. | light, wry | after RULE | — | P2 | 1/run | — | B |
-| HM_N2_OPEN | HM | Evening, Kettle Rock. Glass is falling fast. Keep an eye on that engine tonight. | brisk, a little worried | N2 start | — | P2 | 1/night | — | B |
+| HM_N2_OPEN | HM | Saltmere port office. Check the engine before the next convoy. | brisk, a little worried | N2 start | — | P2 | 1/night | — | B |
 | HM_N3_OPEN | HM | Night three. I've a broadcast for the ships, and I need your radio for it. | businesslike | N3 start | — | P2 | 1/night | — | B |
 | HM_N4_OPEN | HM | Worst of it's coming tonight. Two ships, close together. You'll be busy. | serious, steady | N4 start | — | P2 | 1/night | — | B |
 | HM_N5_OPEN | HM | Last night of the storm. The Providence sails at midnight. Two hundred and twelve aboard. | quiet, heavy | N5 start | — | P2 | 1/night | — | B |
@@ -43,7 +43,7 @@ Filename = lowercase ID + `.wav`. Mono 44.1 kHz, 16-bit, one take, under 10 s; n
 | HM_HELP_GEN_PRIME | HM | Now prime it. Pump the primer till it goes stiff. | calm | tank full, not primed, idle 15 s | refuelled | P2 | 60 s cd | primed | B |
 | HM_HELP_GEN_CHOKE | HM | Choke closed for a cold start. Then pull the cord. Hard. | calm | primed, choke open, idle 15 s | primed | P2 | 60 s cd | choke closed | B |
 | HM_HELP_GEN_PULL_AGAIN | HM | She won't catch first go. Pull again. | encouraging | 1st failed pull | choke closed | P4 | 2/night | running | B |
-| HM_GEN_RUNNING | HM | There she goes. Hear that? That's the whole station breathing again. | relief, warm | generator starts | — | P2 | 1/night | — | B |
+| HM_GEN_RUNNING | HM | Power is back. Check your partner, then the remaining work. | relief, warm | generator starts | — | P2 | 1/night | — | B |
 | HM_HELP_PANEL | HM | Power panel's on the wall, Floor Two. Not enough for everything. Pick what matters. | practical | first power shortage | — | P2 | 1/run | — | B |
 | HM_HELP_RADIO_TUNE | HM | Radio's on Floor Four. Turn the dial till my voice comes in clear. | patient | radio task, idle 20 s | — | P2 | 60 s cd | tuned | B |
 | HM_HELP_RADIO_CODE_COOP | HM | Tonight's code is on the telegram in the House. One of you reads it, one sends it. | clear | code step, not entered 20 s | tuned | P2 | 60 s cd | code sent | C |
@@ -53,14 +53,14 @@ Filename = lowercase ID + `.wav`. Mono 44.1 kHz, 16-bit, one take, under 10 s; n
 | HM_HELP_BEACON_HOLD | HM | Keep it on her. She has to see you the whole way past the rocks. | steady | first time on target in a window | — | P2 | 1/night | — | B |
 | HM_BEACON_DRIFTING | HM | You're drifting off her. Bring it back. | sharp, short | off target >3 s in danger window | — | P1 | 30 s cd | on target | B |
 | HM_SAB_PIPE | HM | Something's torn that pipe open again. Follow the water, Floor One. | grim | pipe sabotage, N2+ | — | P2 | 1/night | fixed | B |
-| HM_N2_FUEL_FAILURE | HM | Engine's coughing. Something's been at the fuel. Floor Two, quick as you can. | urgent | fuel sabotage | — | P2 | 1/night | running | B |
+| HM_N2_FUEL_FAILURE | HM | The engine is losing fuel. Check the tank on Floor Two. | urgent | fuel sabotage | — | P2 | 1/night | running | B |
 | HM_SAB_CABLE | HM | You've lost a circuit. There's a cable down on Floor Two. Join it at the junction box. | urgent, clear | cable sabotage | — | P2 | 1/night | fixed | B |
 | HM_CABLE_FIXED | HM | That's the circuit back. Lights on Two. | relief | cable fixed | — | P2 | 1/night | — | B |
 | HM_SAB_LENS | HM | Your light's fouled. There's muck on the glass. Get a rag on it. | urgent | lens smeared | — | P1 | 1/night | clean | B |
 | HM_LENS_CLEAN | HM | That's it. She's shining clean. | relief | lens clean | — | P2 | 1/night | — | B |
 | HM_SAB_RADIO_RESTORED | HM | There you are. Wire was cut. That wasn't the storm. | quiet, unsettled | radio wire rejoined; HM silent while cut | — | P2 | 1/night | — | B |
 | HM_N2_HANDPRINTS | HM | If there's marks on that tank, they're old. Get her running. | too quick, then flat | player within 1.5 m of tank handprints | — | P3 | 1/run | generator running | B |
-| HM_N2_LANTERN_INTRO | HM | You'll be in the dark till that engine runs. Take the lantern by the door. | calm, firm | first blackout | — | P2 | 1/run | lantern held | B |
+| HM_N2_LANTERN_INTRO | HM | Take a lantern from the marked hook. You will need it while the engine is out. | calm, firm | first blackout | — | P2 | 1/run | lantern held | B |
 | HM_N2_LANTERN_OIL | HM | Oil's dear out there. Keep the wick low, and hang it up while you work. | practical | first lantern grab | — | P2 | 1/run | — | B |
 | HM_LANTERN_LOW_OIL | HM | Your lamp's running low. There's one can of oil on the shelf, Floor Two. | concerned | held lantern <20% oil | can unused | P2 | 1/night | refilled | B |
 | HM_WARN_WATER_HALF | HM | Water's halfway to the engine. Get that pump running. | firm | water 50% | — | P2 | 1/night | falling | B |
@@ -70,7 +70,7 @@ Filename = lowercase ID + `.wav`. Mono 44.1 kHz, 16-bit, one take, under 10 s; n
 | HM_N1_SHIP_PREVIEW | HM | See those lights? That's the Mary Ellen, coal for the city. She'll pass well clear tonight. | relaxed, teaching | N1 ship lights visible | — | P3 | 1/run | — | B |
 | HM_SHIP_SIGHTED | HM | Lights to the south. There's a ship making for the passage. | alert | ship lights appear, N2+ | — | P2 | 1/ship | — | B |
 | HM_SHIP_DANGER | HM | She's in close by the rocks. Get your beam on her. Now. | urgent | danger window opens | — | P1 | 1/ship | on target | B |
-| HM_SHIP_PASSED | HM | She's through. Clear water. Hear that horn? That's for you. | relieved, proud | ship passed | — | P2 | 1/ship | — | B |
+| HM_SHIP_PASSED | HM | Ship clear of the rocks. Keep watch for the next signal. | relieved, proud | ship passed | — | P2 | 1/ship | — | B |
 | HM_SHIP_WRECK | HM | No. No, she's on the Kettles. | stricken, quiet | wreck | — | P1 | 1/ship | — | B |
 | HM_SHIP_WRECK_AFTER | HM | Nothing you can do for her now. Keep the light. There'll be others. | hollow, steady | 6 s after WRECK, non-final ship | — | P2 | 1/night | — | B |
 | HM_SEPARATED_COOP | HM | You two are on different floors. Don't stay that way long. | quiet, uneasy | different floors 45 s, N2+, dark | — | P3 | 1/night | reunited | C |
@@ -87,7 +87,7 @@ Filename = lowercase ID + `.wav`. Mono 44.1 kHz, 16-bit, one take, under 10 s; n
 | HM_N2_WALTER | HM | Walter Brennick kept that engine nineteen years. Never lost a night. Till this summer. | fond, then it catches | N2, GEN_RUNNING +30 s calm | — | P3 | 1/run | — | B |
 | HM_N3_RECOGNITION | HM | Same as August. The fuel, then a cable. Same order. | to himself, low | N3 cable fixed +calm | — | P3 | 1/run | — | B |
 | HM_N3_RULE_TRUTH | HM | It's not the machinery. It's never been the machinery. Just don't be alone in the dark. | quiet, plain, almost ashamed | N3_AFTER_HUNT +20 s | — | P3 | 1/run | — | B |
-| HM_N4_TOM | HM | My boy was on the Kettle. Tom. Junior keeper. Six weeks gone now. | flat, holding it together | N4 opening calm, ~60 s | — | P3 | 1/run | — | B |
+| HM_N4_TOM | HM | My son was stationed on the Kettle. Tom. He has been missing for a week. | flat, holding it together | N4 opening calm, ~60 s | — | P3 | 1/run | — | B |
 | HM_N4_STAIRS | HM | Tom wrote about something at the bottom of the stairs. I thought he was tired. | quiet | N4 tall figure sighting or radio log read | — | P3 | 1/run | — | B |
 | HM_N4_NOT_WALTER | HM | If you see Walter, it's not Walter. Do you understand me? It is not Walter. | intense, slow | after N4_STAIRS +calm | — | P3 | 1/run | — | B |
 | HM_N5_TRUTH_1 | HM | There's a thing I should've told you on the first night. | hesitant | N5 first calm after first ship | — | P3 | 1/run | — | B |

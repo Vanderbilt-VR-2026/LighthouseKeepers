@@ -167,7 +167,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(GeneratorTutorial&&!NightTwoOutage){double until=NightTwoFuelFailure?FuelRunoutRemaining:Master.nightTwoOutageSeconds-Elapsed;if(until>.00001&&seconds>until){Tick(until);Tick(seconds-until);return;}}
             double darkSeconds=Math.Max(0,seconds-BeaconGraceRemaining);
-            Recovery?.Tick((float)seconds);Pressure?.Tick((float)seconds);Lanterns?.Tick((float)seconds);
+            Recovery?.Tick((float)seconds);Pressure?.Tick((float)seconds);if(!Tutorial)Lanterns?.Tick((float)seconds);
             simulationSliceEnd=Elapsed+seconds;PaceArrivalFuel();WarnFuelSabotage();Engine?.Tick((float)seconds);
             Beacon?.Tick((float)seconds,HasPower(PowerCircuit.Beacon));
             if(Ships==null&&!Tutorial&&!BeaconShining && Definition.beaconDarkLimitSeconds>0)

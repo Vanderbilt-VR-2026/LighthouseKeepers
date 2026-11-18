@@ -3,6 +3,7 @@ using UnityEngine;
 using LighthouseKeepers.Core.Progression;
 namespace LighthouseKeepers.Tests.M3 {
  public sealed class ShipAimingTests {
+  [Test] public void SameWheelErrorIsForgivenEarlyAndPunishedLate(){var t=Resources.Load<Sprint5Tuning>("Sprint5Tuning");Assert.NotNull(t);var ship=ShipNavigation.Route(90,75,55,55).position;float aim=ShipNavigation.WheelFor(ship)+10f/270f;Assert.True(ShipNavigation.Aimed(aim,ship,t.BeamTolerance(1)));Assert.False(ShipNavigation.Aimed(aim,ship,t.BeamTolerance(5)));for(int night=2;night<=5;night++)Assert.Less(t.BeamTolerance(night),t.BeamTolerance(night-1));}
   static NightShipEvent Event(bool preview=false)=>new NightShipEvent{id="aim",nameKey="Mary Ellen",sightedAtSeconds=10,approachSeconds=10,windowSeconds=10,darkGraceSeconds=5,safePreview=preview};
   [Test] public void PoweredButOffTargetStopsTravelAndWrecks(){var s=new ShipPassageState(new[]{Event()},0,true);s.TickGuided(0,24,(i,t)=>false,false);Assert.False(s.Lost);Assert.That(s.VisualAge(0,24),Is.EqualTo(10).Within(.01));s.TickGuided(24,26,(i,t)=>false,false);Assert.True(s.Lost);Assert.False(s.Finished);}
   [Test] public void ReacquiringBeamResumesAfterSteadyHoldAndNeverRewinds(){var s=new ShipPassageState(new[]{Event()},0,true);s.Tick(0,22,false,false);double at=s.VisualAge(0,22);s.Tick(22,22.3,true,false);Assert.That(s.VisualAge(0,22.3),Is.EqualTo(at).Within(.02));s.Tick(22.3,23,true,false);Assert.Greater(s.VisualAge(0,23),at);s.Tick(23,34,true,false);Assert.True(s.Finished);Assert.False(s.Lost);}
