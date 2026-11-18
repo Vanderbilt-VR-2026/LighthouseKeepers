@@ -73,19 +73,27 @@ def expressive_face():
             if name.startswith('VIS_'):continue
             g=beard.vertex_groups.get(name) or beard.vertex_groups.new(name=name)
             g.add([v.index],group.weight,'REPLACE')
+    # Clear the lips and mouth opening in the beard shell, rather than stretching a
+    # beard sheet across the opening. The accepted torso, arms and legs are unchanged.
+    import bmesh
+    bm=bmesh.new();bm.from_mesh(beard.data)
+    bmesh.ops.delete(bm,geom=[f for f in bm.faces if abs(M.unity(f.calc_center_median())[0])<.026 and 1.582<M.unity(f.calc_center_median())[1]<1.618],context='FACES')
+    bm.to_mesh(beard.data);bm.free()
     # Mouth interior is concealed by the closed lips, exposed by the lowered jaw.
-    F.ellipsoid('Mouth interior',(0,1.592,.077),(.022,.025,.013),'Mouth','Head',{'Head':1},20,12)
+    F.ellipsoid('Mouth interior',(0,1.592,.062),(.024,.026,.013),'Mouth','Head',{'Head':1},20,12)
+    from mathutils.bvhtree import BVHTree
+    skin_tree=BVHTree.FromPolygons([Vector(M.unity(head.matrix_world@v.co)) for v in head.data.vertices],[list(f.vertices) for f in head.data.polygons])
     for side,joint in ((-1,'EyeL'),(1,'EyeR')):
         x=side*.030775
         F.BONES[joint]=((x,1.665,.064535),(x,1.685,.064535),'Head')
         tear='TearL' if side<0 else 'TearR'
         F.BONES[tear]=((x,1.651,.076),(x,1.621,.071),'Head')
         points=[]
-        for y in (1.651,1.640,1.627,1.611):
-            samples=sorted(( ((px-x)**2+(py-y)**2,pz) for px,py,pz in (M.unity(head.matrix_world@v.co) for v in head.data.vertices) if pz>.015))[:4]
-            z=sum(pz/(d+1e-7) for d,pz in samples)/sum(1/(d+1e-7) for d,pz in samples)
-            points.append((x,y,z+.002))
-        F.line('Dark tear trail',points,.0014,'Tear','Head',{tear:1},6)
+        for i in range(13):
+            y=1.654-i*.0038
+            hit=skin_tree.ray_cast(Vector((x,y,.2)),Vector((0,0,-1)))
+            if hit[0] is not None:points.append((x,y,hit[0].z+.002))
+        F.line('Dark tear trail',points,.0032,'Tear','Head',{tear:1},6)
         # Tiny iris spokes and corneal highlight stay with the moving eyeball.
         for i in range(16):
             a=i*math.pi/8
