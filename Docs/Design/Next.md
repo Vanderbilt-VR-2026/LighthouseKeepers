@@ -1,3 +1,11 @@
+# Current work — controls, Day 2 nightmare, Day 3 cursed ship
+
+Branch `sprint-5`, PR #89. Approved source copied in full to `Docs/Design/S5-Day2-Day3-Scares.md`.
+
+Order: #143 Part 0 (A run, X breath, directional lantern, reliable flare) → #144 end-Day-2 nightmare → #145 Day-3 authenticated calls/cursed ship. Reuse host snapshot, possession/revive, navigation and ship systems. Survival excludes both horror scenes. Existing practice Day 1 already prevents lantern oil drain. Keep Editor muted; install final APK, never launch.
+
+Baseline source: `193d8f22`, last installed APK `cec81c8e`, network `LK-S5-PRACTICE1 / LK-Lab-Coop-v50`. No scene work is complete yet. Earlier evidence/checkpoint below remains historical.
+
 # Current checkpoint — House light and Survival practice day (#142)
 
 Branch `sprint-5`, PR #89. APK source **cec81c8e** built and installed on Quest 3, **not launched**. Network **LK-S5-PRACTICE1 / LK-Lab-Coop-v50**; both players must update. No new snapshot fields.
