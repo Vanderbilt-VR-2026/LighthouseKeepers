@@ -15,8 +15,8 @@ namespace LighthouseKeepers.WatchDemo {
    var c=gameObject.AddComponent<BoxCollider>();c.center=new Vector3(0,.14f,0);c.size=new Vector3(.18f,.28f,.15f);var bail=gameObject.AddComponent<BoxCollider>();bail.center=LanternMesh.Handle;bail.size=new Vector3(.14f,.07f,.07f);
    foreach(var rig in FindObjectsByType<CharacterController>(FindObjectsSortMode.None)){Physics.IgnoreCollision(c,rig,true);Physics.IgnoreCollision(bail,rig,true);}
    Grab=gameObject.AddComponent<XRGrabInteractable>();Grab.colliders.Add(c);Grab.colliders.Add(bail);Grab.movementType=XRBaseInteractable.MovementType.Instantaneous;Grab.attachTransform=M2StationParts.Root("Bail grip",transform,LanternMesh.Handle);Grab.useDynamicAttach=false;Grab.throwOnDetach=false;Grab.smoothPosition=false;Grab.smoothPositionAmount=14;Grab.smoothRotation=false;Grab.smoothRotationAmount=10;Grab.selectEntered.AddListener(Hold);Grab.selectExited.AddListener(Release);Grab.activated.AddListener(Wick);
-   leftPalm=M2StationParts.Root("Left palm on lantern bail",transform,LanternMesh.Handle);leftPalm.localRotation=Quaternion.Euler(0,0,90);
-   rightPalm=M2StationParts.Root("Right palm on lantern bail",transform,LanternMesh.Handle);rightPalm.localRotation=Quaternion.Euler(0,0,-90);
+   leftPalm=M2StationParts.Root("Left palm on lantern bail",transform,LanternMesh.Handle);leftPalm.localRotation=Quaternion.identity;
+   rightPalm=M2StationParts.Root("Right palm on lantern bail",transform,LanternMesh.Handle);rightPalm.localRotation=Quaternion.identity;
    surfaces=GetComponentsInChildren<Renderer>();sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.25f;sound.maxDistance=8;sound.dopplerLevel=0;KeeperAudioMix.Route(sound,"SFX_World");clunk=Resources.Load<AudioClip>("Hands/clunk");}
   Transform Surface(string name,Mesh m,Material material){var g=new GameObject(name);g.transform.SetParent(transform,false);g.AddComponent<MeshFilter>().sharedMesh=m;var r=g.AddComponent<MeshRenderer>();r.sharedMaterial=material;r.shadowCastingMode=ShadowCastingMode.Off;return g.transform;}
   Cubemap cageCookie;
@@ -35,7 +35,7 @@ namespace LighthouseKeepers.WatchDemo {
   void Update(){lease??=GetComponent<INetworkPropStatus>();var state=watch.State.Lanterns;bool active=state!=null;
    if(usable!=active){foreach(var r in surfaces)r.enabled=active;foreach(var c in Grab.colliders)c.enabled=active;Grab.enabled=active;usable=active;}
    if(!watch.State.ReadOnly&&active&&transform.TransformPoint(new Vector3(0,.17f,0)).y<watch.WaterHeightAt(transform.position))state.Extinguish(Slot);
-   if(hand&&Grab.isSelected)hand.SetConstrainedGrip(hand.Node==UnityEngine.XR.XRNode.LeftHand?leftPalm:rightPalm);
+   if(hand&&Grab.isSelected)hand.SetToolGrip(hand.Node==UnityEngine.XR.XRNode.LeftHand?leftPalm:rightPalm,HandRig.ToolGripPoint);
    bool lit=active&&state.Lit(Slot);pool.enabled=lit&&!watch.Sleeping&&!watch.State.Failed;var wick=state?.Wick(Slot)??LanternWick.Off;
    pool.range=wick==LanternWick.High?watch.State.Sprint5.lanternHighRange:watch.State.Sprint5.lanternLowRange;
    float flicker=1+.06f*Mathf.Sin(Time.time*2.7f+Slot)*Mathf.Sin(Time.time*1.3f);float fuel=Mathf.InverseLerp(0,.2f,Oil);pool.intensity=(wick==LanternWick.High?watch.State.Sprint5.lanternHighIntensity:watch.State.Sprint5.lanternLowIntensity)*flicker*Mathf.Lerp(.25f,1,fuel);

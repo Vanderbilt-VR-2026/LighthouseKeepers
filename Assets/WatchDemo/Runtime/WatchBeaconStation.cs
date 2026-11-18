@@ -80,12 +80,12 @@ namespace LighthouseKeepers.WatchDemo
  [DefaultExecutionOrder(100)]
  public sealed class BeaconControl:MonoBehaviour
  {
-  WatchBeaconStation owner;bool wheel;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;Vector3 previousRadial;float working,nextSend,detent;
+  WatchBeaconStation owner;bool wheel;Transform visual,left,right,rimContact;Quaternion rimRotation;PhysicalGrip grip;XRSimpleInteractable interaction;Vector3 previousRadial;float working,nextSend,detent;
   public void Initialize(WatchBeaconStation parent,bool isWheel,Transform model){owner=parent;wheel=isWheel;visual=model;}
-  void Awake(){grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-1);right=Palm(1);interaction.selectEntered.AddListener(Select);interaction.selectExited.AddListener(Release);}
+  void Awake(){grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-1);right=Palm(1);rimContact=M2StationParts.Root("Hand-selected wheel contact",transform,Vector3.zero);interaction.selectEntered.AddListener(Select);interaction.selectExited.AddListener(Release);}
   Transform Palm(int side){var p=M2StationParts.Root(side<0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.10"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.11"),visual,new Vector3(side*(wheel?.20f:.014f),.012f,wheel?.055f:.14f));p.localRotation=Quaternion.Euler(0,180,0);return p;}
   Vector3 Radial(Vector3 point)=>Vector3.ProjectOnPlane(point-transform.position,transform.forward);
-  void Select(SelectEnterEventArgs e){previousRadial=Radial(e.interactorObject.transform.position);working=owner.State.Beacon.Alignment;if(!wheel)owner.Ignite();else owner.Click();}
+  void Select(SelectEnterEventArgs e){previousRadial=Radial(e.interactorObject.transform.position);working=owner.State.Beacon.Alignment;if(!wheel)owner.Ignite();else {var h=e.interactorObject.transform.GetComponentInParent<HandRig>();var skin=h?h.GetComponentInChildren<SkinnedMeshRenderer>():null;rimRotation=skin?skin.transform.rotation:e.interactorObject.transform.rotation;owner.Click();}}
   void Release(SelectExitEventArgs e){if(wheel)owner.Align(working);}
   void Update()
   {
@@ -94,14 +94,18 @@ namespace LighthouseKeepers.WatchDemo
     var radial=Radial(interaction.interactorsSelecting[0].transform.position);
     // Follow the hand around the rim, like a wheel. Regripping keeps the beam angle;
     // turning the wrist in place no longer fights the player's larger arm movement.
-    if(radial.sqrMagnitude>=.0064f&&previousRadial.sqrMagnitude>=.0064f){float degrees=Vector3.SignedAngle(previousRadial,radial,transform.forward);if(float.IsFinite(degrees))working=Mathf.Clamp01(working+Mathf.Clamp(degrees,-25,25)/270);}
+    if(radial.sqrMagnitude>=.0064f&&previousRadial.sqrMagnitude>=.0064f){float degrees=Vector3.SignedAngle(previousRadial,radial,transform.forward);if(float.IsFinite(degrees)){float before=working;working=Mathf.Clamp01(working+Mathf.Clamp(degrees,-25,25)/270);rimRotation=Quaternion.AngleAxis((working-before)*270,transform.forward)*rimRotation;}}
     previousRadial=radial;
     if(Time.time>=nextSend){nextSend=Time.time+.1f;owner.Align(working);}
     if(Mathf.Abs(working-detent)>.04f){detent=working;owner.Click();if(grip.HoldingHand)grip.HoldingHand.Pulse(.25f,.035f);}
    }
    visual.localRotation=wheel?Quaternion.Euler(0,0,-135+(interaction.isSelected?working:owner.State.Beacon.Alignment)*270):Quaternion.Euler(owner.State.Beacon.Ignited?-30:30,0,0);
-   var hand=grip.HoldingHand;if(hand)hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);
+   var hand=grip.HoldingHand;if(hand){
+    if(wheel){var local=transform.InverseTransformPoint(hand.Direct.transform.position);rimContact.localPosition=RimContact(local);rimContact.rotation=rimRotation;hand.SetToolGrip(rimContact,HandRig.ToolGripPoint);}
+    else hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);
+   }
   }
+  public static Vector3 RimContact(Vector3 local){var radial=new Vector2(local.x,local.y);if(radial.sqrMagnitude<.0001f)radial=Vector2.up;radial=radial.normalized*.20f;return new Vector3(radial.x,radial.y,.035f);}
   void OnDestroy(){if(interaction){interaction.selectEntered.RemoveListener(Select);interaction.selectExited.RemoveListener(Release);}}
  }
 }

@@ -2,6 +2,10 @@
 
 Branch `sprint-5`, PR #89. APK source **ad33062a** is built and installed on Quest 3, **not launched**. Network **LK-S5-COOPFIX1** / **LK-Lab-Coop-v50**; both players must update.
 
+## Follow-up in progress — grip and darkness
+
+Tool grip contacts now sit inside curled fingers, with a quarter-turn correction for the lantern; the beacon wheel grabs at the chosen rim point. 30 scripted left/right grip and rim/regrip checks pass, and rendered grip images were inspected (`artifacts/s5/grip-darkness/grips-final`). Not installed yet. Next: remove powered bake during blackout/ambient fill, one dim bulb per room, short-range lantern; Owen work gestures/collar and early-night cushion; then build/install without launch.
+
 ## Done this pass
 
 - Full ordered radio code, role-specific House clue, daily frequency stable on retry/rejoin, explicit F4 lever/mic instructions, transmit progress and limited B reminders.

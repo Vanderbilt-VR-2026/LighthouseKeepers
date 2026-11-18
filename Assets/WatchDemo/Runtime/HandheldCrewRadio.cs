@@ -10,7 +10,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease, INetworkPropCarry
     {
         WatchDemoController watch;int index;XRGrabInteractable grab;INetworkPropStatus lease;Transform head;Renderer lamp;TextMesh status;MaterialPropertyBlock block;
-        bool trigger,previous,released,carried,taughtCarry;AudioSource carrySound;AudioClip carryClick;Transform beltClip;
+        bool trigger,previous,released,carried,taughtCarry;AudioSource carrySound;AudioClip carryClick;Transform beltClip,leftPalm,rightPalm;PhysicalGrip physicalGrip;
         public bool Carried=>carried;
         public void DropCarry(){if(carried)released=true;carried=false;}
         public bool ReleasedBodyIsKinematic=>carried||!released;
@@ -36,17 +36,21 @@ namespace LighthouseKeepers.WatchDemo
             if(surface){var b=surface.bounds;spot=new Vector3(b.center.x+.12f,b.max.y,b.min.z+.14f);}
             transform.SetPositionAndRotation(spot+new Vector3(0,.10f,index*.18f),Quaternion.Euler(0,90,0));
             home=transform.position;homeRotation=transform.rotation;
-            p.Part("Handheld enamel body",transform,Vector3.zero,new Vector3(.075f,.18f,.055f),p.Dark);
-            for(int i=0;i<5;i++)p.Part("Speaker grille",transform,new Vector3(0,.035f-i*.012f,.03f),new Vector3(.05f,.003f,.004f),p.Metal);
+            p.Part("Handheld enamel body",transform,Vector3.zero,new Vector3(.052f,.18f,.032f),p.Dark);
+            for(int i=0;i<5;i++)p.Part("Speaker grille",transform,new Vector3(0,.035f-i*.012f,.018f),new Vector3(.038f,.003f,.004f),p.Metal);
             p.Part("Rubber aerial",transform,new Vector3(-.025f,.155f,0),new Vector3(.009f,.14f,.009f),p.Dark);
-            p.Part("Push to talk button",transform,new Vector3(.041f,0,0),new Vector3(.012f,.04f,.025f),p.Brass);
-            lamp=p.Part("Transmit indicator",transform,new Vector3(.02f,.07f,.031f),new Vector3(.012f,.012f,.008f),p.Brass).GetComponent<Renderer>();
-            status=p.Text("Radio face stencil",PlayerStrings.Get("connected.radioUse"),transform,new Vector3(0,-.055f,.031f),.00065f);
-            var col=gameObject.AddComponent<BoxCollider>();col.size=new Vector3(.08f,.19f,.06f);
+            p.Part("Push to talk button",transform,new Vector3(.03f,0,0),new Vector3(.012f,.04f,.025f),p.Brass);
+            lamp=p.Part("Transmit indicator",transform,new Vector3(.014f,.07f,.018f),new Vector3(.012f,.012f,.008f),p.Brass).GetComponent<Renderer>();
+            status=p.Text("Radio face stencil",PlayerStrings.Get("connected.radioUse"),transform,new Vector3(0,-.055f,.019f),.00065f);
+            var col=gameObject.AddComponent<BoxCollider>();col.size=new Vector3(.058f,.19f,.038f);
             body=gameObject.AddComponent<Rigidbody>();body.mass=.25f;body.isKinematic=true;body.useGravity=true;
             grab=gameObject.AddComponent<XRGrabInteractable>();grab.colliders.Add(col);grab.movementType=XRBaseInteractable.MovementType.Instantaneous;grab.smoothPosition=false;grab.smoothRotation=false;grab.attachEaseInTime=.08f;grab.throwOnDetach=false;
             var attach=M2StationParts.Root("Radio palm contact",transform,new Vector3(0,-.035f,0));
-            gameObject.AddComponent<PhysicalGrip>().Configure(attach,HandPose.WrapGrip);
+            physicalGrip=gameObject.AddComponent<PhysicalGrip>();physicalGrip.Configure(attach,HandPose.WrapGrip);
+            leftPalm=M2StationParts.Root("Left wrap around radio",transform,new Vector3(-.016f,-.025f,0));
+            rightPalm=M2StationParts.Root("Right wrap around radio",transform,new Vector3(.016f,-.025f,0));
+            leftPalm.localRotation=Quaternion.LookRotation(Vector3.left,Vector3.back);
+            rightPalm.localRotation=Quaternion.LookRotation(Vector3.right,Vector3.back);
             grab.useDynamicAttach=false;
             // Exclude the walking capsule, never the hand triggers: ignoring those also
             // removes XRDirectInteractor hover, although manual-selection tests still pass.
@@ -72,6 +76,7 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             if(lease==null)lease=GetComponent<INetworkPropStatus>();
+            if(physicalGrip.HoldingHand){var h=physicalGrip.HoldingHand;h.SetToolGrip(h.Node==UnityEngine.XR.XRNode.LeftHand?leftPalm:rightPalm,new Vector3(0,-.052f,.050f));}
             if(beltClip&&head)beltClip.SetPositionAndRotation(RadioBeltPose.Position(head.position,head.rotation),Quaternion.Euler(0,head.eulerAngles.y,0));
             bool allowed=CrewVoiceBridge.Current is ICrewVoiceCapture capture&&capture.MicrophoneAllowed&&!capture.Muted;
             bool active=allowed&&WantsTransmit;

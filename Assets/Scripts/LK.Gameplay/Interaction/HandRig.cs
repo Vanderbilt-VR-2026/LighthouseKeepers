@@ -41,6 +41,9 @@ namespace LighthouseKeepers.Gameplay.Interaction
         Mesh mesh;
         Material ownedMaterial;
         Transform visual, constrainedGrip;
+        Vector3 constrainedPoint = new Vector3(0, -.018f, .025f);
+        // Centre of the space inside the authored WrapGrip fingers, not the palm surface.
+        public static readonly Vector3 ToolGripPoint = new Vector3(0, -.048f, .055f);
         XRDirectInteractor direct;
         HandPose? selectedPose;
         UnityEngine.Object poseOwner;
@@ -177,7 +180,7 @@ namespace LighthouseKeepers.Gameplay.Interaction
         void LateUpdate()
         {
             if (!visual) return;
-            if (constrainedGrip) visual.SetPositionAndRotation(constrainedGrip.position - constrainedGrip.rotation * new Vector3(0, -.018f, .025f), constrainedGrip.rotation);
+            if (constrainedGrip) visual.SetPositionAndRotation(constrainedGrip.position - constrainedGrip.rotation * constrainedPoint, constrainedGrip.rotation);
             else
             {
                 var device = InputDevices.GetDeviceAtXRNode(hand);
@@ -207,8 +210,9 @@ namespace LighthouseKeepers.Gameplay.Interaction
         }
         void Released(SelectExitEventArgs args) { ClearPose(); }
         public void SetPose(HandPose pose, UnityEngine.Object owner, Transform grip = null)
-        { Capture(); selectedPose = pose; poseOwner = owner; constrainedGrip = grip; }
-        public void SetConstrainedGrip(Transform grip) { constrainedGrip = grip; }
+        { Capture(); selectedPose = pose; poseOwner = owner; SetConstrainedGrip(grip); }
+        public void SetConstrainedGrip(Transform grip) { constrainedGrip = grip; constrainedPoint = new Vector3(0, -.018f, .025f); }
+        public void SetToolGrip(Transform grip, Vector3 localContact) { constrainedGrip = grip; constrainedPoint = localContact; }
         public void ClearPose() { Capture(); selectedPose = null; poseOwner = null; constrainedGrip = null; }
         void Capture() { if (bones != null) for (int i = 0; i < bones.Length; i++) blendStart[i] = bones[i].localRotation; poseTime = 0; }
         public void Pulse(float amplitude, float seconds)
