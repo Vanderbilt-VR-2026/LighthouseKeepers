@@ -1,0 +1,21 @@
+{
+    "passed": true,
+    "checks": [
+        "PASS Walkie reachable through physics hover",
+        "PASS Grip alone picks up walkie",
+        "PASS Release beside right hip clips walkie to belt",
+        "PASS Grip retrieves belt radio",
+        "PASS Lantern top bail is reachable through physics hover",
+        "PASS Grip selects lantern bail",
+        "PASS Lantern attaches at top handle, not glass",
+        "PASS Released lantern remains on floor after old 20-second timeout",
+        "PASS Completing bolts/releasing pressure never relocates valve",
+        "PASS Grip selects red radio power lever",
+        "PASS Lift held radio lever powers console without trigger",
+        "PASS Daily frequency locks",
+        "PASS Entire displayed code accepted in order",
+        "PASS Grip picks up console microphone",
+        "PASS Trigger while gripping microphone starts transmission",
+        "PASS Holding grip and trigger finishes radio broadcast"
+    ]
+}

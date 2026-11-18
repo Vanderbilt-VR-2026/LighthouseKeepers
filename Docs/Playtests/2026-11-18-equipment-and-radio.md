@@ -10,7 +10,7 @@ User feedback, issue #142: pipe valve hard to locate and teleports after release
 
 ## Evidence so far
 
-Radio/recall changes compile; 20 focused EditMode checks pass (RadioRelay 5, CampaignOrder 5, SurvivalMode 7, RadioBelt 3). Worn readability and physical reach remain pending. No new APK delivered yet.
+Radio/recall changes compile; 20 focused EditMode checks pass (RadioRelay 5, CampaignOrder 5, SurvivalMode 7, RadioBelt 3). Worn readability and physical reach remain pending. The final delivery below supersedes the previous installed build.
 
 Props: removed the 20-second automatic return for lantern/walkie (out-of-world recovery remains); host extinguishes submerged flame without deleting oil; two hand-specific bail poses, static pressure bypass and visible belt holster. 15 focused rule tests pass (Lantern 8, PressureValve 4, RadioBelt 3). Physical headset acceptance pending.
 
@@ -22,6 +22,14 @@ Owen: baked beard colour into skin instead of a duplicate shell, removed project
 
 Verification: 40 focused EditMode checks passed on the combined world/radio/starter/companion/survival/lantern/avatar change. Actual XR hover + manual grip/trigger readers passed 16 Play Mode checks: walkie grab/belt/retrieval, lantern bail attachment/set-down beyond 20 seconds, fixed valve through repair/release, radio lever lift, daily tune, full code and mic transmission. Live submerged-lantern check extinguished the flame while preserving oil. Owen navigated to F2 and held assist, then walked to the House telegram and reported all four code symbols together. These are scripted Editor checks, not worn Quest acceptance or a full human playthrough.
 
-Evidence: `artifacts/s5/interaction-fixes/{tests,physical/result.json,bot/result.json,navigation/routes.txt,live/}`. Lighting receipt: `artifacts/s5/quest-quality/bake.txt` (see editor log QUEST_BAKE_FINISHED if path differs).
+Evidence: `artifacts/s5/interaction-fixes/{tests,physical/result.json,bot/result.json,navigation/routes.txt,live/}`. Lighting output: `artifacts/s5/quality/`; powered/emergency completion recorded in the Editor log.
 
-The first two-Editor assist test found the command whitelist still ending at BriefingComplete, silently rejecting EngineAssist. Extended the whitelist; the existing all-actions/replay test now passes (2 command-window, 4 timed-starter, 3 equipment-world checks). Repeating live transport before build.
+The first two-Editor assist test found the command whitelist still ending at BriefingComplete, silently rejecting EngineAssist. Extended the whitelist; the existing all-actions/replay test now passes (2 command-window, 4 timed-starter, 3 equipment-world checks). The repeat live transport passed before build.
+
+## Final delivery
+
+Two muted live Editors passed the repeat: actual guest assist grip/release accepted and replicated, fixed valve grip accepted, role-specific clue, lantern/radio sync, leave/rejoin, ship passage, shared sleep into Day 2 and retry. Station preparation and ship advancement were scripted. No audible voice or worn full-night acceptance is claimed.
+
+APK source **ad33062a** built successfully as IL2CPP ARM64 and installed on Quest 3 without launch. Installed SHA-256 matches `d667f80dca4b6d9ce2bdc5982ad594cc902fd8d1fbcf04905931e0a2e103b1f0`. Network **LK-S5-COOPFIX1 / LK-Lab-Coop-v50**. [Durable evidence, screenshots and eight-step headset checklist](../Verification/S5/EquipmentRelay/README.md). #142 stays open for headset acceptance; final voice recording remains #122.
+
+During packaging, macOS reported a Unity Bug Reporter using 95.31 GB. Stopped both stale reporter processes, preserved their logs locally and left other user applications alone. The Editors had already been closed; the APK build finished normally. No permanent crash-reporter memory fix is claimed.
