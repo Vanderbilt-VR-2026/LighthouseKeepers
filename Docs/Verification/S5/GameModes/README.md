@@ -12,4 +12,4 @@ A live scene caught a wrong field name in the new string entries; fixed before d
 
 Inspected images: `mode-selection.png`, `survival-briefing.png`, plus all three briefing pages in the solo artifacts. Worn stereo readability, difficulty, audio quality, Owen path/feel and sustained Quest CPU/GPU remain NOT VERIFIED.
 
-APK **70977af6** built successfully (IL2CPP ARM64, normal package, VR manifest, valid signature and ZIP). See `delivery.json`. Quest was absent from ADB, so installation and launch were skipped. Neither the Editor checks nor APK packaging are device performance evidence.
+APK **70977af6** built successfully (IL2CPP ARM64, normal package, VR manifest, valid signature and ZIP). See `delivery.json`. Quest returned and this APK was installed on request; installed SHA-256 matches. Not launched. Neither the Editor checks nor APK packaging are device performance evidence.

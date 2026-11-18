@@ -1,6 +1,6 @@
 # Current checkpoint — Campaign / Survival modes (#141)
 
-Branch **sprint-5 / PR #89**. Current APK source **70977af6**, `Builds/LighthouseKeepers-Sprint5-Modes-70977af6.apk`. IL2CPP ARM64, normal package, signature and ZIP validation passed. SHA-256: `e05c1cb017ab6afb7e3168035e34630d210b6f975cfd4fe8d76ff927015509ca`. **Not installed: Quest absent from ADB at delivery. Not launched.**
+Branch **sprint-5 / PR #89**. Current APK source **70977af6**, `Builds/LighthouseKeepers-Sprint5-Modes-70977af6.apk`. IL2CPP ARM64, normal package, signature and ZIP validation passed. SHA-256: `e05c1cb017ab6afb7e3168035e34630d210b6f975cfd4fe8d76ff927015509ca`. **Installed on Quest 3; installed APK SHA-256 verified. Not launched.**
 
 Network **LK-S5-MODES1 / LK-Lab-Coop-v49**. Both players must update. Mode is host-owned in the Photon session and game snapshot.
 
@@ -12,7 +12,7 @@ PLAY → Campaign / Survival → existing host/join/duty flow. Campaign preserve
 
 ## Next
 
-1. Install this APK when the Quest returns; do not launch without a request. Use `Docs/Playtests/2026-11-18-survival-modes.md` for the human check. Issue #141 stays open with needs-headset-check.
+1. APK installed and verified; do not launch without a request. Use `Docs/Playtests/2026-11-18-survival-modes.md` for the human check. Issue #141 stays open with needs-headset-check.
 2. Take feedback on Survival duty clarity, Owen, pressure and wheel difficulty before broadening it.
 3. Deferred Campaign work remains: Northern Star watcher; warned Night 3 bunk/hunter/hiding lesson; older six-minute Demo pacing. The old Demo still fails its timing model; Survival is the new judges' mode. Final voice recordings #122 remain LAST. No AI speech.
 
