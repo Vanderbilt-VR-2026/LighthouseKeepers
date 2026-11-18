@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class AdaptiveMusic:MonoBehaviour
  {
   WatchDemoController watch;AudioPassSettings settings;AudioSource[] deck;AudioSource stings;
-  bool continuous,accentObserved;int previousWindows,previousLesson;bool previousPower;
+  bool continuous,accentObserved;int previousLesson;
   AudioClip mainLoop,intenseHit;readonly MusicAccentGate accentGate=new();
   public bool ContinuousScore=>continuous;public int OverlayCount {get;private set;}
   public bool OverlayPlaying=>continuous&&deck[1].isPlaying;public float MainTime=>continuous?deck[0].time:0;
@@ -75,7 +75,7 @@ namespace LighthouseKeepers.WatchDemo
   }
   void Transition(int next,double at,float age)
   {
-   if(!clips[next]&&!continuous)return;bool impact=mode>=0&&mode!=2&&next==2;mode=next;since=at;if(!horrorDeck){SetDeck(clips[next],age);fadeAge=age;}if(impact&&continuous)RequestAccent(age);
+   if(!clips[next]&&!continuous)return;mode=next;since=at;if(!horrorDeck){SetDeck(clips[next],age);fadeAge=age;}
   }
   void SetDeck(AudioClip clip,float age){if(continuous){if(!deck[0].isPlaying){deck[0].time=age%mainLoop.length;deck[0].Play();}return;}if(!clip)return;active=1-active;var a=deck[active];a.Stop();a.clip=clip;a.time=age%clip.length;a.volume=0;a.Play();fadeAge=0;}
   // The second existing deck is the five-second accent, never another looping song.
@@ -86,16 +86,13 @@ namespace LighthouseKeepers.WatchDemo
   }
   void PollIntenseBeats()
   {
-   var s=watch.State;int windows=0;double age=0;
-   if(s.Ships!=null)for(int i=0;i<s.Ships.Count;i++)if(!s.Scenario.ships[i].safePreview&&s.Ships.InWindow(i,s.Elapsed)){windows|=1<<i;if((previousWindows&(1<<i))==0)age=System.Math.Max(0,s.Elapsed-s.Ships.WindowStart(i));}
-   int lesson=s.Recovery.Lesson;bool power=s.Power==PowerState.On;
+   var s=watch.State;int lesson=s.Recovery.Lesson;
    if(accentObserved){
-    if((windows&~previousWindows)!=0)RequestAccent(age);
-    if(previousPower&&!power)RequestAccent();
     if(lesson==3&&previousLesson!=3&&DrownedAppearance.Sightings)RequestAccent(s.Recovery.LessonAge);
-    if(s.Failed&&!failed)RequestAccent();
    }
-   accentObserved=true;previousWindows=windows;previousPower=power;previousLesson=lesson;
+   // Routine faults, ship windows, mistakes and task completions are not jump scares.
+   // DrownedHorror explicitly requests the other accepted accent: a visible reveal.
+   accentObserved=true;previousLesson=lesson;
   }
   public void Capture(WatchSnapshot s)
   {

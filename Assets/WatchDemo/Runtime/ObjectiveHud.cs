@@ -87,7 +87,7 @@ namespace LighthouseKeepers.WatchDemo
   public static bool RecallTeachingDue(int night,int previous,int current)=>night>=1&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)==0;
   public static void AcknowledgeRecallButton(){if(PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)!=0)return;PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
   void Set(int value,string text){if(RecallTeachingDue(watch.State.Day,index,value)){tipUntil=Time.unscaledTime+5;}index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
-  string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
+  string Title(int value)=>value==(int)KeeperStep.RadioCode&&watch.State.ScriptedPartner&&GetComponent<CrewCompanion>() is CrewCompanion helper&&!helper.CodeDelivered?KeeperStrings.Get("radio.askOwen"):watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
   void Update()
   {
    var s=watch.State;if(s==null)return;if(!radio)radio=FindAnyObjectByType<HarborRadio>();

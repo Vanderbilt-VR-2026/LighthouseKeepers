@@ -19,6 +19,8 @@ namespace LighthouseKeepers.WatchDemo
             pipe=FindAnyObjectByType<WatchPipeRepair>();engine=FindAnyObjectByType<WatchEngineControls>();radio=FindAnyObjectByType<WatchRadioConsole>();beacon=FindAnyObjectByType<WatchBeaconStation>();panel=FindAnyObjectByType<WatchPowerPanel>();
             material=new Material(pipe.indicators[0].sharedMaterial){name="Director control lamp"};material.EnableKeyword("_EMISSION");block=new MaterialPropertyBlock();
             Add(KeeperStep.GrabWrench,pipe.wrench.transform);
+            foreach(var radio in watch.GetComponentsInChildren<HandheldCrewRadio>())FittingFor(radio.transform);
+            for(int i=0;i<2;i++)if(watch.Lantern(i))FittingFor(watch.Lantern(i).transform);
             var valve=FindAnyObjectByType<WatchPressureValve>();if(valve){Add(KeeperStep.HoldValve,valve.GuidanceRoot);}
             for(int i=0;i<3;i++)Add((KeeperStep)((int)KeeperStep.BoltA+i),pipe.bolts[i]);
             Add(KeeperStep.CheckFuel,engine.Filler);Add(KeeperStep.Fuel,engine.FuelCan.transform);FittingFor(engine.Filler);Add(KeeperStep.Prime,engine.Primer.transform);Add(KeeperStep.CloseChoke,engine.Choke.transform);Add(KeeperStep.OpenChoke,engine.Choke.transform);Add(KeeperStep.Starter,FindAnyObjectByType<WatchGenerator>().Starter.transform);
@@ -46,6 +48,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         public Transform Target(KeeperStep step)
         {
+            if(step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick)return watch.GetComponent<ArrivalEquipment>()?.Target;
             if(step==KeeperStep.RescueF2){var recovery=watch.GetComponent<CrewRecovery>();var hand=recovery?recovery.Target(watch.State.Recovery.LessonVictim):null;if(hand)return hand.transform;}
             if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return engine?engine.transform:null;
             if(step==KeeperStep.TightenBolt)return pipe.PipeIndexForGuide();

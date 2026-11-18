@@ -3,7 +3,7 @@ namespace LighthouseKeepers.WatchDemo {
  public sealed partial class WatchDemoController {
   int LocalKeeper=>(coop as ICoopKeeperLocations)?.LocalActor??0;
   public CrewDuty CurrentDuty=>(coop as ICoopKeeperDuties)?.Duty(LocalKeeper)??CrewDuties.Preference;
-  public KeeperStep CurrentInstruction=>state?.Director?.ForActor(LocalKeeper)??KeeperStep.None;
+  public KeeperStep CurrentInstruction=>GetComponent<ArrivalEquipment>() is ArrivalEquipment kit && kit.Step!=KeeperStep.None?kit.Step:state?.Director?.ForActor(LocalKeeper)??KeeperStep.None;
   public KeeperStep PartnerInstruction=>state?.Director?.Partner(LocalKeeper)??KeeperStep.None;
   public void DrownedViewers(out int a,out Vector3 p,out Vector3 f,out int b,out Vector3 q,out Vector3 g){a=b=0;p=q=head.position;f=g=head.forward;if(coop is ICoopKeeperLocations locations){locations.Locations(out a,out p,out b,out q);if(a==0){p=head.position;f=head.forward;}if(coop is ICoopKeeperViews views){if(a!=0)views.View(a,out f);if(b!=0)views.View(b,out g);}}}
   void InitializeDirector(){if(state.Director==null)return;state.Director.StationPosition=StationPosition;state.Director.DutyForActor=actor=>(coop as ICoopKeeperDuties)?.Duty(actor)??CrewDuties.Preference;state.Director.CompanionStep=()=>GetComponent<CrewCompanion>()?.WorkingStep??KeeperStep.None;UpdateDirector();DirectorPresentation.Create(this,head);}

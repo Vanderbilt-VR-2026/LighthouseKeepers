@@ -4,7 +4,7 @@ using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo
 {
-    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2, ChallengeCall, JudgeCall, HelpPartner, ReadyShip }
+    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2, ChallengeCall, JudgeCall, HelpPartner, ReadyShip, GrabWalkie, GrabLantern, LanternWick }
     // Sole instruction policy. The host assigns jobs; presentation never invents a next action.
     public sealed class ObjectiveDirector
     {
@@ -204,6 +204,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         public static string Job(KeeperStep step)
         {
+            if(step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick)return "KIT";
             if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return "LESSON";
             if(step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper)return "RESCUE";
             if(step==KeeperStep.HoldValve||step==KeeperStep.ClampValve||step==KeeperStep.TightenBolt||step>=KeeperStep.GrabWrench&&step<=KeeperStep.BoltC)return WatchState.PipeStation;
@@ -214,13 +215,13 @@ namespace LighthouseKeepers.WatchDemo
             if(step>=KeeperStep.BeaconLight&&step<=KeeperStep.BeaconWipe)return WatchState.BeaconStation;
             return step==KeeperStep.Sleep?"BED":"";
         }
-        public static int Floor(KeeperStep step){if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return 2;if(step==KeeperStep.ReadCode)return 0;string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
+        public static int Floor(KeeperStep step){if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return 2;if(step==KeeperStep.ReadCode||step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick)return 0;string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
         public static string Location(KeeperStep step)
         {
-            string key=step==KeeperStep.ReadCode?"where.telegram":step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
+            string key=step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick?"where.kit":step==KeeperStep.ReadCode?"where.telegram":step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
             return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
         }
-        public static string Button(KeeperStep step)=>step==KeeperStep.HelpPartner?"":step==KeeperStep.ReadyShip?"TRIGGER":step==KeeperStep.GatherF2||step==KeeperStep.WatchPartner||step==KeeperStep.AwaitRescueF2||step==KeeperStep.AwaitRescue||step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
+        public static string Button(KeeperStep step)=>step==KeeperStep.HelpPartner?"":step==KeeperStep.ReadyShip||step==KeeperStep.LanternWick?"TRIGGER":step==KeeperStep.GatherF2||step==KeeperStep.WatchPartner||step==KeeperStep.AwaitRescueF2||step==KeeperStep.AwaitRescue||step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
         public static int Hint(KeeperStep step){string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?7:id==WatchState.GeneratorStation?8:id=="BREAKER"?9:id==WatchState.BeaconStation?10:id==WatchState.RadioStation?11:id=="BED"?12:0;}
         public string StationInstruction(string station) {
             if(First!=KeeperStep.ReadCode&&Job(First)==station)return Instruction(First);

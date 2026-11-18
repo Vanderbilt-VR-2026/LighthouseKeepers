@@ -47,7 +47,9 @@ namespace LighthouseKeepers.WatchDemo
             var attach=M2StationParts.Root("Radio palm contact",transform,new Vector3(0,-.035f,0));
             gameObject.AddComponent<PhysicalGrip>().Configure(attach,HandPose.WrapGrip);
             grab.useDynamicAttach=false;
-            foreach(var rig in FindObjectsByType<Unity.XR.CoreUtils.XROrigin>(FindObjectsSortMode.None))foreach(var c in rig.GetComponentsInChildren<Collider>(true))Physics.IgnoreCollision(col,c,true);
+            // Exclude the walking capsule, never the hand triggers: ignoring those also
+            // removes XRDirectInteractor hover, although manual-selection tests still pass.
+            foreach(var c in FindObjectsByType<CharacterController>(FindObjectsSortMode.None))Physics.IgnoreCollision(col,c,true);
             grab.selectEntered.AddListener(e=>{carried=false;if(!taughtCarry){taughtCarry=true;FindAnyObjectByType<HarborRadio>()?.RecordSilentLine(KeeperStrings.Get("radio.belt"),"");watch.GetComponent<ObjectiveHud>()?.RevealFor(5);}});grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
             head=Camera.main?Camera.main.transform:null;
         }

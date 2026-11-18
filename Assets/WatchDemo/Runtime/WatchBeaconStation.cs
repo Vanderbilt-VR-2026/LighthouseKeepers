@@ -90,18 +90,22 @@ namespace LighthouseKeepers.WatchDemo
  [DefaultExecutionOrder(100)]
  public sealed class BeaconControl:MonoBehaviour
  {
-  WatchBeaconStation owner;bool wheel;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;Quaternion previous;float working,nextSend,detent;
+  WatchBeaconStation owner;bool wheel;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;Vector3 previousRadial;float working,nextSend,detent;
   public void Initialize(WatchBeaconStation parent,bool isWheel,Transform model){owner=parent;wheel=isWheel;visual=model;}
   void Awake(){grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-1);right=Palm(1);interaction.selectEntered.AddListener(Select);interaction.selectExited.AddListener(Release);}
   Transform Palm(int side){var p=M2StationParts.Root(side<0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.10"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.11"),visual,new Vector3(side*(wheel?.20f:.014f),.012f,wheel?.055f:.14f));p.localRotation=Quaternion.Euler(0,180,0);return p;}
-  void Select(SelectEnterEventArgs e){previous=e.interactorObject.transform.rotation;working=owner.State.Beacon.Alignment;if(!wheel)owner.Ignite();else owner.Click();}
+  Vector3 Radial(Vector3 point)=>Vector3.ProjectOnPlane(point-transform.position,transform.forward);
+  void Select(SelectEnterEventArgs e){previousRadial=Radial(e.interactorObject.transform.position);working=owner.State.Beacon.Alignment;if(!wheel)owner.Ignite();else owner.Click();}
   void Release(SelectExitEventArgs e){if(wheel)owner.Align(working);}
   void Update()
   {
    if(wheel&&interaction.isSelected&&interaction.interactorsSelecting.Count>0)
    {
-    var rotation=interaction.interactorsSelecting[0].transform.rotation;var delta=rotation*Quaternion.Inverse(previous);previous=rotation;delta.ToAngleAxis(out float angle,out var axis);if(angle>180)angle-=360;float degrees=angle*Vector3.Dot(axis,transform.forward);
-    if(float.IsFinite(degrees))working=Mathf.Clamp01(working+Mathf.Clamp(degrees,-20,20)/270);
+    var radial=Radial(interaction.interactorsSelecting[0].transform.position);
+    // Follow the hand around the rim, like a wheel. Regripping keeps the beam angle;
+    // turning the wrist in place no longer fights the player's larger arm movement.
+    if(radial.sqrMagnitude>=.0064f&&previousRadial.sqrMagnitude>=.0064f){float degrees=Vector3.SignedAngle(previousRadial,radial,transform.forward);if(float.IsFinite(degrees))working=Mathf.Clamp01(working+Mathf.Clamp(degrees,-25,25)/270);}
+    previousRadial=radial;
     if(Time.time>=nextSend){nextSend=Time.time+.1f;owner.Align(working);}
     if(Mathf.Abs(working-detent)>.04f){detent=working;owner.Click();if(grip.HoldingHand)grip.HoldingHand.Pulse(.25f,.035f);}
    }

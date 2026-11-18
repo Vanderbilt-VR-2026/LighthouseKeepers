@@ -46,7 +46,7 @@
     },
     {
       "key": "step.RadioPower",
-      "text": "Switch on the radio"
+      "text": "GRIP red radio lever; lift up"
     },
     {
       "key": "step.RadioTune",
@@ -58,11 +58,11 @@
     },
     {
       "key": "step.RadioTransmit",
-      "text": "Hold mic trigger: clear the convoy"
+      "text": "Hold microphone; hold TRIGGER to transmit"
     },
     {
       "key": "step.BeaconLight",
-      "text": "Light the beacon"
+      "text": "Go outside F4; grip beacon switch"
     },
     {
       "key": "step.BeaconAlign",
@@ -1582,7 +1582,7 @@
     },
     {
       "key": "step.HoldValve",
-      "text": "Hold the pipe pressure valve"
+      "text": "Hold pipe valve while partner tightens"
     },
     {
       "key": "step.ClampValve",
@@ -1970,7 +1970,7 @@
     },
     {
       "key": "where.STN_BEACON_CONTROL",
-      "text": "Beacon platform"
+      "text": "Outside on Floor 4 — balcony"
     },
     {
       "key": "where.BED",
@@ -2090,7 +2090,7 @@
     },
     {
       "key": "step.KeepLight",
-      "text": "Keep the beam on the ship"
+      "text": "GRIP wheel; move hand around rim"
     },
     {
       "key": "where.SHIP",
@@ -2290,11 +2290,11 @@
     },
     {
       "key": "step.RadioCodeLocal",
-      "text": "Read the code beside the radio"
+      "text": "Enter the code on the telegram"
     },
     {
       "key": "step.RadioCodeRelay",
-      "text": "Walkie TRIGGER: ask for the code"
+      "text": "Enter the code from your partner"
     },
     {
       "key": "where.telegram",
@@ -2310,7 +2310,7 @@
     },
     {
       "key": "code.share",
-      "text": "CALL CODE — READ TO YOUR PARTNER"
+      "text": "PARTNER: READ THIS CODE OVER YOUR WALKIE"
     },
     {
       "key": "code.local",
@@ -2650,7 +2650,7 @@
     },
     {
       "key": "companion.readyReply",
-      "text": "I’m with you."
+      "text": "I’ll handle my station. Call when ready."
     },
     {
       "key": "lantern.hook",
@@ -2711,6 +2711,34 @@
     {
       "key": "radio.belt",
       "text": "Release at right hip to clip"
+    },
+    {
+      "key": "step.GrabWalkie",
+      "text": "Take a walkie — House bench"
+    },
+    {
+      "key": "step.GrabLantern",
+      "text": "Take a lantern — House door"
+    },
+    {
+      "key": "step.LanternWick",
+      "text": "Hold lantern; TRIGGER to light"
+    },
+    {
+      "key": "where.kit",
+      "text": "House — arrival kit"
+    },
+    {
+      "key": "job.KIT",
+      "text": "Collect kit"
+    },
+    {
+      "key": "radio.askOwen",
+      "text": "Hold walkie; TRIGGER asks Owen for code"
+    },
+    {
+      "key": "companion.clearance",
+      "text": "Beacon ready? Walkie TRIGGER clears ship"
     }
   ]
 }

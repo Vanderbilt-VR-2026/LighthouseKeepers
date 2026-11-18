@@ -9,12 +9,12 @@ namespace LighthouseKeepers.WatchDemo {
   readonly RaycastHit[] floorHits=new RaycastHit[24];
   WatchPressureValve valve;CompanionCommand command;float nextPath,readFor,still;Vector3 lastPosition,goal;bool hasGoal,holding,rescuing;CompanionCommand rescueReturn;Vector3 rescueHand;int night;string learnedCode="",statusKey="companion.follow";
   public bool Active=>actor&&actor.activeSelf;
-  public string LearnedCode=>learnedCode;
+  public string LearnedCode=>learnedCode;public bool CodeDelivered {get;private set;}
   public string Status=>KeeperStrings.Get(statusKey);
   bool wantsCode;float reportUntil,radioPoseUntil,nextReport;string reportLine="";GameObject radioProp;
   public bool ReportActive=>Time.unscaledTime<reportUntil;public string ReportLine=>reportLine;
   public void RequestReport(){if(!Active||Time.unscaledTime<nextReport)return;if(RequestClearance())return;nextReport=Time.unscaledTime+tuning.reportCooldown;if(watch.State.HasRadioRelay&&learnedCode.Length==0){wantsCode=true;SetCommand(CompanionCommand.Work);Report(KeeperStrings.Get("companion.fetchReply"));}else Report(learnedCode.Length>0?KeeperStrings.Get("companion.codeReply")+"\n"+learnedCode:KeeperStrings.Get("companion.readyReply"));}
-  void Report(string text){reportLine=text;reportUntil=Time.unscaledTime+tuning.reportSeconds;radioPoseUntil=Time.unscaledTime+tuning.radioGestureSeconds;var n=FindAnyObjectByType<HarborRadio>();if(n)n.RecordSilentLine(text,KeeperStrings.Get("companion.name"));watch.GetComponent<ObjectiveHud>()?.RevealFor(tuning.reportSeconds);}
+  void Report(string text){if(learnedCode.Length>0&&text.Contains(learnedCode))CodeDelivered=true;reportLine=text;reportUntil=Time.unscaledTime+tuning.reportSeconds;radioPoseUntil=Time.unscaledTime+tuning.radioGestureSeconds;var n=FindAnyObjectByType<HarborRadio>();if(n)n.RecordSilentLine(text,KeeperStrings.Get("companion.name"));watch.GetComponent<ObjectiveHud>()?.RevealFor(tuning.reportSeconds);}
   bool lessonMode;CompanionCommand lessonReturn;float possession,lift;readonly RaycastHit[] ceilingHits=new RaycastHit[24];
   public Vector3 OfferedHand=>model&&model.FullBody&&model.FullBody.Joint("LeftHand")?model.FullBody.Joint("LeftHand").position:Position+Vector3.up;
   public Vector3 Position=>actor?actor.transform.position:Vector3.zero;
@@ -134,7 +134,7 @@ namespace LighthouseKeepers.WatchDemo {
    possession=Mathf.MoveTowards(possession,amount,Time.deltaTime*.65f);float maximum=PossessionLesson.SafeLift(Position+Vector3.up*1.8f,HorrorTuning.Current.possessionLift,HorrorTuning.Current.ceilingClearance,ceilingHits);
    lift=Mathf.Min(maximum,Mathf.MoveTowards(lift,amount*maximum,Time.deltaTime*(down?HorrorTuning.Current.possessionRiseSpeed:HorrorTuning.Current.possessionRiseSpeed*1.8f)));model.FullBody.Possession=possession;model.FullBody.VisualLift=lift;
    if(down){left=Position+Vector3.up*1.05f-right*.22f+forward*.55f;r=Position+Vector3.up*(.85f+.11f*Mathf.Sin(Time.time*1.7f)*possession)+right*(.25f+.06f*Mathf.Sin(Time.time*1.1f)*possession);}nameRoot.gameObject.SetActive(!down);
-   model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation,RightRotation=rotation,LeftGrip=.5f,RightGrip=holding||rescuing||Time.unscaledTime<radioPoseUntil?1:.5f},Time.deltaTime,Position.y);
+   model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation*Quaternion.Euler(90,0,0),RightRotation=working||holding||rescuing||Time.unscaledTime<radioPoseUntil?rotation:rotation*Quaternion.Euler(90,0,0),LeftGrip=.5f,RightGrip=holding||rescuing||Time.unscaledTime<radioPoseUntil?1:.5f},Time.deltaTime,Position.y);
    nameRoot.SetPositionAndRotation(Position+Vector3.up*(1.36f+lift)-right*.14f+forward*.19f,rotation*Quaternion.Euler(0,180,0));
    if(workWrench){workWrench.SetActive(workingPipe);if(workingPipe)workWrench.transform.SetPositionAndRotation(workHand,rotation*Quaternion.Euler(0,0,Mathf.Sin(Time.time*3)*35));}
    radioProp.SetActive(!down);radioProp.transform.SetPositionAndRotation(Time.unscaledTime<radioPoseUntil?r:Position+Vector3.up*.9f+right*.24f,rotation);

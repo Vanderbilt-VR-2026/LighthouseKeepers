@@ -10,13 +10,15 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class InWorldBriefing:MonoBehaviour
     {
         WatchDemoController watch;Transform head;GameObject canvasRoot;CrewBriefing folder;
-        Material paper,ink;bool finished,placing;float nextSend,openedAt,stableFor,verticalSpeed;Vector3 previousHead;
+        Material paper,ink;bool finished;float nextSend;
         public bool IsOpen=>folder&&folder.gameObject.activeSelf;
         public CrewBriefing Folder=>folder;
         public static InWorldBriefing Create(WatchDemoController w,Transform head)
         {
             var b=w.gameObject.AddComponent<InWorldBriefing>();b.watch=w;b.head=head;b.Build();
-            b.finished=CrewBriefing.Seen;
+            // Always offer the folder on arrival. Returning players can skip immediately;
+            // a saved read receipt must not silently remove the first in-world instruction.
+            b.finished=false;
             if(w.State.Coop==null)w.State.HoldBriefing(!b.finished);
             if(!b.finished)b.Open();else b.folder.gameObject.SetActive(false);
             return b;
@@ -35,30 +37,20 @@ namespace LighthouseKeepers.WatchDemo
         }
         public void Open()
         {
-            folder.Open();canvasRoot.SetActive(false);placing=true;openedAt=Time.unscaledTime;stableFor=0;previousHead=head.position;
+            folder.Open();Place();
         }
         void Place()
         {
-            var forward=Vector3.ProjectOnPlane(head.forward,Vector3.up).normalized;if(forward.sqrMagnitude<.5f)forward=Vector3.forward;
             const float distance=1.45f;
-            // World-fixed folder, slightly below eye level. Never moves the tracked head or follows it.
-            canvasRoot.transform.SetPositionAndRotation(head.position+forward*distance-Vector3.up*.16f,Quaternion.LookRotation(forward,Vector3.up));
-            canvasRoot.transform.localScale=Vector3.one*.00115f;canvasRoot.SetActive(true);placing=false;verticalSpeed=0;
+            // This reading-only HUD follows the actual tracked eyes, including seated height,
+            // recentering and late origin corrections. It never moves the camera.
+            canvasRoot.transform.SetPositionAndRotation(head.TransformPoint(new Vector3(0,-.12f,distance)),head.rotation);
+            canvasRoot.transform.localScale=Vector3.one*.00105f;canvasRoot.SetActive(true);
         }
         void LateUpdate()
         {
             if(!folder||!folder.gameObject.activeSelf)return;
-            if(placing){
-                float age=Time.unscaledTime-openedAt;
-                stableFor=Mathf.Abs(head.position.y-previousHead.y)<.025f?stableFor+Time.unscaledDeltaTime:0;previousHead=head.position;
-                var origin=head.GetComponentInParent<Unity.XR.CoreUtils.XROrigin>();
-                bool ready=!UnityEngine.XR.XRSettings.isDeviceActive||origin&&(origin.CurrentTrackingOriginMode&UnityEngine.XR.TrackingOriginModeFlags.Floor)!=0;
-                if(ready&&age>=.5f&&stableFor>=.25f||age>=3f)Place();
-            }else{
-                // Keep readable for seated users and late Quest origin/height corrections.
-                // Only height adjusts; the page never rotates with a head turn.
-                var p=canvasRoot.transform.position;p.y=Mathf.SmoothDamp(p.y,head.position.y-.16f,ref verticalSpeed,.15f,Mathf.Infinity,Time.unscaledDeltaTime);canvasRoot.transform.position=p;
-            }
+            Place();
         }
         void Finish(){finished=true;if(watch.State.Coop==null)watch.State.HoldBriefing(false);nextSend=0;}
         void Update()

@@ -1,33 +1,32 @@
-# Current checkpoint — unfinished-feature delivery
+# Current checkpoint — Andrew / Aneesh playtest corrections
 
-Branch **sprint-5 / PR #89**. Installed implementation source **b32eae50**. Network **LK-S5-TRAINING1 / LK-Lab-Coop-v47**; both clients must update. Editors muted. No AI voice. Install only, never auto-launch Quest.
+Branch **sprint-5 / PR #89**. Last installed APK is still **b32eae50**; it does not contain this pass. Editor muted; no AI voice; install without launch. Do not modify the Desktop checkout.
 
-## Implemented and pushed this pass
+## Current implementation
 
-1. **#137 d4acce3f:** fuel + three timed physical starter strokes; no campaign primer/choke. Misses keep progress; host owns timing. 52 focused checks and actual offline XRI stroke fixture pass.
-2. **#112 f9f7a70c:** complementary-duty Owen physically travels/works machinery or radio/beam, yields to tools/commands, awaits explicit ship clearance, retires when another human joins. Actual navigation/station fixture passes in 106.8 s (fixture time, not a human completion measurement); 34 focused checks.
-3. **d9c3813d:** right-hip walkie carry through existing validated grab leases. Actual offline grip/carry/drop and live two-Editor movement/disconnect release pass; 34 focused checks.
-4. **#139 dab1ba19:** beard mouth clearance and skin-fitted wet eye trails. Same accepted body rig/solver; 16 avatar checks and inspected normal/possessed/restored renders.
-5. **#140 4828cbbe:** full Night 1 station rehearsal: pipe, fuel/start, beacon, radio clearance, real aiming, sleep. 49 focused checks and actual accelerated instruction route pass. Final two-Editor clearance/pass/rejoin/retry and guest physical timed starter pass. Evidence: `Docs/Verification/S5/Unfinished/`.
+Immediate headset-following arrival briefing with Skip; actual direct-hover walkie fix; both lanterns enabled from Night 1 at the House entrance; personal walkie → lantern → wick → wrench objective sequence; radio lever grip/lift at the visible tip; distinct code-request/entry/transmit captions; hand-around-rim beacon input; disable accidental 180° stick turn; Owen relaxed wrist orientation; House orders moved off the radio/board; intense score accent limited to possession and visible horror.
 
-Instruction-only timing simulation now completes Nights 1–5 solo/duo, but NOT the Demo. This is not a first-timer measurement or continuous human campaign test. Final review also fixed helper panel overload on the 2.5-unit grid: nine focused checks plus actual stable shed/reset fixture pass (`Unfinished/Panel/`). No new protocol fields. Final clean IL2CPP ARM64 APK **b32eae50** is installed on Quest 3 **without launch**, and its installed SHA-256 matches. APK: `Builds/LighthouseKeepers-Sprint5-CrewTraining-b32eae50.apk`; SHA-256 `6a8fc3b422c30d3ea548578902657f829a8d0e3e25e6be702fed947ee194277c`. Receipt: `Docs/Verification/S5/Unfinished/Delivery/`.
+Network **LK-S5-LANTERNSTART1 / LK-Lab-Coop-v48**. Night 1 now has an enabled lantern snapshot (old peers reject that state), so both players need the new build. No extra replicated fields.
 
-## Next implementation work
+Focused checks and a real physics-hover/input fixture are being recorded in `Docs/Verification/S5/AndrewFeedback`. Input fixtures disable the hardware HandRig reader while injecting button edges; they do NOT bypass XR hover/select filters. Worn usability and GPU cost remain pending.
 
-1. **#140/#105/#106: Night 3 bunk → warned hunter → hiding/hold breath → final ship.** Not implemented/enabled. `Docs/Design/Day3-Radio.md` is the design. Existing `HunterState`/`HunterNavigation` are foundations only. Add host-owned scene/hiding state, valid observations, actual escape/navigation tests and reconnect/recovery checks before enabling catches. Protect the second ship during the lesson. Reuse Day 2 presentation; no camera movement or face-contact scares.
-2. Demo pacing and missing story beats: current model solo expires; duo becomes incomplete on return-to-bed when fuel exhausts. Do not claim six-minute Demo acceptance. Preserve Nights 1–3 while rebuilding its data/flow.
-3. Remaining engine/panel and beacon-bearing information split, later-night scenes/finale, remaining issue checklist. Recordings **#122 LAST**, after guide wording stabilizes. No additional AI voice.
+## Next, in order
 
-## Reproduce / exact next commands
+1. Finish this pass: per-night beam difficulty; try 1.5× later-night flood against the timing model; paired radio clues from Night 1; explain Owen's job handoff; sourced possession-rise sound; one dim room fixture + lantern-led darkness/fog and removal of room-light cable drops. Inspect screenshots and Owen neck/pose.
+2. Northern Star watcher/clown: visible gaze encounter, disappears after five seconds observed, respects scare setting; no camera motion or near-face spawn.
+3. Muted solo route, real two-Editor regression, build current source, install if Quest connected (DO NOT launch). Update PR #89 and detailed headset checklist.
+4. Then resume older missing Night 3 warned hunter/hiding lesson and Demo pacing. Neither is accepted or enabled by these playtest fixes. Recordings #122 LAST.
 
-- Worktree: `cd /Users/aneeshvasamreddy/LighthouseKeepers-M3`; do not change the Desktop checkout.
-- Focused checks with the muted, compiled Editor: `python3 artifacts/s5/unfinished/check.py TimedStarterTests CrewCompanionTests CampaignOrderTests RadioBeltTests GrabAuthorityTests HarborKeeperTests CrewHumanoidAvatarTests M3RuntimeTests VoicePassTests`. Per-slice receipts are already saved; rerun only if source changes justify it.
-- Actual fixtures: `starter-final.py`, `bot-final.py`, `belt-play.py`, `tutorial-final.py`; two live Editors: `crew-final.py`, `crew-starter-timed.py`, all under `artifacts/s5/unfinished/`. Use fresh result folders. Never refresh/edit Assets while playing.
-- Preserve peer overlays before synchronizing; `sync-training.py` has a consumed backup directory, so change it for the next run.
-- Build/delivery drivers: `python3 artifacts/s5/unfinished/build-final.py`, then `python3 artifacts/s5/unfinished/deliver-final.py`. Close both Editors first, clean commit, fresh output/backup folder for future builds. Delivery validates APK/package/signature/CRC/hash; it does not launch.
+## Exact commands
+
+`cd /Users/aneeshvasamreddy/LighthouseKeepers-M3`
+
+Focused: `python3 artifacts/s5/andrew-feedback/check.py ArrivalBriefingTests RadioStateTests RadioBeltTests BeaconStationTests PlayerSoundtrackTests RadioRelayTests CampaignOrderTests CrewCompanionTests VoicePassTests`
+
+Live scene: `python3 artifacts/s5/andrew-feedback/open-play.py`; run `artifacts/s5/andrew-feedback/InteractionPlay.cs` through the existing Pipeline `run_script` bridge, entry `InteractionPlay.Run`, fresh result path; stop Play Mode before editing Assets. Never start a scene while tests are still running.
+
+Build drivers from `artifacts/s5/unfinished/build-final.py` and `deliver-final.py` need fresh output/backup folder, product suffix and network constants before reuse. Close Editors, clean source, validate ARM64/package/signature/hash. Preserve then restore only documented builder/importer churn.
 
 ## DEVICE CHECKS PENDING
 
-Follow `Docs/Verification/S5/Unfinished/Headset-Check.md` in order. Full Night 1 teaching, fair timed-starter band (host and guest), both complementary roles, stair routes/tool handoff, right-hip carry/regrab, briefing height, watch/cuff, possession face/revival/follow, Night 3 radio challenge, human co-op voice/shared task/sleep/rejoin/offline, sustained Quest CPU/GPU. None is inferred from muted Editor tests. User is not available now; do not wait or request a session.
-
-Historical details: `Docs/Design/CheckpointHistory/2026-11-17-unfinished.md` (superseded checkpoints, not the active next-work list).
+Arrival immediate/follows/seated height/Skip; B recall; right/left snap symmetry; actual walkie hover/grip/release/belt; lantern on House hooks, wick/oil/hanging; radio lift/dial/code/hold-trigger sequence; solo both roles and human code relay; beacon outside F4, circular turning/regrip, nightly difficulty; darkness/readability, fog/ship visibility and sustained Quest CPU/GPU; possession audio/eyes/revive; Owen hands/neck/stairs; voice, shared sleep and rejoin. Do not treat an Editor fixture as headset acceptance.

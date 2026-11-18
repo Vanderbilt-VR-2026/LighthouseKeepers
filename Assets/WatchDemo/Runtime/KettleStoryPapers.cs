@@ -23,7 +23,7 @@ namespace LighthouseKeepers.WatchDemo
             var board=watch.BoardTransform;
             var desk=GameObject.Find("Wrench table top");var tabletop=desk?desk.GetComponent<Renderer>().bounds:new Bounds(new Vector3(-1,1,-8),Vector3.one);
             // Orders clip to the wall beside the existing board; letter lies at the back of the real bench.
-            Add(watch,0,"Standing orders",1,board.position+board.right*2.0f,board.rotation);
+            Add(watch,0,"Standing orders",1,new Vector3(3.34f,1.65f,-8.6f),Quaternion.Euler(0,90,0));
             Add(watch,1,"Lucy Gale letter",1,new Vector3(tabletop.center.x+.25f,tabletop.max.y+.008f,tabletop.max.z-.20f),Quaternion.Euler(90,0,0));
             var generator=FindAnyObjectByType<WatchGenerator>().transform;
             Add(watch,2,"Walter engine log",1,generator.TransformPoint(new Vector3(-1.15f,1.13f,.99f)),generator.rotation*Quaternion.Euler(0,180,0));

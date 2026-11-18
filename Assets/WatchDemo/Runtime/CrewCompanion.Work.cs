@@ -12,7 +12,7 @@ namespace LighthouseKeepers.WatchDemo {
    parts.Part("Spanner handle",workWrench.transform,new Vector3(0,-.12f,0),new Vector3(.035f,.30f,.018f),parts.Metal);
    parts.Part("Spanner jaw",workWrench.transform,new Vector3(0,.055f,0),new Vector3(.075f,.07f,.02f),parts.Metal);workWrench.SetActive(false);ClearStationMemory();
   }
-  void ClearStationMemory(){StopStationWork();clearanceRequested=clearanceOffered=false;lastWatchElapsed=0;}
+  void ClearStationMemory(){CodeDelivered=false;StopStationWork();clearanceRequested=clearanceOffered=false;lastWatchElapsed=0;}
   void StopStationWork(){
    working=workingPipe=false;workFor=0;workStep=KeeperStep.None;
    if(watch&&watch.State!=null&&watch.State.PipeWorkerActor==WatchState.CompanionActor)watch.State.PipeWorkerActor=0;

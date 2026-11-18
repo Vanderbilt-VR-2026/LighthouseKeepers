@@ -4,9 +4,9 @@ namespace LighthouseKeepers.WatchDemo {
   readonly WatchLantern[] lanterns=new WatchLantern[2];readonly List<Vector3> lanternHooks=new();M2CarryProp lanternOil;M2StationParts lanternParts;
   void CreateLanterns(){if(!state.Sprint5||!state.Sprint5.oilLanterns)return;lanternParts=gameObject.AddComponent<M2StationParts>();lanternParts.Initialize();lanternParts.Metal.SetColor("_BaseColor",new Color(.16f,.13f,.10f));lanternParts.Metal.SetColor("_EmissionColor",Color.black);
    // Wall brackets beside the House entrance; no free-floating fixture.
-   var houseHook=WallLanternHook("House lantern hook 0",new Vector3(-1,1.55f,-5.45f),Vector3.left);
+   var houseHook=WallLanternHook("House lantern hook 0",new Vector3(-2,1.45f,-6.1f),Vector3.left);
    if(houseHook.HasValue)lanterns[0]=WatchLantern.Create(this,0,houseHook.Value-LanternMesh.Handle);
-   var engineHook=WallLanternHook("Generator room lantern hook",new Vector3(0,4.85f,0),new Vector3(-1,0,-1).normalized);
+   var engineHook=WallLanternHook("House lantern hook 1",new Vector3(-2,1.45f,-6.65f),Vector3.left);
    if(engineHook.HasValue)lanterns[1]=WatchLantern.Create(this,1,engineHook.Value-LanternMesh.Handle);
    if(!houseHook.HasValue||!engineHook.HasValue)Debug.LogError("Missing a supported lantern hook");
    foreach(var station in new[]{(Component)pipeRepair,engineControls,powerPanel,radio,beaconStation})if(station){var pos=station.transform.position;float y=Mathf.Floor((pos.y+.3f)/3.3f)*3.3f+1.45f;var radial=new Vector3(pos.x,0,pos.z).normalized;if(radial.sqrMagnitude<.5f)radial=Vector3.right;if(station==radio)radial=new Vector3(1,0,1).normalized;WallLanternHook(station.name+" lantern hook",new Vector3(0,y,0),radial);}
