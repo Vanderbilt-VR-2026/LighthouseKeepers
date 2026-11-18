@@ -46,11 +46,13 @@ namespace LighthouseKeepers.WatchDemo
             body=gameObject.AddComponent<Rigidbody>();body.mass=.25f;body.isKinematic=true;body.useGravity=true;
             grab=gameObject.AddComponent<XRGrabInteractable>();grab.colliders.Add(col);grab.movementType=XRBaseInteractable.MovementType.Instantaneous;grab.smoothPosition=false;grab.smoothRotation=false;grab.attachEaseInTime=.08f;grab.throwOnDetach=false;
             var attach=M2StationParts.Root("Radio palm contact",transform,new Vector3(0,-.035f,0));
+            // Turn the case around in the tracked grip; aerial stays up, speaker faces the keeper.
+            attach.localRotation=Quaternion.Euler(0,180,0);
             physicalGrip=gameObject.AddComponent<PhysicalGrip>();physicalGrip.Configure(attach,HandPose.WrapGrip);
-            leftPalm=M2StationParts.Root("Left wrap around radio",transform,new Vector3(-.016f,-.025f,0));
-            rightPalm=M2StationParts.Root("Right wrap around radio",transform,new Vector3(.016f,-.025f,0));
-            leftPalm.localRotation=Quaternion.LookRotation(Vector3.left,Vector3.back);
-            rightPalm.localRotation=Quaternion.LookRotation(Vector3.right,Vector3.back);
+            leftPalm=M2StationParts.Root("Left wrap around radio",transform,new Vector3(.016f,-.025f,0));
+            rightPalm=M2StationParts.Root("Right wrap around radio",transform,new Vector3(-.016f,-.025f,0));
+            leftPalm.localRotation=Quaternion.Euler(0,180,0)*Quaternion.LookRotation(Vector3.left,Vector3.back);
+            rightPalm.localRotation=Quaternion.Euler(0,180,0)*Quaternion.LookRotation(Vector3.right,Vector3.back);
             grab.useDynamicAttach=false;
             // Exclude the walking capsule, never the hand triggers: ignoring those also
             // removes XRDirectInteractor hover, although manual-selection tests still pass.
