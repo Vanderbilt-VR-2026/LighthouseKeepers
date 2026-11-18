@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchState state;
         Material[][] originals;
         readonly List<Material> materials=new();
-        readonly List<Color> baseColours=new();
+        readonly List<Color> baseColours=new();readonly List<int> rooms=new();
         Color[] normalLightColours;float[] normalIntensities;
         float warm=1,outageStart,recoveryStart=-100;
         bool power=true,initialized;
@@ -32,17 +32,17 @@ namespace LighthouseKeepers.WatchDemo
             bakedLighting.ApplyNow();
             bakedLighting.enabled=false;
             originals=new Material[interiorSurfaces.Length][];
-            var copies=new Dictionary<Material,Material>();
+            var copies=new Dictionary<(Material,int),Material>();
             for(int i=0;i<interiorSurfaces.Length;i++)
             {
                 var renderer=interiorSurfaces[i];if(!renderer)continue;
-                var source=renderer.sharedMaterials;originals[i]=source;var assigned=(Material[])source.Clone();
+                int room=LanternRoomLighting.Room(renderer.bounds.center);var source=renderer.sharedMaterials;originals[i]=source;var assigned=(Material[])source.Clone();
                 for(int j=0;j<source.Length;j++)
                 {
                     var original=source[j];if(!original||!original.HasProperty("_BaseColor"))continue;
-                    if(!copies.TryGetValue(original,out var copy))
+                    if(!copies.TryGetValue((original,room),out var copy))
                     {
-                        copy=new Material(original){name=original.name+" / central emergency"};copies.Add(original,copy);materials.Add(copy);
+                        copy=new Material(original){name=original.name+" / central emergency"};copies.Add((original,room),copy);materials.Add(copy);rooms.Add(room);
                         copy.EnableKeyword("_EMISSION");
                         baseColours.Add(original.GetColor("_BaseColor"));
                     }
@@ -83,9 +83,10 @@ namespace LighthouseKeepers.WatchDemo
             float dread=state.Sprint5&&state.Sprint5.groundedHorror?DrownedMotion.LampDip(state.Elapsed,state.Day,2):1;
             atmosphere*=dread;
             // Illumination comes from the selected bake and carried lamps, not glowing wall materials.
-            var illumination=Color.white*(power?LanternRoomLighting.Filament(Time.time,0):1)*sputter;
+
             for(int i=0;i<materials.Count;i++)
             {
+                var illumination=Color.white*((rooms[i]==0||power)?LanternRoomLighting.Filament(Time.time,rooms[i]):1)*(rooms[i]==0?1:sputter);
                 var colour=baseColours[i]*illumination;colour.a=baseColours[i].a;materials[i].SetColor("_BaseColor",colour);
                 if(materials[i].HasProperty("_EmissionColor"))
                 {

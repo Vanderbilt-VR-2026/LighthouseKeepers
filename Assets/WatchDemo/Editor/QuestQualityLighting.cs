@@ -55,7 +55,7 @@ public static class QuestQualityLighting
             if(l.name=="Baked cold window spill"){l.enabled=false;l.intensity=0;continue;}
             bool room=l.name.StartsWith("Mains fixture");int floor=LighthouseKeepers.WatchDemo.LanternRoomLighting.Room(l.transform.position);
             l.enabled=room&&used.Add(floor);
-            if(l.enabled){l.transform.position=LighthouseKeepers.WatchDemo.LanternRoomLighting.RoomLights[floor];l.intensity=.30f;l.range=.85f;l.color=new Color(1,.64f,.32f);}
+            if(l.enabled){l.transform.position=LighthouseKeepers.WatchDemo.LanternRoomLighting.RoomLights[floor];l.intensity=floor==0?1.5f:.30f;l.range=floor==0?3.1f:.85f;l.color=new Color(1,.64f,.32f);}
             EditorUtility.SetDirty(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l.transform);
         }
         RenderSettings.ambientIntensity=0;RenderSettings.reflectionIntensity=.025f;RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.0002f,.00025f,.0003f);
@@ -78,7 +78,7 @@ public static class QuestQualityLighting
         var capture=typeof(EnvironmentLightingBake).GetMethod("Capture",BindingFlags.NonPublic|BindingFlags.Static);
         var variants=new List<EnvironmentLightingPreset>();var stats=new List<string>();Directory.CreateDirectory(QuestQualityBaseline.Output);
         foreach(bool powered in new[]{true,false}) {
-            for(int i=0;i<lights.Length;i++){lights[i].enabled=original[i].enabled;lights[i].color=powered?original[i].color:Color.Lerp(original[i].color,new Color(.5f,.09f,.035f),.6f);lights[i].intensity=original[i].intensity*(powered?1:0);}
+            for(int i=0;i<lights.Length;i++){bool house=lights[i].name.StartsWith("Mains fixture")&&LighthouseKeepers.WatchDemo.LanternRoomLighting.Room(lights[i].transform.position)==0;lights[i].enabled=original[i].enabled;lights[i].color=original[i].color;lights[i].intensity=original[i].intensity*(powered||house?1:0);}
             EditorSceneManager.SaveScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
             var start=DateTime.UtcNow;bool baked=Lightmapping.Bake();
             if(!baked&&Application.platform==RuntimePlatform.OSXEditor){Debug.LogWarning("ProgressiveGPU unavailable on this Mac; documented ProgressiveCPU bake fallback, not a Quest performance measurement.");settings.lightmapper=LightingSettings.Lightmapper.ProgressiveCPU;baked=Lightmapping.Bake();}

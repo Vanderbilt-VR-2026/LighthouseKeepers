@@ -9,13 +9,19 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class LanternRoomLighting:MonoBehaviour
     {
         readonly List<Renderer> bulbs=new();readonly List<(ReflectionProbe probe,float intensity)> probes=new();float oldReflection;MaterialPropertyBlock block;WatchDemoController watch;
-        public static readonly Vector3[] RoomLights={new(-3.30f,1.79f,-7.02f),new(3.71f,1.38f,-.85f),new(.75f,5.20f,2.80f),new(2.60f,7.85f,.92f),new(-.50f,11.65f,1.82f)};
+        public static readonly Vector3[] RoomLights={new(-3.30f,2.20f,-8.20f),new(3.71f,1.38f,-.85f),new(.75f,5.20f,2.80f),new(2.60f,7.85f,.92f),new(-.50f,11.65f,1.82f)};
         // Undersides measured against the authored ceilings/floor panels and dome mesh.
         public static readonly float[] MountHeights={2.70f,3.30f,6.25f,9.55f,14.34f};
         public static int Room(Vector3 p)=>p.z< -4.4f?0:Mathf.Clamp(Mathf.FloorToInt(p.y/3.3f)+1,1,4);
         public static void Create(WatchDemoController w){var c=w.gameObject.AddComponent<LanternRoomLighting>();c.watch=w;}
         void Awake()=>block=new MaterialPropertyBlock();
-        public static float Filament(float time,int room)=>.72f+.12f*Mathf.Sin(time*1.1f+room*2)*Mathf.Sin(time*.7f+room);
+        public static float Filament(float time,int room){
+            float t=Mathf.Repeat(time+room*1.31f,6.4f+room*.37f);
+            float first=Mathf.SmoothStep(0,1,Mathf.Clamp01(1-Mathf.Abs(t-1.2f)/.42f));
+            float second=Mathf.SmoothStep(0,1,Mathf.Clamp01(1-Mathf.Abs(t-2.5f)/.34f));
+            // Two slow dips per cycle; the House instruction light never goes out.
+            return 1-(room==0?.28f:.68f)*Mathf.Max(first,second*.75f);
+        }
         void Start(){
             oldReflection=RenderSettings.reflectionIntensity;RenderSettings.reflectionIntensity=.025f;
             RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientIntensity=0;RenderSettings.ambientLight=new Color(.0002f,.00025f,.0003f);
@@ -38,7 +44,7 @@ namespace LighthouseKeepers.WatchDemo
         void LateUpdate(){
             if(!watch||watch.State==null||block==null)return;
             bool powered=watch.State.HasPower(LighthouseKeepers.Core.PowerCircuit.Lights);
-            for(int i=0;i<bulbs.Count;i++){var r=bulbs[i];if(!r)continue;float glow=powered?Filament(Time.time,i)*.65f:0;
+            for(int i=0;i<bulbs.Count;i++){var r=bulbs[i];if(!r)continue;float glow=powered||i==0?Filament(Time.time,i)*(i==0?1.6f:.65f):0;
                 block.Clear();block.SetColor("_BaseColor",new Color(.06f,.045f,.026f));block.SetColor("_EmissionColor",new Color(1,.52f,.19f)*glow);r.SetPropertyBlock(block);
             }
         }
