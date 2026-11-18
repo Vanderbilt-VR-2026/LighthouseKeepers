@@ -18,7 +18,7 @@ MonoBehaviour:
   powerCapacity: 3.25
   initialCircuitMask: 15
   fuelDrainPerSecond: 0
-  beaconInitiallyLit: 1
+  beaconInitiallyLit: 0
   beaconInitialAlignment: 0.5
   beaconTargetAlignment: 0.5
   beaconInitialSoot: 0
@@ -26,6 +26,10 @@ MonoBehaviour:
   tasks:
   - stationId: STN_PIPE_LEAK
     taskText: Repair the pipe
+  - stationId: STN_GENERATOR
+    taskText: Practise starting the generator
+  - stationId: STN_BEACON_CONTROL
+    taskText: Light and aim the beacon
   - stationId: STN_RADIO_CONSOLE
     taskText: Clear the convoy by radio
   startingFaults:
@@ -33,8 +37,8 @@ MonoBehaviour:
   - STN_RADIO_CONSOLE
   requiredKeepers: 1
   briefingHeading: "Day 1 \u2014 The leak"
-  briefingText: Take the wrench, find the pipe downstairs and stop the leak. Clear
-    the water, then rest upstairs.
+  briefingText: Learn the pipe, generator, radio and beacon. Clear the convoy only
+    when ready. Practise aiming before resting on Floor 3.
   briefingVoice: {fileID: 0}
   faultObjectivePrefix: 
   objectives:
@@ -64,7 +68,7 @@ MonoBehaviour:
   crankCooldownSeconds: 2
   chokeReleaseSeconds: 10
   isolationFreshnessSeconds: 0.3
-  initialFuelFraction: 1
+  initialFuelFraction: 0.05
   scenario:
     id: night-1
     nameKey: m3.night1
@@ -94,10 +98,24 @@ MonoBehaviour:
       atSeconds: 0
       graceSeconds: 60
       repeat: 0
+    - id: engine-rehearsal
+      stationId: STN_GENERATOR
+      afterStationId: STN_PIPE_LEAK
+      gate: 3
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    - id: lamp-rehearsal
+      stationId: STN_BEACON_CONTROL
+      afterStationId:
+      gate: 2
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
     - id: clearance
       stationId: STN_RADIO_CONSOLE
-      afterStationId:
-      gate: 0
+      afterStationId: STN_BEACON_CONTROL
+      gate: 3
       atSeconds: 0
       graceSeconds: 60
       repeat: 0
@@ -107,6 +125,20 @@ MonoBehaviour:
       - tighten
       crewVariant: 0
       informationSite: F1
+      soloLocalInformation: 1
+    - stationId: STN_GENERATOR
+      activeSteps:
+      - fuel
+      - timed-pull
+      crewVariant: 0
+      informationSite: F2
+      soloLocalInformation: 1
+    - stationId: STN_BEACON_CONTROL
+      activeSteps:
+      - light
+      - align
+      crewVariant: 0
+      informationSite: F4
       soloLocalInformation: 1
     - stationId: STN_RADIO_CONSOLE
       activeSteps:

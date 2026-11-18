@@ -122,6 +122,9 @@ namespace LighthouseKeepers.WatchDemo
                 return;
             }
             if(!state.HasPower(PowerCircuit.Pump)){First=BreakerStep(PowerCircuit.Pump);if(actorB!=0)Second=First;return;}
+            if(state.Tutorial&&state.IsPending(WatchState.GeneratorStation)){First=KeeperStep.CheckFuel;if(actorB!=0)Second=First;return;}
+            if(state.Tutorial&&(!state.IsDone(WatchState.BeaconStation)||state.IsPending(WatchState.BeaconStation))){First=BeaconStep();if(First==KeeperStep.None)First=KeeperStep.BeaconLight;if(actorB!=0)Second=First;return;}
+            if(state.Tutorial&&state.IsPending(WatchState.RadioStation)){First=KeeperStep.RadioPower;if(actorB!=0)Second=First;return;}
             if(state.Authenticity.NeedsDecision){
                 bool first=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper||Duty(actorB)!=CrewDuty.Lightkeeper;
                 First=first?AuthStep:KeeperStep.ReadCode;Second=actorB==0?KeeperStep.None:first?KeeperStep.ReadCode:AuthStep;return;
