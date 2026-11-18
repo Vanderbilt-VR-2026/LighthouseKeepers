@@ -20,4 +20,7 @@ MonoBehaviour:
   reach: 1.15
   repathSeconds: 0.5
   stuckSeconds: 5
+  reportSeconds: 12
+  radioGestureSeconds: 4
+  reportCooldown: 2
   start: {x: -0.5, y: 0, z: -7}

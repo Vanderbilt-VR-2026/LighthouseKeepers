@@ -13,7 +13,7 @@ namespace LighthouseKeepers.WatchDemo
         bool trigger,previous,released;
         public bool ReleasedBodyIsKinematic=>!released;
         public void OnNetworkReleased(){released=true;unheld=0;}
-        void Start(){grab.useDynamicAttach=true;}float nextSend,unheld;Vector3 home;Quaternion homeRotation;Rigidbody body;
+        void Start(){grab.useDynamicAttach=false;grab.throwOnDetach=false;}float nextSend,unheld;Vector3 home;Quaternion homeRotation;Rigidbody body;
         public XRGrabInteractable Grab=>grab;
         public bool Held=>grab&&grab.isSelected;
         public bool WantsTransmit=>Held&&(trigger||head&&Vector3.Distance(transform.position,head.position)<=watch.State.Connected.radioHeadDistance);
@@ -41,14 +41,15 @@ namespace LighthouseKeepers.WatchDemo
             status=p.Text("Radio face stencil",PlayerStrings.Get("connected.radioUse"),transform,new Vector3(0,-.055f,.031f),.00065f);
             var col=gameObject.AddComponent<BoxCollider>();col.size=new Vector3(.08f,.19f,.06f);
             body=gameObject.AddComponent<Rigidbody>();body.mass=.25f;body.isKinematic=true;body.useGravity=true;
-            grab=gameObject.AddComponent<XRGrabInteractable>();grab.colliders.Add(col);grab.movementType=XRBaseInteractable.MovementType.Kinematic;
+            grab=gameObject.AddComponent<XRGrabInteractable>();grab.colliders.Add(col);grab.movementType=XRBaseInteractable.MovementType.Instantaneous;grab.smoothPosition=false;grab.smoothRotation=false;grab.attachEaseInTime=.08f;grab.throwOnDetach=false;
             var attach=M2StationParts.Root("Radio palm contact",transform,new Vector3(0,-.035f,0));
             gameObject.AddComponent<PhysicalGrip>().Configure(attach,HandPose.WrapGrip);
-            grab.useDynamicAttach=true;grab.matchAttachPosition=true;grab.matchAttachRotation=true;
+            grab.useDynamicAttach=false;
+            foreach(var rig in FindObjectsByType<Unity.XR.CoreUtils.XROrigin>(FindObjectsSortMode.None))foreach(var c in rig.GetComponentsInChildren<Collider>(true))Physics.IgnoreCollision(col,c,true);
             grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
             head=Camera.main?Camera.main.transform:null;
         }
-        void Activate(ActivateEventArgs e){if(Held)trigger=true;}
+        void Activate(ActivateEventArgs e){if(!Held)return;trigger=true;if(watch.State.ScriptedPartner)watch.GetComponent<CrewCompanion>()?.RequestReport();}
         void Deactivate(DeactivateEventArgs e)=>trigger=false;
         void Release(SelectExitEventArgs e){trigger=false;Send(false);OnNetworkReleased();}
         void Send(bool active){watch.State.Coop?.Send(CoopAction.HandheldRadio,index,active);previous=active;nextSend=Time.unscaledTime+.1f;}

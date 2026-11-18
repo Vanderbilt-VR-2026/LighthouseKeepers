@@ -2,7 +2,9 @@
 
 Read `Docs/Playtests/2026-11-17-headset-arrival.md` before continuing. User accepts body, sound, heartbeat and existing scares; prioritizes ordered campaign + a useful automatic partner over additional horror. Arrival/narration slice completed: 35 focused checks and actual muted height-correction/page fixture pass; evidence `Docs/Verification/S5/PlaytestClarity/`. No network bump for this slice. Source checkpoint follows in git history. Work on sprint-5 / PR #89. Editors muted, no Quest auto-launch. Preserve source/scene recovery and use worktree only.
 
-Next: companion recovery/navigation + stable walkies/clue delivery, radio-gated ships and clear prerequisite order, targeted placement/cuff/possession polish, then #137 timed starter. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
+Helper slice complete: automatic blocked-route retries, no permanent slab, relaxed hands/radio gesture, fetched-code caption on walkie trigger, fixed palm grip. Focused checks + actual valve/travel/revive/follow/grip fixtures passed; see PlaytestClarity/Helper. Belt carry and a full opposite-role station solver remain unfinished.
+
+Next: targeted placement/cuff/possession polish, then radio-gated ships and clear prerequisite order, then #137 timed starter. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
 
 ---
 

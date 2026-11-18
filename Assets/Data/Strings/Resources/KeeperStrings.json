@@ -1610,7 +1610,7 @@
     },
     {
       "key": "connected.radioUse",
-      "text": "HEAD OR TRIGGER"
+      "text": "GRIP · HOLD TRIGGER TO TALK"
     },
     {
       "key": "connected.transmitting",
@@ -2294,7 +2294,7 @@
     },
     {
       "key": "step.RadioCodeRelay",
-      "text": "Enter your partner’s telegram code"
+      "text": "Ask your partner for the code"
     },
     {
       "key": "where.telegram",
@@ -2578,7 +2578,7 @@
     },
     {
       "key": "auth.real",
-      "text": "Saltmere port office. Challenge every call. Our reply must match tonight’s code on the House telegram. Then accept it."
+      "text": "Saltmere port office. Challenge this call; compare our reply with the House telegram."
     },
     {
       "key": "auth.false",
@@ -2586,7 +2586,7 @@
     },
     {
       "key": "auth.replyReal",
-      "text": "[two taps] Saltmere port office. Authentication: {0}. Compare with the telegram, then ACCEPT or REJECT."
+      "text": "[Two taps] Saltmere port office. {0}. Compare the telegram, then ACCEPT."
     },
     {
       "key": "auth.replyFalse",
@@ -2639,6 +2639,18 @@
     {
       "key": "caption.production.18",
       "text": "Kettle Rock, we have lost your signal."
+    },
+    {
+      "key": "companion.fetchReply",
+      "text": "Checking the telegram in the House."
+    },
+    {
+      "key": "companion.codeReply",
+      "text": "Tonight’s code:"
+    },
+    {
+      "key": "companion.readyReply",
+      "text": "I’m with you."
     }
   ]
 }
