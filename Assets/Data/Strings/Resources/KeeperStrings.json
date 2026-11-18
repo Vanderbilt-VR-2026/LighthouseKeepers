@@ -2230,7 +2230,7 @@
     },
     {
       "key": "lantern.controls",
-      "text": "GRIP HANDLE · TRIGGER WICK"
+      "text": "LANTERN\nGRIP handle · TRIGGER brightness"
     },
     {
       "key": "duty.None",
@@ -2374,7 +2374,7 @@
     },
     {
       "key": "companion.blocked",
-      "text": "PATH BLOCKED — CALL ME"
+      "text": "Coming around"
     },
     {
       "key": "companion.valveGoing",
@@ -2454,7 +2454,7 @@
     },
     {
       "key": "briefing.body.0",
-      "text": "It is autumn, 1942, and American supply ships are crossing the Atlantic toward the wartime port of Saltmere. Six weeks ago, both keepers of Kettle Rock Light vanished, leaving their bunks made and their final log unfinished. You are their replacements, sent to keep those vital ships clear of the black reefs. The storm has cut you off from shore—and something in the dark wants the light to go out."
+      "text": "Autumn, 1942. American supply ships depend on Kettle Rock Light to reach Saltmere through the Atlantic storms. One week ago, both keepers vanished; no one knows what happened to them. You are the replacement crew: keep the passage open, and find out what they left behind. Their last watch is still written in the logbook."
     },
     {
       "key": "briefing.footer.0",
@@ -2466,11 +2466,11 @@
     },
     {
       "key": "briefing.body.1",
-      "text": "<b>FLOOR 1 · KEEP THE WATER OUT</b>\nTighten the pipe bolts. Power the pump.\n\n<b>FLOOR 2 · KEEP THE ENGINE RUNNING</b>\nFuel and start it. Feed circuits at the panel.\n\n<b>FLOOR 4 · GUIDE THE SHIPS</b>\nAim the beacon at each ship. Hold it steady.\n\n<b>FLOOR 4 · SEND THE HARBOR REPORT</b>\nTune, enter the code, then hold the mic."
+      "text": "<b>FLOOR 2 · RESTORE POWER</b>\nFuel the generator. Feed the circuits.\n\n<b>FLOOR 1 · STOP THE FLOOD</b>\nRepair the pipe. Keep the pump running.\n\n<b>FLOOR 4 · RADIO AND BEACON</b>\nSend the report. Guide ships with the beam.\n\n<b>FLOOR 3 · YOUR BEDROOM</b>\nRest here together when the watch is done."
     },
     {
       "key": "briefing.footer.1",
-      "text": "Share clues. Both can use every tool. When the board is clear, sleep on Floor 3."
+      "text": "Share clues with your partner. Both keepers can use every tool."
     },
     {
       "key": "briefing.title.2",
@@ -2490,7 +2490,7 @@
     },
     {
       "key": "lesson.line.1",
-      "text": "Both keepers to the generator room. Floor Two. Stay together."
+      "text": "The engine needs checking. Both keepers to the generator room, Floor Two."
     },
     {
       "key": "lesson.line.2",
@@ -2506,7 +2506,7 @@
     },
     {
       "key": "lesson.line.5",
-      "text": "I did not call you down there. Keep hold. Stay together."
+      "text": "That call was not from this office. Stay with your partner."
     },
     {
       "key": "lesson.quiet.1",
@@ -2615,6 +2615,30 @@
     {
       "key": "briefing.waiting",
       "text": "Your partner is reading the duty briefing."
+    },
+    {
+      "key": "caption.production.1",
+      "text": "Kettle Rock, Saltmere port office. We have your arrival. Keep the passage lit, and report anything the last crew left behind."
+    },
+    {
+      "key": "caption.production.4",
+      "text": "The generator has stopped. Check the fuel tank on Floor Two."
+    },
+    {
+      "key": "caption.production.5",
+      "text": "The passage is clear. You can rest now. Bunks are on Floor Three."
+    },
+    {
+      "key": "caption.production.13",
+      "text": "Saltmere port office. Check the engine before the next convoy."
+    },
+    {
+      "key": "caption.production.17",
+      "text": "The last ship is clear of the reef. Your watch is over."
+    },
+    {
+      "key": "caption.production.18",
+      "text": "Kettle Rock, we have lost your signal."
     }
   ]
 }

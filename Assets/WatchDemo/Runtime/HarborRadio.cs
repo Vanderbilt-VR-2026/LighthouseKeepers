@@ -205,13 +205,7 @@ namespace LighthouseKeepers.WatchDemo
                 default:return 0;
             }
         }
-        public bool StatusUpdate() {
-            if(watch.State.ReadOnly)return false;
-            var s=watch.State;
-            nextStatus=Time.time+s.Master.statusIntervalSeconds;
-            int id=CompositeStatusCue(s);
-            if(SilenceSeconds>=s.Master.speechSpacingSeconds){Play(id,Serial+1,0);return true;}if(pending.Count<16&&!pending.Contains(id))AddPending(id);return true;
-        }
+        public bool StatusUpdate()=>ReplayLastLocally(); // PA recall, never a synthetic time/water inventory.
         public static int CompositeStatusCue(WatchState s) {
             int time=s.Tutorial?0:s.Duration-s.Elapsed>180?0:s.Duration-s.Elapsed>120?1:s.Duration-s.Elapsed>60?2:3;
             int water=s.WaterDanger>=.9f?3:s.WaterDanger>=.75f?2:s.WaterDanger>=.5f?1:0;
@@ -229,11 +223,11 @@ namespace LighthouseKeepers.WatchDemo
             else if(!s.BeaconShining&&(dangerMask&8)==0){id=30;bit=8;}
             bool critical=id==29||id==32;
             if(id>0&&(critical||!FuelExplanationPending)&&(critical?(Cue!=29&&Cue!=32||SilenceSeconds>=0):SilenceSeconds>=s.Master.speechSpacingSeconds)){dangerMask|=bit;Play(id,Serial+1,0);}
-            if(!s.SuppressBackgroundNarration&&!FuelExplanationPending&&Time.time>=nextStatus&&SilenceSeconds>=s.Master.speechSpacingSeconds)StatusUpdate();
+            // Routine status reports retired: watch/HUD/world already show this information.
             if(s.CompletedTasks>priorTasks&&!(s.Master&&s.Master.onboarding)&&!(s.Radio.Completed&&lastJob==11)){Enqueue(s.Power==PowerState.On&&lastJob==8?21:lastJob==10?22:20);}priorTasks=s.CompletedTasks;
         }
         void Enqueue(int id){if(id>=76){QueueSituational(id);return;}if(id!=6&&!spoken.Contains(id)&&pending.Count<16&&!pending.Contains(id))AddPending(id);}
-        void AddPending(int id){pending.Add(id);queuedAt[id]=Time.time;}
+        void AddPending(int id){if(!HarborEditorialPolicy.Allows(id))return;pending.Add(id);queuedAt[id]=Time.time;}
         void PruneInstructions(){float lifetime=watch.State.Master?watch.State.Master.instructionLifetimeSeconds:20;for(int i=pending.Count-1;i>=0;i--){int id=pending[i];if(!Relevant(id)||(HarborCueRules.InstructionExpires(id)&&!(id==4&&FuelExplanationPending)&&queuedAt.TryGetValue(id,out float at)&&Time.time-at>lifetime)){pending.RemoveAt(i);queuedAt.Remove(id);}}}
         bool CanPlayQueued(int id)
         {
@@ -259,6 +253,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Play(int id,int serial,float age)
         {
+            if(!HarborEditorialPolicy.Allows(id))return;
             sceneCaption=sceneSpeaker=null;
             int requested=id;
             if(!watch.State.RemoteReplica)id=StoryVoiceBridge.Resolve(id,watch.State,catalog);

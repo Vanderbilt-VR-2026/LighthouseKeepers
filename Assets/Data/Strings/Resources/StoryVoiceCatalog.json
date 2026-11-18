@@ -4,7 +4,7 @@
     {
       "id": "HM_N1_ARRIVAL_COOP",
       "speaker": "HM",
-      "text": "Kettle Rock, this is Saltmere harbor. Elias Merrow. Glad you two got across before the weather.",
+      "text": "Kettle Rock, Saltmere port office. We have your arrival. Keep the passage lit, and report anything the last crew left behind.",
       "delivery": "warm, businesslike, a little tired",
       "trigger": "N1 start +3 s",
       "prerequisite": "—",
@@ -19,7 +19,7 @@
     {
       "id": "HM_N1_ARRIVAL_SOLO",
       "speaker": "HM",
-      "text": "Kettle Rock, this is Saltmere harbor. Elias Merrow. You and Teague got across. Good.",
+      "text": "Kettle Rock, Saltmere port office. We have your arrival. Keep the passage lit, and report anything the last crew left behind.",
       "delivery": "warm, businesslike",
       "trigger": "N1 start +3 s",
       "prerequisite": "—",
@@ -94,7 +94,7 @@
     {
       "id": "HM_N2_OPEN",
       "speaker": "HM",
-      "text": "Evening, Kettle Rock. Glass is falling fast. Keep an eye on that engine tonight.",
+      "text": "Saltmere port office. Check the engine before the next convoy.",
       "delivery": "brisk, a little worried",
       "trigger": "N2 start",
       "prerequisite": "—",
@@ -334,7 +334,7 @@
     {
       "id": "HM_GEN_RUNNING",
       "speaker": "HM",
-      "text": "There she goes. Hear that? That's the whole station breathing again.",
+      "text": "Power is back. Check your partner, then the remaining work.",
       "delivery": "relief, warm",
       "trigger": "generator starts",
       "prerequisite": "—",
@@ -484,7 +484,7 @@
     {
       "id": "HM_N2_FUEL_FAILURE",
       "speaker": "HM",
-      "text": "Engine's coughing. Something's been at the fuel. Floor Two, quick as you can.",
+      "text": "The engine is losing fuel. Check the tank on Floor Two.",
       "delivery": "urgent",
       "trigger": "fuel sabotage",
       "prerequisite": "—",
@@ -589,7 +589,7 @@
     {
       "id": "HM_N2_LANTERN_INTRO",
       "speaker": "HM",
-      "text": "You'll be in the dark till that engine runs. Take the lantern by the door.",
+      "text": "Take a lantern from the marked hook. You will need it while the engine is out.",
       "delivery": "calm, firm",
       "trigger": "first blackout",
       "prerequisite": "—",
@@ -994,7 +994,7 @@
     {
       "id": "HM_N4_TOM",
       "speaker": "HM",
-      "text": "My boy was on the Kettle. Tom. Junior keeper. Six weeks gone now.",
+      "text": "My son was stationed on the Kettle. Tom. He has been missing for a week.",
       "delivery": "flat, holding it together",
       "trigger": "N4 opening calm, ~60 s",
       "prerequisite": "—",

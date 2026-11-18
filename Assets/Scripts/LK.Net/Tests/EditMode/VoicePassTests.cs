@@ -14,7 +14,7 @@ namespace LighthouseKeepers.Net.Tests
   [Test] public void AllRecordedAndNewPlaceholderClipsExistWithExactCaptionsAndSingleCuts()
   {
    var table=Read();Assert.AreEqual(97,table.entries.Length);int longCount=0;
-   var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");var caption=catalog.GetType().GetMethod("Caption");
+   var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");var caption=catalog.GetType().GetMethod("RecordedCaption");
    var strings=JsonUtility.FromJson<StringTable>(File.ReadAllText("Assets/Data/Strings/Resources/KeeperStrings.json"));
    foreach(var e in table.entries)
    {
@@ -46,7 +46,7 @@ namespace LighthouseKeepers.Net.Tests
   [Test] public void NewCueDomainIsVersionedAndAllImportedPClipsAreAddressable()
   {
    Assert.AreEqual("LK-S5-ARRIVAL1",LighthouseKeepers.Core.CrewNetworkVersion.Matchmaking);
-   var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");foreach(var e in Read().entries){Assert.NotNull(catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{e.id}),e.file);Assert.AreEqual(e.caption,catalog.GetType().GetMethod("Caption").Invoke(catalog,new object[]{e.id}));}
+   var catalog=Resources.Load<ScriptableObject>("HarborRadioLines");foreach(var e in Read().entries){Assert.NotNull(catalog.GetType().GetMethod("Line").Invoke(catalog,new object[]{e.id}),e.file);Assert.AreEqual(e.caption,catalog.GetType().GetMethod("RecordedCaption").Invoke(catalog,new object[]{e.id}));}
   }
   [Test] public void ObjectiveTransitionsAllowTwoLinesThenRequireAQuietStretch()
   {

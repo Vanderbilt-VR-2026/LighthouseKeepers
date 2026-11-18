@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using LighthouseKeepers.Core;
 using LighthouseKeepers.Core.Progression;
 namespace LighthouseKeepers.WatchDemo
 {
@@ -19,7 +20,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var line=StoryVoiceCatalog.Get(id);
             // Availability and trigger validity are independent of the temporary caption-only mode.
-            if(!trigger||line==null||!catalog.HasLine(line.cue))return;
+            if(!trigger||line==null||!HarborEditorialPolicy.Allows(line.cue)||!catalog.HasLine(line.cue))return;
             storySpeech.Enqueue(line,Time.time,delay:delay,lifetime:120);
         }
         bool StoryRelevant(StorySpeechRequest request)
