@@ -93,7 +93,7 @@ namespace LighthouseKeepers.WatchDemo {
       // Console root is at floor height: use its working face for the arm.
       if(r.Step<3)workHand=workRadio.transform.TransformPoint(new Vector3(-.3f,1.3f,.4f));
       if(workFor>=tuning.controlSeconds){
-       if(r.Step==0)r.ToggleMain();else if(r.Step==1)r.Tune(r.Program.targetMHz);else if(r.Step==2)r.PressCode(r.CodeSymbol(r.CodeProgress));
+       if(r.Step==0)r.ToggleMain();else if(r.Step==1)r.Tune(r.TargetMHz);else if(r.Step==2)r.PressCode(r.CodeSymbol(r.CodeProgress));
        else if(!clearanceOffered){clearanceOffered=true;Report(KeeperStrings.Get("companion.clearanceReady"));}
        workFor=0;
       }

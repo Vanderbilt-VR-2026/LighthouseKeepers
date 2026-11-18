@@ -6,7 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         [SerializeField] RadioProgram program;
         [SerializeField] TextMesh readout;
-        WatchDemoController watch; Vector3 localSite; Quaternion localRotation; bool placed; int stamp=-1; bool relay; Material paperMaterial;
+        WatchDemoController watch; Vector3 localSite; Quaternion localRotation; bool placed; int stamp=-1; bool relay; bool canRead; Material paperMaterial;
         public static CodeSource Active {get;private set;}
         public RadioProgram Program=>program;
         public string PrintedText=>readout?readout.text:"";
@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var text=new StringBuilder();
             for(int i=0;i<radio.CodeLength;i++){
-                if(i>0)text.Append(i%2==0?"\n":"   >   ");
+                if(i>0)text.Append("  >  ");
                 int symbol=radio.CodeSymbol(i);text.Append(string.Format(KeeperStrings.Get("code.symbol"),symbol+1,KeeperStrings.Get("colour."+symbol)));
             }
             return text.ToString();
@@ -27,7 +27,8 @@ namespace LighthouseKeepers.WatchDemo
             if(!watch)watch=FindAnyObjectByType<WatchDemoController>();
             if(!watch||watch.State==null)return;
             var s=watch.State;bool house=s.RadioRelay;
-            if(stamp==s.Day&&placed&&relay==house)return;
+            bool allowed=!house||watch.CurrentDuty==LighthouseKeepers.Lobby.CrewDuty.Machinist;
+            if(stamp==s.Day&&placed&&relay==house&&canRead==allowed)return;canRead=allowed;
             stamp=s.Day;relay=house;placed=true;
             // Same fixed paper changes location as the crew changes. A lone human retains a local
             // clue until the actual companion can fetch it; never require an absent bot.
@@ -37,10 +38,10 @@ namespace LighthouseKeepers.WatchDemo
             var renderer=paper.GetComponent<Renderer>();if(renderer){if(!paperMaterial){paperMaterial=new Material(Shader.Find("Universal Render Pipeline/Unlit")){name="Weathered telegram paper"};paperMaterial.SetColor("_BaseColor",new Color(.57f,.54f,.42f));}renderer.sharedMaterial=paperMaterial;renderer.SetPropertyBlock(null);}
             readout.transform.localPosition=new Vector3(0,0,-.012f);readout.transform.localRotation=Quaternion.identity;readout.transform.localScale=Vector3.one;
             readout.characterSize=.0038f;readout.fontSize=64;readout.anchor=TextAnchor.MiddleCenter;readout.alignment=TextAlignment.Center;readout.color=new Color(.06f,.065f,.05f);
-            readout.text=string.Format(KeeperStrings.Get("code.telegram"),s.Day)+"\n"+KeeperStrings.Get(house?"code.share":"code.local")+"\n"+CodeText(s.Radio);
+            readout.text=string.Format(KeeperStrings.Get("code.telegram"),s.Day)+"\n"+KeeperStrings.Get(house?"code.share":"code.local")+"\n"+(canRead?CodeText(s.Radio):KeeperStrings.Get("code.readerOnly"));
         }
         void Start()=>Refresh();
-        void Update(){if(!watch||watch.State==null||stamp!=watch.State.Day||relay!=watch.State.RadioRelay)Refresh();}
+        void Update()=>Refresh();
         void OnDestroy(){if(Active==this)Active=null;if(paperMaterial)Destroy(paperMaterial);}
     }
 }

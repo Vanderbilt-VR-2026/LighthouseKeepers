@@ -79,7 +79,7 @@ namespace LighthouseKeepers.WatchDemo
             else if(watch.Coop!=null&&watch.Coop.RemoteMicrophone(microphone,out bool remoteTrigger))State.SetMicrophone(true,remoteTrigger);
             else {if(watch.ScriptedPartner&&!helper)helper=FindAnyObjectByType<CrewCompanion>();State.SetMicrophone(microphone.Held||helper&&helper.Transmitting,microphone.TriggerHeld||helper&&helper.Transmitting);}
             bool live=State.MainOn&&watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio);
-            float distance=Mathf.Abs(State.FrequencyMHz-program.targetMHz);
+            float distance=Mathf.Abs(State.FrequencyMHz-State.TargetMHz);
             float quality=1-Mathf.Clamp01(distance/.45f);
             hiss.volume=live&&!completed?.09f*(1-quality):0;
             tone.volume=live&&!completed?.055f*quality:0;
@@ -108,13 +108,13 @@ namespace LighthouseKeepers.WatchDemo
                 {var face=control.visual.GetComponentInChildren<Renderer>();var color=face.sharedMaterial.GetColor("_BaseColor");codeBlock.SetColor("_BaseColor",color*(relevant?1:.25f));codeBlock.SetColor("_EmissionColor",relevant?color*pulse:Color.black);face.SetPropertyBlock(codeBlock);}
             }
             microphoneHighlight.SetPropertyBlock(watch.Director==null&&State.Step==3?current:dark);
-            if(watch.Director!=null){readout.text=watch.Director.StationInstruction(WatchState.RadioStation);return;}
+            if(watch.Director!=null){readout.text=State.Step==2?string.Format(KeeperStrings.Get("radio.codeProgress"),State.CodeProgress,State.CodeLength):State.Step==3?string.Format(KeeperStrings.Get(sending?"radio.sending":"radio.micHold"),Mathf.CeilToInt(State.Program.transmitSeconds-State.TransmitElapsed)):watch.Director.StationInstruction(WatchState.RadioStation);return;}
             if(watch.Failed)readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.1");
             else if(!watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio))readout.text=watch.Grid!=null?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.2"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.3");
             else if(!State.MainOn)readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.4");
             else if(State.Completed)readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.5");
             else if(sending)readout.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.6"),State.TransmitElapsed);
-            else if(State.Step==1)readout.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.7"),program.targetMHz,State.FrequencyMHz);
+            else if(State.Step==1)readout.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.7"),State.TargetMHz,State.FrequencyMHz);
             else if(State.Step==2)readout.text=string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.8"),State.CodeProgress,program.callCode.Length);
             else readout.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchRadioConsole.9");
         }

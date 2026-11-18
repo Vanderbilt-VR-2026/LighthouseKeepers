@@ -21,7 +21,9 @@ namespace LighthouseKeepers.WatchDemo
         public int CodeLength=>Program.callCode.Length;
         // Derived from the already replicated night; retry/rejoin keeps the same telegram.
         public void SetNight(int night)=>codeNight=Math.Max(0,night);
-        public int CodeSymbol(int index)=>Program.callCode[(index+(codeNight>=3?codeNight-3:0))%CodeLength];
+        // Derived from the replicated watch number, stable across retry/rejoin. Never mutate the shared asset.
+        public float TargetMHz=>codeNight==0?Program.targetMHz:Mathf.Clamp(Program.minimumMHz+.1f*(1+(int)(((long)codeNight*7+3)%19)),Program.minimumMHz,Program.maximumMHz);
+        public int CodeSymbol(int index)=>Program.callCode[(index+Math.Max(0,codeNight-1))%CodeLength];
         bool power, held, trigger;
         public bool Held=>held;
         public bool Trigger=>trigger;
@@ -53,7 +55,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(ReadOnly||Step!=1||float.IsNaN(mhz)||float.IsInfinity(mhz))return;
             FrequencyMHz=Mathf.Clamp(mhz,Program.minimumMHz,Program.maximumMHz);
-            if(Mathf.Abs(FrequencyMHz-Program.targetMHz)>Program.toleranceMHz){Locked=false;LockElapsed=TransmitElapsed=0;}
+            if(Mathf.Abs(FrequencyMHz-TargetMHz)>Program.toleranceMHz){Locked=false;LockElapsed=TransmitElapsed=0;}
         }
         // -1: inactive; 0: wrong code resets only sequence; 1: accepted symbol.
         public int PressCode(int colour)
@@ -67,7 +69,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(seconds<0||double.IsNaN(seconds)||double.IsInfinity(seconds))throw new ArgumentOutOfRangeException(nameof(seconds));
             if(ReadOnly||!canWork||!power||!MainOn){TransmitElapsed=0;return;}
-            if(!Locked && Mathf.Abs(FrequencyMHz-Program.targetMHz)<=Program.toleranceMHz)
+            if(!Locked && Mathf.Abs(FrequencyMHz-TargetMHz)<=Program.toleranceMHz)
             {LockElapsed=Mathf.Min(Program.lockSeconds,LockElapsed+(float)seconds);Locked=LockElapsed>=Program.lockSeconds;}
             if(!Transmitting){TransmitElapsed=0;return;}
             TransmitElapsed=Mathf.Min(Program.transmitSeconds,TransmitElapsed+(float)seconds);

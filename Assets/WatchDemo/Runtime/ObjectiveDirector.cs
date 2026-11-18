@@ -234,7 +234,7 @@ namespace LighthouseKeepers.WatchDemo
             if(step==KeeperStep.Prime)text=string.Format(text,Mathf.Max(0,state.PowerTuning.primerSqueezes-state.Engine.Primer));
             if(step==KeeperStep.Starter&&state.TimedStarter)text=KeeperStrings.Get("starter.timed.objective");
             if(step==KeeperStep.Starter)text=string.Format(text,Mathf.Max(0,state.PowerTuning.starterPulls-(state.Engine?.Pulls??state.StarterPulls)));
-            if(step==KeeperStep.RadioTune)text=string.Format(text,state.Radio.Program.targetMHz.ToString("F1"));
+            if(step==KeeperStep.RadioTune)text=string.Format(text,state.Radio.TargetMHz.ToString("F1"));
             if(step==KeeperStep.RadioCode)text=KeeperStrings.Get(state.RadioRelay?"step.RadioCodeRelay":"step.RadioCodeLocal");
             return text;
         }

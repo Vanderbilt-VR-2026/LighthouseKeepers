@@ -13,7 +13,7 @@ namespace LighthouseKeepers.WatchDemo {
   public string Status=>KeeperStrings.Get(statusKey);
   bool dutyExplained;bool wantsCode;float reportUntil,radioPoseUntil,nextReport;string reportLine="";GameObject radioProp;
   public bool ReportActive=>Time.unscaledTime<reportUntil;public string ReportLine=>reportLine;
-  public void RequestReport(){if(!Active||Time.unscaledTime<nextReport)return;if(RequestClearance())return;nextReport=Time.unscaledTime+tuning.reportCooldown;if(watch.State.HasRadioRelay&&learnedCode.Length==0){wantsCode=true;SetCommand(CompanionCommand.Work);Report(KeeperStrings.Get("companion.fetchReply"));}else Report(learnedCode.Length>0?KeeperStrings.Get("companion.codeReply")+"\n"+learnedCode:KeeperStrings.Get("companion.readyReply"));}
+  public void RequestReport(){if(!Active||Time.unscaledTime<nextReport)return;if(RequestClearance())return;nextReport=Time.unscaledTime+tuning.reportCooldown;if(watch.State.HasRadioRelay&&learnedCode.Length==0){wantsCode=true;SetCommand(CompanionCommand.Work);Report(KeeperStrings.Get("companion.fetchReply"));}else Report(learnedCode.Length>0?learnedCode:KeeperStrings.Get("companion.readyReply"));}
   void Report(string text){if(learnedCode.Length>0&&text.Contains(learnedCode))CodeDelivered=true;reportLine=text;reportUntil=Time.unscaledTime+tuning.reportSeconds;radioPoseUntil=Time.unscaledTime+tuning.radioGestureSeconds;var n=FindAnyObjectByType<HarborRadio>();if(n)n.RecordSilentLine(text,KeeperStrings.Get("companion.name"));watch.GetComponent<ObjectiveHud>()?.RevealFor(tuning.reportSeconds);}
   bool lessonMode;CompanionCommand lessonReturn;float possession,lift;readonly RaycastHit[] ceilingHits=new RaycastHit[24];
   public Vector3 OfferedHand=>model&&model.FullBody&&model.FullBody.Joint("LeftHand")?model.FullBody.Joint("LeftHand").position:Position+Vector3.up;
@@ -107,7 +107,7 @@ namespace LighthouseKeepers.WatchDemo {
     if(holding)Release();
     if(support&&s.HasRadioRelay&&(s.Repaired||wantsCode)&&learnedCode.Length==0&&CodeSource.Active){
      statusKey="companion.codeGoing";var paper=CodeSource.Active.transform;var target=paper.position-paper.forward*.85f;
-     if(MoveTo(target)&&Vector3.Distance(Position+Vector3.up,paper.position)<tuning.reach){agent.ResetPath();readFor+=Time.deltaTime;if(readFor>=tuning.readSeconds){learnedCode=CodeSource.CodeText(s.Radio);readFor=0;hasGoal=false;nextPath=0;if(wantsCode){wantsCode=false;Report(KeeperStrings.Get("companion.codeReply")+"\n"+learnedCode);}}}
+     if(MoveTo(target)&&Vector3.Distance(Position+Vector3.up,paper.position)<tuning.reach){agent.ResetPath();readFor+=Time.deltaTime;if(readFor>=tuning.readSeconds){learnedCode=CodeSource.CodeText(s.Radio);readFor=0;hasGoal=false;nextPath=0;if(wantsCode){wantsCode=false;Report(learnedCode);}}}
     }else{
      readFor=0;statusKey=learnedCode.Length>0?"companion.code":"companion.follow";
      var forward=Vector3.ProjectOnPlane(head.forward,Vector3.up).normalized;var offset=-forward*tuning.followDistance+Vector3.Cross(Vector3.up,forward)*.55f;

@@ -12,7 +12,7 @@ namespace LighthouseKeepers.WatchDemo
   TMP_Text task,label,floor,subtitle,partner,speakerTag,recallTip;float tipUntil;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,lastLocationStep=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
   ObjectiveInputIcon inputIcon;TMP_Text inputLabel;DirectorPresentation guidance;
   readonly ObjectiveRecallState recall=new();
-  int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
+  int recallHints;float nextRecallHint;int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
 
   public static string WatchGateCaption=>string.Format(PlayerStrings.Get("integrated.watchGate"),Mathf.CeilToInt(MasterPassTuning.Current?MasterPassTuning.Current.watchStartGraceSeconds:45));
   public static string WrenchDownCaption=>PlayerStrings.Get("integrated.wrenchDown");
@@ -86,8 +86,9 @@ namespace LighthouseKeepers.WatchDemo
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   public static bool RecallTeachingDue(int night,int previous,int current)=>night>=1&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)==0;
   public static void AcknowledgeRecallButton(){if(PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)!=0)return;PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
-  void Set(int value,string text){if(RecallTeachingDue(watch.State.Day,index,value)){tipUntil=Time.unscaledTime+5;}index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
-  string Title(int value)=>value==(int)KeeperStep.RadioCode&&watch.State.ScriptedPartner&&GetComponent<CrewCompanion>() is CrewCompanion helper&&!helper.CodeDelivered?KeeperStrings.Get("radio.askOwen"):watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
+  void Set(int value,string text){if(recallHints==0&&RecallTeachingDue(watch.State.Day,index,value)){recallHints++;tipUntil=Time.unscaledTime+5;}nextRecallHint=Time.unscaledTime+35;index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
+  string ActionTitle(int value)=>value==(int)KeeperStep.RadioCode&&watch.State.ScriptedPartner&&GetComponent<CrewCompanion>() is CrewCompanion helper&&!helper.CodeDelivered?KeeperStrings.Get("radio.askOwen"):watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
+  string Title(int value){var step=(KeeperStep)value;if(ObjectiveDirector.Job(step)==WatchState.RadioStation&&step!=KeeperStep.ReadCode&&ObjectiveHud.FloorAt(head.position.y)!=4)return KeeperStrings.Get("radio.goF4");return ActionTitle(value);}
   void Update()
   {
    var s=watch.State;if(s==null)return;if(!radio)radio=FindAnyObjectByType<HarborRadio>();
@@ -110,6 +111,7 @@ namespace LighthouseKeepers.WatchDemo
    if(recallPress>0){AcknowledgeRecallButton();tipUntil=0;RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
    bool recalling=recall.Visible(Time.unscaledTime);
    if(recalling){until=Mathf.Max(until,recall.Until);changed=Time.unscaledTime-1;}
+   if(recallHints<2&&Time.unscaledTime>=nextRecallHint&&Time.unscaledTime-changed>30&&!watch.Sleeping&&!s.Failed&&!watch.ObjectivePresentationBlocked){recallHints++;tipUntil=Time.unscaledTime+5;RevealFor(5);}
    recallTip.text=Time.unscaledTime<tipUntil?KeeperStrings.Get("hud.recallTeach"):"";partner.gameObject.SetActive(Time.unscaledTime>=tipUntil);
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
@@ -138,7 +140,9 @@ namespace LighthouseKeepers.WatchDemo
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
    string display=s.BriefingHeld?KeeperStrings.Get("briefing.waiting"):sceneLine?lesson.Caption:helperLine?helper.ReportLine:authLine?auth.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
-   ConfigureSubtitle(remembered);
+   bool codeCard=helper&&helper.CodeDelivered&&!string.IsNullOrEmpty(helper.LearnedCode)&&display.Contains(helper.LearnedCode);
+   ConfigureSubtitle(remembered||codeCard);
+   if(codeCard){subtitle.enableAutoSizing=true;subtitle.fontSizeMin=22;subtitle.fontSizeMax=size;subtitle.overflowMode=TextOverflowModes.Overflow;subtitle.maxVisibleLines=2;}
    if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.6f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
    int visible=sceneLine||helperLine||authLine?display.Length:remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
    int page=1;
@@ -147,7 +151,7 @@ namespace LighthouseKeepers.WatchDemo
    for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
    if(showVoice&&radio.CaptionsOnly&&!remembered)page=radio.SubtitlePage(info.pageCount);
    if(authLine&&!helperLine)page=Mathf.Clamp(1+Mathf.FloorToInt(s.Authenticity.Age/6),1,Mathf.Max(1,info.pageCount));
-   subtitle.pageToDisplay=remembered?1:page;subtitle.maxVisibleCharacters=visible;
+   subtitle.pageToDisplay=remembered||codeCard?1:page;subtitle.maxVisibleCharacters=visible;
    float alpha=remembered?Mathf.Clamp01((recall.Until-Time.unscaledTime)/.8f):showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;
    subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);

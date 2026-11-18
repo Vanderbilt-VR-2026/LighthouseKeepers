@@ -46,11 +46,11 @@
     },
     {
       "key": "step.RadioPower",
-      "text": "GRIP red radio lever; lift up"
+      "text": "Grip the POWER lever; lift it"
     },
     {
       "key": "step.RadioTune",
-      "text": "Tune to {0}"
+      "text": "Turn radio dial to {0} MHz"
     },
     {
       "key": "step.RadioCode",
@@ -58,7 +58,7 @@
     },
     {
       "key": "step.RadioTransmit",
-      "text": "Hold microphone; hold TRIGGER to transmit"
+      "text": "Grip console mic; HOLD trigger"
     },
     {
       "key": "step.BeaconLight",
@@ -1582,7 +1582,7 @@
     },
     {
       "key": "step.HoldValve",
-      "text": "Hold pipe valve while partner tightens"
+      "text": "Hold red valve — beside F1 pipe"
     },
     {
       "key": "step.ClampValve",
@@ -1594,11 +1594,11 @@
     },
     {
       "key": "connected.pressure",
-      "text": "PRESSURE"
+      "text": "PRESSURE RELEASE"
     },
     {
       "key": "connected.pressureHeld",
-      "text": "Pressure held"
+      "text": "HOLD — PARTNER TIGHTENS"
     },
     {
       "key": "connected.clampSet",
@@ -2294,7 +2294,7 @@
     },
     {
       "key": "step.RadioCodeRelay",
-      "text": "Enter the code from your partner"
+      "text": "Press your partner’s code in order"
     },
     {
       "key": "where.telegram",
@@ -2310,7 +2310,7 @@
     },
     {
       "key": "code.share",
-      "text": "PARTNER: READ THIS CODE OVER YOUR WALKIE"
+      "text": "MACHINIST — relay these buttons IN ORDER"
     },
     {
       "key": "code.local",
@@ -2710,7 +2710,7 @@
     },
     {
       "key": "radio.belt",
-      "text": "Release at right hip to clip"
+      "text": "Release walkie at right hip to clip it.\nGrip it there to take it back."
     },
     {
       "key": "step.GrabWalkie",
@@ -2734,7 +2734,7 @@
     },
     {
       "key": "radio.askOwen",
-      "text": "Hold walkie; TRIGGER asks Owen for code"
+      "text": "Grip walkie; tap trigger for code"
     },
     {
       "key": "companion.clearance",
@@ -2819,6 +2819,26 @@
     {
       "key": "survival.board.loss",
       "text": "Only the flood ends the run."
+    },
+    {
+      "key": "radio.goF4",
+      "text": "Go to the radio — Floor 4"
+    },
+    {
+      "key": "radio.codeProgress",
+      "text": "CODE: {0}/{1} accepted\nPress buttons in the given order"
+    },
+    {
+      "key": "radio.micHold",
+      "text": "Grip this mic; HOLD trigger {0}s"
+    },
+    {
+      "key": "radio.sending",
+      "text": "TRANSMITTING — keep trigger held {0}s"
+    },
+    {
+      "key": "code.readerOnly",
+      "text": "MACHINIST: read the telegram\nLIGHTKEEPER: ask your partner by walkie"
     }
   ]
 }
