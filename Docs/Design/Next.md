@@ -1,6 +1,6 @@
 # Current checkpoint — unfinished-feature delivery
 
-Branch **sprint-5 / PR #89**. Clean implementation source **4828cbbe**. Network **LK-S5-TRAINING1 / LK-Lab-Coop-v47**; both clients must update. Editors muted. No AI voice. Install only, never auto-launch Quest.
+Branch **sprint-5 / PR #89**. Installed implementation source **b32eae50**. Network **LK-S5-TRAINING1 / LK-Lab-Coop-v47**; both clients must update. Editors muted. No AI voice. Install only, never auto-launch Quest.
 
 ## Implemented and pushed this pass
 
@@ -10,7 +10,7 @@ Branch **sprint-5 / PR #89**. Clean implementation source **4828cbbe**. Network 
 4. **#139 dab1ba19:** beard mouth clearance and skin-fitted wet eye trails. Same accepted body rig/solver; 16 avatar checks and inspected normal/possessed/restored renders.
 5. **#140 4828cbbe:** full Night 1 station rehearsal: pipe, fuel/start, beacon, radio clearance, real aiming, sleep. 49 focused checks and actual accelerated instruction route pass. Final two-Editor clearance/pass/rejoin/retry and guest physical timed starter pass. Evidence: `Docs/Verification/S5/Unfinished/`.
 
-Instruction-only timing simulation now completes Nights 1–5 solo/duo, but NOT the Demo. This is not a first-timer measurement or continuous human campaign test. Final review also fixed helper panel overload on the 2.5-unit grid: nine focused checks plus actual stable shed/reset fixture pass (`Unfinished/Panel/`). No new protocol fields. Final corrected APK packaging is the active step; append the verified delivery receipt before calling it installed.
+Instruction-only timing simulation now completes Nights 1–5 solo/duo, but NOT the Demo. This is not a first-timer measurement or continuous human campaign test. Final review also fixed helper panel overload on the 2.5-unit grid: nine focused checks plus actual stable shed/reset fixture pass (`Unfinished/Panel/`). No new protocol fields. Final clean IL2CPP ARM64 APK **b32eae50** is installed on Quest 3 **without launch**, and its installed SHA-256 matches. APK: `Builds/LighthouseKeepers-Sprint5-CrewTraining-b32eae50.apk`; SHA-256 `6a8fc3b422c30d3ea548578902657f829a8d0e3e25e6be702fed947ee194277c`. Receipt: `Docs/Verification/S5/Unfinished/Delivery/`.
 
 ## Next implementation work
 
