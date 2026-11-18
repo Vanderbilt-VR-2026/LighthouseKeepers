@@ -18,3 +18,5 @@ New replicated clearance/wait fields: **LK-S5-CLEARANCE1 / LK-Lab-Coop-v43**. Bo
 ## Remaining from the headset feedback
 
 #137 timed starter replacing primer/choke; full opposite-role automatic station solver; walkie belt carry; visible eye blood/beard-mouth correction; full Night 1 generator rehearsal. Current companion supports valve, fetched clues, following and rescue, not every station. Watch offset and wrist fit need worn acceptance. New hunter/hiding scenes are not enabled by this change.
+
+Clean source f170da4e built and installed on Quest 3 without launch. Package/signature/ARM64/CRC checked; local and installed SHA-256 match. See ../Delivery and ../Headset-Check.md. No worn test was performed.

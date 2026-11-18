@@ -6,7 +6,19 @@ Helper slice complete: automatic blocked-route retries, no permanent slab, relax
 
 Placement slice complete: internal floating guards removed, radio frame supports corrected, detached beacon fittings removed, one lamp moved to F2, useful lantern instructions, notes persist from arrival, watch offset adjusted. Actual placement checks/screenshots: PlaytestClarity/Placement. Watch clearance and human reach remain device checks.
 
-Campaign slice implemented for Nights 1–3: radio clearance, stable engine → pipe/pump → radio → ship order, actual first-ship aim without wreck penalty. Protocol LK-S5-CLEARANCE1 / v43. Focused/Play evidence in PlaytestClarity/Campaign; 88 focused checks, actual Night 1 Play and live pair passed; clean APK delivery is next. Nights 4–5 duo and solo Demo simulations remain unresolved, so their prior schedule is retained. Next implementation: #137 timed starter. Possession eye trails/beard readability and belt carry still pending. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
+Campaign slice implemented for Nights 1–3: radio clearance, stable engine → pipe/pump → radio → ship order, actual first-ship aim without wreck penalty. Protocol LK-S5-CLEARANCE1 / v43. Focused/Play evidence in PlaytestClarity/Campaign; 88 focused checks, actual Night 1 Play and live pair passed. Clean source **f170da4e** built and installed on the connected Quest without launch. `Builds/LighthouseKeepers-Sprint5-Clarity-f170da4e.apk`; SHA-256 `809e7a0d27f8e13dad3945a7288092a72cbc22febd04384e0177fbd683bc5a94`; on-device hash matches. Receipts: PlaytestClarity/Delivery. Nights 4–5 duo and solo Demo simulations remain unresolved, so their prior schedule is retained. Next implementation: #137 timed starter. Possession eye trails/beard readability and belt carry still pending. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
+
+
+## DEVICE CHECKS PENDING — correction build f170da4e
+
+Use `Docs/Verification/S5/PlaytestClarity/Headset-Check.md`: briefing actual eye height/recenter, watch cuff, direct walkie stability, F3/F4 openings and radio/glass clearance, F2 possession/revive then bot follow, fetched code caption on walkie trigger, Nights 1–3 ordered preparation and real first-ship aiming, human co-op voice/shared task/sleep/rejoin, worn CPU/GPU. Four existing notes and sabotage footprints are intentional. Do not claim timed starter, belt carry, full bot station autonomy or new hunter/hiding are delivered.
+
+## Resume commands and unfinished order
+
+1. #137: implement fuel + three timed physical starter pulls, replace primer/choke guidance after focused host/guest/control checks. Preserve physical can and cord, accepted body/camera and remaining station rules. No uncommitted implementation remains at this checkpoint.
+2. Opposite-role bot automation beyond valve/clues/rescue; add actual task/route tests before claiming it works. Then belt carry, visible eye tears/beard-mouth clearance, full Night 1 rehearsal, the pending Night 3 scene and later-night/Demo timing.
+3. Existing source checks: `python3 artifacts/s5/playtest-feedback/check.py CampaignOrderTests ShipClearanceTests M3RuntimeTests CrewCompanionTests RadioAuthenticityTests VoicePassTests`. Start the muted Editor, refresh and await compilation first. Play fixtures: `clearance-play.py`, `helper-play.py`, `revive.py`, `radio.py`, `world-play.py` under that artifact folder; give each a fresh result destination. Live pair: `crew-clearance.py`, after preserving/synchronizing the peer worktree. Never refresh assets while either Editor is in Play.
+4. For the next APK, adapt `artifacts/s5/playtest-feedback/build.py` and `deliver.py` to a fresh output/backup folder and current network version, close Editors, commit/push, then build clean source. The recorded build files here target f170da4e; do not overwrite its evidence. Install only; do not launch.
 
 ---
 
