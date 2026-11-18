@@ -9,7 +9,7 @@ namespace LighthouseKeepers.Net
         public int Page {get;private set;}
         public event Action Closed;
         TMP_Text title,body,footer,count;Button back,next;BriefingIllustration drawing;RawImage artwork;Texture2D arrival,duties;
-        static string S(string key)=>PlayerStrings.Get("briefing."+key);
+        static string S(string key)=>PlayerStrings.Get((WatchModeSelection.Selected==KeeperGameMode.Survival&&(key.StartsWith("title.")||key.StartsWith("body.")&&key!="body.2"||key.StartsWith("footer."))?"survival.briefing.":"briefing.")+key);
         public static CrewBriefing Create(Transform parent,Action closed)
         {var c=new GameObject("Harbor duty folder",typeof(RectTransform)).AddComponent<CrewBriefing>();c.transform.SetParent(parent,false);c.Closed+=closed;c.Build();return c;}
         public void Open(){Page=0;gameObject.SetActive(true);Refresh();}

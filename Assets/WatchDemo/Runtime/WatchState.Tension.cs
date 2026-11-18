@@ -8,7 +8,7 @@ namespace LighthouseKeepers.WatchDemo
         public TensionDirector Tension { get; private set; }
         public bool TensionQuiet => Tension?.Quiet(Elapsed) == true || Drowned?.Phase==DrownedPhase.Warning;
         public bool SuppressBackgroundNarration => TensionQuiet || Tension?.Phase == TensionPhase.Hunt;
-        TensionDirector NewTension(DayDefinition day) => Master && Sprint5 && Sprint5.tensionDirector && day.scenario?.configured == true
+        TensionDirector NewTension(DayDefinition day) => !Survival && Master && Sprint5 && Sprint5.tensionDirector && day.scenario?.configured == true
             ? new TensionDirector(day.scenario, Sprint5.minimumProblemGapSeconds, Sprint5.preScareQuietSeconds, Sprint5.earliestScareSeconds) { ReadOnly = ReadOnly } : null;
         void TickTension()
         {
@@ -28,9 +28,9 @@ namespace LighthouseKeepers.WatchDemo
             float rate = protectedSeconds > 0 ? Math.Min(normal, Engine.Fuel / (float)(protectedSeconds + Master.fuelSputterSeconds)) : normal;
             Engine.SetConsumption(Math.Min(Engine.Consumption,rate));
         }
-        public bool PrepareScare(bool dark, bool escapeReachable, bool hunt) => !ReadOnly && !Failed && !Complete &&
+        public bool PrepareScare(bool dark, bool escapeReachable, bool hunt) => !Survival && !ReadOnly && !Failed && !Complete &&
             Tension != null && Tension.PrepareScare(Elapsed, Tutorial || WatchStartHeld || StationGraceRemaining > 0, dark, escapeReachable, hunt);
-        public bool LaunchScare(bool dark, bool escapeReachable) => !ReadOnly && !Failed && !Complete && Tension != null &&
+        public bool LaunchScare(bool dark, bool escapeReachable) => !Survival && !ReadOnly && !Failed && !Complete && Tension != null &&
             Tension.LaunchScare(Elapsed, Tutorial || WatchStartHeld || StationGraceRemaining > 0, dark, escapeReachable);
     }
 }

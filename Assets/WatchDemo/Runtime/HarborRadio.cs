@@ -91,6 +91,7 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             var s=watch.State;
+            if(s.Survival){SilencePlayback();return;}
             if(localReplayCue>0){localReplayAge+=Time.deltaTime;if(localReplayAge>PresentationSeconds(localReplayCue)+2.2f){localReplayCue=0;StopStatic();}}
             var yaw=Quaternion.Euler(0,head.eulerAngles.y,0);belt.transform.parent.SetPositionAndRotation(head.position+Vector3.down*.75f+yaw*new Vector3(.18f,0,.02f),yaw);
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
@@ -227,7 +228,7 @@ namespace LighthouseKeepers.WatchDemo
             if(s.CompletedTasks>priorTasks&&!(s.Master&&s.Master.onboarding)&&!(s.Radio.Completed&&lastJob==11)){Enqueue(s.Power==PowerState.On&&lastJob==8?21:lastJob==10?22:20);}priorTasks=s.CompletedTasks;
         }
         void Enqueue(int id){if(id>=76){QueueSituational(id);return;}if(id!=6&&!spoken.Contains(id)&&pending.Count<16&&!pending.Contains(id))AddPending(id);}
-        void AddPending(int id){if(!HarborEditorialPolicy.Allows(id))return;pending.Add(id);queuedAt[id]=Time.time;}
+        void AddPending(int id){if(watch.State.Survival||!HarborEditorialPolicy.Allows(id))return;pending.Add(id);queuedAt[id]=Time.time;}
         void PruneInstructions(){float lifetime=watch.State.Master?watch.State.Master.instructionLifetimeSeconds:20;for(int i=pending.Count-1;i>=0;i--){int id=pending[i];if(!Relevant(id)||(HarborCueRules.InstructionExpires(id)&&!(id==4&&FuelExplanationPending)&&queuedAt.TryGetValue(id,out float at)&&Time.time-at>lifetime)){pending.RemoveAt(i);queuedAt.Remove(id);}}}
         bool CanPlayQueued(int id)
         {
@@ -253,7 +254,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Play(int id,int serial,float age)
         {
-            if(!HarborEditorialPolicy.Allows(id))return;
+            if(watch.State.Survival||!HarborEditorialPolicy.Allows(id))return;
             sceneCaption=sceneSpeaker=null;
             int requested=id;
             if(!watch.State.RemoteReplica)id=StoryVoiceBridge.Resolve(id,watch.State,catalog);

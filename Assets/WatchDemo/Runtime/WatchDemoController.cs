@@ -73,7 +73,7 @@ namespace LighthouseKeepers.WatchDemo
             var powerTuning=S4M2Tuning.Current;
             var campaign=Resources.Load<FiveNightCatalog>("M3Campaign");
             var definitions=campaign&&campaign.enabled?campaign.nights:Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days;
-            state = new WatchState(definitions, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current);
+            state = new WatchState(definitions, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current,WatchModeSelection.Selected);
             if(state.Tuning&&state.Tuning.difficulty)
             {poweredLeakRiseMPerSecond=state.Tuning.poweredRiseMPerSecond;unpoweredLeakRiseMPerSecond=state.Tuning.unpoweredRiseMPerSecond;repairedDrainMPerSecond=state.Tuning.drainMPerSecond;}
             coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);state.Coop=coop;
@@ -123,14 +123,13 @@ namespace LighthouseKeepers.WatchDemo
             HeavyStormRain.Create(this);
             // Exterior sea/coast comes from Eli's StormSeascape; no second coastline.
             StoryDressing.Create(this);
-            KettleStoryPapers.Create(this);
+            if(!state.Survival)KettleStoryPapers.Create(this);
             WorldAudioGaps.Create(this);
             IslandSafety.Create(this);
             GeneratorIdentity.Create();
-            SabotagePresentation.Create(this);
-            DrownedAppearance.Create(this);
+            if(!state.Survival){SabotagePresentation.Create(this);DrownedAppearance.Create(this);}
             ConnectedMachinePresentation.Create(this);
-            CrewCompanion.Create(this,head);CrewRecovery.Create(this);PossessionLesson.Create(this);RadioAuthentication.Create(this);recoveryView=GetComponent<CrewRecovery>();
+            CrewCompanion.Create(this,head);CrewRecovery.Create(this);if(!state.Survival){PossessionLesson.Create(this);RadioAuthentication.Create(this);}recoveryView=GetComponent<CrewRecovery>();
             arrivalBriefing=InWorldBriefing.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
@@ -192,8 +191,8 @@ namespace LighthouseKeepers.WatchDemo
             // Original Day 1 net rise/drain remains unchanged. Outage disables pumping.
             if(!state.Failed)
             {
-                flood.Paused=state.Recovery.LessonActive||state.Repaired||!watchRunning;
-                flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.LeakStrength*state.FloodRiseMultiplier;
+                flood.Paused=state.Recovery.LessonActive||state.Repaired&&(!state.Survival||state.HasPower(PowerCircuit.Pump))||!watchRunning;
+                flood.RiseSpeed=(state.Survival&&state.Repaired?SurvivalTuning.Current.repairedSeepPerSecond:(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.LeakStrength)*state.FloodRiseMultiplier;
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
@@ -303,6 +302,6 @@ namespace LighthouseKeepers.WatchDemo
                 return LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.33");
             }
         }
-        void OnDestroy(){if(state!=null)state.Changed-=StateChanged;if(fadeMaterial)Destroy(fadeMaterial);}
+        void OnDestroy(){if(state!=null){state.Changed-=StateChanged;state.DisposeSurvival();}if(fadeMaterial)Destroy(fadeMaterial);}
     }
 }

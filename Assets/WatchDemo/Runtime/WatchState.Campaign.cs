@@ -6,7 +6,7 @@ namespace LighthouseKeepers.WatchDemo
  {
   NightSchedule schedule;
   public SabotageState Sabotage{get;private set;}
-  SabotageState NewSabotage(DayDefinition day)=>Master&&Sprint5&&Sprint5.sabotageTraces&&day.scenario?.configured==true?new SabotageState(day.scenario,Sprint5.sabotageWarningSeconds,Sprint5.sabotageEvidenceSeconds){ReadOnly=ReadOnly}:null;
+  SabotageState NewSabotage(DayDefinition day)=>!Survival&&Master&&Sprint5&&Sprint5.sabotageTraces&&day.scenario?.configured==true?new SabotageState(day.scenario,Sprint5.sabotageWarningSeconds,Sprint5.sabotageEvidenceSeconds){ReadOnly=ReadOnly}:null;
   void WarnFuelSabotage(){if(Sabotage==null||ReadOnly||Engine==null||!Engine.Running||!NightTwoFuelFailure||NightTwoOutage||FuelRunoutRemaining>Sprint5.sabotageWarningSeconds)return;for(int i=0;i<Scenario.faults.Length;i++)if(Scenario.faults[i].kind==NightFaultKind.FuelExhaustion&&!schedule.Fired(i))Sabotage.Warn(i,Elapsed);}
   bool ValidSabotage(DayDefinition day,WatchSnapshot snapshot){var model=NewSabotage(day);return model==null?!snapshot.sabotage.enabled:model.ValidReplica(snapshot.sabotage,snapshot.nightFaultMask,snapshot.elapsed);}
   bool advancingSchedule;

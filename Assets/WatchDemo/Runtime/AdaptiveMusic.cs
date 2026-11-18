@@ -7,7 +7,7 @@ namespace LighthouseKeepers.WatchDemo
  public sealed class AdaptiveMusic:MonoBehaviour
  {
   WatchDemoController watch;AudioPassSettings settings;AudioSource[] deck;AudioSource stings;
-  bool continuous,accentObserved;int previousLesson;
+  bool continuous,accentObserved,survivalScore;int previousLesson;
   AudioClip mainLoop,intenseHit;readonly MusicAccentGate accentGate=new();
   public bool ContinuousScore=>continuous;public int OverlayCount {get;private set;}
   public bool OverlayPlaying=>continuous&&deck[1].isPlaying;public float MainTime=>continuous?deck[0].time:0;
@@ -26,10 +26,11 @@ namespace LighthouseKeepers.WatchDemo
   void Setup(AudioPassSettings s)
   {
    settings=s;clips=new[]{Resources.Load<AudioClip>("AudioPass/calm"),Resources.Load<AudioClip>("AudioPass/tension"),Resources.Load<AudioClip>("AudioPass/crisis")};
-   if(s.demoSoundtrack)for(int i=0;i<3;i++)clips[i]=Resources.Load<AudioClip>("DemoHorror/"+new[]{"calm","tension","crisis"}[i])??clips[i];
+   bool survival=lobby||watch&&watch.State.Survival;survivalScore=survival;
+   if(s.demoSoundtrack&&!survival)for(int i=0;i<3;i++)clips[i]=Resources.Load<AudioClip>("DemoHorror/"+new[]{"calm","tension","crisis"}[i])??clips[i];
    drownedScore=s.demoSoundtrack?clips[2]:Resources.Load<AudioClip>("S5Audio/DrownedHorror/score");
    deck=new[]{Source("Adaptive music A"),Source("Adaptive music B")};foreach(var d in deck){d.loop=true;d.priority=180;KeeperAudioMix.Route(d,"Music");}
-   mainLoop=s.providedSoundtrack?Resources.Load<AudioClip>("PlayerScore/main-loop"):null;intenseHit=s.providedSoundtrack?Resources.Load<AudioClip>("PlayerScore/intense-hit"):null;
+   mainLoop=s.providedSoundtrack&&!survival?Resources.Load<AudioClip>("PlayerScore/main-loop"):null;intenseHit=s.providedSoundtrack&&!survival?Resources.Load<AudioClip>("PlayerScore/intense-hit"):null;
    continuous=mainLoop&&intenseHit;
    if(continuous){deck[0].clip=mainLoop;deck[1].clip=intenseHit;deck[1].loop=false;}
    stings=Source("Short watch stings");stings.priority=50;
@@ -51,7 +52,7 @@ namespace LighthouseKeepers.WatchDemo
     if(mode<0)Transition(wanted,s.Elapsed,0);
     if(wanted!=mode&&wanted!=pending)
     {
-     pending=wanted;float bar=settings.demoSoundtrack?2:settings.barSeconds[Mathf.Clamp(mode,0,2)];
+     pending=wanted;float bar=settings.demoSoundtrack&&!survivalScore?2:settings.barSeconds[Mathf.Clamp(mode,0,2)];
      nextChange=since+(System.Math.Floor((s.Elapsed-since)/bar)+1)*bar;
     }
     if(wanted==mode)pending=-1;
@@ -62,7 +63,7 @@ namespace LighthouseKeepers.WatchDemo
    if(continuous){PollIntenseBeats();bedOverlayGain=Mathf.MoveTowards(bedOverlayGain,OverlayPlaying?.85f:1,Time.unscaledDeltaTime*(OverlayPlaying?2:.25f));deck[0].volume=settings.providedMusicVolume*bedOverlayGain;deck[1].volume=settings.intenseOverlayVolume;}
    else {
    fadeAge+=Time.unscaledDeltaTime;float t=Mathf.Clamp01(fadeAge/settings.crossfadeSeconds);
-   float restTarget=!horrorDeck&&StormRest(s.Day,s.Elapsed,mode)?(settings.demoSoundtrack?.3f:0):1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
+   float restTarget=!horrorDeck&&StormRest(s.Day,s.Elapsed,mode)?(settings.demoSoundtrack&&!survivalScore?.3f:0):1;restGain=Mathf.MoveTowards(restGain,restTarget,Time.unscaledDeltaTime/(mode==2?.5f:2));float rest=restGain;
    deck[active].volume=rest*settings.musicVolume*Mathf.Sin(t*Mathf.PI*.5f);deck[1-active].volume=rest*settings.musicVolume*Mathf.Cos(t*Mathf.PI*.5f);
    if(t>=1)deck[1-active].Stop();
    }

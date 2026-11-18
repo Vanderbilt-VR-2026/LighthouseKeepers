@@ -65,6 +65,7 @@ namespace LighthouseKeepers.Networking
         }
         void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            ReadSessionMode();
             if (!online || scene.name != ShipWorld.GameplaySceneName) return;
             // Scene arrival is authoritative even if the separate reliable lobby
             // snapshot has not arrived yet. Bind gameplay before its Start runs.
@@ -122,6 +123,7 @@ namespace LighthouseKeepers.Networking
                     CustomPhotonAppSettings=photonSettings,
                     GameMode = mode, SessionName = sessionName, PlayerCount = state.Capacity,
                     Scene = scenes, SceneManager = sceneManager, IsVisible = false,
+                    SessionProperties=mode==GameMode.Host?new Dictionary<string,SessionProperty>{{LighthouseKeepers.Core.WatchModeSelection.SessionKey,(int)LighthouseKeepers.Core.WatchModeSelection.Selected}}:null,
                     EnableClientSessionCreation = false, StartGameCancellationToken = cancellation
                 });
                 if (cancellation.IsCancellationRequested || !this) return;
@@ -131,6 +133,7 @@ namespace LighthouseKeepers.Networking
                 {
                     foreach (var player in current.ActivePlayers) state.Add(Id(player), player == current.LocalPlayer);
                 }
+                ReadSessionMode();
                 SendLocalState(current.IsServer?CrewDuties.Preference:CrewDuty.None);
                 ConnectionChanged?.Invoke(true);
             }
@@ -363,8 +366,14 @@ namespace LighthouseKeepers.Networking
         {
             if ((state.Starting && !AcceptWatchJoin) || state.Players.Count >= state.Capacity) request.Refuse(); else request.Accept();
         }
+        void ReadSessionMode()
+        {
+            if(runner && runner.SessionInfo?.Properties!=null && runner.SessionInfo.Properties.TryGetValue(LighthouseKeepers.Core.WatchModeSelection.SessionKey,out var property))
+                LighthouseKeepers.Core.WatchModeSelection.Selected=(int)property==1?LighthouseKeepers.Core.KeeperGameMode.Survival:LighthouseKeepers.Core.KeeperGameMode.Campaign;
+        }
         public void OnSceneLoadStart(NetworkRunner source)
         {
+            ReadSessionMode();
             // StartGame can complete before the initial lobby finishes loading.
             // Only a host-approved launch is a gameplay transition.
             if (source == runner && state.Starting) { enteredGame = true; GameStarting?.Invoke(); }
@@ -379,6 +388,7 @@ namespace LighthouseKeepers.Networking
         }
         public void OnConnectedToServer(NetworkRunner source)
         {
+            ReadSessionMode();
             // A rejoining client loads the host's current scene inside StartGame.
             // Mark the established connection before that scene's Start methods bind
             // the read-only guest watch; otherwise it would briefly start a solo day.

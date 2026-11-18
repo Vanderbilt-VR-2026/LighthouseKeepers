@@ -12,7 +12,7 @@ namespace LighthouseKeepers.Core.Progression
         public ShipFrame Copy() { var result = (ShipFrame)MemberwiseClone(); result.hold=(float[])hold.Clone(); result.dark = (float[])dark.Clone(); result.delay=(float[])delay.Clone(); result.steady=(float[])steady.Clone(); return result; }
         public bool Valid()
         {
-            if (!double.IsFinite(departureWait)||departureWait<0||departureWait>3600) return false;
+            if (!double.IsFinite(departureWait)||departureWait<0) return false;
             if (hold==null || hold.Length!=dark?.Length || dark == null || delay==null || steady==null || delay.Length!=dark.Length || steady.Length!=dark.Length || dark.Length > 4 || !double.IsFinite(wreckAt) || wreckAt < 0) return false;
             int mask = (1 << dark.Length) - 1;
             if (seen < 0 || entered < 0 || passed < 0 || extended < 0 || closeWarned < 0 ||
@@ -23,7 +23,7 @@ namespace LighthouseKeepers.Core.Progression
             if (wreck < 0 && wreckAt != 0) return false;
             foreach (float value in dark) if (!float.IsFinite(value) || value < 0 || value > 300) return false;
             foreach(float value in hold) if(!float.IsFinite(value)||value<0||value>180) return false;
-            foreach (float value in delay) if (!float.IsFinite(value) || value<0 || value>3600) return false;
+            foreach (float value in delay) if (!float.IsFinite(value) || value<0) return false;
             foreach (float value in steady) if (!float.IsFinite(value) || value<0 || value>2) return false;
             return enabled || departureWait==0&&!cleared&&dark.Length == 0 && seen == 0 && entered == 0 && passed == 0 && extended == 0 && closeWarned == 0 && wreck == -1;
         }
@@ -104,7 +104,7 @@ namespace LighthouseKeepers.Core.Progression
             if(clearanceRequired&&!frame.cleared){
                 if(broadcast){frame.cleared=true;changed=true;}
                 else {
-                    frame.departureWait=Math.Min(Math.Min(3600,to),frame.departureWait+(to-from));
+                    frame.departureWait=Math.Min(to,frame.departureWait+(to-from));
                     // Waiting offshore is visible, but never starts a danger window or dark countdown.
                     for(int i=0;i<Count;i++)if(to-frame.departureWait>=events[i].sightedAtSeconds&&(frame.seen&(1<<i))==0){frame.seen|=1<<i;changed=true;}
                     return changed;

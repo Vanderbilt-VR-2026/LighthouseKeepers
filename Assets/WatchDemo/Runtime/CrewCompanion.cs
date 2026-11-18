@@ -95,7 +95,7 @@ namespace LighthouseKeepers.WatchDemo {
     CheckRoute();return;
    }
    if(command==CompanionCommand.Wait){Release();if(statusKey!="companion.blocked")statusKey="companion.wait";return;}
-   if(s.Day>1&&!dutyExplained&&!s.Recovery.LessonActive&&!s.Recovery.AnyDown){dutyExplained=true;Report(KeeperStrings.Get(Duty==CrewDuty.Machinist?"companion.dutyMachinist":"companion.dutyLightkeeper"));}
+   if((s.Day>1||s.Survival)&&!dutyExplained&&!s.Recovery.LessonActive&&!s.Recovery.AnyDown){dutyExplained=true;Report(KeeperStrings.Get(Duty==CrewDuty.Machinist?"companion.dutyMachinist":"companion.dutyLightkeeper"));}
    bool support=command==CompanionCommand.Work||command==CompanionCommand.Help;
    if(support&&WorkStation()){CheckRoute();return;}
    if(support&&s.Pressure?.CrewRequired==true&&!s.Repaired&&valve&&(watch.CurrentInstruction==KeeperStep.TightenBolt||Vector3.Distance(head.position,valve.transform.position)<3)){

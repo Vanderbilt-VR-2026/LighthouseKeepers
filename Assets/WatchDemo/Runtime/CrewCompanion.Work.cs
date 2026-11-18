@@ -50,7 +50,7 @@ namespace LighthouseKeepers.WatchDemo {
   bool WorkStation(){
    var s=watch.State;working=workingPipe=false;
    // Night 1 is the player's hands-on rehearsal; the helper supports rather than skipping it.
-   if(s.Day==1||!s.Campaign||s.Recovery.AnyDown){StopStationWork();return false;}
+   if(s.Day==1&&!s.Survival||!s.Campaign||s.Recovery.AnyDown){StopStationWork();return false;}
    if(Duty==CrewDuty.Machinist){
     if(!s.Engine.Settled||s.FuelJobPending){
      if(workEngine.FuelCan.Grab.isSelected||workEngine.GetComponentInParent<WatchGenerator>().Starter.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>().isSelected){StopStationWork();return false;}

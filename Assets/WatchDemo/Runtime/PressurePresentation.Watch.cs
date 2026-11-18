@@ -36,7 +36,7 @@ namespace LighthouseKeepers.WatchDemo {
    if(!watchMount)return;
    int lamp=watch.HeldLantern;oilBar.gameObject.SetActive(lamp>=0&&s.Lanterns!=null);if(lamp>=0&&s.Lanterns!=null){float level=s.Lanterns.Oil(lamp);oilBar.localScale=new Vector3(.032f*level,.0013f,.001f);oilBar.localPosition=new Vector3(-.016f+.016f*level,-.019f,.009f);}
    var instruction=KeeperStrings.Get("step."+watch.CurrentInstruction);if(objective.text!=instruction)objective.text=instruction;
-   int left=Mathf.Max(0,(int)(s.Duration-s.Elapsed));if(left!=shownSecond||s.Day!=shownNight){shownSecond=left;shownNight=s.Day;clock.text=$"{left/60:00}:{left%60:00}";nightLabel.text=$"N{s.Day}";}
+   int left=Mathf.Max(0,(int)(s.Survival?s.Elapsed:s.Duration-s.Elapsed));if(left!=shownSecond||s.Day!=shownNight){shownSecond=left;shownNight=s.Day;clock.text=$"{left/60:00}:{left%60:00}";nightLabel.text=$"{(s.Survival?"D":"N")}{s.Day}";}
    var toEyes=head.position-watchMount.position;WatchBacklight=toEyes.sqrMagnitude<.8f*.8f&&Vector3.Dot(watchMount.forward,toEyes.normalized)>.65f;
    lcd.SetColor("_BaseColor",WatchBacklight?new Color(.67f,.76f,.51f):new Color(.55f,.62f,.48f));
   }

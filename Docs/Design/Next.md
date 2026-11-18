@@ -1,3 +1,18 @@
+# Current checkpoint — Campaign / Survival modes (#141)
+
+Branch **sprint-5 / PR #89**. Two-mode implementation complete; focused rules tests 55/55 and rendered lobby tests 3/3 pass. Network **LK-S5-MODES1 / LK-Lab-Coop-v49**, both players must update. See `Docs/Design/GameModes.md`.
+
+Next: muted live solo / two-Editor Survival join, code, ship, shared sleep and rejoin; inspect screenshots; build current source and install if Quest is connected, **do not launch**. Then update #141 and PR #89. No voice recordings yet. The previous APK is still installed until this delivery finishes.
+
+## DEVICE CHECKS PENDING
+
+PLAY → Campaign / Survival → host or join; both peers show host mode; offline Survival with Owen and complementary duties; all four tasks Day 1; House code relay, mic trigger and outside-F4 wheel; shared sleep into progressively harder days; flood-only loss/retry; original soundtrack with no horror in Survival; Campaign horror unchanged; B recall, wristwatch elapsed time, lantern readability, worn comfort and sustained CPU/GPU/audio checks.
+
+Exact commands: `cd /Users/aneeshvasamreddy/LighthouseKeepers-M3`; `python3 artifacts/s5/modes/check.py SurvivalModeTests CampaignOrderTests RadioRelayTests ShipAimingTests CrewCompanionTests VoicePassTests`. Lobby tests use Pipeline `run_tests` mode `playmode`, filter `CrewLobbyBoardTests`, `async_tests: true`, then inspect `Temp/pipeline_test_status.json`. Never edit Assets during Play Mode/tests. Build/install scripts will live in `artifacts/s5/modes/` with a clean source tip and fresh backups.
+
+---
+Previous checkpoint / deferred Campaign work follows. Do not treat its APK as this mode build.
+
 # Current checkpoint — Andrew / Aneesh playtest corrections
 
 Branch **sprint-5 / PR #89**. Installed APK: **6f05ad39**, `Builds/LighthouseKeepers-Sprint5-AndrewFixes-6f05ad39.apk`. Quest package/hash verified; **not launched**. Editor muted; no AI voice; install without launch. Do not modify the Desktop checkout.

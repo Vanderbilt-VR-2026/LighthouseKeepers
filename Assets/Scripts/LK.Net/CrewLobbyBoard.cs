@@ -11,9 +11,9 @@ namespace LighthouseKeepers.Net
     {
         [SerializeField] CrewLobbyTransport transport;
         LobbyScreen screen;LobbyManager manager;
-        enum Page {Main,Choice,Host,Join,Settings}
-        Page page;GameObject[] pages=new GameObject[5];GameObject keypad;TMP_InputField codeInput;
-        TMP_Text codeLabel,roster,joinStatus,hostStatus;Button start,join;float nextRefresh;
+        enum Page {Main,Choice,Host,Join,Settings,Modes}
+        Page page;GameObject[] pages=new GameObject[6];GameObject keypad;TMP_InputField codeInput;
+        TMP_Text codeLabel,roster,joinStatus,hostStatus,modeLabel;Button start,join;float nextRefresh;
         GameObject joinDuties; readonly System.Collections.Generic.List<(Button button,CrewDuty duty)> dutyButtons=new();
         static string S(string key)=>PlayerStrings.Get("lobby."+key);
         void Start()
@@ -25,9 +25,13 @@ namespace LighthouseKeepers.Net
             Label(root,"CrewFlowTitle",new Vector2(0,335),new Vector2(1150,85),48).text="LIGHTHOUSE KEEPERS";
             Label(root,"NetworkVersion",new Vector2(0,-443),new Vector2(1150,35),17).text="NETWORK VERSION: "+CrewNetworkVersion.Matchmaking;
             for(int i=0;i<pages.Length;i++)pages[i]=Rect("Flow"+(Page)i,root,Vector2.zero,new Vector2(1160,650)).gameObject;
-            Key(pages[0].transform,"Play",new Vector2(0,40),new Vector2(600,110),()=>Show(Page.Choice));Text("Play",S("play"));
+            Key(pages[0].transform,"Play",new Vector2(0,40),new Vector2(600,110),()=>Show(Page.Modes));Text("Play",S("play"));
             Key(pages[0].transform,"Settings",new Vector2(-165,-130),new Vector2(300,65),()=>Show(Page.Settings));Text("Settings",S("settings"));
             Key(pages[0].transform,"Quit",new Vector2(165,-130),new Vector2(300,65),Application.Quit);Text("Quit",S("quit"));
+            foreach(var mode in new[]{KeeperGameMode.Campaign,KeeperGameMode.Survival}){var choice=mode;float y=mode==KeeperGameMode.Campaign?115:-80;
+                Key(pages[5].transform,mode.ToString(),new Vector2(0,y),new Vector2(760,80),()=>{WatchModeSelection.Selected=choice;Show(Page.Choice);});Text(mode.ToString(),S(mode.ToString()));
+                var desc=Label(pages[5].transform,mode+" description",new Vector2(0,y-70),new Vector2(950,60),22);desc.textWrappingMode=TextWrappingModes.Normal;desc.text=S(mode+"Hint");}
+            modeLabel=Label(pages[1].transform,"Selected mode",new Vector2(0,230),new Vector2(900,70),28);
             Key(pages[1].transform,"HostPlay",new Vector2(0,90),new Vector2(650,100),()=>{Show(Page.Host);manager.Host();Refresh();});Text("HostPlay",S("host"));
             Key(pages[1].transform,"JoinChoice",new Vector2(0,-65),new Vector2(650,100),()=>Show(Page.Join));Text("JoinChoice",S("join"));
             codeLabel=Label(pages[2].transform,"CrewCode",new Vector2(0,225),new Vector2(1100,80),48);
@@ -41,7 +45,7 @@ namespace LighthouseKeepers.Net
             joinDuties=BuildDuties(pages[3].transform,"GuestDuty");
             Key(pages[3].transform,"JoinCrewCode",new Vector2(0,-245),new Vector2(580,75),()=>{manager.Join(codeInput.text);Refresh();});join=Find("JoinCrewCode");Text("JoinCrewCode",S("join"));
             Key(pages[4].transform,"LowerBoard",new Vector2(0,20),new Vector2(650,85),()=>screen.SetLowered(!screen.IsLowered));Text("LowerBoard",S("height"));
-            Key(root,"FlowBack",new Vector2(0,-355),new Vector2(300,55),()=>{if(page==Page.Host||page==Page.Join)transport.LeaveGame();Show(page==Page.Main||page==Page.Choice||page==Page.Settings?Page.Main:Page.Choice);});Text("FlowBack",S("back"));
+            Key(root,"FlowBack",new Vector2(0,-355),new Vector2(300,55),()=>{if(page==Page.Host||page==Page.Join)transport.LeaveGame();Show(page==Page.Choice?Page.Modes:page==Page.Main||page==Page.Modes||page==Page.Settings?Page.Main:Page.Choice);});Text("FlowBack",S("back"));
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             for(int day=2;day<=3;day++){int selected=day;Key(pages[2].transform,"DevStartDay"+day,new Vector2(day==2?-200:200,-295),new Vector2(375,45),()=>{LighthouseKeepers.StormWatch.WatchDayLaunch.RequestedDay=selected;});Text("DevStartDay"+day,"DEV: SELECT NIGHT "+day);}
 #endif
@@ -60,10 +64,10 @@ namespace LighthouseKeepers.Net
         void Update(){if(transport.IsOnline&&(page==Page.Main||page==Page.Choice))Show(transport.IsHost?Page.Host:Page.Join);if(Time.unscaledTime>=nextRefresh){nextRefresh=Time.unscaledTime+.15f;Refresh();}}
         void Refresh()
         {
-            if(!codeLabel)return;
+            if(!codeLabel)return;modeLabel.text=S(WatchModeSelection.Selected.ToString());
             string names=string.Join("\n",transport.Players.Select(p=>p.DisplayName+" · "+S(p.Duty.ToString())));
             codeLabel.text=transport.IsOnline?S("code")+"  "+transport.SessionName:transport.IsBusy?S("connecting"):S("offline");
-            roster.text=names;hostStatus.text=transport.IsOnline?S("startHint"):transport.IsBusy?S("cancelHint"):S("offline");
+            roster.text=S(WatchModeSelection.Selected.ToString())+" · "+names;hostStatus.text=transport.IsOnline?S("startHint"):transport.IsBusy?S("cancelHint"):S("offline");
             var local=transport.Players.FirstOrDefault(p=>p.Id==transport.LocalPlayerId);
             if(transport.IsOnline)hostStatus.text=local!=null&&local.RequestedDuty!=CrewDuty.None?S("dutyPending"):S("dutyHint");
             foreach(var card in dutyButtons){
@@ -77,7 +81,7 @@ namespace LighthouseKeepers.Net
             start.interactable=!transport.IsStarting;start.GetComponentInChildren<TMP_Text>().text=transport.IsStarting?S("entering"):transport.IsBusy?S("startOffline"):S("start");
             bool connected=transport.IsOnline;if(joinDuties)joinDuties.SetActive(connected);codeInput.gameObject.SetActive(!connected);if(keypad&&(connected||transport.IsBusy))keypad.SetActive(false);
             join.gameObject.SetActive(!connected);join.interactable=!transport.IsBusy&&CrewConnectionPolicy.TryCode(codeInput.text,out _);
-            joinStatus.text=connected?names+"\n"+S("waitHost"):transport.IsBusy?S("connecting"):string.IsNullOrEmpty(transport.LastError)?S("enterCode"):transport.LastError;
+            joinStatus.text=connected?S(WatchModeSelection.Selected.ToString())+" · "+names+"\n"+S("waitHost"):transport.IsBusy?S("connecting"):string.IsNullOrEmpty(transport.LastError)?S("enterCode"):transport.LastError;
         }
         GameObject BuildDuties(Transform parent,string prefix)
         {

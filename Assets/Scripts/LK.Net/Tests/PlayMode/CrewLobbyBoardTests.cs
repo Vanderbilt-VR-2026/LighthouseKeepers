@@ -47,7 +47,7 @@ namespace LighthouseKeepers.Net.Tests
         }
         void OpenPad()
         {
-            Click(Button("Play"));Click(Button("JoinChoice")); Code.text = "";
+            Click(Button("Play"));Click(Button("Campaign"));Click(Button("JoinChoice")); Code.text = "";
             ExecuteEvents.Execute(Code.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.selectHandler);
         }
         TrackedDeviceEventData TrackedPointer(Camera camera, Button button)
@@ -66,6 +66,12 @@ namespace LighthouseKeepers.Net.Tests
             Canvas.ForceUpdateCanvases();
             foreach (var text in root.GetComponentsInChildren<TMP_Text>())
             { text.ForceMeshUpdate(); Assert.IsFalse(text.isTextOverflowing, text.name + ": " + text.text); }
+        }
+        [UnityTest] public IEnumerator PlayOffersTwoModesBeforeSessionChoices()
+        {
+            Click(Button("Play"));Assert.IsFalse(Button("HostPlay").IsActive());Assert.IsTrue(Button("Campaign").IsActive());Assert.IsTrue(Button("Survival").IsActive());AssertTextFits();
+            Click(Button("Survival"));Assert.AreEqual(LighthouseKeepers.Core.KeeperGameMode.Survival,LighthouseKeepers.Core.WatchModeSelection.Selected);Assert.IsTrue(Button("HostPlay").IsActive());
+            Click(Button("FlowBack"));Click(Button("Campaign"));Assert.AreEqual(LighthouseKeepers.Core.KeeperGameMode.Campaign,LighthouseKeepers.Core.WatchModeSelection.Selected);yield return null;
         }
         [UnityTest] public IEnumerator ExistingAlphanumericPadSupportsSixCharactersAndBackspaceWithoutKeyboard()
         {

@@ -14,7 +14,7 @@ namespace LighthouseKeepers.WatchDemo
         public UnityEngine.Vector3 ShipPoint(int i,double now) => ShipNavigation.Route((float)Ships.VisualAge(i,now),(float)Ships.Approach(i),Scenario.ships[i].windowSeconds,ShipNavigation.DepartSeconds).position+UnityEngine.Vector3.up*4;
         public float ShipWheelTarget => AimingShip<0?Beacon.Target:ShipNavigation.WheelFor(ShipPoint(AimingShip,Elapsed));
         public bool ShipOnBeam => AimingShip>=0&&IlluminatesShip(AimingShip,Elapsed);
-        bool IlluminatesShip(int i,double now) => BeamEnergized&&ShipNavigation.Aimed(Beacon.Alignment,ShipPoint(i,now),Sprint5.BeamTolerance(Day));
+        bool IlluminatesShip(int i,double now) => BeamEnergized&&ShipNavigation.Aimed(Beacon.Alignment,ShipPoint(i,now),BeamTolerance);
         bool ValidShipSnapshot(DayDefinition day, WatchSnapshot snapshot)
         {
             var model = NewShips(day);
