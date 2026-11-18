@@ -1,3 +1,22 @@
+# Current checkpoint — House briefing complete; new music requested
+
+**sprint-5 / draft PR #89**. Quest connected. Install the next verified APK without launching it. Keep Editors muted; force asset refresh + finish compilation BEFORE Play to avoid the Fusion Editor recompile-hook crash.
+
+## Done
+
+House arrival replaces lobby briefing. Three pages (WWII context, duties, controls), generated Arrival/Duties artwork, Skip/Finish memory, Watch Menu reread. Host pauses initial clock/flood/start grace until both readers finish; rejoin never re-pauses. **LK-S5-ARRIVAL1 / LK-Lab-Coop-v42**. 62 focused tests; offline arrival and real two-Editor arrival/authentication/rejoin fixtures pass. Inspected all screenshots: `Docs/Verification/S5/Arrival/`. Day 3 auth is already in source; no change to avatar/camera.
+
+## Next, in order
+
+1. Latest user request: `/Users/aneeshvasamreddy/Downloads/Lighthouse keepers soundtrack.mp3` becomes the near-continuous loop. Overlay the previous provided `IT Trailer Music Version.mp3` segment **01:11–01:16** for intense beats, without stopping the new bed; avoid stacking, preserve speech ducking. Work on copies. Then source build/install, comprehensive three-night checklist for Wispr Flow feedback. No auto-launch.
+2. Shared scare kit and Night 3 bunk → warned hunter → hiding/hold breath → final ship remain unfinished (see prior checkpoint). Night 1 remains pipe/preview/sleep, not the requested full-station rehearsal. Do not claim those are in the APK.
+
+## DEVICE CHECKS PENDING
+
+Worn folder size/buttons/art, B recall near walls, both-role Night 2 possession/revival, Day 3 radio challenge/replies, voice, music bed/stinger clarity, three-night uninterrupted run, sustained CPU/GPU. Both clients need the new protocol.
+
+---
+
 # Current checkpoint — Day 3 authentication slice
 
 **sprint-5 / draft PR #89**. Dialogue remains text-only. Editors muted. Quest authorized/connected as of November 17 evening; install verified next APK, **do not launch**.

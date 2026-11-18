@@ -133,7 +133,7 @@ namespace LighthouseKeepers.WatchDemo
    bool showVoice=!sceneLine&&!authLine&&radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
    bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
-   string display=sceneLine?lesson.Caption:authLine?auth.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
+   string display=s.BriefingHeld?KeeperStrings.Get("briefing.waiting"):sceneLine?lesson.Caption:authLine?auth.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
    ConfigureSubtitle(remembered);
    if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.6f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}

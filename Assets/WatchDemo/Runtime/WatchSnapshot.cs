@@ -15,6 +15,7 @@ namespace LighthouseKeepers.WatchDemo
         public LighthouseKeepers.Core.Progression.ShipFrame ships=new();
         public LighthouseKeepers.Core.Progression.SabotageFrame sabotage=new();
         public LighthouseKeepers.Core.Progression.DrownedFrame drowned=new();
+        public bool briefingHeld;
         public bool campaignEnabled,nightSawPowerOff;public int nightFaultMask;public double nightReliefUntil,nightNextFaultAt,nightGraceUntil;
         public bool watchEngaged;public double watchGateElapsed,stationGraceUntil;public int seenStationMask,nightStartSeenMask;
         public bool handheldEnabled;public int radioActor0,radioActor1;

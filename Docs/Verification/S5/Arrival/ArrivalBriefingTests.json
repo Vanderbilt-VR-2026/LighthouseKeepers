@@ -1,0 +1,73 @@
+{
+  "Summary": {
+    "Total": 8,
+    "Passed": 8,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.ArtExistsAndControlsKeepTheExactNativeDiagram",
+      "Status": "Passed",
+      "Duration": 0.0925506,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.AuthenticatedCommandWindowAcceptsArrivalCompletion",
+      "Status": "Passed",
+      "Duration": 0.0002131,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.BothHumansMustFinishButNeedNotReadTogether",
+      "Status": "Passed",
+      "Duration": 0.000254,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.DisconnectionCannotStrandTheRemainingKeeper",
+      "Status": "Passed",
+      "Duration": 6.77e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.HostClocksPauseAndReplicaCannotReleaseTheHold",
+      "Status": "Passed",
+      "Duration": 0.0223764,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.LateJoinCannotPauseAWatchThatAlreadyStarted",
+      "Status": "Passed",
+      "Duration": 0.0001177,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.SkipOrFinishDoesNotReleaseBeforeTransportIsReady",
+      "Status": "Passed",
+      "Duration": 7.04e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ArrivalBriefingTests.UnknownActorsAndEmptyRosterNeverReleaseTheGate",
+      "Status": "Passed",
+      "Duration": 7.49e-05,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 9.62,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ArrivalBriefingTests",
+  "success": true,
+  "result": null
+}

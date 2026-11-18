@@ -1,14 +1,14 @@
 using System;using TMPro;using UnityEngine;using UnityEngine.UI;using LighthouseKeepers.Core;
 namespace LighthouseKeepers.Net
 {
-    // Personal duty folder: no network fields, gameplay timers, audio or readiness requirement.
+    // Personal in-world duty folder. Arrival hold is owned by the watch, never by this UI.
     public sealed class CrewBriefing:MonoBehaviour
     {
-        public const string Preference="LK.Briefing.Wartime1942.v1";
+        public const string Preference="LK.Briefing.House1942.v2";
         public static bool Seen=>PlayerPrefs.GetInt(Preference,0)==1;
         public int Page {get;private set;}
         public event Action Closed;
-        TMP_Text title,body,footer,count;Button back,next;BriefingIllustration drawing;
+        TMP_Text title,body,footer,count;Button back,next;BriefingIllustration drawing;RawImage artwork;Texture2D arrival,duties;
         static string S(string key)=>PlayerStrings.Get("briefing."+key);
         public static CrewBriefing Create(Transform parent,Action closed)
         {var c=new GameObject("Harbor duty folder",typeof(RectTransform)).AddComponent<CrewBriefing>();c.transform.SetParent(parent,false);c.Closed+=closed;c.Build();return c;}
@@ -16,7 +16,7 @@ namespace LighthouseKeepers.Net
         public void Advance(){if(Page<2){Page++;Refresh();}else Finish();}
         public void Back(){if(Page>0){Page--;Refresh();}}
         public void Skip()=>Finish();
-        void Finish(){PlayerPrefs.SetInt(Preference,1);PlayerPrefs.Save();Closed?.Invoke();}
+        void Finish(){PlayerPrefs.SetInt(Preference,1);PlayerPrefs.Save();gameObject.SetActive(false);Closed?.Invoke();}
         RectTransform Rect(string name,Vector2 pos,Vector2 size)
         {var r=new GameObject(name,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(transform,false);r.anchorMin=r.anchorMax=new Vector2(.5f,.5f);r.anchoredPosition=pos;r.sizeDelta=size;return r;}
         TMP_Text Text(string name,Vector2 pos,Vector2 size,int fontSize)
@@ -30,6 +30,8 @@ namespace LighthouseKeepers.Net
             var spine=Rect("Cloth binding",new Vector2(-546,0),new Vector2(28,650));spine.gameObject.AddComponent<Image>().color=new Color(.12f,.21f,.22f);
             Text("Board stamp",new Vector2(0,280),new Vector2(1010,42),20).text=S("stamp");
             title=Text("Briefing title",new Vector2(0,222),new Vector2(1010,66),37);
+            artwork=Rect("Duty illustration",new Vector2(-368,-8),new Vector2(274,365)).gameObject.AddComponent<RawImage>();artwork.raycastTarget=false;
+            arrival=Resources.Load<Texture2D>("CrewBriefing/Arrival");duties=Resources.Load<Texture2D>("CrewBriefing/Duties");
             drawing=Rect("Ink illustration",new Vector2(-368,-8),new Vector2(236,330)).gameObject.AddComponent<BriefingIllustration>();drawing.color=new Color(.12f,.23f,.25f);drawing.raycastTarget=false;
             body=Text("Briefing instructions",new Vector2(128,-12),new Vector2(710,360),27);
             footer=Text("Briefing footer",new Vector2(0,-214),new Vector2(1010,50),21);footer.alignment=TextAlignmentOptions.Center;
@@ -43,9 +45,10 @@ namespace LighthouseKeepers.Net
         {
             if(!title)return;title.text=S("title."+Page);body.text=S("body."+Page);footer.text=S("footer."+Page);count.text=(Page+1)+" / 3";
             back.interactable=Page>0;transform.Find("BriefingNext label").GetComponent<TMP_Text>().text=S(Page==2?"finish":"next");drawing.Page=Page;drawing.SetAllDirty();
+            artwork.texture=Page==0?arrival:Page==1?duties:null;artwork.enabled=artwork.texture;drawing.enabled=!artwork.enabled;
         }
     }
-    // Original vector ink, kept in the UI batch. No imported textures, extra camera or realtime light.
+    // Exact controller diagram and missing-art fallback in the UI batch.
     [RequireComponent(typeof(CanvasRenderer))]
     public sealed class BriefingIllustration:Graphic
     {

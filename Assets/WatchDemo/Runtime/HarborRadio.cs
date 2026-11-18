@@ -96,7 +96,7 @@ namespace LighthouseKeepers.WatchDemo
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
             belt.volume=intercom?0:tuning.beltRadioVolume*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
             beltNoise.volume=.003f*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
-            if(s.Recovery.LessonActive||s.Authenticity.Visible){SilencePlayback();return;}
+            if(s.BriefingHeld||s.Recovery.LessonActive||s.Authenticity.Visible){SilencePlayback();return;}
             if(s.RemoteReplica)return;
             Age+=Time.deltaTime;
             if(day!=s.Day)

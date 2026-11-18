@@ -16,6 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         bool Engaged(bool accepted){if(accepted)EngageWatch();return accepted;}
         public bool AdvanceWatchGate(double seconds)
         {
+            if(BriefingHeld)return false;
             if(ReadOnly)return !WatchStartHeld;
             if(!WatchStartHeld)return true;
             if(double.IsFinite(seconds)&&seconds>0)watchGateElapsed=Math.Min(WatchStartGraceSeconds,watchGateElapsed+seconds);

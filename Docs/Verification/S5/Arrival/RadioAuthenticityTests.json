@@ -1,0 +1,80 @@
+{
+  "Summary": {
+    "Total": 9,
+    "Passed": 9,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.BusyCaptionDefersStartAndOtherNightsDisable",
+      "Status": "Passed",
+      "Duration": 0.0025238,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.CannotAcceptWithoutChallengeOrReplayResolvedChoice",
+      "Status": "Passed",
+      "Duration": 0.0002294,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.ExactlyOneFalseSymbolAndRejectCompletes",
+      "Status": "Passed",
+      "Duration": 0.0002215,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.ExpiredShipCancelsUnfinishedImpostor",
+      "Status": "Passed",
+      "Duration": 0.0001325,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.FalseCallWaitsForRealLessonAndApproach",
+      "Status": "Passed",
+      "Duration": 0.0001404,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.GuestCannotAuthorAndSnapshotCopies",
+      "Status": "Passed",
+      "Duration": 0.0001718,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.InvalidReplicaRejected",
+      "Status": "Passed",
+      "Duration": 0.0001284,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.LostPowerCancelsAndRequiresFreshChallenge",
+      "Status": "Passed",
+      "Duration": 0.0001218,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.RadioAuthenticityTests.WrongChoiceOffersRecoveryWithoutCompleting",
+      "Status": "Passed",
+      "Duration": 0.0001194,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.28,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: RadioAuthenticityTests",
+  "success": true,
+  "result": null
+}

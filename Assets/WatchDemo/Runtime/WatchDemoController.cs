@@ -37,11 +37,11 @@ namespace LighthouseKeepers.WatchDemo
         float repairProgress;
         int shownSecond=-1,shownChalkLetters=-1;
         bool sleeping,previousGrip,previousTrigger;
-        public bool ObjectivePresentationBlocked=>sleeping||(state!=null&&state.Failed)||(menu&&menu.IsOpen);
+        public bool ObjectivePresentationBlocked=>sleeping||(state!=null&&state.Failed)||(menu&&menu.IsOpen)||(arrivalBriefing&&arrivalBriefing.IsOpen);
         Quaternion originalWrenchRotation;
         Material fadeMaterial;
         WrenchHaptics wrenchHaptics;
-        WatchMenu menu;
+        WatchMenu menu;InWorldBriefing arrivalBriefing;
         S4WatchPresentation s4Presentation;
         WatchPowerPanel powerPanel;
         WatchEngineControls engineControls;
@@ -130,6 +130,7 @@ namespace LighthouseKeepers.WatchDemo
             DrownedAppearance.Create(this);
             ConnectedMachinePresentation.Create(this);
             CrewCompanion.Create(this,head);CrewRecovery.Create(this);PossessionLesson.Create(this);RadioAuthentication.Create(this);recoveryView=GetComponent<CrewRecovery>();
+            arrivalBriefing=InWorldBriefing.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
         }
@@ -162,6 +163,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(letters!=shownChalkLetters){shownChalkLetters=letters;RefreshBoard();}
             }
             if(state.RemoteReplica){UpdateReplicaInput();return;}
+            if(state.BriefingHeld){flood.Paused=true;return;}
             if(sleeping)return;
             if(state.NetworkRehearsal){flood.Paused=true;return;}
             if(coop!=null && !coop.Ready){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.3");return;}

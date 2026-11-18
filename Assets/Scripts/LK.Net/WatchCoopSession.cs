@@ -29,6 +29,8 @@ namespace LighthouseKeepers.Net
         readonly Dictionary<int,string> nonces=new();
         readonly HashSet<int> acknowledged=new();
         readonly CoopBedVotes beds=new();
+        readonly CrewArrivalGate arrival=new();
+        IEnumerable<int> ArrivalPlayers=>channel.Runner.ActivePlayers.Select(p=>p.RawEncoded);
         readonly CoopCommandWindow commands=new();
         readonly Dictionary<int,float> lastPull=new(),rateStart=new();
         readonly Dictionary<int,int> rateCount=new();
@@ -114,6 +116,7 @@ namespace LighthouseKeepers.Net
             world=crew.IsHost?Guid.NewGuid().ToString("N"):null;nonce=Guid.NewGuid().ToString("N");
             channel.Received+=Receive;channel.ActorLeft+=Left;channel.SessionChanged+=Connection;
             PlaceKeeper(crew.IsHost);
+            if(crew.IsHost&&watch is ICoopBriefingView briefing)briefing.HoldBriefing(true);
             Debug.Log($"COOP_ROLE {(crew.IsHost?"HOST":"GUEST")} world={world}");
         }
         void PlaceKeeper(bool host)
@@ -157,6 +160,7 @@ namespace LighthouseKeepers.Net
         void Update()
         {
             if(detached||!channel||!channel.Connected)return;
+            if(channel.IsHost&&watch is ICoopBriefingView briefing)briefing.HoldBriefing(arrival.Hold(ArrivalPlayers,Ready));
             if(channel.IsHost&&PressureView!=null){var tool=watch.Target(CoopAction.WrenchClutch,0);var lease=tool?tool.GetComponent<FusionGrabBinding>():null;PressureView.PressureWorker(lease&&props.HasFreshLease(lease.Owner,lease.Id)?lease.Owner:0);}
             if(channel.IsHost&&revision!=watch.Revision)
             {revision=watch.Revision;beds.Clear();micActor=wrenchActor=0;micPressed=wrenchPressed=false;UpdateStatus();}
@@ -226,6 +230,8 @@ namespace LighthouseKeepers.Net
         int Apply(int actor,Command c)
         {
             if(!Ready)return -1;
+            if(c.action==CoopAction.BriefingComplete)return c.value==0&&c.pressed&&arrival.Acknowledge(actor,ArrivalPlayers)?1:-1;
+            if(watch is ICoopBriefingView briefing&&briefing.BriefingHeld)return -1;
             if(watch is ICoopRecoveryView recovery){
                 if(c.action==CoopAction.RecoveryDrill)return c.value==0&&poses.Sample(actor,out _)&&recovery.RescueDrill(actor)?1:-1;
                 if(c.action==CoopAction.RecoveryGrip){
@@ -294,6 +300,7 @@ namespace LighthouseKeepers.Net
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if(debugLine)Destroy(debugLine.gameObject);
 #endif
+            if(watch is ICoopBriefingView briefing)briefing.HoldBriefing(false);
             watch.ContinueAlone("Crew disconnected. Continuing this watch alone.");
         }
         void OnDestroy(){

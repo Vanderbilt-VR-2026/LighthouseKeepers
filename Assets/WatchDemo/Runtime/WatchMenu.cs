@@ -95,6 +95,9 @@ namespace LighthouseKeepers.WatchDemo
             drill.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
             ((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);
 #endif
+            var briefing=Action("ReadDutyBriefing",KeeperStrings.Get("briefing.reopen"),-414,()=>{Close();watch.GetComponent<InWorldBriefing>()?.Open();});
+            briefing.GetComponent<RectTransform>().sizeDelta=new Vector2(550,46);
+            ((RectTransform)panel.transform).sizeDelta=new Vector2(600,900);
             panel.SetActive(false);
         }
 

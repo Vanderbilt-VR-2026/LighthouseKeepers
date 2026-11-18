@@ -11,9 +11,8 @@ namespace LighthouseKeepers.Net
     {
         [SerializeField] CrewLobbyTransport transport;
         LobbyScreen screen;LobbyManager manager;
-        enum Page {Main,Choice,Host,Join,Settings,Briefing}
-        Page page;GameObject[] pages=new GameObject[6];GameObject keypad;TMP_InputField codeInput;
-        CrewBriefing briefing;
+        enum Page {Main,Choice,Host,Join,Settings}
+        Page page;GameObject[] pages=new GameObject[5];GameObject keypad;TMP_InputField codeInput;
         TMP_Text codeLabel,roster,joinStatus,hostStatus;Button start,join;float nextRefresh;
         GameObject joinDuties; readonly System.Collections.Generic.List<(Button button,CrewDuty duty)> dutyButtons=new();
         static string S(string key)=>PlayerStrings.Get("lobby."+key);
@@ -28,7 +27,6 @@ namespace LighthouseKeepers.Net
             for(int i=0;i<pages.Length;i++)pages[i]=Rect("Flow"+(Page)i,root,Vector2.zero,new Vector2(1160,650)).gameObject;
             Key(pages[0].transform,"Play",new Vector2(0,40),new Vector2(600,110),()=>Show(Page.Choice));Text("Play",S("play"));
             Key(pages[0].transform,"Settings",new Vector2(-165,-130),new Vector2(300,65),()=>Show(Page.Settings));Text("Settings",S("settings"));
-            Key(pages[0].transform,"Briefing",new Vector2(0,-230),new Vector2(500,55),OpenBriefing);Text("Briefing",PlayerStrings.Get("briefing.reopen"));
             Key(pages[0].transform,"Quit",new Vector2(165,-130),new Vector2(300,65),Application.Quit);Text("Quit",S("quit"));
             Key(pages[1].transform,"HostPlay",new Vector2(0,90),new Vector2(650,100),()=>{Show(Page.Host);manager.Host();Refresh();});Text("HostPlay",S("host"));
             Key(pages[1].transform,"JoinChoice",new Vector2(0,-65),new Vector2(650,100),()=>Show(Page.Join));Text("JoinChoice",S("join"));
@@ -47,10 +45,8 @@ namespace LighthouseKeepers.Net
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             for(int day=2;day<=3;day++){int selected=day;Key(pages[2].transform,"DevStartDay"+day,new Vector2(day==2?-200:200,-295),new Vector2(375,45),()=>{LighthouseKeepers.StormWatch.WatchDayLaunch.RequestedDay=selected;});Text("DevStartDay"+day,"DEV: SELECT NIGHT "+day);}
 #endif
-            briefing=CrewBriefing.Create(pages[5].transform,()=>Show(Page.Main));
-            Show(Page.Main);if(!CrewBriefing.Seen)OpenBriefing();
+            Show(Page.Main);
         }
-        void OpenBriefing(){Show(Page.Briefing);briefing.Open();}
         TMP_InputField CreateInput(Transform parent)
         {
             var r=Rect("CrewCodeInput",parent,new Vector2(0,185),new Vector2(600,70));r.gameObject.AddComponent<Image>().color=new Color(.11f,.19f,.19f);
@@ -60,7 +56,7 @@ namespace LighthouseKeepers.Net
         }
         Button Find(string name)=>screen.BoardCanvas.GetComponentsInChildren<Button>(true).First(b=>b.name==name);
         void Text(string name,string value){var b=Find(name);var text=b.GetComponentInChildren<TMP_Text>();text.text=value;text.fontSize=name.StartsWith("Dev")?18:name=="Play"?40:30;if(name=="Play"||name=="StartCrew"){b.GetComponent<Image>().color=new Color(.82f,.62f,.32f);text.color=new Color(.06f,.07f,.07f);}}
-        void Show(Page value){page=value;for(int i=0;i<pages.Length;i++)pages[i].SetActive(i==(int)page);Find("FlowBack").gameObject.SetActive(page!=Page.Main&&page!=Page.Briefing);if(keypad)keypad.SetActive(page==Page.Join&&!transport.IsOnline);Refresh();}
+        void Show(Page value){page=value;for(int i=0;i<pages.Length;i++)pages[i].SetActive(i==(int)page);Find("FlowBack").gameObject.SetActive(page!=Page.Main);if(keypad)keypad.SetActive(page==Page.Join&&!transport.IsOnline);Refresh();}
         void Update(){if(transport.IsOnline&&(page==Page.Main||page==Page.Choice))Show(transport.IsHost?Page.Host:Page.Join);if(Time.unscaledTime>=nextRefresh){nextRefresh=Time.unscaledTime+.15f;Refresh();}}
         void Refresh()
         {

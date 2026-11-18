@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "checks": [
+    "real host/join",
+    "both read independently in House",
+    "host skip waits for guest",
+    "90 seconds does not consume watch or start grace",
+    "both finish releases timers",
+    "rejoin does not pause active watch",
+    "guest distant hand rejected",
+    "guest direct challenge replicates identical code",
+    "leave mid-challenge / bot takes over / rejoin restores stage and duty",
+    "wrong answer recovery",
+    "real accepted",
+    "false rejected by guest, same result on host"
+  ],
+  "scope": "Actual two-Editor arrival and Night 3 radio fixture; not full watch, human voice or headset acceptance"
+}
