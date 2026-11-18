@@ -1,6 +1,6 @@
 # Quest playtest — House arrival, rescue, radio and soundtrack
 
-This checklist covers the source containing the illustrated House briefing, Night 2 possession/revive, Night 3 call authentication and the new continuous music bed. The final delivery receipt beside the soundtrack evidence identifies the exact installed APK. Network: **LK-S5-ARRIVAL1 / LK-Lab-Coop-v42**; both players need this build. Installed without launching; open Lighthouse Keepers yourself.
+This checklist covers the source containing the illustrated House briefing, Night 2 possession/revive, Night 3 call authentication and the new continuous music bed. **Build 052b6813 is installed.** The [delivery receipt](Soundtrack/delivery.json) identifies the exact APK. Network: **LK-S5-ARRIVAL1 / LK-Lab-Coop-v42**; both players need this build. Installed without launching; open Lighthouse Keepers yourself.
 
 ## What changed
 

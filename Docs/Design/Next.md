@@ -1,6 +1,6 @@
-# Current checkpoint — House briefing and soundtrack complete; APK delivery next
+# Current checkpoint — House briefing + soundtrack installed; awaiting playtest
 
-**sprint-5 / draft PR #89**. Quest connected. Install the next verified APK without launching it. Keep Editors muted; force asset refresh + finish compilation BEFORE Play to avoid the Fusion Editor recompile-hook crash.
+**sprint-5 / PR #89**. Quest connected. Latest verified APK installed without launching it. Keep Editors muted; force asset refresh + finish compilation BEFORE Play to avoid the Fusion Editor recompile-hook crash.
 
 ## Done
 
@@ -8,8 +8,12 @@ House arrival replaces lobby briefing. Three pages (WWII context, duties, contro
 
 ## Next, in order
 
-1. Music implementation complete: supplied main loop (6:36.593, four-second seam overlap), exact prior sample **01:11–01:16** accent, existing two music decks, eight-second cooldown/no stacking/stale replay, speech ducking retained. 18 focused tests and muted offline Play Mode passed; `Docs/Verification/S5/Soundtrack/`. Build from the next clean committed tip, verify ARM64/signature/package/CRC, install on connected Quest without launch, record receipt + three-night checklist. Build helper: adapt `artifacts/s5/day3/build.py` to a fresh backup/output folder and new APK name; restore only documented builder churn.
+1. **Delivered source 052b6813**: supplied main loop (6:36.593, four-second seam overlap), exact prior sample **01:11–01:16** accent, existing two music decks, eight-second cooldown/no stacking/stale replay, speech ducking retained. 18 focused tests and muted offline Play Mode passed; `Docs/Verification/S5/Soundtrack/`. Clean IL2CPP ARM64 APK verified and installed on Quest 3 **without launch**. `Builds/LighthouseKeepers-Sprint5-ArrivalScore-052b6813.apk`; SHA-256 `43d519ff1a110251fa19c15381d9995460491e62a86f9f15a8850763b7752814` (also matched on device). Full route + Wispr Flow feedback format: `Docs/Verification/S5/Headset-ArrivalScore.md`. User will playtest Nights 1–3; respond to their observations before broadening changes.
 2. Shared scare kit and Night 3 bunk → warned hunter → hiding/hold breath → final ship remain unfinished (see prior checkpoint). Night 1 remains pipe/preview/sleep, not the requested full-station rehearsal. Do not claim those are in the APK.
+
+## Reproduce / next source build
+
+Music processing: `artifacts/s5/finish/music/env/bin/python Tools/Audio/import_player_soundtrack.py`. Focused tests: PlayerSoundtrackTests, AudioPassTests, DreadPlaytestTests via the existing muted Editor bridge after refresh completes. Play fixture: `python3 artifacts/s5/soundtrack/play.py`. Build: adapt `artifacts/s5/soundtrack/build.py` to a new backup/output folder; close Editors first. APK/package/install checks: adapt `artifacts/s5/soundtrack/deliver.py`; do not reuse the old source receipt and do not launch. The working tree is clean after restoring documented build churn.
 
 ## DEVICE CHECKS PENDING
 

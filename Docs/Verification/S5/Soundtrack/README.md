@@ -14,3 +14,9 @@ The supplied Lighthouse Keepers track is the continuous music bed; the earlier s
 Editors stayed muted. Worn listening balance, perceived seam smoothness, sustained Quest CPU/GPU and a full human co-op run require the headset. The Play Mode fixture injects events; it is not a completed Night 2 run. Earlier arrival/authentication pair evidence is in ../Arrival/ and ../Day3/Authentication/.
 
 The importer is Tools/Audio/import_player_soundtrack.py. Test bridge reproduction: run PlayerSoundtrackTests, AudioPassTests and DreadPlaytestTests in EditMode after a completed refresh, then adapt this folder's play.py and ScoreProbe.cs to an artifacts output directory. Keep EditorUtility.audioMasterMute=true.
+
+## Quest delivery
+
+Clean source **052b6813** built successfully (IL2CPP ARM64); APK package, VR manifest, signature and ZIP CRC verified. Installed on the connected Quest 3 without launching. The device's installed APK SHA-256 matches the local APK: `43d519ff1a110251fa19c15381d9995460491e62a86f9f15a8850763b7752814`. File: `Builds/LighthouseKeepers-Sprint5-ArrivalScore-052b6813.apk` (134,388,878 bytes). See `delivery.json` and [the full three-night headset route](../Headset-ArrivalScore.md). Network **LK-S5-ARRIVAL1 / LK-Lab-Coop-v42**.
+
+The first build preflight found the test Editor still holding the project; it exited cleanly before the successful build. Editor-generated Wood material `_Color` migration was archived and restored. Three expected build-setting changes were archived and restored. Source was clean before the build and after restoration; no recovered scene changes were discarded.
