@@ -72,8 +72,8 @@ namespace LighthouseKeepers.WatchDemo {
       if(carryingFuel){workEngine.FuelCan.AssistantHeld=false;workEngine.FuelCan.transform.position=workEngine.transform.TransformPoint(new Vector3(.98f,.28f,1.16f));workEngine.FuelCan.OnNetworkReleased();carryingFuel=false;}
       var starter=workEngine.GetComponentInParent<WatchGenerator>().Starter;
       if(AtControl(KeeperStep.Starter,starter.transform,starter.transform.position+workEngine.transform.forward*.65f)){
-       workHand+=workEngine.transform.forward*(Mathf.Sin(workFor*5)*.12f);
-       if(workFor>=tuning.controlSeconds&&s.StarterInWindow){s.PullStarterAs(WatchState.CompanionActor);workFor=0;}
+       workHand=starter.HandlePosition;
+       if(workFor>=tuning.controlSeconds&&s.StarterInWindow){if(s.PullStarterAs(WatchState.CompanionActor))starter.ShowAssistantPull();workFor=0;}
       }
      }return true;
     }

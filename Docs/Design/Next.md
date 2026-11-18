@@ -2,9 +2,11 @@
 
 Branch `sprint-5`, PR #89. APK source **ad33062a** is built and installed on Quest 3, **not launched**. Network **LK-S5-COOPFIX1** / **LK-Lab-Coop-v50**; both players must update.
 
-## Follow-up in progress — grip and darkness
+## Grip/darkness follow-up ready for build (#142)
 
-Tool grip contacts now sit inside curled fingers, with a quarter-turn correction for the lantern; the beacon wheel grabs at the chosen rim point. 30 scripted left/right grip and rim/regrip checks pass, and rendered grip images were inspected (`artifacts/s5/grip-darkness/grips-final`). Not installed yet. Powered/blackout bakes now switch correctly; ambient/window and accidental material glow removed. Five dim hanging bulbs, LOW 0.8 m / HIGH 1.5 m carried light. 14 focused checks pass; actual map switch and off/LOW/HIGH images checked. Next: Owen work gestures/collar and early-night cushion; then build/install without launch.
+Implemented: wrap-around walkie contacts; quarter-turn lantern bail grip; beacon wheel contacts at any rim point; true blackout lightmaps and weak baked room bulbs; LOW/HIGH lantern range 0.8/1.5 m; Owen repair/tool gestures and narrower collar-covered neck; cooperative opening wording; early-night grace/flood cushion. 73 focused tests, 30 XRI grip checks, map switching and six live helper work checks pass. Images inspected. No new snapshot fields; network now **LK-S5-GRIPDARK1 / LK-Lab-Coop-v50** because grace validation uses matching tuning.
+
+Next: close the muted Editor, build with `python3 artifacts/s5/grip-darkness/build.py`, then `python3 artifacts/s5/grip-darkness/deliver.py` (install only, never launch). After successful delivery, record the receipt/update PR #89 and #142. [Evidence and checklist](../Verification/S5/GripDarkness/README.md).
 
 ## Done this pass
 
@@ -24,7 +26,7 @@ Tool grip contacts now sit inside curled fingers, with a quarter-turn correction
 
 ## DEVICE CHECKS PENDING
 
-Full-code readability/entry, role-specific clues and Owen walkie reply, mic grip/hold trigger; valve reach and fixed position; lantern bail pose/set-down/submersion; belt carry; generator paired hold; F3 wall/Owen route; face seam; lantern darkness/comfort and sustained Quest CPU/GPU. Audible two-headset voice, full solo nights and human co-op runs remain unverified.
+Both-hand walkie/lantern grip, rim grabbing, much darker room navigation and LOW/HIGH usefulness, Owen work gestures/collar, Days 1–2 balance; full-code readability/entry, role-specific clues and Owen walkie reply, mic grip/hold trigger; valve reach and fixed position; lantern bail pose/set-down/submersion; belt carry; generator paired hold; F3 wall/Owen route; face seam; lantern darkness/comfort and sustained Quest CPU/GPU. Audible two-headset voice, full solo nights and human co-op runs remain unverified.
 
 ## Build and exact commands
 

@@ -218,6 +218,14 @@ def main():
     head=next(o for o in F.OBJECTS if o.name=='Anatomical fisherman head')
     bm=bmesh.new();bm.from_mesh(head.data)
     bmesh.ops.delete(bm,geom=[v for v in bm.verts if M.unity(v.co)[1]<1.537],context='VERTS');bm.to_mesh(head.data);bm.free()
+    # Fit the hidden neck stump inside the scarf instead of leaving the source head's broad nape.
+    for v in head.data.vertices:
+        x,y,z=M.unity(v.co)
+        blend=max(0,min(1,(1.590-y)/.043))
+        if blend>0:
+            radius=((x/.048)**2+(z/.046)**2)**.5
+            scale=1/max(1,radius)
+            v.co=M.u((x*(1-blend+blend*scale),y,z*(1-blend+blend*scale)))
     obj=F.join_and_unwrap();obj.name='HarborKeeper_Skin'
     images=F.bake(obj,resolution=1024);F.unity_material()
     # The old material template now has world textures. Replace all texture slots explicitly.

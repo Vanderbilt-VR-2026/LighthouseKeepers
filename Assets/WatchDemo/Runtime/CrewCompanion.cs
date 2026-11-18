@@ -128,17 +128,34 @@ namespace LighthouseKeepers.WatchDemo {
    if(!agent.hasPath){var look=Vector3.ProjectOnPlane((working?workHand:holding&&valve?valve.transform.position:head.position)-Position,Vector3.up);if(look.sqrMagnitude>.01f){rotation=Quaternion.RotateTowards(rotation,Quaternion.LookRotation(look),120*Time.deltaTime);actor.transform.rotation=rotation;forward=rotation*Vector3.forward;right=rotation*Vector3.right;}}
    float swing=Mathf.Sin(Time.time*5)*Mathf.Clamp01(agent.velocity.magnitude)*.10f;
    var left=Position+Vector3.up*.81f-right*.28f+forward*(.06f+swing);var r=Position+Vector3.up*.81f+right*.28f+forward*(.06f-swing);
+   var handRotation=rotation;
    if(Time.unscaledTime<radioPoseUntil)r=Position+Vector3.up*1.57f+right*.21f+forward*.16f;
-   if(working)r=workHand;
+   if(working){
+    r=workHand;
+    if(workingPipe){
+     var bolt=workPipe.bolts[Mathf.Max(0,watch.State.Pipe.ActiveBolt)];
+     var normal=Vector3.ProjectOnPlane(bolt.up,Vector3.up).normalized;if(normal.sqrMagnitude<.1f)normal=Vector3.left;
+     var wrenchRotation=Quaternion.LookRotation(normal,Vector3.up)*Quaternion.Euler(0,0,Mathf.Sin(workFor*3)*35);
+     workWrench.transform.SetPositionAndRotation(workHand-wrenchRotation*Vector3.up*.055f,wrenchRotation);
+     handRotation=wrenchRotation;r=workWrench.transform.TransformPoint(new Vector3(0,-.14f,0));left=Position+Vector3.up*1.15f-right*.24f+forward*.27f;
+    }else if(workStep==KeeperStep.Fuel){
+     r=workEngine.FuelCan.Grab.attachTransform.position;handRotation=workEngine.FuelCan.Grab.attachTransform.rotation;
+    }else if(workStep==KeeperStep.KeepLight){
+     r=workBeacon.Wheel.transform.TransformPoint(Quaternion.Euler(0,0,-135+watch.State.Beacon.Alignment*270)*new Vector3(.20f,0,.035f));
+    }else if(workStep!=KeeperStep.Fuel&&workStep!=KeeperStep.Starter&&workStep!=KeeperStep.HoldStarterAssist){
+     // Deliberate reach/press/release at the actual control, not a frozen T-pose.
+     r-=forward*(.035f*(.5f+.5f*Mathf.Cos(workFor*4)));
+    }
+   }
    if(rescuing&&statusKey=="companion.rescuing")r=rescueHand;
    else if(holding&&valve)r=valve.transform.position+valve.transform.forward*.09f;
    var recovery=watch.State.Recovery;bool down=recovery.Downed((int)Duty);float amount=down&&DrownedAppearance.Sightings?1-recovery.Slot((int)Duty).progress:0;
    possession=Mathf.MoveTowards(possession,amount,Time.deltaTime*.65f);float maximum=PossessionLesson.SafeLift(Position+Vector3.up*1.8f,HorrorTuning.Current.possessionLift,HorrorTuning.Current.ceilingClearance,ceilingHits);
    lift=Mathf.Min(maximum,Mathf.MoveTowards(lift,amount*maximum,Time.deltaTime*(down?HorrorTuning.Current.possessionRiseSpeed:HorrorTuning.Current.possessionRiseSpeed*1.8f)));model.FullBody.Possession=possession;model.FullBody.VisualLift=lift;
    if(down){left=Position+Vector3.up*1.05f-right*.22f+forward*.55f;r=Position+Vector3.up*(.85f+.11f*Mathf.Sin(Time.time*1.7f)*possession)+right*(.25f+.06f*Mathf.Sin(Time.time*1.1f)*possession);}nameRoot.gameObject.SetActive(!down);
-   model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation*Quaternion.Euler(90,0,0),RightRotation=working||holding||rescuing||Time.unscaledTime<radioPoseUntil?rotation:rotation*Quaternion.Euler(90,0,0),LeftGrip=.5f,RightGrip=holding||rescuing||Time.unscaledTime<radioPoseUntil?1:.5f},Time.deltaTime,Position.y);
+   model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=working?Quaternion.RotateTowards(rotation,Quaternion.LookRotation((workHand-(Position+Vector3.up*1.66f)).normalized),18):rotation,Left=left,Right=r,LeftRotation=rotation*Quaternion.Euler(90,0,0),RightPose=(byte)(working||holding||rescuing?2:0),RightRotation=working||holding||rescuing||Time.unscaledTime<radioPoseUntil?handRotation:rotation*Quaternion.Euler(90,0,0),LeftGrip=.5f,RightGrip=working||holding||rescuing||Time.unscaledTime<radioPoseUntil?1:.5f},Time.deltaTime,Position.y);
    nameRoot.SetPositionAndRotation(Position+Vector3.up*(1.36f+lift)-right*.14f+forward*.19f,rotation*Quaternion.Euler(0,180,0));
-   if(workWrench){workWrench.SetActive(workingPipe);if(workingPipe)workWrench.transform.SetPositionAndRotation(workHand,rotation*Quaternion.Euler(0,0,Mathf.Sin(Time.time*3)*35));}
+   if(workWrench)workWrench.SetActive(workingPipe);
    radioProp.SetActive(!down);radioProp.transform.SetPositionAndRotation(Time.unscaledTime<radioPoseUntil?r:Position+Vector3.up*.9f+right*.24f,rotation);
 
   }

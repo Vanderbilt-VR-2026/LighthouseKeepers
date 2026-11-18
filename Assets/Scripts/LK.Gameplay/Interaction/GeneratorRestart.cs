@@ -17,7 +17,10 @@ namespace LighthouseKeepers.Gameplay.Interaction
         PhysicalGrip feedback;
         Transform referenceFrame;
         Vector3 restLocal, initialHand;
-        float extension, initialExtension;
+        float extension, initialExtension;float assistantPullAt=-100;
+        public Vector3 HandlePosition=>starterGrip?starterGrip.position:transform.position;
+        // Cosmetic helper stroke. State and timing acceptance stay with WatchState.
+        public void ShowAssistantPull(){if(!interactable.isSelected)assistantPullAt=Time.time;}
         bool attempted;
         [SerializeField] bool foundationMode;
         [SerializeField] Vector3 localPullDirection = Vector3.forward;
@@ -84,7 +87,7 @@ namespace LighthouseKeepers.Gameplay.Interaction
                     }
                 }
             }
-            else { extension = Mathf.MoveTowards(extension, 0, returnSpeedMPerSec * Time.deltaTime); if (extension < .04f) attempted = false; }
+            else { extension = Time.time-assistantPullAt<.4f?pullTravelM*(1-Mathf.SmoothStep(0,1,(Time.time-assistantPullAt)/.4f)):Mathf.MoveTowards(extension, 0, returnSpeedMPerSec * Time.deltaTime); if (extension < .04f) attempted = false; }
             var rest = referenceFrame ? referenceFrame.TransformPoint(restLocal) : restLocal;
             starterGrip.position = rest - up * extension;
         }
