@@ -9,6 +9,16 @@ Shared by Campaign and Survival. This pass changes presentation and early-night 
 - Owen visibly pours, pulls the starter cord, works a spanner on the pipe and reaches for controls. His opening message describes engine → pipe → ship preparation together. The neck stump now fits inside the collar. Existing first-person body positions, joint definitions and triangle count are preserved; UV packing changes with the rebuilt atlas.
 - Nights 1–2 get 20 seconds more opening/first-station grace. Survival flooding is 20% slower on Day 1 and 10% slower on Day 2. Campaign Night 2 flood multiplier is 1.3 (was 1.5). Day 3+ pressure and the fuel-filling requirement remain.
 
+## Early-night adjustment
+
+| Mode | Day/night | Opening grace | First-station grace | Flood change |
+|---|---|---|---|---|
+| Campaign | 1–2 | 45 → 65 s | 60 → 80 s | N1 stays no-fail; N2 multiplier 1.5 → 1.3 |
+| Survival | 1–2 | 45 → 65 s | 45 → 65 s | Day 1 ×0.8; Day 2 ×0.9 of prior rate |
+| Both | 3+ | Unchanged | Unchanged | Unchanged |
+
+Starting an accepted action still ends opening grace immediately. This adjustment follows the playtest request; it is not a measured human balance result.
+
 ## Evidence and limits
 
 Editor audio was muted throughout. 30 actual XRI grip/contact/regrip checks pass. 73 focused EditMode checks pass across quality, lanterns, world collision, Survival, campaign order, companion, timed starter, keeper body, voice and story imports. The old campaign fixture was updated to hold START ASSIST when testing two keepers; it no longer bypasses the paired starting rule.
@@ -37,4 +47,4 @@ Not verified this pass: human grip comfort, worn darkness/navigation, sustained 
 5. On the F4 gallery, grip the beacon wheel at top, bottom, left and right; release/regrip without an alignment jump.
 6. Play Days 1–2 at your usual pace. Note whether the extra grace helps without removing pressure; then verify Day 3 still escalates. Both human co-op devices need the same network version.
 
-Local reproduction: `python3 artifacts/s5/modes/check.py QualityBaselineTests LanternTests EquipmentWorldTests SurvivalModeTests CampaignOrderTests CrewCompanionTests TimedStarterTests HarborKeeperTests VoicePassTests StoryImportTests`. Rendered/input evidence and scripts are under `artifacts/s5/grip-darkness/`. APK delivery receipt is added after the build.
+Local reproduction: `python3 artifacts/s5/modes/check.py QualityBaselineTests LanternTests EquipmentWorldTests SurvivalModeTests CampaignOrderTests CrewCompanionTests TimedStarterTests HarborKeeperTests VoicePassTests StoryImportTests`. Rendered/input evidence and scripts are under `artifacts/s5/grip-darkness/`. [Delivery receipt](delivery.json): source `823c5781`, IL2CPP ARM64, normal package and VR manifest/signature verified. Installed on Quest 3 and device APK SHA-256 matched. The app was not launched.

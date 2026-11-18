@@ -1,14 +1,14 @@
 # Current checkpoint — paired-station playtest fixes (#142)
 
-Branch `sprint-5`, PR #89. APK source **ad33062a** is built and installed on Quest 3, **not launched**. Network **LK-S5-COOPFIX1** / **LK-Lab-Coop-v50**; both players must update.
+Branch `sprint-5`, PR #89. APK source **823c5781** is built and installed on Quest 3, **not launched**. Network **LK-S5-GRIPDARK1** / **LK-Lab-Coop-v50**; both players must update.
 
-## Grip/darkness follow-up ready for build (#142)
+## Grip/darkness follow-up delivered (#142)
 
 Implemented: wrap-around walkie contacts; quarter-turn lantern bail grip; beacon wheel contacts at any rim point; true blackout lightmaps and weak baked room bulbs; LOW/HIGH lantern range 0.8/1.5 m; Owen repair/tool gestures and narrower collar-covered neck; cooperative opening wording; early-night grace/flood cushion. 73 focused tests, 30 XRI grip checks, map switching and six live helper work checks pass. Images inspected. No new snapshot fields; network now **LK-S5-GRIPDARK1 / LK-Lab-Coop-v50** because grace validation uses matching tuning.
 
-Next: close the muted Editor, build with `python3 artifacts/s5/grip-darkness/build.py`, then `python3 artifacts/s5/grip-darkness/deliver.py` (install only, never launch). After successful delivery, record the receipt/update PR #89 and #142. [Evidence and checklist](../Verification/S5/GripDarkness/README.md).
+Build/install complete. Installed APK hash matches source build `823c5781`; app **not launched**. PR #89 and issue #142 updated; headset acceptance remains pending. [Evidence and checklist](../Verification/S5/GripDarkness/README.md).
 
-## Done this pass
+## Previous paired-station pass
 
 - Full ordered radio code, role-specific House clue, daily frequency stable on retry/rejoin, explicit F4 lever/mic instructions, transmit progress and limited B reminders.
 - Fixed compact pipe bypass; top-bail lantern grip; persistent dropped lanterns/walkies; host-owned underwater extinguishing; visible right-hip walkie clip.
@@ -32,10 +32,10 @@ Both-hand walkie/lantern grip, rim grabbing, much darker room navigation and LOW
 
 Worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. Keep `EditorUtility.audioMasterMute=true`. Do not launch the Quest app without a request.
 
-APK: `Builds/LighthouseKeepers-Sprint5-CoopFix-ad33062a.apk` (IL2CPP ARM64, `com.lighthousekeepers.game`). SHA-256: `d667f80dca4b6d9ce2bdc5982ad594cc902fd8d1fbcf04905931e0a2e103b1f0`. Installed copy hash verified.
+APK: `Builds/LighthouseKeepers-Sprint5-GripDark-823c5781.apk` (IL2CPP ARM64, `com.lighthousekeepers.game`). SHA-256: `74198003655ff95d38f861529c8b77732c08aff0e8097670ed08eed0481aff31`. Installed copy hash verified.
 
-Focused bridge checks: `python3 artifacts/s5/modes/check.py RadioRelayTests TimedStarterTests EquipmentWorldTests`. Completed build/delivery scripts and receipts: `artifacts/s5/interaction-fixes/{build.py,deliver.py,build/delivery.json}`. Use fresh backup/output paths for any subsequent build; do not reuse the completed build backup over new source changes.
+Focused bridge checks: `python3 artifacts/s5/modes/check.py RadioRelayTests TimedStarterTests EquipmentWorldTests`. Completed build/delivery scripts and receipts: `artifacts/s5/grip-darkness/{build.py,deliver.py,build/delivery.json}`. Use fresh backup/output paths for any subsequent build; do not reuse the completed build backup over new source changes.
 
-Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-CoopFix-ad33062a.apk`.
+Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-GripDark-823c5781.apk`.
 
-Workstation: both runaway Unity Bug Reporters stopped, logs saved locally; Editors closed; batch build finished. Avoid reopening stale crash reports during testing. Other user applications were left alone.
+Workstation: no crash reporter or interactive Editor left running; batch build finished. Avoid reopening stale crash reports during testing. Other user applications were left alone.
