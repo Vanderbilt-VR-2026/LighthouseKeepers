@@ -129,24 +129,26 @@ namespace LighthouseKeepers.WatchDemo
    label.text=KeeperStrings.Get("duty."+watch.CurrentDuty);
    icon.Set(station);
    var lesson=watch.GetComponent<PossessionLesson>();bool sceneLine=s.Recovery.LessonActive&&lesson;
-   bool showVoice=!sceneLine&&radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
+   var auth=watch.GetComponent<RadioAuthentication>();bool authLine=!sceneLine&&auth&&auth.Visible;
+   bool showVoice=!sceneLine&&!authLine&&radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
    bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
-   string display=sceneLine?lesson.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
+   string display=sceneLine?lesson.Caption:authLine?auth.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
    ConfigureSubtitle(remembered);
    if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.6f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
-   int visible=sceneLine?display.Length:remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
+   int visible=sceneLine||authLine?display.Length:remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
    int page=1;
    // Paginate long recordings into two readable lines rather than shrinking or clipping text.
    var info=subtitle.textInfo;
    for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
    if(showVoice&&radio.CaptionsOnly&&!remembered)page=radio.SubtitlePage(info.pageCount);
+   if(authLine)page=Mathf.Clamp(1+Mathf.FloorToInt(s.Authenticity.Age/6),1,Mathf.Max(1,info.pageCount));
    subtitle.pageToDisplay=remembered?1:page;subtitle.maxVisibleCharacters=visible;
    float alpha=remembered?Mathf.Clamp01((recall.Until-Time.unscaledTime)/.8f):showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;
    subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);
-   speakerTag.text=sceneLine?lesson.Speaker:remembered?radio.LastSpeaker:showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
+   speakerTag.text=sceneLine?lesson.Speaker:authLine?auth.Speaker:remembered?radio.LastSpeaker:showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
    subtitleBacking.gameObject.SetActive(display.Length>0);subtitleBacking.color=new Color(.012f,.018f,.023f,.8f*alpha);
 
    bool unsafeNow=s.PressureEnabled&&!s.Complete&&s.Danger>=.5f;

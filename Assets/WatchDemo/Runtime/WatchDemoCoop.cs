@@ -18,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo
         float currentFade,replicaFadeTarget;
         public Component Target(CoopAction action,float value)
         {
+            if(action==CoopAction.AuthenticateCall)return GetComponent<RadioAuthentication>()?.Control(value);
             if(action==CoopAction.RecoveryGrip)return value==(int)value&&recoveryView?recoveryView.Target((int)value):null;
             if(action==CoopAction.LanternWick)return LanternTarget(value);
             if(action==CoopAction.FlareFire)return FlareTarget(value);
@@ -43,6 +44,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.ReadOnly||sleeping)return -1;
             switch(action)
             {
+                case CoopAction.AuthenticateCall:return value==(int)value&&state.Authenticity.Command((int)value,state.Day==3,state.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio)&&state.Radio.MainOn&&state.Radio.Locked)?1:-1;
                 case CoopAction.LanternWick:return pressed&&value==(int)value&&state.CycleLantern((int)value)?1:-1;
                 case CoopAction.FlareFire:return pressed&&value==(int)value&&FireFlare((int)value)?1:-1;
                 case CoopAction.StatusRequest:

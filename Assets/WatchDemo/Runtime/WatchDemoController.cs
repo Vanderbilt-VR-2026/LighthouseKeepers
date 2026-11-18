@@ -129,7 +129,7 @@ namespace LighthouseKeepers.WatchDemo
             SabotagePresentation.Create(this);
             DrownedAppearance.Create(this);
             ConnectedMachinePresentation.Create(this);
-            CrewCompanion.Create(this,head);CrewRecovery.Create(this);PossessionLesson.Create(this);recoveryView=GetComponent<CrewRecovery>();
+            CrewCompanion.Create(this,head);CrewRecovery.Create(this);PossessionLesson.Create(this);RadioAuthentication.Create(this);recoveryView=GetComponent<CrewRecovery>();
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
         }

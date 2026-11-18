@@ -4,7 +4,7 @@ using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo
 {
-    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2 }
+    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2, ChallengeCall, JudgeCall }
     // Sole instruction policy. The host assigns jobs; presentation never invents a next action.
     public sealed class ObjectiveDirector
     {
@@ -22,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         public ObjectiveDirector(WatchState owner){state=owner;}
         public KeeperStep ForActor(int actor)=>actorB!=0&&actor==actorB?Second:First;
         public KeeperStep Partner(int actor)=>actorB==0?KeeperStep.None:actor==actorB?First:Second;
-        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.AwaitRescueF2;
+        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.JudgeCall;
         public void Apply(int first,int second,int a,int b)
         {if(!state.ReadOnly)return;First=(KeeperStep)first;Second=(KeeperStep)second;actorA=a;actorB=b;}
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
@@ -54,7 +54,7 @@ namespace LighthouseKeepers.WatchDemo
                 // height every frame swaps both jobs mid-stair and can leave the wheel unattended.
                 if(guideShip!=state.AimingShip||roster||shipGuideActor!=actorA&&shipGuideActor!=actorB){guideShip=state.AimingShip;shipGuideActor=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper?actorA:Duty(actorB)==CrewDuty.Lightkeeper?actorB:firstHead.y>=secondHead.y?actorA:actorB;}
                 bool firstNear=shipGuideActor==actorA;
-                var other=OtherShipJob(wrenchHeld);
+                var other=state.Authenticity.NeedsDecision?AuthStep:OtherShipJob(wrenchHeld);
                 First=firstNear?step:other;Second=actorB==0?KeeperStep.None:firstNear?other:step;return;
             }
             if(actorB!=0&&state.Pressure?.CrewRequired==true&&!state.Repaired&&(!state.Campaign||state.BeaconShining||state.IsPending(WatchState.BeaconStation))&&(state.Power==PowerState.On&&(!state.Campaign||state.Engine==null||state.Engine.Settled)||state.IsPending(WatchState.GeneratorStation)))
@@ -62,6 +62,10 @@ namespace LighthouseKeepers.WatchDemo
                 int holder=state.Pressure.Holder;
                 if(holder!=actorA&&holder!=actorB||state.Campaign&&holder==state.PipeWorkerActor){int worker=state.PipeWorkerActor;var valve=StationPosition!=null?StationPosition("STN_PRESSURE_VALVE"):new Vector3(2.7f,1,2.5f);holder=worker==actorA?actorB:worker==actorB?actorA:Duty(actorA)==CrewDuty.Lightkeeper?actorA:Duty(actorB)==CrewDuty.Lightkeeper?actorB:Vector3.Distance(firstHead,valve)<=Vector3.Distance(secondHead,valve)?actorA:actorB;}
                 First=holder==actorA?KeeperStep.HoldValve:PipeStep(wrenchHeld);Second=holder==actorB?KeeperStep.HoldValve:PipeStep(wrenchHeld);return;
+            }
+            if(state.Authenticity.NeedsDecision&&state.Repaired&&state.Power==PowerState.On){
+                bool firstOperates=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper;
+                First=firstOperates?AuthStep:KeeperStep.ReadCode;Second=actorB==0?KeeperStep.None:firstOperates?KeeperStep.ReadCode:AuthStep;return;
             }
             // Once the engine and pipe are safe, two keepers have different halves of this task.
             // A ship window still takes priority above; no clue answer is put in the operator HUD.
@@ -85,6 +89,7 @@ namespace LighthouseKeepers.WatchDemo
             if(First==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)First=KeeperStep.KeepLight;
             if(actorB!=0&&Second==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)Second=KeeperStep.KeepLight;
         }
+        KeeperStep AuthStep=>state.Authenticity.Stage==2?KeeperStep.JudgeCall:KeeperStep.ChallengeCall;
         KeeperStep OtherShipJob(bool held){for(int i=0;i<state.Definition.tasks.Length;i++)if(Available(i)&&state.Definition.tasks[i].stationId!=WatchState.BeaconStation){var step=Step(i,held);return state.RadioRelay&&step==KeeperStep.RadioCode?KeeperStep.ReadCode:step;}return KeeperStep.KeepLight;}
         bool Available(int i)=>i>=0&&i<state.Definition.tasks.Length&&!state.IsDone(state.Definition.tasks[i].stationId)&&!state.IsPending(state.Definition.tasks[i].stationId)&&(state.Power==PowerState.On||state.Definition.tasks[i].stationId==WatchState.PipeStation||state.Definition.tasks[i].stationId==WatchState.GeneratorStation);
         float Cost(int i,Vector3 head,int actor)
@@ -154,7 +159,7 @@ namespace LighthouseKeepers.WatchDemo
             if(step==KeeperStep.HoldValve||step==KeeperStep.ClampValve||step==KeeperStep.TightenBolt||step>=KeeperStep.GrabWrench&&step<=KeeperStep.BoltC)return WatchState.PipeStation;
             if(step==KeeperStep.CheckFuel||step>=KeeperStep.Fuel&&step<=KeeperStep.OpenChoke)return WatchState.GeneratorStation;
             if(step>=KeeperStep.PumpOff&&step<=KeeperStep.ResetBreaker)return "BREAKER";
-            if(step==KeeperStep.ReadCode||step>=KeeperStep.RadioPower&&step<=KeeperStep.RadioTransmit)return WatchState.RadioStation;
+            if(step==KeeperStep.ChallengeCall||step==KeeperStep.JudgeCall||step==KeeperStep.ReadCode||step>=KeeperStep.RadioPower&&step<=KeeperStep.RadioTransmit)return WatchState.RadioStation;
             if(step==KeeperStep.KeepLight)return "SHIP";
             if(step>=KeeperStep.BeaconLight&&step<=KeeperStep.BeaconWipe)return WatchState.BeaconStation;
             return step==KeeperStep.Sleep?"BED":"";

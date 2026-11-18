@@ -12,6 +12,9 @@ namespace LighthouseKeepers.Core.Progression
     public sealed class HorrorTuning:ScriptableObject
     {
         [Tooltip("Kept OFF until live navigation, protection and escape integration pass.")]
+        [Header("Night 3 radio authentication")]
+        public bool radioAuthentication=true;
+        [Min(1)] public float authResultSeconds=8;
         public bool hunterEnabled;
         [Tooltip("Never enable before hiding and recovery have passed co-op tests.")]
         public bool catchesEnabled;

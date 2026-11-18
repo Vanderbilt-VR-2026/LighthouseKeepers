@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "final": {
+    "day": 3,
+    "failed": false,
+    "powered": true,
+    "main": true,
+    "locked": true,
+    "frame": {
+      "kind": 2,
+      "stage": 4,
+      "serial": 11,
+      "result": 2,
+      "realDone": true,
+      "fakeDone": true,
+      "introDone": false,
+      "age": 0.9748651
+    },
+    "reply": "1 RED \u00b7 4 GREEN \u00b7 2 AMBER \u00b7 4 GREEN",
+    "caption": "False call rejected. Keep the beacon shining. It can imitate a voice; it cannot answer tonight\u2019s challenge.",
+    "code": "1 RED   >   3 BLUE\n2 AMBER   >   4 GREEN",
+    "duty": "Lightkeeper",
+    "protocol": "LK-S5-RADIO3"
+  },
+  "checks": [
+    "direct XRI grip: challenge / accept / reject",
+    "accept before challenge rejected",
+    "real reply uses current House code",
+    "incorrect decisions recover",
+    "impostor differs, rejection resolves",
+    "beacon unchanged by all answers"
+  ],
+  "scope": "Editor fixture powers radio and schedules calls; not a full Night 3 or headset test"
+}

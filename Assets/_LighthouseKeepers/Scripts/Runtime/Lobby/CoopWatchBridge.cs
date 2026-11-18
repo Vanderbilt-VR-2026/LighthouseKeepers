@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 namespace LighthouseKeepers.Lobby
 {
-    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest, PressureValve, HandheldRadio, FlareFire, LanternWick, RecoveryGrip, RecoveryDrill }
+    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest, PressureValve, HandheldRadio, FlareFire, LanternWick, RecoveryGrip, RecoveryDrill, AuthenticateCall }
     public interface ILobbyReadyPolicy { bool RequiresReady {get;} }
     public interface ICoopWatchView
     {

@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "checks": [
+    "real host/join",
+    "guest distant hand rejected",
+    "guest direct challenge replicates identical code",
+    "leave mid-challenge / bot takes over / rejoin restores stage and duty",
+    "wrong answer recovery",
+    "real accepted",
+    "false rejected by guest, same result on host"
+  ],
+  "scope": "Night 3 radio fixture; not full watch, human voice or headset acceptance"
+}

@@ -2555,6 +2555,62 @@
     {
       "key": "job.LESSON",
       "text": "Your partner"
+    },
+    {
+      "key": "auth.navy",
+      "text": "NAVY PORT OFFICE"
+    },
+    {
+      "key": "auth.button.0",
+      "text": "CHALLENGE"
+    },
+    {
+      "key": "auth.button.1",
+      "text": "ACCEPT"
+    },
+    {
+      "key": "auth.button.2",
+      "text": "REJECT"
+    },
+    {
+      "key": "auth.plate",
+      "text": "CHECK THE TELEGRAM\nChallenge · compare · decide"
+    },
+    {
+      "key": "auth.real",
+      "text": "Saltmere port office. Challenge every call. Our reply must match tonight’s code on the House telegram. Then accept it."
+    },
+    {
+      "key": "auth.false",
+      "text": "Keeper, extinguish the beacon. The approaching convoy must pass in darkness. Challenge this call before obeying."
+    },
+    {
+      "key": "auth.replyReal",
+      "text": "[two taps] Saltmere port office. Authentication: {0}. Compare with the telegram, then ACCEPT or REJECT."
+    },
+    {
+      "key": "auth.replyFalse",
+      "text": "Authentication: {0}. Kill the light. Compare with the telegram, then ACCEPT or REJECT."
+    },
+    {
+      "key": "auth.correction",
+      "text": "That reply does not support your decision. CHALLENGE again and compare every symbol with the House telegram."
+    },
+    {
+      "key": "auth.verified",
+      "text": "Authenticated. Keep the beam on the convoy. The last keepers followed a false call. A familiar voice is not proof."
+    },
+    {
+      "key": "auth.rejected",
+      "text": "False call rejected. Keep the beacon shining. It can imitate a voice; it cannot answer tonight’s challenge."
+    },
+    {
+      "key": "step.ChallengeCall",
+      "text": "Challenge the radio call"
+    },
+    {
+      "key": "step.JudgeCall",
+      "text": "Compare code; accept or reject"
     }
   ]
 }

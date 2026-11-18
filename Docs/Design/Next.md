@@ -1,3 +1,25 @@
+# Current checkpoint — Day 3 authentication slice
+
+**sprint-5 / draft PR #89**. Dialogue remains text-only. Editors muted. Quest authorized/connected as of November 17 evening; install verified next APK, **do not launch**.
+
+## Done this slice
+
+- F4 radio has direct-grip CHALLENGE / ACCEPT / REJECT controls in the unused service-meter strip. Compare the caller's four-symbol reply with the existing House telegram / helper slate. Real call has two taps + Navy port-office identification; the impostor gives a wrong symbol and remains **Unknown**. Wrong choices recover; calls never operate equipment automatically; a ship that has passed cancels its false order.
+- Host-owned call state, per-role Objective Director guidance, identical replies and decisions for guests, reconnect preservation. **LK-S5-RADIO3 / LK-Lab-Coop-v41**.
+- 70 focused tests, offline direct-grip fixture, and real two-Editor join/challenge/leave/rejoin/decision fixture pass. Screenshots inspected. Evidence: `Docs/Verification/S5/Day3/Authentication/`.
+
+## Next — latest Day 3 request
+
+1. Shared scare kit: reuse Day 2's gate/stain/caption/possession work; add gaze-triggering, replay skip and local dark-red/muffled possession feedback while keeping the camera still.
+2. Night 3 bunk scene: prior keeper under sheet sits up, then first warned hunt with reachable hiding + hold breath, followed by final convoy payoff. Implement live hunter from the existing disabled foundation only after escape and recovery checks. Design: `Docs/Design/Day3-Radio.md`. **Not implemented or enabled yet.**
+3. Full Night 3 and two-Editor hunt/hiding/recovery/skip checks; source build, install without launch, update issue #140 / PR #89. Preserve Days 1–2. Night 1 is still the existing pipe/preview/sleep; its requested full-station tutorial remains separate unfinished work.
+
+## DEVICE CHECKS PENDING
+
+Radio button reach/readability, telegram comparison, simultaneous beam + challenge in co-op, B recall, Day 2 possession/gates and both-direction hand revival, sustained Quest CPU/GPU and human voice. New APK not built at this checkpoint; previous clean APK fcfa8bd4 lacks radio authentication. Do not label it as the new build.
+
+---
+
 # Current checkpoint — Night 2 possession / Unknown speaker
 
 Branch **sprint-5 / draft PR #89**. Editors muted. Quest unavailable: build only, do not wait or launch.

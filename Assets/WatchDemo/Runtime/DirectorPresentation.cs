@@ -51,7 +51,8 @@ namespace LighthouseKeepers.WatchDemo
             if(step==KeeperStep.TightenBolt)return pipe.PipeIndexForGuide();
             if(step==KeeperStep.ReadCode)return CodeSource.Active?CodeSource.Active.transform:null;
             // All four buttons are equally available. Never illuminate the correct answer.
-            if(step==KeeperStep.RadioCode)return radio.transform;
+            if(step==KeeperStep.RadioCode||step==KeeperStep.JudgeCall)return radio.transform;
+            if(step==KeeperStep.ChallengeCall){var auth=watch.GetComponent<RadioAuthentication>();var key=auth?auth.Control(0):null;return key?key.transform:radio.transform;}
             return targets.TryGetValue(step,out var target)?target:null;
         }
         public Vector3 HintPosition(KeeperStep step)=>step==KeeperStep.Sleep?watch.BedPosition:Target(step)?Target(step).position:Vector3.positiveInfinity;
