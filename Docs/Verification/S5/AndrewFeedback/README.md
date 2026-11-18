@@ -31,3 +31,7 @@ A 50% Night 5 increase killed both careful model runs; even +15% killed the duo.
 ## Still needs a headset
 
 Readability while turning, hand feel, radio/belt stability, realistic wheel difficulty, lantern darkness/fog/ship visibility, physical possession sound balance, Owen moving/reviving, sustained CPU/GPU, two-headset voice and shared sleep. Editor screenshots are inspected composition evidence, not stereo or performance acceptance.
+
+## Live transport rerun
+
+Two muted Editors passed host/join, enabled Night 1 lantern snapshot, preparation hold, radio clearance, ship pass, leave/rejoin and retry. The first run caught a MaterialPropertyBlock initialized in a MonoBehaviour constructor; moved it to Awake and reran with **zero new runtime exceptions**. These actions were scripted; microphone audio and real controller input across devices remain pending.
