@@ -76,3 +76,11 @@ One-click scene preparation was rerun successfully with no serialized scene drif
 Focused current PlayMode: **19/23 passed**. All four failures reproduce with identical messages on pre-quality `785f2d1` (narration hint, legacy beacon deadline, legacy Night1 high-water loss, same-day radio retry). `playmode-comparison.json` records the exact names/messages; no new failures in this set. These remain open technical debt, not passing tests.
 
 Fresh live two-Mac regression **passed**: join/late join, visible avatars, native mono/AEC configuration, proximity and both handheld radio paths, mute, shared guest pipe, shared sleep, leave/rejoin; separate Night3 valve+guest-wrench run also passed. See `Docs/Verification/S5/Quality/crew/`. Editors stayed muted: human voice quality remains unverified.
+
+## November 18 darkness follow-up (#142)
+
+Unity Progressive GPU baked both direct and indirect static light into the existing lightmap UV layout. Material albedo remains separate. This is offline lightmapping, not realtime path tracing. The moving oil lantern uses a shadowless realtime light.
+
+Removed powered maps during blackout, window spill, material self-emission on ordinary station parts/hands, and excess ambient/reflection fill. One 0.30-intensity / 0.85 m baked fixture per room; ceiling support measured against the existing scene. Lamp filaments dim smoothly without rapid flashing. LOW range 0.8 m, HIGH 1.5 m. Handheld-light budget unchanged (up to two), fixed fixtures create no realtime lights.
+
+Rebake: powered two maps / 4.82 MiB, emergency two maps / 4.49 MiB; 444 probes, 2,227 static renderers. Map selection was exercised on power return/loss in Play Mode. 3 quality + 8 lantern + 3 equipment checks pass. Reviewed actual off/LOW/HIGH and fixture captures in `artifacts/s5/grip-darkness`; these are Editor images, not a Quest GPU measurement. Quest readability, safe navigation in darkness, and sustained GPU/CPU cost remain pending.

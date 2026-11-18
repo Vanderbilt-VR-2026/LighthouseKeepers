@@ -27,6 +27,9 @@ namespace LighthouseKeepers.Editor.Environment.Tests
                 var roots=scene.GetRootGameObjects();
                 var lights=roots.SelectMany(g=>g.GetComponentsInChildren<UnityEngine.Light>(true)).ToArray();
                 Assert.That(lights,Is.Not.Empty);
+                var on=lights.Where(l=>l.enabled&&l.gameObject.activeInHierarchy).ToArray();
+                Assert.That(on.Length,Is.EqualTo(5),"One fixed bulb per room; no outdoor/window fill.");
+                Assert.That(on.All(l=>l.range<=.85f&&l.intensity<=.30f),Is.True,"Fixed bulbs must not replace the portable lantern.");
                 Assert.That(lights.All(l=>l.lightmapBakeType==UnityEngine.LightmapBakeType.Baked),Is.True,"Fixed Lab lights must be baked; future handheld lanterns need an explicit exception.");
                 var probes=roots.Single(g=>g.name=="Quest quality route probes").GetComponent<UnityEngine.LightProbeGroup>();
                 Assert.That(probes.probePositions.Length,Is.GreaterThanOrEqualTo(42),"Stairs and outside approach need probe coverage.");

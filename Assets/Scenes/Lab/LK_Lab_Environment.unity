@@ -20,10 +20,10 @@ RenderSettings:
   m_FogDensity: 0.015
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.002, g: 0.003, b: 0.004, a: 1}
+  m_AmbientSkyColor: {r: 0.0002, g: 0.00025, b: 0.0003, a: 1}
   m_AmbientEquatorColor: {r: 0.08, g: 0.09, b: 0.1, a: 1}
   m_AmbientGroundColor: {r: 0.025, g: 0.025, b: 0.03, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: b492d3e1be5e8416b9868b1ed1386e97, type: 2}
@@ -35,7 +35,7 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0.025
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_UseRadianceAmbientProbe: 0
@@ -15258,11 +15258,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296000176}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.012
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -25663,8 +25663,8 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
-  m_Intensity: 0.18
-  m_Range: 2.1
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -25992,8 +25992,8 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
-  m_Intensity: 0.18
-  m_Range: 2.1
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -40123,8 +40123,8 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
-  m_Intensity: 0.18
-  m_Range: 2.1
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -71433,11 +71433,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398595419}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.012
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -72389,11 +72389,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421151113}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.012
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -73129,8 +73129,8 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
-  m_Intensity: 0.18
-  m_Range: 2.1
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -79205,8 +79205,8 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
-  m_Intensity: 0.18
-  m_Range: 2.1
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -83991,11 +83991,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1863212695}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.012
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -85084,7 +85084,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1954359426}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.68, b: 0.3, a: 1}

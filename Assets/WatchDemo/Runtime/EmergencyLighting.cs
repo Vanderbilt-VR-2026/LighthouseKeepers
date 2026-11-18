@@ -16,12 +16,11 @@ namespace LighthouseKeepers.WatchDemo
         WatchState state;
         Material[][] originals;
         readonly List<Material> materials=new();
-        readonly List<Color> baseColours=new(), emissions=new();
+        readonly List<Color> baseColours=new();
         Color[] normalLightColours;float[] normalIntensities;
         float warm=1,outageStart,recoveryStart=-100;
-        bool power=true,initialized,wasSputtering;
+        bool power=true,initialized;
         S4Tuning tuning;
-        readonly List<Light> guides=new();
         public float WarmBlend=>warm;
         public float CycleSeconds=>cycleSeconds;
         public static float PulseAt(float time,float cycle)=>.55f+.10f*Mathf.Sin(time*Mathf.PI*2/Mathf.Max(2,cycle));
@@ -29,7 +28,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             // Preserve the accepted bake/UVs. One set of shared runtime material instances
             // modulates baked illumination coherently; no per-renderer per-frame property blocks.
-            bakedLighting.Powered=true;
+            bakedLighting.Powered=false;
             bakedLighting.ApplyNow();
             bakedLighting.enabled=false;
             originals=new Material[interiorSurfaces.Length][];
@@ -45,7 +44,7 @@ namespace LighthouseKeepers.WatchDemo
                     {
                         copy=new Material(original){name=original.name+" / central emergency"};copies.Add(original,copy);materials.Add(copy);
                         copy.EnableKeyword("_EMISSION");
-                        baseColours.Add(original.GetColor("_BaseColor"));emissions.Add(original.HasProperty("_EmissionColor")?original.GetColor("_EmissionColor"):Color.black);
+                        baseColours.Add(original.GetColor("_BaseColor"));
                     }
                     assigned[j]=copy;
                 }
@@ -60,20 +59,17 @@ namespace LighthouseKeepers.WatchDemo
             state=value;tuning=state.Tuning;state.Changed+=StateChanged;StateChanged();warm=power?1:0;initialized=true;Apply();
             if(tuning&&tuning.soundPass){alarm.spatialBlend=1;alarm.minDistance=3;alarm.maxDistance=18;}
             if(tuning&&tuning.blackout)
-            {cycleSeconds=tuning.emergencyCycleSeconds;recoverySeconds=tuning.warmRecoverySeconds;CreateGuides();Apply();}
+            {cycleSeconds=tuning.emergencyCycleSeconds;recoverySeconds=tuning.warmRecoverySeconds;Apply();}
         }
         void StateChanged()
         {
-            bool next=state.HasPower(PowerCircuit.Lights)&&(!state.Immersion||!state.Failed);if(next==power&&initialized&&state.Elapsed>0)return;if(next&&!power)recoveryStart=Time.time;power=next;
+            bool next=state.HasPower(PowerCircuit.Lights)&&(!state.Immersion||!state.Failed);if(next==power&&initialized&&state.Elapsed>0)return;if(next&&!power)recoveryStart=Time.time;power=next;bakedLighting.Powered=power;bakedLighting.ApplyNow();
             if(!power){outageStart=Time.unscaledTime;alarm.volume=tuning&&tuning.soundPass?tuning.alarmVolume:.09f;}
             if(power)alarm.Stop();else if(!alarm.isPlaying)alarm.Play();
         }
         void LateUpdate()
         {
             if(!initialized)return;
-            bool sputter=state.FuelSputtering;
-            if(power&&warm>=1&&Time.time-recoveryStart>2&&!sputter&&!wasSputtering&&!(state.Sprint5&&state.Sprint5.groundedHorror&&state.Day>=2))return;
-            wasSputtering=sputter;
             if(!power)alarm.volume=Mathf.Lerp(tuning&&tuning.soundPass?tuning.alarmVolume:.09f,tuning&&tuning.soundPass?tuning.alarmHumVolume:.02f,Mathf.SmoothStep(0,1,(Time.unscaledTime-outageStart)/(tuning&&tuning.soundPass?tuning.alarmFadeSeconds:10f)));
             warm=Mathf.MoveTowards(warm,power?1:0,Time.deltaTime/(power?recoverySeconds:.5f));Apply();
         }
@@ -86,15 +82,14 @@ namespace LighthouseKeepers.WatchDemo
             float sputter=state.FuelSputtering?.85f+.15f*Mathf.Cos((float)state.FuelRunoutRemaining*Mathf.PI*2/1.5f):1;
             float dread=state.Sprint5&&state.Sprint5.groundedHorror?DrownedMotion.LampDip(state.Elapsed,state.Day,2):1;
             atmosphere*=dread;
-            var illumination=Color.Lerp(tint*pulse,Color.white*atmosphere,Mathf.SmoothStep(0,1,warm))*sputter;
+            // Illumination comes from the selected bake and carried lamps, not glowing wall materials.
+            var illumination=Color.white*(power?LanternRoomLighting.Filament(Time.time,0):1)*sputter;
             for(int i=0;i<materials.Count;i++)
             {
                 var colour=baseColours[i]*illumination;colour.a=baseColours[i].a;materials[i].SetColor("_BaseColor",colour);
                 if(materials[i].HasProperty("_EmissionColor"))
                 {
-                    var e=emissions[i];float strength=Mathf.Max(e.r,Mathf.Max(e.g,e.b));
-                    var emergency=blackout?tint*strength*pulse+baseColours[i]*.003f:new Color(1,.78f,.58f)*strength*pulse+baseColours[i]*(.025f+.025f*pulse);
-                    materials[i].SetColor("_EmissionColor",Color.Lerp(emergency,e*atmosphere,warm)*sputter);
+                    materials[i].SetColor("_EmissionColor",Color.black);
                 }
             }
             for(int i=0;i<interiorLights.Length;i++)
@@ -103,29 +98,6 @@ namespace LighthouseKeepers.WatchDemo
                 float floorWarm=state.Director!=null&&power?Mathf.Clamp01((Time.time-recoveryStart-TowerWiringPresentation.RestoreDelay(light.transform.position.y))/recoverySeconds):warm;
                 light.intensity=normalIntensities[i]*Mathf.Lerp(pulse,atmosphere,floorWarm)*sputter;
             }
-            foreach(var guide in guides)guide.intensity=tuning.guideLampIntensity*(1-warm)*(blackout?pulse/Mathf.Max(.01f,tuning.emergencyMaximum):1);
-        }
-        void CreateGuides()
-        {
-            if(guides.Count>0)return;
-            // Frozen Sprint 2 side-stair walk lines from lighthouse-layout.json. Small,
-            // shadowless lights sit beside the route; no geometry or colliders on the walkway.
-            for(int floor=0;floor<3;floor++)
-            {
-                float radius=floor==2?1.7f:3f;
-                AddGuide(Polar(320,radius,floor*3.3f+.35f),"stairs F"+(floor+1));
-                AddGuide(Polar(floor==2?140:220,radius,(floor+1)*3.3f+.35f),"landing F"+(floor+2));
-            }
-            var generator=GameObject.Find("STN_GENERATOR");
-            if(generator)AddGuide(generator.transform.TransformPoint(new Vector3(.6f,1.35f,.8f)),"generator");
-        }
-        static Vector3 Polar(float angle,float radius,float y)=>new Vector3(Mathf.Sin(angle*Mathf.Deg2Rad)*radius,y,Mathf.Cos(angle*Mathf.Deg2Rad)*radius);
-        void AddGuide(Vector3 position,string label)
-        {
-            var go=new GameObject("S4 red guide light "+label);go.transform.SetParent(transform,false);
-            go.transform.position=position;
-            var light=go.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(1,.06f,.025f);
-            light.range=tuning.guideLampRangeM;light.shadows=LightShadows.None;guides.Add(light);
         }
         void OnDestroy()
         {

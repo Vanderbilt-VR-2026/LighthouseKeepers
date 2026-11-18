@@ -48,17 +48,17 @@ public static class QuestQualityLighting
     static void ApplyLanternRooms(Light[] lights)
     {
         // Repeatable one-fixture bake, using the same five runtime service-lamp mounts.
-        // Keep the beacon's bake. Windows supply only a trace of cold exterior spill.
+        // No ambient/window/beacon fill: portable lanterns light the player's working area.
         var used=new HashSet<int>();
         foreach(var l in lights.OrderBy(x=>EnvironmentLightingBake.PathOf(x.transform),StringComparer.Ordinal)){
-            if(l.name.Contains("beacon")||l.name=="Powered lantern light")continue;
-            if(l.name=="Baked cold window spill"){l.enabled=true;l.intensity=.012f;continue;}
+            if(l.name.Contains("beacon")||l.name=="Powered lantern light"){l.enabled=false;continue;}
+            if(l.name=="Baked cold window spill"){l.enabled=false;l.intensity=0;continue;}
             bool room=l.name.StartsWith("Mains fixture");int floor=LighthouseKeepers.WatchDemo.LanternRoomLighting.Room(l.transform.position);
             l.enabled=room&&used.Add(floor);
-            if(l.enabled){l.transform.position=LighthouseKeepers.WatchDemo.LanternRoomLighting.RoomLights[floor];l.intensity=.18f;l.range=2.1f;l.color=new Color(1,.64f,.32f);}
+            if(l.enabled){l.transform.position=LighthouseKeepers.WatchDemo.LanternRoomLighting.RoomLights[floor];l.intensity=.30f;l.range=.85f;l.color=new Color(1,.64f,.32f);}
             EditorUtility.SetDirty(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l);PrefabUtility.RecordPrefabInstancePropertyModifications(l.transform);
         }
-        RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.002f,.003f,.004f);
+        RenderSettings.ambientIntensity=0;RenderSettings.reflectionIntensity=.025f;RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.0002f,.00025f,.0003f);
     }
     [MenuItem("Lighthouse Keepers/Quality/Rebake Quest Lighting")]
     public static void Bake()
@@ -78,7 +78,7 @@ public static class QuestQualityLighting
         var capture=typeof(EnvironmentLightingBake).GetMethod("Capture",BindingFlags.NonPublic|BindingFlags.Static);
         var variants=new List<EnvironmentLightingPreset>();var stats=new List<string>();Directory.CreateDirectory(QuestQualityBaseline.Output);
         foreach(bool powered in new[]{true,false}) {
-            for(int i=0;i<lights.Length;i++){lights[i].enabled=original[i].enabled;lights[i].color=powered?original[i].color:Color.Lerp(original[i].color,new Color(.5f,.09f,.035f),.6f);lights[i].intensity=original[i].intensity*(powered?1:.12f);}
+            for(int i=0;i<lights.Length;i++){lights[i].enabled=original[i].enabled;lights[i].color=powered?original[i].color:Color.Lerp(original[i].color,new Color(.5f,.09f,.035f),.6f);lights[i].intensity=original[i].intensity*(powered?1:0);}
             EditorSceneManager.SaveScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
             var start=DateTime.UtcNow;bool baked=Lightmapping.Bake();
             if(!baked&&Application.platform==RuntimePlatform.OSXEditor){Debug.LogWarning("ProgressiveGPU unavailable on this Mac; documented ProgressiveCPU bake fallback, not a Quest performance measurement.");settings.lightmapper=LightingSettings.Lightmapper.ProgressiveCPU;baked=Lightmapping.Bake();}

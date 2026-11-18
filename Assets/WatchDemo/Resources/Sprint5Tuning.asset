@@ -44,11 +44,11 @@ MonoBehaviour:
   lanternStunSeconds: 2
   lanternRetreatSeconds: 20
   lanternStunCost: 0.15
-  lanternLowRange: 2.5
-  lanternHighRange: 4
+  lanternLowRange: 0.8
+  lanternHighRange: 1.5
   nightlyBeamTolerance: [14, 11, 9, 7.5, 6]
   exteriorFogCalm: 0.027
   exteriorFogStorm: 0.038
 
-  lanternLowIntensity: 1.8
-  lanternHighIntensity: 3.4
+  lanternLowIntensity: 1.1
+  lanternHighIntensity: 3.6

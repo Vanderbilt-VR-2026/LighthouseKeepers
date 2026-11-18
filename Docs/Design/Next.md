@@ -4,7 +4,7 @@ Branch `sprint-5`, PR #89. APK source **ad33062a** is built and installed on Que
 
 ## Follow-up in progress — grip and darkness
 
-Tool grip contacts now sit inside curled fingers, with a quarter-turn correction for the lantern; the beacon wheel grabs at the chosen rim point. 30 scripted left/right grip and rim/regrip checks pass, and rendered grip images were inspected (`artifacts/s5/grip-darkness/grips-final`). Not installed yet. Next: remove powered bake during blackout/ambient fill, one dim bulb per room, short-range lantern; Owen work gestures/collar and early-night cushion; then build/install without launch.
+Tool grip contacts now sit inside curled fingers, with a quarter-turn correction for the lantern; the beacon wheel grabs at the chosen rim point. 30 scripted left/right grip and rim/regrip checks pass, and rendered grip images were inspected (`artifacts/s5/grip-darkness/grips-final`). Not installed yet. Powered/blackout bakes now switch correctly; ambient/window and accidental material glow removed. Five dim hanging bulbs, LOW 0.8 m / HIGH 1.5 m carried light. 14 focused checks pass; actual map switch and off/LOW/HIGH images checked. Next: Owen work gestures/collar and early-night cushion; then build/install without launch.
 
 ## Done this pass
 
