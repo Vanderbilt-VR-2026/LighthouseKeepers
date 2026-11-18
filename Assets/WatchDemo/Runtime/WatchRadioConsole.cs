@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         public RadioMicrophone microphone;
         public AudioSource effects,hiss,tone,chatter;
         public AudioClip click,buzzer,reply;
-        WatchState watch;
+        WatchState watch;CrewCompanion helper;
         MaterialPropertyBlock dark,green,red,current,codeBlock,stepDone;
         MaterialPropertyBlock[] panelOn,panelOff;
         float nextReadout,nextMicrophone,nextTune;int currentDay;bool completed,previousMic;
@@ -77,7 +77,7 @@ namespace LighthouseKeepers.WatchDemo
                 {nextMicrophone=Time.unscaledTime+.1f;if(microphone.Held||previousMic)watch.Coop.Send(LighthouseKeepers.Lobby.CoopAction.Microphone,0,pressed);previousMic=pressed;}
             }
             else if(watch.Coop!=null&&watch.Coop.RemoteMicrophone(microphone,out bool remoteTrigger))State.SetMicrophone(true,remoteTrigger);
-            else State.SetMicrophone(microphone.Held,microphone.TriggerHeld);
+            else {if(watch.ScriptedPartner&&!helper)helper=FindAnyObjectByType<CrewCompanion>();State.SetMicrophone(microphone.Held||helper&&helper.Transmitting,microphone.TriggerHeld||helper&&helper.Transmitting);}
             bool live=State.MainOn&&watch.HasPower(LighthouseKeepers.Core.PowerCircuit.Radio);
             float distance=Mathf.Abs(State.FrequencyMHz-program.targetMHz);
             float quality=1-Mathf.Clamp01(distance/.45f);

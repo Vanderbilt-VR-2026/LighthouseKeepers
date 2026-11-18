@@ -4,7 +4,7 @@ using LighthouseKeepers.Core;
 using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo
 {
-    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2, ChallengeCall, JudgeCall }
+    public enum KeeperStep { None, GrabWrench, BoltA, BoltB, BoltC, Fuel, Prime, CloseChoke, Starter, OpenChoke, PumpOff, BeaconOff, RadioOff, LightsOff, PumpOn, BeaconOn, RadioOn, LightsOn, ResetBreaker, RadioPower, RadioTune, RadioCode, RadioTransmit, BeaconLight, BeaconAlign, BeaconWipe, Sleep, Complete, Lost, CheckFuel, HoldValve, ClampValve, TightenBolt, KeepLight, ReadCode, AwaitRescue, ReviveKeeper, GatherF2, WatchPartner, RescueF2, AwaitRescueF2, ChallengeCall, JudgeCall, HelpPartner, ReadyShip }
     // Sole instruction policy. The host assigns jobs; presentation never invents a next action.
     public sealed class ObjectiveDirector
     {
@@ -14,6 +14,7 @@ namespace LighthouseKeepers.WatchDemo
         int actorA,actorB,jobA=-1,jobB=-1;float assignmentUntil;
         public Func<string,Vector3> StationPosition;
         public Func<int,CrewDuty> DutyForActor;
+        public Func<KeeperStep> CompanionStep;
         CrewDuty Duty(int actor)=>DutyForActor?.Invoke(actor)??CrewDuty.None;
         public KeeperStep First {get;private set;}
         public KeeperStep Second {get;private set;}
@@ -22,7 +23,7 @@ namespace LighthouseKeepers.WatchDemo
         public ObjectiveDirector(WatchState owner){state=owner;}
         public KeeperStep ForActor(int actor)=>actorB!=0&&actor==actorB?Second:First;
         public KeeperStep Partner(int actor)=>actorB==0?KeeperStep.None:actor==actorB?First:Second;
-        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.JudgeCall;
+        public static bool Valid(int step)=>step>=0&&step<=(int)KeeperStep.ReadyShip;
         public void Apply(int first,int second,int a,int b)
         {if(!state.ReadOnly)return;First=(KeeperStep)first;Second=(KeeperStep)second;actorA=a;actorB=b;}
         public void Reset(){First=Second=KeeperStep.None;actorA=actorB=shipGuideActor=0;guideShip=-1;jobA=jobB=-1;assignmentUntil=0;}
@@ -35,6 +36,14 @@ namespace LighthouseKeepers.WatchDemo
             if(!state.ReadOnly&&state.ScriptedPartner){
                 actorB=WatchState.CompanionActor;
                 Second=state.Recovery.LessonActive?(state.Recovery.Lesson==4?KeeperStep.AwaitRescueF2:KeeperStep.GatherF2):state.Recovery.AnyDown&&!state.Failed?KeeperStep.ReviveKeeper:state.Failed||state.Complete?KeeperStep.None:state.Repaired?state.Radio.Step==2?KeeperStep.ReadCode:KeeperStep.None:state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.None;
+                if(!state.Recovery.LessonActive&&!state.Recovery.AnyDown&&!state.Failed&&!state.Complete){
+                    var work=CompanionStep?.Invoke()??KeeperStep.None;
+                    if(work!=KeeperStep.None){Second=work;
+                        if(work==KeeperStep.TightenBolt)First=state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.HelpPartner;
+                        else if(work==KeeperStep.RadioTransmit)First=KeeperStep.ReadyShip;
+                        else if(ObjectiveDirector.Job(First)==ObjectiveDirector.Job(work)||work==KeeperStep.Fuel||work==KeeperStep.Starter)First=KeeperStep.HelpPartner;
+                    }
+                }
             }
         }
         void TickCore(float now,int firstActor,Vector3 firstHead,int secondActor,Vector3 secondHead,bool wrenchHeld)
@@ -208,7 +217,7 @@ namespace LighthouseKeepers.WatchDemo
             string key=step==KeeperStep.ReadCode?"where.telegram":step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
             return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
         }
-        public static string Button(KeeperStep step)=>step==KeeperStep.GatherF2||step==KeeperStep.WatchPartner||step==KeeperStep.AwaitRescueF2||step==KeeperStep.AwaitRescue||step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
+        public static string Button(KeeperStep step)=>step==KeeperStep.HelpPartner?"":step==KeeperStep.ReadyShip?"TRIGGER":step==KeeperStep.GatherF2||step==KeeperStep.WatchPartner||step==KeeperStep.AwaitRescueF2||step==KeeperStep.AwaitRescue||step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
         public static int Hint(KeeperStep step){string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?7:id==WatchState.GeneratorStation?8:id=="BREAKER"?9:id==WatchState.BeaconStation?10:id==WatchState.RadioStation?11:id=="BED"?12:0;}
         public string StationInstruction(string station) {
             if(First!=KeeperStep.ReadCode&&Job(First)==station)return Instruction(First);

@@ -1,6 +1,6 @@
 # Active unfinished-feature pass
 
-#137 timed physical starter implemented: fuel + three marked-band strokes, no primer/choke in campaign. 52 focused checks and actual XRI Play strokes passed; `Docs/Verification/S5/Unfinished/Starter/`. Network LK-S5-STARTER1 / v44. Next: opposite-role bot station work, belt radio, possession face, full Night 1 rehearsal and Night 3 hunter/hiding. No new APK yet; do not launch Quest.
+#137 timed physical starter implemented: fuel + three marked-band strokes, no primer/choke in campaign. 52 focused checks and actual XRI Play strokes passed; `Docs/Verification/S5/Unfinished/Starter/`. Network LK-S5-STARTER1 / v44. Opposite-role station work now implemented and actual navigation/station sequence passes; see Unfinished/Companion. LK-S5-CREW3 / v45. Next: belt radio, possession face, full Night 1 rehearsal and Night 3 hunter/hiding. No new APK yet; do not launch Quest.
 
 ---
 

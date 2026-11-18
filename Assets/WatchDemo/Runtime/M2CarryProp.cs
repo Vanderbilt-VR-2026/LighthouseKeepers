@@ -12,7 +12,8 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class M2CarryProp : MonoBehaviour,IHandPoseTarget,INetworkPropRelease,INetworkReleasedBody
     {
         public HandPose RequiredPose=>HandPose.WrapGrip;
-        public bool ReleasedBodyIsKinematic=>!released;
+        public bool AssistantHeld {get;set;}
+        public bool ReleasedBodyIsKinematic=>AssistantHeld||!released;
         bool released;
         public XRGrabInteractable Grab {get;private set;}
         public Transform Tip {get;private set;}
@@ -44,12 +45,12 @@ namespace LighthouseKeepers.WatchDemo
         }
         Transform Palm(string name,Vector3 pos){var t=M2StationParts.Root(name,transform,pos);t.localRotation=Quaternion.Euler(0,180,0);return t;}
         void Awake(){Grab.selectEntered.AddListener(OnGrab);Grab.selectExited.AddListener(OnRelease);}
-        void OnGrab(SelectEnterEventArgs e){var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();Grab.attachTransform=hand&&hand.Node==XRNode.LeftHand?left:right;if(hand){hand.SetPose(RequiredPose,this);hand.Pulse(.35f,.07f);}}
+        void OnGrab(SelectEnterEventArgs e){AssistantHeld=false;var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();Grab.attachTransform=hand&&hand.Node==XRNode.LeftHand?left:right;if(hand){hand.SetPose(RequiredPose,this);hand.Pulse(.35f,.07f);}}
         void OnRelease(SelectExitEventArgs e){var hand=e.interactorObject.transform.GetComponentInParent<HandRig>();if(hand)hand.ClearPose();OnNetworkReleased();}
         public void OnNetworkReleased(){dropped=Time.time;released=true;network??=GetComponent<INetworkPropStatus>();if(network?.CanSimulateReleased!=false){body.isKinematic=false;body.useGravity=true;}}
         public void SetHome(Vector3 position,Quaternion orientation){home=position;rotation=orientation;ResetHome();}
         public void ResetHome(){if(Grab.isSelected)Grab.interactionManager.CancelInteractableSelection((IXRSelectInteractable)Grab);if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,rotation);dropped=0;}
-        void LateUpdate(){network??=GetComponent<INetworkPropStatus>();if(Grab.isSelected||network?.CanSimulateReleased==false)return;body.isKinematic=!released;if(released){body.useGravity=true;if(Time.time-dropped>8||transform.position.y<-.8f)ResetHome();}}
+        void LateUpdate(){network??=GetComponent<INetworkPropStatus>();if(Grab.isSelected||network?.CanSimulateReleased==false)return;body.isKinematic=AssistantHeld||!released;if(released&&!AssistantHeld){body.useGravity=true;if(Time.time-dropped>8||transform.position.y<-.8f)ResetHome();}}
         void OnDestroy(){if(Grab){Grab.selectEntered.RemoveListener(OnGrab);Grab.selectExited.RemoveListener(OnRelease);}}
     }
     // Choose the mirrored attach before XRI calculates its target pose.

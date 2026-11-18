@@ -8,7 +8,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         WatchPressureValve pressureValve;
         public bool PressureCommand(int actor,bool held){bool accepted=state.Pressure!=null&&!state.ReadOnly&&!sleeping&&!state.Failed&&!state.Repaired&&state.Pressure.CrewRequired&&state.Pressure.Hold(actor,held);if(accepted&&held)state.EngageWatch();return accepted;}
-        public void PressureWorker(int actor){if(!state.ReadOnly)state.PipeWorkerActor=actor;}
+        public void PressureWorker(int actor){if(!state.ReadOnly&&!(actor==0&&state.ScriptedPartner&&state.PipeWorkerActor==WatchState.CompanionActor))state.PipeWorkerActor=actor;}
         public void PressureActorLeft(int actor){state.Pressure?.Hold(actor,false);}
         public int Revision {get;private set;}
         public bool CanSleep=>state!=null&&!sleeping&&!state.Failed&&state.Complete&&state.HasNextDay;

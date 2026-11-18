@@ -2,8 +2,8 @@ using UnityEngine;using UnityEngine.AI;using TMPro;
 using LighthouseKeepers.Core.Progression;using LighthouseKeepers.Net;using LighthouseKeepers.Lobby;
 namespace LighthouseKeepers.WatchDemo {
  public enum CompanionCommand { Work,Follow,Wait,Help }
- // Bounded, host-only helper. No general task solver, remote repairs, tool theft or cloud service.
- public sealed class CrewCompanion:MonoBehaviour {
+ // Bounded, host-only helper. Complementary station work, physically reached controls, no cloud service.
+ public sealed partial class CrewCompanion:MonoBehaviour {
   WatchDemoController watch;Transform head;CrewCompanionTuning tuning;HunterNavigation navigation;NavMeshAgent agent;
   GameObject actor;CrewAvatarModel model;TextMeshPro nameTag;Transform nameRoot;
   readonly RaycastHit[] floorHits=new RaycastHit[24];
@@ -13,7 +13,7 @@ namespace LighthouseKeepers.WatchDemo {
   public string Status=>KeeperStrings.Get(statusKey);
   bool wantsCode;float reportUntil,radioPoseUntil,nextReport;string reportLine="";GameObject radioProp;
   public bool ReportActive=>Time.unscaledTime<reportUntil;public string ReportLine=>reportLine;
-  public void RequestReport(){if(!Active||Time.unscaledTime<nextReport)return;nextReport=Time.unscaledTime+tuning.reportCooldown;if(watch.State.HasRadioRelay&&learnedCode.Length==0){wantsCode=true;SetCommand(CompanionCommand.Work);Report(KeeperStrings.Get("companion.fetchReply"));}else Report(learnedCode.Length>0?KeeperStrings.Get("companion.codeReply")+"\n"+learnedCode:KeeperStrings.Get("companion.readyReply"));}
+  public void RequestReport(){if(!Active||Time.unscaledTime<nextReport)return;if(RequestClearance())return;nextReport=Time.unscaledTime+tuning.reportCooldown;if(watch.State.HasRadioRelay&&learnedCode.Length==0){wantsCode=true;SetCommand(CompanionCommand.Work);Report(KeeperStrings.Get("companion.fetchReply"));}else Report(learnedCode.Length>0?KeeperStrings.Get("companion.codeReply")+"\n"+learnedCode:KeeperStrings.Get("companion.readyReply"));}
   void Report(string text){reportLine=text;reportUntil=Time.unscaledTime+tuning.reportSeconds;radioPoseUntil=Time.unscaledTime+tuning.radioGestureSeconds;var n=FindAnyObjectByType<HarborRadio>();if(n)n.RecordSilentLine(text,KeeperStrings.Get("companion.name"));watch.GetComponent<ObjectiveHud>()?.RevealFor(tuning.reportSeconds);}
   bool lessonMode;CompanionCommand lessonReturn;float possession,lift;readonly RaycastHit[] ceilingHits=new RaycastHit[24];
   public Vector3 OfferedHand=>model&&model.FullBody&&model.FullBody.Joint("LeftHand")?model.FullBody.Joint("LeftHand").position:Position+Vector3.up;
@@ -30,13 +30,13 @@ namespace LighthouseKeepers.WatchDemo {
    var prefab=Resources.Load<GameObject>("PF_CompanionKeeper");if(!prefab){Retire();return false;}
    model=Instantiate(prefab,actor.transform).GetComponent<CrewAvatarModel>();if(!model||!model.PrepareVisualOnly(out _)){Retire();return false;}
    nameRoot=new GameObject("Owen cloth name patch").transform;nameRoot.SetParent(actor.transform,false);
-   nameTag=new GameObject("Keeper name").AddComponent<TextMeshPro>();nameTag.transform.SetParent(nameRoot,false);nameTag.rectTransform.sizeDelta=new Vector2(.13f,.045f);nameTag.fontSize=.55f;nameTag.alignment=TextAlignmentOptions.Center;nameTag.color=new Color(.8f,.74f,.56f);nameTag.text=KeeperStrings.Get("companion.name");
+   nameTag=new GameObject("Keeper name").AddComponent<TextMeshPro>();nameTag.transform.SetParent(nameRoot,false);nameTag.rectTransform.sizeDelta=new Vector2(.13f,.045f);nameTag.fontSize=.38f;nameTag.textWrappingMode=TextWrappingModes.NoWrap;nameTag.alignment=TextAlignmentOptions.Center;nameTag.color=new Color(.8f,.74f,.56f);nameTag.text=KeeperStrings.Get("companion.name");
    var parts=watch.GetComponent<M2StationParts>();radioProp=new GameObject("Owen working radio");radioProp.transform.SetParent(actor.transform,false);
    parts.Part("Owen radio case",radioProp.transform,Vector3.zero,new Vector3(.065f,.16f,.05f),parts.Dark);
    parts.Part("Owen radio aerial",radioProp.transform,new Vector3(-.02f,.12f,0),new Vector3(.008f,.12f,.008f),parts.Dark);
-   valve=FindAnyObjectByType<WatchPressureValve>();command=CompanionCommand.Work;readFor=still=0;hasGoal=holding=false;lastPosition=start;night=watch.State.Day;watch.State.SetScriptedPartner(true);return true;
+   PrepareStationWork();valve=FindAnyObjectByType<WatchPressureValve>();command=CompanionCommand.Work;readFor=still=0;hasGoal=holding=false;lastPosition=start;night=watch.State.Day;watch.State.SetScriptedPartner(true);return true;
   }
-  void Release(){holding=false;if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.Pressure?.Hold(WatchState.CompanionActor,false);if(agent&&agent.isOnNavMesh)agent.ResetPath();}
+  void Release(){StopStationWork();holding=false;if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.Pressure?.Hold(WatchState.CompanionActor,false);if(agent&&agent.isOnNavMesh)agent.ResetPath();}
   void Retire(){Release();if(watch&&watch.State!=null&&!watch.State.ReadOnly)watch.State.SetScriptedPartner(false);DestroyVisual();}
   void DestroyVisual(){if(actor){actor.SetActive(false);Destroy(actor);}navigation?.Dispose();navigation=null;actor=null;agent=null;learnedCode="";hasGoal=false;}
   bool FloorPoint(Vector3 near,out Vector3 floor){
@@ -70,7 +70,8 @@ namespace LighthouseKeepers.WatchDemo {
    if(!watch||watch.State==null)return;var s=watch.State;
    if(s.ReadOnly||s.HumanKeeperCount>1||!tuning.enabled){if(Active)Retire();return;}
    if(!Active){if(Time.time<nextPath)return;nextPath=Time.time+3;if(!Spawn())return;}
-   if(night!=s.Day){night=s.Day;learnedCode="";wantsCode=false;reportUntil=0;SetCommand(CompanionCommand.Work);}
+   if(night!=s.Day||s.Elapsed<lastWatchElapsed){ClearStationMemory();night=s.Day;learnedCode="";wantsCode=false;reportUntil=0;SetCommand(CompanionCommand.Work);}
+   lastWatchElapsed=s.Elapsed;if(s.BriefingHeld){Release();return;}
    if(watch.Sleeping||s.Failed){Release();statusKey="companion.wait";return;}
    if(s.Recovery.LessonActive){
     if(!lessonMode){lessonMode=true;lessonReturn=command;Release();hasGoal=false;nextPath=0;}statusKey="companion.follow";
@@ -95,6 +96,7 @@ namespace LighthouseKeepers.WatchDemo {
    }
    if(command==CompanionCommand.Wait){Release();if(statusKey!="companion.blocked")statusKey="companion.wait";return;}
    bool support=command==CompanionCommand.Work||command==CompanionCommand.Help;
+   if(support&&WorkStation()){CheckRoute();return;}
    if(support&&s.Pressure?.CrewRequired==true&&!s.Repaired&&valve&&(watch.CurrentInstruction==KeeperStep.TightenBolt||Vector3.Distance(head.position,valve.transform.position)<3)){
     statusKey="companion.valveGoing";var target=valve.transform.position+valve.transform.forward*.62f+valve.transform.right*.42f;
     if(MoveTo(target)&&Vector3.Distance(Position+Vector3.up, valve.transform.position)<tuning.reach){
@@ -121,10 +123,11 @@ namespace LighthouseKeepers.WatchDemo {
   void LateUpdate(){
    if(!Active||!model||!model.FullBody)return;
    var rotation=actor.transform.rotation;var forward=rotation*Vector3.forward;var right=rotation*Vector3.right;
-   if(!agent.hasPath){var look=Vector3.ProjectOnPlane((holding&&valve?valve.transform.position:head.position)-Position,Vector3.up);if(look.sqrMagnitude>.01f){rotation=Quaternion.RotateTowards(rotation,Quaternion.LookRotation(look),120*Time.deltaTime);actor.transform.rotation=rotation;forward=rotation*Vector3.forward;right=rotation*Vector3.right;}}
+   if(!agent.hasPath){var look=Vector3.ProjectOnPlane((working?workHand:holding&&valve?valve.transform.position:head.position)-Position,Vector3.up);if(look.sqrMagnitude>.01f){rotation=Quaternion.RotateTowards(rotation,Quaternion.LookRotation(look),120*Time.deltaTime);actor.transform.rotation=rotation;forward=rotation*Vector3.forward;right=rotation*Vector3.right;}}
    float swing=Mathf.Sin(Time.time*5)*Mathf.Clamp01(agent.velocity.magnitude)*.10f;
    var left=Position+Vector3.up*.81f-right*.28f+forward*(.06f+swing);var r=Position+Vector3.up*.81f+right*.28f+forward*(.06f-swing);
    if(Time.unscaledTime<radioPoseUntil)r=Position+Vector3.up*1.57f+right*.21f+forward*.16f;
+   if(working)r=workHand;
    if(rescuing&&statusKey=="companion.rescuing")r=rescueHand;
    else if(holding&&valve)r=valve.transform.position+valve.transform.forward*.09f;
    var recovery=watch.State.Recovery;bool down=recovery.Downed((int)Duty);float amount=down&&DrownedAppearance.Sightings?1-recovery.Slot((int)Duty).progress:0;
@@ -133,6 +136,7 @@ namespace LighthouseKeepers.WatchDemo {
    if(down){left=Position+Vector3.up*1.05f-right*.22f+forward*.55f;r=Position+Vector3.up*(.85f+.11f*Mathf.Sin(Time.time*1.7f)*possession)+right*(.25f+.06f*Mathf.Sin(Time.time*1.1f)*possession);}nameRoot.gameObject.SetActive(!down);
    model.FullBody.ApplyPose(new KeeperPoseFrame{Actor=WatchState.CompanionActor,Sequence=1,Head=Position+Vector3.up*model.FullBody.ReferenceEyeHeight,HeadRotation=rotation,Left=left,Right=r,LeftRotation=rotation,RightRotation=rotation,LeftGrip=.5f,RightGrip=holding||rescuing||Time.unscaledTime<radioPoseUntil?1:.5f},Time.deltaTime,Position.y);
    nameRoot.SetPositionAndRotation(Position+Vector3.up*(1.36f+lift)-right*.14f+forward*.19f,rotation*Quaternion.Euler(0,180,0));
+   if(workWrench){workWrench.SetActive(workingPipe);if(workingPipe)workWrench.transform.SetPositionAndRotation(workHand,rotation*Quaternion.Euler(0,0,Mathf.Sin(Time.time*3)*35));}
    radioProp.SetActive(!down);radioProp.transform.SetPositionAndRotation(Time.unscaledTime<radioPoseUntil?r:Position+Vector3.up*.9f+right*.24f,rotation);
 
   }

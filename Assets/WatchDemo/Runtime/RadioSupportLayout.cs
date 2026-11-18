@@ -31,6 +31,7 @@ namespace LighthouseKeepers.WatchDemo
             // The left rear cabinet corner also crossed the angled pane. Move the whole set,
             // including controls, microphone, and their reach volumes, together toward the room.
             transform.position+=transform.forward*.30f;
+            radio.microphone.RebaseHome();
             CodeSource.Active?.RelocateLocal(transform.TransformPoint(new Vector3(0,.43f,.35f)));
             var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();var combined=new WorkshopMesh();
             var frames=new List<Renderer>();foreach(var r in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))

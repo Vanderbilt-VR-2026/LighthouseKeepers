@@ -17,6 +17,7 @@ namespace LighthouseKeepers.WatchDemo
         XRGrabInteractable grab;Vector3 home;Quaternion rotation;
         INetworkPropStatus network;
         readonly Vector3[] cordPoints=new Vector3[81];
+        public void RebaseHome(){home=transform.position;rotation=transform.rotation;}
         void Awake()
         {
             grab=GetComponent<XRGrabInteractable>();home=transform.position;rotation=transform.rotation;
