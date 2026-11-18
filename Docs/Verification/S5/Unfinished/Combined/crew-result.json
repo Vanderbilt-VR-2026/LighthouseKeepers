@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "checks": [
+    "host join",
+    "preparation wait replicated",
+    "radio clearance replicated",
+    "leave/rejoin retains clearance",
+    "guided pass replicated",
+    "retry restores uncleared ship"
+  ],
+  "scope": "Two live Editors; actions scripted on host, not physical controller or audible voice acceptance"
+}
