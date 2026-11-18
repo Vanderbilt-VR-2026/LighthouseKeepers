@@ -1,3 +1,9 @@
+# Active unfinished-feature pass
+
+#137 timed physical starter implemented: fuel + three marked-band strokes, no primer/choke in campaign. 52 focused checks and actual XRI Play strokes passed; `Docs/Verification/S5/Unfinished/Starter/`. Network LK-S5-STARTER1 / v44. Next: opposite-role bot station work, belt radio, possession face, full Night 1 rehearsal and Night 3 hunter/hiding. No new APK yet; do not launch Quest.
+
+---
+
 # Active checkpoint — headset feedback from build 052b6813
 
 Read `Docs/Playtests/2026-11-17-headset-arrival.md` before continuing. User accepts body, sound, heartbeat and existing scares; prioritizes ordered campaign + a useful automatic partner over additional horror. Arrival/narration slice completed: 35 focused checks and actual muted height-correction/page fixture pass; evidence `Docs/Verification/S5/PlaytestClarity/`. No network bump for this slice. Source checkpoint follows in git history. Work on sprint-5 / PR #89. Editors muted, no Quest auto-launch. Preserve source/scene recovery and use worktree only.

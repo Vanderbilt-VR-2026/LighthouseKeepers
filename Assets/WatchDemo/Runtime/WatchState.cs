@@ -32,8 +32,8 @@ namespace LighthouseKeepers.WatchDemo
         public bool AlignBeacon(float angle)=>!ReadOnly&&!Failed&&!IsPending(BeaconStation)&&Beacon!=null&&Engaged(Beacon.Align(angle));
         public void WipeBeacon(float metres){if(!ReadOnly&&!Failed&&!IsPending(BeaconStation))Beacon?.Wipe(metres);}
         void BeaconChanged(){if(resetting)return;if(BeaconShining){BeaconDarkElapsed=0;if(!IsPending(BeaconStation))FinishJob(BeaconStation);}Changed?.Invoke();}
-        public bool PrimeEngine()=>!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.Prime());
-        public bool SetChoke(bool closed)=>!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.SetChoke(closed));
+        public bool PrimeEngine()=>!TimedStarter&&!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.Prime());
+        public bool SetChoke(bool closed)=>!TimedStarter&&!ReadOnly&&!Failed&&Engine!=null&&Engaged(Engine.SetChoke(closed));
         public void PourFuel(float seconds){if(!ReadOnly&&!Failed&&Engine!=null){float before=Engine.Fuel;Engine.Pour(seconds);if(Engine.Fuel>before)EngageWatch();if(Campaign&&Engine.Settled&&!IsPending(GeneratorStation)&&!FuelJobPending)FinishJob(GeneratorStation);}}
         void EngineChanged()
         {
@@ -199,10 +199,13 @@ namespace LighthouseKeepers.WatchDemo
             EngageWatch();FinishJob(PipeStation);if(Day3Balance&&day3Stage==1)StartDay3Outage();Changed?.Invoke(); return true;
         }
         // Called once per full stroke by the constrained interaction, never per frame.
+        public bool TimedStarter=>Campaign&&PowerTuning&&PowerTuning.timedCampaignStarter;
+        public float StarterPhase=>Mathf.PingPong((float)Elapsed*2/Mathf.Max(.5f,PowerTuning?PowerTuning.starterCycleSeconds:2.4f),1);
+        public bool StarterInWindow=>Mathf.Abs(StarterPhase-.5f)<=PowerTuning.starterWindowWidth*.5f;
         public bool StarterPulled()
         {
             if(ReadOnly||Failed)return false;
-            if(Engine!=null)return Engaged(Engine.Pull());
+            if(Engine!=null)return Engaged(TimedStarter?Engine.TimedPull(Mathf.Abs(StarterPhase-.5f)<=PowerTuning.starterWindowWidth*.5f+PowerTuning.starterNetworkTolerance):Engine.Pull());
             if (Power == PowerState.On) return false;
             StarterPulls++;
             if (StarterPulls >= RequiredStarterPulls) { faults.Remove(GeneratorStation); Power = PowerState.On; if(Grid!=null)Grid.SetEngine(true);else {BeaconDarkElapsed=0; Radio.SetPower(true);} }

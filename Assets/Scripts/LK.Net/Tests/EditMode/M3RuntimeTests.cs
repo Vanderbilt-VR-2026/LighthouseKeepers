@@ -25,7 +25,7 @@ namespace LighthouseKeepers.Net.Tests
   {
    for(int i=0;i<100;i++)Call(s,"PourFuel",.1f);
    for(int i=0;i<3;i++){Call(s,"PrimeEngine");Tick(s,.4);}
-   Call(s,"SetChoke",true);for(int i=0;i<3;i++){Call(s,"StarterPulled");Tick(s,.4);}Call(s,"SetChoke",false);
+   Call(s,"SetChoke",true);for(int i=0;i<3;i++){for(int wait=0;wait<100&&!Get<bool>(s,"StarterInWindow");wait++)Call(s,"Tick",.05d);Call(s,"StarterPulled");Tick(s,.4);}Call(s,"SetChoke",false);
   }
   [Test] public void LanternStateSurvivesLateJoinRejectsInvalidFrameAndResetsOnRetry()
   {

@@ -1,0 +1,13 @@
+using System;using UnityEngine;using NUnit.Framework;using LighthouseKeepers.Core;
+namespace LighthouseKeepers.Net.Tests {
+ public sealed class TimedStarterTests {
+  static Type T=>Type.GetType("LighthouseKeepers.WatchDemo.WatchState, Assembly-CSharp",true);
+  static object Call(object o,string n,params object[] a)=>o.GetType().GetMethod(n).Invoke(o,a);
+  static V Get<V>(object o,string n)=>(V)o.GetType().GetProperty(n).GetValue(o);
+  static object New(){var c=Resources.Load("M3Campaign");return Activator.CreateInstance(T,c.GetType().GetField("nights").GetValue(c),2,Resources.Load("S4Tuning"),Resources.Load("S4M2Tuning"),Resources.Load("ImmersionTuning"));}
+  static void Wait(object s){for(int i=0;i<100&&!Get<bool>(s,"StarterInWindow");i++)Call(s,"Tick",.05d);Assert.True(Get<bool>(s,"StarterInWindow"));}
+  [Test]public void FuelAndThreeTimedStrokesStartWithoutPrimerOrChoke(){var s=New();var e=Get<WatchEngineState>(s,"Engine");Assert.True(Get<bool>(s,"TimedStarter"));Assert.False((bool)Call(s,"PrimeEngine"));Assert.False((bool)Call(s,"SetChoke",true));Call(s,"StarterPulled");Assert.Zero(e.Pulls);for(int i=0;i<100;i++)Call(s,"PourFuel",.1f);for(int i=0;i<3;i++){Wait(s);Call(s,"StarterPulled");Call(s,"Tick",.3d);}Assert.True(e.Running&&e.Settled);Assert.False(e.ChokeClosed);Assert.Zero(e.Primer);Assert.False((bool)Call(s,"StarterPulled"));Call(s,"Retry");Assert.Zero(e.Pulls);Assert.False(e.Running);}
+  [Test]public void MissesKeepProgressAndSpamCannotAddPulls(){var t=ScriptableObject.CreateInstance<S4M2Tuning>();try{var e=new WatchEngineState(t);e.Reset(1,0,false);e.TimedPull(true);Assert.AreEqual(1,e.Pulls);Assert.False(e.TimedPull(true));e.Tick(.4f);e.TimedPull(false);Assert.AreEqual(1,e.Pulls);Assert.AreEqual(1,e.CoughSerial);Assert.Zero(e.FloodRemaining);e.ReadOnly=true;e.Tick(5);Assert.False(e.TimedPull(true));Assert.AreEqual(1,e.Pulls);}finally{UnityEngine.Object.DestroyImmediate(t);}}
+  [Test]public void GuestReceivesSameGaugeAndProgressButCannotMutate(){var h=New();for(int i=0;i<100;i++)Call(h,"PourFuel",.1f);Wait(h);Call(h,"StarterPulled");var g=New();Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.AreEqual(Get<float>(h,"StarterPhase"),Get<float>(g,"StarterPhase"),.001f);Assert.AreEqual(1,Get<WatchEngineState>(g,"Engine").Pulls);Assert.False((bool)Call(g,"StarterPulled"));}
+ }
+}

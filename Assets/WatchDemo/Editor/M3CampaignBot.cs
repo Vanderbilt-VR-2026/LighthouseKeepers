@@ -63,7 +63,7 @@ namespace LighthouseKeepers.Editor
      else if(next==KeeperStep.Fuel){for(int i=0;i<300&&s.Engine.Fuel<s.Master.guidedFuelTarget;i++)s.PourFuel(.1f);}
      else if(next==KeeperStep.Prime)s.PrimeEngine();
      else if(next==KeeperStep.CloseChoke)s.SetChoke(true);
-     else if(next==KeeperStep.Starter)s.StarterPulled();
+     else if(next==KeeperStep.Starter){for(int wait=0;wait<100&&s.TimedStarter&&!s.StarterInWindow;wait++)s.Tick(.05);s.StarterPulled();}
      else if(next==KeeperStep.OpenChoke)s.SetChoke(false);
      else if(next==KeeperStep.ResetBreaker)s.ResetBreaker();
      else if(next>=KeeperStep.PumpOff&&next<=KeeperStep.LightsOff)s.SetCircuit((int)next-(int)KeeperStep.PumpOff,false);

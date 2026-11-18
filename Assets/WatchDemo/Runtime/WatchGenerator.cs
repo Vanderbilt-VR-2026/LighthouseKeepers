@@ -22,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         MaterialPropertyBlock lampBlock;
         public GeneratorRestart Starter => starter;
         // Primer/choke readiness will be added here in a later milestone, not enabled in M2.
-        public bool RequiresPrimerAndChoke => state?.Engine!=null;
+        public bool RequiresPrimerAndChoke => state?.Engine!=null&&!state.TimedStarter;
         public void Bind(WatchState value)
         {
             if (state != null) state.Changed -= Refresh;

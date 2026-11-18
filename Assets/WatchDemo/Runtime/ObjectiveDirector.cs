@@ -149,6 +149,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Campaign&&state.FuelJobPending)return KeeperStep.Fuel;
             if(e.Running)return e.ChokeClosed?KeeperStep.OpenChoke:KeeperStep.None;
             if(!e.EnoughFuel||state.Master.onboarding&&e.Fuel<state.Master.guidedFuelTarget)return KeeperStep.Fuel;
+            if(state.TimedStarter)return KeeperStep.Starter;
             if(!e.Primed)return KeeperStep.Prime;
             if(!e.ChokeClosed)return KeeperStep.CloseChoke;
             return KeeperStep.Starter;
@@ -218,6 +219,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             string text=KeeperStrings.Get("step."+step);
             if(step==KeeperStep.Prime)text=string.Format(text,Mathf.Max(0,state.PowerTuning.primerSqueezes-state.Engine.Primer));
+            if(step==KeeperStep.Starter&&state.TimedStarter)text=KeeperStrings.Get("starter.timed.objective");
             if(step==KeeperStep.Starter)text=string.Format(text,Mathf.Max(0,state.PowerTuning.starterPulls-(state.Engine?.Pulls??state.StarterPulls)));
             if(step==KeeperStep.RadioTune)text=string.Format(text,state.Radio.Program.targetMHz.ToString("F1"));
             if(step==KeeperStep.RadioCode)text=KeeperStrings.Get(state.RadioRelay?"step.RadioCodeRelay":"step.RadioCodeLocal");

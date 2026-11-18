@@ -47,7 +47,7 @@ namespace LighthouseKeepers.Core
     public static class CrewNetworkVersion
     {
         // One identity for matchmaking, lobby display and the shared payload contract.
-        public const string Matchmaking = "LK-S5-CLEARANCE1";
-        public const string Snapshot = "LK-Lab-Coop-v43";
+        public const string Matchmaking = "LK-S5-STARTER1";
+        public const string Snapshot = "LK-Lab-Coop-v44";
     }
 }
