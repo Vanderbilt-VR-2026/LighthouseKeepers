@@ -69,7 +69,7 @@ namespace LighthouseKeepers.WatchDemo
             bool approaching=s.Ships!=null&&(s.Ships.SeenMask&1)!=0;
             if(!s.ReadOnly&&!s.Failed&&!watch.Sleeping)a.Tick(Time.deltaTime,s.Day==3,tuning.radioAuthentication,live,approaching,gone,s.Recovery.LessonActive||narrator&&narrator.SubtitleAlpha>0);
             for(int i=0;i<controls.Length;i++){controls[i].enabled=live&&a.NeedsDecision&&!s.Failed;bool next=controls[i].enabled&&(a.Stage==2?i>0:i==0);glow.SetColor("_EmissionColor",next?new Color(.4f,.22f,.06f)*(.65f+.25f*Mathf.Sin(Time.time*5.2f)):Color.black);keys[i].SetPropertyBlock(glow);}
-            
+
             if(lastSerial!=a.Serial){lastSerial=a.Serial;if(Visible){if(narrator)narrator.RecordSilentLine(Caption,Speaker);watch.GetComponent<ObjectiveHud>()?.Reveal();if(a.Kind==1&&a.Stage==2&&taps.clip){taps.Play();secondTap=Time.unscaledTime+.35f;}}}
             if(secondTap>0&&Time.unscaledTime>=secondTap){secondTap=0;if(Visible&&a.Kind==1&&a.Stage==2&&taps.clip)taps.Play();}
         }
