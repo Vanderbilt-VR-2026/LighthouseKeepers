@@ -1,55 +1,40 @@
 # Current checkpoint — Campaign / Survival modes (#141)
 
-Branch **sprint-5 / PR #89**. Two-mode implementation complete; focused rules tests 56/56, rendered lobby tests 3/3, live offline Survival and two-Editor mode/clearance/rejoin/shared-sleep checks pass. Network **LK-S5-MODES1 / LK-Lab-Coop-v49**, both players must update. See `Docs/Design/GameModes.md`.
+Branch **sprint-5 / PR #89**. Current APK source **70977af6**, `Builds/LighthouseKeepers-Sprint5-Modes-70977af6.apk`. IL2CPP ARM64, normal package, signature and ZIP validation passed. SHA-256: `e05c1cb017ab6afb7e3168035e34630d210b6f975cfd4fe8d76ff927015509ca`. **Not installed: Quest absent from ADB at delivery. Not launched.**
 
-Next: build current source and install if Quest is connected, **do not launch**. Screenshots inspected; runtime/transport evidence in `Docs/Verification/S5/GameModes/README.md`. Then update #141 and PR #89. No voice recordings yet. The previous APK is still installed until this delivery finishes.
+Network **LK-S5-MODES1 / LK-Lab-Coop-v49**. Both players must update. Mode is host-owned in the Photon session and game snapshot.
+
+## Done
+
+PLAY → Campaign / Survival → existing host/join/duty flow. Campaign preserved. Survival: all stations Day 1, new fuel/timed-pull generator, co-op valve and House/F4 code relay, Owen's complementary duty from Day 1, original adaptive soundtrack, no horror or narration, only flood loss, safe ship waiting when off beam, elapsed-time wristwatch, unlimited watches after shared sleep, daily flood/aim escalation. All tuning in `Assets/WatchDemo/Resources/SurvivalTuning.asset`. See `Docs/Design/GameModes.md`.
+
+56 focused EditMode tests, 3 rendered PlayMode lobby tests, live muted offline smoke and two-Editor transport passed. Two-Editor checks: mode inheritance, lantern/radio sync, rejoin, ship pass, shared sleep into Day 2, retry. Screenshots inspected. A wrong new string field caught in the live run was fixed and regression-tested. Source commits `4d2bdfc5`, `70977af6`. Build receipt and scope of evidence: `Docs/Verification/S5/GameModes/`.
+
+## Next
+
+1. Install this APK when the Quest returns; do not launch without a request. Use `Docs/Playtests/2026-11-18-survival-modes.md` for the human check. Issue #141 stays open with needs-headset-check.
+2. Take feedback on Survival duty clarity, Owen, pressure and wheel difficulty before broadening it.
+3. Deferred Campaign work remains: Northern Star watcher; warned Night 3 bunk/hunter/hiding lesson; older six-minute Demo pacing. The old Demo still fails its timing model; Survival is the new judges' mode. Final voice recordings #122 remain LAST. No AI speech.
 
 ## DEVICE CHECKS PENDING
 
-PLAY → Campaign / Survival → host or join; both peers show host mode; offline Survival with Owen and complementary duties; all four tasks Day 1; House code relay, mic trigger and outside-F4 wheel; shared sleep into progressively harder days; flood-only loss/retry; original soundtrack with no horror in Survival; Campaign horror unchanged; B recall, wristwatch elapsed time, lantern readability, worn comfort and sustained CPU/GPU/audio checks.
-
-Exact commands: `cd /Users/aneeshvasamreddy/LighthouseKeepers-M3`; `python3 artifacts/s5/modes/check.py SurvivalModeTests CampaignOrderTests RadioRelayTests ShipAimingTests CrewCompanionTests VoicePassTests`. Lobby tests use Pipeline `run_tests` mode `playmode`, filter `CrewLobbyBoardTests`, `async_tests: true`, then inspect `Temp/pipeline_test_status.json`. Never edit Assets during Play Mode/tests. Build/install scripts will live in `artifacts/s5/modes/` with a clean source tip and fresh backups.
-
----
-Previous checkpoint / deferred Campaign work follows. Do not treat its APK as this mode build.
-
-# Current checkpoint — Andrew / Aneesh playtest corrections
-
-Branch **sprint-5 / PR #89**. Installed APK: **6f05ad39**, `Builds/LighthouseKeepers-Sprint5-AndrewFixes-6f05ad39.apk`. Quest package/hash verified; **not launched**. Editor muted; no AI voice; install without launch. Do not modify the Desktop checkout.
-
-## Current implementation
-
-Immediate headset-following arrival briefing with Skip; actual direct-hover walkie fix; both lanterns enabled from Night 1 at the House entrance; personal walkie → lantern → wick → wrench objective sequence; radio lever grip/lift at the visible tip; distinct code-request/entry/transmit captions; hand-around-rim beacon input; disable accidental 180° stick turn; Owen relaxed wrist orientation; House orders moved off the radio/board; intense score accent limited to possession and visible horror.
-
-Network **LK-S5-LANTERNSTART1 / LK-Lab-Coop-v48**. Night 1 now has an enabled lantern snapshot (old peers reject that state), so both players need the new build. No extra replicated fields.
-
-Focused checks and a real physics-hover/input fixture are recorded in `Docs/Verification/S5/AndrewFeedback`. Input fixtures disable the hardware HandRig reader while injecting button edges; they do NOT bypass XR hover/select filters. Worn usability and GPU cost remain pending.
-
-## Next, in order
-
-1. Core pass implemented and verified: nightly beam tolerance, modeled flood retune, paired N1 code, Owen role/pose, possession rise sound, freshly baked dim fixtures, lantern cookie and exterior fog, lamp cable drops removed. Evidence in AndrewFeedback/README.md. Final build/transport delivery follows.
-2. Northern Star watcher/clown: visible gaze encounter, disappears after five seconds observed, respects scare setting; no camera motion or near-face spawn.
-3. Muted live Night 1 and two-Editor transport regression PASSED (including N1 lantern, radio clearance, ship pass, rejoin, retry; zero new runtime exceptions on corrected run). Current-source ARM64 build and Quest install PASSED; not launched. Full headset audio/feel/GPU still pending.
-4. Then resume older missing Night 3 warned hunter/hiding lesson and Demo pacing. Neither is accepted or enabled by these playtest fixes. Recordings #122 LAST.
+Mode flow and correct host mode on both headsets; offline Survival with Owen; all four stations on Day 1; paired valve and code relay; timed starter and circular beacon turning; shared sleep and daily difficulty; flood-only loss/retry and sea recovery; original soundtrack/no horror in Survival; Campaign horror/score unchanged; B recall and elapsed wristwatch; spoken multiplayer voice, lantern visibility, comfort and sustained GPU/CPU. Full autonomous Owen playthrough remains unverified. No Editor result is headset acceptance.
 
 ## Exact commands
 
-`cd /Users/aneeshvasamreddy/LighthouseKeepers-M3`
+Worktree: `cd /Users/aneeshvasamreddy/LighthouseKeepers-M3`. Leave the Desktop checkout untouched. Keep Editor audio muted via `EditorUtility.audioMasterMute = true` before every play/test.
 
-Focused: `python3 artifacts/s5/andrew-feedback/check.py ArrivalBriefingTests RadioStateTests RadioBeltTests BeaconStationTests PlayerSoundtrackTests RadioRelayTests CampaignOrderTests CrewCompanionTests VoicePassTests`
+Focused checks: `python3 artifacts/s5/modes/check.py SurvivalModeTests CampaignOrderTests RadioRelayTests ShipAimingTests CrewCompanionTests VoicePassTests`.
 
-Live scene: `python3 artifacts/s5/andrew-feedback/open-play.py`; run `artifacts/s5/andrew-feedback/InteractionPlay.cs` through the existing Pipeline `run_script` bridge, entry `InteractionPlay.Run`, fresh result path; stop Play Mode before editing Assets. Never start a scene while tests are still running.
+Live offline: `python3 artifacts/s5/modes/solo.py`. Two-Editor: `python3 artifacts/s5/modes/crew.py`; both editors fully imported and muted, source and backed-up peer overlay synchronized before Play Mode. Never copy peer changes back onto source. Evidence includes the final clean restart after an Editor domain reload interrupted the first harness attempt.
 
-Build drivers from `artifacts/s5/unfinished/build-final.py` and `deliver-final.py` need fresh output/backup folder, product suffix and network constants before reuse. Close Editors, clean source, validate ARM64/package/signature/hash. Preserve then restore only documented builder/importer churn.
+Lobby tests: Pipeline `run_tests`, mode `playmode`, filter `CrewLobbyBoardTests`, `async_tests: true`; read `Temp/pipeline_test_status.json`. No Asset edits while Play Mode/tests/build are running.
 
-## DEVICE CHECKS PENDING
+Build driver: `artifacts/s5/modes/build.py` (use a NEW output/backup directory before another build). Package validation / optional install: `python3 artifacts/s5/modes/deliver.py` (restores only documented builder settings from the backup).
 
-Arrival immediate/follows/seated height/Skip; B recall; right/left snap symmetry; actual walkie hover/grip/release/belt; lantern on House hooks, wick/oil/hanging; radio lift/dial/code/hold-trigger sequence; solo both roles and human code relay; beacon outside F4, circular turning/regrip, nightly difficulty; darkness/readability, fog/ship visibility and sustained Quest CPU/GPU; possession audio/eyes/revive; Owen hands/neck/stairs; voice, shared sleep and rejoin. Do not treat an Editor fixture as headset acceptance.
+Install existing APK without launch:
 
-## Delivery / continuation commands for this pass
-
-Current installed build source **6f05ad39** (delivery complete). Build: `python3 artifacts/s5/andrew-feedback/build.py` (one-use backup directory; use a fresh output folder for a second build). Install/validate without launching: `python3 artifacts/s5/andrew-feedback/deliver.py`. Normal package `com.lighthousekeepers.game`; connected Quest serial `2G0YC1ZG32048T`.
-
-Two-Editor script: `python3 artifacts/s5/andrew-feedback/crew.py`; it now explicitly skips each personal briefing after spawn. The peer was copied from the source with its previous overlay backed up to `artifacts/s5/andrew-feedback/peer-backup`. Both Editors muted. Do not copy the peer overlay back to source.
-
-User test plan: `Docs/Playtests/2026-11-18-headset-checklist.md`. Next implementation work is the requested Northern Star watcher, then the older warned Night 3 bunk/hiding lesson and failing Demo pace. More tool use should build on the accepted wrench/lantern/radio interactions; preserve the music, physical repair and heartbeat. Final voice recordings remain last.
+```sh
+"/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb" devices -l
+"/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb" -s 2G0YC1ZG32048T install -r Builds/LighthouseKeepers-Sprint5-Modes-70977af6.apk
+```
