@@ -1,6 +1,12 @@
-# Current checkpoint — paired-station playtest fixes (#142)
+# Current checkpoint — House light and Survival practice day (#142)
 
-Branch `sprint-5`, PR #89. APK source **823c5781** is built and installed on Quest 3, **not launched**. Network **LK-S5-GRIPDARK1** / **LK-Lab-Coop-v50**; both players must update.
+Branch `sprint-5`, PR #89. New source verified; build/install next. Network **LK-S5-PRACTICE1 / LK-Lab-Coop-v50**; both players must update. No new snapshot fields.
+
+## Current follow-up
+
+Held walkies rotated 180° with preserved hand wrap. House instruction lamp always on, larger baked pool in both powered/blackout states; slow per-room flicker. Survival Day 1 is a practice watch: slow water capped at 0.22 m, no flood loss or oil drain; still requires all jobs and ship guidance. Day 2 restores pressure. 58 focused tests and 32 actual XRI checks pass; blackout and controller water-cap checks pass. Inspected images and limits: [HousePractice](../Verification/S5/HousePractice/README.md).
+
+Next action: build clean source with `python3 artifacts/s5/house-practice/build.py`, then `python3 artifacts/s5/house-practice/deliver.py`. Editor must be fully closed first. Install only; do not launch. Update this checkpoint and PR/issue with the resulting receipt.
 
 ## Grip/darkness follow-up delivered (#142)
 
@@ -26,7 +32,7 @@ Build/install complete. Installed APK hash matches source build `823c5781`; app 
 
 ## DEVICE CHECKS PENDING
 
-Both-hand walkie/lantern grip, rim grabbing, much darker room navigation and LOW/HIGH usefulness, Owen work gestures/collar, Days 1–2 balance; full-code readability/entry, role-specific clues and Owen walkie reply, mic grip/hold trigger; valve reach and fixed position; lantern bail pose/set-down/submersion; belt carry; generator paired hold; F3 wall/Owen route; face seam; lantern darkness/comfort and sustained Quest CPU/GPU. Audible two-headset voice, full solo nights and human co-op runs remain unverified.
+New: flipped walkie orientation, always-on House light and slow flicker, Survival practice Day 1 → real flood pressure on Day 2. Both-hand walkie/lantern grip, rim grabbing, much darker room navigation and LOW/HIGH usefulness, Owen work gestures/collar, Days 1–2 balance; full-code readability/entry, role-specific clues and Owen walkie reply, mic grip/hold trigger; valve reach and fixed position; lantern bail pose/set-down/submersion; belt carry; generator paired hold; F3 wall/Owen route; face seam; lantern darkness/comfort and sustained Quest CPU/GPU. Audible two-headset voice, full solo nights and human co-op runs remain unverified.
 
 ## Build and exact commands
 

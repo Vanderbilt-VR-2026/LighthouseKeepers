@@ -175,7 +175,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Director!=null){state.OfferStationGrace(state.Director.First);state.OfferStationGrace(state.Director.Second);}
             bool watchRunning=state.AdvanceWatchGate(Time.deltaTime);
             if(watchRunning)state.Tick(Time.deltaTime);
-            if(state.Tutorial&&flood.Height>state.Master.tutorialFloodCap)flood.SetHeight(state.Master.tutorialFloodCap);
+            if(flood.Height>state.FloodHeightCap)flood.SetHeight(state.FloodHeightCap);
             state.ObserveWater(Time.deltaTime,flood.Height);
             int second=(int)state.Elapsed;if(second!=shownSecond||shownWatchHeld!=state.WatchStartHeld){shownSecond=second;shownWatchHeld=state.WatchStartHeld;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=state.Failed?state.FailureMessage+LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.4"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.5"),state.Day,remaining/60,remaining%60,state.CompletedTasks,state.Definition.tasks.Length);RefreshBoard();}
             bool nearBed=Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)<1.8f;

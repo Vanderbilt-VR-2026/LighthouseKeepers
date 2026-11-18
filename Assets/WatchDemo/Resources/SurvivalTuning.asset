@@ -25,6 +25,8 @@ MonoBehaviour:
   passageSeconds: 30
   initialFuel: 0.05
   repairedSeepPerSecond: 0.0006
-  firstDayFloodCushion: 0.8
+  firstDayFloodCushion: 0.4
   secondDayFloodCushion: 0.9
   earlyGraceBonusSeconds: 20
+  firstDayPractice: 1
+  practiceWaterCap: 0.22

@@ -16,6 +16,8 @@ namespace LighthouseKeepers.WatchDemo
         readonly DayDefinition[] days;
         public KeeperGameMode Mode {get;}
         public bool Survival=>Mode==KeeperGameMode.Survival;
+        public bool SurvivalPractice=>Survival&&Day==1&&SurvivalTuning.Current.firstDayPractice;
+        public float FloodHeightCap=>SurvivalPractice?SurvivalTuning.Current.practiceWaterCap:Tutorial?Master.tutorialFloodCap:float.PositiveInfinity;
         public float BeamTolerance=>Survival?SurvivalTuning.Current.Beam(Day):Sprint5.BeamTolerance(Day);
         public S4Tuning Tuning {get;}
         public S4M2Tuning PowerTuning {get;}
@@ -124,7 +126,7 @@ namespace LighthouseKeepers.WatchDemo
         public int CompletedTasks { get { int n = 0; foreach (var task in Definition.tasks) if (IsDone(task.stationId)) n++; return n; } }
         public bool Complete => Recovery?.LessonActive!=true && Recovery?.AnyDown!=true && CompletedTasks == Definition.tasks.Length && (schedule==null||schedule.Finished) && (Ships==null||Ships.Finished);
         public bool HasNextDay => Survival || index + 1 < days.Length;
-        public bool Failed => Survival?HighWaterFailed:Recovery?.Failed==true || Ships?.Lost==true || Sea.lost || !Tutorial&&(HighWaterFailed || BeaconDarkFailed || (Elapsed >= Duration && !Complete));
+        public bool Failed => Survival?!SurvivalPractice&&HighWaterFailed:Recovery?.Failed==true || Ships?.Lost==true || Sea.lost || !Tutorial&&(HighWaterFailed || BeaconDarkFailed || (Elapsed >= Duration && !Complete));
         public WatchState() : this(Resources.Load<DayCatalog>("WatchDays").days, 1) { }
         public WatchState(DayDefinition[] definitions, int firstDay):this(definitions,firstDay,null){}
         public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning):this(definitions,firstDay,tuning,null){}
@@ -179,7 +181,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(GeneratorTutorial&&!NightTwoOutage){double until=NightTwoFuelFailure?FuelRunoutRemaining:Master.nightTwoOutageSeconds-Elapsed;if(until>.00001&&seconds>until){Tick(until);Tick(seconds-until);return;}}
             double darkSeconds=Math.Max(0,seconds-BeaconGraceRemaining);
-            Recovery?.Tick((float)seconds);StartAssist.Tick((float)seconds);Pressure?.Tick((float)seconds);if(!Tutorial)Lanterns?.Tick((float)seconds);
+            Recovery?.Tick((float)seconds);StartAssist.Tick((float)seconds);Pressure?.Tick((float)seconds);if(!Tutorial&&!SurvivalPractice)Lanterns?.Tick((float)seconds);
             simulationSliceEnd=Elapsed+seconds;PaceArrivalFuel();WarnFuelSabotage();Engine?.Tick((float)seconds);
             Beacon?.Tick((float)seconds,HasPower(PowerCircuit.Beacon));
             if(Ships==null&&!Tutorial&&!BeaconShining && Definition.beaconDarkLimitSeconds>0)
@@ -200,7 +202,7 @@ namespace LighthouseKeepers.WatchDemo
             if(BriefingHeld||Recovery.LessonActive)return;
             if(!double.IsFinite(seconds)||seconds<0||!float.IsFinite(height))throw new ArgumentOutOfRangeException();
             if(!ReadOnly){LatestWater=height;ObservePressure();}
-            if(Tutorial||ReadOnly||Failed||!Tuning||!Tuning.highWaterLoss)return;
+            if(Tutorial||SurvivalPractice||ReadOnly||Failed||!Tuning||!Tuning.highWaterLoss)return;
             if(WatchStartHeld||StationGraceRemaining>0){HighWaterElapsed=0;return;}
             HighWaterElapsed=height>=Tuning.failWaterHeightM?Math.Min(Tuning.failWaterSustainSeconds,HighWaterElapsed+seconds):0;
             if(HighWaterElapsed>=Tuning.failWaterSustainSeconds){HighWaterFailed=true;Changed?.Invoke();}

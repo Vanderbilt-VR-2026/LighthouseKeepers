@@ -7,7 +7,9 @@ namespace LighthouseKeepers.WatchDemo
     {
         [Min(.1f)] public float soloFlood=1,crewFlood=1.1f;
         [Min(0)] public float floodIncreasePerDay=.08f;
-        [Range(.5f,1)] public float firstDayFloodCushion=.8f,secondDayFloodCushion=.9f;
+        [Range(.1f,1)] public float firstDayFloodCushion=.4f,secondDayFloodCushion=.9f;
+        public bool firstDayPractice=true;
+        [Range(.05f,.4f)] public float practiceWaterCap=.22f;
         [Min(0)] public float earlyGraceBonusSeconds=20;
         [Min(1)] public float firstBeamDegrees=14,minimumBeamDegrees=4;
         [Min(0)] public float aimDifficultyPerDay=.18f;
