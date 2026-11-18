@@ -7,12 +7,14 @@ using LighthouseKeepers.Interaction;
 using LighthouseKeepers.Gameplay.Interaction;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease
+    public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease, INetworkPropCarry
     {
         WatchDemoController watch;int index;XRGrabInteractable grab;INetworkPropStatus lease;Transform head;Renderer lamp;TextMesh status;MaterialPropertyBlock block;
-        bool trigger,previous,released;
-        public bool ReleasedBodyIsKinematic=>!released;
-        public void OnNetworkReleased(){released=true;unheld=0;}
+        bool trigger,previous,released,carried,taughtCarry;
+        public bool Carried=>carried;
+        public void DropCarry(){if(carried)released=true;carried=false;}
+        public bool ReleasedBodyIsKinematic=>carried||!released;
+        public void OnNetworkReleased(){if(carried)return;released=true;unheld=0;}
         void Start(){grab.useDynamicAttach=false;grab.throwOnDetach=false;}float nextSend,unheld;Vector3 home;Quaternion homeRotation;Rigidbody body;
         public XRGrabInteractable Grab=>grab;
         public bool Held=>grab&&grab.isSelected;
@@ -46,12 +48,19 @@ namespace LighthouseKeepers.WatchDemo
             gameObject.AddComponent<PhysicalGrip>().Configure(attach,HandPose.WrapGrip);
             grab.useDynamicAttach=false;
             foreach(var rig in FindObjectsByType<Unity.XR.CoreUtils.XROrigin>(FindObjectsSortMode.None))foreach(var c in rig.GetComponentsInChildren<Collider>(true))Physics.IgnoreCollision(col,c,true);
-            grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
+            grab.selectEntered.AddListener(e=>{carried=false;if(!taughtCarry){taughtCarry=true;FindAnyObjectByType<HarborRadio>()?.RecordSilentLine(KeeperStrings.Get("radio.belt"),"");watch.GetComponent<ObjectiveHud>()?.RevealFor(5);}});grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
             head=Camera.main?Camera.main.transform:null;
         }
         void Activate(ActivateEventArgs e){if(!Held)return;trigger=true;if(watch.State.ScriptedPartner)watch.GetComponent<CrewCompanion>()?.RequestReport();}
         void Deactivate(DeactivateEventArgs e)=>trigger=false;
-        void Release(SelectExitEventArgs e){trigger=false;Send(false);OnNetworkReleased();}
+        void Release(SelectExitEventArgs e){trigger=false;Send(false);
+            // Retain the existing prop lease while clipped; the host checks the carry pose at the belt.
+            if(head&&RadioBeltPose.Near(transform.position,head.position,head.rotation)&&!OtherOnBelt()){
+                carried=true;released=false;body.isKinematic=true;
+                watch.GetComponent<ObjectiveHud>()?.RevealFor(3);
+            }else OnNetworkReleased();
+        }
+        bool OtherOnBelt(){foreach(var r in watch.GetComponentsInChildren<HandheldCrewRadio>())if(r!=this&&r.Carried)return true;return false;}
         void Send(bool active){watch.State.Coop?.Send(CoopAction.HandheldRadio,index,active);previous=active;nextSend=Time.unscaledTime+.1f;}
         void Update()
         {
@@ -62,6 +71,7 @@ namespace LighthouseKeepers.WatchDemo
             bool transmitting=watch.RadioTransmitter(index)!=0;
             block.Clear();var c=transmitting?new Color(.15f,.7f,.25f):new Color(.25f,.13f,.03f);block.SetColor("_BaseColor",c);block.SetColor("_EmissionColor",transmitting?c*.7f:c*.12f);lamp.SetPropertyBlock(block);
             status.text=PlayerStrings.Get(transmitting?"connected.transmitting":"connected.radioUse");
+            if(carried&&head&&!Held){body.isKinematic=true;transform.SetPositionAndRotation(RadioBeltPose.Position(head.position,head.rotation),Quaternion.Euler(0,head.eulerAngles.y,0));return;}
             if(Held||lease!=null&&lease.Owner!=0)unheld=0;else unheld+=Time.deltaTime;
             if((lease==null||lease.CanSimulateReleased)&&!Held){body.isKinematic=!released;
                 if(unheld>20||transform.position.y< -1){if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,homeRotation);unheld=0;}}

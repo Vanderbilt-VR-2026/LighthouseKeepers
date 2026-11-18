@@ -1,0 +1,73 @@
+{
+  "Summary": {
+    "Total": 8,
+    "Passed": 8,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.ActiveHeldUpdatesKeepLeaseAliveAndStalledOwnerExpires",
+      "Status": "Passed",
+      "Duration": 0.0074775,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.AnotherPlayerCannotUpdateOrReleaseOwnedProp",
+      "Status": "Passed",
+      "Duration": 0.0001381,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.DisconnectReleasesEveryPropOwnedByThatPlayer",
+      "Status": "Passed",
+      "Duration": 0.0010489,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.OldPacketsCannotMoveOrReleaseANewGrab",
+      "Status": "Passed",
+      "Duration": 0.000107,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.OwnerCanReleaseAndAnotherPlayerCanGrab",
+      "Status": "Passed",
+      "Duration": 8.66e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.RegisterPreservesALeaseAndResetStartsANewSession",
+      "Status": "Passed",
+      "Duration": 0.0001985,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.TwoPlayersCannotOwnTheSameProp",
+      "Status": "Passed",
+      "Duration": 8.14e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.GrabAuthorityTests.UnknownPropsAndInvalidPlayersAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0031234,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.61,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: GrabAuthorityTests",
+  "success": true,
+  "result": null
+}

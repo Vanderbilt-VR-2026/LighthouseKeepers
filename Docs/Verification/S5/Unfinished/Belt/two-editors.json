@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checks": [
+    "join",
+    "guest direct grab lease",
+    "clip retains lease",
+    "carry pose replicated without hand",
+    "disconnect releases prop"
+  ],
+  "scope": "Two live muted Editors; worn belt reach and voice not verified"
+}
