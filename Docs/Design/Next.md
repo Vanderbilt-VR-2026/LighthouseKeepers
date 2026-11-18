@@ -1,8 +1,8 @@
 # Current checkpoint — Campaign / Survival modes (#141)
 
-Branch **sprint-5 / PR #89**. Two-mode implementation complete; focused rules tests 55/55 and rendered lobby tests 3/3 pass. Network **LK-S5-MODES1 / LK-Lab-Coop-v49**, both players must update. See `Docs/Design/GameModes.md`.
+Branch **sprint-5 / PR #89**. Two-mode implementation complete; focused rules tests 56/56, rendered lobby tests 3/3, live offline Survival and two-Editor mode/clearance/rejoin/shared-sleep checks pass. Network **LK-S5-MODES1 / LK-Lab-Coop-v49**, both players must update. See `Docs/Design/GameModes.md`.
 
-Next: muted live solo / two-Editor Survival join, code, ship, shared sleep and rejoin; inspect screenshots; build current source and install if Quest is connected, **do not launch**. Then update #141 and PR #89. No voice recordings yet. The previous APK is still installed until this delivery finishes.
+Next: build current source and install if Quest is connected, **do not launch**. Screenshots inspected; runtime/transport evidence in `Docs/Verification/S5/GameModes/README.md`. Then update #141 and PR #89. No voice recordings yet. The previous APK is still installed until this delivery finishes.
 
 ## DEVICE CHECKS PENDING
 
