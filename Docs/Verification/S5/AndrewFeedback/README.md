@@ -35,3 +35,7 @@ Readability while turning, hand feel, radio/belt stability, realistic wheel diff
 ## Live transport rerun
 
 Two muted Editors passed host/join, enabled Night 1 lantern snapshot, preparation hold, radio clearance, ship pass, leave/rejoin and retry. The first run caught a MaterialPropertyBlock initialized in a MonoBehaviour constructor; moved it to Awake and reran with **zero new runtime exceptions**. These actions were scripted; microphone audio and real controller input across devices remain pending.
+
+## Delivered
+
+Source **6f05ad39** built as IL2CPP ARM64, signed/VR package verified, installed on connected Quest 3, installed APK SHA-256 matches the build. **Not launched.** APK: `Builds/LighthouseKeepers-Sprint5-AndrewFixes-6f05ad39.apk`; SHA-256 `13ba2564b88320d319bef2331a04b4d3b480e311dc154abc59854c904d0a2c6c`. See `delivery.json`. This is installation evidence, not a worn playtest.
