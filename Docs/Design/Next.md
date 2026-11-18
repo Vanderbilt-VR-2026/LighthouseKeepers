@@ -6,7 +6,7 @@ Helper slice complete: automatic blocked-route retries, no permanent slab, relax
 
 Placement slice complete: internal floating guards removed, radio frame supports corrected, detached beacon fittings removed, one lamp moved to F2, useful lantern instructions, notes persist from arrival, watch offset adjusted. Actual placement checks/screenshots: PlaytestClarity/Placement. Watch clearance and human reach remain device checks.
 
-Next: radio-gated ships and clear prerequisite order, then #137 timed starter. Possession eye trails/beard readability and belt carry still pending. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
+Campaign slice implemented for Nights 1–3: radio clearance, stable engine → pipe/pump → radio → ship order, actual first-ship aim without wreck penalty. Protocol LK-S5-CLEARANCE1 / v43. Focused/Play evidence in PlaytestClarity/Campaign; 88 focused checks, actual Night 1 Play and live pair passed; clean APK delivery is next. Nights 4–5 duo and solo Demo simulations remain unresolved, so their prior schedule is retained. Next implementation: #137 timed starter. Possession eye trails/beard readability and belt carry still pending. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
 
 ---
 

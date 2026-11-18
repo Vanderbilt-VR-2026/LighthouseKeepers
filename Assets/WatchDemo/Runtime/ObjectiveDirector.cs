@@ -48,6 +48,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(state.Recovery.AnyDown){First=state.Recovery.Downed((int)Duty(actorA))?KeeperStep.AwaitRescue:KeeperStep.ReviveKeeper;Second=actorB==0?KeeperStep.None:state.Recovery.Downed((int)Duty(actorB))?KeeperStep.AwaitRescue:KeeperStep.ReviveKeeper;return;}
             if(state.Complete){First=state.HasNextDay?KeeperStep.Sleep:KeeperStep.Complete;Second=actorB!=0?First:KeeperStep.None;return;}
+            if(state.Scenario?.radioClearance==true){OrderedCampaign(wrenchHeld);return;}
             if(state.ShipGuidanceDue){
                 var step=BeaconStep();if(step==KeeperStep.None)step=KeeperStep.KeepLight;
                 // Keep the wheel assignment while its keeper walks upstairs. Re-picking by current
@@ -89,6 +90,42 @@ namespace LighthouseKeepers.WatchDemo
             if(First==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)First=KeeperStep.KeepLight;
             if(actorB!=0&&Second==KeeperStep.None&&state.Ships!=null&&!state.Ships.Finished)Second=KeeperStep.KeepLight;
         }
+        // Preparation has one stable dependency chain. Walking past another floor must
+        // not replace the task. A cleared ship takes priority once the engine is healthy.
+        void OrderedCampaign(bool held)
+        {
+            Second=KeeperStep.None;
+            if(state.Power==PowerState.Off||state.Engine?.Settled==false||state.FuelJobPending){First=EngineStep();if(actorB!=0)Second=First;return;}
+            if(state.ShipGuidanceDue){
+                var beam=BeaconStep();if(beam==KeeperStep.None)beam=KeeperStep.KeepLight;
+                bool first=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper||Duty(actorB)!=CrewDuty.Lightkeeper;
+                First=first?beam:OtherShipJob(held);Second=actorB==0?KeeperStep.None:first?OtherShipJob(held):beam;return;
+            }
+            if(!state.Repaired){
+                First=PipeStep(held);
+                if(actorB!=0&&state.Pressure?.CrewRequired==true){
+                    int holder=state.Pressure.Holder,worker=state.PipeWorkerActor;
+                    if(holder!=actorA&&holder!=actorB||holder==worker)
+                        holder=worker==actorA?actorB:worker==actorB?actorA:Duty(actorA)==CrewDuty.Lightkeeper?actorA:actorB;
+                    First=holder==actorA?KeeperStep.HoldValve:PipeStep(held);
+                    Second=holder==actorB?KeeperStep.HoldValve:PipeStep(held);
+                }else if(actorB!=0)Second=First;
+                return;
+            }
+            if(!state.HasPower(PowerCircuit.Pump)){First=BreakerStep(PowerCircuit.Pump);if(actorB!=0)Second=First;return;}
+            if(state.Authenticity.NeedsDecision){
+                bool first=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper||Duty(actorB)!=CrewDuty.Lightkeeper;
+                First=first?AuthStep:KeeperStep.ReadCode;Second=actorB==0?KeeperStep.None:first?KeeperStep.ReadCode:AuthStep;return;
+            }
+            if(!state.Radio.Completed&&!state.IsPending(WatchState.RadioStation)){
+                var step=StepForStation(WatchState.RadioStation,held);
+                bool first=actorB==0||Duty(actorA)==CrewDuty.Lightkeeper||Duty(actorB)!=CrewDuty.Lightkeeper;
+                var partner=state.RadioRelay?KeeperStep.ReadCode:step;
+                First=first?step:partner;Second=actorB==0?KeeperStep.None:first?partner:step;return;
+            }
+            First=BeaconStep();if(First==KeeperStep.None)First=KeeperStep.KeepLight;
+            if(actorB!=0)Second=First;
+        }
         KeeperStep AuthStep=>state.Authenticity.Stage==2?KeeperStep.JudgeCall:KeeperStep.ChallengeCall;
         KeeperStep OtherShipJob(bool held){for(int i=0;i<state.Definition.tasks.Length;i++)if(Available(i)&&state.Definition.tasks[i].stationId!=WatchState.BeaconStation){var step=Step(i,held);return state.RadioRelay&&step==KeeperStep.RadioCode?KeeperStep.ReadCode:step;}return KeeperStep.KeepLight;}
         bool Available(int i)=>i>=0&&i<state.Definition.tasks.Length&&!state.IsDone(state.Definition.tasks[i].stationId)&&!state.IsPending(state.Definition.tasks[i].stationId)&&(state.Power==PowerState.On||state.Definition.tasks[i].stationId==WatchState.PipeStation||state.Definition.tasks[i].stationId==WatchState.GeneratorStation);
@@ -122,7 +159,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.IsDone(id)||state.IsPending(id))return KeeperStep.None;
             if(id==WatchState.PipeStation)return state.Pressure?.CrewRequired==true&&!state.ScriptedPartner?KeeperStep.HoldValve:PipeStep(held);
             if(id==WatchState.GeneratorStation)return EngineStep();
-            if(id==WatchState.RadioStation&&state.Connected&&state.Connected.dependencies&&!state.BeaconShining)return BeaconStep();
+            if(id==WatchState.RadioStation&&state.Connected&&state.Connected.dependencies&&state.Scenario?.radioClearance!=true&&!state.BeaconShining)return BeaconStep();
             var circuit=id==WatchState.RadioStation?PowerCircuit.Radio:PowerCircuit.Beacon;
             if(state.Power==PowerState.Off||state.Engine?.ChokeClosed==true)return EngineStep();
             if(!state.HasPower(circuit))return BreakerStep(circuit);
@@ -143,7 +180,7 @@ namespace LighthouseKeepers.WatchDemo
         KeeperStep BreakerStep(PowerCircuit desired)
         {
             var g=state.Grid;if(g==null)return EngineStep();
-            float required=g.Selected(desired)?0:desired==PowerCircuit.Radio?state.PowerTuning.radioLoad:state.PowerTuning.beaconLoad;
+            float required=g.Selected(desired)?0:desired==PowerCircuit.Radio?state.PowerTuning.radioLoad:desired==PowerCircuit.Pump?state.PowerTuning.pumpLoad:desired==PowerCircuit.Lights?state.PowerTuning.lightsLoad:state.PowerTuning.beaconLoad;
             if(g.Demand+required>g.Capacity+.001f)
             {
                 foreach(var c in shedOrder)

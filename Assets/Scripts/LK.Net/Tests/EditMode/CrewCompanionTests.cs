@@ -13,7 +13,7 @@ namespace LighthouseKeepers.Net.Tests {
    d.GetType().GetField("StationPosition").SetValue(d,new Func<string,Vector3>(id=>id=="STN_PIPE_LEAK"?Vector3.zero:Vector3.right*100));
    Call(d,"Tick",0f,1,Vector3.zero,0,Vector3.zero,true);var first=Get<object>(d,"First");
    Call(d,"Tick",.1f,1,Vector3.right*100,0,Vector3.zero,true);Assert.AreEqual(first,Get<object>(d,"First"),"A moving human retains the current instruction for the authored assignment hold.");
-   Call(d,"Tick",10f,1,Vector3.right*100,0,Vector3.zero,true);Assert.AreNotEqual(first,Get<object>(d,"First"),"After the hold, the nearer urgent station may be reassigned.");
+   Call(d,"Tick",10f,1,Vector3.right*100,0,Vector3.zero,true);Assert.AreEqual(first,Get<object>(d,"First"),"Campaign dependencies stay stable until the engine is repaired, regardless of head position.");
   }
   [Test]public void ReplicaCannotSpawnPartnerOrChangeAuthority(){var h=New();Call(h,"SetScriptedPartner",true);Call(Get<object>(h,"Director"),"Tick",0f,1,Vector3.zero,0,Vector3.zero,true);var packet=Call(h,"Capture",.1f);Assert.True((bool)Call(packet,"Valid"));var g=New();Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",packet));Assert.True(Get<bool>(g,"ScriptedPartner"));Call(Get<object>(g,"Director"),"Tick",1f,42,Vector3.zero,0,Vector3.zero,false);Assert.AreEqual(Bot,Get<int>(Get<object>(g,"Director"),"SecondActor"));Call(g,"SetScriptedPartner",false);Assert.True(Get<bool>(g,"ScriptedPartner"));packet.GetType().GetField("keepers").SetValue(packet,2);Assert.False((bool)Call(packet,"Valid"));}
  }

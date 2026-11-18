@@ -136,11 +136,11 @@ namespace LighthouseKeepers.WatchDemo
             ObserveStorySpeech();
         }
         bool AllowedQueued(int id)=>id<76||id>=96&&id<=98||(id>=94?cueRules.AllowsCampaign(id):cueRules.Allows(id,Time.time));
-        void ObserveShips(){var ships=watch.State.Ships;if(ships==null)return;if((ships.SeenMask&~shipSeen)!=0&&!pending.Contains(96))AddPending(96);if((ships.CloseMask&~shipClose)!=0&&!pending.Contains(97))AddPending(97);if((ships.PassedMask&~shipPassed)!=0&&!pending.Contains(98))AddPending(98);shipSeen=ships.SeenMask;shipClose=ships.CloseMask;shipPassed=ships.PassedMask;}
+        void ObserveShips(){var ships=watch.State.Ships;if(ships==null||!ships.ClearanceGranted)return;if((ships.SeenMask&~shipSeen)!=0&&!pending.Contains(96))AddPending(96);if((ships.CloseMask&~shipClose)!=0&&!pending.Contains(97))AddPending(97);if((ships.PassedMask&~shipPassed)!=0&&!pending.Contains(98))AddPending(98);shipSeen=ships.SeenMask;shipClose=ships.CloseMask;shipPassed=ships.PassedMask;}
         bool Relevant(int id)
         {
             var s=watch.State;
-            if(id==96)return s.Ships!=null&&!s.Ships.Finished;
+            if(id==96)return s.Ships!=null&&s.Ships.ClearanceGranted&&!s.Ships.Finished;
             if(id==97)return s.Ships!=null&&s.Ships.Danger>0&&s.Ships.ThreatLimit(s.Elapsed)>0;
             if(id==33)return !watch.WrenchHeld&&!s.Repaired;
             if(id==78)return s.Repaired&&watch.WrenchHeld;

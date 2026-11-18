@@ -26,8 +26,11 @@ MonoBehaviour:
   tasks:
   - stationId: STN_PIPE_LEAK
     taskText: Repair the pipe
+  - stationId: STN_RADIO_CONSOLE
+    taskText: Clear the convoy by radio
   startingFaults:
   - STN_PIPE_LEAK
+  - STN_RADIO_CONSOLE
   requiredKeepers: 1
   briefingHeading: "Day 1 \u2014 The leak"
   briefingText: Take the wrench, find the pipe downstairs and stop the leak. Clear
@@ -66,6 +69,7 @@ MonoBehaviour:
     id: night-1
     nameKey: m3.night1
     configured: 1
+    radioClearance: 1
     demo: 0
     noFail: 1
     finaleFaultPileup: 0
@@ -90,6 +94,13 @@ MonoBehaviour:
       atSeconds: 0
       graceSeconds: 60
       repeat: 0
+    - id: clearance
+      stationId: STN_RADIO_CONSOLE
+      afterStationId:
+      gate: 0
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
     stations:
     - stationId: STN_PIPE_LEAK
       activeSteps:
@@ -97,15 +108,25 @@ MonoBehaviour:
       crewVariant: 0
       informationSite: F1
       soloLocalInformation: 1
+    - stationId: STN_RADIO_CONSOLE
+      activeSteps:
+      - power
+      - tune
+      - code
+      - transmit
+      crewVariant: 0
+      informationSite: F4
+      soloLocalInformation: 1
     ships:
     - id: preview
       nameKey: m3.ship.maryEllen
-      sightedAtSeconds: 120
+      sightedAtSeconds: 0
       approachSeconds: 45
       windowSeconds: 30
       darkGraceSeconds: 30
       broadcastExtensionSeconds: 0
       safePreview: 1
+      aimingTutorial: 1
       largeFinale: 0
     cues:
     - eventId: ship-sighted

@@ -90,7 +90,7 @@ namespace LighthouseKeepers.WatchDemo
         int repairSeed=System.Environment.TickCount;
         public DayDefinition Definition => days[index];
         public int Day => Definition.day;
-        public double Duration => Campaign ? (balanceCrew?Scenario.crewSeconds:Scenario.soloSeconds) : Day3Balance ? (balanceCrew?Tuning.day3CrewSeconds:Tuning.day3SoloSeconds) : Definition.dayLengthSeconds*(Tuning&&Tuning.difficulty?Tuning.dayLengthMultiplier:1);
+        public double Duration => Campaign ? (balanceCrew?Scenario.crewSeconds:Scenario.soloSeconds)+(Ships?.DepartureWait??0)+(Tutorial?Ships?.TutorialDelay??0:0) : Day3Balance ? (balanceCrew?Tuning.day3CrewSeconds:Tuning.day3SoloSeconds) : Definition.dayLengthSeconds*(Tuning&&Tuning.difficulty?Tuning.dayLengthMultiplier:1);
         public double Elapsed { get; private set; }
         public bool BriefingHeld {get;private set;}
         public void HoldBriefing(bool value){if(!ReadOnly)BriefingHeld=value;}
@@ -140,7 +140,7 @@ namespace LighthouseKeepers.WatchDemo
             Pipe.Changed+=()=>{if(Pipe.TurnsDone>0||Pipe.StrokeDegrees>0)EngageWatch();Changed?.Invoke();};Pipe.Completed+=()=>CompleteRepair();
             InitializePressure();if(Connected&&Connected.handheldRadios)CrewRadio=new CrewRadioState(Connected.holdTimeoutSeconds);
             Radio=new RadioState(Resources.Load<RadioProgram>("StormRadio"));
-            Radio.BroadcastReady=()=>!Connected||!Connected.dependencies||BeaconShining;
+            Radio.BroadcastReady=()=>Campaign&&Scenario.radioClearance?Repaired&&Engine?.Settled!=false:!Connected||!Connected.dependencies||BeaconShining;
             Radio.BroadcastCompleted+=()=>FinishJob(RadioStation);
             PowerTuning=powerTuning&&powerTuning.enabledForWatch?powerTuning:null;
             if(PowerTuning&&PowerTuning.powerGrid){Grid=new PowerGrid(PowerTuning.pumpLoad,PowerTuning.beaconLoad,PowerTuning.radioLoad,PowerTuning.lightsLoad);Grid.Changed+=GridChanged;}
@@ -243,7 +243,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!RemoteReplica || snapshot==null || !snapshot.Valid() || snapshot.day!=3&&snapshot.authenticity.stage!=0)return false;
             int next=Array.FindIndex(days,d=>d.day==snapshot.day);
-            if(next<0 || snapshot.objectiveIndex>=days[next].tasks.Length || snapshot.elapsed>SnapshotDuration(days[next],snapshot.day3Crew) || (snapshot.doneMask>>days[next].tasks.Length)!=0)return false;
+            if(next<0 || snapshot.objectiveIndex>=days[next].tasks.Length || snapshot.elapsed>SnapshotDuration(days[next],snapshot.day3Crew)+snapshot.ships.departureWait+(days[next].scenario?.noFail==true?TutorialShipDelay(days[next],snapshot.ships):0)+.001 || (snapshot.doneMask>>days[next].tasks.Length)!=0)return false;
             if(snapshot.lanterns.enabled!=(NewLanterns(days[next])!=null))return false;
             if(snapshot.flares.enabled!=(NewFlares(days[next])!=null))return false;
             if(!ValidDrowned(days[next],snapshot)||!ValidSabotage(days[next],snapshot)||!ValidShipSnapshot(days[next],snapshot)||!ValidCampaignSnapshot(days[next],snapshot)||!ValidDay3Snapshot(days[next],snapshot)||!ValidGraceSnapshot(snapshot,days[next]))return false;

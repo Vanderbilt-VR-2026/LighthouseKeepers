@@ -42,7 +42,7 @@ namespace LighthouseKeepers.Net.Tests
     public void AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(int day)
   {
    var s=New(day);Assert.True(Get<bool>(s,"Campaign"));Assert.False(Get<bool>(s,"Repaired"));
-   int arrival=Get<int>(s,"CampaignFaultMask");Assert.AreEqual(day==1?1:day==2?3:15,arrival);
+   int arrival=Get<int>(s,"CampaignFaultMask");Assert.AreEqual(day==1?3:day==2?7:15,arrival);
    Assert.AreEqual(day==1,Get<bool>(s,"BeaconShining"));
    var def=Get<object>(s,"Definition");foreach(var task in (Array)def.GetType().GetField("tasks").GetValue(def))Assert.False((bool)Call(s,"IsPending",task.GetType().GetField("stationId").GetValue(task)));
    Tick(s,30);Assert.False((bool)Call(s,"Sleep"));Call(s,"CompleteRepair");Tick(s,10);Call(s,"Retry");

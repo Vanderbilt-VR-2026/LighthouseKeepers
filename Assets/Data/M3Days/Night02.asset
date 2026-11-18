@@ -15,7 +15,7 @@ MonoBehaviour:
   day: 2
   dayLengthSeconds: 315
   beaconDarkLimitSeconds: 120
-  powerCapacity: 2.5
+  powerCapacity: 3.25
   initialCircuitMask: 11
   fuelDrainPerSecond: 0.0015
   beaconInitiallyLit: 1
@@ -28,9 +28,12 @@ MonoBehaviour:
     taskText: Restart the generator
   - stationId: STN_PIPE_LEAK
     taskText: Repair the pipe
+  - stationId: STN_RADIO_CONSOLE
+    taskText: Clear the convoy by radio
   startingFaults:
   - STN_GENERATOR
   - STN_PIPE_LEAK
+  - STN_RADIO_CONSOLE
   requiredKeepers: 1
   briefingHeading: "Day 2 \u2014 The generator"
   briefingText: The pump is running. Check the building and listen for trouble. If
@@ -75,6 +78,7 @@ MonoBehaviour:
     id: night-2
     nameKey: m3.night2
     configured: 1
+    radioClearance: 1
     demo: 0
     noFail: 0
     finaleFaultPileup: 0
@@ -107,6 +111,13 @@ MonoBehaviour:
       atSeconds: 0
       graceSeconds: 60
       repeat: 0
+    - id: clearance
+      stationId: STN_RADIO_CONSOLE
+      afterStationId:
+      gate: 0
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
     stations:
     - stationId: STN_PIPE_LEAK
       activeSteps:
@@ -125,10 +136,19 @@ MonoBehaviour:
       crewVariant: 2
       informationSite: House
       soloLocalInformation: 1
+    - stationId: STN_RADIO_CONSOLE
+      activeSteps:
+      - power
+      - tune
+      - code
+      - transmit
+      crewVariant: 0
+      informationSite: F4
+      soloLocalInformation: 1
     ships:
     - id: blackout-passage
       nameKey: m3.ship.northernStar
-      sightedAtSeconds: 180
+      sightedAtSeconds: 0
       approachSeconds: 45
       windowSeconds: 30
       darkGraceSeconds: 30

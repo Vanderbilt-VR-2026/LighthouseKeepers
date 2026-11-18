@@ -29,7 +29,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             return room;
         }
-        public string Caption=>KeeperStrings.Get(!DrownedAppearance.Sightings?"lesson.quiet."+watch.State.Recovery.Lesson:"lesson.line."+watch.State.Recovery.Lesson);
+        public string Caption=>watch.State.Recovery.Lesson==1&&watch.State.Engine?.Running==true?KeeperStrings.Get("lesson.checkEngine"):KeeperStrings.Get(!DrownedAppearance.Sightings?"lesson.quiet."+watch.State.Recovery.Lesson:"lesson.line."+watch.State.Recovery.Lesson);
         public string Speaker=>watch.State.Recovery.Lesson==2?"":KeeperStrings.Get(DrownedAppearance.Sightings&&(watch.State.Recovery.Lesson==1||watch.State.Recovery.Lesson==3)?"lesson.unknown":"subtitle.speaker");
         public static float SafeLift(Vector3 head,float wanted,float padding,RaycastHit[] buffer)
         {

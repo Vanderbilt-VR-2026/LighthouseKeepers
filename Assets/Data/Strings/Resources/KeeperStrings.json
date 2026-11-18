@@ -58,7 +58,7 @@
     },
     {
       "key": "step.RadioTransmit",
-      "text": "Hold mic trigger to transmit"
+      "text": "Hold mic trigger: clear the convoy"
     },
     {
       "key": "step.BeaconLight",
@@ -90,7 +90,7 @@
     },
     {
       "key": "step.PumpOff",
-      "text": "Switch PUMP off"
+      "text": "Free capacity: switch PUMP off"
     },
     {
       "key": "step.BeaconOn",
@@ -98,7 +98,7 @@
     },
     {
       "key": "step.BeaconOff",
-      "text": "Switch BEACON off"
+      "text": "Free capacity: switch BEACON off"
     },
     {
       "key": "step.RadioOn",
@@ -106,7 +106,7 @@
     },
     {
       "key": "step.RadioOff",
-      "text": "Switch RADIO off"
+      "text": "Free capacity: switch RADIO off"
     },
     {
       "key": "step.LightsOn",
@@ -114,7 +114,7 @@
     },
     {
       "key": "step.LightsOff",
-      "text": "Switch LIGHTS off"
+      "text": "Free capacity: switch LIGHTS off"
     },
     {
       "key": "job.STN_PIPE_LEAK",
@@ -2294,7 +2294,7 @@
     },
     {
       "key": "step.RadioCodeRelay",
-      "text": "Ask your partner for the code"
+      "text": "Walkie TRIGGER: ask for the code"
     },
     {
       "key": "where.telegram",
@@ -2490,7 +2490,7 @@
     },
     {
       "key": "lesson.line.1",
-      "text": "The engine needs checking. Both keepers to the generator room, Floor Two."
+      "text": "The engine is down. Both keepers to the generator room, Floor Two."
     },
     {
       "key": "lesson.line.2",
@@ -2659,6 +2659,10 @@
     {
       "key": "lantern.firstGrip",
       "text": "Hold GRIP to carry the lantern.\nTRIGGER changes its brightness."
+    },
+    {
+      "key": "lesson.checkEngine",
+      "text": "Both keepers to the generator room, Floor Two. Check the tank together."
     }
   ]
 }

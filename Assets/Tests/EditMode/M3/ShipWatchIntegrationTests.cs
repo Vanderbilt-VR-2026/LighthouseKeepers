@@ -10,7 +10,7 @@ namespace LighthouseKeepers.Tests.M3
   static Type State=>Type.GetType("LighthouseKeepers.WatchDemo.WatchState, Assembly-CSharp",true);
   static object Call(object o,string n,params object[] a)=>o.GetType().GetMethod(n).Invoke(o,a);
   static T Get<T>(object o,string n)=>(T)o.GetType().GetProperty(n).GetValue(o);
-  [SetUp] public void Setup(){old=Sprint5Tuning.Current.shipPassages;oldLead=Sprint5Tuning.Current.shipApproachDangerSeconds;Sprint5Tuning.Current.shipApproachDangerSeconds=0;Sprint5Tuning.Current.shipPassages=true;var catalog=Resources.Load<FiveNightCatalog>("M3Campaign");days=new[]{UnityEngine.Object.Instantiate(catalog.nights[0]),UnityEngine.Object.Instantiate(catalog.nights[1])};days[0].scenario.ships=new[]{new NightShipEvent{id="test",nameKey="m3.ship.maryEllen",sightedAtSeconds=1,approachSeconds=3,windowSeconds=8,darkGraceSeconds=4,safePreview=true}};}
+  [SetUp] public void Setup(){old=Sprint5Tuning.Current.shipPassages;oldLead=Sprint5Tuning.Current.shipApproachDangerSeconds;Sprint5Tuning.Current.shipApproachDangerSeconds=0;Sprint5Tuning.Current.shipPassages=true;var catalog=Resources.Load<FiveNightCatalog>("M3Campaign");days=new[]{UnityEngine.Object.Instantiate(catalog.nights[0]),UnityEngine.Object.Instantiate(catalog.nights[1])};foreach(var d in days)d.scenario.radioClearance=false;days[0].tasks=new[]{days[0].tasks[0]};days[0].startingFaults=new[]{"STN_PIPE_LEAK"};days[0].scenario.faults=new[]{days[0].scenario.faults[0]};days[0].scenario.stations=new[]{days[0].scenario.stations[0]};days[0].scenario.ships=new[]{new NightShipEvent{id="test",nameKey="m3.ship.maryEllen",sightedAtSeconds=1,approachSeconds=3,windowSeconds=8,darkGraceSeconds=4,safePreview=true}};}
   [TearDown] public void Cleanup(){Sprint5Tuning.Current.shipPassages=old;Sprint5Tuning.Current.shipApproachDangerSeconds=oldLead;foreach(var d in days)UnityEngine.Object.DestroyImmediate(d);}
   object New(int day=1)=>Activator.CreateInstance(State,days,day,Resources.Load("S4Tuning"),Resources.Load("S4M2Tuning"),Resources.Load("ImmersionTuning"));
   [Test] public void CompletingPipeWaitsForPreviewThenHostAndGuestCanSeeSleepAndRetry()
@@ -43,14 +43,14 @@ namespace LighthouseKeepers.Tests.M3
    var ships=(ShipFrame)snap.GetType().GetField("ships").GetValue(snap);ships.passed=1;
    Assert.False((bool)Call(g,"ApplyRemote",snap));Assert.Zero(Get<double>(g,"Elapsed"));Assert.False(Get<bool>(g,"Repaired"));
   }
-  [Test] public void AuthoredNightTwoDoesNotLoseToBeaconBeforeShipThreatButWrecksIfIgnored()
+  [Test] public void LegacyUngatedNightTwoDoesNotLoseBeforeShipThreatButWrecksIfIgnored()
   {
    Sprint5Tuning.Current.shipApproachDangerSeconds=15;var h=New(2);double before=Get<ShipPassageState>(h,"Ships").ThreatStart(0)-10;Call(h,"Tick",before);
    Assert.False(Get<bool>(h,"BeaconShining"));Assert.False(Get<bool>(h,"Failed"));Assert.Zero(Get<double>(h,"BeaconDarkElapsed"));Assert.Zero(Get<double>(h,"BeaconDarkLimit"));
    Call(h,"Tick",15d);Assert.False(Get<bool>(h,"Failed"));Assert.That(Get<double>(h,"BeaconDarkRemaining"),Is.EqualTo(25).Within(.001));
    var g=New(2);Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.That(Get<double>(g,"BeaconDarkRemaining"),Is.EqualTo(25).Within(.001));
    Call(h,"Tick",26d);Assert.True(Get<bool>(h,"Failed"));Assert.False(Get<bool>(h,"BeaconDarkFailed"),"The ship outcome, not the legacy timer, owns this loss");
-   StringAssert.Contains("Mary Ellen",Get<string>(h,"FailureMessage"));Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.True(Get<bool>(g,"Failed"));
+   StringAssert.Contains("Northern Star",Get<string>(h,"FailureMessage"));Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.True(Get<bool>(g,"Failed"));
   }
  }
 }

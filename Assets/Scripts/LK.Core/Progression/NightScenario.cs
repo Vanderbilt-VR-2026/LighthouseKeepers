@@ -29,7 +29,7 @@ namespace LighthouseKeepers.Core.Progression
         [Min(0)] public float sightedAtSeconds;
         [Min(1)] public float approachSeconds=75,windowSeconds=55,darkGraceSeconds=30;
         [Min(0)] public float broadcastExtensionSeconds;
-        public bool safePreview,largeFinale;
+        public bool safePreview,largeFinale,aimingTutorial;
         public float WindowStart=>sightedAtSeconds+approachSeconds;
         public float LatestExit=>WindowStart+windowSeconds+broadcastExtensionSeconds;
     }
@@ -43,7 +43,7 @@ namespace LighthouseKeepers.Core.Progression
     [Serializable] public sealed class NightScenario
     {
         public string id,nameKey;
-        public bool configured,demo,noFail,finaleFaultPileup,timingApproved;
+        public bool configured,demo,noFail,finaleFaultPileup,timingApproved,radioClearance;
         [Range(1,4)] public int stormBaseStage=1;
         [Range(0,1)] public float peakStormAfterFraction=1;
         [Min(30)] public float soloSeconds=450,crewSeconds=330;

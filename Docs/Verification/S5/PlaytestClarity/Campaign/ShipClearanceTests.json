@@ -1,0 +1,52 @@
+{
+  "Summary": {
+    "Total": 5,
+    "Passed": 5,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipClearanceTests.LateJoinKeepsWaitClearanceAndReadonlyAuthority",
+      "Status": "Passed",
+      "Duration": 0.0227556,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipClearanceTests.RejectInvalidClearanceWithoutChangingGuest",
+      "Status": "Passed",
+      "Duration": 0.0004449,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipClearanceTests.ShipsWaitForRadioWithoutStartingDarkTimerThenDepart",
+      "Status": "Passed",
+      "Duration": 0.000592,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipClearanceTests.TutorialRequiresAimingButCannotWreckOrConsumeLearningBudget",
+      "Status": "Passed",
+      "Duration": 0.0039206,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipClearanceTests.WaitingFrameSurvivesFractionalClockAccumulation",
+      "Status": "Passed",
+      "Duration": 0.0002502,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 9.54,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ShipClearanceTests",
+  "success": true,
+  "result": null
+}

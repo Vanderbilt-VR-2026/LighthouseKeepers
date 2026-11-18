@@ -1,0 +1,94 @@
+{
+  "Summary": {
+    "Total": 11,
+    "Passed": 11,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.ContinuouslyTrackingWheelAllowsPassAndGuestSeesExactProgress",
+      "Status": "Passed",
+      "Duration": 0.0082547,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.CorruptDelayIsRejectedAndSnapshotIsDeepCopied",
+      "Status": "Passed",
+      "Duration": 0.0007642,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.CrewHoldNeverProtectsAnEnteredWindowOrPreview",
+      "Status": "Passed",
+      "Duration": 0.0001051,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.DelayedFirstShipDoesNotForceSimultaneousTracking",
+      "Status": "Passed",
+      "Duration": 0.0001961,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.OffshoreCrewHoldStopsVisualTravelButIsBoundedAndReplicates",
+      "Status": "Passed",
+      "Duration": 0.0030163,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.OffshoreHoldHasNoVisualJump",
+      "Status": "Passed",
+      "Duration": 0.0002951,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.PoweredButOffTargetStopsTravelAndWrecks",
+      "Status": "Passed",
+      "Duration": 0.0005769,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.ReacquiringBeamResumesAfterSteadyHoldAndNeverRewinds",
+      "Status": "Passed",
+      "Duration": 0.0001178,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.RouteAndWheelBearingsMatchForEveryApproachAndPassagePoint",
+      "Status": "Passed",
+      "Duration": 0.0003175,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.SafePreviewDoesNotRequireSteering",
+      "Status": "Passed",
+      "Duration": 9.68e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipAimingTests.StationaryWheelCannotGuideWholePassage",
+      "Status": "Passed",
+      "Duration": 0.000139,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.61,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ShipAimingTests",
+  "success": true,
+  "result": null
+}
