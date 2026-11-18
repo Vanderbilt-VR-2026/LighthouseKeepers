@@ -1,12 +1,12 @@
 # Current checkpoint — House light and Survival practice day (#142)
 
-Branch `sprint-5`, PR #89. New source verified; build/install next. Network **LK-S5-PRACTICE1 / LK-Lab-Coop-v50**; both players must update. No new snapshot fields.
+Branch `sprint-5`, PR #89. APK source **cec81c8e** built and installed on Quest 3, **not launched**. Network **LK-S5-PRACTICE1 / LK-Lab-Coop-v50**; both players must update. No new snapshot fields.
 
 ## Current follow-up
 
 Held walkies rotated 180° with preserved hand wrap. House instruction lamp always on, larger baked pool in both powered/blackout states; slow per-room flicker. Survival Day 1 is a practice watch: slow water capped at 0.22 m, no flood loss or oil drain; still requires all jobs and ship guidance. Day 2 restores pressure. 58 focused tests and 32 actual XRI checks pass; blackout and controller water-cap checks pass. Inspected images and limits: [HousePractice](../Verification/S5/HousePractice/README.md).
 
-Next action: build clean source with `python3 artifacts/s5/house-practice/build.py`, then `python3 artifacts/s5/house-practice/deliver.py`. Editor must be fully closed first. Install only; do not launch. Update this checkpoint and PR/issue with the resulting receipt.
+Build/install complete; device APK hash matched. PR #89 and issue #142 updated. Next action is headset acceptance of the five checks in HousePractice; keep #142 open until verified.
 
 ## Grip/darkness follow-up delivered (#142)
 
@@ -38,10 +38,10 @@ New: flipped walkie orientation, always-on House light and slow flicker, Surviva
 
 Worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. Keep `EditorUtility.audioMasterMute=true`. Do not launch the Quest app without a request.
 
-APK: `Builds/LighthouseKeepers-Sprint5-GripDark-823c5781.apk` (IL2CPP ARM64, `com.lighthousekeepers.game`). SHA-256: `74198003655ff95d38f861529c8b77732c08aff0e8097670ed08eed0481aff31`. Installed copy hash verified.
+APK: `Builds/LighthouseKeepers-Sprint5-Practice-cec81c8e.apk` (IL2CPP ARM64, `com.lighthousekeepers.game`). SHA-256: `2c2f4e236326c657caab13feeb3591f479ac40acd6cc8382691c8a43f30490c9`. Installed copy hash verified; game not launched.
 
-Focused bridge checks: `python3 artifacts/s5/modes/check.py RadioRelayTests TimedStarterTests EquipmentWorldTests`. Completed build/delivery scripts and receipts: `artifacts/s5/grip-darkness/{build.py,deliver.py,build/delivery.json}`. Use fresh backup/output paths for any subsequent build; do not reuse the completed build backup over new source changes.
+Focused bridge checks: `python3 artifacts/s5/modes/check.py SurvivalModeTests RadioRelayTests TimedStarterTests QualityBaselineTests LanternTests VoicePassTests StoryImportTests`. Play Mode and XRI checks: `python3 artifacts/s5/interaction-fixes/start.py` then `python3 artifacts/s5/house-practice/play.py` with the muted Editor open. Completed build/delivery scripts and receipts: `artifacts/s5/house-practice/{build.py,deliver.py,build/delivery.json}`. Use fresh backup/output paths for any subsequent build; do not reuse the completed backup over new source changes.
 
-Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-GripDark-823c5781.apk`.
+Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Practice-cec81c8e.apk`.
 
-Workstation: no crash reporter or interactive Editor left running; batch build finished. Avoid reopening stale crash reports during testing. Other user applications were left alone.
+Workstation: no interactive Editor or crash reporter left running; batch build finished. Other user applications were left alone.
