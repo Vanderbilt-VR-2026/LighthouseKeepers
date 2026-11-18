@@ -4,7 +4,11 @@ namespace LighthouseKeepers.WatchDemo {
   readonly WatchLantern[] lanterns=new WatchLantern[2];readonly List<Vector3> lanternHooks=new();M2CarryProp lanternOil;M2StationParts lanternParts;
   void CreateLanterns(){if(!state.Sprint5||!state.Sprint5.oilLanterns)return;lanternParts=gameObject.AddComponent<M2StationParts>();lanternParts.Initialize();lanternParts.Metal.SetColor("_BaseColor",new Color(.16f,.13f,.10f));lanternParts.Metal.SetColor("_EmissionColor",Color.black);
    // Wall brackets beside the House entrance; no free-floating fixture.
-   for(int i=0;i<2;i++){var hook=WallLanternHook("House lantern hook "+i,new Vector3(-1,1.55f,-5.45f-i*.45f),Vector3.left);if(!hook.HasValue){Debug.LogError("No supported House lantern hook "+i);continue;}lanterns[i]=WatchLantern.Create(this,i,hook.Value-LanternMesh.Handle);}
+   var houseHook=WallLanternHook("House lantern hook 0",new Vector3(-1,1.55f,-5.45f),Vector3.left);
+   if(houseHook.HasValue)lanterns[0]=WatchLantern.Create(this,0,houseHook.Value-LanternMesh.Handle);
+   var engineHook=WallLanternHook("Generator room lantern hook",new Vector3(0,4.85f,0),new Vector3(-1,0,-1).normalized);
+   if(engineHook.HasValue)lanterns[1]=WatchLantern.Create(this,1,engineHook.Value-LanternMesh.Handle);
+   if(!houseHook.HasValue||!engineHook.HasValue)Debug.LogError("Missing a supported lantern hook");
    foreach(var station in new[]{(Component)pipeRepair,engineControls,powerPanel,radio,beaconStation})if(station){var pos=station.transform.position;float y=Mathf.Floor((pos.y+.3f)/3.3f)*3.3f+1.45f;var radial=new Vector3(pos.x,0,pos.z).normalized;if(radial.sqrMagnitude<.5f)radial=Vector3.right;if(station==radio)radial=new Vector3(1,0,1).normalized;WallLanternHook(station.name+" lantern hook",new Vector3(0,y,0),radial);}
    var oilPosition=generator.transform.TransformPoint(new Vector3(-1.5f,.8f,.8f));
    var shelf=lanternParts.Part("Lantern oil shelf",transform,oilPosition-Vector3.up*.205f,new Vector3(.35f,.03f,.28f),lanternParts.Metal);
@@ -28,7 +32,7 @@ namespace LighthouseKeepers.WatchDemo {
    var back=lanternParts.Part(name+" wall strap",transform,wall,new Vector3(.045f,.10f,.012f),lanternParts.Metal);back.transform.rotation=Quaternion.LookRotation(chosen.normal);
    var arm=lanternParts.Part(name+" bracket",transform,(wall+hook)*.5f,new Vector3(.018f,.018f,.18f),lanternParts.Metal);arm.transform.rotation=Quaternion.LookRotation(chosen.normal);
    lanternParts.Part(name+" turned hook",transform,hook-Vector3.up*.018f,new Vector3(.016f,.05f,.016f),lanternParts.Brass);
-   var label=lanternParts.Text(name+" instruction",KeeperStrings.Get("lantern.controls"),transform,Vector3.zero,.002f);label.transform.SetPositionAndRotation(wall+Vector3.up*.16f+chosen.normal*.015f,Quaternion.LookRotation(-chosen.normal));return hook;
+   var label=lanternParts.Text(name+" instruction",KeeperStrings.Get("lantern.hook"),transform,Vector3.zero,.002f);label.transform.SetPositionAndRotation(wall+Vector3.up*.16f+chosen.normal*.015f,Quaternion.LookRotation(-chosen.normal));return hook;
   }
   public Vector3? NearestLanternHook(Vector3 bail){Vector3? result=null;float best=.22f*.22f;foreach(var h in lanternHooks){float d=(h-bail).sqrMagnitude;if(d<best){result=h;best=d;}}return result;}
   public Component LanternTarget(float slot)=>float.IsFinite(slot)&&slot==(int)slot&&slot>=0&&slot<2?lanterns[(int)slot]?.Grab:null;

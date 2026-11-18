@@ -64,17 +64,14 @@ namespace LighthouseKeepers.WatchDemo
                 stair.Add(Fixture(parts,t,Vector3.zero,"Shielded stair lamp"));
             }
             station.Add(Fixture(parts,generator.transform,new Vector3(0,1.9f,.55f),"Generator fault service lamp"));
-            station.Add(Fixture(parts,radio.transform,new Vector3(0,2.55f,.20f),"Radio service lamp"));
-            station.Add(Fixture(parts,beacon.transform,new Vector3(.65f,.85f,0),"Beacon motor service lamp"));
+            station.Add(Fixture(parts,radio.transform,new Vector3(0,2.14f,.20f),"Radio service lamp"));
+            station.Add(null); // The detached motor lamp floated beside the lens.
             faultAudio.Add(Sound(generator.transform,"Generator fault cough","S4Audio/cough",false,.16f));
             faultAudio.Add(Sound(radio.transform,"Unsent broadcast static","S4Audio/hiss",true,.035f));
             faultAudio.Add(Sound(beacon.transform,"Misaligned beacon motor whine","ImmersionAudio/motor",true,.055f));
             // The accepted radio/breaker labels already have physical cabinet faces.
             // The lens hint did not, so replace it with an engraved cleaning tag on the frame.
             var lens=beacon.transform.Find("Lens wipe label");if(lens)lens.gameObject.SetActive(false);
-            var tag=M2StationParts.Root("Engraved lens cleaning tag",beacon.transform,new Vector3(.38f,.68f,.40f));
-            parts.Part("Lens tag brass",tag,Vector3.zero,new Vector3(.28f,.10f,.015f),parts.Brass);
-            parts.Text("Lens tag engraving",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.8"),tag,new Vector3(0,0,.009f),.0023f).color=new Color(.1f,.07f,.03f);
             var controls=FindAnyObjectByType<WatchBeaconStation>();
             if(controls)
             {
@@ -138,7 +135,7 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<station.Count;i++)
             {
                 bool fault=i==0?s.Power==PowerState.Off:i==1?!s.IsDone(WatchState.RadioStation):!s.BeaconShining;
-                if(s.Director!=null){string job=i==0?WatchState.GeneratorStation:i==1?WatchState.RadioStation:WatchState.BeaconStation;station[i].intensity=ObjectiveDirector.Job(watch.CurrentInstruction)==job||ObjectiveDirector.Job(watch.PartnerInstruction)==job?pulse:0;}else station[i].intensity=fault?pulse:.25f;
+                if(station[i]&&s.Director!=null){string job=i==0?WatchState.GeneratorStation:i==1?WatchState.RadioStation:WatchState.BeaconStation;station[i].intensity=ObjectiveDirector.Job(watch.CurrentInstruction)==job||ObjectiveDirector.Job(watch.PartnerInstruction)==job?pulse:0;}else if(station[i])station[i].intensity=fault?pulse:.25f;
                 var a=faultAudio[i];if(!a.clip)continue;
                 if(i==0){if(fault&&!s.Failed&&Time.time>=nextCough){a.Play();nextCough=Time.time+9;}continue;}
                 if(fault&&!s.Failed){if(!a.isPlaying)a.Play();}else if(a.isPlaying)a.Stop();

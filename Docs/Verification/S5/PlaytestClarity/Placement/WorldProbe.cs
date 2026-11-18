@@ -1,0 +1,5 @@
+using UnityEngine;using UnityEditor;using System.IO;
+public static class WorldProbe {
+ public static object Run(string folder){EditorUtility.audioMasterMute=true;Directory.CreateDirectory(folder);Capture(folder,"f4-beacon",new Vector3(1.8f,11.5f,-1.7f),new Vector3(0,11,0));Capture(folder,"radio-exterior",new Vector3(-1.9f,11.5f,3.4f),new Vector3(-.5f,11.2f,2));Capture(folder,"f3-landing",new Vector3(-.3f,8.2f,1),new Vector3(-2,7.3f,2.2f));return true;}
+ public static void Capture(string path,string name,Vector3 from,Vector3 at){var c=new GameObject("Feedback capture").AddComponent<Camera>();c.CopyFrom(Camera.main);c.enabled=false;c.nearClipPlane=.03f;c.fieldOfView=65;c.transform.position=from;c.transform.LookAt(at);var old=RenderTexture.active;var rt=RenderTexture.GetTemporary(1280,1000,24);c.targetTexture=rt;c.Render();RenderTexture.active=rt;var t=new Texture2D(1280,1000,TextureFormat.RGB24,false);t.ReadPixels(new Rect(0,0,1280,1000),0,0);t.Apply();File.WriteAllBytes(path+"/"+name+".png",t.EncodeToPNG());RenderTexture.active=old;c.targetTexture=null;RenderTexture.ReleaseTemporary(rt);Object.Destroy(t);Object.Destroy(c.gameObject);}
+}

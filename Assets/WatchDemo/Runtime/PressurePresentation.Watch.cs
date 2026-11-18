@@ -12,7 +12,7 @@ namespace LighthouseKeepers.WatchDemo {
    var wrist=left.transform.Find("Skinned glove/wrist");if(!wrist)return;
    // Mount on the dorsal side of the visual wrist, including its accepted grip correction.
    // This changes the accessory only, never the tracked controller or the hand pose.
-   watchMount=M2StationParts.Root("Keeper wristwatch",wrist,new Vector3(0,.025f,-.014f));watchMount.localRotation=Quaternion.Euler(-90,0,0);
+   watchMount=M2StationParts.Root("Keeper wristwatch",wrist,new Vector3(0,.034f,.019f));watchMount.localRotation=Quaternion.Euler(-90,0,0);
    resin=new Material(parts.Dark){name="Watch black resin"};resin.SetTexture("_BaseMap",null);resin.SetColor("_BaseColor",new Color(.018f,.021f,.018f));resin.SetColor("_EmissionColor",Color.black);resin.SetFloat("_Metallic",0);resin.SetFloat("_Smoothness",.23f);
    lcd=new Material(Resources.Load<Material>("WatchLCD")){name="Watch grey-green LCD"};
    WatchCase("Watch resin case",watchMount,Vector3.zero,new Vector3(.049f,.055f,.011f),.009f,resin);

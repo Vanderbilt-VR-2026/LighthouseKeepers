@@ -26,12 +26,12 @@ namespace LighthouseKeepers.WatchDemo
             Add(watch,0,"Standing orders",1,board.position+board.right*2.0f,board.rotation);
             Add(watch,1,"Lucy Gale letter",1,new Vector3(tabletop.center.x+.25f,tabletop.max.y+.008f,tabletop.max.z-.20f),Quaternion.Euler(90,0,0));
             var generator=FindAnyObjectByType<WatchGenerator>().transform;
-            Add(watch,2,"Walter engine log",2,generator.TransformPoint(new Vector3(-1.15f,1.13f,.99f)),generator.rotation*Quaternion.Euler(0,180,0));
+            Add(watch,2,"Walter engine log",1,generator.TransformPoint(new Vector3(-1.15f,1.13f,.99f)),generator.rotation*Quaternion.Euler(0,180,0));
             var hook=generator.TransformPoint(new Vector3(-1.15f,1.36f,.99f));
             Bracket("Engine clipboard support",generator.TransformPoint(new Vector3(-.9f,1.36f,.85f)),hook);
             Bracket("Engine clipboard hook",hook,generator.TransformPoint(new Vector3(-1.15f,1.29f,.99f)));
             var mattress=GameObject.Find("Mattress and blanket");var bunk=mattress?mattress.GetComponent<Renderer>().bounds:new Bounds(BunkPlacement.FramePosition+Vector3.up*.28f,Vector3.one*.3f);
-            Add(watch,3,"Tom unsent letter",2,new Vector3(bunk.center.x,bunk.max.y+.012f,bunk.center.z+.25f),Quaternion.Euler(90,0,0));
+            Add(watch,3,"Tom unsent letter",1,new Vector3(bunk.center.x,bunk.max.y+.012f,bunk.center.z+.25f),Quaternion.Euler(90,0,0));
         }
         void Bracket(string name,Vector3 start,Vector3 end)
         {
@@ -78,7 +78,8 @@ namespace LighthouseKeepers.WatchDemo
             network??=GetComponent<INetworkPropStatus>();
             if(!released||grab.isSelected||network?.CanSimulateReleased==false)return;
             body.isKinematic=false;
-            if(Time.time-dropped>20||transform.position.y<home.y-4)
+            var head=Camera.main;bool observed=head&&Vector3.Distance(head.transform.position,transform.position)<4&&Vector3.Dot(head.transform.forward,(transform.position-head.transform.position).normalized)>.5f;
+            if(Time.time-dropped>20&&!observed||transform.position.y<home.y-4)
             {body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,rotation);}
         }
         void OnDestroy(){if(grab)grab.selectExited.RemoveListener(Released);}

@@ -4,7 +4,9 @@ Read `Docs/Playtests/2026-11-17-headset-arrival.md` before continuing. User acce
 
 Helper slice complete: automatic blocked-route retries, no permanent slab, relaxed hands/radio gesture, fetched-code caption on walkie trigger, fixed palm grip. Focused checks + actual valve/travel/revive/follow/grip fixtures passed; see PlaytestClarity/Helper. Belt carry and a full opposite-role station solver remain unfinished.
 
-Next: targeted placement/cuff/possession polish, then radio-gated ships and clear prerequisite order, then #137 timed starter. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
+Placement slice complete: internal floating guards removed, radio frame supports corrected, detached beacon fittings removed, one lamp moved to F2, useful lantern instructions, notes persist from arrival, watch offset adjusted. Actual placement checks/screenshots: PlaytestClarity/Placement. Watch clearance and human reach remain device checks.
+
+Next: radio-gated ships and clear prerequisite order, then #137 timed starter. Possession eye trails/beard readability and belt carry still pending. Commit/push each verified slice. Build/install final source only; update DEVICE CHECKS PENDING and exact commands as slices finish.
 
 ---
 

@@ -81,7 +81,7 @@ namespace LighthouseKeepers.WatchDemo
             adaptiveMusic=AdaptiveMusic.Create(this);
             if (generator) generator.Bind(state);
             if(emergencyLighting)emergencyLighting.Bind(state);
-            if(radio)radio.Bind(state);
+            if(radio){RadioSupportLayout.Apply(radio);radio.Bind(state);}
             if(pipeRepair)pipeRepair.Bind(state);
             if(beacon)beacon.Bind(state);
             if(state.Grid!=null)powerPanel=WatchPowerPanel.Create(this);

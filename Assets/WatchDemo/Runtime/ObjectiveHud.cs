@@ -68,6 +68,7 @@ namespace LighthouseKeepers.WatchDemo
   }
   public void Reveal()=>Reveal(ObjectiveHudSettings.Duration,true);
   public void RevealFor(float seconds)=>Reveal(seconds,true);
+  public void ShowHint(string text,float seconds)=>ShowNote(text,seconds,true);
   void ConfigureSubtitle(bool remembered)
   {
    int size=HarborSubtitleSettings.Large?34:28;

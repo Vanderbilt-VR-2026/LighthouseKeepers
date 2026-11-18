@@ -113,7 +113,7 @@ namespace LighthouseKeepers.Editor
             Part("Steel cabinet",cabinet,new Vector3(0,1.42f,.10f),new Vector3(2.22f,1.5f,.24f),"Cabinet");
             Part("Inset face",cabinet,new Vector3(0,1.42f,.235f),new Vector3(2.10f,1.37f,.035f),"Face");
             for(int i=0;i<8;i++)Part("Vent slot",cabinet,new Vector3(-.89f+i*.075f,1.96f,.258f),new Vector3(.045f,.07f,.008f),"Rubber");
-            for(int x=-1;x<=1;x+=2)for(int y=0;y<2;y++)Part("Wall mounting bracket",cabinet,new Vector3(x*.88f,.83f+y*1.18f,-.25f),new Vector3(.10f,.12f,.7f),"Steel");
+            // RadioSupportLayout joins the actual window-frame posts at runtime; no rods through glass.
             var collision=root.gameObject.AddComponent<BoxCollider>();collision.center=new Vector3(0,1.42f,.1f);collision.size=new Vector3(2.22f,1.50f,.24f);
             Label("Radio header","KEEPER COASTAL  /  STORM TRANSMITTER",root,new Vector3(0,2.08f,.27f),.006f);
             Part("Frequency dial rim",cabinet,new Vector3(-.48f,1.70f,.27f),new Vector3(1.02f,.36f,.035f),"Brass");

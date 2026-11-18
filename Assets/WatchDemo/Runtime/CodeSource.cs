@@ -21,6 +21,7 @@ namespace LighthouseKeepers.WatchDemo
             }
             return text.ToString();
         }
+        public void RelocateLocal(Vector3 position){localSite=position;placed=false;}
         public void Refresh()
         {
             if(!watch)watch=FindAnyObjectByType<WatchDemoController>();
