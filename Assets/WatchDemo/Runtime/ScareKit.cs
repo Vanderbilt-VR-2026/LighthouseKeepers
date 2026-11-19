@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.XR;
 using LighthouseKeepers.Core;
 using LighthouseKeepers.Core.Progression;
 
@@ -13,7 +14,8 @@ namespace LighthouseKeepers.WatchDemo
         readonly MeshRenderer renderer;readonly MaterialPropertyBlock properties=new();
         readonly AudioSource sound,breath,voice,rising,hiss;readonly AudioHighPassFilter radioHigh;readonly AudioLowPassFilter radioLow;readonly List<(Renderer renderer,int index)> lightmaps=new();
         ScareHandprints prints;Vector3 previousBody,smoothedBody;float gait;bool dark;ScareBeat beat;Vector3 turnBase,wall,ceiling;Quaternion wallRotation;bool turnReady,turnHasWall;
-        int observedAttempt=-1,observedCaught;float lungeAt=-1;Vector3 lungeFrom,lungeTo;
+        int observedAttempt=-1,observedCaught;float lungeAt=-1;Vector3 lungeFrom,lungeTo;bool burstPlayed;
+        ParticleSystem bulbSparks;AudioSource bulbPop;
         readonly RaycastHit[] lungeHits=new RaycastHit[32];
         readonly Collider[] lungeOverlaps=new Collider[32];
         readonly List<(AudioSource source,bool muted)> quiet=new();
@@ -30,6 +32,8 @@ namespace LighthouseKeepers.WatchDemo
         public void Beat(ScareBeat value,float age)
         {
             beat=value;turnReady=false;sound.Stop();radioHigh.enabled=radioLow.enabled=value==ScareBeat.Relief;
+            // A replica arriving after the event does not replay a stale burst.
+            burstPlayed=value!=ScareBeat.Turn||age>=HorrorTuning.Current.nightmareBulbBurstAt;
             string line=value==ScareBeat.Follow?"unknown_n2_follow":value==ScareBeat.Turn?"unknown_n2_not_him":value==ScareBeat.Relief?"hm_n2_nightmare_return":null;
             if(value==ScareBeat.Failed||value==ScareBeat.Idle)voice.Stop();
             if(age>1)return;
@@ -40,6 +44,9 @@ namespace LighthouseKeepers.WatchDemo
         public void Present(ScareSequenceState scene,Vector3 eye)
         {
             if(scene.Active&&prints==null)prints=new ScareHandprints(root.transform);prints?.Present(scene);
+            if(!burstPlayed&&scene.Beat==ScareBeat.Turn&&scene.Age>=HorrorTuning.Current.nightmareBulbBurstAt){
+                burstPlayed=true;if(scene.Age<HorrorTuning.Current.nightmareBulbBurstAt+1)BurstBulb();
+            }
             if(observedAttempt!=scene.Attempt){observedAttempt=scene.Attempt;observedCaught=scene.Caught;lungeAt=-1;}
             else{int caught=scene.Caught&~observedCaught;observedCaught=scene.Caught;if(caught!=0)StartLunge(scene,(caught&1)!=0?1:2);}
             float lungeAge=Time.unscaledTime-lungeAt;bool lunging=lungeAt>=0&&lungeAge<HorrorTuning.Current.nightmareLungeSeconds;
@@ -70,6 +77,19 @@ namespace LighthouseKeepers.WatchDemo
             if(scene.Beat==ScareBeat.Relief)voice.transform.position=eye+Vector3.forward*.8f;else voice.transform.localPosition=Vector3.up;
             hiss.transform.position=voice.transform.position;bool radio=scene.Beat==ScareBeat.Relief&&voice.isPlaying;if(radio&&hiss.clip&&!hiss.isPlaying)hiss.Play();else if(!radio&&hiss.isPlaying)hiss.Stop();
             Blackout(scene.Dark);
+        }
+        void BurstBulb()
+        {
+            if(!bulbSparks){
+                var go=new GameObject("Nightmare generator-room bulb pop");go.transform.SetParent(root.transform,false);go.transform.position=LanternRoomLighting.RoomLights[2];
+                bulbSparks=go.AddComponent<ParticleSystem>();bulbSparks.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);
+                var main=bulbSparks.main;main.playOnAwake=false;main.loop=false;main.maxParticles=24;main.startLifetime=.35f;main.startSpeed=.65f;main.startSize=.018f;main.gravityModifier=.6f;main.startColor=new Color(1,.58f,.18f);main.simulationSpace=ParticleSystemSimulationSpace.World;
+                var emission=bulbSparks.emission;emission.enabled=false;var shape=bulbSparks.shape;shape.shapeType=ParticleSystemShapeType.Sphere;shape.radius=.025f;
+                var render=go.GetComponent<ParticleSystemRenderer>();render.sharedMaterial=Resources.Load<Material>("TowerWiring/Sparks");render.shadowCastingMode=ShadowCastingMode.Off;render.receiveShadows=false;
+                bulbPop=go.AddComponent<AudioSource>();bulbPop.playOnAwake=false;bulbPop.spatialBlend=1;bulbPop.minDistance=1;bulbPop.maxDistance=9;bulbPop.volume=.3f;bulbPop.clip=Resources.Load<AudioClip>("S4Audio/breaker");KeeperAudioMix.Route(bulbPop,"SFX_Critical");
+            }
+            bulbSparks.Emit(Mathf.Clamp(HorrorTuning.Current.nightmareBulbSparks,0,24));if(bulbPop.clip)bulbPop.Play();
+            foreach(var node in new[]{XRNode.LeftHand,XRNode.RightHand}){var d=InputDevices.GetDeviceAtXRNode(node);if(d.TryGetHapticCapabilities(out var cap)&&cap.supportsImpulse)d.SendHapticImpulse(0,.18f,.06f);}
         }
         void StartLunge(ScareSequenceState scene,int duty)
         {

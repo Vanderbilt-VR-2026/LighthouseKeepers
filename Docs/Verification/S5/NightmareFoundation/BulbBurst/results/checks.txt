@@ -1,0 +1,8 @@
+PASS Nightmare started
+PASS Existing URP spark material is present
+PASS One bounded spark burst is emitted once (16)
+PASS F2 bulb brightens once during the burst (0.03 to 0.89)
+PASS Burst adds no realtime lights
+PASS Bulb returns to blackout after the brief burst
+PASS Late presentation does not replay an old burst
+PASS Quest-pipeline Editor particle shader has no errors

@@ -44,8 +44,12 @@ namespace LighthouseKeepers.WatchDemo
         }
         void LateUpdate(){
             if(!watch||watch.State==null||block==null)return;
-            bool powered=watch.State.HasPower(LighthouseKeepers.Core.PowerCircuit.Lights);
+            bool powered=watch.State.HasPower(LighthouseKeepers.Core.PowerCircuit.Lights);var scare=watch.State.Scare;var t=HorrorTuning.Current;
             for(int i=0;i<bulbs.Count;i++){var r=bulbs[i];if(!r)continue;float glow=!watch.State.Scare.Dark&&Powered(i,powered)?Filament(Time.time,i)*(i==0?1.6f:.65f):0;
+                // One short, local bulb pop during the witnessed turn; this is
+                // emissive only, not a realtime light or a repeating flash.
+                if(i==2&&scare.Beat==ScareBeat.Turn&&scare.Age>=t.nightmareBulbBurstAt&&scare.Age<t.nightmareBulbBurstAt+t.nightmareBulbBurstSeconds)
+                    glow=Mathf.Max(glow,1-(scare.Age-t.nightmareBulbBurstAt)/Mathf.Max(.01f,t.nightmareBulbBurstSeconds));
                 block.Clear();block.SetColor("_BaseColor",glow>0?new Color(1,.65f,.3f)*glow:new Color(.025f,.02f,.015f));block.SetColor("_EmissionColor",new Color(1,.52f,.19f)*glow);r.SetPropertyBlock(block);
             }
         }
