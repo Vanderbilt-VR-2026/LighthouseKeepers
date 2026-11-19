@@ -1,3 +1,22 @@
+# Current checkpoint — focused flashlights and Morse bulbs (#146)
+
+Branch `sprint-5`, PR #89. Network **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51**; both players must update. The user's flashlight request supersedes LOW/HIGH lantern operation: two metal flashlights, GRIP carry, TRIGGER ON/OFF, unlimited power every night in both modes. No new payload fields. Hand contacts are measured for both hands; no global avatar or wrench changes.
+
+Implemented and checked: focused 28°/9 m beam; no oil can/gauge or fuel prompts; one supported bulb in House and each floor, different softened Morse patterns; House/F1 backup on, upper bulbs require LIGHTS; powered/emergency lightmaps rebaked. **78 focused tests, 12 actual XRI grip checks and 11 rendered checks passed.** Screenshots inspected. Full nights, worn comfort/performance and a new live co-op check are NOT VERIFIED. [Evidence and six-step test](../Verification/S5/Flashlights/README.md).
+
+Build/install pending the source commit. Close the muted Editor; build only clean source with `python3 artifacts/s5/lantern-beams/build.py`, then `python3 artifacts/s5/lantern-beams/deliver.py`. The scripts use a fresh `artifacts/s5/lantern-beams/build` backup/output directory. **Do not reuse a completed backup for later source. Install only; do not launch the Quest app.**
+
+## Next
+
+1. Finish #146 build/install receipt, push and update PR #89 and the issue; keep needs-headset-check open until accepted.
+2. Resume **#144 Day 2 nightmare**, then **#145 Day 3 cursed ship**, exactly as the detailed Part 0 checkpoint below. Re-read the complete `Docs/Design/S5-Day2-Day3-Scares.md`; replace lantern terminology with the new flashlight where needed. Neither new scripted scene has been implemented yet.
+
+## DEVICE CHECKS PENDING
+
+#146: both-hand grip during motion/crouching, close glare/far reach and both-eye readability, regrip/hooks, five Morse bulbs and comfort, two-player tool ownership/light appearance, sustained peak-storm 72 Hz / GPU ≤11 ms with both beams. No device profiling claimed. Existing #142/#143 acceptance and #144/#145 implementation remain outstanding below.
+
+---
+
 # Current checkpoint — Part 0 controls and lantern (#143)
 
 Branch `sprint-5`, PR #89. Network **LK-S5-SCARES1 / LK-Lab-Coop-v51**. Both players must update. Part 0 implementation and focused Editor checks are complete. APK source **83883309** built and installed on Quest 3; installed hash verified; **not launched**. Stopped cleanly before #144; both scripted scenes remain unimplemented.

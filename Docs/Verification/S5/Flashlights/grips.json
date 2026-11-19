@@ -1,0 +1,17 @@
+{
+    "passed": true,
+    "checks": [
+        "PASS LeftHand actual direct grip selects flashlight",
+        "PASS LeftHand handle aligned with finger cavity",
+        "PASS LeftHand no hand vertices penetrate handle by more than 2mm (0, nearest 0.01405409)",
+        "PASS LeftHand trigger goes directly to focused HIGH",
+        "PASS LeftHand second press turns OFF, no LOW stage",
+        "PASS LeftHand release works",
+        "PASS RightHand actual direct grip selects flashlight",
+        "PASS RightHand handle aligned with finger cavity",
+        "PASS RightHand no hand vertices penetrate handle by more than 2mm (0, nearest 0.0140541)",
+        "PASS RightHand trigger goes directly to focused HIGH",
+        "PASS RightHand second press turns OFF, no LOW stage",
+        "PASS RightHand release works"
+    ]
+}

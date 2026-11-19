@@ -38,6 +38,7 @@ namespace LighthouseKeepers.Core.Progression
         public float flareLightRange=3,flareLightIntensity=2.2f,flareHitSeconds=1.6f;
         [Header("Lantern beam")]
         [Range(30,140)] public float lanternBeamAngle=85,lanternBeamInner=55;
+        [Range(5,60)] public float lanternHighBeamAngle=28,lanternHighBeamInner=16;
         [Header("Lantern / defenses")]
         public float highOilSeconds=90,lowOilSeconds=180,pourSeconds=4;
         public float lowRange=2.5f,highRange=4,highExposure=2,highOilCost=.15f,highRetreat=20;

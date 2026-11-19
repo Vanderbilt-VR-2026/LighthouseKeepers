@@ -29,8 +29,8 @@ namespace LighthouseKeepers.WatchDemo
             if(s.Failed||watch.Sleeping||storyPlayedAt.ContainsKey(request.Line.id))return false;
             switch(request.Line.id)
             {
-                case "HM_N2_LANTERN_INTRO":return s.Lanterns!=null&&!s.Engine.Running&&!watch.AnyLanternHeld;
-                case "HM_N2_LANTERN_OIL":return s.Lanterns!=null&&watch.AnyLanternHeld;
+                case "HM_N2_LANTERN_INTRO":return s.Lanterns?.FocusOnly==false&&!s.Engine.Running&&!watch.AnyLanternHeld;
+                case "HM_N2_LANTERN_OIL":return s.Lanterns?.UnlimitedOil==false&&watch.AnyLanternHeld;
                 case "HM_LANTERN_LOW_OIL":return s.Lanterns?.CanOil>0&&watch.HeldLanternLowOil;
                 case "HM_PIPE_FIXED":return s.Repaired;
                 case "HM_GEN_RUNNING":return s.Engine?.Settled==true;
@@ -47,8 +47,8 @@ namespace LighthouseKeepers.WatchDemo
         void ObserveStorySpeech()
         {
             var s=watch.State;bool running=s.Engine?.Settled==true;
-            OfferStory("HM_N2_LANTERN_INTRO",s.Day==2&&s.Lanterns!=null&&!s.Engine.Running&&!watch.AnyLanternHeld);
-            OfferStory("HM_N2_LANTERN_OIL",s.Lanterns!=null&&watch.AnyLanternHeld);
+            OfferStory("HM_N2_LANTERN_INTRO",s.Day==2&&s.Lanterns?.FocusOnly==false&&!s.Engine.Running&&!watch.AnyLanternHeld);
+            OfferStory("HM_N2_LANTERN_OIL",s.Lanterns?.UnlimitedOil==false&&watch.AnyLanternHeld);
             OfferStory("HM_LANTERN_LOW_OIL",s.Lanterns?.CanOil>0&&watch.HeldLanternLowOil);
             OfferStory("HM_PIPE_FIXED",!storyPipeRepaired&&s.Repaired);
             OfferStory("HM_GEN_RUNNING",!storyEngineRunning&&running);

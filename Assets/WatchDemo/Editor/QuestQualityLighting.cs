@@ -78,7 +78,7 @@ public static class QuestQualityLighting
         var capture=typeof(EnvironmentLightingBake).GetMethod("Capture",BindingFlags.NonPublic|BindingFlags.Static);
         var variants=new List<EnvironmentLightingPreset>();var stats=new List<string>();Directory.CreateDirectory(QuestQualityBaseline.Output);
         foreach(bool powered in new[]{true,false}) {
-            for(int i=0;i<lights.Length;i++){bool house=lights[i].name.StartsWith("Mains fixture")&&LighthouseKeepers.WatchDemo.LanternRoomLighting.Room(lights[i].transform.position)==0;lights[i].enabled=original[i].enabled;lights[i].color=original[i].color;lights[i].intensity=original[i].intensity*(powered||house?1:0);}
+            for(int i=0;i<lights.Length;i++){bool house=lights[i].name.StartsWith("Mains fixture")&&LighthouseKeepers.WatchDemo.LanternRoomLighting.Room(lights[i].transform.position)<=1;lights[i].enabled=original[i].enabled;lights[i].color=original[i].color;lights[i].intensity=original[i].intensity*(powered||house?1:0);}
             EditorSceneManager.SaveScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
             var start=DateTime.UtcNow;bool baked=Lightmapping.Bake();
             if(!baked&&Application.platform==RuntimePlatform.OSXEditor){Debug.LogWarning("ProgressiveGPU unavailable on this Mac; documented ProgressiveCPU bake fallback, not a Quest performance measurement.");settings.lightmapper=LightingSettings.Lightmapper.ProgressiveCPU;baked=Lightmapping.Bake();}

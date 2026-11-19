@@ -37,6 +37,7 @@ MonoBehaviour:
   shipMaximumSoot: 0.7
   shipApproachDangerSeconds: 15
   oilLanterns: 1
+  lanternUnlimitedOil: 1
   lanternHighSeconds: 90
   lanternLowSeconds: 180
   lanternPourSeconds: 4
@@ -44,10 +45,10 @@ MonoBehaviour:
   lanternRetreatSeconds: 20
   lanternStunCost: 0.15
   lanternLowRange: 0.8
-  lanternHighRange: 1.5
+  lanternHighRange: 9
   nightlyBeamTolerance: [14, 11, 9, 7.5, 6]
   exteriorFogCalm: 0.027
   exteriorFogStorm: 0.038
 
   lanternLowIntensity: 1.1
-  lanternHighIntensity: 3.6
+  lanternHighIntensity: 36

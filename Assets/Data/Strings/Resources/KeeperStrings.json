@@ -2230,7 +2230,7 @@
     },
     {
       "key": "lantern.controls",
-      "text": "LANTERN\nGRIP handle · TRIGGER brightness"
+      "text": "FLASHLIGHT\nGRIP handle · TRIGGER on / off"
     },
     {
       "key": "duty.None",
@@ -2654,11 +2654,11 @@
     },
     {
       "key": "lantern.hook",
-      "text": "LANTERN HOOK"
+      "text": "FLASHLIGHT · GRIP HANDLE · TRIGGER ON / OFF"
     },
     {
       "key": "lantern.firstGrip",
-      "text": "Hold GRIP to carry the lantern.\nTRIGGER changes its brightness."
+      "text": "Hold GRIP around the flashlight handle. TRIGGER switches the beam on / off. No fuel needed."
     },
     {
       "key": "lesson.checkEngine",
@@ -2718,11 +2718,11 @@
     },
     {
       "key": "step.GrabLantern",
-      "text": "Take a lantern — House door"
+      "text": "Take a flashlight — hooks by the House door"
     },
     {
       "key": "step.LanternWick",
-      "text": "Hold lantern; TRIGGER to light"
+      "text": "Hold flashlight; press TRIGGER to switch on"
     },
     {
       "key": "where.kit",
@@ -2871,6 +2871,10 @@
     {
       "key": "run.help",
       "text": "Hold A + left stick to run. Release A to recover. Hold X to hold breath."
+    },
+    {
+      "key": "lantern.unlimitedTeach",
+      "text": "Flashlight: point the beam where you need to see. Unlimited power while testing."
     }
   ]
 }

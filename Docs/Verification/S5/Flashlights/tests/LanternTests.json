@@ -1,0 +1,94 @@
+{
+  "Summary": {
+    "Total": 11,
+    "Passed": 11,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.FlashlightUsesOnlyOffAndHigh",
+      "Status": "Passed",
+      "Duration": 0.007298,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.HighNeedsContinuousHeldAimAndCostsFifteenPercent",
+      "Status": "Passed",
+      "Duration": 0.0007613,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.InvalidFrameAndSlotAreRejectedWithoutMutation",
+      "Status": "Passed",
+      "Duration": 0.0004144,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.LowAndEmptyCannotRepel",
+      "Status": "Passed",
+      "Duration": 8.43e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.MorseUsesReadableMarksGapsAndSoftEdges",
+      "Status": "Passed",
+      "Duration": 0.002643,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.OneCanRefillsOnlyOneLampAndCannotBeReused",
+      "Status": "Passed",
+      "Duration": 0.0002017,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.ReplicasCannotSpendOilChangeWickOrStun",
+      "Status": "Passed",
+      "Duration": 9.74e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.SnapshotIsCopiedAndNightStartsFullUnlit",
+      "Status": "Passed",
+      "Duration": 8.97e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.UnlimitedTestingKeepsBothLampsFullThroughLongNightsAndStuns",
+      "Status": "Passed",
+      "Duration": 0.0002592,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.WaterExtinguishesWithoutLosingOilAndReplicates",
+      "Status": "Passed",
+      "Duration": 0.0001084,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.LanternTests.WickOffUsesNoOilAndLowLastsTwiceHigh",
+      "Status": "Passed",
+      "Duration": 8.13e-05,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 8.72,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: LanternTests",
+  "success": true,
+  "result": null
+}

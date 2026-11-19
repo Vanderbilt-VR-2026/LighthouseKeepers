@@ -1,0 +1,11 @@
+PASS Exactly two flashlights, one per keeper
+PASS No oil refill can
+PASS Exactly one bulb in House and each floor
+PASS Beam illuminates far wall: off=0.001773218, on=0.06712141
+PASS Focused 28 degree 9m spot, no LOW mode
+PASS No flashlight shadow map
+PASS Turning the tool away removes the bright spot: 0.001773218
+PASS Filament shader compiles on Metal
+PASS Baked environment uses filament GI wrapper: 2211 renderers
+PASS Baked pool dims with bulb: 0.4449633 -> 0.3722083
+PASS Two realtime lights maximum with both flashlights on

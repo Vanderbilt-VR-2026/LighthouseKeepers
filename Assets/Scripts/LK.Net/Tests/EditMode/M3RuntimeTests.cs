@@ -29,14 +29,14 @@ namespace LighthouseKeepers.Net.Tests
   }
   [Test] public void LanternStateSurvivesLateJoinRejectsInvalidFrameAndResetsOnRetry()
   {
-   var h=New(2,true);Call(h,"CycleLantern",0);Call(h,"CycleLantern",0);Tick(h,10);
+   var h=New(2,true);Call(h,"CycleLantern",0);Tick(h,10);
    var g=New(1);Call(g,"SetRemoteReplica",true);var snap=Call(h,"Capture",.1f);
    Assert.True((bool)Call(g,"ApplyRemote",snap));var lamps=Get<object>(g,"Lanterns");
    Assert.AreEqual("High",Call(lamps,"Wick",0).ToString());Assert.AreEqual(Call(Get<object>(h,"Lanterns"),"Oil",0),Call(lamps,"Oil",0));
    Assert.False((bool)Call(g,"CycleLantern",0));Tick(g,30);Assert.AreEqual(Call(Get<object>(h,"Lanterns"),"Oil",0),Call(lamps,"Oil",0));
    var frame=snap.GetType().GetField("lanterns").GetValue(snap);frame.GetType().GetField("oil0").SetValue(frame,float.NaN);Assert.False((bool)Call(g,"ApplyRemote",snap));
    Call(h,"Retry");Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.AreEqual(1f,Call(Get<object>(g,"Lanterns"),"Oil",0));Assert.AreEqual("Off",Call(Get<object>(g,"Lanterns"),"Wick",0).ToString());
-   Assert.IsNull(Get<object>(New(1),"Lanterns"));
+   Assert.NotNull(Get<object>(New(1),"Lanterns"),"Day 1 teaches the flashlight before station work");
   }
   [TestCase(1)][TestCase(2)][TestCase(3)][TestCase(4)][TestCase(5)]
     public void AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(int day)
