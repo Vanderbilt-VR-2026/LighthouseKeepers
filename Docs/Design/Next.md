@@ -1,3 +1,25 @@
+# Active checkpoint — Day 2 nightmare #144 (continued)
+
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Source protocol **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**. The bedtime nightmare is **OFF** in the asset pending the checks below; the earlier generator-room possession and revive lesson remains enabled, and cannot overlap it. No new APK has been delivered; installed source **bf86ddd0** is still the tool-belt build.
+
+This pass: a five-second chase lead (the earlier 2.5-second lead caught a simulated guest at the first door); a brief shared-catch lunge with wall and 0.5 m viewer-clearance checks; a wall/ceiling movement pass and flashlight lighting for the child; keep the blackout through failure; preserve the existing Floor 2 lesson and its rescue. **94 focused EditMode checks passed.** Controlled play checks covered the existing lesson, actual bedtime/gaze, water restoration and transition into Day 3. Two muted Editors passed shared catch, grip/release/regrip rescue, physical-input escape doors, rejoin and retry. A separate natural two-Editor wake-to-return run passed with virtual input and a retry checkpoint. See [evidence and limitations](../Verification/S5/NightmareFoundation/Continuation/README.md).
+
+## Next, in order
+
+1. Finish #144. Complete an unstaged Night 2 for both roles (including the existing lesson and bedtime), review the child model/motion and find an authored safe drop that clears both routes; the present safety fallback remains in the corner when there is no room behind both keepers. Check lunge/door reach/audio in both eyes, and a full two-human escape, caught-player rescue and retry. Keep the flag off while behavior/presentation is not ready. When ready enable `Assets/WatchDemo/Resources/HorrorTuning.asset` `nightmareEnabled`, rerun relevant regressions, build IL2CPP ARM64 and install without launching. Keep #144 open for worn device acceptance.
+2. Implement #145 Day 3 cursed ship, then #148 Day 4 flood/crew chase, then #149 Day 5 finale from the two copied scare briefs, preserving Survival and the existing radio/authentication/ship flows. Each is more than a device check. Commit and push each step, update this checkpoint, and bump the network version for any synced data.
+3. Final full-campaign solo/co-op, failure/retry/rejoin, screenshots, headset comfort/performance and PR update. Do not claim headset results from Editor checks.
+
+## Exact restart commands
+
+Use Unity 6000.3.23f1 on the worktree; set `UnityEditor.EditorUtility.audioMasterMute=true` before **each** Play Mode or test run. Focused EditMode: `python3 artifacts/s5/modes/check.py NightmareIntegrationTests ScareSequenceTests CampaignOrderTests CrewRecoveryTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests StationGuidanceTests HouseFloodTests`. For two muted Editors, freshly back up `/Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer` before syncing; see `Docs/Verification/S5/NightmareFoundation/Coop/README.md` and `Continuation/README.md`. The latest peer overlay backup is `artifacts/s5/final-scaring/peer-backup-5`. Use fresh output and backup paths. Build/delivery templates are `artifacts/s5/tool-belt/build.py` and `deliver.py`; change paths and version, close Editors first, **install but do not launch**.
+
+## DEVICE CHECKS PENDING
+
+Full Day 2 comfort, gaze, doors, catch clearance, rescue, audio and child motion in both eyes; both flashlights/shader on Android; two-headset join/escape/rejoin; sustained Quest 72 Hz and GPU ≤11 ms in the worst scene. Prior tool-belt, pink-material and eye-comfort checks remain pending below. Do not describe the unbuilt Day 3–5 scenes as device-only gaps.
+
+---
+
 # Current checkpoint — Day 2 nightmare #144 in progress
 
 Branch **sprint-5**, PR **#89**. Read/copied the Day 4–5 brief and created **#148** and **#149**. Continue **#144 → #145 → #148 → #149**. Day 3–5 set pieces are not implemented. The older Day 2 possession lesson is separate from the new nightmare.

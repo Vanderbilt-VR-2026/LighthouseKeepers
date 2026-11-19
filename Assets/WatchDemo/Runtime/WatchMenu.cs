@@ -181,7 +181,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var state = watch.State;
             nightmareSkip.gameObject.SetActive(!state.ReadOnly&&state.Scare.CanSkip);
-            if(nightmareDev)nightmareDev.gameObject.SetActive(!state.ReadOnly&&!state.Survival&&state.Day==2&&LighthouseKeepers.Core.Progression.HorrorTuning.Current.nightmareEnabled&&state.Scare.Beat==LighthouseKeepers.Core.Progression.ScareBeat.Idle);
+            if(nightmareDev)nightmareDev.gameObject.SetActive(!state.ReadOnly&&!state.Survival&&!state.Failed&&!state.Recovery.LessonActive&&!state.Recovery.AnyDown&&state.Day==2&&LighthouseKeepers.Core.Progression.HorrorTuning.Current.nightmareEnabled&&state.Scare.Beat==LighthouseKeepers.Core.Progression.ScareBeat.Idle);
             status.text = state.Failed ? state.FailureMessage + KeeperStrings.Get("menu.retry_hint") :
                 state.Complete && !state.HasNextDay ? KeeperStrings.Get("menu.complete") :
                 string.Format(KeeperStrings.Get("menu.day_status"),state.Day);

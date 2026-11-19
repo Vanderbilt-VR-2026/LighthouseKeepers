@@ -1,0 +1,21 @@
+# Day 2 nightmare: escape, presentation and lesson regression (#144)
+
+These are muted Unity 6000.3.23f1 Editor checks on `sprint-5`, protocol **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**. The new bedtime nightmare remains disabled in the serialized tuning asset until the remaining acceptance checks pass. The existing generator-room possession lesson remains enabled. No Quest build or device measurement is represented here.
+
+## Observed
+
+- Live Photon two-Editor runs moved both XRI character controllers from the wake checkpoint through the complete follow, turn, warning, stair descent, grip/pull doors, outside escape and return. Head, stick, A-button and hand input were virtual; the initial wake followed an explicit retry. With the earlier 2.5-second lead the guest was caught at the first door despite moving immediately (`results/natural-1`); with a five-second lead both exited and returned in about 14.3 seconds (`results/natural-3`). The five-second value is now serialized. The same full wake-to-return route also passed against the subsequent presentation and lesson-guard edits (`results/natural-current-1`).
+- The latest two-Editor catch/regrip run uses actual Photon transport and XR direct grip, but stages positions and entry to the chase. Both clients wait for each other's gaze, see the child wait for the rear keeper, observe a host-authoritative catch, and see revival pause on release and finish on regrip.
+- The existing solo F2 lesson was run with the new nightmare flag enabled: the companion was possessed, a real XR grip/release/regrip revived him, the watch stayed paused, and the lesson gates reopened. An overlapping nightmare request was refused. Timing was staged; this was not a whole night.
+- An Editor fixture completed Day 2 using station and ship rules, used the actual bedtime interaction, checked that the child's dialogue waits for gaze, then staged the return/relief. The real water values survived the dry presentation and the game advanced to Day 3 with the scene reset (`results/transition-1`). It did not physically perform every station.
+- The shared catch presentation uses the already-replicated catch point. The 0.35-second lunge moved toward the victim while keeping the rendered bounds at least 0.5 m from the viewer; blocked placements are skipped and a late join does not replay an old catch. These were isolated controlled Editor fixtures, not a headset comfort test.
+- I inspected `images/turn.png`, `images/wall.png`, `images/ceiling.png` and `images/lunge-close.png` with the Quest URP asset in the Editor. The flashlight illuminates the child and the ceiling pose is visible. The model remains stylized and the fallback leaves the child in the corner when no drop location clears both escape paths. Visual quality, actual arm articulation and the scare's impact still need review in the headset.
+- 94 focused EditMode checks passed: NightmareIntegration 5, ScareSequence 22, CampaignOrder 5, CrewRecovery 13, SurvivalMode 10, VoicePass 23, StoryImport 5, CoopCommandWindow 2, StationGuidance 5, HouseFlood 4. Receipts are in `results/editmode/`.
+
+## Still required
+
+A complete unstaged Day 2 for each role and two human players, including the ordinary lesson, all tasks, bedtime, the full nightmare, rescue/failure/retry and Day 3 transition; safe behind-player drop or a deliberate authored alternative; catch and ceiling presentation in both eyes; audio balance; Android shader verification; and sustained Quest GPU/CPU measurements. A successful Editor test does not establish these. Day 3 cursed ship and Days 4–5 set pieces remain implementation work.
+
+## Reproduce
+
+Use the existing [co-op fixtures](../Coop/README.md) and freshly backed-up peer worktree. Set `EditorUtility.audioMasterMute=true` before every Editor Play/test. Run `python3 artifacts/s5/modes/check.py NightmareIntegrationTests ScareSequenceTests CampaignOrderTests CrewRecoveryTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests StationGuidanceTests HouseFloodTests`. The local bridge entrypoints for the isolated fixtures are their matching `Begin` methods in `fixtures/`, each with a new absolute output directory. The `natural.py` fixture consumes the shared Wake state left by the co-op retry fixture; set `LK_TEST_OUT` to a fresh path. All input/scene staging is described above.

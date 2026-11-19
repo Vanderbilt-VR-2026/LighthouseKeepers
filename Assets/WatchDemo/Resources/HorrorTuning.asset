@@ -151,8 +151,11 @@ MonoBehaviour:
   nightmareFollowDistance: 3.5
   nightmareChaseSpeed: 2.15
   nightmareLateChaseSpeed: 2.3
-  nightmareChaseLeadSeconds: 2.5
+  nightmareChaseLeadSeconds: 5
   nightmareCatchDistance: 0.75
+  nightmareLungeSeconds: 0.35
+  nightmareLungeNear: 1.4
+  nightmareLungeFar: 1.8
   nightmareDropDistance: 3.2
   nightmareExitClearance: 2
   nightmareFollowFear: 0.35

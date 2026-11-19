@@ -80,7 +80,7 @@ namespace LighthouseKeepers.WatchDemo
                 watch.DrownedViewers(out int a,out var p,out _,out int b,out var q,out _);
                 bool pair=s.HumanKeeperCount>1?b>0&&Inside(p)&&Inside(q):bot&&bot.Active&&Inside(p)&&Mathf.Abs(bot.Position.y-3.3f)<.12f&&Vector3.Distance(bot.Position,tuning.lessonPartnerSpot)<.55f;
                 int victim=s.HumanKeeperCount>1?(int)((s.Coop as ICoopKeeperDuties)?.Duty(b)??CrewDuty.None):(int)(bot?bot.Duty:CrewDuty.None);
-                r.AdvanceLesson(Time.deltaTime,s.Day,s.Elapsed,pair,victim,tuning.possessionLesson&&!tuning.nightmareEnabled);
+                r.AdvanceLesson(Time.deltaTime,s.Day,s.Elapsed,pair,victim,s.Scare.AllowPossessionLesson(tuning.possessionLesson,s.Complete));
             }
             bool locked=r.RoomSealed&&!s.Failed;foreach(var g in gates)if(g.activeSelf!=locked)g.SetActive(locked);
             if(lastStage!=r.Lesson){lastStage=r.Lesson;if(r.LessonActive){var narrator=watch.GetComponentInChildren<HarborRadio>();if(!narrator)narrator=FindAnyObjectByType<HarborRadio>();if(narrator)narrator.RecordSilentLine(Caption,Speaker);}if(lastStage==2||lastStage==5){sound.clip=Resources.Load<AudioClip>("S4Audio/bolt-clunk");if(sound.clip)sound.Play();}}

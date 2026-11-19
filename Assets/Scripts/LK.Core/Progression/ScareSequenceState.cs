@@ -54,9 +54,12 @@ namespace LighthouseKeepers.Core.Progression
         public bool Paused=>Active||Failed;
         public bool Failed=>Beat==ScareBeat.Failed;
         public bool Finished=>Beat==ScareBeat.Complete;
-        public bool Dark=>Beat>=ScareBeat.Wake&&Beat<=ScareBeat.Escape;
+        public bool Dark=>Beat>=ScareBeat.Wake&&Beat<=ScareBeat.Escape||Failed;
         public bool DryReturn=>Beat==ScareBeat.Return||Beat==ScareBeat.Relief;
         public bool CanRescue=>Beat==ScareBeat.Return;
+        // The earlier Floor 2 lesson remains available during the watch; it must
+        // never start during or after the separate bedtime nightmare.
+        public bool AllowPossessionLesson(bool enabled,bool watchComplete)=>enabled&&Beat==ScareBeat.Idle&&!watchComplete;
         public float Age=>frame.age;
         public float Clock=>frame.clock;
         public int Participants=>frame.participants;

@@ -35,7 +35,19 @@ Shader "Lighthouse/S5 Drowned oilskin" {
  p.z+=sin(_Breath*1.3)*.006*saturate(p.y-.8);p.y+=a.detail.y*lift;p.x+=a.detail.y*sin(_Breath*.45)*.006;
  // The longer watcher turns its head; ceiling limbs brace against the underside.
  if(_Style>.5&&_Style<1.5){float yaw=sin(_Arrival*.75)*.23*head;float2 centred=float2(p.x,p.z-.08);p.x=centred.x*cos(yaw)+centred.y*sin(yaw);p.z=-centred.x*sin(yaw)+centred.y*cos(yaw)+.08;}
- if(_Style>1.5){float contact=max(1-smoothstep(.20,.45,p.y),smoothstep(.26,.40,abs(p.x))*(1-head));p.z=lerp(p.z,-.32,contact);}
+ if(_Style>1.5){
+     // The child braces and alternates limbs as she climbs. Weight falls to zero
+     // at the shoulders/hips so the single inexpensive mesh stays connected.
+     float crawling=smoothstep(.7,1.8,_Arrival);
+     float side=sign(p.x);float phase=sin(_Arrival*7+side*1.57);
+     float skin=step(.5,a.detail.x)*(1-head);
+     float arm=skin*smoothstep(.13,.21,abs(p.x))*saturate((_Height*.68-p.y)/(_Height*.34));
+     float leg=skin*(1-smoothstep(_Height*.18,_Height*.30,p.y))*(1-smoothstep(.15,.22,abs(p.x)));
+     float reach=.5+.5*phase;
+     p.z+=crawling*(arm*(.10+.12*phase)-leg*phase*.10);
+     p.y+=crawling*(arm*(.12+.24*reach)+leg*max(0,-phase)*.035);
+     p.x+=crawling*side*arm*phase*.025;
+ }
  o.local=a.positionOS.xyz;o.world=TransformObjectToWorld(p);o.positionCS=TransformWorldToHClip(o.world);o.normal=TransformObjectToWorldNormal(a.normalOS);o.vertexLight=VertexLighting(o.world,normalize(o.normal));o.colour=a.colour;o.kind=a.detail.x;return o;}
  half4 frag(V i):SV_Target{UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);clip(_Visibility-.005);
  half3 n=normalize(i.normal),view=GetWorldSpaceNormalizeViewDir(i.world);half rim=pow(1-saturate(abs(dot(n,view))),4);
@@ -50,15 +62,17 @@ Shader "Lighthouse/S5 Drowned oilskin" {
  half3 colour=i.colour.rgb*(light*1.55)*diffuse*salt;
  // The handheld flashlight is an additional light. Support the active Quest
  // per-pixel path and the optional vertex fallback without adding any lights.
+ half3 addedLight=0;
  #if defined(_ADDITIONAL_LIGHTS_VERTEX)
- colour+=i.colour.rgb*i.vertexLight;
+ addedLight=i.vertexLight;
  #elif defined(_ADDITIONAL_LIGHTS)
  uint count=GetAdditionalLightsCount();
  LIGHT_LOOP_BEGIN(count)
      Light lamp=GetAdditionalLight(lightIndex,i.world);
-     colour+=i.colour.rgb*LightingLambert(lamp.color*lamp.distanceAttenuation,lamp.direction,n);
+     addedLight+=LightingLambert(lamp.color*lamp.distanceAttenuation,lamp.direction,n);
  LIGHT_LOOP_END
  #endif
+ colour+=i.colour.rgb*min(addedLight,half3(1,1,1));
  if(i.kind>.5&&i.kind<1.5){half vein=pow(saturate(sin(i.local.y*48+sin(i.local.x*28)*2+i.local.z*33)),18);colour*=1-vein*.10;}
 
  if(i.kind<1.5)colour+=min(reflection,half3(.4,.4,.4))*.075*wet+rim*half3(.012,.025,.028);

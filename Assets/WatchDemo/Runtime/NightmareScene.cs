@@ -24,7 +24,7 @@ namespace LighthouseKeepers.WatchDemo
         public bool Begin(bool developer=false)
         {
             var s=watch.State;
-            if(s.ReadOnly||s.Survival||s.Day!=2||!tuning.nightmareEnabled||!navigation.Ready||!developer&&!s.Complete)return false;
+            if(s.ReadOnly||s.Survival||s.Day!=2||s.Failed||watch.Sleeping||s.Recovery.LessonActive||s.Recovery.AnyDown||!tuning.nightmareEnabled||!navigation.Ready||!developer&&!s.Complete)return false;
             if(!navigation.Route(tuning.nightmareStart,tuning.nightmareCorner,out path))return false;
             int humans=s.HumanKeeperCount>1?3:(int)watch.CurrentDuty;
             if(!s.Scare.Begin(humans,path[0],PlayerPrefs.GetInt("LK.Nightmare.Seen",0)>0))return false;
