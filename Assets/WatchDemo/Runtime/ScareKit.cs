@@ -13,7 +13,7 @@ namespace LighthouseKeepers.WatchDemo
         readonly GameObject root;readonly Transform body;readonly Mesh mesh;readonly Material material;
         readonly MeshRenderer renderer;readonly MaterialPropertyBlock properties=new();
         readonly AudioSource sound,breath,voice,rising,hiss;readonly AudioHighPassFilter radioHigh;readonly AudioLowPassFilter radioLow;readonly List<(Renderer renderer,int index)> lightmaps=new();
-        ScareHandprints prints;Vector3 previousBody,smoothedBody;float gait;bool dark;ScareBeat beat;Vector3 turnBase,wall,ceiling;Quaternion wallRotation;bool turnReady,turnHasWall;
+        ScareHandprints prints;Vector3 previousBody,smoothedBody;float gait;bool dark;ScareBeat beat;Vector3 turnBase,wall,ceiling,ceilingEnd;Quaternion wallRotation,ceilingRotation;bool turnReady,turnHasWall,turnHasCeiling;
         int observedAttempt=-1,observedCaught;float lungeAt=-1;Vector3 lungeFrom,lungeTo;bool burstPlayed;
         ParticleSystem bulbSparks;AudioSource bulbPop;
         readonly RaycastHit[] lungeHits=new RaycastHit[32];
@@ -56,13 +56,20 @@ namespace LighthouseKeepers.WatchDemo
             smoothedBody=scene.ReadOnly&&(scene.Beat==ScareBeat.Follow||scene.Beat==ScareBeat.Escape)&&Vector3.Distance(smoothedBody,scene.Body)<1?Vector3.Lerp(smoothedBody,scene.Body,1-Mathf.Exp(-18*Time.deltaTime)):scene.Body;
             body.SetPositionAndRotation(smoothedBody,Quaternion.Euler(0,scene.Yaw,0));
             if(scene.Beat==ScareBeat.Turn){
-                if(!turnReady){turnReady=true;turnHasWall=false;turnBase=scene.Body;wall=turnBase;ceiling=turnBase;wallRotation=Quaternion.Euler(0,scene.Yaw,0);float best=3;
+                if(!turnReady){turnReady=true;turnHasWall=false;turnHasCeiling=false;turnBase=scene.Body;wall=turnBase;ceiling=turnBase;wallRotation=Quaternion.Euler(0,scene.Yaw,0);float best=3;
                     for(int i=0;i<8;i++){var direction=Quaternion.Euler(0,i*45,0)*Vector3.forward;if(Physics.Raycast(turnBase+Vector3.up*1.6f,direction,out var h,best,~0,QueryTriggerInteraction.Ignore)&&!h.collider.attachedRigidbody&&Mathf.Abs(h.normal.y)<.1f){best=h.distance;turnHasWall=true;var contact=h.point+h.normal*.25f;wall=new Vector3(contact.x,turnBase.y,contact.z);wallRotation=Quaternion.LookRotation(-h.normal,Vector3.up);}}
-                    if(turnHasWall){ceiling=wall+Vector3.up*.5f;if(Physics.Raycast(wall+Vector3.up*1.6f,Vector3.up,out var roof,2.8f,~0,QueryTriggerInteraction.Ignore))ceiling=roof.point+Vector3.down*.36f;}
+                    if(turnHasWall){
+                        turnHasCeiling=Physics.Raycast(wall+Vector3.up*1.6f,Vector3.up,out var roof,2.8f,~0,QueryTriggerInteraction.Ignore);
+                        // A missing ceiling must not make the child crawl in midair.
+                        ceiling=turnHasCeiling?roof.point+Vector3.down*.36f:wall;ceilingEnd=turnHasCeiling?SafeCeilingEnd(ceiling):wall;
+                        var lead=Vector3.ProjectOnPlane(ceilingEnd-ceiling,Vector3.up);ceilingRotation=!turnHasCeiling?wallRotation:lead.sqrMagnitude>.001f?Quaternion.LookRotation(Vector3.down,lead.normalized):wallRotation*Quaternion.Euler(90,0,180);}
                 }
                 float t=scene.Age/Mathf.Max(1,HorrorTuning.Current.nightmareTurnSeconds);
-                body.position=t<.55f?Vector3.Lerp(turnBase,wall,Mathf.SmoothStep(0,1,t/.55f)):Vector3.Lerp(wall,ceiling,Mathf.SmoothStep(0,1,(t-.55f)/.45f));
-                body.rotation=turnHasWall?Quaternion.Slerp(wallRotation,wallRotation*Quaternion.Euler(90,0,180),Mathf.SmoothStep(0,1,(t-.55f)/.45f)):wallRotation;
+                float reach=Mathf.Clamp(HorrorTuning.Current.nightmareWallReachFraction,.1f,.8f),climb=Mathf.Clamp(HorrorTuning.Current.nightmareCeilingClimbFraction,reach+.05f,.95f);
+                if(!turnHasWall){body.position=turnBase;body.rotation=wallRotation;}
+                else if(t<reach){body.position=Vector3.Lerp(turnBase,wall,Mathf.SmoothStep(0,1,t/reach));body.rotation=wallRotation;}
+                else if(t<climb){float p=Mathf.SmoothStep(0,1,(t-reach)/(climb-reach));body.position=Vector3.Lerp(wall,ceiling,p);body.rotation=Quaternion.Slerp(wallRotation,ceilingRotation,p);}
+                else{body.position=Vector3.Lerp(ceiling,ceilingEnd,Mathf.SmoothStep(0,1,(t-climb)/(1-climb)));body.rotation=ceilingRotation;}
             }
             if(lunging){float t=Mathf.Clamp01(lungeAge/Mathf.Max(.1f,HorrorTuning.Current.nightmareLungeSeconds));body.position=Vector3.Lerp(lungeFrom,lungeTo,Mathf.SmoothStep(0,1,t));var facing=Vector3.ProjectOnPlane(lungeTo-lungeFrom,Vector3.up);if(facing.sqrMagnitude>.001f)body.rotation=Quaternion.LookRotation(facing);}
             // Brief in-place joint/head distortion, not a camera effect or a collision warp.
@@ -77,6 +84,21 @@ namespace LighthouseKeepers.WatchDemo
             if(scene.Beat==ScareBeat.Relief)voice.transform.position=eye+Vector3.forward*.8f;else voice.transform.localPosition=Vector3.up;
             hiss.transform.position=voice.transform.position;bool radio=scene.Beat==ScareBeat.Relief&&voice.isPlaying;if(radio&&hiss.clip&&!hiss.isPlaying)hiss.Play();else if(!radio&&hiss.isPlaying)hiss.Stop();
             Blackout(scene.Dark);
+        }
+        Vector3 SafeCeilingEnd(Vector3 start)
+        {
+            var tuning=HorrorTuning.Current;var offset=Vector3.ProjectOnPlane(tuning.nightmareCeilingTarget-start,Vector3.up);
+            float distance=Mathf.Min(offset.magnitude,Mathf.Max(0,tuning.nightmareCeilingCrawlDistance));if(distance<.01f)return start;
+            // Sweep the child's whole horizontal body, not just its root. If
+            // the initial pose overlaps solid geometry, omit the crawl.
+            var direction=offset.normalized;float radius=tuning.radius*.6f;var tail=start-Vector3.up*.12f;var head=tail+direction*Mathf.Max(.1f,tuning.nightmareCeilingBodyLength);
+            int overlaps=Physics.OverlapCapsuleNonAlloc(tail,head,radius,lungeOverlaps,~0,QueryTriggerInteraction.Ignore);
+            if(overlaps==lungeOverlaps.Length)return start;
+            for(int i=0;i<overlaps;i++)if(!lungeOverlaps[i].attachedRigidbody&&!lungeOverlaps[i].GetComponentInParent<Unity.XR.CoreUtils.XROrigin>())return start;
+            int count=Physics.CapsuleCastNonAlloc(tail,head,radius,direction,lungeHits,distance,~0,QueryTriggerInteraction.Ignore);
+            if(count==lungeHits.Length)return start;
+            for(int i=0;i<count;i++){var hit=lungeHits[i];if(hit.collider.attachedRigidbody||hit.collider.GetComponentInParent<Unity.XR.CoreUtils.XROrigin>())continue;distance=Mathf.Min(distance,Mathf.Max(0,hit.distance-.05f));}
+            return start+direction*distance;
         }
         void BurstBulb()
         {

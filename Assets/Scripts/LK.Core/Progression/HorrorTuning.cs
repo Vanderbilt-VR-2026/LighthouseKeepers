@@ -55,6 +55,10 @@ namespace LighthouseKeepers.Core.Progression
         public bool nightmareEnabled=false;
         [Min(1)] public float nightmareWakeSeconds=3;
         [Min(1)] public float nightmareTurnSeconds=4;
+        [Range(.1f,.8f)] public float nightmareWallReachFraction=.35f,nightmareCeilingClimbFraction=.7f;
+        [Min(0)] public float nightmareCeilingCrawlDistance=1.2f;
+        [Min(.1f)] public float nightmareCeilingBodyLength=1.28f;
+        public Vector3 nightmareCeilingTarget=new(-.4f,0,1.8f);
         [Min(0)] public float nightmareBulbBurstAt=2.4f,nightmareBulbBurstSeconds=.18f;
         [Range(0,24)] public int nightmareBulbSparks=16;
         [Min(1)] public float nightmareEscapeSeconds=55;

@@ -1,0 +1,10 @@
+PASS Nightmare starts
+PASS A real wall and ceiling were found
+PASS Crawl moves along ceiling within its configured limit (1.20 m)
+PASS Body travels during the ceiling portion
+PASS Rendered body stays outside face clearance
+PASS Body is hidden if a viewer moves inside its safety bounds
+PASS A solid obstacle shortens the ceiling path
+PASS A missing ceiling keeps the body upright at the wall
+PASS Presentation never moves the player camera
+PASS Quest-pipeline Editor shader has no errors

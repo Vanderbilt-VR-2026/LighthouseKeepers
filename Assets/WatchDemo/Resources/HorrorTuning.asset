@@ -144,6 +144,11 @@ MonoBehaviour:
   nightmareEnabled: 0
   nightmareWakeSeconds: 3
   nightmareTurnSeconds: 4
+  nightmareWallReachFraction: 0.35
+  nightmareCeilingClimbFraction: 0.7
+  nightmareCeilingCrawlDistance: 1.2
+  nightmareCeilingBodyLength: 1.28
+  nightmareCeilingTarget: {x: -0.4, y: 0, z: 1.8}
   nightmareBulbBurstAt: 2.4
   nightmareBulbBurstSeconds: 0.18
   nightmareBulbSparks: 16
