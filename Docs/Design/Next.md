@@ -1,3 +1,17 @@
+# Current task — tool belt and Day 1 guidance (#147)
+
+Branch sprint-5, PR #89. Step 1 implemented: separate waist slots for walkie (right), flashlight (left front), wrench (left side). 35 focused tests + 15 actual XRI checks passed. Network **LK-S5-TOOLBELT1 / LK-Lab-Coop-v52**. [Evidence](../Verification/S5/ToolBelt/README.md).
+
+Next: complete Day 1 local-objective-only station text/highlights; test with both roles; live two-Editor belt check. Then build/install (do not launch). Existing lighting stays untouched. No new APK yet.
+
+Exact checks: `python3 artifacts/s5/modes/check.py ToolBeltTests RadioBeltTests`; offline fixture `artifacts/s5/tool-belt/BeltCheck.cs` via Pipeline `run_script`, entry `BeltCheck.Run`, output `artifacts/s5/tool-belt/offline`. Editor must be muted. Fresh build backup/output directories required.
+
+## DEVICE CHECKS PENDING
+
+#147: grip/release each tool at its own clip, all three equipped without overlap, crouch/turn/regrip, partner sees the clips and cannot steal a carried tool, Day 1 only your current station/control prompts. No worn acceptance or GPU claims. Lighting discomfort reported by user; no lighting change in this task. Resume #144 then #145 after requested fixes/delivery.
+
+---
+
 # Current correction — pink Quest environment (#146)
 
 **Do not use APK 335a1ff0:** the user reported an all-pink environment. Removed the runtime room-material replacement and its custom shader. Original URP materials restored; bulb Morse remains, baked pools stay steady. Flashlights/grips/gameplay unchanged. Seven focused tests and 21 rendered checks passed; House/F2 captures inspected. [Correction evidence](../Verification/S5/Flashlights/PinkFix/README.md).

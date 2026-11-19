@@ -145,7 +145,7 @@ namespace LighthouseKeepers.Net
         {
             if(detached||!channel||!channel.IsHost||!prop)return false;
             var binding=prop.GetComponent<FusionGrabBinding>();
-            return binding&&binding.IsRemotelyOwned&&props.HasFreshLease(binding.Owner,binding.Id);
+            return binding&&binding.IsRemotelyOwned&&!binding.IsCarried&&props.HasFreshLease(binding.Owner,binding.Id);
         }
         public bool RemoteMicrophone(Component prop,out bool trigger)
         {trigger=micPressed&&Time.unscaledTime-micSeen<=.5f;return RemoteHeld(prop)&&prop.GetComponent<FusionGrabBinding>().Owner==micActor;}

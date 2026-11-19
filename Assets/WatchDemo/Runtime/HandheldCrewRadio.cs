@@ -7,11 +7,12 @@ using LighthouseKeepers.Interaction;
 using LighthouseKeepers.Gameplay.Interaction;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease, INetworkPropCarry
+    public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease, INetworkPropCarry, INetworkBeltSlot
     {
         WatchDemoController watch;int index;XRGrabInteractable grab;INetworkPropStatus lease;Transform head;Renderer lamp;TextMesh status;MaterialPropertyBlock block;
         bool trigger,previous,released,carried,taughtCarry;AudioSource carrySound;AudioClip carryClick;Transform beltClip,leftPalm,rightPalm;PhysicalGrip physicalGrip;
         public bool Carried=>carried;
+        public ToolBeltSlot BeltSlot=>ToolBeltSlot.Radio;
         public void DropCarry(){if(carried)released=true;carried=false;}
         public bool ReleasedBodyIsKinematic=>carried||!released;
         public void OnNetworkReleased(){if(carried)return;released=true;unheld=0;}

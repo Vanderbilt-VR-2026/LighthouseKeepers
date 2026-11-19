@@ -103,7 +103,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.HouseFlood!=null)WatchHouseFlood.Create(this);
             pressureValve=WatchPressureValve.Create(this);
             CreateCrewRadios();
-            CreateFlares();CreateLanterns();ArrivalEquipment.Create(this);
+            CreateFlares();CreateLanterns();KeeperToolBelt.Create(this,head,wrench);ArrivalEquipment.Create(this);
             InitializeDirector();
             if(state.PressureEnabled)PressurePresentation.Create(this,head);
             if(state.Storm!=null)StormPresentation.Create(this);

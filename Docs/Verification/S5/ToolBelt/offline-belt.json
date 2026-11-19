@@ -1,0 +1,20 @@
+{
+    "passed": true,
+    "checks": [
+        "PASS KEEPER_FLASHLIGHT_0 direct grip selects",
+        "PASS KEEPER_FLASHLIGHT_0 clipped on release",
+        "PASS KEEPER_FLASHLIGHT_0 clipped body stays kinematic",
+        "PASS KEEPER_FLASHLIGHT_0 correct slot",
+        "PASS Grab wrench — grip to hold direct grip selects",
+        "PASS Grab wrench — grip to hold clipped on release",
+        "PASS Grab wrench — grip to hold clipped body stays kinematic",
+        "PASS Grab wrench — grip to hold correct slot",
+        "PASS KEEPER_FLASHLIGHT_1 direct grip selects",
+        "PASS KEEPER_FLASHLIGHT_1 duplicate flashlight rejected",
+        "PASS flashlight and wrench separated",
+        "PASS KEEPER_FLASHLIGHT_0 regrip detaches belt",
+        "PASS KEEPER_FLASHLIGHT_0 ordinary release outside belt does not snap",
+        "PASS Grab wrench — grip to hold regrip detaches belt",
+        "PASS Grab wrench — grip to hold ordinary release outside belt does not snap"
+    ]
+}

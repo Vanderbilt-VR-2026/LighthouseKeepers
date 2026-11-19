@@ -172,7 +172,7 @@ namespace LighthouseKeepers.Net
                 if (p.action!=1 || !ValidPose(p) || !(p.carried?NearBelt(sender,binding,p.position):poses.NearHand(sender,p.position,1.2f)) ||
                     p.sequence<=0 || ownerSequences.TryGetValue(p.id,out var previous) && p.sequence<=previous) return;
                 if (!leases.Touch(p.id,sender,p.epoch,Time.unscaledTimeAsDouble)) return;
-                ownerSequences[p.id]=p.sequence;
+                ownerSequences[p.id]=p.sequence;binding.ObserveCarried(p.carried);
                 if (sender!=LocalActor) binding.ApplyHeld(p.position,p.rotation);
                 Gate.Observe(sender,p.id,!p.carried,Time.unscaledTimeAsDouble);
             }
@@ -182,7 +182,8 @@ namespace LighthouseKeepers.Net
         bool NearBelt(int actor,FusionGrabBinding binding,Vector3 position)
         {
             if(!binding.SupportsCarry||!poses.Sample(actor,out var pose))return false;
-            return RadioBeltPose.Near(position,pose.Head,pose.HeadRotation);
+            foreach(var other in props.Values)if(other&&other!=binding&&other.SupportsCarry&&other.BeltSlot==binding.BeltSlot&&other.IsCarried&&leases.Find(other.Id)?.Owner==actor)return false;
+            return binding.BeltSlot==ToolBeltSlot.Radio?RadioBeltPose.Near(position,pose.Head,pose.HeadRotation):ToolBeltPose.Near(binding.BeltSlot,position,pose.Head,pose.HeadRotation,ToolBeltPose.HostTolerance);
         }
         bool AllowRequest(int actor)
         {
@@ -210,7 +211,7 @@ namespace LighthouseKeepers.Net
                 if (obj.InputAuthority!=owner) obj.AssignInputAuthority(owner);
             }
             channel.SampleBroadcast(StateKind,Encode(new Packet { id=id,path=binding.Path,epoch=lease.Epoch,owner=lease.Owner,sequence=++stateSequence,action=3,generation=registryGeneration,
-                position=binding.transform.position,rotation=binding.transform.rotation }),id);
+                carried=binding.IsCarried,position=binding.transform.position,rotation=binding.transform.rotation }),id);
         }
         public bool HasFreshLease(int actor,int station)
         {

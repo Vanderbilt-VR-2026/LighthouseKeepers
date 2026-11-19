@@ -2,8 +2,8 @@ using UnityEngine;using UnityEngine.Rendering;using UnityEngine.XR.Interaction.T
 namespace LighthouseKeepers.WatchDemo {
  // Legacy component/command identifiers keep the existing two prop slots and replica payload intact.
  [DefaultExecutionOrder(100)] public sealed class WatchLantern:MonoBehaviour,IHandPoseTarget,INetworkReleasedBody,INetworkPropRelease {
-  public int Slot {get;private set;} public XRGrabInteractable Grab {get;private set;} public bool ReleasedBodyIsKinematic=>!released;public HandPose RequiredPose=>HandPose.WrapGrip;
-  public bool Held=>Grab.isSelected||lease?.Owner>0;public float Oil=>watch.State.Lanterns?.Oil(Slot)??0;
+  public int Slot {get;private set;} public XRGrabInteractable Grab {get;private set;} public bool ReleasedBodyIsKinematic=>GetComponent<BeltTool>()?.Carried==true||!released;public HandPose RequiredPose=>HandPose.WrapGrip;
+  public bool Held=>Grab.isSelected||lease?.Owner>0&&!(lease is INetworkPropCarryStatus carry&&carry.IsCarried);public float Oil=>watch.State.Lanterns?.Oil(Slot)??0;
   WatchDemoController watch;Rigidbody body;INetworkPropStatus lease;HandRig hand;Vector3 home;bool released,usable=true;int lastWick=-1;float activateAt;Light pool;Transform leftPalm,rightPalm;Renderer[] surfaces;AudioSource sound;AudioClip clunk;Material metal,glass;Mesh mesh,globe;MaterialPropertyBlock block;readonly RaycastHit[] sightHits=new RaycastHit[24];Renderer lensRenderer;
   public static WatchLantern Create(WatchDemoController w,int slot,Vector3 basePosition){var go=new GameObject("KEEPER_FLASHLIGHT_"+slot);go.SetActive(false);go.transform.SetParent(w.transform,false);go.transform.position=basePosition;var l=go.AddComponent<WatchLantern>();l.watch=w;l.Slot=slot;l.home=basePosition;l.Build();go.SetActive(true);return l;}
   void Build(){
@@ -41,7 +41,7 @@ namespace LighthouseKeepers.WatchDemo {
    pool.intensity=watch.State.Sprint5.lanternHighIntensity;
    block.SetColor("_BaseColor",lit?new Color(.8f,.78f,.65f):new Color(.14f,.16f,.14f));block.SetColor("_EmissionColor",lit?new Color(1,.85f,.64f)*1.5f:Color.black);lensRenderer.SetPropertyBlock(block);
    if(lastWick!=(int)wick){if(lastWick>=0&&clunk)sound.PlayOneShot(clunk,.12f);hand?.Pulse(.18f,.04f);lastWick=(int)wick;}
-   if(!Held&&(lease==null||lease.CanSimulateReleased)&&released){body.isKinematic=false;var hook=watch.NearestLanternHook(transform.TransformPoint(FlashlightMesh.Hook));if(hook.HasValue)SetRest(hook.Value-FlashlightMesh.Hook);else if(transform.position.y< -2f)SetRest(home);}
+   if(GetComponent<BeltTool>()?.Carried!=true&&!Held&&(lease==null||lease.CanSimulateReleased)&&released){body.isKinematic=false;var hook=watch.NearestLanternHook(transform.TransformPoint(FlashlightMesh.Hook));if(hook.HasValue)SetRest(hook.Value-FlashlightMesh.Hook);else if(transform.position.y< -2f)SetRest(home);}
    if(!watch.State.ReadOnly&&active)ObserveRepulsion();
   }
   void ObserveRepulsion(){var d=watch.State.Drowned;bool present=d?.Phase==DrownedPhase.Manifest&&d.Anchored;var target=present?new Vector3(d.X,d.Y+1.2f,d.Z):Vector3.zero;var from=pool.transform.position;var delta=target-from;float range=watch.State.Sprint5.lanternHighRange;bool aim=present&&delta.sqrMagnitude<range*range&&Vector3.Dot(transform.forward,delta.normalized)>Mathf.Cos(HorrorTuning.Current.lanternHighBeamInner*.5f*Mathf.Deg2Rad);

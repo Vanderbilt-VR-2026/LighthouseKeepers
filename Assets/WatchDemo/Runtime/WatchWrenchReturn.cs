@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
         ImmersionTuning tuning;
         bool Physical => tuning&&tuning.physicalWrenchDrops;
         public string LastReturnReason {get;private set;}
-        public bool ReleasedBodyIsKinematic => !Physical||!released;
+        public bool ReleasedBodyIsKinematic => GetComponent<BeltTool>()?.Carried==true||!Physical||!released;
         void Awake()
         {
             grab=GetComponent<XRGrabInteractable>();body=GetComponent<Rigidbody>();home=transform.position;rotation=transform.rotation;
@@ -38,6 +38,7 @@ namespace LighthouseKeepers.WatchDemo
         public void OnNetworkReleased(){released=true;awaySeconds=droppedSeconds=0;returnAt=Time.time+ReturnSeconds;previousOwner=0;}
         void LateUpdate()
         {
+            if(GetComponent<BeltTool>()?.Carried==true){body.isKinematic=true;returnAt=-1;awaySeconds=droppedSeconds=0;return;}
             if(network==null)network=GetComponent<INetworkPropStatus>();
             if(!watch){watch=FindAnyObjectByType<WatchDemoController>();if(watch)keepers=watch.GetComponent<INetworkKeeperProximity>();}
             if(!head&&Camera.main)head=Camera.main.transform;
@@ -103,7 +104,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         public void ReturnHome()
         {
-            if(grab.isSelected || network!=null && !network.CanSimulateReleased)return;
+            if(GetComponent<BeltTool>()?.Carried==true||grab.isSelected || network!=null && !network.CanSimulateReleased)return;
             if(!body.isKinematic){body.linearVelocity=Vector3.zero;body.angularVelocity=Vector3.zero;}
             released=false;awaySeconds=droppedSeconds=0;wet=false;
             body.isKinematic=true;body.position=home;body.rotation=rotation;transform.SetPositionAndRotation(home,rotation);returnAt=-1;
