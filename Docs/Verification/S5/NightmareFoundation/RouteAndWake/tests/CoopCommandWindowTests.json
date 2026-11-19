@@ -1,0 +1,31 @@
+{
+  "Summary": {
+    "Total": 2,
+    "Passed": 2,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CoopCommandWindowTests.EveryDeclaredActionIncludingWrenchClutchAcceptsFreshInputAndRejectsReplay",
+      "Status": "Passed",
+      "Duration": 0.0066403,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CoopCommandWindowTests.RejectsOldDayReplayInvalidActorAndNonfiniteInputWithoutConsumingValidSequence",
+      "Status": "Passed",
+      "Duration": 0.0019794,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.52,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: CoopCommandWindowTests",
+  "success": true,
+  "result": null
+}

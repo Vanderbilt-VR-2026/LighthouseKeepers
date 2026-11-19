@@ -46,7 +46,7 @@ namespace LighthouseKeepers.WatchDemo
             // Only an explicit Retry checkpoint moves the rig, never a scare.
             var rig=FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();if(!rig)return;
             var cc=rig.GetComponent<CharacterController>();bool enabled=cc&&cc.enabled;if(cc)cc.enabled=false;
-            var p=HorrorTuning.Current.nightmareStart;if(CurrentDuty==CrewDuty.Machinist)p.x-=.7f;rig.transform.position+=new Vector3(p.x-head.position.x,p.y-rig.transform.position.y,p.z-head.position.z);
+            var p=HorrorTuning.Current.nightmareWakePosition;p.z+=CurrentDuty==CrewDuty.Machinist?-.3f:.3f;rig.transform.position+=new Vector3(p.x-head.position.x,p.y-rig.transform.position.y,p.z-head.position.z);
             if(cc)cc.enabled=enabled;Physics.SyncTransforms();
         }
     }

@@ -16,9 +16,14 @@ namespace LighthouseKeepers.WatchDemo {
         void Update(){
             InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.primaryButton,out bool a);
             InputDevices.GetDeviceAtXRNode(XRNode.LeftHand).TryGetFeatureValue(CommonUsages.primaryButton,out bool x);
+            SampleButtons(a,x,Time.unscaledDeltaTime);
+        }
+        // Kept separate from XR polling so locomotion and stamina can be exercised with
+        // deterministic input in the Editor without changing the player's bindings.
+        public void SampleButtons(bool a,bool x,float deltaTime){
             bool allowed=watch&&watch.State!=null&&!watch.ObjectivePresentationBlocked&&!watch.State.Failed&&!watch.State.Recovery.Downed((int)watch.CurrentDuty);
             bool moving=move&&move.enabled&&move.leftHandMoveInput.ReadValue().sqrMagnitude>.09f;
-            HoldingBreath=allowed&&x&&!a;float speed=stamina.Tick(Time.unscaledDeltaTime,a,moving,allowed);KeeperMovement.Current?.SetRun(speed);
+            HoldingBreath=allowed&&x&&!a;float speed=stamina.Tick(deltaTime,a,moving,allowed);KeeperMovement.Current?.SetRun(speed);
             if(Time.unscaledTime>=nextSend||priorBreath!=HoldingBreath){nextSend=Time.unscaledTime+.15f;priorBreath=HoldingBreath;if(watch.State.Coop!=null)watch.State.Coop.Send(CoopAction.KeeperBreath,0,HoldingBreath);else watch.BreathCommand(0,HoldingBreath);}
             breath.volume=allowed&&!HoldingBreath?(1-Remaining)*.24f:0;breath.pitch=Mathf.Lerp(1,1.8f,1-Remaining);
             if(stamina.Warning){gasp.volume=.22f;gasp.Play();InputDevices.GetDeviceAtXRNode(XRNode.RightHand).SendHapticImpulse(0,.18f,.06f);}

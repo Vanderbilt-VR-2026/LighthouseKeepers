@@ -29,7 +29,7 @@ namespace LighthouseKeepers.WatchDemo
         void LateUpdate()
         {
             var s=watch.State.HouseFlood;if(s==null)return;
-            doorRenderer.enabled=s.DoorFront>.005f;roomRenderer.enabled=s.RoomFront>.005f;
+            doorRenderer.enabled=!watch.State.Scare.DryReturn&&s.DoorFront>.005f;roomRenderer.enabled=!watch.State.Scare.DryReturn&&s.RoomFront>.005f;
             float y=s.Height;
             Set(door,doorVertices,HouseFloodState.DoorWidth*.5f,HouseFloodState.DoorWidth*.5f,HouseFloodState.DoorNorthZ,HouseFloodState.DoorNorthZ-s.DoorFront,Mathf.Max(MinSheetHeight,watch.WaterHeight),y);
             // Clip to the House footprint; a front advances from the door toward the board/bench.

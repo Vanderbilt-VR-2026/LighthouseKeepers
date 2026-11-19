@@ -27,7 +27,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Beat(ScareBeat value,float age)
         {
             beat=value;turnReady=false;sound.Stop();radioHigh.enabled=radioLow.enabled=value==ScareBeat.Relief;
-            string line=value==ScareBeat.Wake?"unknown_n2_follow":value==ScareBeat.Turn?"unknown_n2_not_him":value==ScareBeat.Relief?"hm_n2_nightmare_return":null;
+            string line=value==ScareBeat.Follow?"unknown_n2_follow":value==ScareBeat.Turn?"unknown_n2_not_him":value==ScareBeat.Relief?"hm_n2_nightmare_return":null;
             if(value==ScareBeat.Failed||value==ScareBeat.Idle)voice.Stop();
             if(age>1)return;
             if(line!=null){voice.Stop();voice.clip=Resources.Load<AudioClip>("ScareDialogue/"+line);voice.volume=value==ScareBeat.Relief?.55f:.4f;if(voice.clip)voice.Play();}

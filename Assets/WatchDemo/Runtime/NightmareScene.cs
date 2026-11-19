@@ -12,9 +12,12 @@ namespace LighthouseKeepers.WatchDemo
     {
         WatchDemoController watch;HorrorTuning tuning;HunterNavigation navigation;ScareKit kit;
         Vector3[] path;int corner;float nextPath;int seenAttempt,seenBeat=-1;bool advanced;
+        Renderer towerWater;bool waterHidden,waterWasEnabled;
         readonly NightmareDoor[] doors=new NightmareDoor[2];
         public Component DoorTarget(float value){if(!float.IsFinite(value)||value<0||value>3)return null;int i=Mathf.FloorToInt(value/2);return i<2?doors[i]?.Handle:null;}
         readonly RaycastHit[] hits=new RaycastHit[32];
+        readonly Collider[] overlaps=new Collider[32];
+        static readonly float[] dropAngles={-80,80,-70,70,-50,50,-30,30,0};
         public static void Create(WatchDemoController w)
         {if(w.State.Survival)return;var n=w.gameObject.AddComponent<NightmareScene>();n.watch=w;n.tuning=HorrorTuning.Current;}
         void Start(){navigation=new HunterNavigation(tuning,Resources.Load<NavMeshData>("HunterNavigation"));kit=new ScareKit(transform);doors[0]=NightmareDoor.Create(watch,0,new Vector3(-.55f,0,-3.86f));doors[1]=NightmareDoor.Create(watch,1,new Vector3(-.55f,0,-9.86f));}
@@ -47,7 +50,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         public string Location=>watch.State.Scare.Beat switch{ScareBeat.Wake=>"Stairs · FLOOR 3",ScareBeat.Follow or ScareBeat.Corner or ScareBeat.Turn=>"Generator room · FLOOR 2",ScareBeat.Warning or ScareBeat.Quiet or ScareBeat.Escape=>"FLOOR 1 → House → outside · GRIP doors, pull",ScareBeat.Return=>watch.State.Scare.Caught==0?"House door · FLOOR 1":"Return to where your partner was caught",_=>""};
         public string Caption=>watch.State.Scare.Beat switch{
-            ScareBeat.Wake=>"Can you come with me? I'm scared.",
+            ScareBeat.Follow=>"Can you come with me? I'm scared.",
             ScareBeat.Turn=>"You're not him.",
             ScareBeat.Relief=>"Keepers? You've been silent for ten minutes. What happened up there?",_=>""};
         public string Speaker=>string.IsNullOrEmpty(Caption)?"":watch.State.Scare.Beat==ScareBeat.Relief?"HARBOR MASTER":"Unknown";
@@ -66,6 +69,27 @@ namespace LighthouseKeepers.WatchDemo
             if(count==hits.Length)return false;
             for(int i=0;i<count;i++)if(!hits[i].collider.GetComponentInParent<Unity.XR.CoreUtils.XROrigin>()&&!hits[i].collider.attachedRigidbody)return false;
             return true;
+        }
+        bool TryDrop(Vector3 eye,Vector3 forward,int other,Vector3 otherEye,out Vector3 drop)
+        {
+            drop=default;
+            var backwards=-Vector3.ProjectOnPlane(forward,Vector3.up).normalized;
+            if(backwards.sqrMagnitude<.9f||!Floor(eye,out var playerFeet)||!navigation.Route(playerFeet,tuning.nightmareOutside,out var escape))return false;
+            Vector3[] partnerEscape=null;
+            if(other>0&&(!Floor(otherEye,out var partnerFeet)||!navigation.Route(partnerFeet,tuning.nightmareOutside,out partnerEscape)))return false;
+            foreach(float angle in dropAngles){
+                var candidate=eye+Quaternion.Euler(0,angle,0)*backwards*tuning.nightmareDropDistance;
+                if(!Floor(candidate,out var feet)||Mathf.Abs(feet.y-playerFeet.y)>tuning.navClimb)continue;
+                if(Vector3.Distance(feet+Vector3.up,eye)<1.8f||other>0&&Vector3.Distance(feet+Vector3.up,otherEye)<1.8f)continue;
+                if(!ScarePathSafety.ClearOfRoute(feet,escape,tuning.nightmareExitClearance,tuning.navClimb)||other>0&&!ScarePathSafety.ClearOfRoute(feet,partnerEscape,tuning.nightmareExitClearance,tuning.navClimb))continue;
+                int count=Physics.OverlapCapsuleNonAlloc(feet+Vector3.up*.25f,feet+Vector3.up*1.2f,tuning.radius*.9f,overlaps,~0,QueryTriggerInteraction.Ignore);
+                if(count==overlaps.Length)continue;bool blocked=false;
+                for(int i=0;i<count;i++)if(!overlaps[i].attachedRigidbody&&!overlaps[i].GetComponentInParent<Unity.XR.CoreUtils.XROrigin>()){blocked=true;break;}
+                if(blocked||!navigation.Route(feet,playerFeet,out _))continue;
+                drop=feet;return true;
+            }
+            // If there is no safe floor beside the route, leave the body at the corner.
+            return false;
         }
         public static bool Outside(Vector3 eye)=>eye.z< -10.1f&&Mathf.Abs(eye.x)<2.5f&&eye.y<3;
         void Update()
@@ -88,7 +112,7 @@ namespace LighthouseKeepers.WatchDemo
                     if(distance<tuning.nightmareFollowDistance)Move(tuning.nightmareFollowSpeed*Time.deltaTime);
                     else {var behind=Vector3.ProjectOnPlane(p-c.Body,Vector3.up);if(behind.sqrMagnitude>.1f)c.Place(c.Body,Quaternion.LookRotation(behind).eulerAngles.y);}
                 }
-                if(c.Beat==ScareBeat.Escape){
+                if(c.Beat==ScareBeat.Escape&&c.Age>=tuning.nightmareChaseLeadSeconds){
                     bool first=(c.Caught&da)==0&&(c.Escaped&da)==0&&!Outside(p),second=db!=0&&(c.Caught&db)==0&&(c.Escaped&db)==0&&!Outside(q);
                     int target=first&&(!second||(p-c.Body).sqrMagnitude<(q-c.Body).sqrMagnitude)?da:second?db:0;
                     var eye=target==da?p:q;
@@ -105,22 +129,28 @@ namespace LighthouseKeepers.WatchDemo
                 if(c.CanRescue)s.Recovery.Tick(Mathf.Min(Time.deltaTime,.1f));
             }
             if(seenAttempt!=c.Attempt||seenBeat!=(int)c.Beat){
-                if(seenAttempt!=c.Attempt&&c.Attempt>1&&c.Reposition)watch.NightmareCheckpoint();
+                if(c.ShouldRepositionFrom(seenAttempt))watch.NightmareCheckpoint();
                 seenAttempt=c.Attempt;seenBeat=(int)c.Beat;
                 if(c.Active){watch.GetComponent<ObjectiveHud>()?.RevealFor(8);var radio=FindAnyObjectByType<HarborRadio>();if(radio&&!string.IsNullOrEmpty(Caption))radio.RecordSilentLine(Caption,Speaker);}
                 kit.Beat(c.Beat,c.Age);
                 if(c.Beat==ScareBeat.Turn)watch.GetComponent<AdaptiveMusic>()?.RequestAccent(c.Age);
                 if(c.Beat==ScareBeat.Warning&&!s.ReadOnly){
                     watch.DrownedViewers(out _,out var eye,out var forward,out int other,out var otherEye,out _);
-                    var drop=eye-Vector3.ProjectOnPlane(forward,Vector3.up).normalized*1.8f;
-                    if(Floor(drop,out var feet)&&Vector3.Distance(feet+Vector3.up,eye)>1.2f&&(other==0||Vector3.Distance(feet+Vector3.up,otherEye)>1.2f)&&navigation.Route(c.Body,feet,out _))c.Place(feet,Quaternion.LookRotation(Vector3.ProjectOnPlane(eye-feet,Vector3.up)).eulerAngles.y);
+                    if(TryDrop(eye,forward,other,otherEye,out var feet))c.Place(feet,Quaternion.LookRotation(Vector3.ProjectOnPlane(eye-feet,Vector3.up)).eulerAngles.y);
                 }
                 if(c.Beat==ScareBeat.Escape){path=null;nextPath=0;}
             }
             kit.Present(c,Camera.main?Camera.main.transform.position:Vector3.zero);
+            SetDryWater(c.DryReturn);
             if(!c.Paused&&!c.Finished)advanced=false;
             if(c.Paused&&s.Recovery.Downed((int)watch.CurrentDuty)&&KeeperAudioMix.Instance)KeeperAudioMix.Instance.LocalFear=1;
             if(c.Finished&&!advanced){advanced=true;PlayerPrefs.SetInt("LK.Nightmare.Seen",1);PlayerPrefs.Save();if(!s.ReadOnly)watch.FinishNightmare();}
+        }
+        void SetDryWater(bool dry)
+        {
+            if(dry==waterHidden)return;
+            if(dry){var surface=GameObject.Find("Visible first-floor flood");towerWater=surface?surface.GetComponent<Renderer>():null;if(towerWater){waterWasEnabled=towerWater.enabled;towerWater.enabled=false;waterHidden=true;}}
+            else{if(towerWater)towerWater.enabled=waterWasEnabled;waterHidden=false;towerWater=null;}
         }
         void Move(float metres)
         {
@@ -130,6 +160,6 @@ namespace LighthouseKeepers.WatchDemo
             var delta=next-p;float yaw=delta.sqrMagnitude>.00001f?Quaternion.LookRotation(Vector3.ProjectOnPlane(delta,Vector3.up)).eulerAngles.y:c.Yaw;
             c.Place(next,yaw);if((next-path[corner]).sqrMagnitude<.0025f)corner++;
         }
-        void OnDestroy(){navigation?.Dispose();kit?.Dispose();}
+        void OnDestroy(){SetDryWater(false);navigation?.Dispose();kit?.Dispose();}
     }
 }

@@ -29,6 +29,7 @@ namespace LighthouseKeepers.WatchDemo
         public float WaterHeight=>flood.Height;
         public float WaterHeightAt(Vector3 position)
         {
+            if(state?.Scare?.DryReturn==true)return float.NegativeInfinity;
             if(position.z>=LighthouseKeepers.Core.HouseFloodState.DoorNorthZ)return flood.Height;
             return state?.HouseFlood!=null&&state.HouseFlood.WetAt(position)?state.HouseFlood.Height:float.NegativeInfinity;
         }

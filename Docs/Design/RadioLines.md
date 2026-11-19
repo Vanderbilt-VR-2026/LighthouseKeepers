@@ -140,7 +140,7 @@ Only these new scene lines have offline TTS placeholders, as requested by the sc
 
 | File in Resources/ScareDialogue | Exact caption | Trigger |
 |---|---|---|
-| unknown_n2_follow.wav | Can you come with me? I'm scared. | Wake; once per nightmare attempt |
+| unknown_n2_follow.wav | Can you come with me? I'm scared. | Follow begins after the active keeper(s) look at the child; once per nightmare attempt |
 | unknown_n2_not_him.wav | You're not him. | Child's gaze-gated turn |
 | hm_n2_nightmare_return.wav | Keepers? You've been silent for ten minutes. What happened up there? | Crew back inside after escape, with any caught partner revived; relief |
 

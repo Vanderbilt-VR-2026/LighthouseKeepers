@@ -3,6 +3,22 @@ using UnityEngine;
 
 namespace LighthouseKeepers.Core.Progression
 {
+    public static class ScarePathSafety
+    {
+        // A drop must not occupy either keeper's route on the same floor.
+        public static bool ClearOfRoute(Vector3 point,Vector3[] route,float clearance,float verticalTolerance)
+        {
+            if(route==null||route.Length<2||!float.IsFinite(clearance)||clearance<=0||!float.IsFinite(verticalTolerance)||verticalTolerance<0)return false;
+            for(int i=1;i<route.Length;i++){
+                var a=route[i-1];var b=route[i];
+                if(Mathf.Abs(a.y-point.y)>verticalTolerance&&Mathf.Abs(b.y-point.y)>verticalTolerance)continue;
+                var edge=new Vector2(b.x-a.x,b.z-a.z);var offset=new Vector2(point.x-a.x,point.z-a.z);
+                float t=edge.sqrMagnitude>0?Mathf.Clamp01(Vector2.Dot(offset,edge)/edge.sqrMagnitude):0;
+                if((offset-edge*t).sqrMagnitude<clearance*clearance)return false;
+            }
+            return true;
+        }
+    }
     public enum ScareBeat { Idle, Wake, Follow, Corner, Turn, Warning, Quiet, Escape, Return, Relief, Complete, Failed }
 
     // A separate, bounded host clock: a nightmare must continue while the watch is paused.
@@ -39,6 +55,7 @@ namespace LighthouseKeepers.Core.Progression
         public bool Failed=>Beat==ScareBeat.Failed;
         public bool Finished=>Beat==ScareBeat.Complete;
         public bool Dark=>Beat>=ScareBeat.Wake&&Beat<=ScareBeat.Escape;
+        public bool DryReturn=>Beat==ScareBeat.Return||Beat==ScareBeat.Relief;
         public bool CanRescue=>Beat==ScareBeat.Return;
         public float Age=>frame.age;
         public float Clock=>frame.clock;
@@ -52,6 +69,8 @@ namespace LighthouseKeepers.Core.Progression
         public float Door(int index)=>index==0?frame.doorOne:frame.doorTwo;
         public bool PullDoor(float packed){if(ReadOnly||Beat!=ScareBeat.Escape||!float.IsFinite(packed))return false;int index=Mathf.FloorToInt(packed/2);float angle=packed-index*2;if(index<0||index>1||angle<0||angle>1)return false;float before=Door(index);float next=Mathf.Clamp(angle,before,before+.18f);if(index==0)frame.doorOne=next;else frame.doorTwo=next;return true;}
         public bool Reposition=>frame.reposition;
+        // A late-joining replica has no previous attempt and must not be moved mid-scene.
+        public bool ShouldRepositionFrom(int previousAttempt)=>Reposition&&Beat==ScareBeat.Wake&&previousAttempt>0&&previousAttempt<Attempt;
         public bool CanSkip=>Active&&frame.replay;
         public ScareSequenceState(HorrorTuning tuning){this.tuning=tuning;}
         void Stage(ScareBeat beat){frame.beat=beat;frame.age=0;}

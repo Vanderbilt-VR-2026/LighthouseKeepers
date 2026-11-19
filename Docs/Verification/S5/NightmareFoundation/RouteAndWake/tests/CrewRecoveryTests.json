@@ -1,0 +1,108 @@
+{
+  "Summary": {
+    "Total": 13,
+    "Passed": 13,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.AStaleGripOrSelfRescueCannotFinish",
+      "Status": "Passed",
+      "Duration": 0.0015914,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.BothDownLosesAndBotIsNotACatchableEscort",
+      "Status": "Passed",
+      "Duration": 0.0007415,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.BreathLeaseReplicatesByDutyExpiresAndResetsOnRetry",
+      "Status": "Passed",
+      "Duration": 0.0062657,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.DisconnectReleasesHoldAndAbsentTargetWithoutFailingRemainingKeeper",
+      "Status": "Passed",
+      "Duration": 0.0006264,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.LessonRosterChangeReleasesVictimAndRegathersInsteadOfTrappingLateJoin",
+      "Status": "Passed",
+      "Duration": 0.0006375,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.LessonWaitsForBothAndSoloHumanRevivesBotWithoutDeadline",
+      "Status": "Passed",
+      "Duration": 0.0007901,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.MalformedFrameRejectedWithoutChangingReplica",
+      "Status": "Passed",
+      "Duration": 0.0003307,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.ReleaseRetainsWorkButDeadlineAndLeaseKeepRunning",
+      "Status": "Passed",
+      "Duration": 0.0069584,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.ReplicaCannotDownTickHoldOrChangeRosterAndSnapshotsAreCopies",
+      "Status": "Passed",
+      "Duration": 0.0004043,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.RescueLossReportsItsCauseAndRetryRestoresTheNight",
+      "Status": "Passed",
+      "Duration": 0.0018852,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.RoomAdmissionIgnoresKeeperCapsuleButRejectsTheStairs",
+      "Status": "Passed",
+      "Duration": 0.0021487,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.VisibleLiftStopsBelowTheCeiling",
+      "Status": "Passed",
+      "Duration": 0.0006993,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewRecoveryTests.WatchLateJoinRestoresDownProgressAndRetryClearsIt",
+      "Status": "Passed",
+      "Duration": 0.000442,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.42,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: CrewRecoveryTests",
+  "success": true,
+  "result": null
+}
