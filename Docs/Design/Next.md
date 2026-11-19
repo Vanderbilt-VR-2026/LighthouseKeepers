@@ -1,3 +1,15 @@
+# Current correction — pink Quest environment (#146)
+
+**Do not use APK 335a1ff0:** the user reported an all-pink environment. Removed the runtime room-material replacement and its custom shader. Original URP materials restored; bulb Morse remains, baked pools stay steady. Flashlights/grips/gameplay unchanged. Seven focused tests and 21 rendered checks passed; House/F2 captures inspected. [Correction evidence](../Verification/S5/Flashlights/PinkFix/README.md).
+
+Build/install pending this source commit. Close the muted Editor, run `python3 artifacts/s5/pink-fix/build.py`, then `python3 artifacts/s5/pink-fix/deliver.py`. Fresh backup directory: `artifacts/s5/pink-fix/build`. Require no `RoomFilamentLit.shader` in packaged asset report. Install **without launch**; preserve receipts and update PR #89/#146. Network stays **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51** (visual-only correction).
+
+## DEVICE CHECKS PENDING
+
+Reopen manually and verify House walls/floor, F2 generator and flashlight illumination render normally in both eyes. Quest rendering/performance is not established by Editor captures. Keep #146 open. Resume #144 then #145 only after this corrective delivery is complete.
+
+---
+
 # Current checkpoint — focused flashlights and Morse bulbs (#146)
 
 Branch `sprint-5`, PR #89. Network **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51**; both players must update. The user's flashlight request supersedes LOW/HIGH lantern operation: two metal flashlights, GRIP carry, TRIGGER ON/OFF, unlimited power every night in both modes. No new payload fields. Hand contacts are measured for both hands; no global avatar or wrench changes.

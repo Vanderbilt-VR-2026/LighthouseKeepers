@@ -36,7 +36,7 @@ namespace LighthouseKeepers.Net.Tests
    var t=Sprint5Tuning.Current;var h=HorrorTuning.Current;Assert.Greater(t.lanternHighRange,t.lanternLowRange*2);
    Assert.Greater(t.lanternHighIntensity,t.lanternLowIntensity*4);Assert.Less(h.lanternHighBeamAngle,h.lanternBeamAngle*.5f);
    Assert.Less(h.lanternHighBeamInner,h.lanternHighBeamAngle);Assert.Less(h.lanternBeamInner,h.lanternBeamAngle);
-   Assert.NotNull(Resources.Load<Shader>("RoomFilamentLit"));
+   Assert.IsNull(Resources.Load<Shader>("RoomFilamentLit"),"Unsupported runtime replacement must not ship in Resources");
   }
  }
 }

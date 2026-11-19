@@ -1,5 +1,7 @@
 # Flashlights and Morse floor bulbs — #146
 
+**Correction:** APK `335a1ff0` rendered pink on Quest. Its custom baked-pool shader has been removed; original materials and steady baked pools restored. See [PinkFix](PinkFix/README.md). The initial results below are historical Editor evidence, not headset acceptance.
+
 The two lanterns are now worn metal, right-angle flashlights. Hold GRIP around the ribbed handle; press TRIGGER to switch the focused beam on or off. There is no LOW mode, fuel drain, oil can or oil gauge. This applies to Campaign and Survival on every night. The beam follows the tool, not the head. Existing drops, hooks, ownership, underwater switch-off and held-light repulsion remain.
 
 The grip was checked against both animated hand meshes. An initial attachment passed through the fingers; the final attachment uses the measured finger cavity rather than the generic tool contact. No global hand pose, avatar mesh or other tool attachment was changed.

@@ -4,7 +4,9 @@ using UnityEngine.Rendering;
 using LighthouseKeepers.Core.Progression;
 namespace LighthouseKeepers.WatchDemo
 {
-    // Five dim landmarks; portable lanterns provide the usable working light.
+    // Five dim landmarks; portable flashlights provide the usable working light.
+    // Keep authored URP materials intact: runtime shader replacement failed on Quest.
+    // Morse changes bulb emission only; baked pools remain steady.
     // Fixed illumination is baked. This component creates no realtime lights.
     [DefaultExecutionOrder(1800)]
     public sealed class LanternRoomLighting:MonoBehaviour
@@ -28,7 +30,6 @@ namespace LighthouseKeepers.WatchDemo
                 if(r.name=="Frosted service lamp")r.transform.parent.gameObject.SetActive(false);
                 if(r.name.StartsWith("SM_Lamp_")||r.name.StartsWith("SM_Fixture_")||r.name.StartsWith("SM_EmergencyLamp_")||r.name.StartsWith("SM_EmergencyFixture_"))r.enabled=false;
             }
-            gameObject.AddComponent<RoomFilamentLightmaps>();
             var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();
             bulbMaterial=new Material(Shader.Find("Universal Render Pipeline/Unlit")){name="Frosted warm room bulbs"};
             for(int i=0;i<RoomLights.Length;i++){
@@ -44,8 +45,6 @@ namespace LighthouseKeepers.WatchDemo
         void LateUpdate(){
             if(!watch||watch.State==null||block==null)return;
             bool powered=watch.State.HasPower(LighthouseKeepers.Core.PowerCircuit.Lights);
-            Shader.SetGlobalVector("_KeeperRoomPulse",new Vector4(Filament(Time.time,1),powered?Filament(Time.time,2):0,powered?Filament(Time.time,3):0,powered?Filament(Time.time,4):0));
-            Shader.SetGlobalFloat("_KeeperHousePulse",Filament(Time.time,0));
             for(int i=0;i<bulbs.Count;i++){var r=bulbs[i];if(!r)continue;float glow=Powered(i,powered)?Filament(Time.time,i)*(i==0?1.6f:.65f):0;
                 block.Clear();block.SetColor("_BaseColor",glow>0?new Color(1,.65f,.3f)*glow:new Color(.025f,.02f,.015f));block.SetColor("_EmissionColor",new Color(1,.52f,.19f)*glow);r.SetPropertyBlock(block);
             }
