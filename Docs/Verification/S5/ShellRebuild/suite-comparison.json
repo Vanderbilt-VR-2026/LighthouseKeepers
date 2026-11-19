@@ -1,0 +1,189 @@
+{
+  "environment": "Unity 6000.3.23f1 EditMode, Editor audio muted",
+  "before": {
+    "summary": {
+      "Total": 711,
+      "Passed": 703,
+      "Failed": 8,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "failures": [
+      {
+        "name": "LighthouseKeepers.Editor.Environment.Tests.CoplanarNudgeTests.ReviewedMeshSeparationsSurviveShellRebuild",
+        "message": "  SM_Floor_F2"
+      },
+      {
+        "name": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.GeometryClearanceAgainstImportedColliders",
+        "message": "  RT-F2-TRANSFER clear-width obstruction Stairwell liner F2 F3 0 at (-1.562, 3.300, -1.828)"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.StoryScopeTests.SelectedClipsAreShortMonoAndCaptionedExactly",
+        "message": "  HM_N2_FUEL_FAILURE"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.M3.SabotageTests.FuelWarningAndRepairEvidenceReplicateInRealWatchAndRetry",
+        "message": "  Expected: -1"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.M3.SabotageTests.SchedulerGivesFullWarningBeforeFaultAndDoesNotDuplicate",
+        "message": "  Expected: -1"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.EveryActionHasAnObjectLocationAndOneButton",
+        "message": "  HelpPartner"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.InstructionsStayShortAndTableHasEveryStep",
+        "message": "  step.HoldValve"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.GameplayLayersKeepNetworkingInsideApprovedAdapters",
+        "message": "  Networking must stay in LK.Net and its explicitly retained transport adapters:"
+      }
+    ]
+  },
+  "after": {
+    "summary": {
+      "Total": 712,
+      "Passed": 705,
+      "Failed": 7,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "failures": [
+      {
+        "name": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.GeometryClearanceAgainstImportedColliders",
+        "message": "  RT-F2-TRANSFER clear-width obstruction Stairwell liner F2 F3 0 at (-1.562, 3.300, -1.828)"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.StoryScopeTests.SelectedClipsAreShortMonoAndCaptionedExactly",
+        "message": "  HM_N2_FUEL_FAILURE"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.M3.SabotageTests.FuelWarningAndRepairEvidenceReplicateInRealWatchAndRetry",
+        "message": "  Expected: -1"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.M3.SabotageTests.SchedulerGivesFullWarningBeforeFaultAndDoesNotDuplicate",
+        "message": "  Expected: -1"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.EveryActionHasAnObjectLocationAndOneButton",
+        "message": "  HelpPartner"
+      },
+      {
+        "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.InstructionsStayShortAndTableHasEveryStep",
+        "message": "  step.HoldValve"
+      },
+      {
+        "name": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.GameplayLayersKeepNetworkingInsideApprovedAdapters",
+        "message": "  Networking must stay in LK.Net and its explicitly retained transport adapters:"
+      }
+    ]
+  },
+  "baseline_22af_failing_classes": {
+    "CoplanarNudgeTests": {
+      "summary": {
+        "Total": 2,
+        "Passed": 1,
+        "Failed": 1,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "failures": [
+        {
+          "name": "LighthouseKeepers.Editor.Environment.Tests.CoplanarNudgeTests.ReviewedMeshSeparationsSurviveShellRebuild",
+          "message": "  SM_Floor_F2"
+        }
+      ]
+    },
+    "ShellGeometryTests": {
+      "summary": {
+        "Total": 7,
+        "Passed": 6,
+        "Failed": 1,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "failures": [
+        {
+          "name": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.GeometryClearanceAgainstImportedColliders",
+          "message": "  RT-F2-TRANSFER clear-width obstruction Stairwell liner F2 F3 0 at (-1.562, 3.300, -1.828)"
+        }
+      ]
+    },
+    "StoryScopeTests": {
+      "summary": {
+        "Total": 4,
+        "Passed": 3,
+        "Failed": 1,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "failures": [
+        {
+          "name": "LighthouseKeepers.Net.Tests.StoryScopeTests.SelectedClipsAreShortMonoAndCaptionedExactly",
+          "message": "  HM_N2_FUEL_FAILURE"
+        }
+      ]
+    },
+    "SabotageTests": {
+      "summary": {
+        "Total": 9,
+        "Passed": 7,
+        "Failed": 2,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "failures": [
+        {
+          "name": "LighthouseKeepers.Tests.M3.SabotageTests.FuelWarningAndRepairEvidenceReplicateInRealWatchAndRetry",
+          "message": "  Expected: -1"
+        },
+        {
+          "name": "LighthouseKeepers.Tests.M3.SabotageTests.SchedulerGivesFullWarningBeforeFaultAndDoesNotDuplicate",
+          "message": "  Expected: -1"
+        }
+      ]
+    },
+    "MasterDirectorTests": {
+      "summary": {
+        "Total": 12,
+        "Passed": 10,
+        "Failed": 2,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "failures": [
+        {
+          "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.EveryActionHasAnObjectLocationAndOneButton",
+          "message": "  HelpPartner"
+        },
+        {
+          "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.InstructionsStayShortAndTableHasEveryStep",
+          "message": "  step.HoldValve"
+        }
+      ]
+    },
+    "NoNetworkingLeakageTest": {
+      "summary": {
+        "Total": 9,
+        "Passed": 8,
+        "Failed": 1,
+        "Skipped": 0,
+        "Inconclusive": 0
+      },
+      "failures": [
+        {
+          "name": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.GameplayLayersKeepNetworkingInsideApprovedAdapters",
+          "message": "  Networking must stay in LK.Net and its explicitly retained transport adapters:"
+        }
+      ]
+    }
+  },
+  "new_failures": [],
+  "resolved": [
+    "LighthouseKeepers.Editor.Environment.Tests.CoplanarNudgeTests.ReviewedMeshSeparationsSurviveShellRebuild"
+  ]
+}

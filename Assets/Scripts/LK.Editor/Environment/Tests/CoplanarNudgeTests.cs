@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 namespace LighthouseKeepers.Editor.Environment.Tests
@@ -33,6 +34,26 @@ namespace LighthouseKeepers.Editor.Environment.Tests
                 }
             }
             Assert.That(nudged,Is.EqualTo(10),"Throat, porch, two F1 reveal frames and six landings");
+        }
+        [Test] public void RebuildRestoresSolidFloorRenderersAndCollidersAfterPoleRemoval()
+        {
+            int visuals=0,colliders=0;
+            string Key(string name){if(name.StartsWith("UCX_"))name=name.Substring(4);if(name.EndsWith("_01"))name=name.Substring(0,name.Length-3);return name;}
+            foreach(var part in new[]{"F2","F3","F4"})
+            {
+                var source=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/PF_Shell_"+part+".prefab");
+                var copy=Object.Instantiate(source);
+                try{
+                    var filters=copy.GetComponentsInChildren<MeshFilter>(true).Where(f=>LighthouseBuilder.SolidFloorMesh(f.name)).ToArray();
+                    var solids=copy.GetComponentsInChildren<MeshCollider>(true).Where(c=>LighthouseBuilder.SolidFloorMesh(Key(c.name))).ToArray();
+                    foreach(var f in filters){var old=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/WatchDemo/PoleShaftMeshes/"+f.name+".asset");Assert.NotNull(old,f.name);f.sharedMesh=old;}
+                    foreach(var c in solids){var old=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/WatchDemo/PoleShaftMeshes/"+Key(c.name)+".asset");Assert.NotNull(old,c.name);c.sharedMesh=old;}
+                    LighthouseBuilder.ApplyVisualCorrections(copy);
+                    foreach(var f in filters){Assert.AreEqual(LighthouseBuilder.SolidFloorMesh(f.name),f.sharedMesh,f.name);visuals++;}
+                    foreach(var c in solids){Assert.AreEqual(LighthouseBuilder.SolidFloorMesh(Key(c.name)),c.sharedMesh,c.name);Assert.False(c.convex,c.name);colliders++;}
+                }finally{Object.DestroyImmediate(copy);}
+            }
+            Assert.AreEqual(4,visuals);Assert.AreEqual(4,colliders);
         }
     }
 }

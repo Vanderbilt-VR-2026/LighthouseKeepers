@@ -85,15 +85,29 @@ namespace LighthouseKeepers.Editor.Environment
             {"SM_Frame_Lantern_Base_B","f99841fca524740a6ac5095b333e9ca8"},
             {"SM_Gallery_Deck","7f17094f034754fd99ee172f922add53"}
         };
+        // These are the UV-preserving solid floors restored when the pole was removed.
+        // The same mapping serves the manual restore and every later shell rebuild.
+        static readonly Dictionary<string,string> solidFloors=new Dictionary<string,string>{
+            {"SM_Floor_F2","37efadb7fc0a0f7d89a2666a2fe10011"},
+            {"SM_Floor_F3","d3999fd2514909d141a95d98e632239c"},
+            {"SM_Floor_F4","f3ec45edcd5ca3686f40035351d3ba40"},
+            {"SM_Floor_Lantern_Threshold","8c0f2dcac7c24842513227c2a532ba16"}
+        };
+        public static Mesh SolidFloorMesh(string name)
+        {
+            if(!solidFloors.TryGetValue(name,out var file))return null;
+            var mesh=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Art/VisualPass/UV/"+file+".asset");
+            if(!mesh)throw new Exception("Missing restored solid floor: "+name);
+            return mesh;
+        }
         public static void ApplyVisualCorrections(GameObject root)
         {
-            // Persist the authored pole apertures when regenerating the shell.
-            const string poleMeshes="Assets/WatchDemo/PoleShaftMeshes/";
+            // Rebuild the solid render and collision surfaces, not the obsolete pole holes.
             foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))
-            {var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+f.name+".asset");if(m)f.sharedMesh=m;}
+            {var m=SolidFloorMesh(f.name);if(m)f.sharedMesh=m;}
             foreach(var c in root.GetComponentsInChildren<MeshCollider>(true))
             {var key=c.name.StartsWith("UCX_")?c.name.Substring(4):c.name;if(key.EndsWith("_01"))key=key.Substring(0,key.Length-3);
-             var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+key+".asset");if(m){c.convex=false;c.sharedMesh=m;}}
+             var m=SolidFloorMesh(key);if(m){c.convex=false;c.sharedMesh=m;}}
             foreach(var filter in root.GetComponentsInChildren<MeshFilter>(true))
                 if(separatedMeshes.TryGetValue(filter.name,out var guid))
                 {
