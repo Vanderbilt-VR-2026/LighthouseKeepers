@@ -73,6 +73,9 @@ namespace LighthouseKeepers.WatchDemo
         public bool HighWaterFailed {get;private set;}
         public RadioAuthenticityState Authenticity {get;private set;}
         public CrewRecoveryState Recovery {get;private set;}
+        public ScareSequenceState Scare {get;private set;}
+        public bool RetryScare(){if(!Scare.Retry(HorrorTuning.Current.nightmareStart))return false;Recovery=new CrewRecoveryState(HorrorTuning.Current);Recovery.SetHumans(Scare.Participants);Changed?.Invoke();return true;}
+        public void ResetSceneRecovery(){if(!ReadOnly){Recovery=new CrewRecoveryState(HorrorTuning.Current);Recovery.SetHumans(Scare.Participants);}}
         public SeaRecoveryState Sea {get;private set;}=new();
         public void ObserveSea(int a,Vector3 p,int b,Vector3 q,float dt){if(ReadOnly||Failed)return;Sea.Tick(a,p,b,q,dt,Survival);if(Sea.lost)Changed?.Invoke();}
         int keeperCount=1;
@@ -87,9 +90,9 @@ namespace LighthouseKeepers.WatchDemo
         {get=>coop;set{coop=value;}}
         public bool ReadOnly => NetworkRehearsal || RemoteReplica;
         public void SetRemoteReplica(bool value)
-        { RemoteReplica=value; if(Authenticity!=null)Authenticity.ReadOnly=ReadOnly;if(Recovery!=null)Recovery.ReadOnly=ReadOnly; if(Lanterns!=null)Lanterns.ReadOnly=ReadOnly;if(Flares!=null)Flares.ReadOnly=ReadOnly;if(Drowned!=null)Drowned.ReadOnly=ReadOnly;if(Sabotage!=null)Sabotage.ReadOnly=ReadOnly;if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly; StartAssist.ReadOnly=ReadOnly;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly; }
+        { RemoteReplica=value;if(Scare!=null)Scare.ReadOnly=ReadOnly; if(Authenticity!=null)Authenticity.ReadOnly=ReadOnly;if(Recovery!=null)Recovery.ReadOnly=ReadOnly; if(Lanterns!=null)Lanterns.ReadOnly=ReadOnly;if(Flares!=null)Flares.ReadOnly=ReadOnly;if(Drowned!=null)Drowned.ReadOnly=ReadOnly;if(Sabotage!=null)Sabotage.ReadOnly=ReadOnly;if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly; StartAssist.ReadOnly=ReadOnly;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly; }
         public void SetNetworkRehearsal(bool value)
-        {NetworkRehearsal=value;if(Authenticity!=null)Authenticity.ReadOnly=ReadOnly;if(Recovery!=null)Recovery.ReadOnly=ReadOnly;if(Lanterns!=null)Lanterns.ReadOnly=ReadOnly;if(Flares!=null)Flares.ReadOnly=ReadOnly;if(Drowned!=null)Drowned.ReadOnly=ReadOnly;if(Sabotage!=null)Sabotage.ReadOnly=ReadOnly;if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly;StartAssist.ReadOnly=ReadOnly;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly;}
+        {NetworkRehearsal=value;if(Scare!=null)Scare.ReadOnly=ReadOnly;if(Authenticity!=null)Authenticity.ReadOnly=ReadOnly;if(Recovery!=null)Recovery.ReadOnly=ReadOnly;if(Lanterns!=null)Lanterns.ReadOnly=ReadOnly;if(Flares!=null)Flares.ReadOnly=ReadOnly;if(Drowned!=null)Drowned.ReadOnly=ReadOnly;if(Sabotage!=null)Sabotage.ReadOnly=ReadOnly;if(Ships!=null)Ships.ReadOnly=ReadOnly;if(Tension!=null)Tension.ReadOnly=ReadOnly;if(Fear!=null)Fear.ReadOnly=ReadOnly;StartAssist.ReadOnly=ReadOnly;Pipe.ReadOnly=Radio.ReadOnly=ReadOnly;if(Pressure!=null)Pressure.ReadOnly=ReadOnly;if(CrewRadio!=null)CrewRadio.ReadOnly=ReadOnly;if(Grid!=null)Grid.ReadOnly=ReadOnly;if(Engine!=null)Engine.ReadOnly=ReadOnly;if(Beacon!=null)Beacon.ReadOnly=ReadOnly;}
         public event Action Changed;
         public RadioState Radio {get;}
         public PipeRepairState Pipe {get;}
@@ -97,7 +100,7 @@ namespace LighthouseKeepers.WatchDemo
         public double BeaconDarkLimit=>Ships!=null?Ships.ThreatLimit(Elapsed):Definition.beaconDarkLimitSeconds*(Tuning&&Tuning.difficulty?Tuning.beaconLimitMultiplier:1);
         public double BeaconDarkRemaining=>Ships!=null?Ships.ThreatRemaining(Elapsed):Math.Max(0,BeaconDarkLimit-BeaconDarkElapsed)+BeaconGraceRemaining;
         public bool BeaconDarkFailed {get;private set;}
-        public string FailureMessage=>Recovery?.Failed==true?PlayerStrings.Get("loss.rescue"):Ships?.Lost==true?string.Format(PlayerStrings.Get("loss.ship"),PlayerStrings.Get(Scenario.ships[Ships.WreckIndex].nameKey)):Sea.lost?PlayerStrings.Get("loss.sea"):HighWaterFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.1"):BeaconDarkFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.2"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.3");
+        public string FailureMessage=>Scare?.Failed==true?"The nightmare took you. Retry from the wake-up.":Recovery?.Failed==true?PlayerStrings.Get("loss.rescue"):Ships?.Lost==true?string.Format(PlayerStrings.Get("loss.ship"),PlayerStrings.Get(Scenario.ships[Ships.WreckIndex].nameKey)):Sea.lost?PlayerStrings.Get("loss.sea"):HighWaterFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.1"):BeaconDarkFailed?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.2"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchState.3");
         int repairSeed=System.Environment.TickCount;
         public DayDefinition Definition => days[index];
         public int Day => Definition.day;
@@ -124,9 +127,9 @@ namespace LighthouseKeepers.WatchDemo
         }
         public bool IsDone(string station) => !faults.Contains(station);
         public int CompletedTasks { get { int n = 0; foreach (var task in Definition.tasks) if (IsDone(task.stationId)) n++; return n; } }
-        public bool Complete => Recovery?.LessonActive!=true && Recovery?.AnyDown!=true && CompletedTasks == Definition.tasks.Length && (schedule==null||schedule.Finished) && (Ships==null||Ships.Finished);
+        public bool Complete => Scare?.Paused!=true && Recovery?.LessonActive!=true && Recovery?.AnyDown!=true && CompletedTasks == Definition.tasks.Length && (schedule==null||schedule.Finished) && (Ships==null||Ships.Finished);
         public bool HasNextDay => Survival || index + 1 < days.Length;
-        public bool Failed => Survival?!SurvivalPractice&&HighWaterFailed:Recovery?.Failed==true || Ships?.Lost==true || Sea.lost || !Tutorial&&(HighWaterFailed || BeaconDarkFailed || (Elapsed >= Duration && !Complete));
+        public bool Failed => Survival?!SurvivalPractice&&HighWaterFailed:Scare?.Failed==true || Recovery?.Failed==true || Ships?.Lost==true || Sea.lost || !Tutorial&&(HighWaterFailed || BeaconDarkFailed || (Elapsed >= Duration && !Complete));
         public WatchState() : this(Resources.Load<DayCatalog>("WatchDays").days, 1) { }
         public WatchState(DayDefinition[] definitions, int firstDay):this(definitions,firstDay,null){}
         public WatchState(DayDefinition[] definitions, int firstDay,S4Tuning tuning):this(definitions,firstDay,tuning,null){}
@@ -168,7 +171,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if (seconds < 0 || double.IsNaN(seconds) || double.IsInfinity(seconds)) throw new ArgumentOutOfRangeException(nameof(seconds));
             bool wasFailed = Failed;
-            if(wasFailed||ReadOnly||BriefingHeld)return;
+            if(wasFailed||ReadOnly||BriefingHeld||Scare.Paused)return;
             // Substep only the campaign so event time and grace do not depend on frame size.
             if(Campaign&&seconds>.25){while(seconds>.25&&!Failed){Tick(.25);seconds-=.25;}if(seconds>0&&!Failed)Tick(seconds);return;}
             if(Recovery.LessonActive){Recovery.Tick((float)seconds);Drowned?.Tick(Elapsed,false,true,false);return;}
@@ -199,7 +202,7 @@ namespace LighthouseKeepers.WatchDemo
         {if(!ReadOnly&&!Failed)HouseFlood?.Step(seconds,height,Repaired&&HasPower(PowerCircuit.Pump));}
         public void ObserveWater(double seconds,float height)
         {
-            if(BriefingHeld||Recovery.LessonActive)return;
+            if(BriefingHeld||Recovery.LessonActive||Scare.Paused)return;
             if(!double.IsFinite(seconds)||seconds<0||!float.IsFinite(height))throw new ArgumentOutOfRangeException();
             if(!ReadOnly){LatestWater=height;ObservePressure();}
             if(Tutorial||SurvivalPractice||ReadOnly||Failed||!Tuning||!Tuning.highWaterLoss)return;
@@ -242,7 +245,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             int done=0;
             for(int i=0;i<Definition.tasks.Length;i++)if(IsDone(Definition.tasks[i].stationId))done|=1<<i;
-            return new WatchSnapshot { breathMask=BreathMask, assistActor=StartAssist.Holder, mode=(int)Mode, briefingHeld=BriefingHeld, authenticity=Authenticity.Capture(), recovery=Recovery?.Capture()??new RecoveryFrame(), scriptedPartner=ScriptedPartner,keepers=keeperCount,lanterns=Lanterns?.Capture()??new LanternFrame(),flares=Flares?.Capture()??new FlareFrame(), drowned=Drowned?.Capture()??new DrownedFrame(), sabotage=Sabotage?.Capture()??new SabotageFrame(), ships=Ships?.Capture()??new ShipFrame(), fear=Fear?.Capture()??new FearFrame(),tension=Tension?.Capture()??new TensionFrame(), campaignEnabled=Campaign,nightFaultMask=schedule?.FiredMask??0,nightSawPowerOff=schedule?.SawPowerOff??false,nightReliefUntil=schedule?.ReliefUntil??0,nightNextFaultAt=schedule?.NextFaultAt??0,nightGraceUntil=schedule?.GraceUntil??0,watchEngaged=watchEngaged,watchGateElapsed=watchGateElapsed,stationGraceUntil=stationGraceUntil,seenStationMask=seenStationMask,nightStartSeenMask=nightStartSeenMask, handheldEnabled=CrewRadio!=null,radioActor0=CrewRadio?.Actor(0)??0,radioActor1=CrewRadio?.Actor(1)??0, valveEnabled=Pressure!=null,valveCrew=Pressure?.CrewRequired??false,valveClamped=Pressure?.Clamped??false,valveActor=Pressure?.Holder??0, nightTwoOutage=NightTwoOutage,firstGeneratorGraceUntil=firstGeneratorGraceUntil,stormStage=Storm?.Stage??1,peakDanger=PeakDanger,previousCloseCall=PreviousCloseCall,directorEnabled=Director!=null,stepA=(int)(Director?.First??KeeperStep.None),stepB=(int)(Director?.Second??KeeperStep.None),actorA=Director?.FirstActor??0,actorB=Director?.SecondActor??0,houseWaterVolume=HouseFlood?.Volume??0,day3Stage=day3Stage,day3Crew=balanceCrew,day3GraceUntil=day3GraceUntil,objectiveIndex=ObjectiveIndex,day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
+            return new WatchSnapshot { scare=Scare.Capture(), breathMask=BreathMask, assistActor=StartAssist.Holder, mode=(int)Mode, briefingHeld=BriefingHeld, authenticity=Authenticity.Capture(), recovery=Recovery?.Capture()??new RecoveryFrame(), scriptedPartner=ScriptedPartner,keepers=keeperCount,lanterns=Lanterns?.Capture()??new LanternFrame(),flares=Flares?.Capture()??new FlareFrame(), drowned=Drowned?.Capture()??new DrownedFrame(), sabotage=Sabotage?.Capture()??new SabotageFrame(), ships=Ships?.Capture()??new ShipFrame(), fear=Fear?.Capture()??new FearFrame(),tension=Tension?.Capture()??new TensionFrame(), campaignEnabled=Campaign,nightFaultMask=schedule?.FiredMask??0,nightSawPowerOff=schedule?.SawPowerOff??false,nightReliefUntil=schedule?.ReliefUntil??0,nightNextFaultAt=schedule?.NextFaultAt??0,nightGraceUntil=schedule?.GraceUntil??0,watchEngaged=watchEngaged,watchGateElapsed=watchGateElapsed,stationGraceUntil=stationGraceUntil,seenStationMask=seenStationMask,nightStartSeenMask=nightStartSeenMask, handheldEnabled=CrewRadio!=null,radioActor0=CrewRadio?.Actor(0)??0,radioActor1=CrewRadio?.Actor(1)??0, valveEnabled=Pressure!=null,valveCrew=Pressure?.CrewRequired??false,valveClamped=Pressure?.Clamped??false,valveActor=Pressure?.Holder??0, nightTwoOutage=NightTwoOutage,firstGeneratorGraceUntil=firstGeneratorGraceUntil,stormStage=Storm?.Stage??1,peakDanger=PeakDanger,previousCloseCall=PreviousCloseCall,directorEnabled=Director!=null,stepA=(int)(Director?.First??KeeperStep.None),stepB=(int)(Director?.Second??KeeperStep.None),actorA=Director?.FirstActor??0,actorB=Director?.SecondActor??0,houseWaterVolume=HouseFlood?.Volume??0,day3Stage=day3Stage,day3Crew=balanceCrew,day3GraceUntil=day3GraceUntil,objectiveIndex=ObjectiveIndex,day=Day,elapsed=Elapsed,water=waterHeight,power=(int)Power,doneMask=done,
                 beaconStationEnabled=Beacon!=null,beaconIgnited=Beacon?.Ignited??false,beaconAlignment=Beacon?.Alignment??0,beaconTarget=Beacon?.Target??0,beaconSoot=Beacon?.Soot??0,
                 engineConsumption=Engine?.Consumption??0,engineEnabled=Engine!=null,fuel=Engine?.Fuel??0,primer=Engine?.Primer??0,enginePulls=Engine?.Pulls??0,engineClosedPulls=Engine?.ClosedPulls??0,chokeClosed=Engine?.ChokeClosed??false,engineSettled=Engine?.Settled??false,chokeRemaining=Engine?.OpenRemaining??0,engineFloodRemaining=Engine?.FloodRemaining??0,coughSerial=Engine?.CoughSerial??0,
                 gridEnabled=Grid!=null,gridCapacity=Grid?.Capacity??0,gridMask=Grid?.SelectedMask??0,gridTripped=Grid?.Tripped??false,
@@ -264,6 +267,7 @@ namespace LighthouseKeepers.WatchDemo
             var target=Survival&&snapshot.day!=Day?SurvivalTuning.Current.Day(snapshot.day):days[next];
             bool accepted=false;try {
             if(next<0 || snapshot.objectiveIndex>=target.tasks.Length || !Survival&&snapshot.elapsed>SnapshotDuration(target,snapshot.day3Crew)+snapshot.ships.departureWait+(target.scenario?.noFail==true?TutorialShipDelay(target,snapshot.ships):0)+.001 || (snapshot.doneMask>>target.tasks.Length)!=0)return false;
+            if(snapshot.scare.scene!=0&&(Survival||snapshot.day!=2||!HorrorTuning.Current.nightmareEnabled))return false;
             if(snapshot.lanterns.enabled!=(NewLanterns(target)!=null))return false;
             if(snapshot.flares.enabled!=(NewFlares(target)!=null))return false;
             if(!ValidDrowned(target,snapshot)||!ValidSabotage(target,snapshot)||!ValidShipSnapshot(target,snapshot)||!ValidCampaignSnapshot(target,snapshot)||!ValidDay3Snapshot(target,snapshot)||!ValidGraceSnapshot(snapshot,target))return false;
@@ -277,6 +281,7 @@ namespace LighthouseKeepers.WatchDemo
             breathReplica=snapshot.breathMask;BriefingHeld=snapshot.briefingHeld;
             Authenticity=new RadioAuthenticityState(HorrorTuning.Current){ReadOnly=true};Authenticity.Apply(snapshot.authenticity);
             Recovery=new CrewRecoveryState(HorrorTuning.Current){ReadOnly=true};Recovery.Apply(snapshot.recovery);
+            Scare=new ScareSequenceState(HorrorTuning.Current){ReadOnly=true};Scare.Apply(snapshot.scare);
             Fear=snapshot.fear.enabled?new KeeperFearState{ReadOnly=true}:null;Fear?.Apply(snapshot.fear);
             Ships=NewShips(target);Ships?.Apply(snapshot.ships,snapshot.elapsed);
             Tension=NewTension(target);if(Tension!=null)Tension.Apply(snapshot.tension,snapshot.elapsed);
@@ -306,6 +311,7 @@ namespace LighthouseKeepers.WatchDemo
             Pressure?.SetCrew(PairedCrew&&RequiresCrewValve);Pressure?.Reset();StartAssist.SetCrew(RequiresStartAssist);StartAssist.Reset();CrewRadio?.Clear();PipeWorkerActor=0;
             Elapsed = simulationSliceEnd = 0; BeaconDarkElapsed=0; BeaconDarkFailed=false; StarterPulls = 0; faults.Clear();
             Authenticity=new RadioAuthenticityState(HorrorTuning.Current){ReadOnly=ReadOnly};
+            Scare=new ScareSequenceState(HorrorTuning.Current){ReadOnly=ReadOnly};
             Recovery=new CrewRecoveryState(HorrorTuning.Current){ReadOnly=ReadOnly};Sea=new();HighWaterElapsed=0;HighWaterFailed=false;
             foreach (var fault in Definition.startingFaults) faults.Add(fault);
             Ships=NewShips(Definition);

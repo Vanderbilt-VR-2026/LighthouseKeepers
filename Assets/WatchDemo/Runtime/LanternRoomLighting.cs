@@ -45,7 +45,7 @@ namespace LighthouseKeepers.WatchDemo
         void LateUpdate(){
             if(!watch||watch.State==null||block==null)return;
             bool powered=watch.State.HasPower(LighthouseKeepers.Core.PowerCircuit.Lights);
-            for(int i=0;i<bulbs.Count;i++){var r=bulbs[i];if(!r)continue;float glow=Powered(i,powered)?Filament(Time.time,i)*(i==0?1.6f:.65f):0;
+            for(int i=0;i<bulbs.Count;i++){var r=bulbs[i];if(!r)continue;float glow=!watch.State.Scare.Dark&&Powered(i,powered)?Filament(Time.time,i)*(i==0?1.6f:.65f):0;
                 block.Clear();block.SetColor("_BaseColor",glow>0?new Color(1,.65f,.3f)*glow:new Color(.025f,.02f,.015f));block.SetColor("_EmissionColor",new Color(1,.52f,.19f)*glow);r.SetPropertyBlock(block);
             }
         }

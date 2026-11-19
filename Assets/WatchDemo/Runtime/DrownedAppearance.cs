@@ -63,9 +63,9 @@ namespace LighthouseKeepers.WatchDemo
             var flare=s.Flares?.Shot(0);float burnAge=flare!=null&&flare.repelled?(float)(s.Flares.Clock-flare.at)-flare.stopAge:100;
             bool burning=d.Anchored&&burnAge>=0&&burnAge<HorrorTuning.Current.flareHitSeconds&&Vector3.Distance(flare.stop,DrownedMotion.Centre(d,s.Elapsed,DrownedForms.Height(activeForm)))<2;
             figure.localScale=Vector3.one;if(burning)figure.localScale=new Vector3(1,Mathf.Lerp(1,.08f,burnAge/HorrorTuning.Current.flareHitSeconds),1);
-            bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&!s.Recovery.LessonActive&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
+            bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&!s.Recovery.LessonActive&&!s.Scare.Paused&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
             float wanted=active&&(d.Phase==DrownedPhase.Manifest||burning)?1:0;
-            visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed||s.Recovery.LessonActive)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?16f:10f));
+            visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed||s.Recovery.LessonActive||s.Scare.Paused)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?16f:10f));
             body.enabled=visibility>.005f;block.SetFloat("_Visibility",visibility);block.SetFloat("_Burn",burning?1-burnAge/HorrorTuning.Current.flareHitSeconds:0);block.SetFloat("_Style",d.PoseKind);block.SetFloat("_Height",DrownedForms.Height(activeForm));block.SetFloat("_Breath",(float)s.Elapsed);block.SetFloat("_Arrival",(float)System.Math.Max(0,s.Elapsed-manifestAt));body.SetPropertyBlock(block);
             flareTarget.transform.localPosition=Vector3.up*DrownedForms.Height(activeForm)*.58f;bool wasHittable=flareTarget.AcceptsHit;flareTarget.AcceptsHit=body.enabled&&d.Phase==DrownedPhase.Manifest;if(flareTarget.AcceptsHit&&!wasHittable)flareTarget.ResetMotion();
             mist.enabled=body.enabled;mistBlock.SetFloat("_Visibility",visibility);mistBlock.SetFloat("_Clock",(float)s.Elapsed);mistBlock.SetFloat("_Height",DrownedForms.Height(activeForm));mistBlock.SetFloat("_FaceHeight",DrownedForms.FaceHeight(activeForm));mist.SetPropertyBlock(mistBlock);

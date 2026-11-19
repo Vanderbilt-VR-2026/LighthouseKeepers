@@ -51,6 +51,21 @@ namespace LighthouseKeepers.Core.Progression
         public Vector3 recoveryFloorPosition=new(2.6f,.04f,0);
         [Header("Night 2 possession lesson")]
         public bool possessionLesson=true;
+        [Header("Scripted end-of-Day-2 nightmare")]
+        public bool nightmareEnabled=false;
+        [Min(1)] public float nightmareWakeSeconds=3;
+        [Min(1)] public float nightmareTurnSeconds=4;
+        [Min(1)] public float nightmareEscapeSeconds=55;
+        [Min(1)] public float nightmareRescueSeconds=38;
+        [Min(1)] public float nightmareReliefSeconds=8;
+        [Min(.1f)] public float nightmareFollowSpeed=.5f;
+        [Min(1)] public float nightmareFollowDistance=3.5f;
+        [Min(.1f)] public float nightmareChaseSpeed=2.9f;
+        [Min(.1f)] public float nightmareLateChaseSpeed=3.3f;
+        [Min(.5f)] public float nightmareCatchDistance=.75f;
+        public Vector3 nightmareStart=new(1,6.6f,0);
+        public Vector3 nightmareCorner=new(1,3.3f,0);
+        public Vector3 nightmareOutside=new(0,0,-10.5f);
         public float lessonStartSeconds=60,lessonCallSeconds=8,lessonSealSeconds=4,lessonThreatSeconds=6,lessonReliefSeconds=6;
         public float possessionLift=.32f,possessionRiseSpeed=.10f,ceilingClearance=.18f;
         public Vector3 lessonPartnerSpot=new(1,3.3f,0);

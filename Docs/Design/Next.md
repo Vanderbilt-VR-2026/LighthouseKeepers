@@ -1,3 +1,17 @@
+# Scare-kit checkpoint — #144 in progress
+
+Implemented host-owned nightmare rules/snapshot, independent clock, safe scene retry, scene blackout/child presentation, stair navigation and grip/pull doors. The new `nightmareEnabled` flag is **OFF** pending remaining scene/co-op validation. Existing installed gameplay still uses the older lesson. Network for this source: **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**.
+
+67 focused checks passed. A muted Editor fixture passed ten actual scene checks: F3→F2 child navigation, watch pause, warning/quiet timing, door progress bounds and solo outside escape. Reviewed screenshots exposed stale normal-job location text during scenes; corrected that. The ceiling capture did not show the child and is not visual acceptance. Need deliberate camera/flashlight captures, actual XRI door grab/release, live host/guest catch→outside→return rescue, checkpoints, and old-mode regression before enabling/building.
+
+Next: finish #144, then #145, #148, #149 in order. Day 4–5 implementation has **not** started. Their full brief is copied and issues created. No new APK installed in this checkpoint. Editor remains muted. Scripts/results: `artifacts/s5/final-scaring/`; rules check: `python3 artifacts/s5/modes/check.py ScareSequenceTests CrewRecoveryTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests` (Edit Mode only). Play fixture: `python3 artifacts/s5/scare-scenes/start.py`, then Pipeline run_script `NightmareProbe.Begin` in `artifacts/s5/final-scaring/NightmareProbe.cs`, with a fresh output folder. Do not run EditMode tests while playing.
+
+## DEVICE CHECKS PENDING
+
+All new nightmare comfort, readability, hand reach, audio and sustained performance are NOT VERIFIED. Do not treat a fixture teleport or direct state mutation as physical-input acceptance. Install only after the finished slice is verified; never launch.
+
+---
+
 # Active implementation — scripted nights (#144, #145, #148, #149)
 
 Read the complete Day 4–5 brief and copied it unchanged into `Docs/Design/S5-Day4-Day5-Scares.md`. Tracking: #148 Day 4 flood/crew chase; #149 Day 5 convoy finale. Build order is #144 Day 2 nightmare → #145 Day 3 cursed ship → #148 → #149. None of these new scenes is implemented yet; the existing mid-Day-2 possession is the older lesson.

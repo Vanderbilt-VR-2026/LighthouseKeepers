@@ -92,6 +92,8 @@ namespace LighthouseKeepers.WatchDemo
             soundPage=panel.transform.Find("Sound settings page");
             AddCompanionControls();
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            var nightmare=Action("DevNightmare","DEV: Day 2 nightmare (host)",335,()=>{watch.GetComponent<NightmareScene>()?.Begin(true);Close();});nightmare.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
+            var skipNightmare=Action("SkipNightmare","Skip nightmare replay (host)",385,()=>{watch.GetComponent<NightmareScene>()?.Skip();Close();});skipNightmare.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
             var drill=Action("DevRescueDrill",KeeperStrings.Get("rescue.drill"),285,()=>{watch.RequestRescueDrill();Close();});
             drill.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
             ((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);

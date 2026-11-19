@@ -79,10 +79,10 @@ namespace LighthouseKeepers.WatchDemo
             bool locked=s.Recovery.RoomSealed&&!s.Failed;
             if(locked!=roomLocked){roomLocked=locked;if(locked){foreach(var b in rig.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationProvider>(true))if(b.enabled){roomDisabled.Add(b);b.enabled=false;}}else{foreach(var b in roomDisabled)if(b)b.enabled=true;roomDisabled.Clear();}}
             bool down=slot?.down==true&&!s.Failed;
-            if(down&&(!blocked||slot.serial!=seenSerial)){seenSerial=slot.serial;moved=s.Recovery.Lesson==4;fade=0;}
+            if(down&&(!blocked||slot.serial!=seenSerial)){seenSerial=slot.serial;moved=s.Recovery.Lesson==4||s.Scare.Paused;fade=0;}
             SetBlocked(down);
             if(down&&!moved){fade=Mathf.MoveTowards(fade,1,Time.unscaledDeltaTime/tune.reviveFadeSeconds);if(fade>=1){Relocate();moved=true;}}
-            else fade=Mathf.MoveTowards(fade,0,Time.unscaledDeltaTime/tune.reviveFadeSeconds);
+            else fade=Mathf.MoveTowards(fade,down&&s.Scare.Paused?.82f:0,Time.unscaledDeltaTime/tune.reviveFadeSeconds);
             if(fade>0)watch.ShowRecoveryFade(fade);else watch.ClearRecoveryFade();
             for(int i=0;i<2;i++){
                 var v=s.Recovery.Slot(i+1);
@@ -124,7 +124,7 @@ namespace LighthouseKeepers.WatchDemo
         int RecoveryDuty(int actor)=>actor==LocalKeeper||coop==null?(int)CurrentDuty:(int)((coop as ICoopKeeperDuties)?.Duty(actor)??CrewDuty.None);
         public bool RecoveryCommand(int actor,int victim,bool held,Vector3 left,Vector3 right)
         {
-            if(state.ReadOnly||sleeping||state.Failed||!recoveryView)return false;
+            if(state.ReadOnly||sleeping||state.Failed||!recoveryView||state.Scare.Paused&&!state.Scare.CanRescue)return false;
             int rescuer=RecoveryDuty(actor);
             if(held&&(actor==LocalKeeper||coop==null?!recoveryView.LocalReach(victim):!recoveryView.Reach(left,right,victim)))return false;
             return state.Recovery.Hold(rescuer,victim,held);
@@ -132,13 +132,13 @@ namespace LighthouseKeepers.WatchDemo
         public bool CompanionRescue(Vector3 actualHand)
         {
             var bot=GetComponent<CrewCompanion>();int victim=(int)CurrentDuty;
-            if(!bot||!bot.Active||state.ReadOnly||state.HumanKeeperCount!=1||!recoveryView.HandPoint(victim,out var p)||!recoveryView.ClearReach(actualHand,p)||Vector3.Distance(bot.Position+Vector3.up,p)>1.2f)return false;
+            if(state.Scare.Paused||!bot||!bot.Active||state.ReadOnly||state.HumanKeeperCount!=1||!recoveryView.HandPoint(victim,out var p)||!recoveryView.ClearReach(actualHand,p)||Vector3.Distance(bot.Position+Vector3.up,p)>1.2f)return false;
             return state.Recovery.Hold((int)bot.Duty,victim,true);
         }
         public bool RescueDrill(int actor)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if(state.ReadOnly||sleeping||state.Failed||!recoveryView)return false;
+            if(state.ReadOnly||sleeping||state.Failed||!recoveryView||state.Scare.Paused&&!state.Scare.CanRescue)return false;
             state.Recovery.SetHumans(state.HumanKeeperCount>1?3:(int)CurrentDuty);
             if(!state.Recovery.Down(RecoveryDuty(actor)))return false;
             state.Pressure?.Hold(actor,false);state.EngageWatch();return true;
@@ -147,7 +147,7 @@ namespace LighthouseKeepers.WatchDemo
 #endif
         }
         public void RequestRescueDrill(){if(coop!=null)coop.Send(CoopAction.RecoveryDrill);else RescueDrill(0);}
-        public void ShowRecoveryFade(float v){recoveryFading=true;fade.enabled=true;fadeMaterial.color=new Color(0,0,0,v);}
+        public void ShowRecoveryFade(float v){recoveryFading=true;fade.enabled=true;fadeMaterial.color=state.Scare.Paused?new Color(.10f,0,.005f,v):new Color(0,0,0,v);}
         public void ClearRecoveryFade(){if(!recoveryFading)return;recoveryFading=false;fade.enabled=currentFade>0;fadeMaterial.color=new Color(0,0,0,currentFade);}
     }
 }

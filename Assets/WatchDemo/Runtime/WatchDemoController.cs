@@ -129,7 +129,7 @@ namespace LighthouseKeepers.WatchDemo
             GeneratorIdentity.Create();
             if(!state.Survival){SabotagePresentation.Create(this);DrownedAppearance.Create(this);}
             ConnectedMachinePresentation.Create(this);
-            CrewCompanion.Create(this,head);CrewRecovery.Create(this);if(!state.Survival){PossessionLesson.Create(this);RadioAuthentication.Create(this);}recoveryView=GetComponent<CrewRecovery>();
+            CrewCompanion.Create(this,head);CrewRecovery.Create(this);NightmareScene.Create(this);if(!state.Survival){PossessionLesson.Create(this);RadioAuthentication.Create(this);}recoveryView=GetComponent<CrewRecovery>();
             arrivalBriefing=InWorldBriefing.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
@@ -154,7 +154,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
-            if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.PreScareQuiet=state.TensionQuiet;
+            if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.PreScareQuiet=state.Scare.Dark||state.TensionQuiet;
             UpdateCrewRadios();
             UpdateDirector();
             if(state.Immersion&&state.Immersion.physicalGuidance)
@@ -165,6 +165,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.RemoteReplica){UpdateReplicaInput();return;}
             if(state.BriefingHeld){flood.Paused=true;return;}
             if(sleeping)return;
+            if(state.Scare.Paused){flood.Paused=true;bedPrompt.text="";if(state.Failed)SetFade(Mathf.MoveTowards(currentFade,1,Time.deltaTime));return;}
             if(state.NetworkRehearsal){flood.Paused=true;return;}
             if(coop!=null && !coop.Ready){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.3");return;}
             var left=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);var right=InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
@@ -202,7 +203,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
         public bool TryBeginRepair()=>!state.Failed&&!state.Repaired&&!sleeping&&pipeRepair&&pipeRepair.InContact;
-        public bool RetryDay(){if(state.RemoteReplica&&coop!=null)return state.Failed&&!sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Retry);if(state.ReadOnly||!state.Failed||sleeping)return false;if(state.Sea.lost)GetComponent<IslandSafety>()?.ReturnToHouse();state.Retry();BeginWatch();if(menu)menu.Close();return true;}
+        public bool RetryDay(){if(state.RemoteReplica&&coop!=null)return state.Failed&&!sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Retry);if(state.ReadOnly||!state.Failed||sleeping)return false;if(state.Scare.Failed){if(!GetComponent<NightmareScene>().Retry())return false;Revision++;SetFade(0);if(menu)menu.Close();return true;}if(state.Sea.lost)GetComponent<IslandSafety>()?.ReturnToHouse();state.Retry();BeginWatch();if(menu)menu.Close();return true;}
         public bool ReplayFromDayOne()
         {
             if(state.RemoteReplica&&coop!=null)return !sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Replay);
@@ -275,8 +276,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Immersion)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.31"));
             board.text=boardText.ToString();
         }
+        public void FinishNightmare(){if(CanSleep)StartCoroutine(Sleep());}
         IEnumerator Sleep()
         {
+            if(state.Scare.Beat==ScareBeat.Idle&&GetComponent<NightmareScene>() is NightmareScene nightmare&&DrownedAppearance.Sightings&&nightmare.Begin()){SetBedMask(0);yield break;}
             if(state.Tuning&&state.Tuning.nightSequence)
             {
                 sleeping=true;if(adaptiveMusic)adaptiveMusic.Survived();sleepDay=state.Day;bedPrompt.text="";

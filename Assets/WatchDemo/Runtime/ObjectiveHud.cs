@@ -88,7 +88,7 @@ namespace LighthouseKeepers.WatchDemo
   public static void AcknowledgeRecallButton(){if(PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)!=0)return;PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
   void Set(int value,string text){if(recallHints==0&&RecallTeachingDue(watch.State.Day,index,value)){recallHints++;tipUntil=Time.unscaledTime+5;}nextRecallHint=Time.unscaledTime+35;index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
   string ActionTitle(int value)=>value==(int)KeeperStep.RadioCode&&watch.State.ScriptedPartner&&GetComponent<CrewCompanion>() is CrewCompanion helper&&!helper.CodeDelivered?KeeperStrings.Get("radio.askOwen"):watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
-  string Title(int value){var step=(KeeperStep)value;if(ObjectiveDirector.Job(step)==WatchState.RadioStation&&step!=KeeperStep.ReadCode&&ObjectiveHud.FloorAt(head.position.y)!=4)return KeeperStrings.Get("radio.goF4");return ActionTitle(value);}
+  string Title(int value){if(watch.State.Scare.Active&&GetComponent<NightmareScene>() is NightmareScene scene)return scene.Instruction;var step=(KeeperStep)value;if(ObjectiveDirector.Job(step)==WatchState.RadioStation&&step!=KeeperStep.ReadCode&&ObjectiveHud.FloorAt(head.position.y)!=4)return KeeperStrings.Get("radio.goF4");return ActionTitle(value);}
   void Update()
   {
    var s=watch.State;if(s==null)return;if(!radio)radio=FindAnyObjectByType<HarborRadio>();
@@ -130,21 +130,23 @@ namespace LighthouseKeepers.WatchDemo
    inputIcon.gameObject.SetActive(near);inputLabel.gameObject.SetActive(near);
    if(near){inputIcon.Set(button=="TRIGGER");inputLabel.text=KeeperStrings.Get("input."+button);}
 
+   if(s.Scare.Active&&GetComponent<NightmareScene>() is NightmareScene sceneInfo){floor.text=sceneInfo.Location;partner.text="";inputIcon.gameObject.SetActive(false);inputLabel.gameObject.SetActive(false);}
    label.text=KeeperStrings.Get("duty."+watch.CurrentDuty);
    icon.Set(station);
+   var nightmare=GetComponent<NightmareScene>();bool nightmareLine=s.Scare.Active&&nightmare;
    var lesson=watch.GetComponent<PossessionLesson>();bool sceneLine=s.Recovery.LessonActive&&lesson;
    var auth=watch.GetComponent<RadioAuthentication>();bool authLine=!sceneLine&&auth&&auth.Visible;
    var helper=watch.GetComponent<CrewCompanion>();bool helperLine=!sceneLine&&helper&&helper.Active&&helper.ReportActive;
-   bool showVoice=!helperLine&&!sceneLine&&!authLine&&radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
+   bool showVoice=!nightmareLine&&!helperLine&&!sceneLine&&!authLine&&radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
    bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
-   string display=s.BriefingHeld?KeeperStrings.Get("briefing.waiting"):sceneLine?lesson.Caption:helperLine?helper.ReportLine:authLine?auth.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
+   string display=nightmareLine?nightmare.Caption:s.BriefingHeld?KeeperStrings.Get("briefing.waiting"):sceneLine?lesson.Caption:helperLine?helper.ReportLine:authLine?auth.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
    bool codeCard=helper&&helper.CodeDelivered&&!string.IsNullOrEmpty(helper.LearnedCode)&&display.Contains(helper.LearnedCode);
    ConfigureSubtitle(remembered||codeCard);
    if(codeCard){subtitle.enableAutoSizing=true;subtitle.fontSizeMin=22;subtitle.fontSizeMax=size;subtitle.overflowMode=TextOverflowModes.Overflow;subtitle.maxVisibleLines=2;}
    if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.6f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
-   int visible=sceneLine||helperLine||authLine?display.Length:remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
+   int visible=nightmareLine||sceneLine||helperLine||authLine?display.Length:remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
    int page=1;
    // Paginate long recordings into two readable lines rather than shrinking or clipping text.
    var info=subtitle.textInfo;
@@ -155,7 +157,7 @@ namespace LighthouseKeepers.WatchDemo
    float alpha=remembered?Mathf.Clamp01((recall.Until-Time.unscaledTime)/.8f):showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;
    subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);
-   speakerTag.text=sceneLine?lesson.Speaker:helperLine?KeeperStrings.Get("companion.name"):authLine?auth.Speaker:remembered?radio.LastSpeaker:showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
+   speakerTag.text=nightmareLine?nightmare.Speaker:sceneLine?lesson.Speaker:helperLine?KeeperStrings.Get("companion.name"):authLine?auth.Speaker:remembered?radio.LastSpeaker:showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
    subtitleBacking.gameObject.SetActive(display.Length>0);subtitleBacking.color=new Color(.012f,.018f,.023f,.8f*alpha);
 
    bool unsafeNow=s.PressureEnabled&&!s.Complete&&s.Danger>=.5f;

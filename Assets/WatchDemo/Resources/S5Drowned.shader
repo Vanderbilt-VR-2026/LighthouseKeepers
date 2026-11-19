@@ -1,5 +1,5 @@
 Shader "Lighthouse/S5 Drowned oilskin" {
- Properties {_Burn("Flare burn",Range(0,1))=0 _Visibility("Visibility",Range(0,1))=1 _Breath("Breath",Float)=0 _Arrival("Appearance age",Float)=0 _Style("Encounter",Float)=0 _Height("Height",Float)=1.84}
+ Properties {_Burn("Flare burn",Range(0,1))=0 _Visibility("Visibility",Range(0,1))=1 _Breath("Breath",Float)=0 _Arrival("Appearance age",Float)=0 _Style("Encounter",Float)=0 _Height("Height",Float)=1.84 _Walk("Gait",Float)=0 _HeadTurn("Head turn radians",Float)=0}
  SubShader {Tags {"RenderPipeline"="UniversalPipeline" "Queue"="AlphaTest" "RenderType"="TransparentCutout"} Pass {
  ZWrite On Cull Off AlphaToMask On
  HLSLPROGRAM
@@ -9,12 +9,18 @@ Shader "Lighthouse/S5 Drowned oilskin" {
  #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
  #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
  CBUFFER_START(UnityPerMaterial)
- float _Burn,_Visibility,_Breath,_Arrival,_Style,_Height;
+ float _Burn,_Visibility,_Breath,_Arrival,_Style,_Height,_Walk,_HeadTurn;
  CBUFFER_END
  struct A {float4 positionOS:POSITION;float3 normalOS:NORMAL;half4 colour:COLOR;float2 detail:TEXCOORD0;UNITY_VERTEX_INPUT_INSTANCE_ID};
  struct V {float4 positionCS:SV_POSITION;float3 normal:TEXCOORD0;float3 world:TEXCOORD1;half4 colour:COLOR;half kind:TEXCOORD2;float3 local:TEXCOORD3;UNITY_VERTEX_OUTPUT_STEREO};
  V vert(A a){V o;UNITY_SETUP_INSTANCE_ID(a);UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);float3 p=a.positionOS.xyz;
  float head=a.detail.y;
+ float gait=sin(_Breath*(_Walk>.8?11:4))*_Walk;
+ float leg=(1-smoothstep(_Height*.23,_Height*.46,p.y))*sign(p.x);
+ float arm=smoothstep(_Height*.1,_Height*.25,abs(p.x))*(1-head);
+ p.z+=gait*(leg*.13-arm*.08);p.y+=abs(gait)*.015;
+ float yaw=_HeadTurn*head;float2 face=float2(p.x,p.z-.03);
+ p.x=face.x*cos(yaw)+face.y*sin(yaw);p.z=-face.x*sin(yaw)+face.y*cos(yaw)+.03;
  float shoulder=smoothstep(_Height*.50,_Height*.75,p.y)*(1-head);
  // Half-second burst: neck whips once, hands seize, then the body settles or vanishes.
  float burst=exp(-max(0,_Arrival-.08)*9)*smoothstep(0,.05,_Arrival);

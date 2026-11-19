@@ -72,6 +72,7 @@ namespace LighthouseKeepers.WatchDemo {
    if(!Active){if(Time.time<nextPath)return;nextPath=Time.time+3;if(!Spawn())return;}
    if(night!=s.Day||s.Elapsed<lastWatchElapsed){ClearStationMemory();dutyExplained=false;night=s.Day;learnedCode="";wantsCode=false;reportUntil=0;SetCommand(CompanionCommand.Work);}
    lastWatchElapsed=s.Elapsed;if(s.BriefingHeld){Release();return;}
+   if(s.Scare.Paused){Release();reportUntil=0;if(agent.isOnNavMesh)agent.ResetPath();statusKey="companion.wait";return;}
    if(watch.Sleeping||s.Failed){Release();statusKey="companion.wait";return;}
    if(s.Recovery.LessonActive){
     if(!lessonMode){lessonMode=true;lessonReturn=command;Release();hasGoal=false;nextPath=0;}statusKey="companion.follow";

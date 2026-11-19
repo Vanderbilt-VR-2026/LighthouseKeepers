@@ -70,7 +70,7 @@ namespace LighthouseKeepers.WatchDemo
             if (d == null) { events.Stop(); breathing.Stop(); return; }
             if (revision != watch.Revision || s.Elapsed < lastElapsed - .01) { revision = watch.Revision; events.Stop(); breathing.Stop(); loopGain = 0; CueCount = 0; cursor.Clear(); }
             lastElapsed = s.Elapsed;
-            bool allowed = DrownedAppearance.Sightings && appearance.SafeAnchor && !watch.Sleeping && !s.Failed && !s.Recovery.LessonActive;
+            bool allowed = DrownedAppearance.Sightings && appearance.SafeAnchor && !watch.Sleeping && !s.Failed && !s.Recovery.LessonActive&&!s.Scare.Paused;
             if (!d.Anchored && DrownedAppearance.Sightings) { events.Stop(); breathing.Stop(); return; }
             double cueAt = d.Phase==DrownedPhase.Manifest ? d.RevealAt : d.Since;
             var cue = cursor.Poll(revision, d.Phase, cueAt, s.Elapsed, allowed);
