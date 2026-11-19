@@ -4,7 +4,9 @@ Branch sprint-5, PR #89. Implemented dedicated waist clips (walkie right, flashl
 
 12 final focused tests + 28 earlier voice/version checks passed; two unchanged legacy director wording assertions remain (10/12 director checks pass). 19 actual XRI belt checks, 34 rendered guidance checks, and live two-Editor grab/clip/regrip/drop for all three tools passed. Screenshots inspected. [Evidence and five-step headset test](../Verification/S5/ToolBelt/README.md).
 
-Next action: build from clean committed source using `python3 artifacts/s5/tool-belt/build.py`, then `python3 artifacts/s5/tool-belt/deliver.py`. Editors closed; unrelated importer material/prefab churn restored. Install only; **do not launch**. After delivery update receipt/PR #89/issue #147, commit + push. Then resume #144 Day 2 nightmare, #145 Day 3 cursed ship from the detailed checkpoint below.
+APK **bf86ddd0** built (IL2CPP ARM64, normal package), installed on Quest 3 with matching device SHA-256, **not launched**. SHA-256 `9d60ac9a9a53e59adc8a607a95f0806e0529d7c0c68a8c729bed52a114daeeb9`. [Receipt](../Verification/S5/ToolBelt/delivery.json).
+
+APK: `Builds/LighthouseKeepers-Sprint5-ToolBelt-bf86ddd0.apk`. Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-ToolBelt-bf86ddd0.apk`. Editors closed; build settings and importer churn restored. Next: headset acceptance for #147; then resume #144 Day 2 nightmare and #145 Day 3 cursed ship. Neither new scripted scene is implemented. Build scripts in `artifacts/s5/tool-belt/`; use fresh backup directories for another build.
 
 ## DEVICE CHECKS PENDING
 

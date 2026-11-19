@@ -28,3 +28,7 @@ Worn reach/body clearance/comfort, both-eye text readability, new full-night run
 5. In co-op, compare your assigned roles and watch the other keeper clip/regrip tools. On Day 2, normal station labels return.
 
 Raw runners are copied beside this report; commands use the existing Pipeline bridge. Do not run Editor tests and Play Mode fixtures concurrently. Build/delivery: `python3 artifacts/s5/tool-belt/build.py`, then `python3 artifacts/s5/tool-belt/deliver.py` (fresh backup directory per build).
+
+## Delivery
+
+APK **bf86ddd0**: installed on Quest 3 with matching device SHA-256, **not launched**. Package/signature/ARM64/VR manifest/ZIP CRC validated. SHA-256 `9d60ac9a9a53e59adc8a607a95f0806e0529d7c0c68a8c729bed52a114daeeb9`. See `delivery.json`. This delivery does not establish worn rendering or comfort.
