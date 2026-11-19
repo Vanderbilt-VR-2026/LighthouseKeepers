@@ -10,4 +10,6 @@ Reproduce with `python3 artifacts/s5/modes/check.py LanternLightingTests Quality
 
 Build/install uses fresh scripts `artifacts/s5/pink-fix/{build.py,deliver.py}` and a new `build/` backup. Install only; never launch the app. Network remains **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51**, because no gameplay or synchronized data changed.
 
+APK **592673ef** built, installed on Quest 3; installed SHA-256 matched, **not launched**. SHA-256 `97b7ea2d2a5c11fc897e75cc648d8024279e58a3bfeae3d5205d928a49a1224e`. [Receipt](delivery.json).
+
 After installation, reopen the game manually: check the House walls/floor and the F2 generator in both eyes, then switch the flashlight on and aim around. Corrected headset rendering and sustained performance remain pending that check.

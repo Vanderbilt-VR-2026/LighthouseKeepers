@@ -2,7 +2,9 @@
 
 **Do not use APK 335a1ff0:** the user reported an all-pink environment. Removed the runtime room-material replacement and its custom shader. Original URP materials restored; bulb Morse remains, baked pools stay steady. Flashlights/grips/gameplay unchanged. Seven focused tests and 21 rendered checks passed; House/F2 captures inspected. [Correction evidence](../Verification/S5/Flashlights/PinkFix/README.md).
 
-Build/install pending this source commit. Close the muted Editor, run `python3 artifacts/s5/pink-fix/build.py`, then `python3 artifacts/s5/pink-fix/deliver.py`. Fresh backup directory: `artifacts/s5/pink-fix/build`. Require no `RoomFilamentLit.shader` in packaged asset report. Install **without launch**; preserve receipts and update PR #89/#146. Network stays **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51** (visual-only correction).
+APK **592673ef** built, installed on Quest 3; installed SHA-256 matched, **not launched**. SHA-256 `97b7ea2d2a5c11fc897e75cc648d8024279e58a3bfeae3d5205d928a49a1224e`. [Receipt](../Verification/S5/Flashlights/PinkFix/delivery.json).
+
+APK: `Builds/LighthouseKeepers-Sprint5-FlashlightFix-592673ef.apk`. Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-FlashlightFix-592673ef.apk`. Build asset report excludes the removed shader. Completed scripts: `artifacts/s5/pink-fix/{build.py,deliver.py}`; choose fresh backup directories for future builds. Network remains **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51**. Editors closed and build settings restored.
 
 ## DEVICE CHECKS PENDING
 
