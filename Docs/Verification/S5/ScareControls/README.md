@@ -1,6 +1,6 @@
 # Part 0 — lantern, A run, X breath, visible flare (#143)
 
-Implemented on sprint-5. This is the controls/weapon foundation only. The new Day 2 nightmare, Day 3 cursed ship, their dev buttons and new scene voices are **not implemented** in this checkpoint; #144 and #145 remain open.
+Implemented on sprint-5. APK source **83883309** built and installed on Quest 3; **not launched**. Package, ARM64, VR manifest, signature, ZIP integrity and installed SHA-256 verified. [Delivery receipt](delivery.json). This is the controls/weapon foundation only. The new Day 2 nightmare, Day 3 cursed ship, their dev buttons and new scene voices are **not implemented** in this checkpoint; #144 and #145 remain open.
 
 - Hold right-controller A while walking: +60% speed for 4.5 seconds. Release to refill over 3 seconds. Below 15%: one gasp and light haptic. Arm-swing run was removed. X holds breath; Y/wrist/B recall remains. Menu, briefing and possession cannot run.
 - Day 1 oil remains unlimited in Campaign and Survival. Pickup teaches the exception; later days teach LOW versus HIGH and refilling from the F2 oil can, with a low-oil reminder. Water still extinguishes a submerged lamp.

@@ -1,8 +1,15 @@
 # Current checkpoint — Part 0 controls and lantern (#143)
 
-Branch `sprint-5`, PR #89. Network **LK-S5-SCARES1 / LK-Lab-Coop-v51**. Both players must update. Part 0 implementation and focused Editor checks are complete; build/install receipt follows below when finished. No Quest launch.
+Branch `sprint-5`, PR #89. Network **LK-S5-SCARES1 / LK-Lab-Coop-v51**. Both players must update. Part 0 implementation and focused Editor checks are complete. APK source **83883309** built and installed on Quest 3; installed hash verified; **not launched**. Stopped cleanly before #144; both scripted scenes remain unimplemented.
 
 Done: A run (4.5 s / 3 s released refill), X breath, removed arm-swing; forward lantern and oil teaching (Day 1 unlimited); visible swept flare, moving-target hits, independent replicated flare clock during grace, shared impact and burning miss. 76 focused EditMode tests; 18 Play Mode collision cases; guest firing and breath lease in two muted Photon Editors; inspected screenshots. [Evidence and six-step test](../Verification/S5/ScareControls/README.md).
+
+
+APK: `Builds/LighthouseKeepers-Sprint5-ScareControls-83883309.apk` (IL2CPP ARM64, normal package). SHA-256 `66e679f6706c88c6074892bd87bb268da90df9bfcbf4bf74185a3269c9bc4454`. Receipt: `Docs/Verification/S5/ScareControls/delivery.json`.
+
+Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-ScareControls-83883309.apk`.
+
+Completed build scripts: `python3 artifacts/s5/scare-scenes/build.py` then `python3 artifacts/s5/scare-scenes/deliver.py`; **choose fresh backup/output directories before another build**, since build-final is a completed receipt. Both test Editors and their crash reporters are closed. Build audio was not changed and the Quest app was not launched.
 
 ## Next, in order — not yet implemented
 
