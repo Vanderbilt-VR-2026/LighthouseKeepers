@@ -9,7 +9,7 @@ namespace LighthouseKeepers.Editor
  {
   sealed class Crew:ICoopWatchLink {public bool Ready=>true;public bool Send(CoopAction a,float v=0,bool p=false)=>true;public bool RemoteHeld(Component p)=>false;public bool RemoteMicrophone(Component p,out bool t){t=false;return false;}}
   sealed class Worker {public int actor,floor,targetFloor;public KeeperStep step;public double ready,start;public bool busy;public int[] knownCode;public double heardAt;}
-  [Serializable] public sealed class Result {public string night,mode;public bool passed;public double seconds,spare,bedTravelSeconds;public float peakWater,endingFuel,endingSoot;public string cause;public List<string> steps=new();}
+  [Serializable] public sealed class Result {public string night,mode;public bool passed;public double seconds,spare,bedTravelSeconds;public float peakWater,endingFuel,endingSoot;public string cause,finalInstructions;public List<string> steps=new(),transitions=new();}
   [Serializable] public sealed class Report {public List<Result> runs=new();}
   public static void RunBatch()
   {
@@ -33,18 +33,23 @@ namespace LighthouseKeepers.Editor
    var s=new WatchState(all,day.day,S4Tuning.Current,S4M2Tuning.Current,ImmersionTuning.Current);if(crew){s.Coop=new Crew();s.SetKeeperCount(2);}s.Pressure?.SetCrew(crew&&s.RequiresCrewValve);
    if(crew)s.Director.DutyForActor=actor=>actor==1?CrewDuty.Machinist:CrewDuty.Lightkeeper;
    var r=new Result{night=day.scenario.id,mode=crew?"duo":"solo"};var workers=crew?new[]{new Worker{actor=1},new Worker{actor=2}}:new[]{new Worker{actor=1}};
-   int wrench=0;float water=.02f;const float dt=.1f;double clock=0;
+   int wrench=0;float water=.02f;const float dt=.1f;double clock=0;KeeperStep lastFirst=KeeperStep.None,lastSecond=KeeperStep.None;
    bool Work(KeeperStep k)=>k!=KeeperStep.KeepLight&&k!=KeeperStep.None&&k!=KeeperStep.HoldValve&&k!=KeeperStep.Sleep&&k!=KeeperStep.Complete&&k!=KeeperStep.Lost;
    while(clock<1200&&!s.Failed&&!s.Complete)
    {
     s.PipeWorkerActor=wrench;
     s.Director.Tick((float)clock,1,new Vector3(0,workers[0].floor*3.3f,0),crew?2:0,crew?new Vector3(0,workers[1].floor*3.3f,0):Vector3.zero,wrench!=0);
+    if((s.Director.First!=lastFirst||s.Director.Second!=lastSecond)&&r.transitions.Count<100){lastFirst=s.Director.First;lastSecond=s.Director.Second;r.transitions.Add($"{clock:F1}s {lastFirst}/{lastSecond} fuel={s.Engine?.Fuel:F2} assist={s.StartAssist.Holder}");}
     foreach(var w in workers)
     {
      var next=s.Director.ForActor(w.actor);
      // Do not abandon a held valve because the other keeper is still reading the instruction.
      if(next==KeeperStep.HoldValve&&w.floor==1){s.Pressure.Hold(w.actor,true);w.busy=false;continue;}
      if(s.Pressure?.Holder==w.actor)s.Pressure.Hold(w.actor,false);
+     // The timed starter requires a different keeper to keep the assist held.
+     // Renew the same short lease used by a physical grip while the worker is at F2.
+     if(next==KeeperStep.HoldStarterAssist&&w.floor==2){s.HoldStartAssist(w.actor,true);w.busy=false;continue;}
+     if(s.StartAssist.Holder==w.actor)s.HoldStartAssist(w.actor,false);
      if(next==KeeperStep.KeepLight){if(w.floor!=4){if(!w.busy||w.step!=next){w.busy=true;w.step=next;w.start=clock;w.ready=clock+Math.Abs(4-w.floor)*12+4;}if(clock>=w.ready){w.floor=4;w.busy=false;r.steps.Add($"{clock:F1}s keeper{w.actor} KeepLight (wheel tracking)");}}if(w.floor==4&&s.AimingShip>=0)s.AlignBeacon(s.ShipWheelTarget);continue;}
      if(!Work(next)&&next!=KeeperStep.HoldValve){w.busy=false;continue;}
      if(!w.busy||w.step!=next)
@@ -56,6 +61,7 @@ namespace LighthouseKeepers.Editor
      if(clock+.0001<w.ready)continue;
      w.floor=w.targetFloor;
      if(next==KeeperStep.HoldValve){s.Pressure.Hold(w.actor,true);w.busy=false;continue;}
+     if(next==KeeperStep.HoldStarterAssist){s.HoldStartAssist(w.actor,true);w.busy=false;continue;}
      if(next==KeeperStep.GrabWrench){if(wrench==0)wrench=w.actor;}
      else if(next==KeeperStep.ClampValve)s.Pressure.Clamp();
      else if(next==KeeperStep.TightenBolt||next>=KeeperStep.BoltA&&next<=KeeperStep.BoltC)
@@ -63,13 +69,17 @@ namespace LighthouseKeepers.Editor
      else if(next==KeeperStep.Fuel){for(int i=0;i<300&&s.Engine.Fuel<s.Master.guidedFuelTarget;i++)s.PourFuel(.1f);}
      else if(next==KeeperStep.Prime)s.PrimeEngine();
      else if(next==KeeperStep.CloseChoke)s.SetChoke(true);
-     else if(next==KeeperStep.Starter){for(int wait=0;wait<100&&s.TimedStarter&&!s.StarterInWindow;wait++)s.Tick(.05);s.StarterPulled();}
+     else if(next==KeeperStep.Starter){
+      // Keep advancing both workers while waiting for the timing window or
+      // the other keeper's live grip; never fast-forward the host clock alone.
+      if(s.TimedStarter&&!s.StarterInWindow||!s.PullStarterAs(w.actor)){w.ready=clock+dt;continue;}
+     }
      else if(next==KeeperStep.OpenChoke)s.SetChoke(false);
      else if(next==KeeperStep.ResetBreaker)s.ResetBreaker();
      else if(next>=KeeperStep.PumpOff&&next<=KeeperStep.LightsOff)s.SetCircuit((int)next-(int)KeeperStep.PumpOff,false);
      else if(next>=KeeperStep.PumpOn&&next<=KeeperStep.LightsOn)s.SetCircuit((int)next-(int)KeeperStep.PumpOn,true);
      else if(next==KeeperStep.RadioPower)s.Radio.ToggleMain();
-     else if(next==KeeperStep.RadioTune)s.Radio.Tune(s.Radio.Program.targetMHz);
+     else if(next==KeeperStep.RadioTune)s.Radio.Tune(s.Radio.TargetMHz);
      else if(next==KeeperStep.ReadCode){if(w.knownCode==null){w.knownCode=new int[s.Radio.CodeLength];for(int i=0;i<w.knownCode.Length;i++)w.knownCode[i]=s.Radio.CodeSymbol(i);w.heardAt=clock+3;}else {w.busy=false;continue;}}
      else if(next==KeeperStep.RadioCode){if(s.RadioRelay){var reader=Array.Find(workers,x=>x!=w&&x.knownCode!=null&&clock>=x.heardAt);if(reader==null)continue;s.Radio.PressCode(reader.knownCode[s.Radio.CodeProgress]);}else s.Radio.PressCode(s.Radio.CodeSymbol(s.Radio.CodeProgress));}
      else if(next==KeeperStep.RadioTransmit)s.Radio.SetMicrophone(true,true);
@@ -84,7 +94,7 @@ namespace LighthouseKeepers.Editor
     r.peakWater=Mathf.Max(r.peakWater,water);clock+=dt;
    }
    if(s.Complete&&!s.Failed){foreach(var w in workers)r.bedTravelSeconds=Math.Max(r.bedTravelSeconds,Math.Abs(3-w.floor)*12+4);s.Tick(r.bedTravelSeconds);clock+=r.bedTravelSeconds;}
-   r.endingFuel=s.Engine?.Fuel??0;r.endingSoot=s.Beacon?.Soot??0;r.seconds=clock;r.spare=s.Duration-s.Elapsed;r.passed=s.Complete&&!s.Failed;r.cause=r.passed?"tasks and authored ships complete; return-to-bed travel modeled (not human timing or shared-bed transport)":s.Failed?s.FailureMessage:"instruction stalled";return r;
+   r.endingFuel=s.Engine?.Fuel??0;r.endingSoot=s.Beacon?.Soot??0;r.seconds=clock;r.spare=s.Duration-s.Elapsed;r.passed=s.Complete&&!s.Failed;r.cause=r.passed?"tasks and authored ships complete; return-to-bed travel modeled (not human timing or shared-bed transport)":s.Failed?s.FailureMessage:"instruction stalled";r.finalInstructions=$"{s.Director.First}/{s.Director.Second}; assist={s.StartAssist.Holder}; " + string.Join(", ",Array.ConvertAll(workers,w=>$"keeper{w.actor} floor={w.floor} step={w.step} busy={w.busy} ready={w.ready:F1}"));return r;
   }
   static float Gesture(KeeperStep k)=>k==KeeperStep.GrabWrench?8:k==KeeperStep.Fuel?12:k==KeeperStep.RadioTune?18:k==KeeperStep.BeaconAlign?14:k==KeeperStep.TightenBolt||k>=KeeperStep.BoltA&&k<=KeeperStep.BoltC?6:k==KeeperStep.Starter?3:k==KeeperStep.Prime?2:1;
  }

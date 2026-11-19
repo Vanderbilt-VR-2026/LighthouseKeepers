@@ -33,6 +33,18 @@ namespace LighthouseKeepers.WatchDemo
             // Restore that input before comparing rosters so movement keeps the normal assignment hold.
             if(!state.ReadOnly&&state.ScriptedPartner&&actorB==WatchState.CompanionActor)actorB=0;
             TickCore(now,firstActor,firstHead,secondActor,secondHead,wrenchHeld);
+            // Starting the engine needs two different human keepers. A ship or
+            // pipe assignment can also resolve to Starter when power is out;
+            // don't leave the other keeper holding a valve or another starter.
+            if(!state.ReadOnly&&!state.ScriptedPartner&&actorB!=0&&actorA!=actorB&&state.RequiresStartAssist){
+                bool first=First==KeeperStep.Starter,second=Second==KeeperStep.Starter;
+                if(first&&second){
+                    bool firstWorks=Duty(actorA)==CrewDuty.Machinist||Duty(actorB)!=CrewDuty.Machinist;
+                    First=firstWorks?KeeperStep.Starter:KeeperStep.HoldStarterAssist;
+                    Second=firstWorks?KeeperStep.HoldStarterAssist:KeeperStep.Starter;
+                }else if(first)Second=KeeperStep.HoldStarterAssist;
+                else if(second)First=KeeperStep.HoldStarterAssist;
+            }
             if(!state.ReadOnly&&state.ScriptedPartner){
                 actorB=WatchState.CompanionActor;
                 Second=state.Recovery.LessonActive?(state.Recovery.Lesson==4?KeeperStep.AwaitRescueF2:KeeperStep.GatherF2):state.Recovery.AnyDown&&!state.Failed?KeeperStep.ReviveKeeper:state.Failed||state.Complete?KeeperStep.None:state.Repaired?state.Radio.Step==2?KeeperStep.ReadCode:KeeperStep.None:state.RequiresCrewValve?KeeperStep.HoldValve:KeeperStep.None;

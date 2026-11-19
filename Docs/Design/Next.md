@@ -1,4 +1,32 @@
-# Active checkpoint — Day 2 nightmare #144 (continued)
+# Active checkpoint — campaign and Day 2 (#137, #144)
+
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Source protocol **LK-S5-COOPSTART1 / LK-Lab-Coop-v54**; both peers need the same build. No new APK is built or installed; the Quest still has source `bf86ddd0`, not launched.
+
+The director now gives two humans complementary START ASSIST / starter instructions even when a pipe or ship job led to the generator. The watch menu also guards a not-yet-created nightmare-skip button. **116 focused EditMode checks passed**; a live two-Editor Photon test verified the paired instructions and replicated running engine with staged actions. See [CoopStart](../Verification/S5/CoopStart/README.md). The updated rules bot completes the Night 4 duo and demo duo model, but **Night 5 duo still floods and demo solo times out** under its assumed travel/action speeds. Investigate the modeled timing and actual mechanics before tuning; neither failure is a human playtest. The model does not simulate Owen, XRI controls, shared sleep, the nightmare or a complete headset run.
+
+## Next, in order
+
+1. Resolve the remaining Night 5 duo and demo solo model failures without weakening the intended danger from guesses. Check the simulation against the current physical pipe/start flow and fault/ship schedules, then reproduce any real defect with a focused test and appropriate live Editor input. Re-run earlier nights and the two-Editor path after changes.
+2. Finish Day 2 nightmare **#144**: an unstaged full night for both roles, including the earlier F2 lesson, bedtime and restoration; inspect child, prints and audio; test shared escape/rescue/retry. `HorrorTuning.nightmareEnabled` remains **OFF** until ready. Then build and install without launching; worn safety/performance remains pending.
+3. Implement **#145** Day 3 cursed ship, **#148** Day 4 flood/crew chase and **#149** Day 5 finale from the copied briefs, in that order, preserving both game modes and co-op. Finish full-campaign regression and headset acceptance; final voice recordings come last.
+
+## Exact commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+git status --short --branch
+LK_M3_TIMING_OUTPUT="$PWD/artifacts/s5/campaign-audit/next.json" LK_SHIP_TIMING=1 /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath "$PWD" -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/s5/campaign-audit/next.log"
+```
+
+The bot exits nonzero while either simulation fails and still writes its report. Run the focused test filters in `Docs/Verification/S5/CoopStart/tests.json`; mute each Editor (`UnityEditor.EditorUtility.audioMasterMute=true`) before Play/tests. For two Editors use a fresh peer backup and `Docs/Verification/S5/CoopStart/fixtures/two-peer.py`. Latest peer backup: `artifacts/s5/final-scaring/peer-backup-12`. Do not launch the Quest game.
+
+## DEVICE CHECKS PENDING
+
+Full-night two-human starter/valve/ship progression; headset grip reach and timing, co-op voice/rejoin/sleep; Day 2 nightmare comfort and presentation when enabled; Quest GPU/CPU at peak storm; previously reported flashlight eye strain and pink-material correction. Day 3–5 set pieces still require implementation, not just device checks.
+
+---
+
+# Previous checkpoint — Day 2 nightmare #144 (continued)
 
 Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Source protocol **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**. The bedtime nightmare is **OFF** in the asset pending the checks below; the earlier generator-room possession and revive lesson remains enabled, and cannot overlap it. No new APK has been delivered; installed source **bf86ddd0** is still the tool-belt build.
 
