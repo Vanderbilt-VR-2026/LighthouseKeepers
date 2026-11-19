@@ -13,7 +13,7 @@ namespace LighthouseKeepers.Core.Progression
         public float clock, age;
         public Vector3 body, catchOne, catchTwo;
         public float yaw,doorOne,doorTwo;
-        public bool replay;
+        public bool replay, reposition;
         static bool Point(Vector3 p)=>float.IsFinite(p.x)&&float.IsFinite(p.y)&&float.IsFinite(p.z)&&p.sqrMagnitude<1000000;
         public bool Valid()=>scene>=0&&scene<=1&&attempt>=0&&attempt<10000&&
             (int)beat>=0&&(int)beat<=(int)ScareBeat.Failed&&
@@ -23,7 +23,7 @@ namespace LighthouseKeepers.Core.Progression
             participants>=0&&participants<=3&&caught>=0&&caught<=3&&escaped>=0&&escaped<=3&&
             (caught&~participants)==0&&(escaped&~participants)==0&&(caught&escaped)==0&&
             (scene==0?beat==ScareBeat.Idle&&participants==0&&attempt==0:beat!=ScareBeat.Idle&&participants>0&&attempt>0)&&
-            (beat!=ScareBeat.Return||caught!=0&&escaped!=0)&&
+            (beat!=ScareBeat.Return||escaped!=0)&&
             (beat!=ScareBeat.Complete||caught==0);
         public ScareSequenceFrame Copy()=>(ScareSequenceFrame)MemberwiseClone();
     }
@@ -47,9 +47,11 @@ namespace LighthouseKeepers.Core.Progression
         public int Escaped=>frame.escaped;
         public int Attempt=>frame.attempt;
         public Vector3 Body=>frame.body;
+        public Vector3 CatchPoint(int duty)=>duty==1?frame.catchOne:frame.catchTwo;
         public float Yaw=>frame.yaw;
         public float Door(int index)=>index==0?frame.doorOne:frame.doorTwo;
         public bool PullDoor(float packed){if(ReadOnly||Beat!=ScareBeat.Escape||!float.IsFinite(packed))return false;int index=Mathf.FloorToInt(packed/2);float angle=packed-index*2;if(index<0||index>1||angle<0||angle>1)return false;float before=Door(index);float next=Mathf.Clamp(angle,before,before+.18f);if(index==0)frame.doorOne=next;else frame.doorTwo=next;return true;}
+        public bool Reposition=>frame.reposition;
         public bool CanSkip=>Active&&frame.replay;
         public ScareSequenceState(HorrorTuning tuning){this.tuning=tuning;}
         void Stage(ScareBeat beat){frame.beat=beat;frame.age=0;}
@@ -67,7 +69,7 @@ namespace LighthouseKeepers.Core.Progression
         public void Tick(float dt,bool seen,bool cornerReached,int outsideMask,int downMask)
         {
             if(ReadOnly||!Active||!float.IsFinite(dt)||dt<=0||dt>1)return;
-            frame.clock=Mathf.Min(86400,frame.clock+dt);frame.age+=dt;
+            frame.clock=Mathf.Min(86400,frame.clock+dt);frame.age=Mathf.Min(86400,frame.age+dt);
             switch(Beat){
                 case ScareBeat.Wake:if(Age>=tuning.nightmareWakeSeconds&&seen)Stage(ScareBeat.Follow);break;
                 case ScareBeat.Follow:if(cornerReached)Stage(ScareBeat.Corner);break;
@@ -77,13 +79,13 @@ namespace LighthouseKeepers.Core.Progression
                 case ScareBeat.Quiet:if(Age>=tuning.quietSeconds)Stage(ScareBeat.Escape);break;
                 case ScareBeat.Escape:
                     frame.escaped|=outsideMask&frame.participants&~frame.caught;
-                    if((frame.escaped|frame.caught)==frame.participants&&frame.escaped!=0)Stage(frame.caught==0?ScareBeat.Relief:ScareBeat.Return);
+                    if((frame.escaped|frame.caught)==frame.participants&&frame.escaped!=0)Stage(ScareBeat.Return);
                     else if(Age>=tuning.nightmareEscapeSeconds)Stage(ScareBeat.Failed);
                     break;
                 case ScareBeat.Return:
                     frame.caught&=downMask;
-                    if(frame.caught==0)Stage(ScareBeat.Relief);
-                    else if(Age>=tuning.nightmareRescueSeconds)Stage(ScareBeat.Failed);
+                    if(frame.caught==0&&(outsideMask&frame.participants)==0)Stage(ScareBeat.Relief);
+                    else if(frame.caught!=0&&Age>=tuning.nightmareRescueSeconds)Stage(ScareBeat.Failed);
                     break;
                 case ScareBeat.Relief:if(Age>=tuning.nightmareReliefSeconds)Stage(ScareBeat.Complete);break;
             }
@@ -103,7 +105,7 @@ namespace LighthouseKeepers.Core.Progression
         }
         void Restart(int humans,Vector3 start)
         {int attempt=Mathf.Min(9999,frame.attempt+1);frame=new(){scene=1,attempt=attempt,participants=humans,body=start,replay=true};Stage(ScareBeat.Wake);}
-        public bool Retry(Vector3 start){if(ReadOnly||!Failed||!Finite(start))return false;Restart(frame.participants,start);return true;}
+        public bool Retry(Vector3 start){if(ReadOnly||!Failed||!Finite(start))return false;Restart(frame.participants,start);frame.reposition=true;return true;}
         public bool Skip(){if(ReadOnly||!CanSkip)return false;frame.caught=0;Stage(ScareBeat.Complete);return true;}
         public ScareSequenceFrame Capture()=>frame.Copy();
         public bool Apply(ScareSequenceFrame value){if(!ReadOnly||value==null||!value.Valid())return false;frame=value.Copy();return true;}

@@ -42,7 +42,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             var s=watch.State;int actor=(s.Coop as ICoopKeeperLocations)?.LocalActor??0;
             bool silent=watch.Sleeping||s.Failed||s.Fear==null;
-            float target=silent?0:s.Fear.ForActor(actor);shown=Mathf.MoveTowards(shown,target,Time.unscaledDeltaTime*2);
+            float target=silent?0:s.Fear.ForActor(actor);if(!silent&&s.Scare.Dark)target=Mathf.Max(target,s.Scare.Beat>=ScareBeat.Turn?HorrorTuning.Current.nightmareChaseFear:HorrorTuning.Current.nightmareFollowFear);shown=Mathf.MoveTowards(shown,target,Time.unscaledDeltaTime*2);
             if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.LocalFear=silent?0:shown;
             breath.volume=silent||s.BreathHeld((int)watch.CurrentDuty)||s.Fear.HoldingBreath(actor)?0:Mathf.Lerp(.07f,.2f,shown);breath.pitch=Mathf.Lerp(1,2.2f,shown);
             bool apparition=s.Drowned!=null&&DrownedAppearance.Sightings&&s.Drowned.Phase==DrownedPhase.Manifest;

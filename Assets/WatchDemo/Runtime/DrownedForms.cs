@@ -90,7 +90,7 @@ namespace LighthouseKeepers.WatchDemo
             // Uneven bob, individual clumped strands. Keep the eyes open to the viewer.
             for(int i=0;i<24;i++){
                 float a=.76f+i*(Mathf.PI*2-1.52f)/23;var p=centre+rotation*new Vector3(Mathf.Sin(a)*.142f,.045f,Mathf.Cos(a)*.121f);
-                s.Tube(new[]{p,p+new Vector3(Mathf.Sin(a)*.007f,-.12f,.012f),p+new Vector3(Mathf.Sin(a)*.012f,-.24f+.022f*Mathf.Sin(i*3),.025f)},new[]{.006f,.005f,.001f},new[]{.003f,.002f,.0005f},Hair,6);
+                s.Tube(new[]{p,p+new Vector3(Mathf.Sin(a)*.007f,-.12f,.012f),p+new Vector3(Mathf.Sin(a)*.012f,-.24f+.022f*Mathf.Sin(i*3),.025f)},new[]{.006f,.005f,.001f},new[]{.003f,.002f,.0005f},Hair,6,trueHead:true);
             }
             // A few painted cracks; no emissive eyes or bright circular mask.
             for(int side=-1;side<=1;side+=2){

@@ -12,6 +12,7 @@ namespace LighthouseKeepers.WatchDemo
     {
         WatchDemoController watch;int index;Transform leaf;BoxCollider blocker;XRSimpleInteractable handle;
         IXRSelectInteractor hand;Vector3 start;float initial,nextSend;bool active;
+        AudioSource sound;float previousAngle;
         Material material;readonly List<Renderer> originals=new();readonly List<Collider> originalColliders=new();
         public Component Handle=>handle;
         public static NightmareDoor Create(WatchDemoController w,int i,Vector3 hinge)
@@ -25,14 +26,14 @@ namespace LighthouseKeepers.WatchDemo
             var col=grip.AddComponent<SphereCollider>();col.radius=.13f;col.isTrigger=true;var rb=grip.AddComponent<Rigidbody>();rb.isKinematic=true;rb.useGravity=false;
             handle=grip.AddComponent<XRSimpleInteractable>();handle.colliders.Add(col);handle.selectEntered.AddListener(e=>{if(e.interactorObject is XRDirectInteractor){hand=e.interactorObject;start=hand.transform.position;initial=watch.State.Scare.Door(index);}else e.manager.SelectExit(e.interactorObject,e.interactableObject);});handle.selectExited.AddListener(_=>hand=null);
             var bar=GameObject.CreatePrimitive(PrimitiveType.Cube);bar.transform.SetParent(grip.transform,false);bar.transform.localScale=new Vector3(.03f,.19f,.04f);Object.Destroy(bar.GetComponent<Collider>());bar.GetComponent<Renderer>().sharedMaterial=material;
-            leaf.gameObject.SetActive(false);
+            sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=1;sound.maxDistance=12;sound.volume=.35f;sound.clip=Resources.Load<AudioClip>("S4Audio/bolt-clunk");LighthouseKeepers.Core.KeeperAudioMix.Route(sound,"SFX_Critical");leaf.gameObject.SetActive(false);
         }
         void Update()
         {
             var s=watch.State.Scare;bool wanted=s.Beat==ScareBeat.Escape;
-            if(active!=wanted){active=wanted;leaf.gameObject.SetActive(active);if(active){string key=index==0?"SM_Door_Steel":"SM_Door_Green";foreach(var r in Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))if(r.name==key&&r.enabled){originals.Add(r);r.enabled=false;}foreach(var c in Object.FindObjectsByType<Collider>(FindObjectsSortMode.None))if(c.name.StartsWith("UCX_"+key)&&c.enabled){originalColliders.Add(c);c.enabled=false;}}else Restore();}
+            if(active!=wanted){active=wanted;leaf.gameObject.SetActive(active);if(active&&sound.clip)sound.Play();if(active){string key=index==0?"SM_Door_Steel":"SM_Door_Green";foreach(var r in Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))if(r.name==key&&r.enabled){originals.Add(r);r.enabled=false;}foreach(var c in Object.FindObjectsByType<Collider>(FindObjectsSortMode.None))if(c.name.StartsWith("UCX_"+key)&&c.enabled){originalColliders.Add(c);c.enabled=false;}}else Restore();}
             if(!active)return;
-            float angle=s.Door(index);leaf.localRotation=Quaternion.Euler(0,angle*95,0);blocker.enabled=angle<.72f;
+            float angle=s.Door(index);leaf.localRotation=Quaternion.Euler(0,angle*95,0);blocker.enabled=angle<.72f;if(angle>=.72f&&previousAngle<.72f&&sound.clip)sound.Play();previousAngle=angle;
             if(hand!=null&&Time.unscaledTime>=nextSend){nextSend=Time.unscaledTime+.08f;float pull=Vector3.Distance(hand.transform.position,start)/(index==1?.60f:.42f);float value=index*2+Mathf.Clamp01(initial+pull);if(watch.State.Coop!=null)watch.State.Coop.Send(CoopAction.ScareDoor,value,true);else watch.State.Scare.PullDoor(value);}
         }
         void Restore(){foreach(var r in originals)if(r)r.enabled=true;originals.Clear();foreach(var c in originalColliders)if(c)c.enabled=true;originalColliders.Clear();hand=null;}
@@ -42,10 +43,10 @@ namespace LighthouseKeepers.WatchDemo
     {
         public void NightmareCheckpoint()
         {
-            // Only an explicit Retry/crew-change checkpoint moves the rig, never a scare.
+            // Only an explicit Retry checkpoint moves the rig, never a scare.
             var rig=FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();if(!rig)return;
             var cc=rig.GetComponent<CharacterController>();bool enabled=cc&&cc.enabled;if(cc)cc.enabled=false;
-            var p=HorrorTuning.Current.nightmareStart;rig.transform.position+=new Vector3(p.x-head.position.x,p.y-rig.transform.position.y,p.z-head.position.z);
+            var p=HorrorTuning.Current.nightmareStart;if(CurrentDuty==CrewDuty.Machinist)p.x-=.7f;rig.transform.position+=new Vector3(p.x-head.position.x,p.y-rig.transform.position.y,p.z-head.position.z);
             if(cc)cc.enabled=enabled;Physics.SyncTransforms();
         }
     }

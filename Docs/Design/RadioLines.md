@@ -132,3 +132,16 @@ P1–P18 obey once-per-night gates, except P8/P16 use 20/15-second cooldowns mea
 The November 9 headset timing revision is authoritative: see [trigger and quiet-period rules](../Audio/triggers.md#headset-feedback-timing-and-quiet-november-9). At most two ordinary lines play back-to-back, followed by 20 seconds of quiet; stale instructions expire and location-sensitive tips wait until relevant.
 
 Sprint5 ship cues are active behind `shipPassages`; snapshot `LK-S5-SHIPS1 / v25`. Thirty/ten-second beacon shouts only apply to an active ship threat; ordinary light-out warnings remain outside it. Arrival/pass cues may recur for a different ship, never repeatedly for the same ship.
+
+
+## Day 2 nightmare placeholders — #144
+
+Only these new scene lines have offline TTS placeholders, as requested by the scare brief. Routine narration remains caption-only. Assets are mono 44.1 kHz PCM WAV, generated locally with macOS voices; replace the same filenames with final recordings. Unknown is the antagonist's displayed name.
+
+| File in Resources/ScareDialogue | Exact caption | Trigger |
+|---|---|---|
+| unknown_n2_follow.wav | Can you come with me? I'm scared. | Wake; once per nightmare attempt |
+| unknown_n2_not_him.wav | You're not him. | Child's gaze-gated turn |
+| hm_n2_nightmare_return.wav | Keepers? You've been silent for ten minutes. What happened up there? | Crew back inside after escape, with any caught partner revived; relief |
+
+Replica rejoin does not replay lines older than one second. Voice chat ducks the scene voice. Day 3–5 lines remain pending their implementation.

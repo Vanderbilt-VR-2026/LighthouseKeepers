@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.XR;
 namespace LighthouseKeepers.WatchDemo {
  public sealed partial class PressurePresentation {
-  Transform watchMount,oilBar;readonly System.Collections.Generic.List<Mesh> watchMeshes=new();TextMesh nightLabel;Material resin,lcd;int shownNight;
+  Transform watchMount,oilBar;readonly System.Collections.Generic.List<Mesh> watchMeshes=new();TextMesh nightLabel;Material resin,lcd;int shownNight;bool shownNightmare;
   public bool WatchBacklight {get;private set;}
   void BuildWatch(M2StationParts parts){
    var left=System.Array.Find(FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None),h=>h.Node==XRNode.LeftHand);if(!left)return;
@@ -35,8 +35,8 @@ namespace LighthouseKeepers.WatchDemo {
   void UpdateWatch(WatchState s){
    if(!watchMount)return;
    int lamp=watch.HeldLantern;oilBar.gameObject.SetActive(lamp>=0&&s.Lanterns!=null&&!s.Lanterns.UnlimitedOil);if(lamp>=0&&s.Lanterns!=null){float level=s.Lanterns.Oil(lamp);oilBar.localScale=new Vector3(.032f*level,.0013f,.001f);oilBar.localPosition=new Vector3(-.016f+.016f*level,-.019f,.009f);}
-   var instruction=KeeperStrings.Get("step."+watch.CurrentInstruction);if(objective.text!=instruction)objective.text=instruction;
-   int left=Mathf.Max(0,(int)(s.Survival?s.Elapsed:s.Duration-s.Elapsed));if(left!=shownSecond||s.Day!=shownNight){shownSecond=left;shownNight=s.Day;clock.text=$"{left/60:00}:{left%60:00}";nightLabel.text=$"{(s.Survival?"D":"N")}{s.Day}";}
+   var instruction=s.Scare.Paused?watch.GetComponent<NightmareScene>()?.Instruction:KeeperStrings.Get("step."+watch.CurrentInstruction);if(objective.text!=instruction)objective.text=instruction;
+   int left=Mathf.Max(0,(int)(s.Survival?s.Elapsed:s.Duration-s.Elapsed));if(left!=shownSecond||s.Day!=shownNight||shownNightmare!=s.Scare.Paused){shownSecond=left;shownNight=s.Day;shownNightmare=s.Scare.Paused;clock.text=shownNightmare?"03:00":$"{left/60:00}:{left%60:00}";nightLabel.text=shownNightmare?"AM":$"{(s.Survival?"D":"N")}{s.Day}";}
    var toEyes=head.position-watchMount.position;WatchBacklight=toEyes.sqrMagnitude<.8f*.8f&&Vector3.Dot(watchMount.forward,toEyes.normalized)>.65f;
    lcd.SetColor("_BaseColor",WatchBacklight?new Color(.67f,.76f,.51f):new Color(.55f,.62f,.48f));
   }

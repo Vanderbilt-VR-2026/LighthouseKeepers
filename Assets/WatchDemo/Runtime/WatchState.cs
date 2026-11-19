@@ -65,7 +65,7 @@ namespace LighthouseKeepers.WatchDemo
             if(Grid!=null)Grid.SetEngine(Engine.Running);else Radio.SetPower(Engine.Running);
             Changed?.Invoke();
         }
-        public bool HasPower(PowerCircuit circuit)=>Grid!=null?Grid.Powered(circuit):Power==PowerState.On;
+        public bool HasPower(PowerCircuit circuit)=>Scare?.Dark!=true&&(Grid!=null?Grid.Powered(circuit):Power==PowerState.On);
         public bool SetCircuit(int circuit,bool selected)=>!ReadOnly&&!Failed&&Grid!=null&&Engaged(Grid.SetCircuit((PowerCircuit)circuit,selected));
         public bool ResetBreaker()=>!ReadOnly&&!Failed&&Grid!=null&&Engaged(Grid.ResetBreaker());
         void GridChanged(){if(resetting)return;Radio.SetPower(RadioAvailable);BeaconChanged();}

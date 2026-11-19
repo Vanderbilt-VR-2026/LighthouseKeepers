@@ -15,7 +15,7 @@ namespace LighthouseKeepers.WatchDemo {
    horn=new GameObject("Approaching ship horn").AddComponent<AudioSource>();horn.transform.SetParent(transform,false);horn.transform.position=new Vector3(10,3,0);horn.playOnAwake=false;horn.spatialBlend=1;horn.minDistance=3;horn.maxDistance=30;horn.clip=Resources.Load<AudioClip>("ImmersionAudio/foghorn");KeeperAudioMix.Route(horn,"SFX_Critical");
   }
   void Update(){var s=watch.State;UpdateWatch(s);
-   if(s.Survival||s.Failed||s.Complete)return;
+   if(s.Scare.Paused||s.Survival||s.Failed||s.Complete)return;
    int m=(int)((s.Duration-s.Elapsed)/60);bool toll=m<2&&m!=minute;minute=m;
    if(toll||!s.BeaconShining&&Time.time>=nextHorn){nextHorn=Time.time+10;horn.transform.position=head.position+Vector3.right*Mathf.Lerp(22,5,s.BeaconDanger);horn.volume=Mathf.Lerp(.08f,.25f,s.BeaconDanger);if(horn.clip)horn.Play();}
   }

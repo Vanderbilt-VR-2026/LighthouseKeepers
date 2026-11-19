@@ -21,8 +21,8 @@ namespace LighthouseKeepers.WatchDemo
         GameObject panel, ownedEventSystem;
         Canvas canvas;
         Text status;
-        Button retry, replay, leave, close;
-        Button mute,turnMode;
+        Button retry, replay, leave, close, nightmareSkip;
+        Button mute,turnMode,nightmareDev;
         LighthouseKeepers.Lobby.ICrewVoice voice;
         bool previousMenu, exiting;
         int previousTerminal;
@@ -91,9 +91,9 @@ namespace LighthouseKeepers.WatchDemo
             WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
             soundPage=panel.transform.Find("Sound settings page");
             AddCompanionControls();
+            nightmareSkip=Action("SkipNightmare","Skip nightmare replay (host)",385,()=>{watch.GetComponent<NightmareScene>()?.Skip();Close();});nightmareSkip.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            var nightmare=Action("DevNightmare","DEV: Day 2 nightmare (host)",335,()=>{watch.GetComponent<NightmareScene>()?.Begin(true);Close();});nightmare.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
-            var skipNightmare=Action("SkipNightmare","Skip nightmare replay (host)",385,()=>{watch.GetComponent<NightmareScene>()?.Skip();Close();});skipNightmare.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
+            nightmareDev=Action("DevNightmare","DEV: Day 2 nightmare (host)",335,()=>{watch.GetComponent<NightmareScene>()?.Begin(true);Close();});nightmareDev.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
             var drill=Action("DevRescueDrill",KeeperStrings.Get("rescue.drill"),285,()=>{watch.RequestRescueDrill();Close();});
             drill.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
             ((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);
@@ -180,12 +180,14 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             var state = watch.State;
+            nightmareSkip.gameObject.SetActive(!state.ReadOnly&&state.Scare.CanSkip);
+            if(nightmareDev)nightmareDev.gameObject.SetActive(!state.ReadOnly&&!state.Survival&&state.Day==2&&LighthouseKeepers.Core.Progression.HorrorTuning.Current.nightmareEnabled&&state.Scare.Beat==LighthouseKeepers.Core.Progression.ScareBeat.Idle);
             status.text = state.Failed ? state.FailureMessage + KeeperStrings.Get("menu.retry_hint") :
                 state.Complete && !state.HasNextDay ? KeeperStrings.Get("menu.complete") :
                 string.Format(KeeperStrings.Get("menu.day_status"),state.Day);
             if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
             else if(Book)status.text=state.Failed?(state.HighWaterFailed?KeeperStrings.Get("menu.old_flood"):state.BeaconDarkFailed?KeeperStrings.Get("menu.old_beacon"):KeeperStrings.Get("menu.old_time")):state.Complete&&!state.HasNextDay?KeeperStrings.Get("menu.survived"):string.Format(KeeperStrings.Get("menu.night_status"),state.Day);
-            if(state.Recovery.Failed)status.text=state.FailureMessage;
+            if(state.Recovery.Failed||state.Scare.Failed)status.text=state.FailureMessage;
             if(state.Sea.lost)status.text=KeeperStrings.Get("loss.sea");
             if(state.Ships?.Lost==true)status.text=state.FailureMessage;
             // Host snapshots can refresh every frame. Do not bring main-page controls

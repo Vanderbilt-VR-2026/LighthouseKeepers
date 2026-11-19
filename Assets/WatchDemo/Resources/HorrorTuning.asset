@@ -141,3 +141,19 @@ MonoBehaviour:
   lanternBeamInner: 55
   lanternHighBeamAngle: 28
   lanternHighBeamInner: 16
+  nightmareEnabled: 0
+  nightmareWakeSeconds: 3
+  nightmareTurnSeconds: 4
+  nightmareEscapeSeconds: 55
+  nightmareRescueSeconds: 38
+  nightmareReliefSeconds: 8
+  nightmareFollowSpeed: 0.5
+  nightmareFollowDistance: 3.5
+  nightmareChaseSpeed: 2.9
+  nightmareLateChaseSpeed: 2.95
+  nightmareCatchDistance: 0.75
+  nightmareFollowFear: 0.35
+  nightmareChaseFear: 0.9
+  nightmareStart: {x: 1, y: 6.6, z: 0}
+  nightmareCorner: {x: 1.7, y: 3.3, z: 1.3}
+  nightmareOutside: {x: 0, y: 0, z: -10.5}

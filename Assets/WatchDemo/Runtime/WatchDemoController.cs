@@ -154,7 +154,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
-            if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.PreScareQuiet=state.Scare.Dark||state.TensionQuiet;
+            if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.PreScareQuiet=state.Scare.Beat==ScareBeat.Quiet||!state.Scare.Paused&&state.TensionQuiet;
             UpdateCrewRadios();
             UpdateDirector();
             if(state.Immersion&&state.Immersion.physicalGuidance)

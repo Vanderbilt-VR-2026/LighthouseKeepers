@@ -56,6 +56,7 @@ namespace LighthouseKeepers.WatchDemo {
   void LateUpdate(){if(!watch||watch.State==null)return;if(Time.unscaledTime>=nextScan)Scan();var step=watch.CurrentInstruction;bool first=watch.State.Day==1;
    foreach(var item in labels){var text=item.Key;if(!text)continue;bool show=!first||Allows(item.Value.station,text.name,step,watch.State.Pipe.ActiveBolt);
     if(first&&pipe&&text==pipe.prompt)show=step==KeeperStep.TightenBolt||step>=KeeperStep.BoltA&&step<=KeeperStep.BoltC;
+    show&=!watch.State.Scare.Paused;
     WorldLabelRaster.SetObjectiveVisible(text,show);
     if(!raster)text.GetComponent<Renderer>().enabled=show&&item.Value.originallyVisible;
    }

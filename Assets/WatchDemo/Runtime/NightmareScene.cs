@@ -41,11 +41,11 @@ namespace LighthouseKeepers.WatchDemo
                     ScareBeat.Corner=>"Look at the child",
                     ScareBeat.Turn=>"Keep the stairs clear",
                     ScareBeat.Warning or ScareBeat.Quiet or ScareBeat.Escape=>"RUN — hold A",
-                    ScareBeat.Return=>"Go back — GRIP your partner’s hand",
+                    ScareBeat.Return=>c.Caught==0?"Go back inside — stay together":"Go back — GRIP your partner’s hand",
                     ScareBeat.Relief=>"You're awake. Stay together.",_=>""};
             }
         }
-        public string Location=>watch.State.Scare.Beat switch{ScareBeat.Wake=>"Stairs · FLOOR 3",ScareBeat.Follow or ScareBeat.Corner or ScareBeat.Turn=>"Generator room · FLOOR 2",ScareBeat.Warning or ScareBeat.Quiet or ScareBeat.Escape=>"FLOOR 1 → House → outside · GRIP doors, pull",ScareBeat.Return=>"Return to where your partner was caught",_=>""};
+        public string Location=>watch.State.Scare.Beat switch{ScareBeat.Wake=>"Stairs · FLOOR 3",ScareBeat.Follow or ScareBeat.Corner or ScareBeat.Turn=>"Generator room · FLOOR 2",ScareBeat.Warning or ScareBeat.Quiet or ScareBeat.Escape=>"FLOOR 1 → House → outside · GRIP doors, pull",ScareBeat.Return=>watch.State.Scare.Caught==0?"House door · FLOOR 1":"Return to where your partner was caught",_=>""};
         public string Caption=>watch.State.Scare.Beat switch{
             ScareBeat.Wake=>"Can you come with me? I'm scared.",
             ScareBeat.Turn=>"You're not him.",
@@ -77,7 +77,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(c.CrewChanged(humans,tuning.nightmareStart)){s.ResetSceneRecovery();path=null;nextPath=0;}
                 watch.DrownedViewers(out int a,out var p,out var f,out int b,out var q,out var g);
                 int da=Duty(a),db=b>0?Duty(b):0;
-                bool seen=Seen(p,f,c.Body+Vector3.up*1.1f)||b>0&&Seen(q,g,c.Body+Vector3.up*1.1f);
+                bool seen=Seen(p,f,c.Body+Vector3.up*1.1f)&&(s.HumanKeeperCount==1||b>0&&Seen(q,g,c.Body+Vector3.up*1.1f));
                 int outside=(Outside(p)?da:0)|(b>0&&Outside(q)?db:0);
                 bool atCorner=(c.Body-tuning.nightmareCorner).sqrMagnitude<.15f;
                 if(c.Beat==ScareBeat.Follow){
@@ -86,6 +86,7 @@ namespace LighthouseKeepers.WatchDemo
                     float distance=Vector3.Distance(c.Body,p-Vector3.up*1.5f);
                     if(b>0)distance=Mathf.Max(distance,Vector3.Distance(c.Body,q-Vector3.up*1.5f));
                     if(distance<tuning.nightmareFollowDistance)Move(tuning.nightmareFollowSpeed*Time.deltaTime);
+                    else {var behind=Vector3.ProjectOnPlane(p-c.Body,Vector3.up);if(behind.sqrMagnitude>.1f)c.Place(c.Body,Quaternion.LookRotation(behind).eulerAngles.y);}
                 }
                 if(c.Beat==ScareBeat.Escape){
                     bool first=(c.Caught&da)==0&&(c.Escaped&da)==0&&!Outside(p),second=db!=0&&(c.Caught&db)==0&&(c.Escaped&db)==0&&!Outside(q);
@@ -104,15 +105,21 @@ namespace LighthouseKeepers.WatchDemo
                 if(c.CanRescue)s.Recovery.Tick(Mathf.Min(Time.deltaTime,.1f));
             }
             if(seenAttempt!=c.Attempt||seenBeat!=(int)c.Beat){
-                if(seenAttempt!=c.Attempt&&c.Attempt>1)watch.NightmareCheckpoint();
+                if(seenAttempt!=c.Attempt&&c.Attempt>1&&c.Reposition)watch.NightmareCheckpoint();
                 seenAttempt=c.Attempt;seenBeat=(int)c.Beat;
                 if(c.Active){watch.GetComponent<ObjectiveHud>()?.RevealFor(8);var radio=FindAnyObjectByType<HarborRadio>();if(radio&&!string.IsNullOrEmpty(Caption))radio.RecordSilentLine(Caption,Speaker);}
                 kit.Beat(c.Beat,c.Age);
                 if(c.Beat==ScareBeat.Turn)watch.GetComponent<AdaptiveMusic>()?.RequestAccent(c.Age);
+                if(c.Beat==ScareBeat.Warning&&!s.ReadOnly){
+                    watch.DrownedViewers(out _,out var eye,out var forward,out int other,out var otherEye,out _);
+                    var drop=eye-Vector3.ProjectOnPlane(forward,Vector3.up).normalized*1.8f;
+                    if(Floor(drop,out var feet)&&Vector3.Distance(feet+Vector3.up,eye)>1.2f&&(other==0||Vector3.Distance(feet+Vector3.up,otherEye)>1.2f)&&navigation.Route(c.Body,feet,out _))c.Place(feet,Quaternion.LookRotation(Vector3.ProjectOnPlane(eye-feet,Vector3.up)).eulerAngles.y);
+                }
                 if(c.Beat==ScareBeat.Escape){path=null;nextPath=0;}
             }
             kit.Present(c,Camera.main?Camera.main.transform.position:Vector3.zero);
             if(!c.Paused&&!c.Finished)advanced=false;
+            if(c.Paused&&s.Recovery.Downed((int)watch.CurrentDuty)&&KeeperAudioMix.Instance)KeeperAudioMix.Instance.LocalFear=1;
             if(c.Finished&&!advanced){advanced=true;PlayerPrefs.SetInt("LK.Nightmare.Seen",1);PlayerPrefs.Save();if(!s.ReadOnly)watch.FinishNightmare();}
         }
         void Move(float metres)

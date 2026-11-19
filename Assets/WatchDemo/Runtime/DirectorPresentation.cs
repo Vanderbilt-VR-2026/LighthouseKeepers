@@ -68,7 +68,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!pipe)return;var state=watch.State;var d=state.Director;
             foreach(var entry in labels){string value=KeeperStrings.Get(entry.key);if(entry.text&&entry.text.text!=value)entry.text.text=value;}
-            var current=watch.CurrentInstruction;var partner=state.Day==1?KeeperStep.None:watch.PartnerInstruction;var target=Target(current);var other=Target(partner);
+            var current=state.Scare.Paused?KeeperStep.None:watch.CurrentInstruction;var partner=state.Scare.Paused||state.Day==1?KeeperStep.None:watch.PartnerInstruction;var target=Target(current);var other=Target(partner);
             int now=Progress();if(lastDay!=state.Day){lastDay=state.Day;foreach(var f in fittings.Values)f.completed=false;previous=current;stamp=now;untouched=0;}
             if(now!=stamp||previous!=current){untouched=0;stamp=now;}else if(!watch.WrenchHeld)untouched+=Time.deltaTime;
             if(previous!=current&&ObjectiveDirector.Job(previous)==ObjectiveDirector.Job(current)&&target&&Target(previous) is Transform old&&old!=target)

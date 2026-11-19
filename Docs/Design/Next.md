@@ -1,24 +1,34 @@
-# Scare-kit checkpoint — #144 in progress
+# Current checkpoint — Day 2 prerequisite #144 in progress
 
-Implemented host-owned nightmare rules/snapshot, independent clock, safe scene retry, scene blackout/child presentation, stair navigation and grip/pull doors. The new `nightmareEnabled` flag is **OFF** pending remaining scene/co-op validation. Existing installed gameplay still uses the older lesson. Network for this source: **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**.
+Branch **sprint-5**, PR **#89**. Read and copied the full Day 4–5 brief to `Docs/Design/S5-Day4-Day5-Scares.md`; created **#148 Day 4** and **#149 Day 5**. Execute **#144 → #145 → #148 → #149**. Day 3–5 are not implemented. Do not confuse the older mid-Day-2 possession lesson with the new nightmare.
 
-67 focused checks passed. A muted Editor fixture passed ten actual scene checks: F3→F2 child navigation, watch pause, warning/quiet timing, door progress bounds and solo outside escape. Reviewed screenshots exposed stale normal-job location text during scenes; corrected that. The ceiling capture did not show the child and is not visual acceptance. Need deliberate camera/flashlight captures, actual XRI door grab/release, live host/guest catch→outside→return rescue, checkpoints, and old-mode regression before enabling/building.
+New source version: **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**. New `HorrorTuning.nightmareEnabled` stays **OFF**. Host scene rules/snapshot, independent clock, sleep interception, stair-follow prototype, wall/ceiling presentation, grip doors, in-place catch/revive and wake retry are implemented. Added scene-only TTS, wet rail prints, 03:00 AM watch, scene-only objective guidance and muted engine/normal radio while the storm continues. Existing Survival and ordinary narrator settings remain unchanged.
 
-Next: finish #144, then #145, #148, #149 in order. Day 4–5 implementation has **not** started. Their full brief is copied and issues created. No new APK installed in this checkpoint. Editor remains muted. Scripts/results: `artifacts/s5/final-scaring/`; rules check: `python3 artifacts/s5/modes/check.py ScareSequenceTests CrewRecoveryTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests` (Edit Mode only). Play fixture: `python3 artifacts/s5/scare-scenes/start.py`, then Pipeline run_script `NightmareProbe.Begin` in `artifacts/s5/final-scaring/NightmareProbe.cs`, with a fresh output folder. Do not run EditMode tests while playing.
+**85 focused tests passed; 26 scene and 11 bedtime lifecycle checks passed; live two-Editor Photon guest door and host revive inputs passed.** These are not complete physical playthroughs. [Evidence, inspected images and exact limits](../Verification/S5/NightmareFoundation/README.md). Editors muted, then closed. No new APK built/installed at this checkpoint; previous **bf86ddd0 tool-belt APK remains on Quest**, not launched.
+
+## Next — finish #144 before proceeding
+
+1. Re-read the complete `Docs/Design/S5-Day2-Day3-Scares.md`. Finish the actual A-run movement-input escape through both grip/pull doors, with stamina and the existing route collision checks. Test both duties, two-person gaze/wait, actual pursuit catch, outside→return→revive, release/regrip, late join/disconnect and retry. Current scene fixtures use controlled rig movement and staged catch; transport uses real Photon/XRI.
+2. Place the child at the actual F3 stair landing (currently room-side start `(1,6.6,0)`); retune follow duration after that change. Finish/review wall→ceiling crawl→behind-player drop and safe catch-lunge animation, prints under the flashlight, return-phase water/lighting restoration and radio-static recovery line. No camera movement. Chase 2.9 / late 2.95 m/s is below default computed sprint 3.072; slower comfort settings and real stamina escape need verification.
+3. Only after those checks: enable `HorrorTuning.nightmareEnabled`, recheck impacted tests, build IL2CPP ARM64 and install on connected Quest **without launch**. Keep #144 open for worn acceptance. Then #145 cursed ship, then #148 flood/crew chase, then #149 finale. Reuse the kit. Flashlights/unlimited power supersede old lantern/oil language. Prepare the requested eight-step Day 4–5 headset test with the final build.
+
+## Exact commands / state
+
+Worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. `git status --short`; `git branch --show-current` must show sprint-5. Do not change the main folder's coop/two-headsets branch.
+
+Open: `/Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -projectPath /Users/aneeshvasamreddy/LighthouseKeepers-M3`.
+
+Before tests: `UnityEditor.EditorUtility.audioMasterMute=true`. EditMode only: `python3 artifacts/s5/modes/check.py NightmareIntegrationTests ScareSequenceTests CampaignOrderTests CrewRecoveryTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests StationGuidanceTests`.
+
+Play: `python3 artifacts/s5/scare-scenes/start.py` and wait until it reports Campaign Day 2. Then Pipeline `run_script`, using `Docs/Verification/S5/NightmareFoundation/fixtures/NightmareProbe.cs`, entry `NightmareProbe.Begin`, one fresh absolute output-folder argument. `NightmareLifecycle.Begin` checks bedtime/retry/next-day; `TurnProbe.Begin` checks the ceiling pose. Stop Play before a different fixture or EditMode tests. Never launch two fixtures together.
+
+Peer: `/Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer`. Sync template `artifacts/s5/final-scaring/sync-peer.py`; **use a new backup path**, previous backups `peer-backup`, `peer-backup-2`, `peer-backup-3` contain prior peer work. Live check template `artifacts/s5/final-scaring/crew-3.py`; choose a fresh output path. `ScenePeer.cs` now derives the victim from the actual role, not a fixed slot. Preserve that correction.
+
+Build only after enabling/verification and a clean committed tree. Copy `artifacts/s5/tool-belt/build.py` and `deliver.py` to a fresh folder; update output/backup directory, APK name and version receipt (v53). Close both Editors. Never reuse an old build backup over new source. Delivery runs adb install and hash verification; it must not launch.
 
 ## DEVICE CHECKS PENDING
 
-All new nightmare comfort, readability, hand reach, audio and sustained performance are NOT VERIFIED. Do not treat a fixture teleport or direct state mutation as physical-input acceptance. Install only after the finished slice is verified; never launch.
-
----
-
-# Active implementation — scripted nights (#144, #145, #148, #149)
-
-Read the complete Day 4–5 brief and copied it unchanged into `Docs/Design/S5-Day4-Day5-Scares.md`. Tracking: #148 Day 4 flood/crew chase; #149 Day 5 convoy finale. Build order is #144 Day 2 nightmare → #145 Day 3 cursed ship → #148 → #149. None of these new scenes is implemented yet; the existing mid-Day-2 possession is the older lesson.
-
-Reuse CrewRecovery, HunterNavigation, the avatar possession presentation and host snapshots. Current unlimited flashlights supersede oil/lantern references. Keep Survival untouched. All scene dialogue identifies the antagonist as Unknown. No camera movement, strobe or face-intersecting geometry. Editors muted; APK installation only, never launch.
-
-Current verified delivery and DEVICE CHECKS PENDING follow below. Next: implement and verify #144, with a scene clock independent of the paused watch; then continue in order. Commit/push each completed slice.
+All new nightmare worn comfort, readability, hand reach, sound, full two-headset escape/revival and sustained 72 Hz / GPU ≤11 ms remain NOT VERIFIED. Day 3–5 have implementation work outstanding, not merely device checks. Quest serial `2G0YC1ZG32048T` was connected. Existing installed tool-belt build and earlier pending acceptance remain below.
 
 ---
 
