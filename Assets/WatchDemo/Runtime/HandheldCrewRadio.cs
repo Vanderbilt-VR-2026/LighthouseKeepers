@@ -60,7 +60,10 @@ namespace LighthouseKeepers.WatchDemo
             foreach(var c in FindObjectsByType<CharacterController>(FindObjectsSortMode.None))Physics.IgnoreCollision(col,c,true);
             grab.selectEntered.AddListener(e=>{carried=false;if(!taughtCarry){taughtCarry=true;FindAnyObjectByType<HarborRadio>()?.RecordSilentLine(KeeperStrings.Get("radio.belt"),"");watch.GetComponent<ObjectiveHud>()?.RevealFor(5);}});grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
             head=Camera.main?Camera.main.transform:null;
-            carrySound=gameObject.AddComponent<AudioSource>();carrySound.playOnAwake=false;carrySound.spatialBlend=1;carrySound.minDistance=.3f;carrySound.maxDistance=3;KeeperAudioMix.Route(carrySound,"SFX_World");carryClick=Resources.Load<AudioClip>("Hands/clunk");
+            // PhysicalGrip adds its own AudioSource when this inactive prop awakens.
+            // A filtered source must live alone on its object in Unity, so keep
+            // the holster click on a child that follows the radio at the same pose.
+            carrySound=new GameObject("Radio holster sound").AddComponent<AudioSource>();carrySound.transform.SetParent(transform,false);carrySound.playOnAwake=false;carrySound.spatialBlend=1;carrySound.minDistance=.3f;carrySound.maxDistance=3;KeeperAudioMix.Route(carrySound,"SFX_World");carryClick=Resources.Load<AudioClip>("Hands/clunk");
             if(index==0){beltClip=M2StationParts.Root("Right hip walkie belt clip",watch.transform,Vector3.zero);p.Part("Leather radio holster",beltClip,new Vector3(0,-.045f,0),new Vector3(.09f,.08f,.066f),p.Dark);p.Part("Brass belt clip",beltClip,new Vector3(.05f,0,0),new Vector3(.014f,.10f,.065f),p.Brass);}
         }
         void Activate(ActivateEventArgs e){if(!Held)return;trigger=true;if(watch.State.ScriptedPartner)watch.GetComponent<CrewCompanion>()?.RequestReport();}

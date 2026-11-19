@@ -1,0 +1,20 @@
+{
+  "status": "completed",
+  "duration": 48.78,
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Presentation.Environment.Tests.ShellTraversalTests.ExistingRigWalksAuthoredHouseToGalleryRoute",
+      "Status": "Failed",
+      "Duration": 48.6877715,
+      "Message": "RT-HOUSE-MAIN stuck at (0.00, 0.04, -4.70) targeting (0.00, 0.00, -3.85)",
+      "StackTrace": "at LighthouseKeepers.Presentation.Environment.Tests.ShellTraversalTests+<WalkTo>d__4.MoveNext () [0x00127] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/Assets/Scripts/LK.Presentation/Environment/Tests/ShellTraversalTests.cs:70\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@bd7f943e9647/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44\n"
+    }
+  ]
+}

@@ -24,6 +24,10 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
             previousDelta=Time.captureDeltaTime;Time.captureDeltaTime=1f/72f;
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Lab/LK_Lab_Environment.unity",new LoadSceneParameters(LoadSceneMode.Single));
             for(int i=0;i<10;i++)yield return null;
+            // This checks locomotion, not the arrival briefing. Leaving the folder
+            // open pauses the watch and prevents the tutorial door timeout.
+            var briefing=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).FirstOrDefault(c=>c.GetType().Name=="InWorldBriefing");
+            if(briefing){var folder=briefing.GetType().GetProperty("Folder").GetValue(briefing);folder.GetType().GetMethod("Skip").Invoke(folder,null);}
             rig=UnityEngine.Object.FindFirstObjectByType<XROrigin>();Assert.That(rig,Is.Not.Null);
             foreach(var c in rig.GetComponents<MonoBehaviour>())if(c.GetType().Name=="DesktopPreview")c.enabled=false;
             input=new XRInputValueReader<Vector2>("Environment traversal regression",XRInputValueReader.InputSourceMode.ManualValue);
