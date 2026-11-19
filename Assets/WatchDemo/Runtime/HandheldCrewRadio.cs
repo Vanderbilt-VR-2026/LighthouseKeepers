@@ -74,7 +74,7 @@ namespace LighthouseKeepers.WatchDemo
                 watch.GetComponent<ObjectiveHud>()?.RevealFor(3);
             }else OnNetworkReleased();
         }
-        bool OtherOnBelt(){foreach(var r in watch.GetComponentsInChildren<HandheldCrewRadio>())if(r!=this&&r.Carried)return true;return false;}
+        bool OtherOnBelt(){foreach(var r in FindObjectsByType<HandheldCrewRadio>(FindObjectsSortMode.None))if(r!=this&&r.Carried)return true;return false;}
         void Send(bool active){watch.State.Coop?.Send(CoopAction.HandheldRadio,index,active);previous=active;nextSend=Time.unscaledTime+.1f;}
         void Update()
         {

@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         public RadioMicrophone microphone;
         public AudioSource effects,hiss,tone,chatter;
         public AudioClip click,buzzer,reply;
-        WatchState watch;CrewCompanion helper;
+        WatchState watch;CrewCompanion helper;WatchDemoController localWatch;
         MaterialPropertyBlock dark,green,red,current,codeBlock,stepDone;
         MaterialPropertyBlock[] panelOn,panelOff;
         float nextReadout,nextMicrophone,nextTune;int currentDay;bool completed,previousMic;
@@ -34,7 +34,7 @@ namespace LighthouseKeepers.WatchDemo
         public void Bind(WatchState value)
         {
             if(watch!=null){watch.Changed-=Changed;watch.Radio.BroadcastCompleted-=Complete;}
-            watch=value;watch.Changed+=Changed;watch.Radio.BroadcastCompleted+=Complete;Changed();
+            watch=value;localWatch=FindAnyObjectByType<WatchDemoController>();watch.Changed+=Changed;watch.Radio.BroadcastCompleted+=Complete;Changed();
         }
         void Changed()
         {
@@ -97,7 +97,7 @@ namespace LighthouseKeepers.WatchDemo
             float pulse=.55f+.20f*Mathf.Sin(Time.unscaledTime*Mathf.PI);
             current.SetColor("_EmissionColor",new Color(1,.55f,.08f)*pulse);
             for(int i=0;i<stepLamps.Length;i++)
-            {if(watch.Director!=null){stepLabels[i].gameObject.SetActive(i==State.Step);stepLamps[i].gameObject.SetActive(i==State.Step);}
+            {if(watch.Director!=null){stepLabels[i].gameObject.SetActive(i==State.Step);stepLamps[i].gameObject.SetActive(i==State.Step&&(watch.Day!=1||localWatch&&StationObjectiveGuidance.RadioStep(localWatch.CurrentInstruction)));}
             stepLamps[i].SetPropertyBlock(i<State.Step?stepDone:i==State.Step?current:dark);stepLabels[i].color=i<State.Step?new Color(.3f,1,.4f):i==State.Step?new Color(1,.85f,.35f):new Color(.38f,.4f,.38f);}
             for(int i=0;i<controls.Length;i++)
             {

@@ -63,7 +63,7 @@ namespace LighthouseKeepers.WatchDemo
    var b=State.Beacon;marker.localRotation=Quaternion.Euler(0,0,-135+b.Alignment*270);
    targetMarker.localRotation=Quaternion.Euler(0,0,-135+(State.AimingShip>=0?State.ShipWheelTarget:b.Target)*270);bool powered=State.HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon);
    readout.text=State.AimingShip>=0?LighthouseKeepers.Core.PlayerStrings.Get(!State.ShipOnBeam?"beacon.shipAim":State.Ships.Steady(State.AimingShip)<1?"beacon.shipHold":"beacon.shipSafe"):State.Director!=null?State.Director.StationInstruction(WatchState.BeaconStation):!powered?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.1"):!b.Ignited?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.2"):!b.Aligned?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.3"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.4"),b.Soot*100);
-   var colour=(State.AimingShip>=0?State.ShipOnBeam:b.Aligned)?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.5f);lamp.SetPropertyBlock(block);
+   var colour=(State.AimingShip>=0?State.ShipOnBeam:b.Aligned)?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",State.Day!=1||StationObjectiveGuidance.BeamStep(watch.CurrentInstruction)?colour*.5f:Color.black);lamp.SetPropertyBlock(block);
   }
   public void ResetProps(){}
   void BuildBeam()

@@ -3,6 +3,10 @@ namespace LighthouseKeepers.WatchDemo {
  // World writing is a mipmapped physical surface. Keep the original TextMesh as the data sink
  // for existing station scripts; rebuild only changed captions, at most two labels per frame.
  [DefaultExecutionOrder(1200)]public sealed class WorldLabelRaster:MonoBehaviour {
+  static readonly HashSet<TextMesh> objectiveHidden=new();
+  public static void SetObjectiveVisible(TextMesh text,bool show){if(show)objectiveHidden.Remove(text);else objectiveHidden.Add(text);}
+  public static void ClearObjectiveVisibility(TextMesh text)=>objectiveHidden.Remove(text);
+  public static bool ObjectiveVisible(TextMesh text)=>!objectiveHidden.Contains(text);
   sealed class Label {public TextMesh source;public Renderer old;public MeshRenderer face;public Mesh quad;public RenderTexture texture;public string shown;public Color colour;public bool visible;}
   readonly List<Label> labels=new();Material surface,glyph;Mesh glyphMesh;int cursor;float nextScan;readonly HashSet<TextMesh> known=new();
   public static void Create(WatchDemoController w){if(VisualPassSettings.Current&&VisualPassSettings.Current.renderQuality)w.gameObject.AddComponent<WorldLabelRaster>();}
@@ -11,7 +15,7 @@ namespace LighthouseKeepers.WatchDemo {
    if(known.Contains(source)||source.GetComponentInParent<Canvas>()||source.name.Contains("name",System.StringComparison.OrdinalIgnoreCase)||source.GetComponentInParent<Unity.XR.CoreUtils.XROrigin>())continue;
    var old=source.GetComponent<Renderer>();if(!old)continue;known.Add(source);var go=new GameObject("Mipmapped writing surface");go.transform.SetParent(source.transform,false);var mesh=new Mesh();go.AddComponent<MeshFilter>().sharedMesh=mesh;var r=go.AddComponent<MeshRenderer>();r.sharedMaterial=new Material(surface);r.shadowCastingMode=ShadowCastingMode.Off;r.receiveShadows=false;labels.Add(new Label{source=source,old=old,face=r,quad=mesh,visible=old.enabled});old.enabled=false;
   }}
-  void LateUpdate(){if(!surface)return;if(Time.time>=nextScan)Scan();int count=labels.Count,rebuilt=0;for(int i=0;i<count;i++){cursor=(cursor+1)%count;var l=labels[cursor];if(!l.source||!l.face)continue;if(l.old.enabled){l.visible=true;l.old.enabled=false;}l.face.enabled=l.visible&&l.source.gameObject.activeInHierarchy&&!string.IsNullOrEmpty(l.source.text);if(!l.face.enabled)continue;
+  void LateUpdate(){if(!surface)return;if(Time.time>=nextScan)Scan();int count=labels.Count,rebuilt=0;for(int i=0;i<count;i++){cursor=(cursor+1)%count;var l=labels[cursor];if(!l.source||!l.face)continue;if(l.old.enabled){l.visible=true;l.old.enabled=false;}l.face.enabled=ObjectiveVisible(l.source)&&l.visible&&l.source.gameObject.activeInHierarchy&&!string.IsNullOrEmpty(l.source.text);if(!l.face.enabled)continue;
    if((l.shown!=l.source.text||l.colour!=l.source.color)&&rebuilt<2){Raster(l);rebuilt++;}
   }}
   void Raster(Label l){var source=l.source;var font=source.font?source.font:Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");int size=Mathf.Max(64,source.fontSize);font.RequestCharactersInTexture(source.text,size,source.fontStyle);

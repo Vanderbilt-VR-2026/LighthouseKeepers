@@ -1,14 +1,14 @@
-# Current task — tool belt and Day 1 guidance (#147)
+# Current delivery — tool belt and Day 1 guidance (#147)
 
-Branch sprint-5, PR #89. Step 1 implemented: separate waist slots for walkie (right), flashlight (left front), wrench (left side). 35 focused tests + 15 actual XRI checks passed. Network **LK-S5-TOOLBELT1 / LK-Lab-Coop-v52**. [Evidence](../Verification/S5/ToolBelt/README.md).
+Branch sprint-5, PR #89. Implemented dedicated waist clips (walkie right, flashlight left front, wrench left side), host carry validation and Day 1 local-objective-only writing/control glow in both modes. Lighting and hand poses unchanged. Network **LK-S5-TOOLBELT1 / LK-Lab-Coop-v52**.
 
-Next: complete Day 1 local-objective-only station text/highlights; test with both roles; live two-Editor belt check. Then build/install (do not launch). Existing lighting stays untouched. No new APK yet.
+12 final focused tests + 28 earlier voice/version checks passed; two unchanged legacy director wording assertions remain (10/12 director checks pass). 19 actual XRI belt checks, 34 rendered guidance checks, and live two-Editor grab/clip/regrip/drop for all three tools passed. Screenshots inspected. [Evidence and five-step headset test](../Verification/S5/ToolBelt/README.md).
 
-Exact checks: `python3 artifacts/s5/modes/check.py ToolBeltTests RadioBeltTests`; offline fixture `artifacts/s5/tool-belt/BeltCheck.cs` via Pipeline `run_script`, entry `BeltCheck.Run`, output `artifacts/s5/tool-belt/offline`. Editor must be muted. Fresh build backup/output directories required.
+Next action: build from clean committed source using `python3 artifacts/s5/tool-belt/build.py`, then `python3 artifacts/s5/tool-belt/deliver.py`. Editors closed; unrelated importer material/prefab churn restored. Install only; **do not launch**. After delivery update receipt/PR #89/issue #147, commit + push. Then resume #144 Day 2 nightmare, #145 Day 3 cursed ship from the detailed checkpoint below.
 
 ## DEVICE CHECKS PENDING
 
-#147: grip/release each tool at its own clip, all three equipped without overlap, crouch/turn/regrip, partner sees the clips and cannot steal a carried tool, Day 1 only your current station/control prompts. No worn acceptance or GPU claims. Lighting discomfort reported by user; no lighting change in this task. Resume #144 then #145 after requested fixes/delivery.
+#147: worn clip reach and body clearance while moving/crouching; all three tools together; both-eye local Day 1 text; partner carry appearance; disconnect/rejoin; full-night and sustained device performance checks. Keep #147 open. Prior pink-material correction and reported eye discomfort still need headset acceptance; no lighting change in this task.
 
 ---
 

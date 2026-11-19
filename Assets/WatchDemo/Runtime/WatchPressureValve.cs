@@ -58,8 +58,8 @@ namespace LighthouseKeepers.WatchDemo
             float angle=v.Reduced?55:0;bar.localRotation=Quaternion.Slerp(bar.localRotation,Quaternion.Euler(0,0,angle),1-Mathf.Exp(-12*Time.deltaTime));
             instruction.text=KeeperStrings.Get(v.Reduced&&!s.Repaired?"connected.pressureHeld":"connected.pressure");
             var colour=v.Reduced?new Color(.15f,.6f,.25f):new Color(.75f,.43f,.1f);
-            bool urgent=!s.Repaired&&(watch.CurrentInstruction==KeeperStep.HoldValve||watch.PartnerInstruction==KeeperStep.HoldValve);
-            block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*(s.Repaired?0:v.Reduced?.2f:urgent?.35f+.15f*Mathf.Sin(Time.time*5.2f):0));lamp.SetPropertyBlock(block);
+            bool urgent=!s.Repaired&&(watch.CurrentInstruction==KeeperStep.HoldValve||s.Day!=1&&watch.PartnerInstruction==KeeperStep.HoldValve);
+            block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*(s.Repaired||s.Day==1&&!urgent?0:v.Reduced?.2f:urgent?.35f+.15f*Mathf.Sin(Time.time*5.2f):0));lamp.SetPropertyBlock(block);
         }
         void SetVisible(bool visible)
         {
