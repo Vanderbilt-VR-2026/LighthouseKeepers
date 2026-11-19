@@ -1,3 +1,13 @@
+# Active implementation — scripted nights (#144, #145, #148, #149)
+
+Read the complete Day 4–5 brief and copied it unchanged into `Docs/Design/S5-Day4-Day5-Scares.md`. Tracking: #148 Day 4 flood/crew chase; #149 Day 5 convoy finale. Build order is #144 Day 2 nightmare → #145 Day 3 cursed ship → #148 → #149. None of these new scenes is implemented yet; the existing mid-Day-2 possession is the older lesson.
+
+Reuse CrewRecovery, HunterNavigation, the avatar possession presentation and host snapshots. Current unlimited flashlights supersede oil/lantern references. Keep Survival untouched. All scene dialogue identifies the antagonist as Unknown. No camera movement, strobe or face-intersecting geometry. Editors muted; APK installation only, never launch.
+
+Current verified delivery and DEVICE CHECKS PENDING follow below. Next: implement and verify #144, with a scene clock independent of the paused watch; then continue in order. Commit/push each completed slice.
+
+---
+
 # Current delivery — tool belt and Day 1 guidance (#147)
 
 Branch sprint-5, PR #89. Implemented dedicated waist clips (walkie right, flashlight left front, wrench left side), host carry validation and Day 1 local-objective-only writing/control glow in both modes. Lighting and hand poses unchanged. Network **LK-S5-TOOLBELT1 / LK-Lab-Coop-v52**.
