@@ -65,7 +65,7 @@ namespace LighthouseKeepers.Core.Progression
         [Min(0)] public float nightmareChaseLeadSeconds=5f;
         [Min(.5f)] public float nightmareCatchDistance=.75f;
         [Min(.1f)] public float nightmareLungeSeconds=.35f,nightmareLungeNear=1.4f,nightmareLungeFar=1.8f;
-        [Min(1)] public float nightmareDropDistance=3.2f,nightmareExitClearance=2f;
+        [Min(1)] public float nightmareDropDistance=3.2f,nightmareDropMinDistance=1.8f,nightmareExitClearance=1.5f;
         [Range(0,1)] public float nightmareFollowFear=.35f,nightmareChaseFear=.9f;
         public Vector3 nightmareStart=new(-1.59f,6.6f,-2.54f);
         public Vector3 nightmareWakePosition=new(2,6.6f,-.8f);

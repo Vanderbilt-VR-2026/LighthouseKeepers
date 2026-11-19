@@ -157,7 +157,8 @@ MonoBehaviour:
   nightmareLungeNear: 1.4
   nightmareLungeFar: 1.8
   nightmareDropDistance: 3.2
-  nightmareExitClearance: 2
+  nightmareDropMinDistance: 1.8
+  nightmareExitClearance: 1.5
   nightmareFollowFear: 0.35
   nightmareChaseFear: 0.9
   nightmareStart: {x: -1.59, y: 6.6, z: -2.54}

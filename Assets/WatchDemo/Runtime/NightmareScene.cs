@@ -17,7 +17,9 @@ namespace LighthouseKeepers.WatchDemo
         public Component DoorTarget(float value){if(!float.IsFinite(value)||value<0||value>3)return null;int i=Mathf.FloorToInt(value/2);return i<2?doors[i]?.Handle:null;}
         readonly RaycastHit[] hits=new RaycastHit[32];
         readonly Collider[] overlaps=new Collider[32];
-        static readonly float[] dropAngles={-80,80,-70,70,-50,50,-30,30,0};
+        // Prefer directly behind before trying either side, while still checking
+        // the clearance of both keepers' exits for every candidate.
+        static readonly float[] dropAngles={0,-20,20,-30,30,-40,40,-50,50,-60,60,-70,70,-80,80};
         public static void Create(WatchDemoController w)
         {if(w.State.Survival)return;var n=w.gameObject.AddComponent<NightmareScene>();n.watch=w;n.tuning=HorrorTuning.Current;}
         void Start(){navigation=new HunterNavigation(tuning,Resources.Load<NavMeshData>("HunterNavigation"));kit=new ScareKit(transform);doors[0]=NightmareDoor.Create(watch,0,new Vector3(-.55f,0,-3.86f));doors[1]=NightmareDoor.Create(watch,1,new Vector3(-.55f,0,-9.86f));}
@@ -77,8 +79,12 @@ namespace LighthouseKeepers.WatchDemo
             if(backwards.sqrMagnitude<.9f||!Floor(eye,out var playerFeet)||!navigation.Route(playerFeet,tuning.nightmareOutside,out var escape))return false;
             Vector3[] partnerEscape=null;
             if(other>0&&(!Floor(otherEye,out var partnerFeet)||!navigation.Route(partnerFeet,tuning.nightmareOutside,out partnerEscape)))return false;
-            foreach(float angle in dropAngles){
-                var candidate=eye+Quaternion.Euler(0,angle,0)*backwards*tuning.nightmareDropDistance;
+            // Tight rooms can have a safe position nearer the players even when
+            // the outer ring is beyond the wall. Both rings use the same route,
+            // collision and viewer-clearance checks; never force a bad drop.
+            for(int ring=0;ring<2;ring++)foreach(float angle in dropAngles){
+                float distance=ring==0?tuning.nightmareDropDistance:Mathf.Min(tuning.nightmareDropDistance,tuning.nightmareDropMinDistance);
+                var candidate=eye+Quaternion.Euler(0,angle,0)*backwards*distance;
                 if(!Floor(candidate,out var feet)||Mathf.Abs(feet.y-playerFeet.y)>tuning.navClimb)continue;
                 if(Vector3.Distance(feet+Vector3.up,eye)<1.8f||other>0&&Vector3.Distance(feet+Vector3.up,otherEye)<1.8f)continue;
                 if(!ScarePathSafety.ClearOfRoute(feet,escape,tuning.nightmareExitClearance,tuning.navClimb)||other>0&&!ScarePathSafety.ClearOfRoute(feet,partnerEscape,tuning.nightmareExitClearance,tuning.navClimb))continue;
