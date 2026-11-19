@@ -16,7 +16,7 @@ Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. `git switch sprint-5`; 
 
 Focused checks: `python3 artifacts/s5/modes/check.py DreadPlaytestTests FlareTests LanternTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests CrewRecoveryTests QualityBaselineTests`. Play fixture: `python3 artifacts/s5/scare-scenes/start.py`, then Pipeline `run_script` entries `RunFlareTests.Begin` and `VisualProbe.Begin` from the files in `artifacts/s5/scare-scenes`; output paths must be fresh. Two-Editor fixture: `python3 artifacts/s5/scare-scenes/crew.py` with both Editors open and peer synced. Physical test platform is test-only, never serialized. Do not run a second fixture concurrently. A CoreAudio crash happened once on peer restart; preserve recovery backups and close only that test Editor's reporter.
 
-Build scripts use fresh backup directories; never reuse a previous build-backup over newer source. Part 0 scripts/receipts: `artifacts/s5/scare-scenes/{build.py,deliver.py,build/}`. Completed build source must be clean before starting. Do not launch the Quest.
+Build scripts use fresh backup directories; never reuse a previous build-backup over newer source. Part 0 scripts/receipts: `artifacts/s5/scare-scenes/{build.py,deliver.py,build-final/}`. Completed build source must be clean before starting. Do not launch the Quest.
 
 ## DEVICE CHECKS PENDING
 
