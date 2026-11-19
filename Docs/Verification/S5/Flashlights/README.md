@@ -6,6 +6,12 @@ The grip was checked against both animated hand meshes. An initial attachment pa
 
 One supported hanging bulb remains in the House and on each floor. House/F1 have backup power; F2–F4 require the LIGHTS circuit. Slow, softened Morse patterns are HELP ME, HELP ME at a different rate/phase, 666, YOULL DIE HERE and DEATH. The House stays at least 60% bright so instructions remain readable. Upper fixtures were raised above their equipment and the five bulb clearance probes found no collider overlap within 8 cm.
 
+## Delivery
+
+APK source **335a1ff0**, IL2CPP ARM64 / normal package, installed on Quest 3 with matching device SHA-256; **not launched**. SHA-256 `f5a72ba43be465fd3eff8a20d1fd458ee37510f90607da06588e499ce69ff532`. [Delivery receipt](delivery.json).
+
+APK: `Builds/LighthouseKeepers-Sprint5-Flashlights-335a1ff0.apk`.
+
 ## Executed verification
 
 | Evidence | Result | Limit |

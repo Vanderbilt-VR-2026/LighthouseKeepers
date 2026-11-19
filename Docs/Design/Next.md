@@ -4,11 +4,15 @@ Branch `sprint-5`, PR #89. Network **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51**; both
 
 Implemented and checked: focused 28°/9 m beam; no oil can/gauge or fuel prompts; one supported bulb in House and each floor, different softened Morse patterns; House/F1 backup on, upper bulbs require LIGHTS; powered/emergency lightmaps rebaked. **78 focused tests, 12 actual XRI grip checks and 11 rendered checks passed.** Screenshots inspected. Full nights, worn comfort/performance and a new live co-op check are NOT VERIFIED. [Evidence and six-step test](../Verification/S5/Flashlights/README.md).
 
-Build/install pending the source commit. Close the muted Editor; build only clean source with `python3 artifacts/s5/lantern-beams/build.py`, then `python3 artifacts/s5/lantern-beams/deliver.py`. The scripts use a fresh `artifacts/s5/lantern-beams/build` backup/output directory. **Do not reuse a completed backup for later source. Install only; do not launch the Quest app.**
+APK source **335a1ff0**, IL2CPP ARM64 / normal package, installed on Quest 3 with matching device SHA-256; **not launched**. SHA-256 `f5a72ba43be465fd3eff8a20d1fd458ee37510f90607da06588e499ce69ff532`. [Delivery receipt](../Verification/S5/Flashlights/delivery.json).
+
+APK: `Builds/LighthouseKeepers-Sprint5-Flashlights-335a1ff0.apk`. Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Flashlights-335a1ff0.apk`.
+
+Completed build/delivery scripts: `artifacts/s5/lantern-beams/{build.py,deliver.py}`; use a fresh backup/output directory for a future build. Editor closed; build settings restored; no Quest launch.
 
 ## Next
 
-1. Finish #146 build/install receipt, push and update PR #89 and the issue; keep needs-headset-check open until accepted.
+1. #146 implementation, build and delivery are complete. Headset acceptance remains open with needs-headset-check; run the six-step checklist and fix concrete failures.
 2. Resume **#144 Day 2 nightmare**, then **#145 Day 3 cursed ship**, exactly as the detailed Part 0 checkpoint below. Re-read the complete `Docs/Design/S5-Day2-Day3-Scares.md`; replace lantern terminology with the new flashlight where needed. Neither new scripted scene has been implemented yet.
 
 ## DEVICE CHECKS PENDING
