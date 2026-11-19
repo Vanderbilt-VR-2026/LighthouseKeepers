@@ -87,6 +87,7 @@ namespace LighthouseKeepers.WatchDemo
                 mute=Action("ToggleCrewMicrophone",voice.StatusText,-225,()=>{if(voice!=null)voice.ToggleMute();Refresh();});
             }
             if(watch.State.Master&&watch.State.Master.movement){turnMode=Action("TurnComfortMode",KeeperStrings.Get("turn.snap"),-285,()=>{if(KeeperMovement.Current){KeeperMovement.Current.Toggle();turnMode.GetComponentInChildren<Text>().text=KeeperStrings.Get(KeeperMovement.Current.Smooth?"turn.smooth":"turn.snap");}});((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);}
+            Label("Run and breath controls",KeeperStrings.Get("run.help"),-470,60,18);
             WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
             soundPage=panel.transform.Find("Sound settings page");
             AddCompanionControls();
@@ -97,7 +98,7 @@ namespace LighthouseKeepers.WatchDemo
 #endif
             var briefing=Action("ReadDutyBriefing",KeeperStrings.Get("briefing.reopen"),-414,()=>{Close();watch.GetComponent<InWorldBriefing>()?.Open();});
             briefing.GetComponent<RectTransform>().sizeDelta=new Vector2(550,46);
-            ((RectTransform)panel.transform).sizeDelta=new Vector2(600,900);
+            ((RectTransform)panel.transform).sizeDelta=new Vector2(600,1040);
             panel.SetActive(false);
         }
 

@@ -43,8 +43,8 @@ MonoBehaviour:
   maximumEscapeSeconds: 10
   lungesPerNight: 1
   sprintMultiplier: 1.6
-  sprintSeconds: 4
-  sprintCooldown: 6
+  sprintSeconds: 4.5
+  sprintCooldown: 3
   breathingHearingRange: 2
   highOilSeconds: 90
   lowOilSeconds: 180
@@ -124,3 +124,18 @@ MonoBehaviour:
   possessionRiseSpeed: 0.10
   ceilingClearance: 0.18
   lessonPartnerSpot: {x: 1, y: 3.3, z: 0}
+  sprintWarning: 0.15
+  breathInputLease: 0.4
+  flareSpeed: 50
+  flareGravity: 3.5
+  flareFlightSeconds: 4
+  flareBurnSeconds: 8
+  flareSweepRadius: 0.06
+  flareTargetRadius: 0.65
+  flareTrailSeconds: 0.12
+  flareSubstep: 0.02
+  flareLightRange: 3
+  flareLightIntensity: 2.2
+  flareHitSeconds: 1.6
+  lanternBeamAngle: 85
+  lanternBeamInner: 55

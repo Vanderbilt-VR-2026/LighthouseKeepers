@@ -2138,7 +2138,7 @@
     },
     {
       "key": "radio.102",
-      "text": "Swing your arms while you move, keeper. Don't stop here."
+      "text": "Hold A while moving to run."
     },
     {
       "key": "radio.file.102",
@@ -2478,7 +2478,7 @@
     },
     {
       "key": "briefing.body.2",
-      "text": "<b>LEFT STICK</b> — walk. Swing empty hands to run.\n<b>RIGHT STICK</b> — turn.\n<b>GRIP</b> — hold tools and controls; release to let go.\n<b>TRIGGER</b> — select menus; use a held tool.\n<b>B</b> — recall your objective and last message.\n<b>HOLD B</b> — keep them visible.\n<b>X / Y or WRIST GLANCE</b> — recall guidance.\n<b>LEFT MENU BUTTON</b> — settings and Owen’s orders."
+      "text": "<b>LEFT STICK</b> — walk. Hold A to run.\n<b>RIGHT STICK</b> — turn.\n<b>GRIP</b> — hold tools and controls; release to let go.\n<b>TRIGGER</b> — select menus; use a held tool.\n<b>B</b> — recall your objective and last message.\n<b>HOLD B</b> — keep them visible.\n<b>X</b> — hold your breath.\n<b>Y or WRIST GLANCE</b> — recall guidance.\n<b>LEFT MENU BUTTON</b> — settings and Owen’s orders."
     },
     {
       "key": "briefing.footer.2",
@@ -2855,6 +2855,22 @@
     {
       "key": "survival.board.practice",
       "text": "DAY 1: PRACTICE — NO FLOOD LOSS"
+    },
+    {
+      "key": "lantern.fuelPractice",
+      "text": "Day 1: lantern oil is unlimited. Trigger changes LOW / HIGH."
+    },
+    {
+      "key": "lantern.fuelTeach",
+      "text": "Lanterns use oil. LOW lasts longer. Refill from the oil can beside the generator — Floor 2."
+    },
+    {
+      "key": "lantern.fuelLow",
+      "text": "Oil low — tilt the F2 oil can over the lantern cap."
+    },
+    {
+      "key": "run.help",
+      "text": "Hold A + left stick to run. Release A to recover. Hold X to hold breath."
     }
   ]
 }

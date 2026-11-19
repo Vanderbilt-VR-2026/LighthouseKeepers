@@ -109,7 +109,7 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Storm!=null)StormPresentation.Create(this);
             if(state.Master&&state.Master.onboarding)OnboardingPresentation.Create(this,head,bed,pipeRepair);
             if(state.Master&&state.Master.worldSafety)MasterWorldSafety.Create(this);
-            if(state.Master&&state.Master.movement)KeeperMovement.Create(this);ArmSwingRun.Create(this);
+            if(state.Master&&state.Master.movement)KeeperMovement.Create(this);KeeperRunInput.Create(this);
             // Aperture guards are structural even when optional movement features are disabled.
             // The retired descent pole is removed; all shaft floors are restored by PoleShaftAuthoring.
             ObjectiveHud.Create(this,head);
@@ -173,6 +173,7 @@ namespace LighthouseKeepers.WatchDemo
             bool grip=lg||rg,trigger=lt||rt;
             if(WrenchHeld)state.EngageWatch();
             if(state.Director!=null){state.OfferStationGrace(state.Director.First);state.OfferStationGrace(state.Director.Second);}
+            state.TickBreath(Time.deltaTime);state.Flares?.Tick(Time.deltaTime);
             bool watchRunning=state.AdvanceWatchGate(Time.deltaTime);
             if(watchRunning)state.Tick(Time.deltaTime);
             if(flood.Height>state.FloodHeightCap)flood.SetHeight(state.FloodHeightCap);

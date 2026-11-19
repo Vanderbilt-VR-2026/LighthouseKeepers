@@ -161,7 +161,7 @@ namespace LighthouseKeepers.WatchDemo
    bool unsafeNow=s.PressureEnabled&&!s.Complete&&s.Danger>=.5f;
    danger.gameObject.SetActive(unsafeNow);dangerText.gameObject.SetActive(unsafeNow);if(unsafeNow){danger.localScale=new Vector3(s.Danger,1,1);dangerText.text=KeeperStrings.Get(s.DangerKey);}
    objectiveGroup.alpha=Mathf.Clamp01((until-Time.unscaledTime)/.8f);group.alpha=watch.ObjectivePresentationBlocked?0:Mathf.Max(objectiveGroup.alpha,display.Length>0?alpha:0);
-   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=x||y;if(pressed&&!buttons){Reveal();if(s.PressureEnabled&&radio)radio.RequestReplay();}buttons=pressed;
+   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=y;if(pressed&&!buttons){Reveal();if(s.PressureEnabled&&radio)radio.RequestReplay();}buttons=pressed;
    bool looking=wrist&&Vector3.Distance(head.position,wrist.position)<1.1f&&Vector3.Dot(head.forward,(wrist.position-head.position).normalized)>.94f;if(looking&&!glance)Reveal();glance=looking;
    // Presentation follows lazily; gameplay and tracked transforms remain untouched.
   }

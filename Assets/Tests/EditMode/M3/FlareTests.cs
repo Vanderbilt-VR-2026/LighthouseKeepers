@@ -5,6 +5,14 @@ namespace LighthouseKeepers.Tests.M3
 {
     public sealed class FlareTests
     {
+        [Test] public void FlightClockMovesWhileWatchClockIsPausedAndCannotBeAdvancedByReplica()
+        {
+            var h=new FlareState();h.Tick(12);Assert.True(h.Fire(0,Vector3.up,Vector3.forward,h.Clock));h.Tick(.2f);
+            Assert.Greater(FlareState.Position(h.Shot(0),(float)(h.Clock-h.Shot(0).at)).z,9);
+            var g=new FlareState{ReadOnly=true};Assert.True(g.Apply(h.Capture(),0));double clock=g.Clock;g.Tick(50);Assert.AreEqual(clock,g.Clock);
+            var f=h.Capture();f.clock=double.NaN;Assert.False(g.Apply(f,0));
+        }
+
         [Test] public void SharedGunHasOneRoundAndReservedSlotCannotFire()
         {
             var s=new FlareState();Assert.False(s.Fire(2,Vector3.zero,Vector3.forward,10));Assert.False(s.Fire(0,Vector3.zero,Vector3.zero,10));Assert.False(s.Fire(0,new Vector3(float.NaN,0,0),Vector3.forward,10));Assert.True(s.Loaded(0));

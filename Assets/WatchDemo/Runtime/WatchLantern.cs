@@ -10,7 +10,7 @@ namespace LighthouseKeepers.WatchDemo {
    fire=new Material(Shader.Find("Universal Render Pipeline/Simple Lit")){name="Lantern flame"};fire.EnableKeyword("_EMISSION");block=new MaterialPropertyBlock();flameMesh=LanternMesh.Flame();flame=Surface("Oil flame",flameMesh,fire);flameRenderer=flame.GetComponent<Renderer>();
    p.Part("Wick knob",transform,new Vector3(.073f,.075f,-.025f),new Vector3(.025f,.025f,.012f),p.Brass,PrimitiveType.Cylinder).transform.localRotation=Quaternion.Euler(90,0,0);
    p.Part("Oil sight glass recess",transform,new Vector3(0,.045f,-.083f),new Vector3(.025f,.034f,.005f),p.Dark);oil=p.Part("Visible oil level",transform,new Vector3(0,.045f,-.087f),new Vector3(.016f,.028f,.003f),p.Brass).transform;
-   pool=new GameObject("Lantern shadowless warm pool").AddComponent<Light>();pool.transform.SetParent(transform,false);pool.transform.localPosition=new Vector3(0,.15f,0);pool.type=LightType.Point;pool.shadows=LightShadows.None;pool.color=new Color(1,.69f,.4f);pool.enabled=false;
+   pool=new GameObject("Lantern shadowless warm pool").AddComponent<Light>();pool.transform.SetParent(transform,false);pool.transform.localPosition=new Vector3(0,.15f,0);pool.type=LightType.Spot;pool.spotAngle=HorrorTuning.Current.lanternBeamAngle;pool.innerSpotAngle=HorrorTuning.Current.lanternBeamInner;pool.shadows=LightShadows.None;pool.color=new Color(1,.69f,.4f);pool.enabled=false;
    body=gameObject.AddComponent<Rigidbody>();body.mass=.65f;body.isKinematic=true;body.useGravity=true;body.interpolation=RigidbodyInterpolation.Interpolate;body.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;
    var c=gameObject.AddComponent<BoxCollider>();c.center=new Vector3(0,.14f,0);c.size=new Vector3(.18f,.28f,.15f);var bail=gameObject.AddComponent<BoxCollider>();bail.center=LanternMesh.Handle;bail.size=new Vector3(.14f,.07f,.07f);
    foreach(var rig in FindObjectsByType<CharacterController>(FindObjectsSortMode.None)){Physics.IgnoreCollision(c,rig,true);Physics.IgnoreCollision(bail,rig,true);}
@@ -19,14 +19,13 @@ namespace LighthouseKeepers.WatchDemo {
    rightPalm=M2StationParts.Root("Right palm on lantern bail",transform,LanternMesh.Handle);rightPalm.localRotation=Quaternion.identity;
    surfaces=GetComponentsInChildren<Renderer>();sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.25f;sound.maxDistance=8;sound.dopplerLevel=0;KeeperAudioMix.Route(sound,"SFX_World");clunk=Resources.Load<AudioClip>("Hands/clunk");}
   Transform Surface(string name,Mesh m,Material material){var g=new GameObject(name);g.transform.SetParent(transform,false);g.AddComponent<MeshFilter>().sharedMesh=m;var r=g.AddComponent<MeshRenderer>();r.sharedMaterial=material;r.shadowCastingMode=ShadowCastingMode.Off;return g.transform;}
-  Cubemap cageCookie;
+  Texture2D cageCookie;int fuelDay=-1;bool fuelTaught,lowTaught;
   void Start(){
-   // A small reusable cage mask adds a shaped pool without six point-shadow renders.
-   cageCookie=new Cubemap(32,TextureFormat.RGBA32,false){name="Lantern cage light cookie",wrapMode=TextureWrapMode.Clamp,filterMode=FilterMode.Bilinear};
-   for(int face=0;face<6;face++){var pixels=new Color[32*32];for(int y=0;y<32;y++)for(int x=0;x<32;x++){
-    float u=(x+.5f)/16-1,v=(y+.5f)/16-1;var d=face==0?new Vector3(1,-v,-u):face==1?new Vector3(-1,-v,u):face==2?new Vector3(u,1,v):face==3?new Vector3(u,-1,-v):face==4?new Vector3(u,-v,1):new Vector3(-u,-v,-1);d.Normalize();
-    float rib=Mathf.SmoothStep(.2f,1,Mathf.Clamp01(Mathf.Abs(Mathf.Sin(Mathf.Atan2(d.x,d.z)*3))*3));float cap=Mathf.Lerp(.25f,1,1-Mathf.Abs(d.y));float value=rib*cap*Mathf.Lerp(.12f,1,Mathf.SmoothStep(0,1,(d.z+.2f)/1.2f));pixels[y*32+x]=new Color(value,value,value,1);
-   }cageCookie.SetPixels(pixels,(CubemapFace)face);}cageCookie.Apply(false,true);pool.cookie=cageCookie;
+   cageCookie=new Texture2D(64,64,TextureFormat.RGBA32,false){name="Forward lantern aperture",wrapMode=TextureWrapMode.Clamp,filterMode=FilterMode.Bilinear};
+   var pixels=new Color[64*64];for(int y=0;y<64;y++)for(int x=0;x<64;x++){
+    float u=(x+.5f)/32-1,v=(y+.5f)/32-1;float edge=1-Mathf.SmoothStep(.45f,1,Mathf.Sqrt(u*u+v*v));
+    pixels[y*64+x]=new Color(edge,edge,edge,edge);
+   }cageCookie.SetPixels(pixels);cageCookie.Apply(false,true);pool.cookie=cageCookie;
   }
   void Hold(SelectEnterEventArgs e){if(PlayerPrefs.GetInt("LK.Lantern.InputLearned",0)==0){watch.GetComponent<ObjectiveHud>()?.ShowHint(KeeperStrings.Get("lantern.firstGrip"),8);PlayerPrefs.SetInt("LK.Lantern.InputLearned",1);PlayerPrefs.Save();}hand=e.interactorObject.transform.GetComponentInParent<HandRig>();hand?.SetPose(RequiredPose,this);hand?.Pulse(.2f,.04f);}
   void Release(SelectExitEventArgs e){hand?.ClearPose();hand=null;OnNetworkReleased();}
@@ -35,6 +34,9 @@ namespace LighthouseKeepers.WatchDemo {
   void Update(){lease??=GetComponent<INetworkPropStatus>();var state=watch.State.Lanterns;bool active=state!=null;
    if(usable!=active){foreach(var r in surfaces)r.enabled=active;foreach(var c in Grab.colliders)c.enabled=active;Grab.enabled=active;usable=active;}
    if(!watch.State.ReadOnly&&active&&transform.TransformPoint(new Vector3(0,.17f,0)).y<watch.WaterHeightAt(transform.position))state.Extinguish(Slot);
+   if(fuelDay!=watch.State.Day){fuelDay=watch.State.Day;fuelTaught=lowTaught=false;}
+   if(Grab.isSelected&&!fuelTaught){fuelTaught=true;watch.GetComponent<ObjectiveHud>()?.ShowHint(KeeperStrings.Get(watch.State.Day==1?"lantern.fuelPractice":"lantern.fuelTeach"),10);}
+   if(Grab.isSelected&&Oil<.25f&&!lowTaught&&watch.State.Day>1){lowTaught=true;watch.GetComponent<ObjectiveHud>()?.ShowHint(KeeperStrings.Get("lantern.fuelLow"),10);}
    if(hand&&Grab.isSelected)hand.SetToolGrip(hand.Node==UnityEngine.XR.XRNode.LeftHand?leftPalm:rightPalm,HandRig.ToolGripPoint);
    bool lit=active&&state.Lit(Slot);pool.enabled=lit&&!watch.Sleeping&&!watch.State.Failed;var wick=state?.Wick(Slot)??LanternWick.Off;
    pool.range=wick==LanternWick.High?watch.State.Sprint5.lanternHighRange:watch.State.Sprint5.lanternLowRange;

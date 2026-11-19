@@ -8,41 +8,17 @@ namespace LighthouseKeepers.Tests.M3
     public sealed class DreadPlaytestTests
     {
         static Type Runtime(string n)=>Type.GetType("LighthouseKeepers.WatchDemo."+n+", Assembly-CSharp",true);
-        [Test]public void RunningRequiresMovementAndAlternatingFreeArmsAndStopsSmoothly()
-        {
-            var type=Runtime("ArmSwingRun+Gait");var gait=Activator.CreateInstance(type);var tick=type.GetMethod("Tick");
-            float Step(float l,float r,bool moving=true,bool free=true)=>(float)tick.Invoke(gait,new object[]{l,r,moving,free,.05f});
-            for(int i=0;i<30;i++)Assert.AreEqual(1,Step(1,-1,false));
-            for(int i=0;i<30;i++)Assert.AreEqual(1,Step(1,1));
-            for(int i=0;i<60;i++){float sign=(i/5)%2==0?1:-1;Step(sign,-sign);}
-            Assert.Greater(Step(1,-1),1.4f);
-            float prior=Step(0,0,false);for(int i=0;i<20;i++){float value=Step(0,0,false);Assert.LessOrEqual(value,prior);prior=value;}Assert.AreEqual(1,prior);
-            for(int i=0;i<40;i++)Assert.AreEqual(1,Step(i%2==0?1:-1,i%2==0?-1:1,true,false));
+        [Test]public void HoldARunsUntilExhaustedAndReleaseRefillsInThreeSeconds(){
+            var t=HorrorTuning.Current;var s=new KeeperStamina(t);
+            Assert.AreEqual(1,s.Tick(.1f,false,true,true));Assert.AreEqual(1,s.Tick(.1f,true,false,true));
+            bool warning=false;for(int i=0;i<40;i++){Assert.Greater(s.Tick(.1f,true,true,true),1);warning|=s.Warning;}
+            for(int i=0;i<6;i++){s.Tick(.1f,true,true,true);warning|=s.Warning;}Assert.True(warning);Assert.AreEqual(0,s.Remaining);
+            Assert.AreEqual(1,s.Tick(2,true,true,true));Assert.AreEqual(0,s.Remaining);
+            s.Tick(3,false,true,true);Assert.AreEqual(1,s.Remaining);Assert.Greater(s.Tick(.1f,true,true,true),1);
         }
-        [Test]public void NaturalArmSwingsBuildRunningThroughBriefReversalPauses()
-        {
-            var type=Runtime("ArmSwingRun+Gait");var gait=Activator.CreateInstance(type);var tick=type.GetMethod("Tick");
-            float speed=1; const float dt=1f/72;
-            // Opposite arm pendulums include zero velocity at both ends; this is not continuous digital input.
-            for(int i=0;i<360;i++)
-            {
-                float velocity=.75f*Mathf.Sin(i*dt*Mathf.PI*2*1.3f);
-                speed=(float)tick.Invoke(gait,new object[]{velocity,-velocity,true,true,dt});
-            }
-            Assert.Greater(speed,1.45f);
-            for(int i=0;i<72;i++)speed=(float)tick.Invoke(gait,new object[]{0f,0f,false,true,dt});
-            Assert.AreEqual(1,speed);
-        }
-        [Test]public void SwingSignalFollowsPlayerFacingRatherThanOriginForward()
-        {
-            var method=Runtime("ArmSwingRun+Gait").GetMethod("ForwardSpeed");
-            foreach(float yaw in new[]{0f,90f,180f,270f})
-            {
-                var facing=Quaternion.Euler(30,yaw,0)*Vector3.forward;
-                var velocity=Quaternion.Euler(0,yaw,0)*new Vector3(0,.2f,.8f);
-                Assert.That((float)method.Invoke(null,new object[]{velocity,facing}),Is.EqualTo(.8f).Within(.001f));
-                Assert.That((float)method.Invoke(null,new object[]{Vector3.up,facing}),Is.EqualTo(0).Within(.001f));
-            }
+        [Test]public void MenuAndPossessionCannotRunAndInvalidTimeCannotSpendStamina(){
+            var s=new KeeperStamina(HorrorTuning.Current);Assert.AreEqual(1,s.Tick(.1f,true,true,false));Assert.AreEqual(1,s.Remaining);
+            s.Tick(float.NaN,true,true,true);Assert.AreEqual(1,s.Remaining);
         }
         [Test]public void BriefEncounterEndsWithoutWaitingTwelveSecondsAndReplicasSharePose()
         {

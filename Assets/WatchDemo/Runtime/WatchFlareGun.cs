@@ -21,7 +21,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch; Rigidbody body; INetworkPropStatus lease; HandRig hand;
         Renderer[] renderers; bool previouslyUsable = true; Mesh[] meshes; Material[] materials; Transform visual, hammer; Renderer loadedLamp;
         Vector3 home; Quaternion homeRotation; bool released, shownShot; double lastElapsed;
-        float unheld, dryAt, recoil; AudioSource sound; AudioClip shotSound, drySound;
+        Transform muzzleFlash;float unheld, dryAt, recoil, flashUntil; AudioSource sound; AudioClip shotSound, drySound;
         public static WatchFlareGun Create(WatchDemoController w, int slot)
         {
             var go=new GameObject("KEEPER_FLARE_GUN_"+slot);go.SetActive(false);go.transform.SetParent(w.transform,false);
@@ -40,6 +40,8 @@ namespace LighthouseKeepers.WatchDemo
             materials=new[]{iron,enamel,wood};meshes=FlareGunMesh.Build();visual=M2StationParts.Root("Signal pistol moving assembly",transform,Vector3.zero);
             for(int i=0;i<meshes.Length;i++){var g=new GameObject(meshes[i].name);g.transform.SetParent(visual,false);g.AddComponent<MeshFilter>().sharedMesh=meshes[i];var r=g.AddComponent<MeshRenderer>();r.sharedMaterial=materials[i];r.shadowCastingMode=ShadowCastingMode.Off;}
             Muzzle=M2StationParts.Root("Flare muzzle",transform,FlareGunMesh.Muzzle);
+            var spark=GameObject.CreatePrimitive(PrimitiveType.Sphere);spark.name="Flare muzzle flash";Destroy(spark.GetComponent<Collider>());spark.transform.SetParent(Muzzle,false);spark.transform.localScale=new Vector3(.075f,.075f,.18f);spark.transform.localPosition=Vector3.forward*.06f;
+            var glow=new Material(Resources.Load<Shader>("FlareGlow"));glow.SetColor("_BaseColor",new Color(1,.25f,.02f,1));spark.GetComponent<Renderer>().sharedMaterial=glow;materials=new[]{iron,enamel,wood,glow};muzzleFlash=spark.transform;muzzleFlash.gameObject.SetActive(false);
             var chamber=parts.Part("Loaded cartridge rim",visual,new Vector3(0,.061f,-.037f),new Vector3(.036f,.004f,.036f),parts.Brass,PrimitiveType.Cylinder);chamber.transform.localRotation=Quaternion.Euler(90,0,0);loadedLamp=chamber.GetComponent<Renderer>();
             hammer=M2StationParts.Root("Hammer feedback",visual,new Vector3(0,.08f,-.07f));
             body=gameObject.AddComponent<Rigidbody>();body.mass=.65f;body.isKinematic=true;body.useGravity=true;body.interpolation=RigidbodyInterpolation.Interpolate;body.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;
@@ -78,9 +80,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Elapsed<lastElapsed-.01){shownShot=false;ReturnHome();}lastElapsed=state.Elapsed;
             bool usable=state.Flares!=null;
             if(previouslyUsable!=usable||lastElapsed==0){foreach(var r in renderers)r.enabled=usable;Grab.enabled=usable;foreach(var c in Grab.colliders)c.enabled=usable;previouslyUsable=usable;}
-            if(frame!=null&&frame.fired&&!shownShot){shownShot=true;if(state.Elapsed-frame.at<1.25){recoil=1;if(shotSound)sound.PlayOneShot(shotSound,.55f);hand?.Pulse(.65f,.10f);}}
+            if(frame!=null&&frame.fired&&!shownShot){shownShot=true;if(state.Flares.Clock-frame.at>=0&&state.Flares.Clock-frame.at<1.25){recoil=1;flashUntil=Time.unscaledTime+.09f;if(shotSound)sound.PlayOneShot(shotSound,.55f);hand?.Pulse(.65f,.10f);}}
             if(frame!=null&&!frame.fired)shownShot=false;
             if(loadedLamp)loadedLamp.enabled=usable&&frame!=null&&!frame.fired;
+            muzzleFlash.gameObject.SetActive(Time.unscaledTime<flashUntil);
             recoil=Mathf.MoveTowards(recoil,0,Time.deltaTime*7);visual.localRotation=Quaternion.Euler(-recoil*7,0,0);
             bool held=Grab.isSelected||lease!=null&&lease.Owner!=0;
             unheld=held?0:unheld+Time.deltaTime;

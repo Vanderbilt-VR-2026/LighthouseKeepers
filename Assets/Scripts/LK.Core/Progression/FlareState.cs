@@ -22,23 +22,30 @@ namespace LighthouseKeepers.Core.Progression
     [Serializable] public sealed class FlareFrame
     {
         public bool enabled;
+        public double clock;
         public FlareShot first = new(), second = new();
-        public bool Valid(double now) => first != null && second != null && first.Valid(now) && second.Valid(now) && (enabled || !first.fired && !second.fired);
+        public bool Valid(double now) => double.IsFinite(clock) && clock >= 0 && clock < 604800 && first != null && second != null && first.Valid(clock) && second.Valid(clock) && (enabled || !first.fired && !second.fired);
     }
     // One physical gun with one round. The second frame slot stays reserved for schema stability. Only the host spends rounds and
     // resolves obstruction/repulsion. Clients reproduce the last flight from its timestamp.
     public sealed class FlareState
     {
-        public const float Speed = 14, Gravity = 3.5f, FlightSeconds = 6, BurnSeconds = 3;
+        public static float Speed=>HorrorTuning.Current.flareSpeed;
+        public static float Gravity=>HorrorTuning.Current.flareGravity;
+        public static float FlightSeconds=>HorrorTuning.Current.flareFlightSeconds;
+        public static float BurnSeconds=>HorrorTuning.Current.flareBurnSeconds;
         public bool ReadOnly { get; set; }
         FlareFrame frame = new() { enabled = true };
+        public double Clock=>frame.clock;
+        public void Tick(float dt){if(!ReadOnly&&float.IsFinite(dt)&&dt>0)frame.clock+=dt;}
         public FlareShot Shot(int slot) => slot == 0 ? frame.first.Copy() : slot == 1 ? frame.second.Copy() : null;
         public bool Loaded(int slot) => slot == 0 && !Shot(slot).fired;
         public bool Fire(int slot, Vector3 muzzle, Vector3 direction, double now)
         {
             if (ReadOnly || !Loaded(slot) || !FlareShot.Finite(direction) || direction.sqrMagnitude < .9f || !FlareShot.Finite(muzzle)) return false;
             var shot = new FlareShot { fired = true, at = now, origin = muzzle, direction = direction.normalized };
-            if (!shot.Valid(now)) return false;
+            if (!shot.Valid(now) || now < frame.clock) return false;
+            frame.clock=now;
             if (slot == 0) frame.first = shot; else frame.second = shot;
             return true;
         }
@@ -46,6 +53,7 @@ namespace LighthouseKeepers.Core.Progression
         {
             var shot = Shot(slot);
             if (ReadOnly || shot == null || !shot.fired || shot.stopped || !FlareShot.Finite(position) || position.sqrMagnitude > 100000 || !float.IsFinite(age) || age < 0 || age > FlightSeconds) return false;
+            frame.clock=System.Math.Max(frame.clock,shot.at+age);
             shot.stopped = true; shot.stop = position; shot.stopAge = age; shot.repelled = repelled;
             if (slot == 0) frame.first = shot; else frame.second = shot;
             return true;
@@ -56,11 +64,11 @@ namespace LighthouseKeepers.Core.Progression
             var d = b - a; float t = d.sqrMagnitude > .00001f ? Mathf.Clamp01(Vector3.Dot(point - a, d) / d.sqrMagnitude) : 0;
             return (a + d * t - point).sqrMagnitude <= radius * radius;
         }
-        public FlareFrame Capture() => new() { enabled = true, first = frame.first.Copy(), second = frame.second.Copy() };
+        public FlareFrame Capture() => new() { enabled = true, clock=frame.clock, first = frame.first.Copy(), second = frame.second.Copy() };
         public bool Apply(FlareFrame value, double now)
         {
             if (!ReadOnly || value == null || !value.enabled || !value.Valid(now)) return false;
-            frame = new FlareFrame { enabled = true, first = value.first.Copy(), second = value.second.Copy() }; return true;
+            frame = new FlareFrame { enabled = true, clock=value.clock, first = value.first.Copy(), second = value.second.Copy() }; return true;
         }
     }
 }

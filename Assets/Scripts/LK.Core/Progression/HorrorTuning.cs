@@ -29,7 +29,15 @@ namespace LighthouseKeepers.Core.Progression
         public float tellMin=3,tellMax=6,maximumEscapeSeconds=10;
         public int lungesPerNight=1;
         [Header("Sprint / hiding")]
-        public float sprintMultiplier=1.6f,sprintSeconds=4,sprintCooldown=6,breathingHearingRange=2;
+        public float sprintMultiplier=1.6f,sprintSeconds=4.5f,sprintCooldown=3,breathingHearingRange=2;
+        [Range(0,1)] public float sprintWarning=.15f;
+        [Min(.1f)] public float breathInputLease=.4f;
+        [Header("Flare — metres and seconds")]
+        public float flareSpeed=50,flareGravity=3.5f,flareFlightSeconds=4,flareBurnSeconds=8;
+        public float flareSweepRadius=.06f,flareTargetRadius=.65f,flareTrailSeconds=.12f,flareSubstep=.02f;
+        public float flareLightRange=3,flareLightIntensity=2.2f,flareHitSeconds=1.6f;
+        [Header("Lantern beam")]
+        [Range(30,140)] public float lanternBeamAngle=85,lanternBeamInner=55;
         [Header("Lantern / defenses")]
         public float highOilSeconds=90,lowOilSeconds=180,pourSeconds=4;
         public float lowRange=2.5f,highRange=4,highExposure=2,highOilCost=.15f,highRetreat=20;

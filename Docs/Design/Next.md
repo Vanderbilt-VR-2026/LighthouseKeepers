@@ -1,10 +1,26 @@
-# Current work — controls, Day 2 nightmare, Day 3 cursed ship
+# Current checkpoint — Part 0 controls and lantern (#143)
 
-Branch `sprint-5`, PR #89. Approved source copied in full to `Docs/Design/S5-Day2-Day3-Scares.md`.
+Branch `sprint-5`, PR #89. Network **LK-S5-SCARES1 / LK-Lab-Coop-v51**. Both players must update. Part 0 implementation and focused Editor checks are complete; build/install receipt follows below when finished. No Quest launch.
 
-Order: #143 Part 0 (A run, X breath, directional lantern, reliable flare) → #144 end-Day-2 nightmare → #145 Day-3 authenticated calls/cursed ship. Reuse host snapshot, possession/revive, navigation and ship systems. Survival excludes both horror scenes. Existing practice Day 1 already prevents lantern oil drain. Keep Editor muted; install final APK, never launch.
+Done: A run (4.5 s / 3 s released refill), X breath, removed arm-swing; forward lantern and oil teaching (Day 1 unlimited); visible swept flare, moving-target hits, independent replicated flare clock during grace, shared impact and burning miss. 76 focused EditMode tests; 18 Play Mode collision cases; guest firing and breath lease in two muted Photon Editors; inspected screenshots. [Evidence and six-step test](../Verification/S5/ScareControls/README.md).
 
-Baseline source: `193d8f22`, last installed APK `cec81c8e`, network `LK-S5-PRACTICE1 / LK-Lab-Coop-v50`. No scene work is complete yet. Earlier evidence/checkpoint below remains historical.
+## Next, in order — not yet implemented
+
+1. **#144 Part 1, Day 2 nightmare.** Read `Docs/Design/S5-Day2-Day3-Scares.md` fully again. Replace the old mid-Day-2 possession lesson with the end-Day-2 sleep interception, 3 AM wake-up, child follow/wait/gaze, wall/ceiling turn, warned escape, caught-in-place possession, outside-then-return revival and wake-up retry. Reuse CrewRecoveryState/CrewRecovery presentation and HunterNavigation. Preserve Survival. Add host-owned scene clock/state, position/phase in WatchSnapshot with strict validation; bump both versions. Do not reuse the paused watch clock for scene animation. Solo escape/fail as brief; two-human victim remains at catch point. No camera movement. Reusable scare kit and dev buttons. New scene TTS only as specifically requested in this brief, catalogue exact text; routine narration remains disabled.
+2. **#145 Part 2, Day 3 cursed ship.** After #144 is verified and pushed: challenge-word/password + real/fake audio tell and real cost; six non-repeating visible deck points; gaze blood rain; scripted wreck excluded from failure accounting; warned safe near-beacon reveal; relentless navigable chase; flare hit/one-shot miss outcomes, caught/revive; after-scene normal watch progression. Add dev buttons, branch/path/network tests and inspected captures. Preserve the existing radio code relay and unaffected ship outcomes.
+3. Build/install each completed slice, never launch. Verify headset comfort/performance separately; keep issues open with needs-headset-check until accepted.
+
+## Exact restart commands and tooling
+
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. `git switch sprint-5`; `git status --short`; read this file and `Docs/Design/S5-Day2-Day3-Scares.md`. Use the existing Unity 6000.3.23f1 project and Pipeline bridge. Always set `UnityEditor.EditorUtility.audioMasterMute=true` before tests/Play Mode. Peer worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer`; previous peer changes preserved in `artifacts/s5/scare-scenes/peer-backup`.
+
+Focused checks: `python3 artifacts/s5/modes/check.py DreadPlaytestTests FlareTests LanternTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests CrewRecoveryTests QualityBaselineTests`. Play fixture: `python3 artifacts/s5/scare-scenes/start.py`, then Pipeline `run_script` entries `RunFlareTests.Begin` and `VisualProbe.Begin` from the files in `artifacts/s5/scare-scenes`; output paths must be fresh. Two-Editor fixture: `python3 artifacts/s5/scare-scenes/crew.py` with both Editors open and peer synced. Physical test platform is test-only, never serialized. Do not run a second fixture concurrently. A CoreAudio crash happened once on peer restart; preserve recovery backups and close only that test Editor's reporter.
+
+Build scripts use fresh backup directories; never reuse a previous build-backup over newer source. Part 0 scripts/receipts: `artifacts/s5/scare-scenes/{build.py,deliver.py,build/}`. Completed build source must be clean before starting. Do not launch the Quest.
+
+## DEVICE CHECKS PENDING
+
+Part 0: six steps in ScareControls report; sustained GPU/CPU at peak storm with two HIGH lanterns and flare; both-eye beam/flare readability, grasp direction, run/breath comfort, co-op worn acceptance. Parts 1/2 all scene acceptance is pending implementation, not a device-only gap. Keep previous equipment/radio/lighting acceptance below pending too.
 
 # Current checkpoint — House light and Survival practice day (#142)
 

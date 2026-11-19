@@ -9,6 +9,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class DrownedAppearance:MonoBehaviour
     {
         WatchDemoController watch;Transform figure;Mesh mesh,mistMesh;Mesh[] forms;MeshFilter bodyFilter;DrownedForm activeForm=(DrownedForm)(-1);Material material,mistMaterial;MeshRenderer body,mist;MaterialPropertyBlock block,mistBlock;
+        FlareImpactTarget flareTarget;
         DrownedPlacement placement;float nextProbe;
         int revision=-1;float visibility;double manifestAt=-1,lastElapsed;
         public bool SafeAnchor { get; private set; }
@@ -21,6 +22,8 @@ namespace LighthouseKeepers.WatchDemo
             block=new MaterialPropertyBlock();forms=new[]{DrownedForms.Build(DrownedForm.SeaHag),DrownedForms.Build(DrownedForm.Doll),DrownedForms.Build(DrownedForm.Gaunt)};mesh=forms[0];material=new Material(Resources.Load<Shader>("S5Drowned")){name="Salt-wet Drowned skin cloth and hair"};
             figure=new GameObject("The Drowned — three forms").transform;figure.SetParent(transform,false);bodyFilter=figure.gameObject.AddComponent<MeshFilter>();bodyFilter.sharedMesh=mesh;body=figure.gameObject.AddComponent<MeshRenderer>();body.sharedMaterial=material;body.shadowCastingMode=ShadowCastingMode.Off;body.receiveShadows=false;body.enabled=false;
             DrownedHorror.Create(watch,this,figure);
+            var hit=new GameObject("Drowned generous flare target");hit.transform.SetParent(figure,false);hit.transform.localPosition=Vector3.up;
+            flareTarget=hit.AddComponent<FlareImpactTarget>();flareTarget.Radius=HorrorTuning.Current.flareTargetRadius;flareTarget.OnHit=()=>watch.State.RepelWithFlare();flareTarget.AcceptsHit=false;
             var fog=new GameObject("Drowned local mist and dripping coat");fog.transform.SetParent(figure,false);
             mistMesh=DrownedSculpt.Effects();fog.AddComponent<MeshFilter>().sharedMesh=mistMesh;
             mistMaterial=new Material(Resources.Load<Shader>("S5DrownedMist")){name="Bounded cold breath and runoff"};
@@ -57,10 +60,14 @@ namespace LighthouseKeepers.WatchDemo
             SafeAnchor=d.Anchored;
             if(d.Anchored){DrownedMotion.Pose(d,s.Elapsed,out var position,out var rotation);figure.SetPositionAndRotation(position,rotation);}
             if(Camera.main){var head=Camera.main.transform.position;float face=DrownedForms.FaceHeight(activeForm);if((head-figure.TransformPoint(Vector3.up*face)).sqrMagnitude<2.25f)SafeAnchor=false;}
+            var flare=s.Flares?.Shot(0);float burnAge=flare!=null&&flare.repelled?(float)(s.Flares.Clock-flare.at)-flare.stopAge:100;
+            bool burning=d.Anchored&&burnAge>=0&&burnAge<HorrorTuning.Current.flareHitSeconds&&Vector3.Distance(flare.stop,DrownedMotion.Centre(d,s.Elapsed,DrownedForms.Height(activeForm)))<2;
+            figure.localScale=Vector3.one;if(burning)figure.localScale=new Vector3(1,Mathf.Lerp(1,.08f,burnAge/HorrorTuning.Current.flareHitSeconds),1);
             bool active=Sightings&&SafeAnchor&&!watch.Sleeping&&!s.Failed&&!s.Recovery.LessonActive&&(d.Phase==DrownedPhase.Manifest||d.Phase==DrownedPhase.Retreat);
-            float wanted=active&&d.Phase==DrownedPhase.Manifest?1:0;
+            float wanted=active&&(d.Phase==DrownedPhase.Manifest||burning)?1:0;
             visibility=(!Sightings||!SafeAnchor||watch.Sleeping||s.Failed||s.Recovery.LessonActive)?0:Mathf.MoveTowards(visibility,wanted,Time.deltaTime*(wanted>0?16f:10f));
-            body.enabled=visibility>.005f;block.SetFloat("_Visibility",visibility);block.SetFloat("_Style",d.PoseKind);block.SetFloat("_Height",DrownedForms.Height(activeForm));block.SetFloat("_Breath",(float)s.Elapsed);block.SetFloat("_Arrival",(float)System.Math.Max(0,s.Elapsed-manifestAt));body.SetPropertyBlock(block);
+            body.enabled=visibility>.005f;block.SetFloat("_Visibility",visibility);block.SetFloat("_Burn",burning?1-burnAge/HorrorTuning.Current.flareHitSeconds:0);block.SetFloat("_Style",d.PoseKind);block.SetFloat("_Height",DrownedForms.Height(activeForm));block.SetFloat("_Breath",(float)s.Elapsed);block.SetFloat("_Arrival",(float)System.Math.Max(0,s.Elapsed-manifestAt));body.SetPropertyBlock(block);
+            flareTarget.transform.localPosition=Vector3.up*DrownedForms.Height(activeForm)*.58f;bool wasHittable=flareTarget.AcceptsHit;flareTarget.AcceptsHit=body.enabled&&d.Phase==DrownedPhase.Manifest;if(flareTarget.AcceptsHit&&!wasHittable)flareTarget.ResetMotion();
             mist.enabled=body.enabled;mistBlock.SetFloat("_Visibility",visibility);mistBlock.SetFloat("_Clock",(float)s.Elapsed);mistBlock.SetFloat("_Height",DrownedForms.Height(activeForm));mistBlock.SetFloat("_FaceHeight",DrownedForms.FaceHeight(activeForm));mist.SetPropertyBlock(mistBlock);
         }
         public static Mesh BuildMesh()=>DrownedForms.Build(DrownedForm.SeaHag);

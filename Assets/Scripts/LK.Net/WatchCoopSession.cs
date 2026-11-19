@@ -240,6 +240,7 @@ namespace LighthouseKeepers.Net
                 }
                 if(recovery.KeeperDown(actor)&&c.action!=CoopAction.Retry&&c.action!=CoopAction.StatusRequest)return -1;
             }
+            if(c.action==CoopAction.KeeperBreath)return c.value==0&&poses.Sample(actor,out _)&&(watch as ICoopBreathView)?.BreathCommand(actor,c.pressed)==true?1:-1;
             if(c.action==CoopAction.Bed)
             {
                 if(!poses.Sample(actor,out var pose)||Vector3.Distance(pose.Head,watch.BedPosition)>=1.8f)return -1;

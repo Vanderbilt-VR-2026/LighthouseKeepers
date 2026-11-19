@@ -16,7 +16,6 @@ namespace LighthouseKeepers.Core.Progression
         [Range(.01f,1)] public float lanternStunCost = .15f;
         [Min(.5f)] public float lanternLowRange = .8f, lanternHighRange = 1.5f;
         public bool heavyRain = true;
-        public bool armSwingRun = true;
         public bool groundedHorror = true;
         [Range(30,120)] public float drownedIntervalSeconds = 60;
         [Range(4,15)] public float drownedVisibleSeconds = 12;

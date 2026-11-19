@@ -1,5 +1,5 @@
 Shader "Lighthouse/FlareGlow" {
-Properties { _BaseColor("Colour",Color)=(1,1,1,1) }
+Properties { _BaseColor("Colour",Color)=(1,1,1,1) _Radial("Particle falloff",Float)=0 }
 SubShader { Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" "RenderType"="Transparent" }
 Pass { Blend SrcAlpha One ZWrite Off Cull Off
 HLSLPROGRAM
@@ -7,9 +7,12 @@ HLSLPROGRAM
 #pragma fragment frag
 #pragma multi_compile_instancing
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+CBUFFER_START(UnityPerMaterial)
+half4 _BaseColor; half _Radial;
+CBUFFER_END
 struct A { float4 positionOS:POSITION; float2 uv:TEXCOORD0; half4 color:COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
 struct V { float4 positionCS:SV_POSITION; float2 uv:TEXCOORD0; half4 color:COLOR; UNITY_VERTEX_OUTPUT_STEREO };
-V vert(A i) { V o;UNITY_SETUP_INSTANCE_ID(i);UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);o.positionCS=TransformObjectToHClip(i.positionOS.xyz);o.uv=i.uv;o.color=i.color;return o; }
-half4 frag(V i):SV_Target { UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);half edge=pow(saturate(1-abs(i.uv.y*2-1)),2);return half4(i.color.rgb,i.color.a*edge); }
+V vert(A i) { V o;UNITY_SETUP_INSTANCE_ID(i);UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);o.positionCS=TransformObjectToHClip(i.positionOS.xyz);o.uv=i.uv;o.color=i.color*_BaseColor;return o; }
+half4 frag(V i):SV_Target { UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);half edge=pow(saturate(1-abs(i.uv.y*2-1)),2);edge=lerp(edge,pow(saturate(1-length(i.uv*2-1)),2),_Radial);return half4(i.color.rgb,i.color.a*edge); }
 ENDHLSL
 } } }

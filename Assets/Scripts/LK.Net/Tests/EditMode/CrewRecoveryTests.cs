@@ -35,6 +35,11 @@ namespace LighthouseKeepers.Net.Tests {
   static V Get<V>(object o,string n)=>(V)o.GetType().GetProperty(n).GetValue(o);
   static object Watch(){var c=Resources.Load("M3Campaign");return Activator.CreateInstance(T("WatchState"),c.GetType().GetField("nights").GetValue(c),3,Resources.Load<S4Tuning>("S4Tuning"),Resources.Load<S4M2Tuning>("S4M2Tuning"),Resources.Load<ImmersionTuning>("ImmersionTuning"));}
   [Test]public void RescueLossReportsItsCauseAndRetryRestoresTheNight(){var w=Watch();var r=Get<CrewRecoveryState>(w,"Recovery");r.Down(1);r.Tick(41);Assert.True(Get<bool>(w,"Failed"));Assert.That(Get<string>(w,"FailureMessage"),Does.Contain("keeper"));Assert.False(Get<bool>(w,"Complete"));Call(w,"Retry");Assert.False(Get<bool>(w,"Failed"));Assert.False(Get<CrewRecoveryState>(w,"Recovery").AnyDown);}
+  [Test]public void BreathLeaseReplicatesByDutyExpiresAndResetsOnRetry(){
+   var h=Watch();Assert.True((bool)Call(h,"SetBreath",2,true));Assert.AreEqual(2,Get<int>(h,"BreathMask"));
+   var g=Watch();Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",.1f)));Assert.AreEqual(2,Get<int>(g,"BreathMask"));Assert.False((bool)Call(g,"SetBreath",1,true));
+   Call(h,"TickBreath",.5f);Assert.Zero(Get<int>(h,"BreathMask"));Call(h,"SetBreath",1,true);Call(h,"Retry");Assert.Zero(Get<int>(h,"BreathMask"));
+  }
   [Test]public void WatchLateJoinRestoresDownProgressAndRetryClearsIt(){var h=Watch();var r=Get<CrewRecoveryState>(h,"Recovery");r.SetHumans(3);r.Down(2);Hold(r,1,2,1);var packet=Call(h,"Capture",.1f);Assert.True((bool)Call(packet,"Valid"));var g=Watch();Call(g,"SetRemoteReplica",true);Assert.True((bool)Call(g,"ApplyRemote",packet));Assert.True(Get<CrewRecoveryState>(g,"Recovery").Downed(2));Assert.Greater(Get<CrewRecoveryState>(g,"Recovery").Slot(2).progress,.3f);Call(h,"Retry");Assert.False(Get<CrewRecoveryState>(h,"Recovery").AnyDown);}
  }
 }

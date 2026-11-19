@@ -84,3 +84,9 @@ Unity Progressive GPU baked both direct and indirect static light into the exist
 Removed powered maps during blackout, window spill, material self-emission on ordinary station parts/hands, and excess ambient/reflection fill. One 0.30-intensity / 0.85 m baked fixture per room; ceiling support measured against the existing scene. Lamp filaments dim smoothly without rapid flashing. LOW range 0.8 m, HIGH 1.5 m. Handheld-light budget unchanged (up to two), fixed fixtures create no realtime lights.
 
 Rebake: powered two maps / 4.82 MiB, emergency two maps / 4.49 MiB; 444 probes, 2,227 static renderers. Map selection was exercised on power return/loss in Play Mode. 3 quality + 8 lantern + 3 equipment checks pass. Reviewed actual off/LOW/HIGH and fixture captures in `artifacts/s5/grip-darkness`; these are Editor images, not a Quest GPU measurement. Quest readability, safe navigation in darkness, and sustained GPU/CPU cost remain pending.
+
+## Control/weapon pass — bounded flare exception (#143)
+
+The existing moving lantern lights are now 85° forward spots (55° inner cone), with a small feathered cookie. They follow the held tool, not the head. No light is added for this conversion. Day 1 oil remains unlimited in both modes.
+
+The flare adds **one temporary shadowless point light**, range 3 m, intensity 2.2 while flying; a dimmer remnant fades over 8 s after impact. One shared pistol has one round per night. This is an explicit exception to the regular moving-lantern budget: at most two lanterns plus one temporary flare light. Fixed House/tower bulbs remain baked. The projectile uses bounded line meshes, one impact mesh and at most 24 short-lived sparks; no bloom. The checked-in Quest asset now retains Per Pixel (limit 2), matching the existing build-time baseline rather than reverting to vertex lighting between builds. Peak-storm Quest GPU/CPU with two HIGH lanterns + flare is NOT VERIFIED and stays in DEVICE CHECKS PENDING.

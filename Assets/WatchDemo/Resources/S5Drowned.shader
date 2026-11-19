@@ -1,5 +1,5 @@
 Shader "Lighthouse/S5 Drowned oilskin" {
- Properties {_Visibility("Visibility",Range(0,1))=1 _Breath("Breath",Float)=0 _Arrival("Appearance age",Float)=0 _Style("Encounter",Float)=0 _Height("Height",Float)=1.84}
+ Properties {_Burn("Flare burn",Range(0,1))=0 _Visibility("Visibility",Range(0,1))=1 _Breath("Breath",Float)=0 _Arrival("Appearance age",Float)=0 _Style("Encounter",Float)=0 _Height("Height",Float)=1.84}
  SubShader {Tags {"RenderPipeline"="UniversalPipeline" "Queue"="AlphaTest" "RenderType"="TransparentCutout"} Pass {
  ZWrite On Cull Off AlphaToMask On
  HLSLPROGRAM
@@ -9,7 +9,7 @@ Shader "Lighthouse/S5 Drowned oilskin" {
  #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
  #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
  CBUFFER_START(UnityPerMaterial)
- float _Visibility,_Breath,_Arrival,_Style,_Height;
+ float _Burn,_Visibility,_Breath,_Arrival,_Style,_Height;
  CBUFFER_END
  struct A {float4 positionOS:POSITION;float3 normalOS:NORMAL;half4 colour:COLOR;float2 detail:TEXCOORD0;UNITY_VERTEX_INPUT_INSTANCE_ID};
  struct V {float4 positionCS:SV_POSITION;float3 normal:TEXCOORD0;float3 world:TEXCOORD1;half4 colour:COLOR;half kind:TEXCOORD2;float3 local:TEXCOORD3;UNITY_VERTEX_OUTPUT_STEREO};
@@ -44,6 +44,7 @@ Shader "Lighthouse/S5 Drowned oilskin" {
  if(i.kind>.5&&i.kind<1.5){half vein=pow(saturate(sin(i.local.y*48+sin(i.local.x*28)*2+i.local.z*33)),18);colour*=1-vein*.10;}
 
  if(i.kind<1.5)colour+=min(reflection,half3(.4,.4,.4))*.075*wet+rim*half3(.012,.025,.028);
+ colour+=_Burn*half3(1.8,.045,.008)*(0.6+0.4*wet);
  return half4(colour,_Visibility);}
  ENDHLSL
  }}

@@ -27,7 +27,7 @@ namespace LighthouseKeepers.WatchDemo
         AudioSource Source(string name,AudioClip clip,bool loop,string bus)
         {var g=new GameObject(name);g.transform.SetParent(transform,false);var a=g.AddComponent<AudioSource>();a.playOnAwake=false;a.spatialBlend=0;a.clip=clip;a.loop=loop;a.volume=0;a.priority=100;KeeperAudioMix.Route(a,bus);return a;}
         // Bounded deterministic synthesis; original sounds, no external sample or licence dependency.
-        static AudioClip Clip(string name,float seconds,int kind)
+        public static AudioClip Clip(string name,float seconds,int kind)
         {
             const int rate=44100;var data=new float[Mathf.RoundToInt(seconds*rate)];var rng=new System.Random(713+kind);float low=0;
             for(int i=0;i<data.Length;i++){
@@ -44,7 +44,7 @@ namespace LighthouseKeepers.WatchDemo
             bool silent=watch.Sleeping||s.Failed||s.Fear==null;
             float target=silent?0:s.Fear.ForActor(actor);shown=Mathf.MoveTowards(shown,target,Time.unscaledDeltaTime*2);
             if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.LocalFear=silent?0:shown;
-            breath.volume=silent||s.Fear.HoldingBreath(actor)?0:Mathf.Lerp(.07f,.2f,shown);breath.pitch=Mathf.Lerp(1,2.2f,shown);
+            breath.volume=silent||s.BreathHeld((int)watch.CurrentDuty)||s.Fear.HoldingBreath(actor)?0:Mathf.Lerp(.07f,.2f,shown);breath.pitch=Mathf.Lerp(1,2.2f,shown);
             bool apparition=s.Drowned!=null&&DrownedAppearance.Sightings&&s.Drowned.Phase==DrownedPhase.Manifest;
             hunted.volume=silent||apparition?0:Mathf.InverseLerp(.6f,1,shown)*.16f;
             if(silent){secondAt=-1;return;}
