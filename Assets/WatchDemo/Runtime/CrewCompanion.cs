@@ -18,6 +18,7 @@ namespace LighthouseKeepers.WatchDemo {
   bool lessonMode;CompanionCommand lessonReturn;float possession,lift;readonly RaycastHit[] ceilingHits=new RaycastHit[24];
   public Vector3 OfferedHand=>model&&model.FullBody&&model.FullBody.Joint("LeftHand")?model.FullBody.Joint("LeftHand").position:Position+Vector3.up;
   public Vector3 Position=>actor?actor.transform.position:Vector3.zero;
+  public Transform ActorTransform=>Active?actor.transform:null;
   public bool HeadlampPose(out Vector3 eye,out Vector3 forward){eye=default;forward=Vector3.forward;if(!Active||!model||!model.FullBody)return false;var joint=model.FullBody.Joint("Head");if(!joint)return false;eye=model.FullBody.EyePosition;forward=joint.forward;return true;}
   public CrewDuty Duty=>watch.CurrentDuty==CrewDuty.Lightkeeper?CrewDuty.Machinist:CrewDuty.Lightkeeper;
   public CompanionCommand Command=>command;

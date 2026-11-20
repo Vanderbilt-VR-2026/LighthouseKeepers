@@ -52,6 +52,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         public Transform Target(KeeperStep step)
         {
+            if(step==KeeperStep.HelpPartner)return watch.GetComponent<CrewCompanion>()?.ActorTransform;
             if(step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick)return watch.GetComponent<ArrivalEquipment>()?.Target;
             if(step==KeeperStep.RescueF2){var recovery=watch.GetComponent<CrewRecovery>();var hand=recovery?recovery.Target(watch.State.Recovery.LessonVictim):null;if(hand)return hand.transform;}
             if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return engine?engine.transform:null;
@@ -87,7 +88,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(f.cap)f.cap.localRotation=Quaternion.Slerp(f.cap.localRotation,Quaternion.Euler(0,0,f.completed?45:0),1-Mathf.Exp(-10*Time.deltaTime));
             }
             wasFirstDay=state.Day==1;
-            if(target&&untouched>=state.Master.idleTickSeconds&&Time.time>=nextTick&&!watch.ObjectivePresentationBlocked){nextTick=Time.time+4;sound.transform.position=target.position;if(click)sound.PlayOneShot(click,.14f);}
+            if(current!=KeeperStep.HelpPartner&&target&&untouched>=state.Master.idleTickSeconds&&Time.time>=nextTick&&!watch.ObjectivePresentationBlocked){nextTick=Time.time+4;sound.transform.position=target.position;if(click)sound.PlayOneShot(click,.14f);}
         }
         void OnDestroy(){if(material)Destroy(material);}
     }

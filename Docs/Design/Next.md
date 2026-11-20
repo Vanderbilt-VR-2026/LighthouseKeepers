@@ -2,7 +2,7 @@
 
 Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-BODYBELT1 / LK-Lab-Coop-v57**; both players need this version. APK `003a8cbe` was installed on the connected Quest, checksum verified, and not launched. Never launch it automatically.
 
-The source has a subsequent belt-lookup boundary cleanup that is **not** in that APK. It preserves the same waist behavior and protocol; rebuild before the next delivery. The muted full EditMode audit passed **708/715** with the same seven failing cases as the previous baseline. The new direct networking dependency found during this audit was removed. [Comparison](../Verification/S5/BodyBelt/suite-comparison.json).
+The source has subsequent belt-lookup and Owen-guidance changes that are **not** in that APK; rebuild before the next delivery. The Owen objective now shows his actual floor, and the portable walkie instruction doesn't invent a floor. A staged scene check passed all 11 location/target checks. The latest full EditMode run passed **711/716** with five baseline failures remaining; two outdated objective assertions were reconciled with the clearer wording and non-button actions, and missing companion/walkie locations were added. [Evidence](../Verification/S5/CompanionGuidance/README.md). A final small pole-hint guard changed after that full run; 41 focused objective/voice checks passed afterward.
 
 The user confirmed the briefing works and reported floating tool holders, flashlight clipping failure, unclear wrench/partner roles, a dim generator-room lamp, and missing B reminders. They now want the handheld flashlight replaced with an automatically available, 35% brighter headlamp on hard hats for both keepers. [Playtest notes](../Playtests/2026-11-19-headlamp-feedback.md).
 
@@ -14,7 +14,7 @@ The radio and wrench holders now follow the animated hip with separate slots; th
 
 1. Continue the stair audit before changing the scene: a disposable sweep found a narrow possible F2 liner adjustment, but also one F3 route-edge intersection and five F3 work-position intersections. The latter positions describe an older radio/forecast layout, while the current F3 is the bedroom. Map them against the real bunk, inspect F2 rail/liner contact and baked-light implications, then test the actual route in both directions before choosing any geometry or metadata fix. [Sweep](../Verification/S5/StairClearance/README.md). No scene was saved by the audit.
 2. Continue campaign work in the preceding checkpoint below. The nightmare ceiling-crawl visual fixture now uses the headlamp and its **11 staged checks passed**; [captures](../Verification/S5/NightmareFoundation/CeilingCrawl/Headlamp/README.md) show the child still looks like a stylized prototype. The bedtime nightmare remains disabled pending an unstaged full night, visual improvement and headset acceptance.
-3. Keep worn lighting, holder placement, comfort and GPU on the device checklist. Build and install future completed steps when authorized, without launching.
+3. Build the current source and install without launching if the Quest is connected and the game isn't currently running; don't interrupt a headset playtest. Keep worn lighting, holder placement, comfort and GPU on the device checklist.
 
 ## Exact commands
 

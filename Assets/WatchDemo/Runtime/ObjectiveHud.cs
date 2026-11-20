@@ -21,8 +21,10 @@ namespace LighthouseKeepers.WatchDemo
   public static bool PromptWrenchDown(bool repaired,bool held)=>repaired&&held;
   public static int StationFloor(string station)=>station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
   public static int FloorAt(float y)=>y<3.4f?1:y<6.7f?2:y<10?3:4;
+  public static int KeeperFloor(Vector3 feet)=>feet.z< -4.4f&&feet.y<3.3f?0:FloorAt(feet.y+1.3f);
   public static string FloorDirection(int target,int here,string gap=" ")=>target==0?KeeperStrings.Get("floor.house"):string.Format(PlayerStrings.Get(target>here?"integrated.floorUp":target<here?"integrated.floorDown":"integrated.floorHere"),target);
-  string FloorCaption(int value)=>FloorDirection(watch.State.Director!=null?ObjectiveDirector.Floor((KeeperStep)value):StationFloor(value>=0?watch.State.Definition.tasks[value].stationId:"BED"),FloorAt(head.position.y));
+  public static string LocationLine(string where,int target,int here)=>string.IsNullOrEmpty(where)?"":target<0?where:where+" · "+FloorDirection(target,here);
+  string FloorCaption(int value){int target=watch.State.Director!=null?watch.InstructionFloor((KeeperStep)value):StationFloor(value>=0?watch.State.Definition.tasks[value].stationId:"BED");return target<0?ObjectiveDirector.Location((KeeperStep)value):FloorDirection(target,FloorAt(head.position.y));}
   void Place(){var q=ObjectiveHudSettings.Facing(head.rotation);root.SetPositionAndRotation(head.position+q*Vector3.forward*ObjectiveHudSettings.Distance,q);}
   void LateUpdate(){if(!root||!head||group.alpha<=0)return;var q=ObjectiveHudSettings.Facing(head.rotation);float blend=1-Mathf.Exp(-Time.unscaledDeltaTime*5);root.SetPositionAndRotation(Vector3.Lerp(root.position,head.position+q*Vector3.forward*ObjectiveHudSettings.Distance,blend),Quaternion.Slerp(root.rotation,q,blend));}
   void Reveal(float seconds,bool place=false){bool hidden=until<=Time.unscaledTime;until=Mathf.Max(until,Time.unscaledTime+seconds);if(hidden||place)Place();}
@@ -118,11 +120,11 @@ namespace LighthouseKeepers.WatchDemo
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
    line.localScale=new Vector3(Mathf.Clamp01((Time.unscaledTime-changed)/.4f),1,1);
    string station=s.Director!=null?ObjectiveDirector.Job((KeeperStep)index):index>=0&&index<s.Definition.tasks.Length?s.Definition.tasks[index].stationId:"BED";
-   int target=s.Director!=null?ObjectiveDirector.Floor((KeeperStep)index):station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
+   int target=s.Director!=null?watch.InstructionFloor((KeeperStep)index):station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
    int here=FloorAt(head.position.y);
    if(lastFloor!=here||lastTarget!=target||lastLocationStep!=index){
     lastFloor=here;lastTarget=target;lastLocationStep=index;
-    if(s.Director!=null){var where=ObjectiveDirector.Location((KeeperStep)index);floor.text=string.IsNullOrEmpty(where)?"":where+" · "+FloorDirection(target,here);}
+    if(s.Director!=null){var where=ObjectiveDirector.Location((KeeperStep)index);floor.text=LocationLine(where,target,here);}
     else floor.text=FloorDirection(target,here);
    }
    if(!guidance)guidance=GetComponent<DirectorPresentation>();

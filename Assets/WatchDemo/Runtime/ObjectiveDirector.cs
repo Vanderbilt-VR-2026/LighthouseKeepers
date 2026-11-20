@@ -229,10 +229,10 @@ namespace LighthouseKeepers.WatchDemo
             if(step>=KeeperStep.BeaconLight&&step<=KeeperStep.BeaconWipe)return WatchState.BeaconStation;
             return step==KeeperStep.Sleep?"BED":"";
         }
-        public static int Floor(KeeperStep step){if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return 2;if(step==KeeperStep.ReadCode||step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick)return 0;string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
+        public static int Floor(KeeperStep step){if(step==KeeperStep.HelpPartner||step==KeeperStep.ReadyShip)return -1;if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return 2;if(step==KeeperStep.ReadCode||step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick)return 0;string id=Job(step);return step==KeeperStep.AwaitRescue||step==KeeperStep.ReviveKeeper?1:id==WatchState.PipeStation?1:id==WatchState.GeneratorStation||id=="BREAKER"?2:id=="BED"?3:4;}
         public static string Location(KeeperStep step)
         {
-            string key=step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick?"where.kit":step==KeeperStep.ReadCode?"where.telegram":step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
+            string key=step==KeeperStep.HelpPartner?"where.partner":step==KeeperStep.ReadyShip?"where.walkie":step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick?"where.kit":step==KeeperStep.ReadCode?"where.telegram":step==KeeperStep.GrabWrench?"where.workbench":step==KeeperStep.Fuel?"where.fuel":"where."+Job(step);
             return KeeperStrings.Has(key)?KeeperStrings.Get(key):"";
         }
         public static string Button(KeeperStep step)=>step==KeeperStep.HelpPartner?"":step==KeeperStep.ReadyShip||step==KeeperStep.LanternWick?"TRIGGER":step==KeeperStep.GatherF2||step==KeeperStep.WatchPartner||step==KeeperStep.AwaitRescueF2||step==KeeperStep.AwaitRescue||step==KeeperStep.None||step==KeeperStep.Lost||step==KeeperStep.Complete||step==KeeperStep.CheckFuel||step==KeeperStep.ReadCode||step==KeeperStep.KeepLight?"":step==KeeperStep.RadioTransmit?"TRIGGER":"GRIP";
