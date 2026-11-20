@@ -11,3 +11,5 @@ The following capture was inspected to check the modeled torso, separate wrench 
 Network for this step: `LK-S5-BODYBELT1 / LK-Lab-Coop-v57`. Both keepers must update. Worn grip reach, clipping while moving/crouching, comfort and performance still require Quest testing.
 
 Quest APK from source `003a8cbe` was built, installed and hash-verified without launching: SHA-256 `4f1e07e96cbc8a82b2eb1a6688de231262443302e9ea4b1644aec7677eb4f3c3`. ARM64, package ID, VR intent category, APK signature and archive integrity were checked. This is installation evidence, not a headset playtest.
+
+After the APK was installed, the source was cleaned up to supply the active hip through a local presentation bridge, avoiding a new direct gameplay-to-network dependency. The same 21 simulated grip/attachment checks passed. A muted full EditMode run passed **708/715**: [comparison](suite-comparison.json). The same seven cases failed as in the earlier baseline. The objective-length test now encounters the clearer wrench wording first; the existing networking-boundary test again reports only its original five references. This cleanup is not in the installed APK.

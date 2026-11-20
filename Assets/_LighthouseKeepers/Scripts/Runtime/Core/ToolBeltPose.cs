@@ -3,6 +3,8 @@ namespace LighthouseKeepers.Core {
  public enum ToolBeltSlot {Radio,Flashlight,Wrench}
  public static class ToolBeltPose {
   public const float SnapReach=.18f;
+  // Local body presentation supplies its animated hip without a gameplay-to-network dependency.
+  public static System.Func<Transform> TrackedHips;
   // Positions are relative to the animated Hips joint, not the HMD. The fallback
   // uses the avatar's reference eye/hip spacing and its .18 m body offset.
   public static Vector3 HipOffset(ToolBeltSlot slot)=>slot==ToolBeltSlot.Radio?new Vector3(.24f,.09f,.02f):new Vector3(-.24f,.09f,-.035f);

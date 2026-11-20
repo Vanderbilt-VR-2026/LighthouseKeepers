@@ -5,14 +5,13 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using LighthouseKeepers.Core;
 using LighthouseKeepers.Interaction;
 using LighthouseKeepers.Gameplay.Interaction;
-using LighthouseKeepers.Net;
 namespace LighthouseKeepers.WatchDemo {
  [DefaultExecutionOrder(900)]public sealed class KeeperToolBelt:MonoBehaviour {
   public Transform Head {get;private set;}
   public WatchDemoController Watch {get;private set;}
   readonly List<BeltTool> tools=new();readonly List<(Transform clip,ToolBeltSlot slot)> clips=new();
   public static void Create(WatchDemoController watch,Transform head,XRGrabInteractable wrench){var belt=watch.gameObject.AddComponent<KeeperToolBelt>();belt.Watch=watch;belt.Head=head;belt.Build(wrench);}
-  Transform Hips {get {var body=LocalKeeperBody.Current?LocalKeeperBody.Current.Body:null;return body&&body.gameObject.activeInHierarchy?body.Joint("Hips"):null;}}
+  Transform Hips=>ToolBeltPose.TrackedHips?.Invoke();
   public Vector3 Position(ToolBeltSlot slot){var hip=Hips;return hip?ToolBeltPose.Position(slot,hip):ToolBeltPose.Position(slot,Head.position,Head.rotation);}
   public Quaternion Rotation(ToolBeltSlot slot){var hip=Hips;return ToolBeltPose.Rotation(slot,hip?hip.rotation:Head.rotation);}
   public Quaternion Facing {get {var hip=Hips;var rotation=hip?hip.rotation:Head.rotation;return Quaternion.Euler(0,rotation.eulerAngles.y,0);}}

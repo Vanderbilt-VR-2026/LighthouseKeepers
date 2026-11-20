@@ -19,7 +19,7 @@ public class BodyBeltCheck:MonoBehaviour {
   var presenter=LocalKeeperBody.Current;Check(presenter!=null,"local body presenter exists");presenter.enabled=false;presenter.Bind(rig);
   for(int i=0;i<100;i++){presenter.Present(true,1f/72);yield return null;}
   Check(presenter.Body&&presenter.Body.gameObject.activeInHierarchy,"tracked local body active");
-  var hip=presenter.Body.Joint("Hips");
+  var hip=presenter.Body.Joint("Hips");Check(ToolBeltPose.TrackedHips!=null&&ToolBeltPose.TrackedHips()==hip,"body presentation exposes the active hip");
   foreach(var slot in new[]{ToolBeltSlot.Radio,ToolBeltSlot.Wrench})Check(Vector3.Distance(belt.Position(slot),ToolBeltPose.Position(slot,hip))<.003f,slot+" clip is anchored to animated hip");
   Check(!FindObjectsByType<Transform>(FindObjectsSortMode.None).Any(t=>t.name=="Flashlight waist clip"),"no flashlight holder");
   var wrench=FindAnyObjectByType<WatchPipeRepair>().wrench;

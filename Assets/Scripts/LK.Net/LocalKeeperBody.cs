@@ -1,6 +1,7 @@
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR;
+using LighthouseKeepers.Core;
 
 namespace LighthouseKeepers.Net
 {
@@ -18,14 +19,14 @@ namespace LighthouseKeepers.Net
         public static LocalKeeperBody Current=>instance;
         public CrewHumanoidAvatar Body=>body;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void Reset()=>instance=null;
+        static void Reset(){instance=null;ToolBeltPose.TrackedHips=null;}
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install()
         {
-            if(instance)return;
-            instance=new GameObject("Local keeper body presentation").AddComponent<LocalKeeperBody>();
-            DontDestroyOnLoad(instance.gameObject);
+            if(!instance){instance=new GameObject("Local keeper body presentation").AddComponent<LocalKeeperBody>();DontDestroyOnLoad(instance.gameObject);}
+            ToolBeltPose.TrackedHips=ActiveHips;
         }
+        static Transform ActiveHips(){var avatar=instance?instance.Body:null;return avatar&&avatar.gameObject.activeInHierarchy?avatar.Joint("Hips"):null;}
         void LateUpdate()
         {
             if(!XRSettings.isDeviceActive){Hide();return;}
