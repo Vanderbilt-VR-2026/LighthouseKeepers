@@ -12,7 +12,7 @@ The radio and wrench holders now follow the animated hip with separate slots; th
 
 ## Next
 
-1. Resume the campaign work in the preceding checkpoint below. The older nightmare ceiling-crawl visual fixture uses `WatchLantern` and must be adapted to the headlamp before it can be rerun; the bedtime nightmare itself is still disabled pending its acceptance checks.
+1. Resume the campaign work in the preceding checkpoint below. The nightmare ceiling-crawl visual fixture now uses the headlamp and its **11 staged checks passed**; [captures](../Verification/S5/NightmareFoundation/CeilingCrawl/Headlamp/README.md) show the child still looks like a stylized prototype. The bedtime nightmare remains disabled pending an unstaged full night, visual improvement and headset acceptance.
 2. Keep worn lighting, holder placement, comfort and GPU on the device checklist. Build and install future completed steps when authorized, without launching.
 
 ## Exact commands
