@@ -35,8 +35,8 @@ namespace LighthouseKeepers.Net.Tests
    Assert.AreEqual("High",Call(lamps,"Wick",0).ToString());Assert.AreEqual(Call(Get<object>(h,"Lanterns"),"Oil",0),Call(lamps,"Oil",0));
    Assert.False((bool)Call(g,"CycleLantern",0));Tick(g,30);Assert.AreEqual(Call(Get<object>(h,"Lanterns"),"Oil",0),Call(lamps,"Oil",0));
    var frame=snap.GetType().GetField("lanterns").GetValue(snap);frame.GetType().GetField("oil0").SetValue(frame,float.NaN);Assert.False((bool)Call(g,"ApplyRemote",snap));
-   Call(h,"Retry");Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.AreEqual(1f,Call(Get<object>(g,"Lanterns"),"Oil",0));Assert.AreEqual("Off",Call(Get<object>(g,"Lanterns"),"Wick",0).ToString());
-   Assert.NotNull(Get<object>(New(1),"Lanterns"),"Day 1 teaches the flashlight before station work");
+   Call(h,"Retry");Assert.True((bool)Call(g,"ApplyRemote",Call(h,"Capture",0f)));Assert.AreEqual(1f,Call(Get<object>(g,"Lanterns"),"Oil",0));Assert.AreEqual("High",Call(Get<object>(g,"Lanterns"),"Wick",0).ToString());
+   Assert.NotNull(Get<object>(New(1),"Lanterns"),"Day 1 starts with the helmet light available");
   }
   [TestCase(1)][TestCase(2)][TestCase(3)][TestCase(4)][TestCase(5)]
     public void AuthoredJobsAreAvailableTogetherAndRetryRestoresArrival(int day)

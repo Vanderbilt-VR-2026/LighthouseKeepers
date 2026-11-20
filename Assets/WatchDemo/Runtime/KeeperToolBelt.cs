@@ -13,13 +13,13 @@ namespace LighthouseKeepers.WatchDemo {
   public static void Create(WatchDemoController watch,Transform head,XRGrabInteractable wrench){var belt=watch.gameObject.AddComponent<KeeperToolBelt>();belt.Watch=watch;belt.Head=head;belt.Build(wrench);}
   void Build(XRGrabInteractable wrench){
    var parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();
-   foreach(var slot in new[]{ToolBeltSlot.Flashlight,ToolBeltSlot.Wrench}){
+   foreach(var slot in new[]{ToolBeltSlot.Wrench}){
     var t=M2StationParts.Root(slot+" waist clip",transform,Vector3.zero);clips.Add((t,slot));
     parts.Part("Leather tool loop",t,new Vector3(0,-.035f,-.025f),new Vector3(.065f,.075f,.016f),parts.Dark);
     parts.Part("Brass retention clip",t,new Vector3(.028f,0,0),new Vector3(.012f,.040f,.045f),parts.Brass);
     parts.Part("Lower loop",t,new Vector3(0,-.055f,0),new Vector3(.065f,.012f,.05f),parts.Dark);
    }
-   Add(wrench,ToolBeltSlot.Wrench);for(int i=0;i<2;i++)if(Watch.Lantern(i))Add(Watch.Lantern(i).Grab,ToolBeltSlot.Flashlight);
+   Add(wrench,ToolBeltSlot.Wrench);
   }
   void Add(XRGrabInteractable grab,ToolBeltSlot slot){var tool=grab.gameObject.AddComponent<BeltTool>();tool.Initialize(this,grab,slot);tools.Add(tool);}
   public bool Occupied(ToolBeltSlot slot,BeltTool except){foreach(var tool in tools)if(tool&&tool!=except&&tool.BeltSlot==slot&&tool.Carried)return true;return false;}

@@ -16,10 +16,11 @@ namespace LighthouseKeepers.Net.Tests
   object New(int day,KeeperGameMode mode){var c=Resources.Load("M3Campaign");var s=Activator.CreateInstance(T("WatchState"),c.GetType().GetField("nights").GetValue(c),day,Resources.Load("S4Tuning"),Resources.Load("S4M2Tuning"),Resources.Load("ImmersionTuning"),mode);watches.Add(s);return s;}
   [TearDown]public void Cleanup(){foreach(var s in watches)Call(s,"DisposeSurvival");watches.Clear();}
   [TestCase(KeeperGameMode.Campaign)][TestCase(KeeperGameMode.Survival)]
-  public void EveryNightUsesUnlimitedFuelAndReplicasKeepWicks(KeeperGameMode mode){
+  public void EveryNightStartsBothHeadlampsAndReplicasKeepThemOn(KeeperGameMode mode){
    for(int day=1;day<=5;day++){
     var host=New(day,mode);var lamps=Get<LanternState>(host,"Lanterns");Assert.NotNull(lamps);Assert.True(lamps.UnlimitedOil);Assert.True(lamps.FocusOnly);
-    Call(host,"CycleLantern",0);lamps.Tick(3600);Assert.AreEqual(1,lamps.Oil(0));
+    Assert.AreEqual(LanternWick.High,lamps.Wick(0));Assert.AreEqual(LanternWick.High,lamps.Wick(1));
+    Assert.False((bool)Call(host,"CycleLantern",0));lamps.Tick(3600);Assert.AreEqual(1,lamps.Oil(0));
     var guest=New(day,mode);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(host,"Capture",.1f)));
     var remote=Get<LanternState>(guest,"Lanterns");Assert.True(remote.UnlimitedOil);Assert.AreEqual(LanternWick.High,remote.Wick(0));Assert.False(remote.Cycle(0));
    }
@@ -37,6 +38,15 @@ namespace LighthouseKeepers.Net.Tests
    Assert.Greater(t.lanternHighIntensity,t.lanternLowIntensity*4);Assert.Less(h.lanternHighBeamAngle,h.lanternBeamAngle*.5f);
    Assert.Less(h.lanternHighBeamInner,h.lanternHighBeamAngle);Assert.Less(h.lanternBeamInner,h.lanternBeamAngle);
    Assert.IsNull(Resources.Load<Shader>("RoomFilamentLit"),"Unsupported runtime replacement must not ship in Resources");
+  }
+  [Test]public void HeadlampUsesFocused35PercentBrighterBeam(){
+   Assert.That(Sprint5Tuning.Current.lanternHighIntensity,Is.EqualTo(36f*1.35f).Within(.001f));
+   var aim=T("KeeperHeadlamps").GetMethod("InBeam");
+   bool In(Vector3 p,Vector3 f,Vector3 target)=>(bool)aim.Invoke(null,new object[]{p,f,target,9f,16f});
+   Assert.True(In(Vector3.zero,Vector3.forward,new Vector3(0,0,4)));
+   Assert.False(In(Vector3.zero,Vector3.forward,new Vector3(2,0,4)));
+   Assert.False(In(Vector3.zero,Vector3.forward,new Vector3(0,0,10)));
+   Assert.False(In(Vector3.zero,Vector3.zero,new Vector3(0,0,4)));
   }
  }
 }
