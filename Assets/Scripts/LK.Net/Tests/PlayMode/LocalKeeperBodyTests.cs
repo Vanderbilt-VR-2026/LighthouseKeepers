@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Unity.XR.CoreUtils;
 using LighthouseKeepers.Gameplay.Interaction;
+using LighthouseKeepers.Core;
 
 namespace LighthouseKeepers.Net.Tests
 {
@@ -76,6 +77,26 @@ namespace LighthouseKeepers.Net.Tests
                 Assert.AreEqual(lp,leftWrist.position);Assert.AreEqual(rp,rightWrist.position);Assert.Less(Quaternion.Angle(lr,leftWrist.rotation),.001f);Assert.Less(Quaternion.Angle(rr,rightWrist.rotation),.001f);
                 Assert.Less(presenter.Body.Joint("LeftFoot").position.y,.3f);
                 var mesh=new Mesh();presenter.Body.Skin.BakeMesh(mesh);mesh.RecalculateBounds();Assert.Less(mesh.bounds.size.y,2.2f);Assert.Less(mesh.bounds.size.x,1.6f);Object.Destroy(mesh);
+            }
+            yield return null;
+        }
+        [UnityTest] public IEnumerator WaistSlotsFollowTheAnimatedBodyDuringTurnsAndCrouching()
+        {
+            foreach(float height in new[]{1.35f,1.65f,1.95f}){
+                Settle(height);
+                foreach(float yaw in new[]{0f,85f,180f,270f}){
+                    head.localRotation=Quaternion.Euler(35,yaw,0);
+                    for(int i=0;i<25;i++)presenter.Present(true,1f/72);
+                    var hip=presenter.Body.Joint("Hips");
+                    foreach(var slot in new[]{ToolBeltSlot.Radio,ToolBeltSlot.Wrench}){
+                        var p=ToolBeltPose.Position(slot,hip);
+                        Assert.Less(Vector3.Distance(hip.InverseTransformPoint(p),ToolBeltPose.HipOffset(slot)),.001f);
+                        Assert.IsTrue(ToolBeltPose.NearHost(slot,p,head.position,head.rotation),$"{slot} {height} {yaw}");
+                    }
+                }
+                Pose(height-.35f);for(int i=0;i<100;i++)presenter.Present(true,1f/72);
+                var crouched=presenter.Body.Joint("Hips");
+                Assert.IsTrue(ToolBeltPose.NearHost(ToolBeltSlot.Wrench,ToolBeltPose.Position(ToolBeltSlot.Wrench,crouched),head.position,head.rotation));
             }
             yield return null;
         }

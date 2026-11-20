@@ -15,6 +15,7 @@ namespace LighthouseKeepers.Net
         readonly KeeperStature stature=new();
         public float StandingHeight=>stature.Height;
         static LocalKeeperBody instance;
+        public static LocalKeeperBody Current=>instance;
         public CrewHumanoidAvatar Body=>body;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Reset()=>instance=null;

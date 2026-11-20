@@ -7,10 +7,11 @@ using LighthouseKeepers.Interaction;
 using LighthouseKeepers.Gameplay.Interaction;
 namespace LighthouseKeepers.WatchDemo
 {
+    [DefaultExecutionOrder(950)]
     public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease, INetworkPropCarry, INetworkBeltSlot
     {
         WatchDemoController watch;int index;XRGrabInteractable grab;INetworkPropStatus lease;Transform head;Renderer lamp;TextMesh status;MaterialPropertyBlock block;
-        bool trigger,previous,released,carried,taughtCarry;AudioSource carrySound;AudioClip carryClick;Transform beltClip,leftPalm,rightPalm;PhysicalGrip physicalGrip;
+        bool trigger,previous,released,carried,taughtCarry;AudioSource carrySound;AudioClip carryClick;Transform leftPalm,rightPalm;PhysicalGrip physicalGrip;KeeperToolBelt belt;
         public bool Carried=>carried;
         public ToolBeltSlot BeltSlot=>ToolBeltSlot.Radio;
         public void DropCarry(){if(carried)released=true;carried=false;}
@@ -64,13 +65,13 @@ namespace LighthouseKeepers.WatchDemo
             // A filtered source must live alone on its object in Unity, so keep
             // the holster click on a child that follows the radio at the same pose.
             carrySound=new GameObject("Radio holster sound").AddComponent<AudioSource>();carrySound.transform.SetParent(transform,false);carrySound.playOnAwake=false;carrySound.spatialBlend=1;carrySound.minDistance=.3f;carrySound.maxDistance=3;KeeperAudioMix.Route(carrySound,"SFX_World");carryClick=Resources.Load<AudioClip>("Hands/clunk");
-            if(index==0){beltClip=M2StationParts.Root("Right hip walkie belt clip",watch.transform,Vector3.zero);p.Part("Leather radio holster",beltClip,new Vector3(0,-.045f,0),new Vector3(.09f,.08f,.066f),p.Dark);p.Part("Brass belt clip",beltClip,new Vector3(.05f,0,0),new Vector3(.014f,.10f,.065f),p.Brass);}
         }
         void Activate(ActivateEventArgs e){if(!Held)return;trigger=true;if(watch.State.ScriptedPartner)watch.GetComponent<CrewCompanion>()?.RequestReport();}
         void Deactivate(DeactivateEventArgs e)=>trigger=false;
         void Release(SelectExitEventArgs e){trigger=false;Send(false);
             // Retain the existing prop lease while clipped; the host checks the carry pose at the belt.
-            if(head&&RadioBeltPose.Near(transform.position,head.position,head.rotation)&&!OtherOnBelt()){
+            if(!belt)belt=watch.GetComponent<KeeperToolBelt>();
+            if(head&&belt&&Vector3.Distance(transform.position,belt.Position(ToolBeltSlot.Radio))<=RadioBeltPose.Reach&&!OtherOnBelt()){
                 carried=true;released=false;body.isKinematic=true;
                 if(carryClick)carrySound.PlayOneShot(carryClick,.25f);
                 e.interactorObject.transform.GetComponentInParent<HandRig>()?.Pulse(.25f,.05f);
@@ -83,18 +84,18 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(lease==null)lease=GetComponent<INetworkPropStatus>();
             if(physicalGrip.HoldingHand){var h=physicalGrip.HoldingHand;h.SetToolGrip(h.Node==UnityEngine.XR.XRNode.LeftHand?leftPalm:rightPalm,new Vector3(0,-.052f,.050f));}
-            if(beltClip&&head)beltClip.SetPositionAndRotation(RadioBeltPose.Position(head.position,head.rotation),Quaternion.Euler(0,head.eulerAngles.y,0));
             bool allowed=CrewVoiceBridge.Current is ICrewVoiceCapture capture&&capture.MicrophoneAllowed&&!capture.Muted;
             bool active=allowed&&WantsTransmit;
             if(watch.State.Coop!=null&&(Time.unscaledTime>=nextSend||active!=previous)&&(active||previous))Send(active);
             bool transmitting=watch.RadioTransmitter(index)!=0;
             block.Clear();var c=transmitting?new Color(.15f,.7f,.25f):new Color(.25f,.13f,.03f);block.SetColor("_BaseColor",c);block.SetColor("_EmissionColor",transmitting?c*.7f:c*.12f);lamp.SetPropertyBlock(block);
             status.text=PlayerStrings.Get(transmitting?"connected.transmitting":"connected.radioUse");
-            if(carried&&head&&!Held){body.isKinematic=true;transform.SetPositionAndRotation(RadioBeltPose.Position(head.position,head.rotation),Quaternion.Euler(0,head.eulerAngles.y,0));return;}
+            if(carried&&head&&!Held)return;
             if(Held||lease!=null&&lease.Owner!=0)unheld=0;else unheld+=Time.deltaTime;
             if((lease==null||lease.CanSimulateReleased)&&!Held){body.isKinematic=!released;
                 if(transform.position.y< -2){if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,homeRotation);unheld=0;}}
         }
+        void LateUpdate(){if(!carried||!head||Held)return;if(!belt)belt=watch.GetComponent<KeeperToolBelt>();if(!belt)return;body.isKinematic=true;transform.SetPositionAndRotation(belt.Position(ToolBeltSlot.Radio),belt.Facing);}
         void OnDisable(){if(previous&&watch)Send(false);trigger=false;}
     }
 }

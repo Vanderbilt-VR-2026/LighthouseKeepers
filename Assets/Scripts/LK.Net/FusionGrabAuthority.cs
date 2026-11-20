@@ -183,7 +183,7 @@ namespace LighthouseKeepers.Net
         {
             if(!binding.SupportsCarry||!poses.Sample(actor,out var pose))return false;
             foreach(var other in props.Values)if(other&&other!=binding&&other.SupportsCarry&&other.BeltSlot==binding.BeltSlot&&other.IsCarried&&leases.Find(other.Id)?.Owner==actor)return false;
-            return binding.BeltSlot==ToolBeltSlot.Radio?RadioBeltPose.Near(position,pose.Head,pose.HeadRotation):ToolBeltPose.Near(binding.BeltSlot,position,pose.Head,pose.HeadRotation,ToolBeltPose.HostTolerance);
+            return ToolBeltPose.NearHost(binding.BeltSlot,position,pose.Head,pose.HeadRotation);
         }
         bool AllowRequest(int actor)
         {

@@ -1,16 +1,17 @@
 # Active checkpoint — headlamp and playtest feedback (#147, #123)
 
-Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-HEADLAMP1 / LK-Lab-Coop-v56**; both players need this version. Quest currently has the older `bf86ddd0` build; no new APK delivered. Never launch it automatically.
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-BODYBELT1 / LK-Lab-Coop-v57**; both players need this version. Quest currently has the older `bf86ddd0` build; no new APK delivered. Never launch it automatically.
 
 The user confirmed the briefing works and reported floating tool holders, flashlight clipping failure, unclear wrench/partner roles, a dim generator-room lamp, and missing B reminders. They now want the handheld flashlight replaced with an automatically available, 35% brighter headlamp on hard hats for both keepers. [Playtest notes](../Playtests/2026-11-19-headlamp-feedback.md).
 
-Done: objective wording explains the wrench/pipe and paired valve roles; the transient objective header identifies B and spaced reminders recur after inactivity. **18 focused Editor checks passed** (5 recall, 5 campaign order, 8 valve). The F2 bulb now has the same minimum filament level as F1 once powered, and stays off without mains. Both keepers wear hard hats with automatic, head-tracked beams at 135% of the old intensity. The old handheld flashlight and pickup steps are absent; the host still checks the Drowned's line of sight. **70 focused EditMode checks**, **2 headlamp PlayMode checks**, **16 avatar EditMode and 3 local-body PlayMode checks** passed. Both beams appeared in a muted two-Editor Photon session, with staged paired engine and pipe instructions; this was not a full night, voice, rejoin, or physical-grip check. [Evidence](../Verification/S5/Headlamp/README.md). Worn visual matching and performance remain headset checks.
+Done: objective wording explains the wrench/pipe and paired valve roles; the transient objective header identifies B and spaced reminders recur after inactivity. **18 focused Editor checks passed** (5 recall, 5 campaign order, 8 valve). The F2 bulb now has the same minimum filament level as F1 once powered, and stays off without mains. Both keepers wear hard hats with automatic, head-tracked beams at 135% of the old intensity. The old handheld flashlight and pickup steps are absent; the host still checks the Drowned's line of sight. **70 focused EditMode checks**, **2 headlamp PlayMode checks**, **16 avatar EditMode and 3 local-body PlayMode checks** passed. Both beams appeared in a muted two-Editor Photon session, with staged paired engine and pipe instructions. [Evidence](../Verification/S5/Headlamp/README.md).
+
+The radio and wrench holders now follow the animated hip with separate slots; the host checks a bounded waist region while allowing the body's turn lag. **41 focused EditMode checks, 4 local-body PlayMode checks, 20 simulated XR hand/attachment checks and a two-Editor guest carry/regrip/release check** passed. [Evidence](../Verification/S5/BodyBelt/README.md). Neither session was a full night or a worn headset check.
 
 ## Next
 
-1. Anchor the wrench and radio holders to the body belt, including grab/release and co-op host validation; prevent floating, overlap and clipping while turning/crouching. No flashlight waist slot remains.
-2. Run focused EditMode and muted Play Mode/co-op checks; build the current source, install on the connected Quest if available, **do not launch**. Inspect Editor captures; worn lighting, holder placement, comfort and GPU remain device checks. Commit and push each completed step; update PR #89 and this file.
-3. Resume the campaign work in the preceding checkpoint below.
+1. Build the current source, install on the connected Quest if available, **do not launch**. Worn lighting, holder placement, comfort and GPU remain device checks. Update PR #89 and this file.
+2. Resume the campaign work in the preceding checkpoint below.
 
 ## Exact commands
 
@@ -21,7 +22,7 @@ python3 artifacts/s5/modes/check.py ToolBeltTests RadioBeltTests ObjectiveRecall
 /Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb devices
 ```
 
-Use Unity 6000.3.23f1, muting every Editor before Play/tests. For peer sessions, back up the peer worktree to a fresh path before syncing; `artifacts/s5/final-scaring/peer-backup-16` is the last backup. Use fresh build/delivery paths based on `artifacts/s5/tool-belt/build.py` and `deliver.py`.
+Use Unity 6000.3.23f1, muting every Editor before Play/tests. For peer sessions, back up the peer worktree to a fresh path before syncing; `artifacts/s5/final-scaring/peer-backup-17` is the last backup. Use fresh build/delivery paths based on `artifacts/s5/tool-belt/build.py` and `deliver.py`.
 
 ## DEVICE CHECKS PENDING
 
