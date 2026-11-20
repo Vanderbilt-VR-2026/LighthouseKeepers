@@ -6,6 +6,6 @@ In a muted staged Play Mode scene, the actual objective text and target followed
 
 Focused objective/voice tests passed after the final pole-hint guard (**41 checks**). Just before that one-line guard, a muted full EditMode run passed **711/716** with no new failing cases compared with the earlier 708/715 run: [comparison](suite-comparison.json). The two objective tests were updated because current guidance can use up to 10 short words/48 characters and some steps are observation or portable-tool instructions, not button presses; the previously missing Owen and walkie locations were implemented rather than omitted from the checks. Five unrelated baseline failures remain. A new full run after the guard has not been claimed.
 
-This change was committed after Quest APK `003a8cbe`; it is not in that installed APK until a newer build is delivered.
+Quest APK `c47cd351` includes this change and was installed without launching. Its local and device SHA-256 match: `b19f61f2327c3d343a3207f71ac0dfb8353f617368ab4589ce232baa6468a24a`. ARM64, the normal package ID, VR category, signature and archive integrity were checked. This is installation evidence, not a headset playtest.
 
 Reproduce with a muted Unity 6000.3.23f1 Editor and Pipeline bridge: `python3 Docs/Verification/S5/CompanionGuidance/fixtures/run.py "$PWD/artifacts/s5/companion-guide/repro"` (use a fresh output directory).

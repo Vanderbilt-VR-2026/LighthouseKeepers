@@ -1,8 +1,8 @@
 # Active checkpoint — headlamp and playtest feedback (#147, #123)
 
-Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-BODYBELT1 / LK-Lab-Coop-v57**; both players need this version. APK `003a8cbe` was installed on the connected Quest, checksum verified, and not launched. Never launch it automatically.
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-BODYBELT1 / LK-Lab-Coop-v57**; both players need this version. APK `c47cd351` was installed on the connected Quest, checksum verified, and not launched. Never launch it automatically.
 
-The source has subsequent belt-lookup and Owen-guidance changes that are **not** in that APK; rebuild before the next delivery. The Owen objective now shows his actual floor, and the portable walkie instruction doesn't invent a floor. A staged scene check passed all 11 location/target checks. The latest full EditMode run passed **711/716** with five baseline failures remaining; two outdated objective assertions were reconciled with the clearer wording and non-button actions, and missing companion/walkie locations were added. [Evidence](../Verification/S5/CompanionGuidance/README.md). A final small pole-hint guard changed after that full run; 41 focused objective/voice checks passed afterward.
+The installed build includes the belt-lookup cleanup and Owen-guidance changes. The Owen objective now shows his actual floor, and the portable walkie instruction doesn't invent a floor. A staged scene check passed all 11 location/target checks. The latest full EditMode run passed **711/716** with five baseline failures remaining; two outdated objective assertions were reconciled with the clearer wording and non-button actions, and missing companion/walkie locations were added. [Evidence](../Verification/S5/CompanionGuidance/README.md). A final small pole-hint guard changed after that full run; 41 focused objective/voice checks passed afterward.
 
 The user confirmed the briefing works and reported floating tool holders, flashlight clipping failure, unclear wrench/partner roles, a dim generator-room lamp, and missing B reminders. They now want the handheld flashlight replaced with an automatically available, 35% brighter headlamp on hard hats for both keepers. [Playtest notes](../Playtests/2026-11-19-headlamp-feedback.md).
 
@@ -14,7 +14,7 @@ The radio and wrench holders now follow the animated hip with separate slots; th
 
 1. Continue the stair audit before changing the scene: a disposable sweep found a narrow possible F2 liner adjustment, but also one F3 route-edge intersection and five F3 work-position intersections. The latter positions describe an older radio/forecast layout, while the current F3 is the bedroom. Map them against the real bunk, inspect F2 rail/liner contact and baked-light implications, then test the actual route in both directions before choosing any geometry or metadata fix. [Sweep](../Verification/S5/StairClearance/README.md). No scene was saved by the audit.
 2. Continue campaign work in the preceding checkpoint below. The nightmare ceiling-crawl visual fixture now uses the headlamp and its **11 staged checks passed**; [captures](../Verification/S5/NightmareFoundation/CeilingCrawl/Headlamp/README.md) show the child still looks like a stylized prototype. The bedtime nightmare remains disabled pending an unstaged full night, visual improvement and headset acceptance.
-3. Build the current source and install without launching if the Quest is connected and the game isn't currently running; don't interrupt a headset playtest. Keep worn lighting, holder placement, comfort and GPU on the device checklist.
+3. Keep worn lighting, holder placement, comfort and GPU on the device checklist. For future builds, install without launching if the Quest is connected and the game isn't currently running; don't interrupt a headset playtest.
 
 ## Exact commands
 
@@ -23,12 +23,12 @@ cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
 git status --short --branch
 python3 artifacts/s5/modes/check.py ToolBeltTests RadioBeltTests ObjectiveRecallTests CampaignOrderTests LanternLightingTests M3RuntimeTests SurvivalModeTests
 /Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb devices
-/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Headlamp-003a8cbe.apk
+/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-CompanionGuide-c47cd351.apk
 ```
 
 Use Unity 6000.3.23f1, muting every Editor before Play/tests. For peer sessions, back up the peer worktree to a fresh path before syncing; `artifacts/s5/final-scaring/peer-backup-17` is the last backup. Use fresh build/delivery paths based on `artifacts/s5/tool-belt/build.py` and `deliver.py`.
 
-The installed APK is `Builds/LighthouseKeepers-Sprint5-Headlamp-003a8cbe.apk`, SHA-256 `4f1e07e96cbc8a82b2eb1a6688de231262443302e9ea4b1644aec7677eb4f3c3`. The APK has the normal package ID, ARM64, the Quest VR category and a verified signature; device and local hashes match. Later documentation-only commits do not change the APK contents.
+The installed APK is `Builds/LighthouseKeepers-Sprint5-CompanionGuide-c47cd351.apk`, SHA-256 `b19f61f2327c3d343a3207f71ac0dfb8353f617368ab4589ce232baa6468a24a`. The APK has the normal package ID, ARM64, the Quest VR category and a verified signature; device and local hashes match. Later documentation-only commits do not change the APK contents.
 
 ## DEVICE CHECKS PENDING
 
