@@ -85,8 +85,9 @@ namespace LighthouseKeepers.WatchDemo
   }
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
   public static bool RecallTeachingDue(int night,int previous,int current)=>night>=1&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)==0;
+  public static bool IdleRecallReminderDue(float now,float next,float changed,bool blocked)=>!blocked&&float.IsFinite(now)&&float.IsFinite(next)&&float.IsFinite(changed)&&now>=next&&now-changed>=30;
   public static void AcknowledgeRecallButton(){if(PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)!=0)return;PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
-  void Set(int value,string text){if(recallHints==0&&RecallTeachingDue(watch.State.Day,index,value)){recallHints++;tipUntil=Time.unscaledTime+5;}nextRecallHint=Time.unscaledTime+35;index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
+  void Set(int value,string text){if(recallHints==0&&RecallTeachingDue(watch.State.Day,index,value)){recallHints++;tipUntil=Time.unscaledTime+5;}nextRecallHint=Time.unscaledTime+60;index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
   string ActionTitle(int value)=>value==(int)KeeperStep.RadioCode&&watch.State.ScriptedPartner&&GetComponent<CrewCompanion>() is CrewCompanion helper&&!helper.CodeDelivered?KeeperStrings.Get("radio.askOwen"):watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
   string Title(int value){if(watch.State.Scare.Active&&GetComponent<NightmareScene>() is NightmareScene scene)return scene.Instruction;var step=(KeeperStep)value;if(ObjectiveDirector.Job(step)==WatchState.RadioStation&&step!=KeeperStep.ReadCode&&ObjectiveHud.FloorAt(head.position.y)!=4)return KeeperStrings.Get("radio.goF4");return ActionTitle(value);}
   void Update()
@@ -108,10 +109,10 @@ namespace LighthouseKeepers.WatchDemo
    if(Time.unscaledTime-built<.5f)Place();
    InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.secondaryButton,out bool b);
    int recallPress=recall.Input(b,Time.unscaledTime);
-   if(recallPress>0){AcknowledgeRecallButton();tipUntil=0;RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
+   if(recallPress>0){AcknowledgeRecallButton();tipUntil=0;nextRecallHint=Time.unscaledTime+90;RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
    bool recalling=recall.Visible(Time.unscaledTime);
    if(recalling){until=Mathf.Max(until,recall.Until);changed=Time.unscaledTime-1;}
-   if(recallHints<2&&Time.unscaledTime>=nextRecallHint&&Time.unscaledTime-changed>30&&!watch.Sleeping&&!s.Failed&&!watch.ObjectivePresentationBlocked){recallHints++;tipUntil=Time.unscaledTime+5;RevealFor(5);}
+   if(IdleRecallReminderDue(Time.unscaledTime,nextRecallHint,changed,watch.Sleeping||s.Failed||watch.ObjectivePresentationBlocked)){tipUntil=Time.unscaledTime+5;nextRecallHint=Time.unscaledTime+90;RevealFor(5);}
    recallTip.text=Time.unscaledTime<tipUntil?KeeperStrings.Get("hud.recallTeach"):"";partner.gameObject.SetActive(Time.unscaledTime>=tipUntil);
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
@@ -131,7 +132,7 @@ namespace LighthouseKeepers.WatchDemo
    if(near){inputIcon.Set(button=="TRIGGER");inputLabel.text=KeeperStrings.Get("input."+button);}
 
    if(s.Scare.Active&&GetComponent<NightmareScene>() is NightmareScene sceneInfo){floor.text=sceneInfo.Location;partner.text="";inputIcon.gameObject.SetActive(false);inputLabel.gameObject.SetActive(false);}
-   label.text=KeeperStrings.Get("duty."+watch.CurrentDuty);
+   label.text=string.Format(KeeperStrings.Get("hud.dutyRecall"),KeeperStrings.Get("duty."+watch.CurrentDuty));
    icon.Set(station);
    var nightmare=GetComponent<NightmareScene>();bool nightmareLine=s.Scare.Active&&nightmare;
    var lesson=watch.GetComponent<PossessionLesson>();bool sceneLine=s.Recovery.LessonActive&&lesson;

@@ -1,4 +1,37 @@
-# Active checkpoint — paired pipe work and campaign (#110, #112, #144)
+# Active checkpoint — headlamp and playtest feedback (#147, #123)
+
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-COOPPIPE1 / LK-Lab-Coop-v55**. Quest currently has the older `bf86ddd0` build; no new APK delivered. Never launch it automatically.
+
+The user confirmed the briefing works and reported floating tool holders, flashlight clipping failure, unclear wrench/partner roles, a dim generator-room lamp, and missing B reminders. They now want the handheld flashlight replaced with an automatically available, 35% brighter headlamp on hard hats for both keepers. [Playtest notes](../Playtests/2026-11-19-headlamp-feedback.md).
+
+Done: objective wording explains the wrench/pipe and paired valve roles; the transient objective header identifies B and spaced reminders recur after inactivity. **18 focused Editor checks passed** (5 recall, 5 campaign order, 8 valve). No headset claim.
+
+## Next
+
+1. Replace both keepers' beanies with hard hats and the portable flashlight interaction with head-mounted lights, 35% brighter, facing the tracked head. Preserve host-authoritative danger/stun, solo companion and co-op pose/ownership; remove obsolete pickup/holster prompts. Keep the light/shader budget and bump the protocol if synced behavior changes. Test both modes, local/remote/companion presentation, retry and rejoin.
+2. Anchor the wrench and radio holders to the body belt, including grab/release and co-op host validation; prevent floating, overlap and clipping while turning/crouching. No flashlight waist slot remains.
+3. Make the F2 bulb off without power and comparably bright to F1 when powered. Preserve the dark atmosphere, flicker and Quest budget; validate powered/blackout states.
+4. Run focused EditMode and muted Play Mode/co-op checks; build the current source, install on the connected Quest if available, **do not launch**. Inspect Editor captures; worn lighting, holder placement, comfort and GPU remain device checks. Commit and push each completed step; update PR #89 and this file.
+5. Resume the campaign work in the preceding checkpoint below.
+
+## Exact commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+git status --short --branch
+python3 artifacts/s5/modes/check.py ObjectiveRecallTests CampaignOrderTests PressureValveTests
+/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb devices
+```
+
+Use Unity 6000.3.23f1, muting every Editor before Play/tests. For peer sessions, back up the peer worktree to a fresh path before syncing; `artifacts/s5/final-scaring/peer-backup-15` is the last backup. Use fresh build/delivery paths based on `artifacts/s5/tool-belt/build.py` and `deliver.py`.
+
+## DEVICE CHECKS PENDING
+
+Headlamp brightness/direction, glare and 72 Hz GPU cost; hard-hat appearance for self/partner/Owen; radio and wrench holders while looking, turning and crouching; two-player tool ownership and voice; F2 light on/off/flicker; B reminder and objective clarity. Earlier campaign/nightmare acceptance remains below.
+
+---
+
+# Previous checkpoint — paired pipe work and campaign (#110, #112, #144)
 
 Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Source protocol **LK-S5-COOPPIPE1 / LK-Lab-Coop-v55**; both players must update together. No new APK has been built or installed; the Quest still has source `bf86ddd0`, not launched.
 

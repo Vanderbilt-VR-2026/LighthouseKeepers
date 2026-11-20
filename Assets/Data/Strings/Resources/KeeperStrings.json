@@ -6,7 +6,7 @@
     },
     {
       "key": "step.GrabWrench",
-      "text": "Hold GRIP — collect the wrench"
+      "text": "GRIP the wrench to repair the pipe"
     },
     {
       "key": "step.BoltA",
@@ -1582,7 +1582,7 @@
     },
     {
       "key": "step.HoldValve",
-      "text": "Hold red valve — beside F1 pipe"
+      "text": "Hold red valve — partner turns bolts"
     },
     {
       "key": "step.ClampValve",
@@ -1590,7 +1590,7 @@
     },
     {
       "key": "step.TightenBolt",
-      "text": "Tighten the active pipe bolt"
+      "text": "Turn pipe bolt — partner holds valve"
     },
     {
       "key": "connected.pressure",
@@ -1887,6 +1887,10 @@
     {
       "key": "hud.recallHeader",
       "text": "OBJECTIVE     B — RECALL"
+    },
+    {
+      "key": "hud.dutyRecall",
+      "text": "{0}  ·  PRESS B FOR OBJECTIVE"
     },
     {
       "key": "hud.recallTeach",

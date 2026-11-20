@@ -30,5 +30,13 @@ namespace LighthouseKeepers.Net.Tests {
     Assert.False((bool)due.Invoke(null,new object[]{1,2,3}));Assert.False((bool)due.Invoke(null,new object[]{5,3,4}));
    } finally {PlayerPrefs.SetInt(key,old);PlayerPrefs.SetInt("LK.Objective.BTaught",legacy);}
   }
+  [Test] public void IdleRecallRemindersRespectSpacingAndBlockedPresentation() {
+   var method=T("ObjectiveHud").GetMethod("IdleRecallReminderDue");
+   bool Due(float now,float next,float changed,bool blocked)=>(bool)method.Invoke(null,new object[]{now,next,changed,blocked});
+   Assert.False(Due(59,60,0,false));Assert.True(Due(60,60,0,false));
+   Assert.False(Due(150,150,125,false),"A recently changed objective should not immediately nag.");
+   Assert.False(Due(150,150,0,true),"A briefing, loss, or sleep must not reveal a reminder.");
+   Assert.True(Due(150,150,0,false));Assert.False(Due(float.NaN,150,0,false));
+  }
  }
 }
