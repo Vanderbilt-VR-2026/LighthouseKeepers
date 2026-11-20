@@ -24,12 +24,15 @@ def band(name,levels,mat,region,weights,sides=32):
 
 
 def cap():
-    # Fitted rib-knit watch cap, without the old projecting peak or badge.
-    band('Beanie folded cuff',[(1.722,.092,.097),(1.735,.099,.104),(1.768,.099,.104),(1.778,.093,.098)],'Knit','Head',{'Head':1},40)
-    band('Beanie wool crown',[(1.760,.096,.101),(1.790,.099,.103),(1.821,.088,.092),(1.844,.058,.061),(1.853,.005,.005)],'Knit','Head',{'Head':1},40)
-    for i in range(48):
-        a=2*math.pi*i/48
-        F.line('Knitted cuff rib',[(.100*math.cos(a),y,.105*math.sin(a)) for y in (1.732,1.75,1.769)],.0011,'Trim','Head',{'Head':1},4)
+    # Rounded working helmet and fitted brow lamp, all weighted to the existing head.
+    # The wearer sees the beam from the tracked HMD, not this first-person mesh.
+    band('Steel helmet brim',[(1.735,.111,.116),(1.744,.116,.121),(1.751,.115,.120),(1.756,.105,.111)],'Helmet','Head',{'Head':1},40)
+    band('Steel helmet shell',[(1.748,.103,.109),(1.779,.105,.110),(1.812,.096,.101),(1.844,.073,.077),(1.862,.042,.045),(1.869,.004,.004)],'Helmet','Head',{'Head':1},40)
+    band('Lamp retaining strap',[(1.765,.106,.111),(1.777,.106,.111)],'Rubber','Head',{'Head':1},40)
+    box('Headlamp mounting plate',(0,1.786,.113),(.065,.058,.018),'Metal','Head',{'Head':1})
+    F.ellipsoid('Headlamp housing',(0,1.789,.128),(.037,.037,.018),'Rubber','Head',{'Head':1},20,10)
+    F.ellipsoid('Headlamp rim',(0,1.789,.142),(.031,.031,.010),'Metal','Head',{'Head':1},20,10)
+    F.ellipsoid('Headlamp glass',(0,1.789,.149),(.024,.024,.004),'EyeWhite','Head',{'Head':1},20,10)
     for side in (-1,1):
         F.ellipsoid('Grey temple',(side*.076,1.691,-.012),(.012,.037,.053),'Hair','Head',{'Head':1},16,8)
 
@@ -193,7 +196,7 @@ def main():
        'Knit':((.15,.21,.21),.9),'Scarf':((.20,.29,.26),.92),'Leather':((.50,.33,.18),.63),
        'LeatherSeam':((.23,.14,.08),.7),'Rubber':((.095,.09,.07),.62),'Sole':((.033,.034,.03),.85),
        'Mouth':((.055,.012,.015),.5),'Tear':((.17,.012,.014),.22),'IrisLight':((.33,.38,.24),.3),
-       'Metal':((.49,.36,.17),.38)}
+       'Metal':((.49,.36,.17),.38),'Helmet':((.25,.29,.23),.64)}
     M.MATERIALS={n:F.surface(n,c,r,.13,.001 if n not in ('EyeWhite','Iris','Skin') else .0002) for n,(c,r) in colours.items()}
     expressive_face();cap();clothes();F.arms_and_hands();legs()
     # The sleeve itself overlaps the jacket shoulder. Detached sphere caps read as armour.
