@@ -1,6 +1,6 @@
 # Active checkpoint — headlamp and playtest feedback (#147, #123)
 
-Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-BODYBELT1 / LK-Lab-Coop-v57**; both players need this version. Quest currently has the older `bf86ddd0` build; no new APK delivered. Never launch it automatically.
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-BODYBELT1 / LK-Lab-Coop-v57**; both players need this version. APK `003a8cbe` was installed on the connected Quest, checksum verified, and not launched. Never launch it automatically.
 
 The user confirmed the briefing works and reported floating tool holders, flashlight clipping failure, unclear wrench/partner roles, a dim generator-room lamp, and missing B reminders. They now want the handheld flashlight replaced with an automatically available, 35% brighter headlamp on hard hats for both keepers. [Playtest notes](../Playtests/2026-11-19-headlamp-feedback.md).
 
@@ -10,8 +10,8 @@ The radio and wrench holders now follow the animated hip with separate slots; th
 
 ## Next
 
-1. Build the current source, install on the connected Quest if available, **do not launch**. Worn lighting, holder placement, comfort and GPU remain device checks. Update PR #89 and this file.
-2. Resume the campaign work in the preceding checkpoint below.
+1. Resume the campaign work in the preceding checkpoint below. The older nightmare ceiling-crawl visual fixture uses `WatchLantern` and must be adapted to the headlamp before it can be rerun; the bedtime nightmare itself is still disabled pending its acceptance checks.
+2. Keep worn lighting, holder placement, comfort and GPU on the device checklist. Build and install future completed steps when authorized, without launching.
 
 ## Exact commands
 
@@ -20,9 +20,12 @@ cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
 git status --short --branch
 python3 artifacts/s5/modes/check.py ToolBeltTests RadioBeltTests ObjectiveRecallTests CampaignOrderTests LanternLightingTests M3RuntimeTests SurvivalModeTests
 /Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb devices
+/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Headlamp-003a8cbe.apk
 ```
 
 Use Unity 6000.3.23f1, muting every Editor before Play/tests. For peer sessions, back up the peer worktree to a fresh path before syncing; `artifacts/s5/final-scaring/peer-backup-17` is the last backup. Use fresh build/delivery paths based on `artifacts/s5/tool-belt/build.py` and `deliver.py`.
+
+The installed APK is `Builds/LighthouseKeepers-Sprint5-Headlamp-003a8cbe.apk`, SHA-256 `4f1e07e96cbc8a82b2eb1a6688de231262443302e9ea4b1644aec7677eb4f3c3`. The APK has the normal package ID, ARM64, the Quest VR category and a verified signature; device and local hashes match. Later documentation-only commits do not change the APK contents.
 
 ## DEVICE CHECKS PENDING
 
