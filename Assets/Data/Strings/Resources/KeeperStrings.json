@@ -6,7 +6,7 @@
     },
     {
       "key": "step.GrabWrench",
-      "text": "Hold GRIP — collect the wrench"
+      "text": "GRIP the wrench to repair the pipe"
     },
     {
       "key": "step.BoltA",
@@ -46,23 +46,23 @@
     },
     {
       "key": "step.RadioPower",
-      "text": "Switch on the radio"
+      "text": "Grip the POWER lever; lift it"
     },
     {
       "key": "step.RadioTune",
-      "text": "Tune to {0}"
+      "text": "Turn radio dial to {0} MHz"
     },
     {
       "key": "step.RadioCode",
-      "text": "Press {0}"
+      "text": "Enter the telegram code"
     },
     {
       "key": "step.RadioTransmit",
-      "text": "Hold mic trigger to transmit"
+      "text": "Grip console mic; HOLD trigger"
     },
     {
       "key": "step.BeaconLight",
-      "text": "Light the beacon"
+      "text": "Go outside F4; grip beacon switch"
     },
     {
       "key": "step.BeaconAlign",
@@ -90,7 +90,7 @@
     },
     {
       "key": "step.PumpOff",
-      "text": "Switch PUMP off"
+      "text": "Free capacity: switch PUMP off"
     },
     {
       "key": "step.BeaconOn",
@@ -98,7 +98,7 @@
     },
     {
       "key": "step.BeaconOff",
-      "text": "Switch BEACON off"
+      "text": "Free capacity: switch BEACON off"
     },
     {
       "key": "step.RadioOn",
@@ -106,7 +106,7 @@
     },
     {
       "key": "step.RadioOff",
-      "text": "Switch RADIO off"
+      "text": "Free capacity: switch RADIO off"
     },
     {
       "key": "step.LightsOn",
@@ -114,7 +114,7 @@
     },
     {
       "key": "step.LightsOff",
-      "text": "Switch LIGHTS off"
+      "text": "Free capacity: switch LIGHTS off"
     },
     {
       "key": "job.STN_PIPE_LEAK",
@@ -149,6 +149,10 @@
       "text": "Keep the light. Survive till dawn."
     },
     {
+      "key": "board.loop.five",
+      "text": "Finish jobs. Sleep. Survive five nights."
+    },
+    {
       "key": "board.loop",
       "text": "Finish jobs. Sleep. Survive three nights."
     },
@@ -158,7 +162,7 @@
     },
     {
       "key": "board.night",
-      "text": "NIGHT {0}"
+      "text": "NIGHT {0}     B: OBJECTIVE"
     },
     {
       "key": "partner",
@@ -1566,7 +1570,7 @@
     },
     {
       "key": "story.logbook",
-      "text": "Third watch.\nThe light answered back."
+      "text": "14 September\nTwo keepers on watch.\nW. Brennick / T. Merrow"
     },
     {
       "key": "bunk.keeperTwo",
@@ -1578,7 +1582,7 @@
     },
     {
       "key": "step.HoldValve",
-      "text": "Hold the pipe pressure valve"
+      "text": "Hold red valve — partner turns bolts"
     },
     {
       "key": "step.ClampValve",
@@ -1586,15 +1590,15 @@
     },
     {
       "key": "step.TightenBolt",
-      "text": "Tighten the active pipe bolt"
+      "text": "Turn pipe bolt — partner holds valve"
     },
     {
       "key": "connected.pressure",
-      "text": "PRESSURE"
+      "text": "PRESSURE RELEASE"
     },
     {
       "key": "connected.pressureHeld",
-      "text": "Pressure held"
+      "text": "HOLD — PARTNER TIGHTENS"
     },
     {
       "key": "connected.clampSet",
@@ -1606,7 +1610,7 @@
     },
     {
       "key": "connected.radioUse",
-      "text": "HEAD OR TRIGGER"
+      "text": "GRIP · HOLD TRIGGER TO TALK"
     },
     {
       "key": "connected.transmitting",
@@ -1881,8 +1885,72 @@
       "text": "Objective height"
     },
     {
+      "key": "hud.recallHeader",
+      "text": "OBJECTIVE     B — RECALL"
+    },
+    {
+      "key": "hud.dutyRecall",
+      "text": "{0}  ·  PRESS B FOR OBJECTIVE"
+    },
+    {
       "key": "hud.recallTeach",
-      "text": "Press B to see your objective"
+      "text": "Press B: show current objective"
+    },
+    {
+      "key": "m3.night1",
+      "text": "The Leak"
+    },
+    {
+      "key": "m3.night2",
+      "text": "Blackout"
+    },
+    {
+      "key": "m3.night3",
+      "text": "The Warning"
+    },
+    {
+      "key": "m3.night4",
+      "text": "Everything Breaks"
+    },
+    {
+      "key": "m3.night5",
+      "text": "The Long Night"
+    },
+    {
+      "key": "m3.demo",
+      "text": "Demo (6 min)"
+    },
+    {
+      "key": "m3.ship.maryEllen",
+      "text": "Mary Ellen"
+    },
+    {
+      "key": "m3.ship.northStar",
+      "text": "North Star"
+    },
+    {
+      "key": "m3.ship.meridian",
+      "text": "Meridian"
+    },
+    {
+      "key": "wiring.box0",
+      "text": "HOUSE FEED"
+    },
+    {
+      "key": "wiring.box1",
+      "text": "F1 PUMP"
+    },
+    {
+      "key": "wiring.box2",
+      "text": "F2 GENERATOR"
+    },
+    {
+      "key": "wiring.box3",
+      "text": "F3 LIGHTS"
+    },
+    {
+      "key": "wiring.box4",
+      "text": "BEACON CIRCUIT"
     },
     {
       "key": "where.workbench",
@@ -1906,7 +1974,7 @@
     },
     {
       "key": "where.STN_BEACON_CONTROL",
-      "text": "Beacon platform"
+      "text": "Outside on Floor 4 — balcony"
     },
     {
       "key": "where.BED",
@@ -2009,24 +2077,818 @@
       "text": "Red can · FLOOR 2"
     },
     {
-      "key": "wiring.box0",
-      "text": "HOUSE FEED"
+      "key": "menu.heartbeatOn",
+      "text": "Heartbeat haptics: On"
     },
     {
-      "key": "wiring.box1",
-      "text": "F1 PUMP"
+      "key": "menu.heartbeatOff",
+      "text": "Heartbeat haptics: Off"
     },
     {
-      "key": "wiring.box2",
-      "text": "F2 GENERATOR"
+      "key": "loss.ship",
+      "text": "The {0} struck the rocks."
     },
     {
-      "key": "wiring.box3",
-      "text": "F3 LIGHTS"
+      "key": "board.ships",
+      "text": "SHIPS"
     },
     {
-      "key": "wiring.box4",
-      "text": "BEACON CIRCUIT"
-    }
+      "key": "step.KeepLight",
+      "text": "GRIP wheel; move hand around rim"
+    },
+    {
+      "key": "where.SHIP",
+      "text": "Beacon wheel, Floor 4"
+    },
+    {
+      "key": "board.shipLoss",
+      "text": "Flood or shipwreck: night lost."
+    },
+    {
+      "key": "beacon.shipAim",
+      "text": "KEEP BEAM ON SHIP"
+    },
+    {
+      "key": "beacon.shipHold",
+      "text": "HOLD STEADY"
+    },
+    {
+      "key": "beacon.shipSafe",
+      "text": "SHIP GUIDED"
+    },
+    {
+      "key": "menu.drownedOn",
+      "text": "Drowned sightings: On"
+    },
+    {
+      "key": "menu.drownedOff",
+      "text": "Drowned sightings: Off"
+    },
+    {
+      "key": "flare.rack",
+      "text": "EMERGENCY FLARES"
+    },
+    {
+      "key": "flare.input",
+      "text": "GRIP HANDLE · TRIGGER FIRES"
+    },
+    {
+      "key": "flare.loaded",
+      "text": "ONE SHOT EACH NIGHT"
+    },
+    {
+      "key": "flare.spent",
+      "text": "SPENT — REPLENISHED AT DAWN"
+    },
+    {
+      "key": "radio.102",
+      "text": "Hold A while moving to run."
+    },
+    {
+      "key": "radio.file.102",
+      "text": "keeper_run"
+    },
+    {
+      "key": "radio.103",
+      "text": "One flare on the bench. Save it for a clear shot."
+    },
+    {
+      "key": "radio.file.103",
+      "text": "keeper_flare"
+    },
+    {
+      "key": "radio.104",
+      "text": "I heard that too. Keep moving, keeper."
+    },
+    {
+      "key": "radio.file.104",
+      "text": "keeper_watched"
+    },
+    {
+      "key": "story.orders.title",
+      "text": "KETTLE ROCK LIGHT"
+    },
+    {
+      "key": "story.orders.body",
+      "text": "STANDING ORDERS\n\nRule 14\n\nThis station shall be kept by TWO keepers at all hours. The machinery cannot be worked single-handed in weather.\n\nSaltmere Board of Lights\n1874 (amended 1919)"
+    },
+    {
+      "key": "story.letter.title",
+      "text": "To the keepers of Kettle Rock"
+    },
+    {
+      "key": "story.letter.body",
+      "text": "The Lucy Gale and her forty souls thank you for the night of 14th September.\n\nCapt. R. Hale"
+    },
+    {
+      "key": "story.engineLog.title",
+      "text": "ENGINE LOG"
+    },
+    {
+      "key": "story.engineLog.body",
+      "text": "3 Aug 1942\nTank drained overnight. No leak. Oily hand marks on the cap. Small hand.\n— W.B.\n\n19 Aug\nAgain. Taught the boy the engine. Told him: never come down here alone after dark. He laughed."
+    },
+    {
+      "key": "story.tomLetter.title",
+      "text": "Da —"
+    },
+    {
+      "key": "story.tomLetter.body",
+      "text": "Walter says it's two of us because of the engine. That's not why, is it? He won't go below after dark without me. Nor me without him. I'm not scared. I'm only asking.\n\n— Tom"
+    },
+    {
+      "key": "m3.ship.northernStar",
+      "text": "Northern Star"
+    },
+    {
+      "key": "m3.ship.halcyon",
+      "text": "Halcyon"
+    },
+    {
+      "key": "m3.ship.saintBrendan",
+      "text": "Saint Brendan"
+    },
+    {
+      "key": "m3.ship.gannet",
+      "text": "Gannet"
+    },
+    {
+      "key": "m3.ship.wexfordLass",
+      "text": "Wexford Lass"
+    },
+    {
+      "key": "m3.ship.kittiwake",
+      "text": "Kittiwake"
+    },
+    {
+      "key": "m3.ship.albionRose",
+      "text": "Albion Rose"
+    },
+    {
+      "key": "m3.ship.providence",
+      "text": "Providence"
+    },
+    {
+      "key": "lantern.oil",
+      "text": "LAMP OIL"
+    },
+    {
+      "key": "lantern.controls",
+      "text": "FLASHLIGHT\nGRIP handle · TRIGGER on / off"
+    },
+    {
+      "key": "duty.None",
+      "text": "OBJECTIVE"
+    },
+    {
+      "key": "duty.Lightkeeper",
+      "text": "LIGHTKEEPER"
+    },
+    {
+      "key": "duty.Machinist",
+      "text": "MACHINIST"
+    },
+    {
+      "key": "lobby.dutyTitle",
+      "text": "CHOOSE YOUR DUTY"
+    },
+    {
+      "key": "lobby.Lightkeeper",
+      "text": "LIGHTKEEPER"
+    },
+    {
+      "key": "lobby.Machinist",
+      "text": "MACHINIST"
+    },
+    {
+      "key": "lobby.LightkeeperWork",
+      "text": "Ships · beacon · radio"
+    },
+    {
+      "key": "lobby.MachinistWork",
+      "text": "Engine · pumps · repairs"
+    },
+    {
+      "key": "lobby.dutyOpen",
+      "text": "AVAILABLE"
+    },
+    {
+      "key": "lobby.dutyYou",
+      "text": "YOU"
+    },
+    {
+      "key": "lobby.dutySwap",
+      "text": "SWAP REQUESTED — CHOOSE TO AGREE"
+    },
+    {
+      "key": "lobby.dutyPending",
+      "text": "Swap requested. Partner must agree."
+    },
+    {
+      "key": "lobby.dutyHint",
+      "text": "Both keepers can use every tool."
+    },
+    {
+      "key": "step.ReadCode",
+      "text": "House telegram: read code to partner"
+    },
+    {
+      "key": "step.RadioCodeLocal",
+      "text": "Enter the code on the telegram"
+    },
+    {
+      "key": "step.RadioCodeRelay",
+      "text": "Press your partner’s code in order"
+    },
+    {
+      "key": "where.telegram",
+      "text": "Telegram by the House job board"
+    },
+    {
+      "key": "floor.house",
+      "text": "HOUSE"
+    },
+    {
+      "key": "code.telegram",
+      "text": "SALTMERE HARBOR · NIGHT {0}"
+    },
+    {
+      "key": "code.share",
+      "text": "MACHINIST — relay these buttons IN ORDER"
+    },
+    {
+      "key": "code.local",
+      "text": "CALL CODE — ENTER IN ORDER"
+    },
+    {
+      "key": "code.symbol",
+      "text": "{0} {1}"
+    },
+    {
+      "key": "code.button",
+      "text": "{0}\n{1}"
+    },
+    {
+      "key": "label.Code label 0",
+      "text": "1 RED"
+    },
+    {
+      "key": "label.Code label 1",
+      "text": "2 AMBER"
+    },
+    {
+      "key": "label.Code label 2",
+      "text": "3 BLUE"
+    },
+    {
+      "key": "label.Code label 3",
+      "text": "4 GREEN"
+    },
+    {
+      "key": "companion.orders",
+      "text": "Partner orders"
+    },
+    {
+      "key": "companion.command.Work",
+      "text": "Work your duty"
+    },
+    {
+      "key": "companion.command.Follow",
+      "text": "Follow me"
+    },
+    {
+      "key": "companion.command.Wait",
+      "text": "Wait here"
+    },
+    {
+      "key": "companion.command.Help",
+      "text": "Help here"
+    },
+    {
+      "key": "companion.name",
+      "text": "OWEN"
+    },
+    {
+      "key": "companion.follow",
+      "text": "I'M HERE"
+    },
+    {
+      "key": "companion.wait",
+      "text": "WAITING HERE"
+    },
+    {
+      "key": "companion.blocked",
+      "text": "Coming around"
+    },
+    {
+      "key": "companion.valveGoing",
+      "text": "GOING TO THE VALVE"
+    },
+    {
+      "key": "companion.valve",
+      "text": "VALVE HELD"
+    },
+    {
+      "key": "companion.codeGoing",
+      "text": "FETCHING THE TELEGRAM"
+    },
+    {
+      "key": "companion.code",
+      "text": "TONIGHT’S CODE"
+    },
+    {
+      "key": "loss.rescue",
+      "text": "A keeper was lost. Try the watch again."
+    },
+    {
+      "key": "step.AwaitRescue",
+      "text": "Hold out your left hand"
+    },
+    {
+      "key": "step.ReviveKeeper",
+      "text": "Grip your partner’s left hand"
+    },
+    {
+      "key": "where.RESCUE",
+      "text": "Floor 1 — by the pipe"
+    },
+    {
+      "key": "job.RESCUE",
+      "text": "Rescue"
+    },
+    {
+      "key": "rescue.drill",
+      "text": "DEV: rescue drill (down me)"
+    },
+    {
+      "key": "companion.rescueGoing",
+      "text": "I'M COMING"
+    },
+    {
+      "key": "companion.rescuing",
+      "text": "HOLD ON"
+    },
+    {
+      "key": "briefing.stamp",
+      "text": "SALTMERE BOARD OF LIGHTS · RELIEF DUTY · 1942"
+    },
+    {
+      "key": "briefing.reopen",
+      "text": "READ THE DUTY BRIEFING"
+    },
+    {
+      "key": "briefing.back",
+      "text": "BACK"
+    },
+    {
+      "key": "briefing.skip",
+      "text": "SKIP BRIEFING"
+    },
+    {
+      "key": "briefing.next",
+      "text": "NEXT"
+    },
+    {
+      "key": "briefing.finish",
+      "text": "FINISH BRIEFING"
+    },
+    {
+      "key": "briefing.title.0",
+      "text": "TWO KEEPERS. ONE LIGHT."
+    },
+    {
+      "key": "briefing.body.0",
+      "text": "Autumn, 1942. American supply ships depend on Kettle Rock Light to reach Saltmere through the Atlantic storms. One week ago, both keepers vanished; no one knows what happened to them. You are the replacement crew: keep the passage open, and find out what they left behind. Their last watch is still written in the logbook."
+    },
+    {
+      "key": "briefing.footer.0",
+      "text": "You are in the House. Read at your own pace; the watch waits for both keepers."
+    },
+    {
+      "key": "briefing.title.1",
+      "text": "YOUR WATCH, TOGETHER"
+    },
+    {
+      "key": "briefing.body.1",
+      "text": "<b>FLOOR 2 · RESTORE POWER</b>\nFuel the generator. Feed the circuits.\n\n<b>FLOOR 1 · STOP THE FLOOD</b>\nRepair the pipe. Keep the pump running.\n\n<b>FLOOR 4 · RADIO AND BEACON</b>\nSend the report. Guide ships with the beam.\n\n<b>FLOOR 3 · YOUR BEDROOM</b>\nRest here together when the watch is done."
+    },
+    {
+      "key": "briefing.footer.1",
+      "text": "Share clues with your partner. Your hard-hat light follows where you look."
+    },
+    {
+      "key": "briefing.title.2",
+      "text": "KNOW YOUR CONTROLS"
+    },
+    {
+      "key": "briefing.body.2",
+      "text": "<b>LEFT STICK</b> — walk. Hold A to run.\n<b>RIGHT STICK</b> — turn.\n<b>GRIP</b> — hold tools and controls; release to let go.\n<b>TRIGGER</b> — select menus; use a held tool.\n<b>B</b> — recall your objective and last message.\n<b>HOLD B</b> — keep them visible.\n<b>X</b> — hold your breath.\n<b>Y or WRIST GLANCE</b> — recall guidance.\n<b>LEFT MENU BUTTON</b> — settings and Owen’s orders."
+    },
+    {
+      "key": "briefing.footer.2",
+      "text": "Contains jump scares and possession. Skip or finish to begin; reopen from the left Menu button."
+    },
+    {
+      "key": "lesson.unknown",
+      "text": "Unknown"
+    },
+    {
+      "key": "lesson.line.1",
+      "text": "The engine is down. Both keepers to the generator room, Floor Two."
+    },
+    {
+      "key": "lesson.line.2",
+      "text": "The stair gates slam shut. Something is inside the room."
+    },
+    {
+      "key": "lesson.line.3",
+      "text": "You’ll die here like the others."
+    },
+    {
+      "key": "lesson.line.4",
+      "text": "Take your partner’s left hand. Hold GRIP until they come back."
+    },
+    {
+      "key": "lesson.line.5",
+      "text": "That call was not from this office. Stay with your partner."
+    },
+    {
+      "key": "lesson.quiet.1",
+      "text": "Both keepers to Floor Two for a rescue drill."
+    },
+    {
+      "key": "lesson.quiet.2",
+      "text": "Practice rescuing your partner here. The watch is paused."
+    },
+    {
+      "key": "lesson.quiet.3",
+      "text": "Your partner needs help. Reach for their left hand."
+    },
+    {
+      "key": "lesson.quiet.4",
+      "text": "Hold GRIP on their left hand until they recover."
+    },
+    {
+      "key": "lesson.quiet.5",
+      "text": "Both safe. The stair gates are reopening."
+    },
+    {
+      "key": "companion.possessed",
+      "text": "HELP ME"
+    },
+    {
+      "key": "step.GatherF2",
+      "text": "Join your partner on Floor Two"
+    },
+    {
+      "key": "step.WatchPartner",
+      "text": "Stay beside your partner"
+    },
+    {
+      "key": "step.RescueF2",
+      "text": "Grip your partner’s left hand"
+    },
+    {
+      "key": "step.AwaitRescueF2",
+      "text": "Hold out your left hand"
+    },
+    {
+      "key": "where.LESSON",
+      "text": "generator room, Floor 2"
+    },
+    {
+      "key": "job.LESSON",
+      "text": "Your partner"
+    },
+    {
+      "key": "auth.navy",
+      "text": "NAVY PORT OFFICE"
+    },
+    {
+      "key": "auth.button.0",
+      "text": "CHALLENGE"
+    },
+    {
+      "key": "auth.button.1",
+      "text": "ACCEPT"
+    },
+    {
+      "key": "auth.button.2",
+      "text": "REJECT"
+    },
+    {
+      "key": "auth.plate",
+      "text": "CHECK THE TELEGRAM\nChallenge · compare · decide"
+    },
+    {
+      "key": "auth.real",
+      "text": "Saltmere port office. Challenge this call; compare our reply with the House telegram."
+    },
+    {
+      "key": "auth.false",
+      "text": "Keeper, extinguish the beacon. The approaching convoy must pass in darkness. Challenge this call before obeying."
+    },
+    {
+      "key": "auth.replyReal",
+      "text": "[Two taps] Saltmere port office. {0}. Compare the telegram, then ACCEPT."
+    },
+    {
+      "key": "auth.replyFalse",
+      "text": "Authentication: {0}. Kill the light. Compare with the telegram, then ACCEPT or REJECT."
+    },
+    {
+      "key": "auth.correction",
+      "text": "That reply does not support your decision. CHALLENGE again and compare every symbol with the House telegram."
+    },
+    {
+      "key": "auth.verified",
+      "text": "Authenticated. Keep the beam on the convoy. The last keepers followed a false call. A familiar voice is not proof."
+    },
+    {
+      "key": "auth.rejected",
+      "text": "False call rejected. Keep the beacon shining. It can imitate a voice; it cannot answer tonight’s challenge."
+    },
+    {
+      "key": "step.ChallengeCall",
+      "text": "Challenge the radio call"
+    },
+    {
+      "key": "step.JudgeCall",
+      "text": "Compare code; accept or reject"
+    },
+    {
+      "key": "briefing.waiting",
+      "text": "Your partner is reading the duty briefing."
+    },
+    {
+      "key": "caption.production.1",
+      "text": "Kettle Rock, Saltmere port office. We have your arrival. Keep the passage lit, and report anything the last crew left behind."
+    },
+    {
+      "key": "caption.production.4",
+      "text": "The generator has stopped. Check the fuel tank on Floor Two."
+    },
+    {
+      "key": "caption.production.5",
+      "text": "The passage is clear. You can rest now. Bunks are on Floor Three."
+    },
+    {
+      "key": "caption.production.13",
+      "text": "Saltmere port office. Check the engine before the next convoy."
+    },
+    {
+      "key": "caption.production.17",
+      "text": "The last ship is clear of the reef. Your watch is over."
+    },
+    {
+      "key": "caption.production.18",
+      "text": "Kettle Rock, we have lost your signal."
+    },
+    {
+      "key": "companion.fetchReply",
+      "text": "Checking the telegram in the House."
+    },
+    {
+      "key": "companion.codeReply",
+      "text": "Tonight’s code:"
+    },
+    {
+      "key": "companion.readyReply",
+      "text": "I’ll handle my station. Call when ready."
+    },
+    {
+      "key": "lantern.hook",
+      "text": "FLASHLIGHT · GRIP HANDLE · TRIGGER ON / OFF"
+    },
+    {
+      "key": "lantern.firstGrip",
+      "text": "Hold GRIP around the flashlight handle. TRIGGER switches the beam on / off. No fuel needed."
+    },
+    {
+      "key": "lesson.checkEngine",
+      "text": "Both keepers to the generator room, Floor Two. Check the tank together."
+    },
+    {
+      "key": "starter.timed.objective",
+      "text": "Pull in the marked band ×{0}"
+    },
+    {
+      "key": "starter.timed.plate",
+      "text": "FILL • TIMED PULL ×3"
+    },
+    {
+      "key": "starter.timed.hint",
+      "text": "GRIP · PULL IN BAND"
+    },
+    {
+      "key": "starter.timed.ready",
+      "text": "PULL"
+    },
+    {
+      "key": "starter.timed.wait",
+      "text": "WAIT"
+    },
+    {
+      "key": "starter.timed.running",
+      "text": "RUNNING"
+    },
+    {
+      "key": "step.HelpPartner",
+      "text": "Stay with Owen — see Partner below"
+    },
+    {
+      "key": "where.partner",
+      "text": "Owen's location"
+    },
+    {
+      "key": "where.walkie",
+      "text": "Your walkie"
+    },
+    {
+      "key": "step.ReadyShip",
+      "text": "Trigger your walkie to clear ships"
+    },
+    {
+      "key": "companion.work",
+      "text": "Working on my station"
+    },
+    {
+      "key": "companion.clearanceReady",
+      "text": "Radio ready. Trigger your walkie when you want the ships to approach."
+    },
+    {
+      "key": "companion.clearanceSent",
+      "text": "Sending clearance. I will take the beacon."
+    },
+    {
+      "key": "radio.belt",
+      "text": "Release walkie at right hip to clip it.\nGrip it there to take it back."
+    },
+    {
+      "key": "step.GrabWalkie",
+      "text": "Take a walkie — House bench"
+    },
+    {
+      "key": "step.GrabLantern",
+      "text": "Take a flashlight — hooks by the House door"
+    },
+    {
+      "key": "step.LanternWick",
+      "text": "Hold flashlight; press TRIGGER to switch on"
+    },
+    {
+      "key": "where.kit",
+      "text": "House — arrival kit"
+    },
+    {
+      "key": "job.KIT",
+      "text": "Collect kit"
+    },
+    {
+      "key": "radio.askOwen",
+      "text": "Grip walkie; tap trigger for code"
+    },
+    {
+      "key": "companion.clearance",
+      "text": "Beacon ready? Walkie TRIGGER clears ship"
+    },
+    {
+      "key": "companion.dutyMachinist",
+      "text": "Engine first. Hold START ASSIST when I pull. Then we'll stop the leak together."
+    },
+    {
+      "key": "companion.dutyLightkeeper",
+      "text": "Engine first; I'll hold START ASSIST. Then we fix the pipe together before clearing a ship."
+    },
+    {
+      "key": "lobby.Campaign",
+      "text": "CAMPAIGN"
+    },
+    {
+      "key": "lobby.Survival",
+      "text": "SURVIVAL"
+    },
+    {
+      "key": "lobby.CampaignHint",
+      "text": "Five nights of teamwork and survival horror. Contains scares."
+    },
+    {
+      "key": "lobby.SurvivalHint",
+      "text": "Endless watches. All stations, no horror. Only the flood ends your run."
+    },
+    {
+      "key": "survival.title",
+      "text": "Survival"
+    },
+    {
+      "key": "survival.briefing.title.0",
+      "text": "KEEP THE STATION AFLOAT"
+    },
+    {
+      "key": "survival.briefing.body.0",
+      "text": "American supply ships need this passage. You and your partner keep the lighthouse working through the storm. Repair the machinery, clear each convoy by radio, then guide it past the rocks. Each new watch brings faster flooding and tighter aiming. Day 1 is practice: learn every job without a flood loss. From Day 2, rising water can end your watch."
+    },
+    {
+      "key": "survival.briefing.footer.0",
+      "text": "No horror. No night limit. Flooding is the only loss."
+    },
+    {
+      "key": "survival.briefing.title.1",
+      "text": "ONE CREW, TWO DUTIES"
+    },
+    {
+      "key": "survival.briefing.body.1",
+      "text": "F2: Fuel the generator; pull three times in the marked timing window.\nF1: One holds the valve; one wrenches the bolts. Power the pump.\nHouse / F4: Relay the telegram code; hold the mic trigger to clear the ship.\nOutside F4: Aim the beam and hold it on the ship.\nF3: Both rest to begin a harder watch."
+    },
+    {
+      "key": "survival.briefing.footer.1",
+      "text": "Alone? Owen takes the other duty; ask by walkie. Your hard-hat light follows your gaze."
+    },
+    {
+      "key": "survival.briefing.title.2",
+      "text": "YOUR CONTROLS"
+    },
+    {
+      "key": "survival.briefing.footer.2",
+      "text": "Press B for your current job. Ships wait for the beam; water does not."
+    },
+    {
+      "key": "survival.watch",
+      "text": "DAY {0} · {1:00}:{2:00}"
+    },
+    {
+      "key": "survival.board.goal",
+      "text": "KEEP THE STATION AFLOAT"
+    },
+    {
+      "key": "survival.board.day",
+      "text": "DAY {0}"
+    },
+    {
+      "key": "survival.board.loop",
+      "text": "Rest on F3 for the next watch."
+    },
+    {
+      "key": "survival.board.loss",
+      "text": "Only the flood ends the run."
+    },
+    {
+      "key": "radio.goF4",
+      "text": "Go to the radio — Floor 4"
+    },
+    {
+      "key": "radio.codeProgress",
+      "text": "CODE: {0}/{1} accepted\nPress buttons in the given order"
+    },
+    {
+      "key": "radio.micHold",
+      "text": "Grip this mic; HOLD trigger {0}s"
+    },
+    {
+      "key": "radio.sending",
+      "text": "TRANSMITTING — keep trigger held {0}s"
+    },
+    {
+      "key": "code.readerOnly",
+      "text": "MACHINIST: read the telegram\nLIGHTKEEPER: ask your partner by walkie"
+    },
+    {
+      "key": "step.HoldStarterAssist",
+      "text": "Hold START ASSIST — generator, Floor 2"
+    },
+    {
+      "key": "starter.assistNeeded",
+      "text": "PARTNER: HOLD START ASSIST"
+    },
+    {
+      "key": "starter.assistPlate",
+      "text": "START ASSIST\nHOLD WHILE PARTNER PULLS"
+    },
+    {
+      "key": "survival.board.practice",
+      "text": "DAY 1: PRACTICE — NO FLOOD LOSS"
+    },
+    {
+      "key": "lantern.fuelPractice",
+      "text": "Day 1: lantern oil is unlimited. Trigger changes LOW / HIGH."
+    },
+    {
+      "key": "lantern.fuelTeach",
+      "text": "Lanterns use oil. LOW lasts longer. Refill from the oil can beside the generator — Floor 2."
+    },
+    {
+      "key": "lantern.fuelLow",
+      "text": "Oil low — tilt the F2 oil can over the lantern cap."
+    },
+    {
+      "key": "run.help",
+      "text": "Hold A + left stick to run. Release A to recover. Hold X to hold breath."
+    },
+    {
+      "key": "lantern.unlimitedTeach",
+      "text": "Flashlight: point the beam where you need to see. Unlimited power while testing."
+    },
+    {"key":"belt.wrench","text":"Wrench: release at your left-side clip. GRIP to take it back."},
+    {"key":"belt.flashlight","text":"Flashlight: release at your left-front clip. GRIP to take it back."}
   ]
 }

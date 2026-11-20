@@ -15,13 +15,13 @@ namespace LighthouseKeepers.WatchDemo
         WatchState watch;bool powered,initialized;float speed;
         MaterialPropertyBlock block;
         Renderer visibleBeam;float brightness=1,previousAlignment=.5f;
-        public bool Lit=>lantern.enabled;
+        public bool Lit=>powered;
         public float SpinFraction=>speed;
         void Awake(){block=new MaterialPropertyBlock();Apply(false);}
         public void Bind(WatchState state){watch=state;watch.Changed+=Changed;Changed();}
         void Changed()
         {
-            if(watch.Beacon!=null){float angle=watch.Beacon.Alignment;rotor.Rotate(Vector3.up,(angle-previousAlignment)*270,Space.Self);previousAlignment=angle;}
+            if(watch.Beacon!=null&&watch.AimingShip<0){float angle=watch.Beacon.Alignment;rotor.Rotate(Vector3.up,(angle-previousAlignment)*270,Space.Self);previousAlignment=angle;}
             brightness=watch.Beacon?.Brightness??1;bool next=watch.BeaconShining&&(!watch.Immersion||!watch.Failed);if(initialized&&powered==next){if(watch.Beacon!=null)Apply(powered);return;}
             powered=next;Apply(powered);
             audioSource.PlayOneShot(powered?powerUp:powerDown,.35f);
@@ -35,13 +35,19 @@ namespace LighthouseKeepers.WatchDemo
             block.SetColor("_BaseColor",on?new Color(.8f,.42f,.12f,lensAlpha):new Color(.07f,.065f,.05f,lensAlpha));
             block.SetColor("_EmissionColor",on?new Color(1,.30f,.045f)*(.7f*brightness):Color.black);
             foreach(var lens in lenses)lens.SetPropertyBlock(block);
-            if(visibleBeam){block.SetColor("_BaseColor",new Color(1,.55f,.16f,.12f*brightness));visibleBeam.SetPropertyBlock(block);}
+            if(visibleBeam){block.SetColor("_BaseColor",new Color(1,.76f,.40f,.025f*brightness));visibleBeam.SetPropertyBlock(block);}
         }
         void Update()
         {
             if(!powered)return;
             speed=Mathf.MoveTowards(speed,1,Time.deltaTime/spinUpSeconds);
-            rotor.Rotate(Vector3.up,degreesPerSecond*speed*Time.deltaTime,Space.Self);
+            if(watch.AimingShip>=0){
+                float heading=LighthouseKeepers.Core.Progression.ShipNavigation.Heading(watch.Beacon.Alignment);
+                rotor.rotation=Quaternion.Euler(0,heading,0);
+                var target=watch.ShipPoint(watch.AimingShip,watch.Elapsed);
+                float pitch=Mathf.Atan2(beam.transform.position.y-target.y,new Vector2(target.x,target.z).magnitude)*Mathf.Rad2Deg;
+                beam.transform.rotation=Quaternion.Euler(pitch,heading,0);
+            }else rotor.Rotate(Vector3.up,degreesPerSecond*speed*Time.deltaTime,Space.Self);
             lantern.intensity=1.8f*speed*brightness;beam.intensity=6*speed*brightness;
         }
         public void SetVisibleBeam(Renderer renderer){visibleBeam=renderer;Apply(powered);}

@@ -12,6 +12,7 @@ namespace LighthouseKeepers.Core
         public bool IgnoreExtraPulls {get;set;}
         public bool Guided {get;set;}
         public float Fuel {get;private set;}
+        public float Consumption => drain;
         public int Primer {get;private set;}
         public int Pulls {get;private set;}
         public int ClosedPulls {get;private set;}
@@ -50,8 +51,19 @@ namespace LighthouseKeepers.Core
             if(!Running&&Pulls>=tuning.starterPulls){Running=true;OpenRemaining=tuning.chokeOpenSeconds;}
             Changed?.Invoke();return true;
         }
+        public bool TimedPull(bool withinWindow)
+        {
+            if(ReadOnly||Running||crankWait>0)return false;
+            crankWait=tuning.crankCooldown;
+            if(!EnoughFuel||!withinWindow){CoughSerial++;Changed?.Invoke();return true;}
+            Pulls++;
+            if(Pulls>=tuning.starterPulls){Running=Settled=true;ChokeClosed=false;OpenRemaining=FloodRemaining=0;}
+            Changed?.Invoke();return true;
+        }
         public void Pour(float seconds)
         {if(ReadOnly||!float.IsFinite(seconds)||seconds<=0||Fuel>=1)return;Fuel=Mathf.Min(1,Fuel+tuning.fuelPourPerSecond*Mathf.Min(seconds,.1f));}
+        public void SetFuel(float amount)
+        {if(ReadOnly||!float.IsFinite(amount))return;Fuel=Mathf.Clamp01(amount);if(Fuel<=0)Stop();Changed?.Invoke();}
         void Stop(){Running=Settled=false;OpenRemaining=0;Primer=Pulls=ClosedPulls=0;}
         public void Tick(float seconds)
         {

@@ -1,0 +1,38 @@
+{
+  "Summary": {
+    "Total": 3,
+    "Passed": 3,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.TimedStarterTests.FuelAndThreeTimedStrokesStartWithoutPrimerOrChoke",
+      "Status": "Passed",
+      "Duration": 0.039591,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.TimedStarterTests.GuestReceivesSameGaugeAndProgressButCannotMutate",
+      "Status": "Passed",
+      "Duration": 0.0063814,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.TimedStarterTests.MissesKeepProgressAndSpamCannotAddPulls",
+      "Status": "Passed",
+      "Duration": 0.0005568,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 9.03,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: TimedStarterTests",
+  "success": true,
+  "result": null
+}

@@ -1,0 +1,23 @@
+Rig count=1 camera=Main Camera: elapsed=0.000s realtime=37.663 day=1 repaired=False water=0.02000m
+Test placement moved=True requested=(-1.90, 1.65, -8.40) actual=(-1.90, 1.65, -8.40) rig=Existing player — unmodified source prefab origin=Existing player — unmodified source prefab: elapsed=0.000s realtime=37.670 day=1 repaired=False water=0.02000m
+Grab requested selected=True hand=(-3.02, 0.89, -8.40) wrench=(-3.02, 0.89, -8.40) owner=0 layout=Crew prop layout confirmed.: elapsed=0.000s realtime=38.731 day=1 repaired=False water=0.02000m
+Test placement moved=True requested=(2.90, 1.65, -0.50) actual=(2.90, 1.65, -0.50) rig=Existing player — unmodified source prefab origin=Existing player — unmodified source prefab: elapsed=0.234s realtime=39.152 day=1 repaired=False water=0.02029m
+stroke head=(2.90, 1.65, -0.50) hand=(3.58, 1.09, -0.72) remoteTurns=0 deg=20.00001: elapsed=5.151s realtime=44.168 day=1 repaired=False water=0.02631m
+stroke head=(2.90, 1.65, -0.50) hand=(3.58, 1.09, -0.72) remoteTurns=1 deg=9.759556: elapsed=6.857s realtime=45.765 day=1 repaired=False water=0.02818m
+stroke head=(2.90, 1.65, -0.50) hand=(3.58, 1.09, -0.72) remoteTurns=1 deg=29.75957: elapsed=8.465s realtime=47.362 day=1 repaired=False water=0.02978m
+stroke head=(2.90, 1.65, -0.50) hand=(3.58, 1.09, -0.72) remoteTurns=2 deg=19.55277: elapsed=10.068s realtime=48.960 day=1 repaired=False water=0.03123m
+host physical bolt 0 complete; inflow=0.6666667: elapsed=10.771s realtime=49.632 day=1 repaired=False water=0.03183m
+Mid-repair drop position=(3.07, 0.00, -0.78) water=0.03473948 localKinematic=True: elapsed=14.281s realtime=53.274 day=1 repaired=False water=0.03474m
+stroke head=(2.90, 1.65, -0.50) hand=(3.64, 1.05, 0.03) remoteTurns=0 deg=20: elapsed=20.117s realtime=59.082 day=1 repaired=False water=0.03948m
+stroke head=(2.90, 1.65, -0.50) hand=(3.64, 1.05, 0.03) remoteTurns=1 deg=9.901068: elapsed=21.722s realtime=60.680 day=1 repaired=False water=0.04057m
+stroke head=(2.90, 1.65, -0.50) hand=(3.64, 1.05, 0.03) remoteTurns=1 deg=29.90108: elapsed=23.327s realtime=62.276 day=1 repaired=False water=0.04151m
+stroke head=(2.90, 1.65, -0.50) hand=(3.64, 1.05, 0.03) remoteTurns=2 deg=19.54606: elapsed=24.929s realtime=63.874 day=1 repaired=False water=0.04231m
+host physical bolt 1 complete; inflow=0.3333333: elapsed=25.631s realtime=64.546 day=1 repaired=False water=0.04262m
+stroke head=(2.90, 1.65, -0.50) hand=(3.56, 1.09, 0.79) remoteTurns=0 deg=19.99998: elapsed=29.744s realtime=68.697 day=1 repaired=False water=0.04423m
+stroke head=(2.90, 1.65, -0.50) hand=(3.56, 1.09, 0.79) remoteTurns=1 deg=9.909108: elapsed=31.349s realtime=70.292 day=1 repaired=False water=0.04465m
+stroke head=(2.90, 1.65, -0.50) hand=(3.56, 1.09, 0.79) remoteTurns=1 deg=29.90908: elapsed=32.954s realtime=71.889 day=1 repaired=False water=0.04493m
+stroke head=(2.90, 1.65, -0.50) hand=(3.56, 1.09, 0.79) remoteTurns=2 deg=19.6368: elapsed=34.558s realtime=73.486 day=1 repaired=False water=0.04505m
+host physical bolt 2 complete; inflow=0: elapsed=35.162s realtime=74.117 day=1 repaired=True water=0.04382m
+Released wrench (3.16, 0.01, 0.72) kinematic=True: elapsed=38.871s realtime=77.767 day=1 repaired=True water=-0.00069m
+Host actual XRI pipe: elapsed=39.272s realtime=78.305 day=1 repaired=True water=-0.00550m
+PASS: Editor input injection; check the Quest receive-side state separately.

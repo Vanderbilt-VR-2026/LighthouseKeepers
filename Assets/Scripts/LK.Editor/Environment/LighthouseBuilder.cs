@@ -85,15 +85,29 @@ namespace LighthouseKeepers.Editor.Environment
             {"SM_Frame_Lantern_Base_B","f99841fca524740a6ac5095b333e9ca8"},
             {"SM_Gallery_Deck","7f17094f034754fd99ee172f922add53"}
         };
+        // These are the UV-preserving solid floors restored when the pole was removed.
+        // The same mapping serves the manual restore and every later shell rebuild.
+        static readonly Dictionary<string,string> solidFloors=new Dictionary<string,string>{
+            {"SM_Floor_F2","37efadb7fc0a0f7d89a2666a2fe10011"},
+            {"SM_Floor_F3","d3999fd2514909d141a95d98e632239c"},
+            {"SM_Floor_F4","f3ec45edcd5ca3686f40035351d3ba40"},
+            {"SM_Floor_Lantern_Threshold","8c0f2dcac7c24842513227c2a532ba16"}
+        };
+        public static Mesh SolidFloorMesh(string name)
+        {
+            if(!solidFloors.TryGetValue(name,out var file))return null;
+            var mesh=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Art/VisualPass/UV/"+file+".asset");
+            if(!mesh)throw new Exception("Missing restored solid floor: "+name);
+            return mesh;
+        }
         public static void ApplyVisualCorrections(GameObject root)
         {
-            // Persist the authored pole apertures when regenerating the shell.
-            const string poleMeshes="Assets/WatchDemo/PoleShaftMeshes/";
+            // Rebuild the solid render and collision surfaces, not the obsolete pole holes.
             foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))
-            {var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+f.name+".asset");if(m)f.sharedMesh=m;}
+            {var m=SolidFloorMesh(f.name);if(m)f.sharedMesh=m;}
             foreach(var c in root.GetComponentsInChildren<MeshCollider>(true))
             {var key=c.name.StartsWith("UCX_")?c.name.Substring(4):c.name;if(key.EndsWith("_01"))key=key.Substring(0,key.Length-3);
-             var m=AssetDatabase.LoadAssetAtPath<Mesh>(poleMeshes+key+".asset");if(m){c.convex=false;c.sharedMesh=m;}}
+             var m=SolidFloorMesh(key);if(m){c.convex=false;c.sharedMesh=m;}}
             foreach(var filter in root.GetComponentsInChildren<MeshFilter>(true))
                 if(separatedMeshes.TryGetValue(filter.name,out var guid))
                 {
@@ -145,23 +159,19 @@ namespace LighthouseKeepers.Editor.Environment
             foreach(var s in Layout.stations.Where(s=>s.floor==floor).OrderBy(s=>s.id,StringComparer.Ordinal))
             {
                 var p=new GameObject(s.id).transform;p.SetParent(root,false);p.position=V(s.anchor.position);p.rotation=Quaternion.Euler(V(s.anchor.rotationEuler));
-                if(s.id=="STN_BEACON_CONTROL"&&AssetDatabase.IsValidFolder("Assets/WatchDemo/PoleShaftMeshes")){p.position=new Vector3(1f,9.9f,2.4f);p.rotation=Quaternion.Euler(0,202.62f,0);}
+                if(s.id=="STN_BEACON_CONTROL"&&AssetDatabase.IsValidFolder("Assets/WatchDemo/PoleShaftMeshes")){p.position=new Vector3(-4.02f,9.9f,0);p.rotation=Quaternion.Euler(0,90f,0);}
                 foreach(var a in s.interactiveAnchors){var t=new GameObject(a.name).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);}
                 foreach(var a in s.legacySockets){var t=new GameObject(a.socketName).transform;t.SetParent(p,false);t.localPosition=V(a.localPosition);new GameObject(a.anchorName).transform.SetParent(t,false);}
             }
         }
         static void AddLights(Transform root,string floor)
         {
-            if(floor=="Exterior")return;
+            if(floor=="Exterior"||floor=="F4")return;
             var f=Layout.floors.FirstOrDefault(x=>x.id==floor);float y=f==null?0:f.floorY,r=f==null?0:f.interiorRadius;
             Vector3[] positions=f==null?new[]{new Vector3(-2.4f,2.35f,-5.05f),new Vector3(2.4f,2.35f,-5.05f),new Vector3(0,2.32f,-7.35f)}:new[]{Polar(30,r-.23f,y+2.35f),Polar(150,r-.23f,y+2.35f),Polar(270,r-.23f,y+2.35f)};
             foreach(var pos in positions){var g=new GameObject(f==null&&pos.x<0?"Oil fixture light":"Mains fixture light");g.transform.SetParent(root,false);g.transform.position=pos;var l=g.AddComponent<Light>();l.type=LightType.Point;l.color=new Color(1,.78f,.52f);l.intensity=f==null?5:4;l.range=8;l.shadows=LightShadows.Hard;l.lightmapBakeType=LightmapBakeType.Baked;}
             if(f!=null)foreach(float a in new[]{90f,270f}) {var g=new GameObject("Emergency fixture light");g.transform.SetParent(root,false);g.transform.position=Polar(a,r-.21f,y+2.45f);var l=g.AddComponent<Light>();l.type=LightType.Point;l.color=new Color(.62f,.77f,.84f);l.intensity=f.id=="F2"?3.6f:(f.id=="F3"?1.2f:.5f);l.range=8;l.shadows=LightShadows.Hard;l.lightmapBakeType=LightmapBakeType.Baked;}
-            if(floor=="F4")foreach(float a in new[]{45f,225f})
-            {
-                var g=new GameObject("Emergency gallery fixture light");g.transform.SetParent(root,false);g.transform.position=Polar(a,3.2f,y+2.59f);
-                var light=g.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(.62f,.77f,.84f);light.intensity=1.2f;light.range=7;light.shadows=LightShadows.Hard;light.lightmapBakeType=LightmapBakeType.Baked;
-            }
+            // Unsupported gallery fixtures removed with their hanging cable feeds.
             var probes=new GameObject("Hand light probes").AddComponent<LightProbeGroup>();probes.transform.SetParent(root,false);var points=new List<Vector3>();
             for(float x=-2.5f;x<=2.5f;x+=1.25f)for(float z=-2.5f;z<=2.5f;z+=1.25f)if(f==null||new Vector2(x,z).magnitude<r-.25f)foreach(float h in new[]{.5f,1.5f,2.3f})points.Add(new Vector3(x,y+h,z+(f==null?-7.35f:0)));
             probes.probePositions=points.ToArray();

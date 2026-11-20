@@ -1,0 +1,45 @@
+{
+  "Summary": {
+    "Total": 4,
+    "Passed": 4,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.LanternLightingTests.BackupBulbsStayOnUpperBulbsRequireMainsAndPatternNeverStrobes",
+      "Status": "Passed",
+      "Duration": 0.125659,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.LanternLightingTests.BeamModesHaveDifferentReachAndWidthWithoutShadows",
+      "Status": "Passed",
+      "Duration": 0.0018024,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.LanternLightingTests.EveryNightUsesUnlimitedFuelAndReplicasKeepWicks(Campaign)",
+      "Status": "Passed",
+      "Duration": 0.0190896,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.LanternLightingTests.EveryNightUsesUnlimitedFuelAndReplicasKeepWicks(Survival)",
+      "Status": "Passed",
+      "Duration": 0.0029874,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.81,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: LanternLightingTests",
+  "success": true,
+  "result": null
+}

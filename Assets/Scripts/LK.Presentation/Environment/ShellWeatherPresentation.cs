@@ -9,6 +9,7 @@ namespace LighthouseKeepers.Presentation.Environment
         [SerializeField] Light lightning;
         [SerializeField] AudioSource exteriorRain,interiorRain,ocean,thunder;
         [SerializeField] AudioLowPassFilter thunderFilter;
+        public bool ExternalRainVisuals {get;set;}
         public bool ExternalStormAudio {get;set;}
         ParticleSystem.Particle[] particles;
         float nextStrike,flashStarted=-100,thunderAt=-1;
@@ -23,6 +24,7 @@ namespace LighthouseKeepers.Presentation.Environment
         void LateUpdate()
         {
             if(!head)return;
+            if(!ExternalRainVisuals){
             rain.transform.position=head.position+Vector3.up*5;
             int count=rain.GetParticles(particles);
             for(int i=0;i<count;i++)
@@ -31,6 +33,7 @@ namespace LighthouseKeepers.Presentation.Environment
                 if(Sheltered(p)||(p.y>9.4f&&p.y<9.9f&&p.x*p.x+p.z*p.z<4.25f*4.25f))particles[i].remainingLifetime=0;
             }
             rain.SetParticles(particles,count);
+            }
             float outside=Sheltered(head.position)?0:1;
             if(ExternalStormAudio){if(exteriorRain.isPlaying)exteriorRain.Stop();if(interiorRain.isPlaying)interiorRain.Stop();lightning.intensity=0;if(thunder.isPlaying)thunder.Stop();return;}
             exteriorRain.volume=Mathf.MoveTowards(exteriorRain.volume,outside*.22f,Time.deltaTime*.2f);

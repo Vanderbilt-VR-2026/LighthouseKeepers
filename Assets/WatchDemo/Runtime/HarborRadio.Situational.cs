@@ -18,11 +18,11 @@ namespace LighthouseKeepers.WatchDemo
   void ResetSituationalLines()
   {
    cueRules.Reset();priorValve=watch.State.Pressure?.Holder??0;engineWasRunning=watch.State.Engine?.Running??false;
-   wrongCodePending=broadcastReplyPending=stallPending=false;poles=FindObjectsByType<PoleSlide>(FindObjectsSortMode.None);var valve=watch.GetComponentInChildren<WatchPressureValve>();pressureValve=valve?valve.transform:null;
+   priorDread=LighthouseKeepers.Core.Progression.DrownedPhase.Dormant;wrongCodePending=broadcastReplyPending=stallPending=false;poles=FindObjectsByType<PoleSlide>(FindObjectsSortMode.None);var valve=watch.GetComponentInChildren<WatchPressureValve>();pressureValve=valve?valve.transform:null;
   }
   bool QueueSituational(int id)
   {
-   if(!cueRules.Allows(id,Time.time)||pending.Contains(id)||pending.Count>=16)return false;
+   if(!(watch.State.Campaign&&id>=94?cueRules.AllowsCampaign(id):cueRules.Allows(id,Time.time))||pending.Contains(id)||pending.Count>=16)return false;
    AddPending(id);return true;
   }
   public static int TonightCue(WatchState s)
@@ -34,9 +34,20 @@ namespace LighthouseKeepers.WatchDemo
   bool KeepersSeparated()
   {if(watch.State.Coop is not ICoopKeeperLocations locations)return false;locations.Locations(out _,out var a,out int second,out var b);return second>0&&Mathf.Abs(a.y-b.y)>=6.6f;}
   bool AtUsefulPole(Vector3 p,KeeperStep step)
-  {if(poles==null||ObjectiveDirector.Floor(step)>=ObjectiveHud.FloorAt(p.y)||step==KeeperStep.None)return false;foreach(var pole in poles)if(pole&&pole.CanEnterAt(p.y-1.6f)&&Vector2.Distance(new Vector2(p.x,p.z),new Vector2(pole.transform.position.x,pole.transform.position.z))<1.8f)return true;return false;}
+  {int floor=watch.InstructionFloor(step);if(poles==null||floor<0||floor>=ObjectiveHud.FloorAt(p.y)||step==KeeperStep.None)return false;foreach(var pole in poles)if(pole&&pole.CanEnterAt(p.y-1.6f)&&Vector2.Distance(new Vector2(p.x,p.z),new Vector2(pole.transform.position.x,pole.transform.position.z))<1.8f)return true;return false;}
   bool UsefulPoleNearby()
   {var s=watch.State;var a=head.position;var b=a;int actor=0,other=0;if(s.Coop is ICoopKeeperLocations locations)locations.Locations(out actor,out a,out other,out b);return AtUsefulPole(a,s.Director?.ForActor(actor)??KeeperStep.None)||other>0&&AtUsefulPole(b,s.Director?.ForActor(other)??KeeperStep.None);}
+  LighthouseKeepers.Core.Progression.DrownedPhase priorDread;
+  void ObserveDread()
+  {
+   var s=watch.State;if(s.Day<2||s.Drowned==null)return;
+   var phase=s.Drowned.Phase;
+   if(phase==LighthouseKeepers.Core.Progression.DrownedPhase.Dormant&&priorDread==LighthouseKeepers.Core.Progression.DrownedPhase.Retreat){Enqueue(102);}
+   if(s.Elapsed>15&&s.Elapsed<30&&s.Flares?.Loaded(0)==true)Enqueue(103);
+   // No talking over a reveal. Only one reminder on later nights, after the figure has left.
+   if(s.Day>=3&&phase==LighthouseKeepers.Core.Progression.DrownedPhase.Dormant&&priorDread==LighthouseKeepers.Core.Progression.DrownedPhase.Retreat)Enqueue(104);
+   priorDread=phase;
+  }
   void ObserveSituationalLines()
   {
    var s=watch.State;bool crew=s.Pressure?.CrewRequired==true;
@@ -48,7 +59,7 @@ namespace LighthouseKeepers.WatchDemo
     valveReleased=crew&&!s.Repaired&&(s.Pipe.BoltsDone>0||s.Pipe.TurnsDone>0||s.Pipe.StrokeDegrees>0)&&priorValve>0&&holder==0,
     soloClamp=false, // Recorded P9 retained for archives, never requested by the current solo loop.
     crewRadios=KeepersSeparated(),
-    pole=UsefulPoleNearby(),
+    pole=false, // Retired pole: keep old recording in archive, never enqueue its instruction.
     breakerTripped=s.Grid?.Tripped==true,
     lowFuel=running&&s.Engine?.LowFuel==true&&!s.IsPending(WatchState.GeneratorStation),
     engineStalled=stallPending&&!running,

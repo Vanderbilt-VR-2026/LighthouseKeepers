@@ -1,0 +1,16 @@
+{
+  "exit": 2,
+  "counts": {
+    "total": "95",
+    "passed": "94",
+    "failed": "1",
+    "duration": "0.5349528"
+  },
+  "failures": [
+    {
+      "name": "LighthouseKeepers.Tests.M3.DrownedTests.ReliefCancelsAndOldWarningsDoNotReplay",
+      "message": "  Expected: Dormant\n  But was:  Warning\n",
+      "stack": "at LighthouseKeepers.Tests.M3.DrownedTests.ReliefCancelsAndOldWarningsDoNotReplay () [0x0005f] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/Assets/Tests/EditMode/M3/DrownedTests.cs:8\n"
+    }
+  ]
+}

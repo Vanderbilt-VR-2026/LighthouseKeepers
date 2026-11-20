@@ -1,3 +1,5 @@
+> Current November 17 score: [continuous supplied soundtrack + five-second overlay](PlayerSoundtrack.md). This supersedes the older three-loop demo replacement and periodic silence for the selected score. Existing speech ducking and buses remain.
+
 # Music
 
 Tracks and stings supplied by the team, AI-generated with Google Gemini/Lyria. Original MP3s are untouched and excluded from the build. Reprocess with `Tools/S4/process_music.py <source-folder>` after beat analysis.
@@ -19,3 +21,6 @@ Crisis omits the slow build and starts at the detected bar nearest 1:22. Loops u
 | lost | 27.0, 40.0, 13.5 | 1 | 3.5 s |
 
 Candidates are in gitignored `Recordings/Music/sting-candidates/`. Defaults choose the strongest energy window, with fast attack and a naturalizing tail fade. Listening acceptance is pending. Runtime: any unfinished task → tension; water >70% loss height, <20 s beacon darkness allowance, or <60 s remaining → crisis; all fixed → calm after the current bar. Each task completion plays fixed; shared sleep plays survived; loss plays lost. Guest state comes from the authenticated host snapshot.
+
+## November 16 demo replacement
+The default demo now uses the supplied sample and edited loops documented in [DemoSoundtrack.md](DemoSoundtrack.md). Earlier Gemini/Lyria tracks remain as the fallback; their original attribution still applies to them.

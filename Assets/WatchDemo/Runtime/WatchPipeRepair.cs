@@ -105,7 +105,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(returnClickDegrees>=30){returnClickDegrees%=30;audioSource.PlayOneShot(ratchetClick,.2f);}
             }
             else if(!InContact||degrees*state.Direction>0)returnClickDegrees=0;
-            state.Observe(Time.deltaTime,degrees,InContact,steady,!watch.Failed);
+            if(watch.PipeWorkerActor!=WatchState.CompanionActor||wrench.isSelected||remoteHeld)state.Observe(Time.deltaTime,degrees,InContact,steady,!watch.Failed);
             if(watch.Failed){if(!failureShown){Changed();prompt.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchPipeRepair.1");failureShown=true;}return;}
             if(watch.Immersion&&watch.Immersion.physicalGuidance)return;
             if(Time.unscaledTime<nextText)return;nextText=Time.unscaledTime+.1f;

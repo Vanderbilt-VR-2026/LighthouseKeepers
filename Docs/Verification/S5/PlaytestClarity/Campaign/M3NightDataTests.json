@@ -1,0 +1,38 @@
+{
+  "Summary": {
+    "Total": 3,
+    "Passed": 3,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.EnabledFiveNightPreviewHasValidDataAndKeepsTimingUnapproved",
+      "Status": "Passed",
+      "Duration": 0.013897,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.ExistingSoloCatalogHasNotBeenReplacedOrGivenCampaignSchedules",
+      "Status": "Passed",
+      "Duration": 0.0030961,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.M3NightDataTests.InvalidShipWindowsAndUnknownDependenciesAreRejected",
+      "Status": "Passed",
+      "Duration": 0.0009043,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.8,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: M3NightDataTests",
+  "success": true,
+  "result": null
+}

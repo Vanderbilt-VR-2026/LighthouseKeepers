@@ -8,6 +8,11 @@ namespace LighthouseKeepers.Core
         public bool enabledForWatch=true;
         public bool powerGrid=true;
         public bool generatorSequence=true;
+        [Header("Campaign physical timed starter")]
+        public bool timedCampaignStarter=true;
+        [Min(.5f)] public float starterCycleSeconds=2.4f;
+        [Range(.05f,.8f)] public float starterWindowWidth=.40f;
+        [Range(0,.15f)] public float starterNetworkTolerance=.06f;
         public bool beaconStation=true;
         [Range(.001f,.2f)] public float alignmentTolerance=.025f;
         [Min(.01f)] public float sootRemovedPerMetre=.4f;

@@ -1,0 +1,73 @@
+{
+  "Summary": {
+    "Total": 8,
+    "Passed": 8,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.AStaticStepRaisesTheBootsEvenWhenALowerFloorExistsUnderIt",
+      "Status": "Passed",
+      "Duration": 0.0610815,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.CorruptTrackingCannotMoveTheBodyOrProduceNanBones",
+      "Status": "Passed",
+      "Duration": 0.0377463,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.CrouchingLowersHipsBendsKneesAndKeepsBootsOnTheFloor",
+      "Status": "Passed",
+      "Duration": 0.0405249,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.DiscreteFistPoseAlsoCurlsTheIndexWithoutAnalogTriggerInput",
+      "Status": "Passed",
+      "Duration": 0.0342587,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.EyesAndReachableWristsFollowExistingTrackingIncludingHeadTilt",
+      "Status": "Passed",
+      "Duration": 0.0457878,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.GripCurlsFingersAndOpenInputRestoresThem",
+      "Status": "Passed",
+      "Duration": 0.0489102,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.SkinBuildsOnceWithAllBonesAndNoGameplayOrTrackingComponents",
+      "Status": "Passed",
+      "Duration": 0.0425233,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewHumanoidAvatarTests.WalkingLiftsFeetAndATeleportResetsThePlantedStance",
+      "Status": "Passed",
+      "Duration": 0.0394999,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 7.21,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: CrewHumanoidAvatarTests",
+  "success": true,
+  "result": null
+}

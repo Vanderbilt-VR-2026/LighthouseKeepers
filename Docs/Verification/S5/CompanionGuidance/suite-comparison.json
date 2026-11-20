@@ -1,0 +1,30 @@
+{
+  "environment": "Unity 6000.3.23f1 EditMode, muted",
+  "previous": {
+    "total": 715,
+    "passed": 708,
+    "failed": 7,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "current": {
+    "total": 716,
+    "passed": 711,
+    "failed": 5,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "new_failing_cases": [],
+  "resolved_cases": [
+    "LighthouseKeepers.Net.Tests.MasterDirectorTests.EveryActionHasAnObjectLocationAndOneButton",
+    "LighthouseKeepers.Net.Tests.MasterDirectorTests.InstructionsStayShortAndTableHasEveryStep"
+  ],
+  "remaining_cases": [
+    "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.GeometryClearanceAgainstImportedColliders",
+    "LighthouseKeepers.Net.Tests.StoryScopeTests.SelectedClipsAreShortMonoAndCaptionedExactly",
+    "LighthouseKeepers.Tests.M3.SabotageTests.FuelWarningAndRepairEvidenceReplicateInRealWatchAndRetry",
+    "LighthouseKeepers.Tests.M3.SabotageTests.SchedulerGivesFullWarningBeforeFaultAndDoesNotDuplicate",
+    "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.GameplayLayersKeepNetworkingInsideApprovedAdapters"
+  ],
+  "scope": "Full audit preceded the final pole-hint guard; focused objective and voice checks passed after it."
+}

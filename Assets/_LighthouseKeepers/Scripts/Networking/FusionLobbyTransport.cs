@@ -65,6 +65,7 @@ namespace LighthouseKeepers.Networking
         }
         void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            ReadSessionMode();
             if (!online || scene.name != ShipWorld.GameplaySceneName) return;
             // Scene arrival is authoritative even if the separate reliable lobby
             // snapshot has not arrived yet. Bind gameplay before its Start runs.
@@ -122,6 +123,7 @@ namespace LighthouseKeepers.Networking
                     CustomPhotonAppSettings=photonSettings,
                     GameMode = mode, SessionName = sessionName, PlayerCount = state.Capacity,
                     Scene = scenes, SceneManager = sceneManager, IsVisible = false,
+                    SessionProperties=mode==GameMode.Host?new Dictionary<string,SessionProperty>{{LighthouseKeepers.Core.WatchModeSelection.SessionKey,(int)LighthouseKeepers.Core.WatchModeSelection.Selected}}:null,
                     EnableClientSessionCreation = false, StartGameCancellationToken = cancellation
                 });
                 if (cancellation.IsCancellationRequested || !this) return;
@@ -131,7 +133,8 @@ namespace LighthouseKeepers.Networking
                 {
                     foreach (var player in current.ActivePlayers) state.Add(Id(player), player == current.LocalPlayer);
                 }
-                SendLocalState();
+                ReadSessionMode();
+                SendLocalState(current.IsServer?CrewDuties.Preference:CrewDuty.None);
                 ConnectionChanged?.Invoke(true);
             }
             catch (OperationCanceledException) { }
@@ -185,6 +188,7 @@ namespace LighthouseKeepers.Networking
         }
         void ClearConnection()
         {
+            var local=state.Players.FirstOrDefault(p=>p.Id==LocalPlayerId);if(local!=null&&local.Duty!=CrewDuty.None)CrewDuties.Preference=local.Duty;
             bool wasOnline = online;
             online = false; state.Reset(ShipWorld.MaximumCrewSize); localReady = false;
             if (wasOnline) ConnectionChanged?.Invoke(false);
@@ -207,10 +211,17 @@ namespace LighthouseKeepers.Networking
             pendingName = LobbyProtocol.DisplayName(displayName);
             if (online && !busy && !state.Starting) SendLocalState();
         }
-        void SendLocalState()
+        public bool SetLocalDuty(CrewDuty duty)
+        {
+            if(!CrewDuties.Valid(duty)||duty==CrewDuty.None||busy||state.Starting)return false;
+            CrewDuties.Preference=duty;
+            if(online)SendLocalState(duty);
+            return true;
+        }
+        void SendLocalState(CrewDuty requestedDuty=CrewDuty.None)
         {
             if (!runner || !runner.IsRunning) return;
-            var request = new LobbyPacket { revision = ++requestSequence, name = pendingName, ready = localReady };
+            var request = new LobbyPacket { revision = ++requestSequence, name = pendingName, ready = localReady, requestedDuty=requestedDuty };
             if (runner.IsServer)
             {
                 if (state.ApplyRequest(LocalPlayerId, request, AcceptWatchJoin)) PublishRoster();
@@ -218,7 +229,7 @@ namespace LighthouseKeepers.Networking
             else runner.SendReliableDataToServer(NextKey(), LobbyProtocol.Encode(request));
         }
         static string Id(PlayerRef player) => player.PlayerId.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        ReliableKey NextKey() => ReliableKey.FromInts(LobbyProtocol.Channel, 1, 0, ++transferSequence);
+        ReliableKey NextKey() => ReliableKey.FromInts(LobbyProtocol.Channel, LobbyProtocol.Version, 0, ++transferSequence);
         void ClearResolvedLaunchError()
         {
             if (LastError == CrewSessionPolicy.SharedGameStatePending && string.IsNullOrEmpty(StartBlockReason(ShipWorld.GameplaySceneName)))
@@ -325,7 +336,7 @@ namespace LighthouseKeepers.Networking
         public void OnReliableDataReceived(NetworkRunner source, PlayerRef sender, ReliableKey key, ReadOnlySpan<byte> data)
         {
             key.GetInts(out int channel, out int version, out _, out _);
-            if (source != runner || channel != LobbyProtocol.Channel || version != 1 ||
+            if (source != runner || channel != LobbyProtocol.Channel || version != LobbyProtocol.Version ||
                 !LobbyProtocol.TryDecode(data, out var packet)) return;
             if (source.IsServer)
             {
@@ -355,8 +366,14 @@ namespace LighthouseKeepers.Networking
         {
             if ((state.Starting && !AcceptWatchJoin) || state.Players.Count >= state.Capacity) request.Refuse(); else request.Accept();
         }
+        void ReadSessionMode()
+        {
+            if(runner && runner.SessionInfo?.Properties!=null && runner.SessionInfo.Properties.TryGetValue(LighthouseKeepers.Core.WatchModeSelection.SessionKey,out var property))
+                LighthouseKeepers.Core.WatchModeSelection.Selected=(int)property==1?LighthouseKeepers.Core.KeeperGameMode.Survival:LighthouseKeepers.Core.KeeperGameMode.Campaign;
+        }
         public void OnSceneLoadStart(NetworkRunner source)
         {
+            ReadSessionMode();
             // StartGame can complete before the initial lobby finishes loading.
             // Only a host-approved launch is a gameplay transition.
             if (source == runner && state.Starting) { enteredGame = true; GameStarting?.Invoke(); }
@@ -371,6 +388,7 @@ namespace LighthouseKeepers.Networking
         }
         public void OnConnectedToServer(NetworkRunner source)
         {
+            ReadSessionMode();
             // A rejoining client loads the host's current scene inside StartGame.
             // Mark the established connection before that scene's Start methods bind
             // the read-only guest watch; otherwise it would briefly start a solo day.

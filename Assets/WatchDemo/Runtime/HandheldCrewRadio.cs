@@ -7,15 +7,20 @@ using LighthouseKeepers.Interaction;
 using LighthouseKeepers.Gameplay.Interaction;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease
+    [DefaultExecutionOrder(950)]
+    public sealed class HandheldCrewRadio : MonoBehaviour, INetworkReleasedBody, INetworkPropRelease, INetworkPropCarry, INetworkBeltSlot
     {
         WatchDemoController watch;int index;XRGrabInteractable grab;INetworkPropStatus lease;Transform head;Renderer lamp;TextMesh status;MaterialPropertyBlock block;
-        bool trigger,previous,released;
-        public bool ReleasedBodyIsKinematic=>!released;
-        public void OnNetworkReleased(){released=true;unheld=0;}
-        void Start(){grab.useDynamicAttach=true;}float nextSend,unheld;Vector3 home;Quaternion homeRotation;Rigidbody body;
+        bool trigger,previous,released,carried,taughtCarry;AudioSource carrySound;AudioClip carryClick;Transform leftPalm,rightPalm;PhysicalGrip physicalGrip;KeeperToolBelt belt;
+        public bool Carried=>carried;
+        public ToolBeltSlot BeltSlot=>ToolBeltSlot.Radio;
+        public void DropCarry(){if(carried)released=true;carried=false;}
+        public bool ReleasedBodyIsKinematic=>carried||!released;
+        public void OnNetworkReleased(){if(carried)return;released=true;unheld=0;}
+        void Start(){grab.useDynamicAttach=false;grab.throwOnDetach=false;}float nextSend,unheld;Vector3 home;Quaternion homeRotation;Rigidbody body;
         public XRGrabInteractable Grab=>grab;
         public bool Held=>grab&&grab.isSelected;
+        public bool Available=>!Held&&!Carried&&(lease==null||lease.Owner==0);
         public bool WantsTransmit=>Held&&(trigger||head&&Vector3.Distance(transform.position,head.position)<=watch.State.Connected.radioHeadDistance);
         public static HandheldCrewRadio Create(WatchDemoController w,int index)
         {
@@ -33,38 +38,64 @@ namespace LighthouseKeepers.WatchDemo
             if(surface){var b=surface.bounds;spot=new Vector3(b.center.x+.12f,b.max.y,b.min.z+.14f);}
             transform.SetPositionAndRotation(spot+new Vector3(0,.10f,index*.18f),Quaternion.Euler(0,90,0));
             home=transform.position;homeRotation=transform.rotation;
-            p.Part("Handheld enamel body",transform,Vector3.zero,new Vector3(.075f,.18f,.055f),p.Dark);
-            for(int i=0;i<5;i++)p.Part("Speaker grille",transform,new Vector3(0,.035f-i*.012f,.03f),new Vector3(.05f,.003f,.004f),p.Metal);
+            p.Part("Handheld enamel body",transform,Vector3.zero,new Vector3(.052f,.18f,.032f),p.Dark);
+            for(int i=0;i<5;i++)p.Part("Speaker grille",transform,new Vector3(0,.035f-i*.012f,.018f),new Vector3(.038f,.003f,.004f),p.Metal);
             p.Part("Rubber aerial",transform,new Vector3(-.025f,.155f,0),new Vector3(.009f,.14f,.009f),p.Dark);
-            p.Part("Push to talk button",transform,new Vector3(.041f,0,0),new Vector3(.012f,.04f,.025f),p.Brass);
-            lamp=p.Part("Transmit indicator",transform,new Vector3(.02f,.07f,.031f),new Vector3(.012f,.012f,.008f),p.Brass).GetComponent<Renderer>();
-            status=p.Text("Radio face stencil",PlayerStrings.Get("connected.radioUse"),transform,new Vector3(0,-.055f,.031f),.00065f);
-            var col=gameObject.AddComponent<BoxCollider>();col.size=new Vector3(.08f,.19f,.06f);
+            p.Part("Push to talk button",transform,new Vector3(.03f,0,0),new Vector3(.012f,.04f,.025f),p.Brass);
+            lamp=p.Part("Transmit indicator",transform,new Vector3(.014f,.07f,.018f),new Vector3(.012f,.012f,.008f),p.Brass).GetComponent<Renderer>();
+            status=p.Text("Radio face stencil",PlayerStrings.Get("connected.radioUse"),transform,new Vector3(0,-.055f,.019f),.00065f);
+            var col=gameObject.AddComponent<BoxCollider>();col.size=new Vector3(.058f,.19f,.038f);
             body=gameObject.AddComponent<Rigidbody>();body.mass=.25f;body.isKinematic=true;body.useGravity=true;
-            grab=gameObject.AddComponent<XRGrabInteractable>();grab.colliders.Add(col);grab.movementType=XRBaseInteractable.MovementType.Kinematic;
+            grab=gameObject.AddComponent<XRGrabInteractable>();grab.colliders.Add(col);grab.movementType=XRBaseInteractable.MovementType.Instantaneous;grab.smoothPosition=false;grab.smoothRotation=false;grab.attachEaseInTime=.08f;grab.throwOnDetach=false;
             var attach=M2StationParts.Root("Radio palm contact",transform,new Vector3(0,-.035f,0));
-            gameObject.AddComponent<PhysicalGrip>().Configure(attach,HandPose.WrapGrip);
-            grab.useDynamicAttach=true;grab.matchAttachPosition=true;grab.matchAttachRotation=true;
-            grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
+            // Turn the case around in the tracked grip; aerial stays up, speaker faces the keeper.
+            attach.localRotation=Quaternion.Euler(0,180,0);
+            physicalGrip=gameObject.AddComponent<PhysicalGrip>();physicalGrip.Configure(attach,HandPose.WrapGrip);
+            leftPalm=M2StationParts.Root("Left wrap around radio",transform,new Vector3(.016f,-.025f,0));
+            rightPalm=M2StationParts.Root("Right wrap around radio",transform,new Vector3(-.016f,-.025f,0));
+            leftPalm.localRotation=Quaternion.Euler(0,180,0)*Quaternion.LookRotation(Vector3.left,Vector3.back);
+            rightPalm.localRotation=Quaternion.Euler(0,180,0)*Quaternion.LookRotation(Vector3.right,Vector3.back);
+            grab.useDynamicAttach=false;
+            // Exclude the walking capsule, never the hand triggers: ignoring those also
+            // removes XRDirectInteractor hover, although manual-selection tests still pass.
+            foreach(var c in FindObjectsByType<CharacterController>(FindObjectsSortMode.None))Physics.IgnoreCollision(col,c,true);
+            grab.selectEntered.AddListener(e=>{carried=false;if(!taughtCarry){taughtCarry=true;FindAnyObjectByType<HarborRadio>()?.RecordSilentLine(KeeperStrings.Get("radio.belt"),"");watch.GetComponent<ObjectiveHud>()?.RevealFor(5);}});grab.activated.AddListener(Activate);grab.deactivated.AddListener(Deactivate);grab.selectExited.AddListener(Release);
             head=Camera.main?Camera.main.transform:null;
+            // PhysicalGrip adds its own AudioSource when this inactive prop awakens.
+            // A filtered source must live alone on its object in Unity, so keep
+            // the holster click on a child that follows the radio at the same pose.
+            carrySound=new GameObject("Radio holster sound").AddComponent<AudioSource>();carrySound.transform.SetParent(transform,false);carrySound.playOnAwake=false;carrySound.spatialBlend=1;carrySound.minDistance=.3f;carrySound.maxDistance=3;KeeperAudioMix.Route(carrySound,"SFX_World");carryClick=Resources.Load<AudioClip>("Hands/clunk");
         }
-        void Activate(ActivateEventArgs e){if(Held)trigger=true;}
+        void Activate(ActivateEventArgs e){if(!Held)return;trigger=true;if(watch.State.ScriptedPartner)watch.GetComponent<CrewCompanion>()?.RequestReport();}
         void Deactivate(DeactivateEventArgs e)=>trigger=false;
-        void Release(SelectExitEventArgs e){trigger=false;Send(false);OnNetworkReleased();}
+        void Release(SelectExitEventArgs e){trigger=false;Send(false);
+            // Retain the existing prop lease while clipped; the host checks the carry pose at the belt.
+            if(!belt)belt=watch.GetComponent<KeeperToolBelt>();
+            if(head&&belt&&Vector3.Distance(transform.position,belt.Position(ToolBeltSlot.Radio))<=RadioBeltPose.Reach&&!OtherOnBelt()){
+                carried=true;released=false;body.isKinematic=true;
+                if(carryClick)carrySound.PlayOneShot(carryClick,.25f);
+                e.interactorObject.transform.GetComponentInParent<HandRig>()?.Pulse(.25f,.05f);
+                watch.GetComponent<ObjectiveHud>()?.RevealFor(3);
+            }else OnNetworkReleased();
+        }
+        bool OtherOnBelt(){foreach(var r in FindObjectsByType<HandheldCrewRadio>(FindObjectsSortMode.None))if(r!=this&&r.Carried)return true;return false;}
         void Send(bool active){watch.State.Coop?.Send(CoopAction.HandheldRadio,index,active);previous=active;nextSend=Time.unscaledTime+.1f;}
         void Update()
         {
             if(lease==null)lease=GetComponent<INetworkPropStatus>();
+            if(physicalGrip.HoldingHand){var h=physicalGrip.HoldingHand;h.SetToolGrip(h.Node==UnityEngine.XR.XRNode.LeftHand?leftPalm:rightPalm,new Vector3(0,-.052f,.050f));}
             bool allowed=CrewVoiceBridge.Current is ICrewVoiceCapture capture&&capture.MicrophoneAllowed&&!capture.Muted;
             bool active=allowed&&WantsTransmit;
             if(watch.State.Coop!=null&&(Time.unscaledTime>=nextSend||active!=previous)&&(active||previous))Send(active);
             bool transmitting=watch.RadioTransmitter(index)!=0;
             block.Clear();var c=transmitting?new Color(.15f,.7f,.25f):new Color(.25f,.13f,.03f);block.SetColor("_BaseColor",c);block.SetColor("_EmissionColor",transmitting?c*.7f:c*.12f);lamp.SetPropertyBlock(block);
             status.text=PlayerStrings.Get(transmitting?"connected.transmitting":"connected.radioUse");
+            if(carried&&head&&!Held)return;
             if(Held||lease!=null&&lease.Owner!=0)unheld=0;else unheld+=Time.deltaTime;
             if((lease==null||lease.CanSimulateReleased)&&!Held){body.isKinematic=!released;
-                if(unheld>20||transform.position.y< -1){if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,homeRotation);unheld=0;}}
+                if(transform.position.y< -2){if(!body.isKinematic)body.linearVelocity=body.angularVelocity=Vector3.zero;released=false;body.isKinematic=true;transform.SetPositionAndRotation(home,homeRotation);unheld=0;}}
         }
+        void LateUpdate(){if(!carried||!head||Held)return;if(!belt)belt=watch.GetComponent<KeeperToolBelt>();if(!belt)return;body.isKinematic=true;transform.SetPositionAndRotation(belt.Position(ToolBeltSlot.Radio),belt.Facing);}
         void OnDisable(){if(previous&&watch)Send(false);trigger=false;}
     }
 }

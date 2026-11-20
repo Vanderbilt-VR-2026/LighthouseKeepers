@@ -13,7 +13,7 @@ namespace LighthouseKeepers.Net.Tests
   [Test] public void BroadcastNeedsActualLightWithoutDiscardingTuningOrCode()
   {
    var s=New(1);Call(s,"SetCircuit",2,true);var r=Get<object>(s,"Radio");Call(r,"ToggleMain");
-   var p=r.GetType().GetField("Program").GetValue(r);float f=(float)p.GetType().GetField("targetMHz").GetValue(p);
+   var p=r.GetType().GetField("Program").GetValue(r);float f=(float)r.GetType().GetProperty("TargetMHz").GetValue(r);
    Call(r,"Tune",f);Call(s,"Tick",2d);foreach(int c in (int[])p.GetType().GetField("callCode").GetValue(p))Call(r,"PressCode",c);
    Call(s,"IgniteBeacon",false);Call(r,"SetMicrophone",true,true);Call(s,"Tick",4d);
    Assert.False(Get<bool>(r,"Completed"));Assert.True(Get<bool>(r,"Locked"));Assert.True(Get<bool>(r,"CodeAccepted"));

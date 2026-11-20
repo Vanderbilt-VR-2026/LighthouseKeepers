@@ -1,0 +1,31 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=10.208 day=1 repaired=False water=0.02000m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=10.212 day=1 repaired=False water=0.02000m
+day-one physical bolt 2 complete; inflow=0.6666667: elapsed=8.254s realtime=18.833 day=1 repaired=False water=0.02943m
+Released wrench: position=(3.12, 0.01, 0.75) kinematic=False water=0.03086745: elapsed=9.988s realtime=20.675 day=1 repaired=False water=0.03087m
+day-one physical bolt 0 complete; inflow=0.3333333: elapsed=16.589s realtime=27.169 day=1 repaired=False water=0.03550m
+day-one physical bolt 1 complete; inflow=0: elapsed=22.882s realtime=33.453 day=1 repaired=True water=0.03460m
+Day 1 bed -> Day 2: elapsed=0.000s realtime=43.538 day=2 repaired=False water=0.02196m
+Three actual generator XRI pulls: elapsed=108.471s realtime=110.707 day=2 repaired=False water=0.23491m
+Solo repair ready without clamp; valve hidden: elapsed=108.471s realtime=110.809 day=2 repaired=False water=0.23491m
+day-two physical bolt 2 complete; inflow=0.6666667: elapsed=116.987s realtime=119.369 day=2 repaired=False water=0.24485m
+Released wrench: position=(3.12, 0.01, 0.75) kinematic=False water=0.2463019: elapsed=118.706s realtime=121.167 day=2 repaired=False water=0.24630m
+day-two physical bolt 0 complete; inflow=0.3333333: elapsed=125.294s realtime=127.665 day=2 repaired=False water=0.25102m
+day-two physical bolt 1 complete; inflow=0: elapsed=131.548s realtime=133.927 day=2 repaired=True water=0.25031m
+PASS Night 1 -> Night 2 -> staged Night 3: elapsed=0.000s realtime=138.505 day=3 repaired=False water=0.02126m
+START paced solo Day 3; physical XRI plus explicitly budgeted read/navigation waits: elapsed=0.000s realtime=138.505 day=3 repaired=False water=0.02126m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=163.650 day=3 repaired=False water=0.02126m
+day-three physical bolt 0 complete; inflow=0.6666667: elapsed=9.891s realtime=173.621 day=3 repaired=False water=0.02818m
+Released wrench: position=(3.19, 0.00, 0.94) kinematic=False water=0.02911348: elapsed=11.629s realtime=175.467 day=3 repaired=False water=0.02911m
+day-three physical bolt 2 complete; inflow=0.3333333: elapsed=18.112s realtime=181.849 day=3 repaired=False water=0.03206m
+day-three physical bolt 1 complete; inflow=0: elapsed=24.366s realtime=188.105 day=3 repaired=True water=0.03071m
+PIPE finished: elapsed=45.011s realtime=208.745 day=3 repaired=True water=-0.03000m
+Three actual generator XRI pulls: elapsed=115.263s realtime=279.002 day=3 repaired=True water=-0.03000m
+GENERATOR settled; beacon and radio now required: elapsed=142.971s realtime=306.701 day=3 repaired=True water=-0.03000m
+BEACON shining: elapsed=218.137s realtime=381.867 day=3 repaired=True water=-0.03000m
+RADIO complete; board 4/4: elapsed=263.149s realtime=426.879 day=3 repaired=True water=-0.03000m
+SOLO DAY3 SPARE=231.84 seconds
+BED passed next day: elapsed=0.000s realtime=451.959 day=4 repaired=False water=0.02126m
+System.InvalidOperationException: Own fear sound must be 2D
+  at LighthouseKeepers.Editor.ImmersionSoloReplay+<Loop>d__18.MoveNext () [0x02150] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/fear/graphics-fixed/Nights123.cs:201 
+  at LighthouseKeepers.Editor.ImmersionSoloReplay.Tick () [0x00061] in /Users/aneeshvasamreddy/LighthouseKeepers-M3/artifacts/s5/fear/graphics-fixed/Nights123.cs:58 

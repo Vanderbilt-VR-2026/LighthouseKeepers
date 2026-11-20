@@ -1,0 +1,38 @@
+{
+  "Summary": {
+    "Total": 3,
+    "Passed": 3,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Editor.Environment.Tests.QualityBaselineTests.AndroidQuestSettingsAndWorldTextureImportsMatchFieldManual",
+      "Status": "Passed",
+      "Duration": 0.0375521,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Editor.Environment.Tests.QualityBaselineTests.AuthoredLabHasBakedFixturesAndRouteProbes",
+      "Status": "Passed",
+      "Duration": 0.610199,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Editor.Environment.Tests.QualityBaselineTests.RuntimeNeverUsesViewportScalingAndEnablesFixedFoveation",
+      "Status": "Passed",
+      "Duration": 0.1294757,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 7.11,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: QualityBaselineTests",
+  "success": true,
+  "result": null
+}

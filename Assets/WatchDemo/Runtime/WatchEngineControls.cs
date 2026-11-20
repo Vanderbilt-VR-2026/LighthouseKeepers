@@ -28,6 +28,7 @@ namespace LighthouseKeepers.WatchDemo
             if(!e.IgnoreExtraPulls&&e.FloodRemaining>0)return string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.4"),Mathf.CeilToInt(e.FloodRemaining));
             if(e.Running)return e.ChokeClosed?string.Format(KeeperStrings.Get("engine.open.deadline"),Mathf.CeilToInt(e.OpenRemaining)):e.LowFuel?KeeperStrings.Get("engine.low"):KeeperStrings.Get("engine.running");
             if(!e.EnoughFuel)return LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.5");
+            if(state.TimedStarter)return string.Format(KeeperStrings.Get("starter.timed.objective"),state.PowerTuning.starterPulls-e.Pulls);
             if(!e.Primed)return string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.6"),e.Primer,state.PowerTuning.primerSqueezes);
             if(!e.ChokeClosed)return LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.7");
             return string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchEngineControls.8"),e.Pulls,state.PowerTuning.starterPulls);
@@ -56,6 +57,7 @@ namespace LighthouseKeepers.WatchDemo
             sound=gameObject.AddComponent<AudioSource>();sound.playOnAwake=false;sound.spatialBlend=1;sound.minDistance=.4f;sound.maxDistance=12;
             cough=Resources.Load<AudioClip>("S4Audio/cough");clunk=Resources.Load<AudioClip>("S4Audio/breaker");
             if(State.Immersion&&State.Immersion.physicalGuidance)BuildPhysicalGuidance();
+            if(State.TimedStarter)BuildTimedStarter();
             watch.State.Changed+=Refresh;Refresh();
         }
         void ExposeStarter()
@@ -104,7 +106,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
-            AnimateCounters();
+            AnimateCounters();UpdateTimedStarter();
             starterCord.SetPosition(0,transform.TransformPoint(starterCordMount));starterCord.SetPosition(1,starterHandle.position-starterHandle.forward*.025f);
             if(State.Engine.Running&&(State.FuelSputtering||State.Engine.LowFuel&&!State.IsPending(WatchState.GeneratorStation))&&Time.time>=nextWarning){nextWarning=Time.time+(State.FuelSputtering?1f:8f);if(cough)sound.PlayOneShot(cough,.2f);}
             bool held=FuelCan.Grab.isSelected||State.Coop?.RemoteHeld(FuelCan.Grab)==true;

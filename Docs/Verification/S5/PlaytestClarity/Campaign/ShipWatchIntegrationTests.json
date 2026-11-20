@@ -1,0 +1,52 @@
+{
+  "Summary": {
+    "Total": 5,
+    "Passed": 5,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipWatchIntegrationTests.CompletingPipeWaitsForPreviewThenHostAndGuestCanSeeSleepAndRetry",
+      "Status": "Passed",
+      "Duration": 0.0112968,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipWatchIntegrationTests.InvalidShipPayloadIsRejectedBeforeGuestStationStateChanges",
+      "Status": "Passed",
+      "Duration": 0.0010531,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipWatchIntegrationTests.LegacyUngatedNightTwoDoesNotLoseBeforeShipThreatButWrecksIfIgnored",
+      "Status": "Passed",
+      "Duration": 0.0057847,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipWatchIntegrationTests.NightThreeRefilledTankCoversShipWatchAndTheWalkToBed",
+      "Status": "Passed",
+      "Duration": 0.0034783,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Tests.M3.ShipWatchIntegrationTests.WreckNamesTheShipReplicatesAndRetryClearsIt",
+      "Status": "Passed",
+      "Duration": 0.0006241,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.71,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ShipWatchIntegrationTests",
+  "success": true,
+  "result": null
+}

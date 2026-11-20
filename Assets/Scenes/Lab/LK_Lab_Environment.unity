@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.015
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.13, g: 0.18, b: 0.24, a: 1}
+  m_AmbientSkyColor: {r: 0.0002, g: 0.00025, b: 0.0003, a: 1}
   m_AmbientEquatorColor: {r: 0.08, g: 0.09, b: 0.1, a: 1}
   m_AmbientGroundColor: {r: 0.025, g: 0.025, b: 0.03, a: 1}
-  m_AmbientIntensity: 1
-  m_AmbientMode: 1
+  m_AmbientIntensity: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: b492d3e1be5e8416b9868b1ed1386e97, type: 2}
   m_HaloStrength: 0.5
@@ -35,7 +35,7 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0.025
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_UseRadianceAmbientProbe: 0
@@ -446,6 +446,7 @@ GameObject:
   - component: {fileID: 30549446}
   - component: {fileID: 30549448}
   - component: {fileID: 30549447}
+  - component: {fileID: 30549449}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 2
   m_TagString: Untagged
@@ -525,6 +526,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30549445}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &30549449
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30549445}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0.000000029850668, y: 0, z: 0}
 --- !u!1 &34407454
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +648,7 @@ GameObject:
   - component: {fileID: 38037340}
   - component: {fileID: 38037342}
   - component: {fileID: 38037341}
+  - component: {fileID: 38037343}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 22
   m_TagString: Untagged
@@ -705,6 +728,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 38037339}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &38037343
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38037339}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.0000000015322712, y: 0, z: 0}
 --- !u!1 &38128527
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +760,7 @@ GameObject:
   - component: {fileID: 38128528}
   - component: {fileID: 38128530}
   - component: {fileID: 38128529}
+  - component: {fileID: 38128531}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 8
   m_TagString: Untagged
@@ -795,6 +840,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 38128527}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &38128531
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38128527}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000004, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: -0.000000010286055, y: 0, z: 0}
 --- !u!1 &38384760
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +886,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 38384760}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -1098,6 +1164,7 @@ GameObject:
   - component: {fileID: 39788028}
   - component: {fileID: 39788030}
   - component: {fileID: 39788029}
+  - component: {fileID: 39788031}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 9
   m_TagString: Untagged
@@ -1177,6 +1244,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39788027}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &39788031
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39788027}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.0000000012164492, y: 0, z: 0}
 --- !u!1 &47696992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1314,6 +1402,7 @@ GameObject:
   - component: {fileID: 53623990}
   - component: {fileID: 53623992}
   - component: {fileID: 53623991}
+  - component: {fileID: 53623993}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 10
   m_TagString: Untagged
@@ -1393,6 +1482,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53623989}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &53623993
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53623989}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 1}
+  m_Center: {x: -0.0000000054146767, y: 0, z: 0}
 --- !u!1 &57773380
 GameObject:
   m_ObjectHideFlags: 0
@@ -14424,6 +14534,7 @@ GameObject:
   - component: {fileID: 199065802}
   - component: {fileID: 199065804}
   - component: {fileID: 199065803}
+  - component: {fileID: 199065805}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 29
   m_TagString: Untagged
@@ -14503,6 +14614,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199065801}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &199065805
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199065801}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0.0000000670957, y: 0, z: 0}
 --- !u!1 &200228106
 GameObject:
   m_ObjectHideFlags: 0
@@ -14600,6 +14732,7 @@ GameObject:
   - component: {fileID: 205285084}
   - component: {fileID: 205285086}
   - component: {fileID: 205285085}
+  - component: {fileID: 205285087}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 12
   m_TagString: Untagged
@@ -14679,6 +14812,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 205285083}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &205285087
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205285083}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1}
+  m_Center: {x: 0.000000085377735, y: 0, z: 0}
 --- !u!1 &211850354
 GameObject:
   m_ObjectHideFlags: 0
@@ -15104,11 +15258,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296000176}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.65
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -15202,6 +15356,7 @@ GameObject:
   - component: {fileID: 304544225}
   - component: {fileID: 304544227}
   - component: {fileID: 304544226}
+  - component: {fileID: 304544228}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 12
   m_TagString: Untagged
@@ -15281,6 +15436,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304544224}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &304544228
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304544224}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1}
+  m_Center: {x: 0.000000085377735, y: 0, z: 0}
 --- !u!1 &304706338
 GameObject:
   m_ObjectHideFlags: 0
@@ -15442,7 +15618,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313820470}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -15720,6 +15896,7 @@ GameObject:
   - component: {fileID: 321925335}
   - component: {fileID: 321925337}
   - component: {fileID: 321925336}
+  - component: {fileID: 321925338}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 7
   m_TagString: Untagged
@@ -15799,6 +15976,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 321925334}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &321925338
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321925334}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000004, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: 0.000000013887082, y: 0, z: 0}
 --- !u!1 &324057893
 GameObject:
   m_ObjectHideFlags: 0
@@ -16477,6 +16675,7 @@ GameObject:
   - component: {fileID: 349268540}
   - component: {fileID: 349268542}
   - component: {fileID: 349268541}
+  - component: {fileID: 349268543}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 14
   m_TagString: Untagged
@@ -16556,6 +16755,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 349268539}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &349268543
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 349268539}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.00000007571856, y: 0, z: 0}
 --- !u!1 &349630519
 GameObject:
   m_ObjectHideFlags: 0
@@ -16742,6 +16962,7 @@ GameObject:
   - component: {fileID: 357202173}
   - component: {fileID: 357202175}
   - component: {fileID: 357202174}
+  - component: {fileID: 357202176}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 5
   m_TagString: Untagged
@@ -16821,6 +17042,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 357202172}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &357202176
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357202172}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.000000025713064, y: 0, z: -0.0000009536743}
 --- !u!1 &357677424
 GameObject:
   m_ObjectHideFlags: 0
@@ -17169,7 +17411,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385796761}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -23117,7 +23359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LK.Presentation::LighthouseKeepers.Presentation.Environment.BeaconAndMainsLightingGroup
   powered: 1
   poweredPreset: {fileID: 11400000, guid: 91c10eee5207b4d9db895d80e8853c63, type: 2}
-  emergencyPreset: {fileID: 11400000, guid: 2a6fb77d0839748f8a89ecaae644d298, type: 2}
+  emergencyPreset: {fileID: 11400000, guid: b6029d6df53d145d2a8adce6e0e6a33c, type: 2}
   bakedRenderers:
   - {fileID: 1510906318}
   - {fileID: 1510906317}
@@ -25404,7 +25646,7 @@ Transform:
   m_GameObject: {fileID: 447473653}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.235, y: 12.25, z: 2.1390827}
+  m_LocalPosition: {x: -0.5, y: 12.1, z: 1.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25420,9 +25662,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
-  m_Intensity: 2
-  m_Range: 8
+  m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -25515,6 +25757,7 @@ GameObject:
   - component: {fileID: 448255666}
   - component: {fileID: 448255668}
   - component: {fileID: 448255667}
+  - component: {fileID: 448255669}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 19
   m_TagString: Untagged
@@ -25594,6 +25837,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 448255665}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &448255669
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448255665}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1}
+  m_Center: {x: -0.00000010703417, y: 0, z: 0}
 --- !u!1 &451650766
 GameObject:
   m_ObjectHideFlags: 0
@@ -25711,7 +25975,7 @@ Transform:
   m_GameObject: {fileID: 454987709}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.735, y: 5.6499996, z: 3.005108}
+  m_LocalPosition: {x: 0.75, y: 5.5, z: 2.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25727,9 +25991,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
-  m_Intensity: 2
-  m_Range: 8
+  m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -25912,6 +26176,7 @@ GameObject:
   - component: {fileID: 461569063}
   - component: {fileID: 461569065}
   - component: {fileID: 461569064}
+  - component: {fileID: 461569066}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 15
   m_TagString: Untagged
@@ -25991,6 +26256,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 461569062}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &461569066
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461569062}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.000000058204932, y: 0, z: 0}
 --- !u!1 &465816810
 GameObject:
   m_ObjectHideFlags: 0
@@ -26738,6 +27024,7 @@ GameObject:
   - component: {fileID: 516506703}
   - component: {fileID: 516506705}
   - component: {fileID: 516506704}
+  - component: {fileID: 516506706}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 11
   m_TagString: Untagged
@@ -26817,6 +27104,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516506702}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &516506706
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516506702}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1}
+  m_Center: {x: 0.0000000013998829, y: 0, z: 0}
 --- !u!1 &517857625
 GameObject:
   m_ObjectHideFlags: 0
@@ -27112,7 +27420,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 518229097}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -28057,8 +28365,8 @@ PrefabInstance:
       objectReference: {fileID: 4300000, guid: 54fb3e0e5a1e74feb9bd682d84c36587, type: 2}
     - target: {fileID: 3377548998259959673, guid: cd885cac40f374bf1b378003d452ad4f, type: 3}
       propertyPath: m_Mesh
-      value:
-      objectReference: {fileID: 4300000, guid: 352a7d3835ada4f8996be7f6af8b1fe0, type: 2}
+      value: 
+      objectReference: {fileID: 4300000, guid: 907c0086be71943fc87f3abe14d5c68d, type: 2}
     - target: {fileID: 3408806759978941394, guid: cd885cac40f374bf1b378003d452ad4f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -28898,7 +29206,7 @@ PrefabInstance:
     - target: {fileID: 8283023762688421145, guid: cd885cac40f374bf1b378003d452ad4f, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: 352a7d3835ada4f8996be7f6af8b1fe0, type: 2}
+      objectReference: {fileID: 4300000, guid: 907c0086be71943fc87f3abe14d5c68d, type: 2}
     - target: {fileID: 8352725384573543643, guid: cd885cac40f374bf1b378003d452ad4f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -31406,7 +31714,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540296365}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -31866,7 +32174,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 555556760}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -32505,6 +32813,7 @@ GameObject:
   - component: {fileID: 581421618}
   - component: {fileID: 581421620}
   - component: {fileID: 581421619}
+  - component: {fileID: 581421621}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 30
   m_TagString: Untagged
@@ -32584,6 +32893,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 581421617}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &581421621
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581421617}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_Center: {x: 0.00000006493872, y: 0, z: 0}
 --- !u!1 &595361693
 GameObject:
   m_ObjectHideFlags: 0
@@ -33831,6 +34161,7 @@ GameObject:
   - component: {fileID: 667503527}
   - component: {fileID: 667503529}
   - component: {fileID: 667503528}
+  - component: {fileID: 667503530}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 6
   m_TagString: Untagged
@@ -33910,6 +34241,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667503526}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &667503530
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667503526}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0.0000000903342, y: 0, z: 0}
 --- !u!1 &669016370
 GameObject:
   m_ObjectHideFlags: 0
@@ -33983,6 +34335,7 @@ GameObject:
   - component: {fileID: 670183272}
   - component: {fileID: 670183274}
   - component: {fileID: 670183273}
+  - component: {fileID: 670183275}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 14
   m_TagString: Untagged
@@ -34062,6 +34415,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670183271}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &670183275
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670183271}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0.00000007163385, y: 0, z: 0}
 --- !u!1 &677272756
 GameObject:
   m_ObjectHideFlags: 0
@@ -34500,6 +34874,7 @@ GameObject:
   - component: {fileID: 722171114}
   - component: {fileID: 722171116}
   - component: {fileID: 722171115}
+  - component: {fileID: 722171117}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 32
   m_TagString: Untagged
@@ -34579,6 +34954,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 722171113}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &722171117
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722171113}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0.00000011841911, y: 0, z: 0}
 --- !u!1 &722714309
 GameObject:
   m_ObjectHideFlags: 0
@@ -34817,6 +35213,7 @@ GameObject:
   - component: {fileID: 735834369}
   - component: {fileID: 735834371}
   - component: {fileID: 735834370}
+  - component: {fileID: 735834372}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 3
   m_TagString: Untagged
@@ -34896,6 +35293,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735834368}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &735834372
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735834368}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000004, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: 0.000000058980376, y: 0, z: 0}
 --- !u!1 &739500166
 GameObject:
   m_ObjectHideFlags: 0
@@ -34938,6 +35356,7 @@ GameObject:
   - component: {fileID: 745777831}
   - component: {fileID: 745777833}
   - component: {fileID: 745777832}
+  - component: {fileID: 745777834}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 6
   m_TagString: Untagged
@@ -35017,6 +35436,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745777830}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &745777834
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745777830}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0.0000000903342, y: 0, z: 0}
 --- !u!1001 &757290161
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36043,8 +36483,8 @@ PrefabInstance:
       objectReference: {fileID: 4300000, guid: 11bfe895afab14748b2c5ef081166d31, type: 2}
     - target: {fileID: 4555370637917155621, guid: 9fe33694a260b493da0210d0929348e6, type: 3}
       propertyPath: m_Mesh
-      value:
-      objectReference: {fileID: 4300000, guid: 97a0bb9a31547454d9d0d30ffa0c2ae4, type: 2}
+      value: 
+      objectReference: {fileID: 4300000, guid: c7af11e9976df42fe9bb7b4adf74f74f, type: 2}
     - target: {fileID: 4590515546420889636, guid: 9fe33694a260b493da0210d0929348e6, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -36688,7 +37128,7 @@ PrefabInstance:
     - target: {fileID: 7899276137789202992, guid: 9fe33694a260b493da0210d0929348e6, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: 97a0bb9a31547454d9d0d30ffa0c2ae4, type: 2}
+      objectReference: {fileID: 4300000, guid: c7af11e9976df42fe9bb7b4adf74f74f, type: 2}
     - target: {fileID: 7904375151012405355, guid: 9fe33694a260b493da0210d0929348e6, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -39666,7 +40106,7 @@ Transform:
   m_GameObject: {fileID: 766882377}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.835, y: 2.35, z: 3.1783133}
+  m_LocalPosition: {x: 3.71, y: 2.2, z: -0.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39682,9 +40122,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
-  m_Intensity: 2
-  m_Range: 8
+  m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -40047,7 +40487,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793059090}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -40465,6 +40905,7 @@ GameObject:
   - component: {fileID: 799826683}
   - component: {fileID: 799826685}
   - component: {fileID: 799826684}
+  - component: {fileID: 799826686}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 13
   m_TagString: Untagged
@@ -40544,6 +40985,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 799826682}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &799826686
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799826682}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: -0.0000000903342, y: 0, z: 0}
 --- !u!1001 &801391412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40562,12 +41024,16 @@ PrefabInstance:
       objectReference: {fileID: 4300000, guid: f08d3bfe0adc040e4a9e49f14b26598e, type: 2}
     - target: {fileID: 56862766127120799, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
-      value:
-      objectReference: {fileID: 4300000, guid: c0b237545dc944edab1b799fcab3261f, type: 2}
+      value: 
+      objectReference: {fileID: 4300000, guid: 3e24d6435c00b4b7a84fdfaa69e36a33, type: 2}
     - target: {fileID: 164649401768195089, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 0c508547825eb4a759fd4f7c2eebda08, type: 2}
+    - target: {fileID: 175831575589792063, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 182823318458970046, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -40632,6 +41098,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: dd5932d5c33654bada27f82b131da00d, type: 2}
+    - target: {fileID: 708158314095211122, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 711002099445842646, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -40732,6 +41202,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 95249f1d9df584dad9e4102575804ab9, type: 2}
+    - target: {fileID: 1199532565104829408, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1222309152617964938, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -40752,6 +41226,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: cfc2d01ccf6c941b08743bbe8f6ff964, type: 2}
+    - target: {fileID: 1273674997392719042, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1300018315531062885, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -40832,6 +41310,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: f7b3acaf7f7834ac48dc1a6cb613cfb9, type: 2}
+    - target: {fileID: 1881551251788802335, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1907454285884019979, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -40912,6 +41394,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 915cfd919071c4d9ab81e1c1a71f4be3, type: 2}
+    - target: {fileID: 2252896956056691672, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2280889033438040233, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -40964,6 +41450,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 0303c12dab5984ef09eb57b3d4e23221, type: 2}
+    - target: {fileID: 2632229389605691111, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2636897768700822664, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -40994,8 +41484,8 @@ PrefabInstance:
       objectReference: {fileID: 4300000, guid: f3c8de00c341340488df7ef52fd6b3e6, type: 2}
     - target: {fileID: 2778567600592318822, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
-      value:
-      objectReference: {fileID: 4300000, guid: c53cb64996d5c41168358230f1b175e0, type: 2}
+      value: 
+      objectReference: {fileID: 4300000, guid: 14da76a75db764d14aa9d657adb83cb3, type: 2}
     - target: {fileID: 2811375290156029522, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41008,10 +41498,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 8b03fbfdb5d104b42a716853281e287d, type: 2}
+    - target: {fileID: 2896659079499218227, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2903442755292942462, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: f827d046809184147874d7863af01db1, type: 2}
+    - target: {fileID: 2928722489389148642, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2976734125530651559, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41200,6 +41698,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: f45d8e3407c794d09baf77bda667fbf8, type: 2}
+    - target: {fileID: 4526011360044909920, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4588283061319421494, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41260,6 +41762,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 958401a8630f646f9bff0ebfb5dbd4cf, type: 2}
+    - target: {fileID: 5471850692536217250, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5541631450345191128, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41332,6 +41838,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: d0d357348d7b34c52a468727c5a63184, type: 2}
+    - target: {fileID: 6271235468477314784, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6314369649641731368, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41372,10 +41882,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 90aea940aeecf4d5da0e690c2e8d2d82, type: 2}
+    - target: {fileID: 6558502846056991884, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6673161454507791640, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: e488880116e164de29e485fdfaca554d, type: 2}
+    - target: {fileID: 6686489219568408444, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6702144489033129828, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41395,7 +41913,7 @@ PrefabInstance:
     - target: {fileID: 6786679516251947526, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: c53cb64996d5c41168358230f1b175e0, type: 2}
+      objectReference: {fileID: 4300000, guid: 14da76a75db764d14aa9d657adb83cb3, type: 2}
     - target: {fileID: 6818249125940846708, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41472,6 +41990,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 2624c0dd26a6949db9edfeffe9dbe143, type: 2}
+    - target: {fileID: 7423969693754522909, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486418952543821922, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7503167985611449945, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7508127193356185567, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41543,7 +42073,11 @@ PrefabInstance:
     - target: {fileID: 8096217782937620667, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: c0b237545dc944edab1b799fcab3261f, type: 2}
+      objectReference: {fileID: 4300000, guid: 3e24d6435c00b4b7a84fdfaa69e36a33, type: 2}
+    - target: {fileID: 8118382529972520348, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8135532053810989397, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -41612,10 +42146,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: d62d301138ebf46739359a3185276096, type: 2}
+    - target: {fileID: 8890450337890256634, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8907737189970424307, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: ca919f422fdf04bb6ba15f901ee4049e, type: 2}
+    - target: {fileID: 8976081212346476125, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8979362333110742438, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -44337,6 +44879,90 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3046778971419775655, guid: 1f07ac16806f7465b91a6cc25c984013, type: 3}
   m_PrefabInstance: {fileID: 801391412}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &809973025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 809973027}
+  - component: {fileID: 809973026}
+  m_Layer: 0
+  m_Name: Quest quality route probes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!220 &809973026
+LightProbeGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809973025}
+  m_Enabled: 1
+  m_SourcePositions:
+  - {x: 3.0909626, y: 1.4, z: 0.82822096}
+  - {x: 1.5999999, y: 1.4, z: 2.7712815}
+  - {x: -0.82822096, y: 1.4, z: 3.0909626}
+  - {x: -2.7712812, y: 1.4, z: 1.6000003}
+  - {x: -3.0909626, y: 1.4, z: -0.828221}
+  - {x: -1.5999998, y: 1.4, z: -2.7712815}
+  - {x: 0.82822084, y: 1.4, z: -3.0909626}
+  - {x: 2.771281, y: 1.4, z: -1.6000006}
+  - {x: 3.0909626, y: 4.7, z: 0.82822096}
+  - {x: 1.5999999, y: 4.7, z: 2.7712815}
+  - {x: -0.82822096, y: 4.7, z: 3.0909626}
+  - {x: -2.7712812, y: 4.7, z: 1.6000003}
+  - {x: -3.0909626, y: 4.7, z: -0.828221}
+  - {x: -1.5999998, y: 4.7, z: -2.7712815}
+  - {x: 0.82822084, y: 4.7, z: -3.0909626}
+  - {x: 2.771281, y: 4.7, z: -1.6000006}
+  - {x: 3.0909626, y: 8, z: 0.82822096}
+  - {x: 1.5999999, y: 8, z: 2.7712815}
+  - {x: -0.82822096, y: 8, z: 3.0909626}
+  - {x: -2.7712812, y: 8, z: 1.6000003}
+  - {x: -3.0909626, y: 8, z: -0.828221}
+  - {x: -1.5999998, y: 8, z: -2.7712815}
+  - {x: 0.82822084, y: 8, z: -3.0909626}
+  - {x: 2.771281, y: 8, z: -1.6000006}
+  - {x: 3.0909626, y: 11.3, z: 0.82822096}
+  - {x: 1.5999999, y: 11.3, z: 2.7712815}
+  - {x: -0.82822096, y: 11.3, z: 3.0909626}
+  - {x: -2.7712812, y: 11.3, z: 1.6000003}
+  - {x: -3.0909626, y: 11.3, z: -0.828221}
+  - {x: -1.5999998, y: 11.3, z: -2.7712815}
+  - {x: 0.82822084, y: 11.3, z: -3.0909626}
+  - {x: 2.771281, y: 11.3, z: -1.6000006}
+  - {x: -3.8, y: 1.3, z: -11.8}
+  - {x: -3, y: 1.3, z: -11.8}
+  - {x: -2.1999998, y: 1.3, z: -11.8}
+  - {x: -1.3999999, y: 1.3, z: -11.8}
+  - {x: -0.5999999, y: 1.3, z: -11.8}
+  - {x: 0.2000001, y: 1.3, z: -11.8}
+  - {x: 1.0000001, y: 1.3, z: -11.8}
+  - {x: 1.8000002, y: 1.3, z: -11.8}
+  - {x: 2.6000001, y: 1.3, z: -11.8}
+  - {x: 3.4, y: 1.3, z: -11.8}
+  m_Dering: 1
+--- !u!4 &809973027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809973025}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &813449497
 GameObject:
   m_ObjectHideFlags: 0
@@ -49458,6 +50084,7 @@ GameObject:
   - component: {fileID: 841609282}
   - component: {fileID: 841609284}
   - component: {fileID: 841609283}
+  - component: {fileID: 841609285}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 18
   m_TagString: Untagged
@@ -49537,6 +50164,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841609281}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &841609285
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841609281}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 1}
+  m_Center: {x: -0.00000021784768, y: 0, z: 0}
 --- !u!1 &842748600
 GameObject:
   m_ObjectHideFlags: 0
@@ -49666,7 +50314,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 854803773}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -50546,6 +51194,7 @@ GameObject:
   - component: {fileID: 896045498}
   - component: {fileID: 896045500}
   - component: {fileID: 896045499}
+  - component: {fileID: 896045501}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 9
   m_TagString: Untagged
@@ -50625,6 +51274,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896045497}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &896045501
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896045497}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.00000004397407, y: 0, z: -0.0000009536743}
 --- !u!1 &897123894
 GameObject:
   m_ObjectHideFlags: 0
@@ -50665,7 +51335,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897123894}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -51625,6 +52295,7 @@ GameObject:
   - component: {fileID: 929168915}
   - component: {fileID: 929168917}
   - component: {fileID: 929168916}
+  - component: {fileID: 929168918}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 31
   m_TagString: Untagged
@@ -51704,6 +52375,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929168914}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &929168918
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929168914}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.00000003784635, y: 0, z: 0}
 --- !u!1 &941844288
 GameObject:
   m_ObjectHideFlags: 0
@@ -51715,6 +52407,7 @@ GameObject:
   - component: {fileID: 941844289}
   - component: {fileID: 941844291}
   - component: {fileID: 941844290}
+  - component: {fileID: 941844292}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 0
   m_TagString: Untagged
@@ -51794,6 +52487,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941844288}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &941844292
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941844288}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0.000000013956225, y: 0, z: 0}
 --- !u!1 &943155201
 GameObject:
   m_ObjectHideFlags: 0
@@ -52047,6 +52761,7 @@ GameObject:
   - component: {fileID: 956188053}
   - component: {fileID: 956188055}
   - component: {fileID: 956188054}
+  - component: {fileID: 956188056}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 25
   m_TagString: Untagged
@@ -52126,6 +52841,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956188052}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &956188056
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956188052}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_Center: {x: -0.000000014740465, y: 0, z: 0}
 --- !u!1 &956202512
 GameObject:
   m_ObjectHideFlags: 0
@@ -52270,7 +53006,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956493877}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -52601,6 +53337,7 @@ GameObject:
   - component: {fileID: 970169869}
   - component: {fileID: 970169871}
   - component: {fileID: 970169870}
+  - component: {fileID: 970169872}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 2
   m_TagString: Untagged
@@ -52680,6 +53417,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 970169868}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &970169872
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970169868}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: -0.000000051480583, y: 0, z: 0}
 --- !u!1 &973066345
 GameObject:
   m_ObjectHideFlags: 0
@@ -52691,6 +53449,7 @@ GameObject:
   - component: {fileID: 973066346}
   - component: {fileID: 973066348}
   - component: {fileID: 973066347}
+  - component: {fileID: 973066349}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 4
   m_TagString: Untagged
@@ -52770,6 +53529,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973066345}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &973066349
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973066345}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: 0.0000000617278, y: 0, z: 0}
 --- !u!1 &979372629
 GameObject:
   m_ObjectHideFlags: 0
@@ -53097,6 +53877,7 @@ GameObject:
   - component: {fileID: 1008802278}
   - component: {fileID: 1008802280}
   - component: {fileID: 1008802279}
+  - component: {fileID: 1008802281}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 20
   m_TagString: Untagged
@@ -53176,6 +53957,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1008802277}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1008802281
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008802277}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: 0.000000034461664, y: 0, z: 0}
 --- !u!1 &1011942796
 GameObject:
   m_ObjectHideFlags: 0
@@ -58627,6 +59429,7 @@ GameObject:
   - component: {fileID: 1043552971}
   - component: {fileID: 1043552973}
   - component: {fileID: 1043552972}
+  - component: {fileID: 1043552974}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 0
   m_TagString: Untagged
@@ -58706,6 +59509,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1043552970}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1043552974
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043552970}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: 0.00000016902905, y: 0, z: 0}
 --- !u!1 &1047435383
 GameObject:
   m_ObjectHideFlags: 0
@@ -58919,6 +59743,7 @@ GameObject:
   - component: {fileID: 1052180050}
   - component: {fileID: 1052180052}
   - component: {fileID: 1052180051}
+  - component: {fileID: 1052180053}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 7
   m_TagString: Untagged
@@ -58998,6 +59823,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1052180049}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1052180053
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1052180049}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999998, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: 0.000000051009238, y: 0, z: 0}
 --- !u!1 &1057537412
 GameObject:
   m_ObjectHideFlags: 0
@@ -59128,7 +59974,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1062305121}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -60025,6 +60871,7 @@ GameObject:
   - component: {fileID: 1126756716}
   - component: {fileID: 1126756718}
   - component: {fileID: 1126756717}
+  - component: {fileID: 1126756719}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 27
   m_TagString: Untagged
@@ -60104,6 +60951,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126756715}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1126756719
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126756715}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.000000003428994, y: 0, z: 0}
 --- !u!1 &1130514618
 GameObject:
   m_ObjectHideFlags: 0
@@ -60115,6 +60983,7 @@ GameObject:
   - component: {fileID: 1130514619}
   - component: {fileID: 1130514621}
   - component: {fileID: 1130514620}
+  - component: {fileID: 1130514622}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 10
   m_TagString: Untagged
@@ -60194,6 +61063,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1130514618}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1130514622
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130514618}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 1}
+  m_Center: {x: -0.0000000054146767, y: 0, z: 0}
 --- !u!1 &1136770497
 GameObject:
   m_ObjectHideFlags: 0
@@ -60562,7 +61452,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1159552375}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -60750,6 +61640,7 @@ GameObject:
   - component: {fileID: 1162270653}
   - component: {fileID: 1162270655}
   - component: {fileID: 1162270654}
+  - component: {fileID: 1162270656}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 1
   m_TagString: Untagged
@@ -60829,6 +61720,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162270652}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1162270656
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162270652}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000004}
+  m_Center: {x: 0.00000021784768, y: 0, z: 0}
 --- !u!1 &1168903628
 GameObject:
   m_ObjectHideFlags: 0
@@ -61310,6 +62222,7 @@ GameObject:
   - component: {fileID: 1222398051}
   - component: {fileID: 1222398053}
   - component: {fileID: 1222398052}
+  - component: {fileID: 1222398054}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 21
   m_TagString: Untagged
@@ -61389,6 +62302,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1222398050}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1222398054
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222398050}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_Center: {x: -0.000000058554235, y: 0, z: 0}
 --- !u!1 &1225931655
 GameObject:
   m_ObjectHideFlags: 0
@@ -61504,7 +62438,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232058680}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -61863,6 +62797,7 @@ GameObject:
   - component: {fileID: 1249651535}
   - component: {fileID: 1249651537}
   - component: {fileID: 1249651536}
+  - component: {fileID: 1249651538}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 5
   m_TagString: Untagged
@@ -61942,6 +62877,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1249651534}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1249651538
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249651534}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.000000066265216, y: 0, z: 0}
 --- !u!1 &1252990594
 GameObject:
   m_ObjectHideFlags: 0
@@ -62172,6 +63128,7 @@ GameObject:
   - component: {fileID: 1258807766}
   - component: {fileID: 1258807768}
   - component: {fileID: 1258807767}
+  - component: {fileID: 1258807769}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 24
   m_TagString: Untagged
@@ -62251,6 +63208,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258807765}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1258807769
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258807765}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: -0.000000027542484, y: 0, z: 0}
 --- !u!1 &1259203417
 GameObject:
   m_ObjectHideFlags: 0
@@ -62352,6 +63330,7 @@ GameObject:
   - component: {fileID: 1261071756}
   - component: {fileID: 1261071758}
   - component: {fileID: 1261071757}
+  - component: {fileID: 1261071759}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 16
   m_TagString: Untagged
@@ -62431,6 +63410,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1261071755}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1261071759
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261071755}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000004, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: -0.00000021460983, y: 0, z: 0}
 --- !u!1 &1261536688
 GameObject:
   m_ObjectHideFlags: 0
@@ -62806,6 +63806,7 @@ GameObject:
   - component: {fileID: 1283773110}
   - component: {fileID: 1283773112}
   - component: {fileID: 1283773111}
+  - component: {fileID: 1283773113}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 19
   m_TagString: Untagged
@@ -62885,6 +63886,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283773109}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1283773113
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283773109}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1}
+  m_Center: {x: -0.00000010703417, y: 0, z: 0}
 --- !u!1 &1289072149
 GameObject:
   m_ObjectHideFlags: 0
@@ -63444,6 +64466,7 @@ GameObject:
   - component: {fileID: 1329931676}
   - component: {fileID: 1329931678}
   - component: {fileID: 1329931677}
+  - component: {fileID: 1329931679}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 9
   m_TagString: Untagged
@@ -63523,6 +64546,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329931675}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1329931679
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329931675}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.0000000012164492, y: 0, z: 0}
 --- !u!1 &1335947895
 GameObject:
   m_ObjectHideFlags: 0
@@ -63534,6 +64578,7 @@ GameObject:
   - component: {fileID: 1335947896}
   - component: {fileID: 1335947898}
   - component: {fileID: 1335947897}
+  - component: {fileID: 1335947899}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 23
   m_TagString: Untagged
@@ -63613,6 +64658,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1335947895}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1335947899
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335947895}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: -0.000000044693593, y: 0, z: 0}
 --- !u!1 &1335956853
 GameObject:
   m_ObjectHideFlags: 0
@@ -64142,7 +65208,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1361008077}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -64272,6 +65338,7 @@ GameObject:
   - component: {fileID: 1366244150}
   - component: {fileID: 1366244152}
   - component: {fileID: 1366244151}
+  - component: {fileID: 1366244153}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 2
   m_TagString: Untagged
@@ -64351,6 +65418,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366244149}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1366244153
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366244149}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0.000000029850668, y: 0, z: 0}
 --- !u!1 &1366900655
 GameObject:
   m_ObjectHideFlags: 0
@@ -64626,6 +65714,7 @@ GameObject:
   - component: {fileID: 1380187578}
   - component: {fileID: 1380187580}
   - component: {fileID: 1380187579}
+  - component: {fileID: 1380187581}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 17
   m_TagString: Untagged
@@ -64705,6 +65794,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1380187577}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1380187581
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380187577}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.00000008799822, y: 0, z: -0.0000038146973}
 --- !u!1 &1382211964
 GameObject:
   m_ObjectHideFlags: 0
@@ -70323,11 +71433,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398595419}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.65
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -70421,6 +71531,7 @@ GameObject:
   - component: {fileID: 1400500724}
   - component: {fileID: 1400500726}
   - component: {fileID: 1400500725}
+  - component: {fileID: 1400500727}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 35
   m_TagString: Untagged
@@ -70500,6 +71611,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1400500723}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1400500727
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400500723}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_Center: {x: -0.00000015804508, y: 0, z: 0}
 --- !u!1 &1402442072
 GameObject:
   m_ObjectHideFlags: 0
@@ -71257,11 +72389,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421151113}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.65
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -71445,6 +72577,7 @@ GameObject:
   - component: {fileID: 1434826788}
   - component: {fileID: 1434826790}
   - component: {fileID: 1434826789}
+  - component: {fileID: 1434826791}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 18
   m_TagString: Untagged
@@ -71524,6 +72657,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434826787}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1434826791
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434826787}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_Center: {x: 0.00000017227671, y: 0, z: 0}
 --- !u!1 &1438433508
 GameObject:
   m_ObjectHideFlags: 0
@@ -71958,7 +73112,7 @@ Transform:
   m_GameObject: {fileID: 1460722843}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.71, y: 8.95, z: 2.961807}
+  m_LocalPosition: {x: 2.6, y: 8.8, z: 0.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -71974,9 +73128,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
-  m_Intensity: 2
-  m_Range: 8
+  m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
+  m_Intensity: 0.3
+  m_Range: 0.85
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -72098,7 +73252,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1471452287}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -72346,7 +73500,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491625690}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -72692,6 +73846,7 @@ GameObject:
   - component: {fileID: 1501431202}
   - component: {fileID: 1501431204}
   - component: {fileID: 1501431203}
+  - component: {fileID: 1501431205}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 33
   m_TagString: Untagged
@@ -72771,6 +73926,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1501431201}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1501431205
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501431201}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_Center: {x: -0.0000002286796, y: 0, z: 0}
 --- !u!1 &1508583314
 GameObject:
   m_ObjectHideFlags: 0
@@ -72795,8 +73971,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1508583314}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.98058045, z: -0, w: -0.19611724}
-  m_LocalPosition: {x: 1, y: 9.9, z: 2.4}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -4.02, y: 9.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -73790,6 +74966,7 @@ GameObject:
   - component: {fileID: 1512335259}
   - component: {fileID: 1512335261}
   - component: {fileID: 1512335260}
+  - component: {fileID: 1512335262}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 15
   m_TagString: Untagged
@@ -73869,6 +75046,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1512335258}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1512335262
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512335258}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.000000058204932, y: 0, z: 0}
 --- !u!1 &1513507949
 GameObject:
   m_ObjectHideFlags: 0
@@ -73880,6 +75078,7 @@ GameObject:
   - component: {fileID: 1513507950}
   - component: {fileID: 1513507952}
   - component: {fileID: 1513507951}
+  - component: {fileID: 1513507953}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 0
   m_TagString: Untagged
@@ -73959,6 +75158,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1513507949}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1513507953
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1513507949}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: 0.00000016902905, y: 0, z: 0}
 --- !u!1 &1514393645
 GameObject:
   m_ObjectHideFlags: 0
@@ -73970,6 +75190,7 @@ GameObject:
   - component: {fileID: 1514393646}
   - component: {fileID: 1514393648}
   - component: {fileID: 1514393647}
+  - component: {fileID: 1514393649}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 17
   m_TagString: Untagged
@@ -74049,6 +75270,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1514393645}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1514393649
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514393645}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.00000008799822, y: 0, z: -0.0000038146973}
 --- !u!1 &1520776893
 GameObject:
   m_ObjectHideFlags: 0
@@ -74320,7 +75562,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1531195616}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -74882,7 +76124,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1548710201}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -77338,6 +78580,7 @@ GameObject:
   - component: {fileID: 1568877154}
   - component: {fileID: 1568877156}
   - component: {fileID: 1568877155}
+  - component: {fileID: 1568877157}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 5
   m_TagString: Untagged
@@ -77417,6 +78660,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568877153}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1568877157
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568877153}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.000000066265216, y: 0, z: 0}
 --- !u!1 &1570281809
 GameObject:
   m_ObjectHideFlags: 0
@@ -77653,6 +78917,7 @@ GameObject:
   - component: {fileID: 1598180734}
   - component: {fileID: 1598180736}
   - component: {fileID: 1598180735}
+  - component: {fileID: 1598180737}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 26
   m_TagString: Untagged
@@ -77732,6 +78997,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598180733}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1598180737
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598180733}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_Center: {x: 0.000000007850645, y: 0, z: 0}
 --- !u!1 &1612618881
 GameObject:
   m_ObjectHideFlags: 0
@@ -77774,6 +79060,7 @@ GameObject:
   - component: {fileID: 1618512647}
   - component: {fileID: 1618512649}
   - component: {fileID: 1618512648}
+  - component: {fileID: 1618512650}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 3
   m_TagString: Untagged
@@ -77853,6 +79140,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618512646}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1618512650
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618512646}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.000000071396556, y: 0, z: 0}
 --- !u!1 &1622843512
 GameObject:
   m_ObjectHideFlags: 0
@@ -77880,7 +79188,7 @@ Transform:
   m_GameObject: {fileID: 1622843512}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.4, y: 2.35, z: -5.05}
+  m_LocalPosition: {x: -3.3, y: 2.2, z: -8.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -77896,9 +79204,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
-  m_Intensity: 2.5
-  m_Range: 8
+  m_Color: {r: 1, g: 0.64, b: 0.32, a: 1}
+  m_Intensity: 1.5
+  m_Range: 3.1
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -78020,7 +79328,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631287487}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -78118,6 +79426,7 @@ GameObject:
   - component: {fileID: 1649403200}
   - component: {fileID: 1649403202}
   - component: {fileID: 1649403201}
+  - component: {fileID: 1649403203}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 14
   m_TagString: Untagged
@@ -78197,6 +79506,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649403199}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1649403203
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1649403199}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0.00000007163385, y: 0, z: 0}
 --- !u!1 &1652213426
 GameObject:
   m_ObjectHideFlags: 0
@@ -78579,6 +79909,7 @@ GameObject:
   - component: {fileID: 1668563213}
   - component: {fileID: 1668563215}
   - component: {fileID: 1668563214}
+  - component: {fileID: 1668563216}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 13
   m_TagString: Untagged
@@ -78658,6 +79989,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1668563212}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1668563216
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668563212}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: -0.0000000903342, y: 0, z: 0}
 --- !u!1 &1676091468
 GameObject:
   m_ObjectHideFlags: 0
@@ -78939,6 +80291,7 @@ GameObject:
   - component: {fileID: 1692321928}
   - component: {fileID: 1692321930}
   - component: {fileID: 1692321929}
+  - component: {fileID: 1692321931}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 6
   m_TagString: Untagged
@@ -79018,6 +80371,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1692321927}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1692321931
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692321927}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.00000004487771, y: 0, z: 0}
 --- !u!1 &1699697669
 GameObject:
   m_ObjectHideFlags: 0
@@ -79029,6 +80403,7 @@ GameObject:
   - component: {fileID: 1699697670}
   - component: {fileID: 1699697672}
   - component: {fileID: 1699697671}
+  - component: {fileID: 1699697673}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 4
   m_TagString: Untagged
@@ -79108,6 +80483,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699697669}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1699697673
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1699697669}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000004}
+  m_Center: {x: 0.00000004948481, y: 0, z: 0}
 --- !u!1 &1704739438
 GameObject:
   m_ObjectHideFlags: 0
@@ -79151,6 +80547,7 @@ GameObject:
   - component: {fileID: 1709052335}
   - component: {fileID: 1709052337}
   - component: {fileID: 1709052336}
+  - component: {fileID: 1709052338}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 34
   m_TagString: Untagged
@@ -79230,6 +80627,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709052334}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1709052338
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709052334}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.000000100006474, y: 0, z: 0}
 --- !u!1 &1726694911
 GameObject:
   m_ObjectHideFlags: 0
@@ -79980,6 +81398,7 @@ GameObject:
   - component: {fileID: 1765127176}
   - component: {fileID: 1765127178}
   - component: {fileID: 1765127177}
+  - component: {fileID: 1765127179}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 4
   m_TagString: Untagged
@@ -80059,6 +81478,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1765127175}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1765127179
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765127175}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000004}
+  m_Center: {x: 0.00000004948481, y: 0, z: 0}
 --- !u!1 &1768225415
 GameObject:
   m_ObjectHideFlags: 0
@@ -80175,6 +81615,7 @@ GameObject:
   - component: {fileID: 1770129112}
   - component: {fileID: 1770129114}
   - component: {fileID: 1770129113}
+  - component: {fileID: 1770129115}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 18
   m_TagString: Untagged
@@ -80254,6 +81695,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1770129111}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1770129115
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770129111}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 1}
+  m_Center: {x: -0.00000021784768, y: 0, z: 0}
 --- !u!1 &1770242900
 GameObject:
   m_ObjectHideFlags: 0
@@ -80265,6 +81727,7 @@ GameObject:
   - component: {fileID: 1770242901}
   - component: {fileID: 1770242903}
   - component: {fileID: 1770242902}
+  - component: {fileID: 1770242904}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 10
   m_TagString: Untagged
@@ -80344,6 +81807,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1770242900}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1770242904
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770242900}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0.000000046499423, y: 0, z: 0}
 --- !u!1 &1774930737
 GameObject:
   m_ObjectHideFlags: 0
@@ -80446,7 +81930,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1775848058}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -80902,6 +82386,7 @@ GameObject:
   - component: {fileID: 1778990187}
   - component: {fileID: 1778990189}
   - component: {fileID: 1778990188}
+  - component: {fileID: 1778990190}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 8
   m_TagString: Untagged
@@ -80981,6 +82466,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1778990186}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1778990190
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778990186}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: 0.000000057885586, y: 0, z: 0}
 --- !u!1 &1800168369
 GameObject:
   m_ObjectHideFlags: 0
@@ -81480,7 +82986,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1818181594}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -81578,6 +83084,7 @@ GameObject:
   - component: {fileID: 1823201166}
   - component: {fileID: 1823201168}
   - component: {fileID: 1823201167}
+  - component: {fileID: 1823201169}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 3
   m_TagString: Untagged
@@ -81657,6 +83164,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823201165}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1823201169
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823201165}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.000000071396556, y: 0, z: 0}
 --- !u!1 &1824780523
 GameObject:
   m_ObjectHideFlags: 0
@@ -81758,6 +83286,7 @@ GameObject:
   - component: {fileID: 1827509030}
   - component: {fileID: 1827509032}
   - component: {fileID: 1827509031}
+  - component: {fileID: 1827509033}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 15
   m_TagString: Untagged
@@ -81837,6 +83366,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1827509029}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1827509033
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827509029}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 1}
+  m_Center: {x: 0.00000006443156, y: 0, z: 0}
 --- !u!1 &1832561109
 GameObject:
   m_ObjectHideFlags: 0
@@ -81848,6 +83398,7 @@ GameObject:
   - component: {fileID: 1832561110}
   - component: {fileID: 1832561112}
   - component: {fileID: 1832561111}
+  - component: {fileID: 1832561113}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 8
   m_TagString: Untagged
@@ -81927,6 +83478,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832561109}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1832561113
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832561109}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: 0.000000057885586, y: 0, z: 0}
 --- !u!1 &1835788378
 GameObject:
   m_ObjectHideFlags: 0
@@ -82166,6 +83738,7 @@ GameObject:
   - component: {fileID: 1857437750}
   - component: {fileID: 1857437752}
   - component: {fileID: 1857437751}
+  - component: {fileID: 1857437753}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 13
   m_TagString: Untagged
@@ -82245,6 +83818,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857437749}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1857437753
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857437749}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000004}
+  m_Center: {x: 0.000000022980714, y: 0, z: 0}
 --- !u!1 &1863005001
 GameObject:
   m_ObjectHideFlags: 0
@@ -82397,11 +83991,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1863212695}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 3
   m_Color: {r: 0.36, g: 0.52, b: 0.8, a: 1}
-  m_Intensity: 0.65
+  m_Intensity: 0
   m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -82799,7 +84393,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1887416897}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -83093,6 +84687,7 @@ GameObject:
   - component: {fileID: 1912179159}
   - component: {fileID: 1912179161}
   - component: {fileID: 1912179160}
+  - component: {fileID: 1912179162}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 16
   m_TagString: Untagged
@@ -83172,6 +84767,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1912179158}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1912179162
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912179158}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0.00000003965647, y: 0, z: 0}
 --- !u!1 &1917172999
 GameObject:
   m_ObjectHideFlags: 0
@@ -83468,7 +85084,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1954359426}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.68, b: 0.3, a: 1}
@@ -83478,7 +85094,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -83511,7 +85127,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -83581,6 +85197,7 @@ GameObject:
   - component: {fileID: 1960474461}
   - component: {fileID: 1960474463}
   - component: {fileID: 1960474462}
+  - component: {fileID: 1960474464}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 19
   m_TagString: Untagged
@@ -83660,6 +85277,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960474460}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1960474464
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960474460}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.00000014830448, y: 0, z: 0}
 --- !u!1 &1962459484
 GameObject:
   m_ObjectHideFlags: 0
@@ -83685,7 +85323,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1962459484}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -84123,6 +85761,7 @@ GameObject:
   - component: {fileID: 1977473138}
   - component: {fileID: 1977473140}
   - component: {fileID: 1977473139}
+  - component: {fileID: 1977473141}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 11
   m_TagString: Untagged
@@ -84202,6 +85841,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977473137}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1977473141
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977473137}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999999, y: 0.99999994, z: 1}
+  m_Center: {x: 0.0000000013998829, y: 0, z: 0}
 --- !u!1 &1981611806
 GameObject:
   m_ObjectHideFlags: 0
@@ -84213,6 +85873,7 @@ GameObject:
   - component: {fileID: 1981611807}
   - component: {fileID: 1981611809}
   - component: {fileID: 1981611808}
+  - component: {fileID: 1981611810}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 11
   m_TagString: Untagged
@@ -84292,6 +85953,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1981611806}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1981611810
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981611806}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000005, y: 0.99999994, z: 1.0000004}
+  m_Center: {x: -0.000000056511283, y: 0, z: 0}
 --- !u!1 &1983537622
 GameObject:
   m_ObjectHideFlags: 0
@@ -84335,6 +86017,7 @@ GameObject:
   - component: {fileID: 1992288852}
   - component: {fileID: 1992288854}
   - component: {fileID: 1992288853}
+  - component: {fileID: 1992288855}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 7
   m_TagString: Untagged
@@ -84414,6 +86097,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1992288851}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1992288855
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992288851}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9999998, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: 0.000000051009238, y: 0, z: 0}
 --- !u!1 &1994927709
 GameObject:
   m_ObjectHideFlags: 0
@@ -84425,6 +86129,7 @@ GameObject:
   - component: {fileID: 1994927710}
   - component: {fileID: 1994927712}
   - component: {fileID: 1994927711}
+  - component: {fileID: 1994927713}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 12
   m_TagString: Untagged
@@ -84504,6 +86209,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1994927709}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1994927713
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994927709}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000004, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: -0.00000006884507, y: 0, z: -0.0000009536743}
 --- !u!1 &2005890431
 GameObject:
   m_ObjectHideFlags: 0
@@ -84544,7 +86270,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2005890431}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -85650,7 +87376,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047669116}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.72, b: 0.43, a: 1}
@@ -85748,6 +87474,7 @@ GameObject:
   - component: {fileID: 2053262350}
   - component: {fileID: 2053262352}
   - component: {fileID: 2053262351}
+  - component: {fileID: 2053262353}
   m_Layer: 0
   m_Name: Stairwell liner F2 F3 1
   m_TagString: Untagged
@@ -85827,6 +87554,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2053262349}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2053262353
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053262349}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 0.99999994, z: 1.0000004}
+  m_Center: {x: 0.00000021784768, y: 0, z: 0}
 --- !u!1 &2058030460
 GameObject:
   m_ObjectHideFlags: 0
@@ -86225,6 +87973,7 @@ GameObject:
   - component: {fileID: 2072052072}
   - component: {fileID: 2072052074}
   - component: {fileID: 2072052073}
+  - component: {fileID: 2072052075}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 28
   m_TagString: Untagged
@@ -86304,6 +88053,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2072052071}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2072052075
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072052071}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0.00000005832578, y: 0, z: 0}
 --- !u!1 &2089401176
 GameObject:
   m_ObjectHideFlags: 0
@@ -87123,6 +88893,7 @@ GameObject:
   - component: {fileID: 2122462374}
   - component: {fileID: 2122462376}
   - component: {fileID: 2122462375}
+  - component: {fileID: 2122462377}
   m_Layer: 0
   m_Name: Stairwell liner F1 F2 16
   m_TagString: Untagged
@@ -87202,6 +88973,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122462373}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2122462377
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122462373}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0.00000003965647, y: 0, z: 0}
 --- !u!1 &2132319314
 GameObject:
   m_ObjectHideFlags: 0
@@ -87213,6 +89005,7 @@ GameObject:
   - component: {fileID: 2132319315}
   - component: {fileID: 2132319317}
   - component: {fileID: 2132319316}
+  - component: {fileID: 2132319318}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 1
   m_TagString: Untagged
@@ -87292,6 +89085,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132319314}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2132319318
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132319314}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: 0.00000021726885, y: 0, z: 0.0000009536743}
 --- !u!1 &2138090929
 GameObject:
   m_ObjectHideFlags: 0
@@ -87303,6 +89117,7 @@ GameObject:
   - component: {fileID: 2138090930}
   - component: {fileID: 2138090932}
   - component: {fileID: 2138090931}
+  - component: {fileID: 2138090933}
   m_Layer: 0
   m_Name: Stairwell liner F3 F4 17
   m_TagString: Untagged
@@ -87382,6 +89197,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138090929}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2138090933
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138090929}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 0.99999994, z: 1.0000002}
+  m_Center: {x: 0.000000100006446, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -87405,3 +89241,4 @@ SceneRoots:
   - {fileID: 2090653017}
   - {fileID: 1241278246}
   - {fileID: 1069510999}
+  - {fileID: 809973027}

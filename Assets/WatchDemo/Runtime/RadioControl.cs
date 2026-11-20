@@ -17,19 +17,22 @@ namespace LighthouseKeepers.WatchDemo
         public bool Toggled {get;private set;}
         XRSimpleInteractable interaction;PhysicalGrip grip;
         Quaternion previousHand;Vector3 visualHome;Quaternion visualRotation;
-        float depression,detent;
+        float depression,detent;Vector3 selectedHand;bool leverCommitted;
         void Awake()
         {
             interaction=GetComponent<XRSimpleInteractable>();grip=GetComponent<PhysicalGrip>();
             visualHome=visual.localPosition;visualRotation=visual.localRotation;
+            // The old hitbox stopped at the socket, short of the visible lever tip.
+            if(kind==Kind.Toggle){var box=GetComponent<BoxCollider>();if(box){box.center=new Vector3(0,0,.075f);box.size=new Vector3(.14f,.16f,.22f);}}
             interaction.selectEntered.AddListener(Selected);interaction.selectExited.AddListener(Released);
         }
         void Selected(SelectEnterEventArgs e)
         {
             previousHand=e.interactorObject.transform.rotation;
+            selectedHand=e.interactorObject.transform.position;leverCommitted=false;
             if(kind==Kind.Button){depression=.018f;console.Press(this);}
             else if(kind==Kind.Toggle)
-            {if(!mainPower||console.ToggleMain())Toggled=!Toggled;console.Click();}
+            {if(!mainPower){Toggled=!Toggled;console.Click();}}
             else console.Click();
         }
         void Released(SelectExitEventArgs e){depression=0;}
@@ -37,6 +40,12 @@ namespace LighthouseKeepers.WatchDemo
         public void SyncCrewFrequency(float normalized){if(frequency&&!interaction.isSelected)Normalized=Mathf.Clamp01(normalized);}
         void Update()
         {
+            if(mainPower&&kind==Kind.Toggle&&interaction.isSelected&&interaction.interactorsSelecting.Count>0&&!leverCommitted)
+            {
+                var travel=Vector3.Dot(interaction.interactorsSelecting[0].transform.position-selectedHand,transform.up);
+                // Grip and lift. Trigger is not a second, hidden activation path.
+                if(travel>=.025f){leverCommitted=true;if(console.ToggleMain()){Toggled=true;grip.HoldingHand?.Pulse(.3f,.05f);console.Click();}}
+            }
             if(kind==Kind.Knob && interaction.isSelected && interaction.interactorsSelecting.Count>0)
             {
                 // Signed wrist twist around the console-facing shaft; tracking transform stays untouched.

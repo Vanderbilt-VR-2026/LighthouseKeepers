@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "host join",
+    "preparation wait replicated",
+    "radio clearance replicated",
+    "leave/rejoin retains clearance",
+    "guided pass replicated",
+    "shared sleep advances both to day 2",
+    "retry restores uncleared ship",
+    "host mode overrides guest campaign selection"
+  ],
+  "scope": "Two live Editors; actions scripted on host, not physical controller or audible voice acceptance"
+}

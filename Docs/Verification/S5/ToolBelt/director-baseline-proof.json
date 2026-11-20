@@ -1,0 +1,12 @@
+{
+  "baseline": "8b15f0f3",
+  "unchanged": {
+    "Assets/WatchDemo/Runtime/ObjectiveDirector.cs": true,
+    "Assets/Scripts/LK.Net/Tests/EditMode/MasterDirectorTests.cs": true,
+    "all_existing_string_values_unchanged": true
+  },
+  "known_failures": [
+    "EveryActionHasAnObjectLocationAndOneButton: HelpPartner has no fixed location",
+    "InstructionsStayShortAndTableHasEveryStep: HoldValve has 7 words, legacy test max 6"
+  ]
+}

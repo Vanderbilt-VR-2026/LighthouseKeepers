@@ -41,6 +41,9 @@ namespace LighthouseKeepers.Core.Progression
         [Min(.01f)] public float isolationFreshnessSeconds = .3f;
         [Range(0, 1)] public float initialFuelFraction = .25f;
 
+        [Header("Optional M3 campaign; unused by the legacy watch catalog")]
+        public NightScenario scenario;
+
         public DayPlan CreatePlan() => new DayPlan
         {
             Day = day, RequiredKeepers = requiredKeepers, Heading = briefingHeading, Briefing = briefingText,

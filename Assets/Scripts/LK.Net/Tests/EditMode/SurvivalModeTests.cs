@@ -1,0 +1,46 @@
+using System;using System.Collections.Generic;using UnityEngine;using NUnit.Framework;using LighthouseKeepers.Core;using LighthouseKeepers.Lobby;
+namespace LighthouseKeepers.Net.Tests
+{
+ public sealed class SurvivalModeTests
+ {
+  readonly List<object> watches=new();
+  static Type T(string n)=>Type.GetType("LighthouseKeepers.WatchDemo."+n+", Assembly-CSharp",true);
+  static object Call(object o,string n,params object[] a)=>o.GetType().GetMethod(n).Invoke(o,a);
+  static V Get<V>(object o,string n)=>(V)o.GetType().GetProperty(n).GetValue(o);
+  object New(int day=1,KeeperGameMode mode=KeeperGameMode.Survival){var c=Resources.Load("M3Campaign");var s=Activator.CreateInstance(T("WatchState"),c.GetType().GetField("nights").GetValue(c),day,Resources.Load("S4Tuning"),Resources.Load("S4M2Tuning"),Resources.Load("ImmersionTuning"),mode);watches.Add(s);return s;}
+  [TearDown]public void Cleanup(){foreach(var s in watches)Call(s,"DisposeSurvival");watches.Clear();}
+  void Start(object s){for(int i=0;i<60;i++)Call(s,"PourFuel",.1f);for(int i=0;i<3;i++){for(int n=0;n<100&&!Get<bool>(s,"StarterInWindow");n++)Call(s,"Tick",.05d);Assert.True((bool)Call(s,"StarterPulled"));Call(s,"Tick",.5d);}Assert.AreEqual("On",Get<object>(s,"Power").ToString());}
+  void Prepare(object s){Start(s);Call(s,"CompleteRepair");Call(s,"IgniteBeacon",true);var r=Get<object>(s,"Radio");Call(r,"ToggleMain");var p=r.GetType().GetField("Program").GetValue(r);Call(r,"Tune",(float)r.GetType().GetProperty("TargetMHz").GetValue(r));Call(s,"Tick",3d);for(int i=0;i<Get<int>(r,"CodeLength");i++)Call(r,"PressCode",Call(r,"CodeSymbol",i));Call(r,"SetMicrophone",true,true);Call(s,"Tick",5d);Assert.True(Get<bool>(r,"Completed"));}
+  void Pass(object s){for(int i=0;i<2400&&!Get<bool>(s,"Complete");i++){if(Get<int>(s,"AimingShip")>=0)Call(s,"AlignBeacon",Get<float>(s,"ShipWheelTarget"));Call(s,"Tick",.1d);}Assert.True(Get<bool>(s,"Complete"));}
+  [Test]public void AllStationsAndPartnerInformationFromFirstDay(){var s=New();Assert.False(Get<bool>(s,"Tutorial"));Assert.True(Get<bool>(s,"TimedStarter"));Assert.False((bool)Call(s,"Sleep"));foreach(string id in new[]{"STN_PIPE_LEAK","STN_GENERATOR","STN_RADIO_CONSOLE","STN_BEACON_CONTROL"}){Assert.False((bool)Call(s,"IsDone",id));Assert.False((bool)Call(s,"IsPending",id));}Call(s,"SetScriptedPartner",true);Assert.True(Get<bool>(s,"RadioRelay"));Assert.True(Get<bool>(Get<object>(s,"Pressure"),"CrewRequired"));Assert.Null(Get<object>(s,"Drowned"));Assert.Null(Get<object>(s,"Fear"));Assert.False((bool)Call(s,"PrepareScare",true,true,true));}
+  [Test]public void FloodIsOnlyLossAndRetryResetsIt(){var s=New(2);Call(s,"EngageWatch");Call(s,"Tick",900d);Assert.False(Get<bool>(s,"Failed"));Assert.AreEqual(0,Get<float>(s,"TimeDanger"));Call(s,"ObserveSea",1,new Vector3(30,-1,0),0,Vector3.zero,11f);Assert.False(Get<bool>(s,"Failed"));Call(s,"ObserveWater",10d,1f);Assert.True(Get<bool>(s,"Failed"));Call(s,"Retry");Assert.False(Get<bool>(s,"Failed"));Assert.AreEqual(2,Get<int>(s,"Day"));}
+  [Test]public void MissedBeamWaitsThenPassesAndDaySixBecomesSeven(){var s=New(6);Prepare(s);Call(s,"AlignBeacon",.99f);Call(s,"IgniteBeacon",false);Call(s,"Tick",600d);Assert.False(Get<bool>(s,"Failed"));Assert.False(Get<bool>(Get<object>(s,"Ships"),"Lost"));Assert.False(Get<bool>(s,"Complete"));Call(s,"IgniteBeacon",true);Pass(s);Assert.True((bool)Call(s,"Sleep"));Assert.AreEqual(7,Get<int>(s,"Day"));Assert.False(Get<bool>(s,"Complete"));}
+  [Test]public void EndlessDifficultyAndReplicaPastFive(){var first=New();var later=New(100);Assert.Greater(Get<float>(later,"FloodRiseMultiplier"),Get<float>(first,"FloodRiseMultiplier"));Assert.Less(Get<float>(later,"BeamTolerance"),Get<float>(first,"BeamTolerance"));Assert.Greater(Get<float>(later,"BeamTolerance"),3.9f);Call(later,"SetKeeperCount",2);var f=Call(later,"Capture",.1f);Assert.True((bool)Call(f,"Valid"));Call(first,"SetRemoteReplica",true);Assert.True((bool)Call(first,"ApplyRemote",f));Assert.AreEqual(100,Get<int>(first,"Day"));var campaign=New(1,KeeperGameMode.Campaign);Call(campaign,"SetRemoteReplica",true);Assert.False((bool)Call(campaign,"ApplyRemote",f));}
+  [Test]public void HumanReaderAndOperatorGetDifferentCodeInstructions(){var s=New();Start(s);Call(s,"SetKeeperCount",2);Call(s,"CompleteRepair");var r=Get<object>(s,"Radio");Call(r,"ToggleMain");var p=r.GetType().GetField("Program").GetValue(r);Call(r,"Tune",(float)r.GetType().GetProperty("TargetMHz").GetValue(r));Call(s,"Tick",3d);var d=Get<object>(s,"Director");d.GetType().GetField("DutyForActor").SetValue(d,new Func<int,CrewDuty>(a=>a==1?CrewDuty.Machinist:CrewDuty.Lightkeeper));Call(d,"Tick",5f,1,Vector3.zero,2,Vector3.up*11,true);Assert.AreEqual("ReadCode",Get<object>(d,"First").ToString());Assert.AreEqual("RadioCode",Get<object>(d,"Second").ToString());}
+  [Test]public void ModeLabelsAndBriefingHaveRealText(){foreach(string key in new[]{"lobby.Campaign","lobby.Survival","lobby.CampaignHint","lobby.SurvivalHint","survival.board.day","survival.board.loop","survival.board.loss","survival.briefing.body.0","survival.briefing.body.1","survival.briefing.title.0","survival.briefing.title.1","survival.briefing.title.2"}){Assert.True(PlayerStrings.Has(key),key);Assert.IsNotEmpty(PlayerStrings.Get(key),key);}Assert.AreEqual("DAY 8",string.Format(PlayerStrings.Get("survival.board.day"),8));}
+  [TestCase(KeeperGameMode.Campaign)][TestCase(KeeperGameMode.Survival)]
+  public void EarlyNightGraceSurvivesReplicationWithoutRemovingFuelOrLaterPressure(KeeperGameMode mode){
+   for(int day=1;day<=2;day++){
+    var host=New(day,mode);Call(host,"SetKeeperCount",2);Call(host,"AdvanceWatchGate",60d);
+    Assert.True(Get<bool>(host,"WatchStartHeld"),$"{mode} {day}: reading time before work starts");
+    var packet=Call(host,"Capture",.1f);Assert.True((bool)Call(packet,"Valid"));
+    var guest=New(day,mode);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",packet));
+    Assert.True(Get<bool>(guest,"WatchStartHeld"));
+    Call(host,"EngageWatch");Assert.False(Get<bool>(host,"WatchStartHeld"),"Starting work still starts the watch immediately");
+   }
+   var first=New(1,KeeperGameMode.Survival);Assert.False(Get<bool>(Get<object>(first,"Engine"),"EnoughFuel"),"Learning to pour fuel remains required");
+   var third=New(3,mode);Call(third,"AdvanceWatchGate",46d);Assert.False(Get<bool>(third,"WatchStartHeld"),"Only the first two nights receive extra grace");
+   if(mode==KeeperGameMode.Survival)Assert.Greater(Get<float>(third,"FloodRiseMultiplier"),Get<float>(first,"FloodRiseMultiplier"));
+  }
+  [Test]public void PracticeDayCannotFloodOutButStillRequiresEveryJobAndPassage(){
+   var s=New();Assert.True(Get<bool>(s,"SurvivalPractice"));Assert.Less(Get<float>(s,"FloodHeightCap"),.3f);
+   Call(s,"EngageWatch");Call(s,"CycleLantern",0);var lamps=Get<object>(s,"Lanterns");float oil=(float)Call(lamps,"Oil",0);
+   Call(s,"Tick",1800d);Call(s,"ObserveWater",1800d,10f);
+   Assert.False(Get<bool>(s,"Failed"));Assert.False(Get<bool>(s,"Complete"));Assert.False((bool)Call(s,"Sleep"));Assert.AreEqual(oil,Call(lamps,"Oil",0));
+   var guest=New(3);Call(guest,"SetRemoteReplica",true);Assert.True((bool)Call(guest,"ApplyRemote",Call(s,"Capture",.22f)));Assert.True(Get<bool>(guest,"SurvivalPractice"));
+   Prepare(s);Pass(s);Assert.True((bool)Call(s,"Sleep"));Assert.AreEqual(2,Get<int>(s,"Day"));Assert.False(Get<bool>(s,"SurvivalPractice"));
+   Call(s,"EngageWatch");Call(s,"ObserveWater",10d,1f);Assert.True(Get<bool>(s,"Failed"),"The next day restores real flood-loss pressure");
+  }
+  [Test]public void CampaignRetainsTutorialAndHorror(){var a=New(1,KeeperGameMode.Campaign);Assert.True(Get<bool>(a,"Tutorial"));var b=New(2,KeeperGameMode.Campaign);Assert.NotNull(Get<object>(b,"Drowned"));}
+ }
+}

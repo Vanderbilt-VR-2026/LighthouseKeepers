@@ -74,7 +74,7 @@ Shader "LighthouseKeepers/Storm Ocean Waves" {
   float r=length(xz);
   float calm=lerp(1,_CalmAmplitude,smoothstep(_CalmStart,_CalmEnd,r));
   float amp=_WaveAmplitude*(1+_StormGain*storm)*shore*calm*saturate(_LK_OceanWaves);
-  float t=_Time.y*(1+0.25*storm);
+  float t=_Time.y;
   float wind=radians(_WindAzimuth);float2 d0=float2(sin(wind),cos(wind));
   float2 d1=float2(sin(wind+0.7),cos(wind+0.7)),d2=float2(sin(wind-1.05),cos(wind-1.05)),d3=float2(sin(wind+2.2),cos(wind+2.2));
   float spacing=max(r*_RingRatio,0.05);

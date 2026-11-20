@@ -1,0 +1,27 @@
+{
+  "main_source_sha256": "2568d2f87b1fb23b092c4a7e2811c45802561372536dabbf554209ad66fb2db3",
+  "accent_source_sha256": "6cbfc9a211c4aff8298e329711ecbe11f71bfa680c5ccba50cf161fc7a57d2a2",
+  "clips": [
+    {
+      "name": "main-loop",
+      "duration": 396.59260770975055,
+      "lufs": -20.0,
+      "true_peak": -3.8,
+      "sha256": "e8e7e4d2d2129ec17cd3c746815f5689f27f777d715b3267b978b8731bf1bfc8",
+      "source_start": 0.1893424036281179,
+      "source_end": 400.7819501133787,
+      "crossfade": 4,
+      "unencoded_seam_delta": 0.009521484375
+    },
+    {
+      "name": "intense-hit",
+      "duration": 5.0,
+      "lufs": -18.02,
+      "true_peak": -2.35,
+      "sha256": "f13b80a9bafd61f9a4325b064aac83737e9cdf1b83a4c861cad807997f47cb54",
+      "source_start": 71,
+      "source_end": 76,
+      "crossfade": 0
+    }
+  ]
+}

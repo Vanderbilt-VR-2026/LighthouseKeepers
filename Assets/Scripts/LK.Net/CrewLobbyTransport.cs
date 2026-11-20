@@ -59,6 +59,10 @@ namespace LighthouseKeepers.Net
             fusion.GameStarting += Starting;
         }
         public bool HostGame(int maxPlayers) {hostRequested=true;return Connect(true,CrewConnectionPolicy.NewCode());}
+        public CrewDuty LocalDuty {
+            get {foreach(var p in Players)if(p.Id==LocalPlayerId)return p.Duty;return CrewDuties.Preference;}
+        }
+        public bool SetLocalDuty(CrewDuty duty)=>fusion&&fusion.SetLocalDuty(duty);
         public bool StartOrOffline(){if(IsOnline)return IsHost&&StartGame(ShipWorld.GameplaySceneName,1,false);return hostRequested&&PlaySolo();}
         public bool JoinGame(string address)
         {
@@ -180,7 +184,7 @@ namespace LighthouseKeepers.Net
         }
         void Connection(bool online) { connecting = false; if (online) localError = ""; ConnectionChanged?.Invoke(online); }
         void Status() => StatusChanged?.Invoke();
-        void Starting() => GameStarting?.Invoke();
+        void Starting(){if(LocalDuty!=CrewDuty.None)CrewDuties.Preference=LocalDuty;GameStarting?.Invoke();}
         void OnDestroy()
         {
             if (!fusion) return;

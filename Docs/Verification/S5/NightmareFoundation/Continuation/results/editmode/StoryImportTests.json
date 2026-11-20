@@ -1,0 +1,52 @@
+{
+  "Summary": {
+    "Total": 5,
+    "Passed": 5,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StoryImportTests.ExistingRecordingsStillResolveWithTheirOriginalExactCaptions",
+      "Status": "Passed",
+      "Duration": 0.0129469,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StoryImportTests.GeneratorRecoveryNeverAnnouncedWhileEngineIsStillStopped",
+      "Status": "Passed",
+      "Duration": 0.006553,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StoryImportTests.PaTransportAcceptsOnlyHarborMasterNeverPrivateAntagonistOrUnusedGap",
+      "Status": "Passed",
+      "Duration": 0.0026785,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StoryImportTests.ScriptRowsMatchEveryRuntimeCaptionAndFilename",
+      "Status": "Passed",
+      "Duration": 0.0036241,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StoryImportTests.UnsupportedDirectionsAndAbsentCompanionNeverReplaceWorkingInstructions",
+      "Status": "Passed",
+      "Duration": 0.000583,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.51,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: StoryImportTests",
+  "success": true,
+  "result": null
+}

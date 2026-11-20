@@ -1,0 +1,69 @@
+{
+  "editor": "Unity 6000.3.23f1, muted",
+  "summary": {
+    "PressureValveTests": {
+      "Total": 8,
+      "Passed": 8,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "TimedStarterTests": {
+      "Total": 10,
+      "Passed": 10,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "CampaignOrderTests": {
+      "Total": 5,
+      "Passed": 5,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "CrewCompanionTests": {
+      "Total": 5,
+      "Passed": 5,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "RadioRelayTests": {
+      "Total": 5,
+      "Passed": 5,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "SurvivalModeTests": {
+      "Total": 10,
+      "Passed": 10,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "StoryImportTests": {
+      "Total": 5,
+      "Passed": 5,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    },
+    "VoicePassTests": {
+      "Total": 23,
+      "Passed": 23,
+      "Failed": 0,
+      "Skipped": 0,
+      "Inconclusive": 0
+    }
+  },
+  "total": 71,
+  "passed": 71,
+  "failed": 0,
+  "before_fix": {
+    "new_cases": 4,
+    "failed": 4,
+    "observed": "HoldValve paired with BeaconLight even when no ship needed guidance"
+  }
+}

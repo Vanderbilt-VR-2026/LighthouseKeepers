@@ -1,0 +1,66 @@
+{
+  "Summary": {
+    "Total": 7,
+    "Passed": 7,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.AudioPassTests.DemoScoreUsesStreamedStereoLoopsAndOneBoundedSpatialScare",
+      "Status": "Passed",
+      "Duration": 0.0017096,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.AudioPassTests.Phase2RadioClipsContainOneShortRecordedTake",
+      "Status": "Passed",
+      "Duration": 0.0132559,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.AudioPassTests.Phase3MusicHasThreeLoopsShortStingsAndAuthenticatedState",
+      "Status": "Passed",
+      "Duration": 0.0022005,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.AudioPassTests.Phase3SnapshotRejectsInvalidMusicState",
+      "Status": "Passed",
+      "Duration": 0.0110923,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.AudioPassTests.Phase4RainZonesAndSourceClipsAreDistinct",
+      "Status": "Passed",
+      "Duration": 0.0030042,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.AudioPassTests.Phase5MixerHasSixBusesAndCeilingKeepsQuietAudioUnchanged",
+      "Status": "Passed",
+      "Duration": 0.0073301,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.AudioPassTests.Phase5VoiceIdentitySurvivesPhotonSpeakerRename",
+      "Status": "Passed",
+      "Duration": 0.0028662,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.37,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: AudioPassTests",
+  "success": true,
+  "result": null
+}

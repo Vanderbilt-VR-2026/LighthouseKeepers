@@ -19,6 +19,20 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
         static object Get(object o,string p)=>o.GetType().GetProperty(p).GetValue(o);
         static object Call(object o,string m,params object[] args)=>o.GetType().GetMethod(m).Invoke(o,args);
         static T Field<T>(object o,string p)=>(T)o.GetType().GetField(p,BindingFlags.Instance|BindingFlags.NonPublic).GetValue(o);
+        // Combined plumbing has an intentionally broad AABB. Visibility must test
+        // triangles, not treat all the empty space inside that box as opaque metal.
+        static bool SurfaceHit(Mesh mesh,Ray ray,out float distance)
+        {
+            distance=float.PositiveInfinity;if(!mesh.bounds.IntersectRay(ray))return false;
+            var v=mesh.vertices;var tris=mesh.triangles;
+            for(int n=0;n<tris.Length;n+=3){var a=v[tris[n]];var e1=v[tris[n+1]]-a;var e2=v[tris[n+2]]-a;
+                var p=Vector3.Cross(ray.direction,e2);float det=Vector3.Dot(e1,p);if(Mathf.Abs(det)<.0000001f)continue;
+                var t=ray.origin-a;float u=Vector3.Dot(t,p)/det;if(u<0||u>1)continue;
+                var q=Vector3.Cross(t,e1);float w=Vector3.Dot(ray.direction,q)/det;if(w<0||u+w>1)continue;
+                float d=Vector3.Dot(e2,q)/det;if(d>=0&&d<distance)distance=d;
+            }
+            return float.IsFinite(distance);
+        }
         [UnityTest] public IEnumerator S4M2StarterIsVisibleFromStandingReachAndReturnsAfterPull()
         {
             string previous=System.Environment.GetEnvironmentVariable("LK_S4M2_DISABLED");
@@ -40,7 +54,8 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
                 var watch=UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Single(c=>c.GetType().Name=="WatchDemoController");
                 var state=Get(watch,"State");var engine=Get(state,"Engine");Assert.That(engine,Is.Not.Null);
                 // The new tutorial begins powered; test the same unprimed pull after its scheduled outage.
-                if((bool)Get(state,"GeneratorTutorial")){Call(state,"Tick",75d);yield return null;}
+                if((bool)Get(state,"GeneratorTutorial")||(bool)Get(state,"Campaign")){Call(state,"Tick",100d);yield return null;}
+                Assert.False((bool)Get(engine,"Running"),"Unprimed-pull fixture must start after fuel exhaustion");
                 var generator=GameObject.Find("STN_GENERATOR").transform;
                 var starter=GameObject.Find("GRIP_StarterHandle").GetComponents<MonoBehaviour>().Single(c=>c.GetType().Name=="GeneratorRestart");
                 var bar=starter.transform.Find("Control grip");var barSize=bar.GetComponent<MeshFilter>().sharedMesh.bounds.size;
@@ -53,7 +68,7 @@ namespace LighthouseKeepers.Presentation.Environment.Tests
                     {
                         var renderer=mesh.GetComponent<Renderer>();if(!renderer||!renderer.enabled||!mesh.sharedMesh)continue;
                         var ray=new Ray(mesh.transform.InverseTransformPoint(eye),mesh.transform.InverseTransformVector(starter.transform.position-eye));
-                        if(!mesh.sharedMesh.bounds.IntersectRay(ray,out float distance))continue;
+                        if(!SurfaceHit(mesh.sharedMesh,ray,out float distance))continue;
                         float worldDistance=Vector3.Distance(eye,mesh.transform.TransformPoint(ray.GetPoint(distance)));
                         if(worldDistance<nearest){nearest=worldDistance;first=mesh;}
                     }

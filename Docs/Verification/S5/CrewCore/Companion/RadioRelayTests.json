@@ -1,0 +1,45 @@
+{
+  "Summary": {
+    "Total": 4,
+    "Passed": 4,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.RadioRelayTests.ClueAndButtonsAgreeAndMistakeKeepsTuning",
+      "Status": "Passed",
+      "Duration": 0.0593602,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.RadioRelayTests.CodeVariesByNightButIsStableOnRetryAndReplica",
+      "Status": "Passed",
+      "Duration": 0.0150007,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.RadioRelayTests.LastHumanLeavingRestoresLocalCluePolicyAndPreservesCodeProgress",
+      "Status": "Passed",
+      "Duration": 0.0008526,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.RadioRelayTests.RelayAssignsReaderAndOperatorWithoutGivingAwayAnswer",
+      "Status": "Passed",
+      "Duration": 0.003478,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 10.68,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: RadioRelayTests",
+  "success": true,
+  "result": null
+}

@@ -19,6 +19,10 @@ MonoBehaviour:
   radioLoad: 1
   lightsLoad: 0.25
   generatorSequence: 1
+  timedCampaignStarter: 1
+  starterCycleSeconds: 2.4
+  starterWindowWidth: 0.4
+  starterNetworkTolerance: 0.06
   primerSqueezes: 3
   starterPulls: 3
   floodAtPulls: 5

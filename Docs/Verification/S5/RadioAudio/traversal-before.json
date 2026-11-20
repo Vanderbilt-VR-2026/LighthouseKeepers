@@ -1,0 +1,20 @@
+{
+  "status": "completed",
+  "duration": 2.64,
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "FullName": "LighthouseKeepers.Presentation.Environment.Tests.ShellTraversalTests.ExistingRigWalksAuthoredHouseToGalleryRoute",
+      "Status": "Failed",
+      "Duration": 2.5453926,
+      "Message": "Unhandled log message: '[Error] GameObject has multiple AudioSources and/or AudioListeners attached. While built-in filters like lowpass are instantiated separately, components implementing OnAudioFilterRead may only be used by either one AudioSource or AudioListener at a time.\nThe reason for this is that any state information used by the callback exists only once in the component, and the source or listener calling it cannot be inferred from the callback.\nIn this case the OnAudioFilterRead callback of script FearWorldFilter was first attached to a component of type AudioSource on the game object CREW_RADIO_0 after which another component of type AudioSource tried to attach it.'. Use UnityEngine.TestTools.LogAssert.Expect",
+      "StackTrace": "UnityEngine.GameObject:SetActive (bool)\nLighthouseKeepers.WatchDemo.HandheldCrewRadio:Create (LighthouseKeepers.WatchDemo.WatchDemoController,int) (at Assets/WatchDemo/Runtime/HandheldCrewRadio.cs:27)\nLighthouseKeepers.WatchDemo.WatchDemoController:CreateCrewRadios () (at Assets/WatchDemo/Runtime/WatchDemoController.Radios.cs:7)\nLighthouseKeepers.WatchDemo.WatchDemoController:Start () (at Assets/WatchDemo/Runtime/WatchDemoController.cs:106)\n\n"
+    }
+  ]
+}

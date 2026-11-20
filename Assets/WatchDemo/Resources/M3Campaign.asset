@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79d91d703fb741a7986c96dfbd69806e, type: 3}
+  m_Name: M3Campaign
+  m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.FiveNightCatalog
+  enabled: 1
+  nights:
+  - {fileID: 11400000, guid: f5b1095db85684dc7836d757a2c56c70, type: 2}
+  - {fileID: 11400000, guid: 42893da6858b4427ea28ae4b4a16faaf, type: 2}
+  - {fileID: 11400000, guid: 7dc15b51360e440faa9f9debe59aafdc, type: 2}
+  - {fileID: 11400000, guid: ff339933887314f88a717a30d313ef24, type: 2}
+  - {fileID: 11400000, guid: 706ae8dabfb8d45cd9d8dfc18eb7a0b8, type: 2}
+  demo: {fileID: 11400000, guid: 50c4d3694b610449f983e578c3b1ffa2, type: 2}

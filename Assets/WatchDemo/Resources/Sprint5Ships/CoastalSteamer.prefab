@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1472627259528595791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6505002903424813947}
+  - component: {fileID: 1375283064870885301}
+  m_Layer: 0
+  m_Name: CoastalSteamer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6505002903424813947
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472627259528595791}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1375283064870885301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472627259528595791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0de509ee9506341cc8c4865d213c1498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LK.Presentation::LighthouseKeepers.Presentation.Environment.SteamerView
+  hull: {fileID: 4300000, guid: 34f7aabb3220d4298b0943bad9b466cf, type: 2}
+  distant: {fileID: 4300000, guid: b24b6993a04f9402d968d0d375dd7f46, type: 2}
+  beam: {fileID: 4300000, guid: 0629975bc56a8403fb80d6124befecbd, type: 2}
+  particles: {fileID: 4300000, guid: 16598f3ce778f4a169aa808d4241341f, type: 2}
+  hullMaterial: {fileID: 2100000, guid: 4d0b2ecc432a7466f8bb364168619fe4, type: 2}
+  effectsMaterial: {fileID: 2100000, guid: 102bfa41a94df4894b9a58f99892d8bd, type: 2}

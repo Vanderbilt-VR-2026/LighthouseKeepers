@@ -8,33 +8,33 @@ namespace LighthouseKeepers.WatchDemo
 {
  public sealed class WatchBeaconStation:MonoBehaviour
  {
-  WatchDemoController watch;WatchBeacon beacon;M2StationParts parts;TextMesh readout;Transform marker;Renderer lamp;MaterialPropertyBlock block;AudioSource sound;AudioClip click;
-  Vector3 previousRag;bool wasHeld;Mesh beamMesh;Material beamMaterial;
+  WatchDemoController watch;WatchBeacon beacon;M2StationParts parts;TextMesh readout;Transform marker,targetMarker;Renderer lamp;MaterialPropertyBlock block;AudioSource sound;AudioClip click;
+  int beamDay;Mesh beamMesh;Material beamMaterial;
   public BeaconControl Ignition {get;private set;}
   public BeaconControl Wheel {get;private set;}
   public M2CarryProp Rag {get;private set;}
   public Vector3 LensPoint=>beacon.transform.TransformPoint(new Vector3(0,1.3f,.43f));
   public WatchState State=>watch.State;
   public static WatchBeaconStation Create(WatchDemoController watch,WatchBeacon beacon)
-  {var anchor=GameObject.Find("STN_BEACON_CONTROL");if(!anchor)throw new System.InvalidOperationException("Missing F4 beacon control anchor");var root=new GameObject("S4 beacon station");root.SetActive(false);root.transform.SetParent(anchor.transform,false);var c=root.AddComponent<WatchBeaconStation>();c.watch=watch;c.beacon=beacon;c.Build();root.SetActive(true);return c;}
+  {var anchor=GameObject.Find("STN_BEACON_CONTROL");if(!anchor)throw new System.InvalidOperationException("Missing F4 beacon control anchor");foreach(Transform legacy in anchor.transform)legacy.gameObject.SetActive(false);anchor.transform.SetPositionAndRotation(new Vector3(-4.02f,9.9f,0),Quaternion.Euler(0,90,0));var root=new GameObject("S4 beacon station");root.SetActive(false);root.transform.SetParent(anchor.transform,false);var c=root.AddComponent<WatchBeaconStation>();c.watch=watch;c.beacon=beacon;c.Build();root.SetActive(true);return c;}
   void Build()
   {
    parts=gameObject.AddComponent<M2StationParts>();parts.Initialize();block=new MaterialPropertyBlock();
-   parts.Part("Beacon control cabinet",transform,new Vector3(0,1.3f,.10f),new Vector3(.8f,.85f,.13f),parts.Dark);
-   parts.Text("Beacon heading",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.5"),transform,new Vector3(0,1.65f,.18f),.0045f);
-   readout=parts.Text("Beacon instructions","",transform,new Vector3(0,1.53f,.19f),.003f);
+   parts.Part("Beacon pedestal foot",transform,new Vector3(0,.04f,.08f),new Vector3(.52f,.08f,.38f),parts.Dark);
+   parts.Part("Beacon pedestal column",transform,new Vector3(0,.58f,.08f),new Vector3(.13f,.54f,.13f),parts.Metal,PrimitiveType.Cylinder);
+   parts.Part("Beacon control cabinet",transform,new Vector3(0,1.18f,.10f),new Vector3(.8f,.45f,.13f),parts.Dark);
+   parts.Part("Ship bearing instrument plate",transform,new Vector3(.24f,1.49f,.12f),new Vector3(.34f,.18f,.06f),parts.Dark);
+   parts.Text("Beacon heading",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.5"),transform,new Vector3(.24f,1.54f,.18f),.0045f);
+   readout=parts.Text("Beacon instructions","",transform,new Vector3(.24f,1.46f,.19f),.003f);
    Ignition=Control("SWITCH_BeaconIgnition",new Vector3(.25f,1.20f,.19f),false);
    parts.Text("Ignition label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.6"),transform,new Vector3(.25f,1.05f,.20f),.003f);
    Wheel=Control("GRIP_BeaconWheel",new Vector3(-.14f,1.21f,.23f),true);
    parts.Text("Wheel label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.7"),transform,new Vector3(-.14f,.91f,.21f),.0035f);
-   marker=M2StationParts.Root("Alignment pointer",transform,new Vector3(-.14f,1.21f,.22f));
-   parts.Part("Alignment needle",marker,new Vector3(0,.16f,0),new Vector3(.014f,.11f,.018f),parts.Red);
-   parts.Part("Target alignment mark",transform,new Vector3(-.14f,1.44f,.25f),new Vector3(.045f,.025f,.02f),parts.Green);
+   marker=M2StationParts.Root("Alignment pointer",transform,new Vector3(-.14f,1.21f,.30f));
+   parts.Part("Alignment needle",marker,new Vector3(0,.185f,0),new Vector3(.018f,.15f,.018f),parts.Red);
+   targetMarker=M2StationParts.Root("Ship bearing marker",transform,new Vector3(-.14f,1.21f,.22f));
+   parts.Part("Target alignment mark",targetMarker,new Vector3(0,.23f,.03f),new Vector3(.045f,.025f,.02f),parts.Green);
    lamp=parts.Part("Alignment green lamp",transform,new Vector3(.25f,1.39f,.20f),new Vector3(.075f,.035f,.02f),parts.Green).GetComponent<Renderer>();
-   Rag=M2CarryProp.Create(parts,transform,"BEACON_RAG",new Vector3(.28f,.82f,.25f),true);
-   parts.Part("Rag shelf",transform,new Vector3(.28f,.775f,.22f),new Vector3(.22f,.035f,.22f),parts.Brass);
-   parts.Text("Rag instruction",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.8"),transform,new Vector3(.25f,.64f,.22f),.003f);
-   var wipeLabel=parts.Text("Lens wipe label",LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.9"),beacon.transform,new Vector3(0,.72f,.46f),.003f);
    sound=gameObject.AddComponent<AudioSource>();sound.spatialBlend=1;sound.minDistance=.4f;sound.maxDistance=10;sound.playOnAwake=false;click=Resources.Load<AudioClip>("S4Audio/breaker");
    BuildBeam();State.Changed+=Refresh;Refresh();
   }
@@ -59,25 +59,20 @@ namespace LighthouseKeepers.WatchDemo
   public void Click(){if(click)sound.PlayOneShot(click,.22f);}
   void Refresh()
   {
-   var b=State.Beacon;marker.localRotation=Quaternion.Euler(0,0,-135+b.Alignment*270);bool powered=State.HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon);
-   readout.text=State.Director!=null?State.Director.StationInstruction(WatchState.BeaconStation):!powered?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.1"):!b.Ignited?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.2"):!b.Aligned?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.3"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.4"),b.Soot*100);
-   var colour=b.Aligned?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",colour*.5f);lamp.SetPropertyBlock(block);
+   if(beamMesh&&beamDay!=State.Day){beamDay=State.Day;var v=beamMesh.vertices;float radius=Mathf.Tan(State.BeamTolerance*Mathf.Deg2Rad)*280;for(int i=1;i<v.Length;i+=2){var r=new Vector2(v[i].x,v[i].y).normalized;v[i]=new Vector3(r.x*radius,r.y*radius,280);}beamMesh.vertices=v;beamMesh.RecalculateBounds();}
+   var b=State.Beacon;marker.localRotation=Quaternion.Euler(0,0,-135+b.Alignment*270);
+   targetMarker.localRotation=Quaternion.Euler(0,0,-135+(State.AimingShip>=0?State.ShipWheelTarget:b.Target)*270);bool powered=State.HasPower(LighthouseKeepers.Core.PowerCircuit.Beacon);
+   readout.text=State.AimingShip>=0?LighthouseKeepers.Core.PlayerStrings.Get(!State.ShipOnBeam?"beacon.shipAim":State.Ships.Steady(State.AimingShip)<1?"beacon.shipHold":"beacon.shipSafe"):State.Director!=null?State.Director.StationInstruction(WatchState.BeaconStation):!powered?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.1"):!b.Ignited?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.2"):!b.Aligned?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.3"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.4"),b.Soot*100);
+   var colour=(State.AimingShip>=0?State.ShipOnBeam:b.Aligned)?new Color(.03f,.9f,.1f):new Color(.7f,.08f,.015f);block.Clear();block.SetColor("_BaseColor",colour);block.SetColor("_EmissionColor",State.Day!=1||StationObjectiveGuidance.BeamStep(watch.CurrentInstruction)?colour*.5f:Color.black);lamp.SetPropertyBlock(block);
   }
-  void Update()
-  {
-   var point=Rag.Tip.position;bool held=Rag.Grab.isSelected||State.Coop?.RemoteHeld(Rag.Grab)==true;
-   if(!State.ReadOnly&&!State.Failed&&held&&wasHeld&&Vector3.Distance(point,LensPoint)<.58f)
-   {float distance=Vector3.Distance(point,previousRag);if(distance>=State.PowerTuning.wipeStrokeMetres){if(distance<.15f)State.WipeBeacon(distance);previousRag=point;}}
-   else previousRag=point;wasHeld=held;
-  }
-  public void ResetProps(){if(!Rag.Grab.isSelected&&State.Coop?.RemoteHeld(Rag.Grab)!=true)Rag.ResetHome();wasHeld=false;}
+  public void ResetProps(){}
   void BuildBeam()
   {
    var shader=Resources.Load<Shader>("S4BeaconBeam");if(!shader)throw new System.InvalidOperationException("Missing included beacon beam shader");
    beamMaterial=new Material(shader){name="S4 sweeping amber beam"};
    var go=new GameObject("Visible outside beacon sweep");go.transform.SetParent(beacon.beam.transform,false);
    const int n=24;var vertices=new Vector3[n*2];var colours=new Color[n*2];var indices=new int[n*6];
-   for(int i=0;i<n;i++){float a=i*Mathf.PI*2/n;var radial=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);vertices[i*2]=radial*.12f;vertices[i*2+1]=radial*4+Vector3.forward*24;colours[i*2]=Color.white;colours[i*2+1]=new Color(1,1,1,.02f);int k=i*6,next=(i+1)%n*2;indices[k]=i*2;indices[k+1]=next;indices[k+2]=i*2+1;indices[k+3]=i*2+1;indices[k+4]=next;indices[k+5]=next+1;}
+   for(int i=0;i<n;i++){float a=i*Mathf.PI*2/n;var radial=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);vertices[i*2]=radial*.12f;vertices[i*2+1]=radial*(Mathf.Tan((State.Sprint5?State.BeamTolerance:8)*Mathf.Deg2Rad)*280)+Vector3.forward*280;colours[i*2]=Color.white;colours[i*2+1]=new Color(1,1,1,.02f);int k=i*6,next=(i+1)%n*2;indices[k]=i*2;indices[k+1]=next;indices[k+2]=i*2+1;indices[k+3]=i*2+1;indices[k+4]=next;indices[k+5]=next+1;}
    beamMesh=new Mesh{name="Beacon cone 24 segments"};beamMesh.vertices=vertices;beamMesh.colors=colours;beamMesh.triangles=indices;beamMesh.RecalculateNormals();beamMesh.RecalculateBounds();go.AddComponent<MeshFilter>().sharedMesh=beamMesh;var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=beamMaterial;renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;renderer.receiveShadows=false;beacon.SetVisibleBeam(renderer);
   }
   void OnDestroy(){if(watch&&State!=null)State.Changed-=Refresh;if(beamMesh)Destroy(beamMesh);if(beamMaterial)Destroy(beamMaterial);}
@@ -85,24 +80,32 @@ namespace LighthouseKeepers.WatchDemo
  [DefaultExecutionOrder(100)]
  public sealed class BeaconControl:MonoBehaviour
  {
-  WatchBeaconStation owner;bool wheel;Transform visual,left,right;PhysicalGrip grip;XRSimpleInteractable interaction;Quaternion previous;float working,nextSend,detent;
+  WatchBeaconStation owner;bool wheel;Transform visual,left,right,rimContact;Quaternion rimRotation;PhysicalGrip grip;XRSimpleInteractable interaction;Vector3 previousRadial;float working,nextSend,detent;
   public void Initialize(WatchBeaconStation parent,bool isWheel,Transform model){owner=parent;wheel=isWheel;visual=model;}
-  void Awake(){grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-1);right=Palm(1);interaction.selectEntered.AddListener(Select);interaction.selectExited.AddListener(Release);}
+  void Awake(){grip=GetComponent<PhysicalGrip>();interaction=GetComponent<XRSimpleInteractable>();left=Palm(-1);right=Palm(1);rimContact=M2StationParts.Root("Hand-selected wheel contact",transform,Vector3.zero);interaction.selectEntered.AddListener(Select);interaction.selectExited.AddListener(Release);}
   Transform Palm(int side){var p=M2StationParts.Root(side<0?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.10"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchBeaconStation.11"),visual,new Vector3(side*(wheel?.20f:.014f),.012f,wheel?.055f:.14f));p.localRotation=Quaternion.Euler(0,180,0);return p;}
-  void Select(SelectEnterEventArgs e){previous=e.interactorObject.transform.rotation;working=owner.State.Beacon.Alignment;if(!wheel)owner.Ignite();else owner.Click();}
+  Vector3 Radial(Vector3 point)=>Vector3.ProjectOnPlane(point-transform.position,transform.forward);
+  void Select(SelectEnterEventArgs e){previousRadial=Radial(e.interactorObject.transform.position);working=owner.State.Beacon.Alignment;if(!wheel)owner.Ignite();else {var h=e.interactorObject.transform.GetComponentInParent<HandRig>();var skin=h?h.GetComponentInChildren<SkinnedMeshRenderer>():null;rimRotation=skin?skin.transform.rotation:e.interactorObject.transform.rotation;owner.Click();}}
   void Release(SelectExitEventArgs e){if(wheel)owner.Align(working);}
   void Update()
   {
    if(wheel&&interaction.isSelected&&interaction.interactorsSelecting.Count>0)
    {
-    var rotation=interaction.interactorsSelecting[0].transform.rotation;var delta=rotation*Quaternion.Inverse(previous);previous=rotation;delta.ToAngleAxis(out float angle,out var axis);if(angle>180)angle-=360;float degrees=angle*Vector3.Dot(axis,transform.forward);
-    if(float.IsFinite(degrees))working=Mathf.Clamp01(working+Mathf.Clamp(degrees,-20,20)/270);
+    var radial=Radial(interaction.interactorsSelecting[0].transform.position);
+    // Follow the hand around the rim, like a wheel. Regripping keeps the beam angle;
+    // turning the wrist in place no longer fights the player's larger arm movement.
+    if(radial.sqrMagnitude>=.0064f&&previousRadial.sqrMagnitude>=.0064f){float degrees=Vector3.SignedAngle(previousRadial,radial,transform.forward);if(float.IsFinite(degrees)){float before=working;working=Mathf.Clamp01(working+Mathf.Clamp(degrees,-25,25)/270);rimRotation=Quaternion.AngleAxis((working-before)*270,transform.forward)*rimRotation;}}
+    previousRadial=radial;
     if(Time.time>=nextSend){nextSend=Time.time+.1f;owner.Align(working);}
     if(Mathf.Abs(working-detent)>.04f){detent=working;owner.Click();if(grip.HoldingHand)grip.HoldingHand.Pulse(.25f,.035f);}
    }
    visual.localRotation=wheel?Quaternion.Euler(0,0,-135+(interaction.isSelected?working:owner.State.Beacon.Alignment)*270):Quaternion.Euler(owner.State.Beacon.Ignited?-30:30,0,0);
-   var hand=grip.HoldingHand;if(hand)hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);
+   var hand=grip.HoldingHand;if(hand){
+    if(wheel){var local=transform.InverseTransformPoint(hand.Direct.transform.position);rimContact.localPosition=RimContact(local);rimContact.rotation=rimRotation;hand.SetToolGrip(rimContact,HandRig.ToolGripPoint);}
+    else hand.SetConstrainedGrip(hand.Node==XRNode.LeftHand?left:right);
+   }
   }
+  public static Vector3 RimContact(Vector3 local){var radial=new Vector2(local.x,local.y);if(radial.sqrMagnitude<.0001f)radial=Vector2.up;radial=radial.normalized*.20f;return new Vector3(radial.x,radial.y,.035f);}
   void OnDestroy(){if(interaction){interaction.selectEntered.RemoveListener(Select);interaction.selectExited.RemoveListener(Release);}}
  }
 }

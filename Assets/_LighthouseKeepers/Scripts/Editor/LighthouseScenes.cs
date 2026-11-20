@@ -57,7 +57,7 @@ public static class LighthouseScenes {
   var snap=rig.GetComponentInChildren<SnapTurnProvider>(true);snap.turnAmount=45;var smooth=rig.GetComponentInChildren<ContinuousTurnProvider>(true);smooth.enabled=false;
   var managers=rig.GetComponentsInChildren<ControllerInputActionManager>(true);foreach(var manager in managers){manager.smoothMotionEnabled=manager.gameObject.name.Contains("Left");manager.smoothTurnEnabled=false;}
   var comfort=rig.AddComponent<PlayerComfort>();Set(comfort,"settings",Asset<ComfortSettings>("ComfortSettings"));Set(comfort,"move",move);Set(comfort,"snap",snap);Set(comfort,"smooth",smooth);SetArray(comfort,"inputManagers",managers.Cast<UnityEngine.Object>().ToArray());
-  var torso=Box("Stabilized chest proxy",Vector3.zero,new Vector3(.34f,.42f,.18f),"Cloth",rig.transform,false);var body=torso.AddComponent<BodyPresence>();Set(body,"head",camera.transform);
+  var torso=Box("Stabilized chest proxy",Vector3.zero,new Vector3(.34f,.42f,.18f),"Cloth",rig.transform,false);torso.GetComponent<Renderer>().enabled=false;var body=torso.AddComponent<BodyPresence>();Set(body,"head",camera.transform);
   LighthousePlayerRepair.CreateGloves(rig);
   var preview=rig.AddComponent<DesktopPreview>();Set(preview,"character",character);Set(preview,"head",camera.transform);
   if(!UnityEngine.Object.FindAnyObjectByType<XRInteractionManager>())new GameObject("XR Interaction Manager").AddComponent<XRInteractionManager>();

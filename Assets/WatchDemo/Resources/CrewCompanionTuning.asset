@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1507a76ba1ab475c95afd2730a7f340e, type: 3}
+  m_Name: CrewCompanionTuning
+  m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.WatchDemo.CrewCompanionTuning
+  enabled: 1
+  walkSpeed: 1.8
+  followDistance: 1.4
+  arriveDistance: 0.3
+  readSeconds: 2
+  reach: 1.15
+  repathSeconds: 0.5
+  stuckSeconds: 5
+  reportSeconds: 12
+  radioGestureSeconds: 4
+  reportCooldown: 2
+  start: {x: -0.5, y: 0, z: -7}

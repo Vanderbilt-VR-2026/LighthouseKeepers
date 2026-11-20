@@ -1,0 +1,115 @@
+{
+  "Summary": {
+    "Total": 14,
+    "Passed": 14,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "ScareSequenceTests.BothCaughtFailAndRetryUsesWakeCheckpoint",
+      "Status": "Passed",
+      "Duration": 0.0074605,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.BothEscapeThenRelief",
+      "Status": "Passed",
+      "Duration": 0.0003399,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.CrewDisconnectRestartsSafeCheckpoint",
+      "Status": "Passed",
+      "Duration": 0.0001651,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.EscapedPlayerCannotBeCaught",
+      "Status": "Passed",
+      "Duration": 0.0001495,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.EscapeHasFiniteDeadline",
+      "Status": "Passed",
+      "Duration": 8.7e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.FirstPlayCannotSkipAndUnknownDutyCannotCatch",
+      "Status": "Passed",
+      "Duration": 9.6e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.InvalidFrameRejectedBeforeMutation",
+      "Status": "Passed",
+      "Duration": 0.000161,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.ReplicasCannotAdvanceAndFramesAreIsolated",
+      "Status": "Passed",
+      "Duration": 0.0011214,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.RescueDeadlineStartsOnlyAfterEscape",
+      "Status": "Passed",
+      "Duration": 0.0001639,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.RescueTimeoutFails",
+      "Status": "Passed",
+      "Duration": 9.2e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.SoloCatchFailsInEitherRole(1)",
+      "Status": "Passed",
+      "Duration": 0.0001558,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.SoloCatchFailsInEitherRole(2)",
+      "Status": "Passed",
+      "Duration": 5.75e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.UnescapedPartnerPreventsEarlyRevivePhase",
+      "Status": "Passed",
+      "Duration": 0.0001623,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.WakeAndCornerWaitForGaze",
+      "Status": "Passed",
+      "Duration": 0.0001331,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.66,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ScareSequenceTests",
+  "success": true,
+  "result": null
+}

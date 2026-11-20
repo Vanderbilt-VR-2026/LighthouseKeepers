@@ -22,7 +22,7 @@ namespace LighthouseKeepers.WatchDemo
         MaterialPropertyBlock lampBlock;
         public GeneratorRestart Starter => starter;
         // Primer/choke readiness will be added here in a later milestone, not enabled in M2.
-        public bool RequiresPrimerAndChoke => state?.Engine!=null;
+        public bool RequiresPrimerAndChoke => state?.Engine!=null&&!state.TimedStarter;
         public void Bind(WatchState value)
         {
             if (state != null) state.Changed -= Refresh;
@@ -39,7 +39,7 @@ namespace LighthouseKeepers.WatchDemo
         public void ResetInteraction() { starter.ResetInteraction(); shakeTime = 0; engine.localPosition = engineRest; Refresh(); }
         void Pulled()
         {
-            if(state!=null&&state.RemoteReplica&&state.Coop!=null)
+            if(state!=null&&state.Coop!=null)
             {state.Coop.Send(LighthouseKeepers.Lobby.CoopAction.Starter);shakeTime=.22f;return;}
             ApplyPull();
         }

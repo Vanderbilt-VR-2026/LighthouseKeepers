@@ -10,7 +10,7 @@ namespace LighthouseKeepers.Net
 {
     /// <summary>XRI selection remains optimistic until the host grants the lease; denial explicitly detaches the losing hand.</summary>
     [DefaultExecutionOrder(1000)]
-    public sealed class FusionGrabBinding : MonoBehaviour, IXRSelectFilter, INetworkPropStatus
+    public sealed class FusionGrabBinding : MonoBehaviour, IXRSelectFilter, INetworkPropStatus, INetworkPropCarryStatus
     {
         FusionGrabAuthority authority;
         XRBaseInteractable interaction;
@@ -18,7 +18,13 @@ namespace LighthouseKeepers.Net
         LighthouseKeepers.StormWatch.WatchWrench legacyWrench;
         LighthouseKeepers.StormWatch.WatchControl legacyControl;
         bool wrenchWasEnabled, controlWasEnabled;
-        INetworkReleasedBody releasedBody;
+        INetworkReleasedBody releasedBody;INetworkPropCarry carry;
+        bool replicatedCarried;
+        public bool SupportsCarry=>carry!=null&&GetComponent<INetworkBeltSlot>()!=null;
+        public LighthouseKeepers.Core.ToolBeltSlot BeltSlot=>GetComponent<INetworkBeltSlot>()?.BeltSlot??LighthouseKeepers.Core.ToolBeltSlot.Radio;
+        public bool IsCarried=>Carried||Owner!=0&&replicatedCarried;
+        public void ObserveCarried(bool value)=>replicatedCarried=value;
+        public bool Carried=>carry?.Carried==true;
         bool RestingKinematic => releasedBody?.ReleasedBodyIsKinematic ?? initialKinematic;
         bool initialKinematic, pending, suppress, hasState;
         float requested, nextSend;
@@ -41,13 +47,13 @@ namespace LighthouseKeepers.Net
         float previousHeldTime;
         public Vector3 AuthoritativePosition => hasState?targetPosition:transform.position;
         public bool canProcess => isActiveAndEnabled;
-        bool Selected => interaction && interaction.interactorsSelecting.Any(i=>!(i is XRSocketInteractor));
+        bool Selected => Carried || interaction && interaction.interactorsSelecting.Any(i=>!(i is XRSocketInteractor));
         public void Bind(FusionGrabAuthority host,int id,string path,XRBaseInteractable interactable)
         {
             authority=host;Id=id;Path=path;interaction=interactable;body=GetComponent<Rigidbody>();
             // A grip held during scene loading must not survive without a host lease.
             // Let XRI restore the pre-grab body mode before recording that mode.
-            CancelSelection();initialKinematic=body&&body.isKinematic;releasedBody=GetComponent<INetworkReleasedBody>();
+            CancelSelection();initialKinematic=body&&body.isKinematic;releasedBody=GetComponent<INetworkReleasedBody>();carry=GetComponent<INetworkPropCarry>();carry?.DropCarry();
             foreach(var component in GetComponents<MonoBehaviour>())
                 if(component is INetworkPropRelease observer)releaseObservers.Add(observer);
             legacyWrench=GetComponent<LighthouseKeepers.StormWatch.WatchWrench>();
@@ -80,7 +86,7 @@ namespace LighthouseKeepers.Net
         public void Reject(int expectedEpoch=-1)
         {
             if (expectedEpoch>=0 && expectedEpoch<Epoch) return;
-            pending=releaseQueued=false;CancelSelection();PhysicsOwner();
+            pending=releaseQueued=false;replicatedCarried=false;CancelSelection();carry?.DropCarry();PhysicsOwner();
         }
         void CancelSelection()
         {
@@ -93,14 +99,14 @@ namespace LighthouseKeepers.Net
         {
             if (p.epoch<Epoch || p.epoch==Epoch && p.sequence<=receivedSequence) return;
             bool changed=p.epoch!=Epoch;
-            Owner=p.owner;Epoch=p.epoch;receivedSequence=p.sequence;targetPosition=p.position;targetRotation=p.rotation;hasState=true;
+            Owner=p.owner;replicatedCarried=p.carried;Epoch=p.epoch;receivedSequence=p.sequence;targetPosition=p.position;targetRotation=p.rotation;hasState=true;
             if (changed) serial=0;
             if (Owner==authority.LocalActor)
             {
                 pending=false;
                 if (!Selected) releaseQueued=true; // released during the round trip
             }
-            else if (Owner!=0 || !pending) { pending=false;CancelSelection(); }
+            else if (Owner!=0 || !pending) { pending=false;CancelSelection();carry?.DropCarry(); }
             PhysicsOwner();
         }
         public void ApplyHeld(Vector3 position,Quaternion rotation)
@@ -112,7 +118,7 @@ namespace LighthouseKeepers.Net
         }
         public void ReleaseOnHost(Vector3 position,Quaternion rotation,Vector3 velocity,Vector3 angularVelocity)
         {
-            transform.SetPositionAndRotation(position,rotation.normalized);
+            replicatedCarried=false;carry?.DropCarry();transform.SetPositionAndRotation(position,rotation.normalized);
             if (!body) return;
             if(releasedBody!=null)foreach(var observer in releaseObservers)observer.OnNetworkReleased();
             body.position=position;body.rotation=rotation.normalized;body.isKinematic=RestingKinematic;
@@ -161,12 +167,12 @@ namespace LighthouseKeepers.Net
         public void Unbind()
         {
             bool wasOwned=Owner!=0;
-            CancelSelection();
+            CancelSelection();carry?.DropCarry();
             if (interaction) { interaction.selectFilters.Remove(this);interaction.selectEntered.RemoveListener(Grab);interaction.selectExited.RemoveListener(Release); }
             if (body) body.isKinematic=initialKinematic;
             if (legacyWrench) legacyWrench.enabled=wrenchWasEnabled;
             if (legacyControl) legacyControl.enabled=controlWasEnabled;
-            authority=null;Owner=0;
+            authority=null;Owner=0;replicatedCarried=false;
             if(wasOwned)foreach(var observer in releaseObservers)observer.OnNetworkReleased();
         }
         void OnDestroy() => Unbind();

@@ -1,0 +1,31 @@
+{
+  "Summary": {
+    "Total": 2,
+    "Passed": 2,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ConnectedTasksTests.BroadcastNeedsActualLightWithoutDiscardingTuningOrCode",
+      "Status": "Passed",
+      "Duration": 0.0079875,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.ConnectedTasksTests.RadioGuidanceRestoresBeaconBeforeTransmitAndPumpRequiresItsCircuit",
+      "Status": "Passed",
+      "Duration": 0.0019982,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.6,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ConnectedTasksTests",
+  "success": true,
+  "result": null
+}

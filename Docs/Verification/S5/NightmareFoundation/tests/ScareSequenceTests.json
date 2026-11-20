@@ -1,0 +1,136 @@
+{
+  "Summary": {
+    "Total": 17,
+    "Passed": 17,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "ScareSequenceTests.BothCaughtFailAndRetryUsesWakeCheckpoint",
+      "Status": "Passed",
+      "Duration": 0.0027653,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.BothEscapeThenRelief",
+      "Status": "Passed",
+      "Duration": 0.0008054,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.CrewChangeDoesNotRequestCameraRelocation",
+      "Status": "Passed",
+      "Duration": 0.0006993,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.CrewDisconnectRestartsSafeCheckpoint",
+      "Status": "Passed",
+      "Duration": 0.000705,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.DoorsRejectInvalidCommandsAndReplicaWrites",
+      "Status": "Passed",
+      "Duration": 0.0017051,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.EscapedPlayerCannotBeCaught",
+      "Status": "Passed",
+      "Duration": 0.0004686,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.EscapeHasFiniteDeadline",
+      "Status": "Passed",
+      "Duration": 0.0005371,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.FirstPlayCannotSkipAndUnknownDutyCannotCatch",
+      "Status": "Passed",
+      "Duration": 0.0007462,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.InvalidFrameRejectedBeforeMutation",
+      "Status": "Passed",
+      "Duration": 0.0008003,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.ReplicasCannotAdvanceAndFramesAreIsolated",
+      "Status": "Passed",
+      "Duration": 0.0038191,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.RescueDeadlineStartsOnlyAfterEscape",
+      "Status": "Passed",
+      "Duration": 0.0005795,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.RescueTimeoutFails",
+      "Status": "Passed",
+      "Duration": 0.0002872,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.ReturningWithoutVictimDoesNotTimeout",
+      "Status": "Passed",
+      "Duration": 0.0003343,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.SoloCatchFailsInEitherRole(1)",
+      "Status": "Passed",
+      "Duration": 0.001169,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.SoloCatchFailsInEitherRole(2)",
+      "Status": "Passed",
+      "Duration": 0.0003261,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.UnescapedPartnerPreventsEarlyRevivePhase",
+      "Status": "Passed",
+      "Duration": 0.0006511,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.WakeAndCornerWaitForGaze",
+      "Status": "Passed",
+      "Duration": 0.0007209,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.22,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ScareSequenceTests",
+  "success": true,
+  "result": null
+}

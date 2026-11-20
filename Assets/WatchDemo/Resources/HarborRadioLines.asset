@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aebde70bd3b134fd2a9a6dde866a6e0c, type: 3}
   m_Name: HarborRadioLines
   m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.WatchDemo.RadioLineCatalog
+  captionsOnly: 1
+  readingWordsPerSecond: 2.6
+  minimumReadingSeconds: 4
+  maximumReadingSeconds: 18
   lines:
   - {fileID: 8300000, guid: 60606595eeada4ad5aa784d17aa7fd5b, type: 3}
   - {fileID: 8300000, guid: 9b5ea2c1ba50845d48ed71d54d58ac95, type: 3}

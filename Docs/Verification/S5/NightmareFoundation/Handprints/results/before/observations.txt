@@ -1,0 +1,5 @@
+The renderer/collider audit found these pre-fix values (world metres):
+segment 33 mark bounds center y=7.036, height=0.869; corresponding rail center y=7.421, height=0.127
+segment 27 mark bounds center y=6.761, height=0.319; corresponding rail center y=6.871, height=0.127
+segment 15 mark bounds center y=6.602; corresponding rail center y=5.771, height=0.127
+The shared mesh collider covered the tower, so the old long ray could hit a different surface.

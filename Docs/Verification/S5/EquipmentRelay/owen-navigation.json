@@ -1,0 +1,50 @@
+[
+  {
+    "label": "start assist navigation",
+    "state": {
+      "Day": 1,
+      "Power": 0,
+      "holder": 0,
+      "step": "None",
+      "p": "(-0.50, 0.03, -7.00)",
+      "code": "",
+      "delivered": false
+    }
+  },
+  {
+    "label": "Owen reached and held start assist",
+    "state": {
+      "Day": 1,
+      "Power": 0,
+      "holder": 2147483646,
+      "step": "HoldStarterAssist",
+      "p": "(-0.02, 3.33, 1.79)",
+      "code": "",
+      "delivered": false
+    }
+  },
+  {
+    "label": "Owen physically fetched full code",
+    "state": {
+      "Day": 1,
+      "Power": 1,
+      "holder": 0,
+      "step": "RadioPower",
+      "p": "(-1.60, 0.03, -7.03)",
+      "code": "1 RED  >  3 BLUE  >  2 AMBER  >  4 GREEN",
+      "delivered": true
+    }
+  },
+  {
+    "label": "reply",
+    "state": {
+      "Day": 1,
+      "Power": 1,
+      "holder": 0,
+      "step": "RadioPower",
+      "p": "(-1.55, 0.03, -6.97)",
+      "code": "1 RED  >  3 BLUE  >  2 AMBER  >  4 GREEN",
+      "delivered": true
+    }
+  }
+]

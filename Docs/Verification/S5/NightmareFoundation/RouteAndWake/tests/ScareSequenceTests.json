@@ -1,0 +1,157 @@
+{
+  "Summary": {
+    "Total": 20,
+    "Passed": 20,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "ScareSequenceTests.BothCaughtFailAndRetryUsesWakeCheckpoint",
+      "Status": "Passed",
+      "Duration": 0.0027862,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.BothEscapeThenRelief",
+      "Status": "Passed",
+      "Duration": 0.0004783,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.CrewChangeDoesNotRequestCameraRelocation",
+      "Status": "Passed",
+      "Duration": 0.0003317,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.CrewDisconnectRestartsSafeCheckpoint",
+      "Status": "Passed",
+      "Duration": 0.0003529,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.DoorsRejectInvalidCommandsAndReplicaWrites",
+      "Status": "Passed",
+      "Duration": 0.0020607,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.DropAvoidsTheEscapeRouteOnTheSameFloor",
+      "Status": "Passed",
+      "Duration": 0.001379,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.DryPresentationIsLimitedToReturnAndRelief",
+      "Status": "Passed",
+      "Duration": 0.0003929,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.EscapedPlayerCannotBeCaught",
+      "Status": "Passed",
+      "Duration": 0.0002723,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.EscapeHasFiniteDeadline",
+      "Status": "Passed",
+      "Duration": 0.0003061,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.FirstPlayCannotSkipAndUnknownDutyCannotCatch",
+      "Status": "Passed",
+      "Duration": 0.0003156,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.InvalidFrameRejectedBeforeMutation",
+      "Status": "Passed",
+      "Duration": 0.0004412,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.ReplicasCannotAdvanceAndFramesAreIsolated",
+      "Status": "Passed",
+      "Duration": 0.0039369,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.RescueDeadlineStartsOnlyAfterEscape",
+      "Status": "Passed",
+      "Duration": 0.0014373,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.RescueTimeoutFails",
+      "Status": "Passed",
+      "Duration": 0.0003044,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.RetryRepositionsExistingCrewOnlyAtWake",
+      "Status": "Passed",
+      "Duration": 0.0005318,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.ReturningWithoutVictimDoesNotTimeout",
+      "Status": "Passed",
+      "Duration": 0.0003654,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.SoloCatchFailsInEitherRole(1)",
+      "Status": "Passed",
+      "Duration": 0.0018177,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.SoloCatchFailsInEitherRole(2)",
+      "Status": "Passed",
+      "Duration": 0.0003905,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.UnescapedPartnerPreventsEarlyRevivePhase",
+      "Status": "Passed",
+      "Duration": 0.0006288,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "ScareSequenceTests.WakeAndCornerWaitForGaze",
+      "Status": "Passed",
+      "Duration": 0.000772,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.52,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: ScareSequenceTests",
+  "success": true,
+  "result": null
+}

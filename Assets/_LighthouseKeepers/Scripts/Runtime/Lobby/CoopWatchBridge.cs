@@ -2,7 +2,9 @@ using System;
 using UnityEngine;
 namespace LighthouseKeepers.Lobby
 {
-    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest, PressureValve, HandheldRadio }
+    public enum CoopAction { Starter, RadioPower, RadioTune, RadioCode, Microphone, Bed, Retry, Replay, GridCircuit, GridReset, EnginePrime, EngineChoke, BeaconIgnition, BeaconAlign, WrenchClutch, PAReplay, StatusRequest, PressureValve, HandheldRadio, FlareFire, LanternWick, RecoveryGrip, RecoveryDrill, AuthenticateCall, BriefingComplete, EngineAssist, KeeperBreath, ScareDoor }
+    public interface ICoopBreathView { bool BreathCommand(int actor,bool held); }
+    public interface ICoopBriefingView { bool BriefingHeld {get;} void HoldBriefing(bool held); }
     public interface ILobbyReadyPolicy { bool RequiresReady {get;} }
     public interface ICoopWatchView
     {
@@ -25,6 +27,16 @@ namespace LighthouseKeepers.Lobby
         int LocalActor {get;}
         void Locations(out int first,out Vector3 firstHead,out int second,out Vector3 secondHead);
     }
+    public interface ICoopKeeperDuties { CrewDuty Duty(int actor); }
+    public interface ICoopKeeperViews { bool View(int actor,out Vector3 forward); }
+    public interface ICoopRecoveryHands { bool HandForDuty(CrewDuty duty,out Vector3 hand); }
+    public interface ICoopRecoveryView {
+        float PossessionRiseSpeed {get;}
+        bool KeeperDown(int actor);
+        bool PossessionView(int actor,out float progress,out float maxLift);
+        bool RescueDrill(int actor);
+        bool RecoveryCommand(int actor,int victim,bool held,Vector3 left,Vector3 right);
+    }
     public interface ICoopRadioView
     {
         bool RadioCommand(int actor,int index,bool active);
@@ -32,6 +44,7 @@ namespace LighthouseKeepers.Lobby
         void RadioActorLeft(int actor);
         Transform LocalRadio {get;}
     }
+    public interface ICoopEngineAssistView {bool EngineAssistCommand(int actor,bool held);int EnginePullCommand(int actor);void EngineActorLeft(int actor);}
     public interface ICoopPressureView
     {
         bool PressureCommand(int actor,bool held);

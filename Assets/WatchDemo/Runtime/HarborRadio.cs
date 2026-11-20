@@ -13,32 +13,41 @@ namespace LighthouseKeepers.WatchDemo
         readonly HarborRecallHistory recallHistory=new();
         int localReplayCue;float localReplayAge,nextLocalReplay;
         public System.Collections.Generic.IReadOnlyList<int> RecentCues=>recallHistory.Cues;
-        public string LastCaption=>catalog&&recallHistory.Latest>0?catalog.Caption(recallHistory.Latest):"";
+        string sceneCaption,sceneSpeaker;
+        public string LastSpeaker=>!string.IsNullOrEmpty(sceneCaption)?sceneSpeaker:KeeperStrings.Get("subtitle.speaker");
+        public void RecordSilentLine(string text,string speaker){sceneCaption=text;sceneSpeaker=speaker;}
+        public string LastCaption=>!string.IsNullOrEmpty(sceneCaption)?sceneCaption:catalog&&recallHistory.Latest>0?catalog.Caption(recallHistory.Latest):"";
         public int SubtitleCue=>localReplayCue>0?localReplayCue:Cue;
-        public float SpeechAge=>(localReplayCue>0?localReplayAge:Age)-(intercom ? .3f : 0);
+        public bool CaptionsOnly=>catalog&&catalog.captionsOnly;
+        float PresentationSeconds(int id)=>catalog?catalog.PresentationSeconds(id):0;
+        public float SpeechAge=>(localReplayCue>0?localReplayAge:Age)-(!CaptionsOnly&&intercom ? .3f : 0);
+        public int SubtitlePage(int pages)=>Mathf.Clamp(1+Mathf.FloorToInt(Mathf.Max(0,SpeechAge)/Mathf.Max(.1f,PresentationSeconds(SubtitleCue))*pages),1,Mathf.Max(1,pages));
         public bool ReplayLastLocally()
         {
+            if(!string.IsNullOrEmpty(sceneCaption))return true;
             int id=recallHistory.Latest;var clip=catalog?catalog.Line(id):null;
-            if(!clip||Time.unscaledTime<nextLocalReplay)return false;
+            if(!catalog||!catalog.HasLine(id)||(!CaptionsOnly&&!clip)||Time.unscaledTime<nextLocalReplay)return false;
             nextLocalReplay=Time.unscaledTime+3;localReplayCue=id;localReplayAge=0;
+            if(CaptionsOnly){SilencePlayback();return true;}
             if(intercom)intercom.Play(id,clip,0,Serial);
             else{foreach(var source in new[]{wall,belt}){source.Stop();source.clip=clip;source.time=0;source.Play();}wallNoise.Play();beltNoise.Play();staticActive=true;}
             return true;
         }
-        public float SubtitleAlpha=>catalog&&catalog.Line(SubtitleCue)&&SpeechAge>=0?Mathf.Clamp01((catalog.Line(SubtitleCue).length+1.85f-SpeechAge)/.35f):0;
+        public float SubtitleAlpha=>catalog&&catalog.HasLine(SubtitleCue)&&SpeechAge>=0?Mathf.Clamp01((PresentationSeconds(SubtitleCue)+1.85f-SpeechAge)/.35f):0;
         public string Subtitle=>SubtitleAlpha>0?catalog.Caption(SubtitleCue):"";
-        public int SubtitleCharacters=>HarborVoiceTiming.Get(SubtitleCue)?.VisibleCharacters(SpeechAge)??Mathf.CeilToInt(Subtitle.Length*Mathf.Clamp01(SpeechAge/Mathf.Max(.1f,catalog&&catalog.Line(SubtitleCue)?catalog.Line(SubtitleCue).length:1)));
+        public int SubtitleCharacters=>CaptionsOnly?Subtitle.Length:HarborVoiceTiming.Get(SubtitleCue)?.VisibleCharacters(SpeechAge)??Mathf.CeilToInt(Subtitle.Length*Mathf.Clamp01(SpeechAge/Mathf.Max(.1f,catalog&&catalog.Line(SubtitleCue)?catalog.Line(SubtitleCue).length:1)));
         public bool DangerSubtitle=>HarborCueRules.Danger(SubtitleCue);
         public Component ReplayButton(int i)=>intercom?intercom.Button(i):null;
         public bool RequestReplay(){if(watch.State.RemoteReplica)return watch.State.Coop?.Send(LighthouseKeepers.Lobby.CoopAction.StatusRequest)==true;return intercom&&intercom.Replay();}
         public void ReplayLast(){if(Cue>0)Play(Cue,Serial+1,0);}
         public float SilenceSeconds=>Time.time-quietSince;
-        float Extra=>intercom ? .7f : 0;
+        float Extra=>!CaptionsOnly&&intercom ? .7f : 0;
         WatchDemoController watch;ImmersionTuning tuning;RadioLineCatalog catalog;
         AudioSource wall,belt,wallNoise,beltNoise;AudioClip noise,click;
         Transform head,wrench;WatchPipeRepair pipe;readonly List<int> pending=new();readonly Dictionary<int,float> queuedAt=new();
         bool gripTaught,upperJobsCued;string announcedJob;
         int dangerMask,priorTasks;float nextStatus;
+        int shipSeen,shipPassed,shipClose;
         int ordinaryBurstCount;int day,progress,lastJob;bool firstBolt,complete,staticActive,failed;float idle,quietSince;
         readonly HashSet<int> spoken=new();
         Transform generator,radio,beacon,panel;
@@ -82,18 +91,20 @@ namespace LighthouseKeepers.WatchDemo
         void Update()
         {
             var s=watch.State;
-            if(localReplayCue>0){localReplayAge+=Time.deltaTime;var localClip=catalog.Line(localReplayCue);if(!localClip||localReplayAge>localClip.length+2.2f){localReplayCue=0;StopStatic();}}
+            if(s.Survival){SilencePlayback();return;}
+            if(localReplayCue>0){localReplayAge+=Time.deltaTime;if(localReplayAge>PresentationSeconds(localReplayCue)+2.2f){localReplayCue=0;StopStatic();}}
             var yaw=Quaternion.Euler(0,head.eulerAngles.y,0);belt.transform.parent.SetPositionAndRotation(head.position+Vector3.down*.75f+yaw*new Vector3(.18f,0,.02f),yaw);
             // The quieter receiver carries the same voice upstairs without doubling it beside the wall set.
             belt.volume=intercom?0:tuning.beltRadioVolume*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
             beltNoise.volume=.003f*Mathf.InverseLerp(2,5,Vector3.Distance(head.position,wall.transform.position));
+            if(s.BriefingHeld||s.Scare.Paused||s.Recovery.LessonActive||s.Authenticity.Visible){SilencePlayback();return;}
             if(s.RemoteReplica)return;
             Age+=Time.deltaTime;
             if(day!=s.Day)
             {
                 day=s.Day;dangerMask=0;priorTasks=s.CompletedTasks;nextStatus=Time.time+120;pending.Clear();queuedAt.Clear();spoken.Clear();firstBolt=complete=failed=upperJobsCued=false;idle=0;quietSince=Time.time;progress=Progress();lastJob=CurrentJob();
-                ResetSituationalLines();ordinaryBurstCount=0;announcedJob=null;
-                int tonight=TonightCue(s);int opening=day==2&&tonight==80?80:OpeningCue(day,s.Day3Balance);
+                ResetSituationalLines();ResetStorySpeech();shipSeen=shipPassed=shipClose=0;ordinaryBurstCount=0;announcedJob=null;
+                int tonight=s.Campaign?s.Scenario.tonightCue:TonightCue(s);int opening=s.Campaign?s.Scenario.openingCue:day==2&&tonight==80?80:OpeningCue(day,s.Day3Balance);
                 Enqueue(opening);if(s.WatchStartHeld)Enqueue(79);
                 if(day>1&&tonight>0&&tonight!=opening&&!(day==3&&s.Day3Balance))Enqueue(tonight);
                 if(s.Master&&s.Master.onboarding){/* Arrival covers stakes; board and current objective carry the loop. No queued lecture. */}
@@ -101,10 +112,10 @@ namespace LighthouseKeepers.WatchDemo
             }
             if(s.Failed)
             {
-                if(!failed){failed=true;pending.Clear();spoken.Add(18);Play(18,Serial+1,0);}
-                var loss=catalog?catalog.Line(18):null;if(!loss||Age>loss.length+Extra+.2f)StopStatic();return;
+                if(!failed){failed=true;pending.Clear();int lossCue=s.Ships?.Lost==true?99:18;spoken.Add(lossCue);Play(lossCue,Serial+1,0);}
+                var loss=catalog?catalog.Line(Cue):null;if(!loss||Age>loss.length+Extra+.2f)StopStatic();return;
             }
-            PruneInstructions();ObserveSituationalLines();
+            PruneInstructions();ObserveSituationalLines();ObserveShips();ObserveDread();
             if(s.PressureEnabled)PressureCues();
             if(s.Director!=null&&s.Master.onboarding){
                 var jobName=ObjectiveDirector.Job(s.Director.First);
@@ -115,18 +126,23 @@ namespace LighthouseKeepers.WatchDemo
             bool holding=watch.WrenchHeld;
             if(!(s.Master&&s.Master.onboarding)&&day==1&&!firstBolt&&holding&&Vector3.Distance(wrench.position,pipe.ActivePosition)<1.3f){firstBolt=true;Enqueue(3);}
             if(!upperJobsCued&&s.Day3Balance&&s.Day3Stage==3){upperJobsCued=true;Enqueue(UpperJobsCue);}
-            if(s.Complete&&!complete){complete=true;pending.RemoveAll(id=>id!=92&&id!=78);if(s.PeakDanger>.8f)Enqueue(93);
+            if(s.Complete&&!complete){complete=true;pending.RemoveAll(id=>id!=92&&id!=78&&id!=98);if(s.PeakDanger>.8f)Enqueue(93);
                 if(!s.HasNextDay)Enqueue(17);else if(watch.WrenchHeld)Enqueue(78);else if(!broadcastReplyPending)Enqueue(5);}
             if(idle>=Mathf.Max(90,tuning.idleHintSeconds)&&Time.time-quietSince>=15&&!WrenchSuppressesHints(holding,s.Repaired)&&!AtStation(job))
                 Enqueue(job);
             var clip=catalog?catalog.Line(Cue):null;
             if(pending.Count>0&&CanPlayQueued(pending[NextPendingIndex()]))
-                while(pending.Count>0){int next=TakeNext();if(Relevant(next)&&(next<76||cueRules.Allows(next,Time.time))){if(next>=44&&next<=75)next=CompositeStatusCue(s);spoken.Add(next);Play(next,Serial+1,0);break;}}
+                while(pending.Count>0){int next=TakeNext();if(Relevant(next)&&AllowedQueued(next)){if(next>=44&&next<=75)next=CompositeStatusCue(s);spoken.Add(next);Play(next,Serial+1,0);break;}}
             if(clip&&Age>clip.length+Extra+.2f)StopStatic();
+            ObserveStorySpeech();
         }
+        bool AllowedQueued(int id)=>id<76||id>=96&&id<=98||(id>=94?cueRules.AllowsCampaign(id):cueRules.Allows(id,Time.time));
+        void ObserveShips(){var ships=watch.State.Ships;if(ships==null||!ships.ClearanceGranted)return;if((ships.SeenMask&~shipSeen)!=0&&!pending.Contains(96))AddPending(96);if((ships.CloseMask&~shipClose)!=0&&!pending.Contains(97))AddPending(97);if((ships.PassedMask&~shipPassed)!=0&&!pending.Contains(98))AddPending(98);shipSeen=ships.SeenMask;shipClose=ships.CloseMask;shipPassed=ships.PassedMask;}
         bool Relevant(int id)
         {
             var s=watch.State;
+            if(id==96)return s.Ships!=null&&s.Ships.ClearanceGranted&&!s.Ships.Finished;
+            if(id==97)return s.Ships!=null&&s.Ships.Danger>0&&s.Ships.ThreatLimit(s.Elapsed)>0;
             if(id==33)return !watch.WrenchHeld&&!s.Repaired;
             if(id==78)return s.Repaired&&watch.WrenchHeld;
             if(id==79)return s.WatchStartHeld;
@@ -134,7 +150,9 @@ namespace LighthouseKeepers.WatchDemo
             if(id==83)return s.Pressure?.CrewRequired==true&&!s.Repaired&&s.Pressure.Holder==0;
             if(id==84)return false; // Retired solo-clamp instruction.
             if(id==85)return KeepersSeparated();
-            if(id==86)return UsefulPoleNearby();
+            if(id==102||id==104)return s.Day>=2&&s.Drowned?.Phase==LighthouseKeepers.Core.Progression.DrownedPhase.Dormant;
+            if(id==103)return s.Flares?.Loaded(0)==true;
+            if(id==86)return false; // Retired pole cue.
             if(id==87)return s.Grid?.Tripped==true;
             if(id==88)return s.Engine?.LowFuel==true&&!s.IsPending(WatchState.GeneratorStation);
             if(id==89)return s.Engine!=null&&!s.Engine.Running;
@@ -188,13 +206,7 @@ namespace LighthouseKeepers.WatchDemo
                 default:return 0;
             }
         }
-        public bool StatusUpdate() {
-            if(watch.State.ReadOnly)return false;
-            var s=watch.State;
-            nextStatus=Time.time+s.Master.statusIntervalSeconds;
-            int id=CompositeStatusCue(s);
-            if(SilenceSeconds>=s.Master.speechSpacingSeconds){Play(id,Serial+1,0);return true;}if(pending.Count<16&&!pending.Contains(id))AddPending(id);return true;
-        }
+        public bool StatusUpdate()=>ReplayLastLocally(); // PA recall, never a synthetic time/water inventory.
         public static int CompositeStatusCue(WatchState s) {
             int time=s.Tutorial?0:s.Duration-s.Elapsed>180?0:s.Duration-s.Elapsed>120?1:s.Duration-s.Elapsed>60?2:3;
             int water=s.WaterDanger>=.9f?3:s.WaterDanger>=.75f?2:s.WaterDanger>=.5f?1:0;
@@ -205,27 +217,29 @@ namespace LighthouseKeepers.WatchDemo
             var s=watch.State;
             int id=0,bit=0;
             if(s.WaterDanger>=.9f&&(dangerMask&4)==0){id=29;bit=4;}
-            else if(!s.BeaconShining&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=10&&(dangerMask&32)==0){id=32;bit=32;}
+            else if((!s.BeaconShining||s.Ships?.Danger>0)&&s.BeaconDarkLimit>0&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=10&&(dangerMask&32)==0){id=32;bit=32;}
             else if(s.WaterDanger>=.75f&&(dangerMask&2)==0){id=28;bit=2;}
             else if(s.WaterDanger>=.5f&&(dangerMask&1)==0){id=27;bit=1;}
-            else if(!s.BeaconShining&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=30&&(dangerMask&16)==0){id=31;bit=16;}
+            else if((!s.BeaconShining||s.Ships?.Danger>0)&&s.BeaconDarkLimit>0&&s.BeaconGraceRemaining<=0&&s.BeaconDarkRemaining<=30&&(dangerMask&16)==0){id=31;bit=16;}
             else if(!s.BeaconShining&&(dangerMask&8)==0){id=30;bit=8;}
             bool critical=id==29||id==32;
             if(id>0&&(critical||!FuelExplanationPending)&&(critical?(Cue!=29&&Cue!=32||SilenceSeconds>=0):SilenceSeconds>=s.Master.speechSpacingSeconds)){dangerMask|=bit;Play(id,Serial+1,0);}
-            if(!FuelExplanationPending&&Time.time>=nextStatus&&SilenceSeconds>=s.Master.speechSpacingSeconds)StatusUpdate();
+            // Routine status reports retired: watch/HUD/world already show this information.
             if(s.CompletedTasks>priorTasks&&!(s.Master&&s.Master.onboarding)&&!(s.Radio.Completed&&lastJob==11)){Enqueue(s.Power==PowerState.On&&lastJob==8?21:lastJob==10?22:20);}priorTasks=s.CompletedTasks;
         }
         void Enqueue(int id){if(id>=76){QueueSituational(id);return;}if(id!=6&&!spoken.Contains(id)&&pending.Count<16&&!pending.Contains(id))AddPending(id);}
-        void AddPending(int id){pending.Add(id);queuedAt[id]=Time.time;}
+        void AddPending(int id){if(watch.State.Survival||!HarborEditorialPolicy.Allows(id))return;pending.Add(id);queuedAt[id]=Time.time;}
         void PruneInstructions(){float lifetime=watch.State.Master?watch.State.Master.instructionLifetimeSeconds:20;for(int i=pending.Count-1;i>=0;i--){int id=pending[i];if(!Relevant(id)||(HarborCueRules.InstructionExpires(id)&&!(id==4&&FuelExplanationPending)&&queuedAt.TryGetValue(id,out float at)&&Time.time-at>lifetime)){pending.RemoveAt(i);queuedAt.Remove(id);}}}
         bool CanPlayQueued(int id)
         {
+            if(watch.State.SuppressBackgroundNarration&&!HarborCueRules.Danger(id))return false;
             if(Cue==0)return true;
-            var clip=catalog?catalog.Line(Cue):null;float silence=Age-(clip?clip.length:0)-Extra;
+            var clip=catalog?catalog.Line(Cue):null;float silence=Age-PresentationSeconds(Cue)-Extra;
+            if(id==97)return !HarborCueRules.Danger(Cue)?Age>=Mathf.Min(8,PresentationSeconds(Cue)+Extra):silence>=0;
             float recovery=watch.State.Master?watch.State.Master.narrationQuietSeconds:20f;
             return HarborCueRules.CanSpeak(ordinaryBurstCount,silence,HarborCueRules.Transition(id),recovery,watch.State.Master?watch.State.Master.speechSpacingSeconds:8f);
         }
-        int NextPendingIndex(){if(FuelExplanationPending){int cause=pending.IndexOf(4);if(cause>=0)return cause;}int index=0; // Keep arrival first, then grace; situational guidance precedes background tutorial prose.
+        int NextPendingIndex(){int danger=pending.FindIndex(id=>id==97);if(danger>=0)return danger;if(FuelExplanationPending){int cause=pending.IndexOf(4);if(cause>=0)return cause;}int index=0; // Keep arrival first, then grace; situational guidance precedes background tutorial prose.
             if(Cue!=0&&pending[0]!=79){int priority=pending.FindIndex(id=>id>=76&&id<=93);if(priority>=0)index=priority;}
             return index;}
         int TakeNext(){int index=NextPendingIndex();int id=pending[index];pending.RemoveAt(index);return id;}
@@ -240,20 +254,26 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Play(int id,int serial,float age)
         {
+            if(watch.State.Survival||!HarborEditorialPolicy.Allows(id))return;
+            sceneCaption=sceneSpeaker=null;
+            int requested=id;
+            if(!watch.State.RemoteReplica)id=StoryVoiceBridge.Resolve(id,watch.State,catalog);
             localReplayCue=0;recallHistory.Remember(id);
             if(!watch.State.RemoteReplica){
-                cueRules.Played(id,Time.time);
+                cueRules.Played(requested,Time.time);NoteStoryPlayback(id);
                 if(SilenceSeconds>=(watch.State.Master?watch.State.Master.narrationQuietSeconds:20f))ordinaryBurstCount=0;
                 if(!HarborCueRules.Danger(id))ordinaryBurstCount++;
             }
-            Debug.Log($"[HarborVoice] {(watch.State.RemoteReplica?"guest":"host")} night={watch.State.Day} time={Time.time:F2} cue={id} serial={serial} age={age:F2} previous={Cue} remaining={Mathf.Max(0,(catalog&&catalog.Line(Cue)?catalog.Line(Cue).length:0)+Extra-Age):F2}");
-            Cue=id;Serial=serial;Age=age;quietSince=Time.time+(catalog&&catalog.Line(id)?catalog.Line(id).length+Extra:0);
+            Debug.Log($"[HarborVoice] {(watch.State.RemoteReplica?"guest":"host")} night={watch.State.Day} time={Time.time:F2} cue={id} serial={serial} age={age:F2} previous={Cue} remaining={Mathf.Max(0,PresentationSeconds(Cue)+Extra-Age):F2}");
+            Cue=id;Serial=serial;Age=age;quietSince=Time.time+PresentationSeconds(id)+Extra;
+            if(CaptionsOnly){SilencePlayback();return;}
             var clip=catalog?catalog.Line(id):null;
             if(!clip||age>=clip.length+Extra)return;
             if(intercom){intercom.Play(id,clip,age,Serial);return;}
             foreach(var source in new[]{wall,belt}){source.Stop();source.clip=clip;source.time=Mathf.Min(age,clip.length-.01f);source.Play();}
             staticActive=true;wallNoise.Play();beltNoise.Play();if(age<.1f&&click)wallNoise.PlayOneShot(click,.5f);
         }
+        void SilencePlayback(){if(wall)wall.Stop();if(belt)belt.Stop();if(wallNoise)wallNoise.Stop();if(beltNoise)beltNoise.Stop();if(intercom)intercom.Stop();staticActive=false;}
         void StopStatic(){if(!staticActive)return;staticActive=false;wallNoise.Stop();beltNoise.Stop();if(click)wallNoise.PlayOneShot(click,.25f);}
         void OnDestroy(){if(watch!=null&&watch.State!=null){watch.State.Radio.CodeRejected-=WrongCode;watch.State.Radio.BroadcastCompleted-=BroadcastReply;}if(noise)Destroy(noise);if(belt)Destroy(belt.transform.parent.gameObject);}
     }

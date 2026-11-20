@@ -7,7 +7,7 @@ using LighthouseKeepers.Flood;
 using LighthouseKeepers.Core;
 namespace LighthouseKeepers.WatchDemo
 {
-    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation, LighthouseKeepers.Lobby.ICoopPressureView, LighthouseKeepers.Lobby.ICoopRadioView
+    public sealed partial class WatchDemoController : MonoBehaviour, LighthouseKeepers.Lobby.ICoopWatchView, LighthouseKeepers.Lobby.ICoopBedPresentation, LighthouseKeepers.Lobby.ICoopPressureView, LighthouseKeepers.Lobby.ICoopRadioView, LighthouseKeepers.Lobby.ICoopEngineAssistView
     {
         [SerializeField] FloodController flood;
         [SerializeField] Transform head,repairPoint,bed,wrenchVisual;
@@ -29,6 +29,7 @@ namespace LighthouseKeepers.WatchDemo
         public float WaterHeight=>flood.Height;
         public float WaterHeightAt(Vector3 position)
         {
+            if(state?.Scare?.DryReturn==true)return float.NegativeInfinity;
             if(position.z>=LighthouseKeepers.Core.HouseFloodState.DoorNorthZ)return flood.Height;
             return state?.HouseFlood!=null&&state.HouseFlood.WetAt(position)?state.HouseFlood.Height:float.NegativeInfinity;
         }
@@ -37,11 +38,11 @@ namespace LighthouseKeepers.WatchDemo
         float repairProgress;
         int shownSecond=-1,shownChalkLetters=-1;
         bool sleeping,previousGrip,previousTrigger;
-        public bool ObjectivePresentationBlocked=>sleeping||(state!=null&&state.Failed)||(menu&&menu.IsOpen);
+        public bool ObjectivePresentationBlocked=>sleeping||(state!=null&&state.Failed)||(menu&&menu.IsOpen)||(arrivalBriefing&&arrivalBriefing.IsOpen);
         Quaternion originalWrenchRotation;
         Material fadeMaterial;
         WrenchHaptics wrenchHaptics;
-        WatchMenu menu;
+        WatchMenu menu;InWorldBriefing arrivalBriefing;
         S4WatchPresentation s4Presentation;
         WatchPowerPanel powerPanel;
         WatchEngineControls engineControls;
@@ -71,7 +72,9 @@ namespace LighthouseKeepers.WatchDemo
         void Start()
         {
             var powerTuning=S4M2Tuning.Current;
-            state = new WatchState(Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current);
+            var campaign=Resources.Load<FiveNightCatalog>("M3Campaign");
+            var definitions=campaign&&campaign.enabled?campaign.nights:Resources.Load<DayCatalog>(powerTuning?S4M2Tuning.DayCatalogResource:"WatchDays").days;
+            state = new WatchState(definitions, LighthouseKeepers.StormWatch.WatchDayLaunch.Consume(),S4Tuning.Current,powerTuning,ImmersionTuning.Current,WatchModeSelection.Selected);
             if(state.Tuning&&state.Tuning.difficulty)
             {poweredLeakRiseMPerSecond=state.Tuning.poweredRiseMPerSecond;unpoweredLeakRiseMPerSecond=state.Tuning.unpoweredRiseMPerSecond;repairedDrainMPerSecond=state.Tuning.drainMPerSecond;}
             coop=LighthouseKeepers.Lobby.CoopWatchBridge.Attach?.Invoke(this);state.Coop=coop;
@@ -79,7 +82,7 @@ namespace LighthouseKeepers.WatchDemo
             adaptiveMusic=AdaptiveMusic.Create(this);
             if (generator) generator.Bind(state);
             if(emergencyLighting)emergencyLighting.Bind(state);
-            if(radio)radio.Bind(state);
+            if(radio){RadioSupportLayout.Apply(radio);radio.Bind(state);}
             if(pipeRepair)pipeRepair.Bind(state);
             if(beacon)beacon.Bind(state);
             if(state.Grid!=null)powerPanel=WatchPowerPanel.Create(this);
@@ -101,25 +104,34 @@ namespace LighthouseKeepers.WatchDemo
             if(state.HouseFlood!=null)WatchHouseFlood.Create(this);
             pressureValve=WatchPressureValve.Create(this);
             CreateCrewRadios();
+            CreateFlares();KeeperHeadlamps.Create(this,head);KeeperToolBelt.Create(this,head,wrench);ArrivalEquipment.Create(this);
             InitializeDirector();
             if(state.PressureEnabled)PressurePresentation.Create(this,head);
             if(state.Storm!=null)StormPresentation.Create(this);
             if(state.Master&&state.Master.onboarding)OnboardingPresentation.Create(this,head,bed,pipeRepair);
             if(state.Master&&state.Master.worldSafety)MasterWorldSafety.Create(this);
-            if(state.Master&&state.Master.movement)KeeperMovement.Create(this);
+            if(state.Master&&state.Master.movement)KeeperMovement.Create(this);KeeperRunInput.Create(this);
             // Aperture guards are structural even when optional movement features are disabled.
-            PoleSlide.Create(this,FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>());
+            // The retired descent pole is removed; all shaft floors are restored by PoleShaftAuthoring.
             ObjectiveHud.Create(this,head);
+            KeeperFearPresentation.Create(this,head);
+            ShipFleetPresentation.Create(this);
             QuestRenderQuality.Create(this);
             WorldLabelRaster.Create(this);
             PracticalAtmosphere.Create(this);
+            LanternRoomLighting.Create(this);
             WorldWaterPresentation.Create(this);
+            HeavyStormRain.Create(this);
             // Exterior sea/coast comes from Eli's StormSeascape; no second coastline.
             StoryDressing.Create(this);
+            if(!state.Survival)KettleStoryPapers.Create(this);
             WorldAudioGaps.Create(this);
             IslandSafety.Create(this);
             GeneratorIdentity.Create();
+            if(!state.Survival){SabotagePresentation.Create(this);DrownedAppearance.Create(this);}
             ConnectedMachinePresentation.Create(this);
+            CrewCompanion.Create(this,head);CrewRecovery.Create(this);NightmareScene.Create(this);if(!state.Survival){PossessionLesson.Create(this);RadioAuthentication.Create(this);}recoveryView=GetComponent<CrewRecovery>();
+            arrivalBriefing=InWorldBriefing.Create(this,head);
             if(state.NetworkRehearsal){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.1");}
             if(state.RemoteReplica){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.2");}
         }
@@ -143,6 +155,7 @@ namespace LighthouseKeepers.WatchDemo
         }
         void Update()
         {
+            if(KeeperAudioMix.Instance)KeeperAudioMix.Instance.PreScareQuiet=state.Scare.Beat==ScareBeat.Quiet||!state.Scare.Paused&&state.TensionQuiet;
             UpdateCrewRadios();
             UpdateDirector();
             if(state.Immersion&&state.Immersion.physicalGuidance)
@@ -151,7 +164,9 @@ namespace LighthouseKeepers.WatchDemo
                 if(letters!=shownChalkLetters){shownChalkLetters=letters;RefreshBoard();}
             }
             if(state.RemoteReplica){UpdateReplicaInput();return;}
+            if(state.BriefingHeld){flood.Paused=true;return;}
             if(sleeping)return;
+            if(state.Scare.Paused){flood.Paused=true;bedPrompt.text="";if(state.Failed)SetFade(Mathf.MoveTowards(currentFade,1,Time.deltaTime));return;}
             if(state.NetworkRehearsal){flood.Paused=true;return;}
             if(coop!=null && !coop.Ready){flood.Paused=true;clock.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.3");return;}
             var left=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);var right=InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
@@ -160,9 +175,10 @@ namespace LighthouseKeepers.WatchDemo
             bool grip=lg||rg,trigger=lt||rt;
             if(WrenchHeld)state.EngageWatch();
             if(state.Director!=null){state.OfferStationGrace(state.Director.First);state.OfferStationGrace(state.Director.Second);}
+            state.TickBreath(Time.deltaTime);state.Flares?.Tick(Time.deltaTime);
             bool watchRunning=state.AdvanceWatchGate(Time.deltaTime);
             if(watchRunning)state.Tick(Time.deltaTime);
-            if(state.Tutorial&&flood.Height>state.Master.tutorialFloodCap)flood.SetHeight(state.Master.tutorialFloodCap);
+            if(flood.Height>state.FloodHeightCap)flood.SetHeight(state.FloodHeightCap);
             state.ObserveWater(Time.deltaTime,flood.Height);
             int second=(int)state.Elapsed;if(second!=shownSecond||shownWatchHeld!=state.WatchStartHeld){shownSecond=second;shownWatchHeld=state.WatchStartHeld;int remaining=Mathf.Max(0,(int)state.Duration-second);clock.text=state.Failed?state.FailureMessage+LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.4"):string.Format(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.5"),state.Day,remaining/60,remaining%60,state.CompletedTasks,state.Definition.tasks.Length);RefreshBoard();}
             bool nearBed=Vector3.Distance(head.position,bed.position+Vector3.up*1.3f)<1.8f;
@@ -178,17 +194,17 @@ namespace LighthouseKeepers.WatchDemo
             // Original Day 1 net rise/drain remains unchanged. Outage disables pumping.
             if(!state.Failed)
             {
-                flood.Paused=state.Repaired||!watchRunning;
-                flood.RiseSpeed=(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.LeakStrength*state.FloodRiseMultiplier;
+                flood.Paused=state.Recovery.LessonActive||state.Repaired&&(!state.Survival||state.HasPower(PowerCircuit.Pump))||!watchRunning;
+                flood.RiseSpeed=(state.Survival&&state.Repaired?SurvivalTuning.Current.repairedSeepPerSecond:(state.HasPower(PowerCircuit.Pump)?poweredLeakRiseMPerSecond:unpoweredLeakRiseMPerSecond)*state.LeakStrength)*state.FloodRiseMultiplier;
                 if(state.Repaired && state.HasPower(PowerCircuit.Pump))
                     flood.SetHeight(Mathf.MoveTowards(flood.Height,flood.MinimumHeight,Time.deltaTime*repairedDrainMPerSecond));
             }
-            if(watchRunning)state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
+            if(watchRunning&&!state.Recovery.LessonActive)state.AdvanceHouseFlood(Time.deltaTime,flood.Height);
             previousGrip=grip;previousTrigger=trigger;
         }
         // Kept for historical tooling: seating never starts an automatic repair anymore.
         public bool TryBeginRepair()=>!state.Failed&&!state.Repaired&&!sleeping&&pipeRepair&&pipeRepair.InContact;
-        public bool RetryDay(){if(state.RemoteReplica&&coop!=null)return state.Failed&&!sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Retry);if(state.ReadOnly||!state.Failed||sleeping)return false;if(state.Sea.lost)GetComponent<IslandSafety>()?.ReturnToHouse();state.Retry();BeginWatch();if(menu)menu.Close();return true;}
+        public bool RetryDay(){if(state.RemoteReplica&&coop!=null)return state.Failed&&!sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Retry);if(state.ReadOnly||!state.Failed||sleeping)return false;if(state.Scare.Failed){if(!GetComponent<NightmareScene>().Retry())return false;Revision++;SetFade(0);if(menu)menu.Close();return true;}if(state.Sea.lost)GetComponent<IslandSafety>()?.ReturnToHouse();state.Retry();BeginWatch();if(menu)menu.Close();return true;}
         public bool ReplayFromDayOne()
         {
             if(state.RemoteReplica&&coop!=null)return !sleeping&&coop.Send(LighthouseKeepers.Lobby.CoopAction.Replay);
@@ -250,7 +266,7 @@ namespace LighthouseKeepers.WatchDemo
                 if(!state.Grid.Tripped&&state.Grid.EngineRunning)for(int i=0;i<4;i++)if(state.Grid.Selected((PowerCircuit)i))boardText.Append(((PowerCircuit)i).ToString().ToUpperInvariant()).Append(' ');
                 boardText.Append('\n');}
             if(!state.BeaconShining&&state.BeaconGraceRemaining>0&&!state.Failed)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.20")).Append(Mathf.CeilToInt((float)state.BeaconGraceRemaining)).Append(state.Power==PowerState.Off?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.21"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.22"));
-            else if(!state.BeaconShining&&state.Definition.beaconDarkLimitSeconds>0&&!state.Failed)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.23")).Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.24"));
+            else if((!state.BeaconShining||state.Ships?.Danger>0)&&state.BeaconDarkLimit>0&&!state.Failed)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.23")).Append(Mathf.CeilToInt((float)state.BeaconDarkRemaining)).Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.24"));
             boardText.Append('\n');
             if(state.Failed)boardText.Append(state.FailureMessage).Append(state.Immersion?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.25"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.37"));
             else if(state.Complete)boardText.Append(state.HasNextDay?LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.26"):LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.27"));
@@ -261,8 +277,10 @@ namespace LighthouseKeepers.WatchDemo
             if(state.Immersion)boardText.Append(LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.31"));
             board.text=boardText.ToString();
         }
+        public void FinishNightmare(){if(CanSleep)StartCoroutine(Sleep());}
         IEnumerator Sleep()
         {
+            if(state.Scare.Beat==ScareBeat.Idle&&GetComponent<NightmareScene>() is NightmareScene nightmare&&DrownedAppearance.Sightings&&nightmare.Begin()){SetBedMask(0);yield break;}
             if(state.Tuning&&state.Tuning.nightSequence)
             {
                 sleeping=true;if(adaptiveMusic)adaptiveMusic.Survived();sleepDay=state.Day;bedPrompt.text="";
@@ -289,6 +307,6 @@ namespace LighthouseKeepers.WatchDemo
                 return LighthouseKeepers.Core.PlayerStrings.Get("legacy.WatchDemoController.33");
             }
         }
-        void OnDestroy(){if(state!=null)state.Changed-=StateChanged;if(fadeMaterial)Destroy(fadeMaterial);}
+        void OnDestroy(){if(state!=null){state.Changed-=StateChanged;state.DisposeSurvival();}if(fadeMaterial)Destroy(fadeMaterial);}
     }
 }

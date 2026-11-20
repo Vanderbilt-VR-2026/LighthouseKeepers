@@ -1,0 +1,38 @@
+{
+  "Summary": {
+    "Total": 3,
+    "Passed": 3,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.RadioBeltTests.BeltStaysBelowEyesAndIgnoresLookingUpOrDown",
+      "Status": "Passed",
+      "Duration": 0.0007463,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.RadioBeltTests.CrouchAndTurningFollowTheWearer",
+      "Status": "Passed",
+      "Duration": 9.81e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.RadioBeltTests.InvalidOrRemoteCarryCannotRenewLease",
+      "Status": "Passed",
+      "Duration": 0.0001367,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.62,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: RadioBeltTests",
+  "success": true,
+  "result": null
+}

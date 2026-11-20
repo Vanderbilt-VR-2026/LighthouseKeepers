@@ -40,6 +40,7 @@ namespace LighthouseKeepers.Net
     {
         public Vector3 Position {get;private set;}
         public bool Moving {get;private set;}
+        public float Progress=>duration>0?Math.Clamp(elapsed/duration,0,1):1;
         Vector3 from,to;
         float elapsed,duration,height;
         public void Reset(Vector3 position){Position=from=to=position;Moving=false;elapsed=0;}

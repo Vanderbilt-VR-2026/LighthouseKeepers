@@ -1,0 +1,50 @@
+{
+  "environment": "Unity 6000.3.23f1 EditMode; Editor audio muted",
+  "previous": {
+    "Total": 712,
+    "Passed": 705,
+    "Failed": 7,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "current": {
+    "total": 715,
+    "passed": 708,
+    "failed": 7,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "current_failures": [
+    {
+      "name": "LighthouseKeepers.Editor.Environment.Tests.ShellGeometryTests.GeometryClearanceAgainstImportedColliders",
+      "message": "  RT-F2-TRANSFER clear-width obstruction Stairwell liner F2 F3 0 at (-1.562, 3.300, -1.828)"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.StoryScopeTests.SelectedClipsAreShortMonoAndCaptionedExactly",
+      "message": "  HM_N2_FUEL_FAILURE"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.M3.SabotageTests.FuelWarningAndRepairEvidenceReplicateInRealWatchAndRetry",
+      "message": "  Expected: -1"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.M3.SabotageTests.SchedulerGivesFullWarningBeforeFaultAndDoesNotDuplicate",
+      "message": "  Expected: -1"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.EveryActionHasAnObjectLocationAndOneButton",
+      "message": "  HelpPartner"
+    },
+    {
+      "name": "LighthouseKeepers.Net.Tests.MasterDirectorTests.InstructionsStayShortAndTableHasEveryStep",
+      "message": "  step.GrabWrench"
+    },
+    {
+      "name": "LighthouseKeepers.Tests.Simulation.NoNetworkingLeakageTest.GameplayLayersKeepNetworkingInsideApprovedAdapters",
+      "message": "  Networking must stay in LK.Net and its explicitly retained transport adapters:"
+    }
+  ],
+  "new_failing_cases": [],
+  "resolved_cases": [],
+  "note": "The existing objective-length assertion now first reports the clearer GrabWrench string rather than HoldValve. The existing networking-boundary failure has its original five references; the newly introduced LocalKeeperBody dependency was removed."
+}

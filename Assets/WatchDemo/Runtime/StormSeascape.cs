@@ -64,7 +64,7 @@ namespace LighthouseKeepers.WatchDemo
                 {if(l.name=="Gentle lightning through windows")gentleFlash=l;else if(l.name=="Distant lightning flash")shellFlash=l;}
             }
             // Storm worsens each watch: day 1 -> 0, day 3 -> 1.
-            float target=watch&&watch.State!=null?Mathf.Max(Mathf.Clamp01((watch.State.Day-1)/2f),watch.State.Storm!=null?(watch.State.Storm.Stage-1)/3f:0):0;
+            float target=watch&&watch.State?.Storm!=null?(watch.State.Storm.Stage-1)/3f:0;
             storm=Mathf.MoveTowards(storm,target,Time.deltaTime/Mathf.Max(.1f,stormEaseSeconds));
             float raw=0;
             if(gentleFlash&&gentleFlash.isActiveAndEnabled)raw=Mathf.Max(raw,gentleFlash.intensity/.35f);

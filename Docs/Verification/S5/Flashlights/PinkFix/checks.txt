@@ -1,0 +1,21 @@
+PASS Exactly two flashlights, one per keeper
+PASS No oil refill can
+PASS Exactly one bulb in House and each floor
+PASS f2-beam-off has no shader-error magenta (pixels=0)
+PASS f2-beam-on-far has no shader-error magenta (pixels=0)
+PASS Beam illuminates far wall: off=0.003122481, on=0.08059793
+PASS Focused 28 degree 9m spot, no LOW mode
+PASS No flashlight shadow map
+PASS f2-beam-away has no shader-error magenta (pixels=0)
+PASS Turning the tool away removes the bright spot: 0.00388921
+PASS f2-beam-near has no shader-error magenta (pixels=0)
+PASS f1-backup-bulb has no shader-error magenta (pixels=0)
+PASS f2-bulb-starts-off has no shader-error magenta (pixels=0)
+PASS f2-powered-bulb has no shader-error magenta (pixels=0)
+PASS f3-powered-bulb has no shader-error magenta (pixels=0)
+PASS f4-powered-bulb has no shader-error magenta (pixels=0)
+PASS Broken replacement shader excluded from Resources
+PASS Lightmapped environment uses supported original shaders: materials=2211, bad=0
+PASS Environment material references remain unchanged across bulb updates
+PASS house-original-materials has no shader-error magenta (pixels=0)
+PASS Two realtime lights maximum with both flashlights on

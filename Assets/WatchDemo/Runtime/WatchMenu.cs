@@ -16,12 +16,13 @@ namespace LighthouseKeepers.WatchDemo
     {
         const string LobbyScene = "LK_NetworkLobby";
         WatchDemoController watch;
-        Transform head;
+        Transform head, soundPage, companionPage;
+        Button companionOrders;
         GameObject panel, ownedEventSystem;
         Canvas canvas;
         Text status;
-        Button retry, replay, leave, close;
-        Button mute,turnMode;
+        Button retry, replay, leave, close, nightmareSkip;
+        Button mute,turnMode,nightmareDev;
         LighthouseKeepers.Lobby.ICrewVoice voice;
         bool previousMenu, exiting;
         int previousTerminal;
@@ -86,8 +87,33 @@ namespace LighthouseKeepers.WatchDemo
                 mute=Action("ToggleCrewMicrophone",voice.StatusText,-225,()=>{if(voice!=null)voice.ToggleMute();Refresh();});
             }
             if(watch.State.Master&&watch.State.Master.movement){turnMode=Action("TurnComfortMode",KeeperStrings.Get("turn.snap"),-285,()=>{if(KeeperMovement.Current){KeeperMovement.Current.Toggle();turnMode.GetComponentInChildren<Text>().text=KeeperStrings.Get(KeeperMovement.Current.Smooth?"turn.smooth":"turn.snap");}});((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);}
+            Label("Run and breath controls",KeeperStrings.Get("run.help"),-470,60,18);
             WatchAudioSettings.Attach(panel,InkFont,inkMaterial,Refresh);
+            soundPage=panel.transform.Find("Sound settings page");
+            AddCompanionControls();
+            nightmareSkip=Action("SkipNightmare","Skip nightmare replay (host)",385,()=>{watch.GetComponent<NightmareScene>()?.Skip();Close();});nightmareSkip.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            nightmareDev=Action("DevNightmare","DEV: Day 2 nightmare (host)",335,()=>{watch.GetComponent<NightmareScene>()?.Begin(true);Close();});nightmareDev.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
+            var drill=Action("DevRescueDrill",KeeperStrings.Get("rescue.drill"),285,()=>{watch.RequestRescueDrill();Close();});
+            drill.GetComponent<RectTransform>().sizeDelta=new Vector2(550,40);
+            ((RectTransform)panel.transform).sizeDelta=new Vector2(600,640);
+#endif
+            var briefing=Action("ReadDutyBriefing",KeeperStrings.Get("briefing.reopen"),-414,()=>{Close();watch.GetComponent<InWorldBriefing>()?.Open();});
+            briefing.GetComponent<RectTransform>().sizeDelta=new Vector2(550,46);
+            ((RectTransform)panel.transform).sizeDelta=new Vector2(600,1040);
             panel.SetActive(false);
+        }
+
+        void AddCompanionControls()
+        {
+            var entry=companionOrders=Action("CompanionOrders",KeeperStrings.Get("companion.orders"),235,()=>{});
+            var page=Rect("Companion page",Vector2.zero,((RectTransform)panel.transform).sizeDelta);companionPage=page;page.gameObject.SetActive(false);
+            var saved=new Dictionary<GameObject,bool>();
+            foreach(var choice in new[]{CompanionCommand.Work,CompanionCommand.Follow,CompanionCommand.Wait,CompanionCommand.Help}){
+                var local=choice;var b=Action("Companion"+choice,KeeperStrings.Get("companion.command."+choice),120-(int)choice*75,()=>{var c=watch.GetComponent<CrewCompanion>();if(c)c.SetCommand(local);});b.transform.SetParent(page,false);
+            }
+            var back=Action("CompanionBack",KeeperStrings.Get("menu.back"),-200,()=>{foreach(var pair in saved)if(pair.Key)pair.Key.SetActive(pair.Value);page.gameObject.SetActive(false);Refresh();});back.transform.SetParent(page,false);
+            entry.onClick.AddListener(()=>{saved.Clear();foreach(Transform child in panel.transform)if(child!=page){saved[child.gameObject]=child.gameObject.activeSelf;child.gameObject.SetActive(false);}page.gameObject.SetActive(true);});
         }
 
         Text Label(string name, string text, float y, float height, int size)
@@ -124,6 +150,7 @@ namespace LighthouseKeepers.WatchDemo
             bool keyboard = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
             if ((pressed && !previousMenu) || keyboard) { if (IsOpen) Close(); else Open(); }
             previousMenu = pressed;
+            if(IsOpen&&companionOrders&&(!companionPage||!companionPage.gameObject.activeSelf)&&(!soundPage||!soundPage.gameObject.activeSelf))companionOrders.gameObject.SetActive(watch.GetComponent<CrewCompanion>()?.Active==true);
             if(IsOpen&&mute&&voice!=null)mute.GetComponentInChildren<Text>().text=voice.StatusText;
         }
 
@@ -153,15 +180,22 @@ namespace LighthouseKeepers.WatchDemo
         void Refresh()
         {
             var state = watch.State;
+            if(nightmareSkip)nightmareSkip.gameObject.SetActive(!state.ReadOnly&&state.Scare.CanSkip);
+            if(nightmareDev)nightmareDev.gameObject.SetActive(!state.ReadOnly&&!state.Survival&&!state.Failed&&!state.Recovery.LessonActive&&!state.Recovery.AnyDown&&state.Day==2&&LighthouseKeepers.Core.Progression.HorrorTuning.Current.nightmareEnabled&&state.Scare.Beat==LighthouseKeepers.Core.Progression.ScareBeat.Idle);
             status.text = state.Failed ? state.FailureMessage + KeeperStrings.Get("menu.retry_hint") :
                 state.Complete && !state.HasNextDay ? KeeperStrings.Get("menu.complete") :
                 string.Format(KeeperStrings.Get("menu.day_status"),state.Day);
             if(state.PressureEnabled&&state.Failed)status.text=KeeperStrings.Get(state.HighWaterFailed?"log.flood":state.BeaconDarkFailed?"log.beacon":"log.time");
             else if(Book)status.text=state.Failed?(state.HighWaterFailed?KeeperStrings.Get("menu.old_flood"):state.BeaconDarkFailed?KeeperStrings.Get("menu.old_beacon"):KeeperStrings.Get("menu.old_time")):state.Complete&&!state.HasNextDay?KeeperStrings.Get("menu.survived"):string.Format(KeeperStrings.Get("menu.night_status"),state.Day);
+            if(state.Recovery.Failed||state.Scare.Failed)status.text=state.FailureMessage;
             if(state.Sea.lost)status.text=KeeperStrings.Get("loss.sea");
-            retry.gameObject.SetActive(!state.NetworkRehearsal && state.Failed);
-            close.gameObject.SetActive(!Book||!state.Failed);
-            replay.gameObject.SetActive(!state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
+            if(state.Ships?.Lost==true)status.text=state.FailureMessage;
+            // Host snapshots can refresh every frame. Do not bring main-page controls
+            // back over the active Sound page when the watch state changes.
+            bool settingsOpen=soundPage&&soundPage.gameObject.activeSelf||(companionPage&&companionPage.gameObject.activeSelf);
+            retry.gameObject.SetActive(!settingsOpen && !state.NetworkRehearsal && state.Failed);
+            close.gameObject.SetActive(!settingsOpen && (!Book||!state.Failed));
+            replay.gameObject.SetActive(!settingsOpen && !state.NetworkRehearsal && state.Complete && !state.HasNextDay && !state.Failed);
         }
 
         public void ReturnToLobby()

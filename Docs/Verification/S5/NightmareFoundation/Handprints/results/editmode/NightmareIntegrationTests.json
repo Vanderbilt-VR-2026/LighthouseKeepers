@@ -1,0 +1,52 @@
+{
+  "Summary": {
+    "Total": 5,
+    "Passed": 5,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.NightmareIntegrationTests.DisabledFeatureRejectsScenePayloadBeforeChangingGuest",
+      "Status": "Passed",
+      "Duration": 0.015385,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.NightmareIntegrationTests.FailedNightmareRetryPreservesNightAndWorkAndClearsDownedBodies",
+      "Status": "Passed",
+      "Duration": 0.0017676,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.NightmareIntegrationTests.LateJoinRestoresSceneClockAndVictimWithoutAcceptingInvalidFrame",
+      "Status": "Passed",
+      "Duration": 0.0018792,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.NightmareIntegrationTests.NightThreeCannotAcceptDayTwoScarePayload",
+      "Status": "Passed",
+      "Duration": 0.0002385,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.NightmareIntegrationTests.WatchClockFloodFuelAndPowerResumeWithoutDiscardingCompletedJobs",
+      "Status": "Passed",
+      "Duration": 0.0014566,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 0.67,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: NightmareIntegrationTests",
+  "success": true,
+  "result": null
+}

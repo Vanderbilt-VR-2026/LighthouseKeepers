@@ -1,0 +1,45 @@
+{
+  "Summary": {
+    "Total": 4,
+    "Passed": 4,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewCompanionTests.CompanionDoesNotReassignHumanObjectiveOnEveryHeadMovement",
+      "Status": "Passed",
+      "Duration": 0.0070389,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewCompanionTests.HumanJoinReleasesBotBeforeAcceptingHumanValve",
+      "Status": "Passed",
+      "Duration": 0.0003999,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewCompanionTests.PartnerEnablesPairedSupportWithoutTakingAwaySoloTime",
+      "Status": "Passed",
+      "Duration": 0.0003334,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.CrewCompanionTests.ReplicaCannotSpawnPartnerOrChangeAuthority",
+      "Status": "Passed",
+      "Duration": 0.0004187,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.51,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: CrewCompanionTests",
+  "success": true,
+  "result": null
+}

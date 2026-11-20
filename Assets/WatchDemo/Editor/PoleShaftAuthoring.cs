@@ -4,42 +4,30 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using LighthouseKeepers.Editor.Environment;
 namespace LighthouseKeepers.WatchDemo.Editor
 {
     // Rebuildable circular subtraction; preserves source triangle attributes/submeshes.
     public static class PoleShaftAuthoring
     {
         const string Folder="Assets/WatchDemo/PoleShaftMeshes";
-        static readonly Dictionary<string,string> Sources=new Dictionary<string,string>{
-            {"SM_Floor_F2","37efadb7fc0a0f7d89a2666a2fe10011"},{"SM_Floor_F3","d3999fd2514909d141a95d98e632239c"},
-            {"SM_Floor_F4","f3ec45edcd5ca3686f40035351d3ba40"},{"SM_Floor_Lantern_Threshold","8c0f2dcac7c24842513227c2a532ba16"}};
         static bool Floor(string name)=>name=="SM_Floor_F2"||name=="SM_Floor_F3"||name=="SM_Floor_F4"||name=="SM_Floor_Lantern_Threshold";
         public static void Apply(GameObject root)
         {
             foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))if(Floor(f.name))
-            {var m=AssetDatabase.LoadAssetAtPath<Mesh>(Folder+"/"+f.name+".asset");if(m)f.sharedMesh=m;}
+            {var m=LighthouseBuilder.SolidFloorMesh(f.name);if(m)f.sharedMesh=m;}
             foreach(var c in root.GetComponentsInChildren<MeshCollider>(true))
             {var key=c.name.StartsWith("UCX_")?c.name.Substring(4):c.name; if(key.EndsWith("_01"))key=key.Substring(0,key.Length-3);if(!Floor(key))continue;
-             var m=AssetDatabase.LoadAssetAtPath<Mesh>(Folder+"/"+key+".asset");if(m){c.convex=false;c.sharedMesh=m;}}
+             var m=LighthouseBuilder.SolidFloorMesh(key);if(m){c.convex=false;c.sharedMesh=m;}}
         }
-        [MenuItem("Lighthouse Keepers/Rebuild continuous pole openings")]
+        [MenuItem("Lighthouse Keepers/Restore floors after pole removal")]
         public static void Build()
         {
             if(EditorApplication.isPlaying)throw new InvalidOperationException("Stop Play Mode first.");
             var scene=EditorSceneManager.OpenScene("Assets/Scenes/Lab/LK_Lab_Environment.unity");
-            Directory.CreateDirectory(Folder);AssetDatabase.Refresh();
-            foreach(var root in scene.GetRootGameObjects())foreach(var f in root.GetComponentsInChildren<MeshFilter>(true))if(Floor(f.name))
-            {
-                var path=Folder+"/"+f.name+".asset";
-                // Always cut the original UV-corrected source, never a previous aperture.
-                var source=AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Art/VisualPass/UV/"+Sources[f.name]+".asset");
-                var mesh=Cut(source,f.transform);mesh.name=f.name+" circular pole opening";
-                var existing=AssetDatabase.LoadAssetAtPath<Mesh>(path);
-                if(existing){EditorUtility.CopySerialized(mesh,existing);UnityEngine.Object.DestroyImmediate(mesh);}else AssetDatabase.CreateAsset(mesh,path);
-            }
             foreach(var root in scene.GetRootGameObjects())Apply(root);
             var bunk=GameObject.Find("Third-floor bed frame");if(bunk)BunkPlacement.Apply(bunk.transform);
-            var beacon=GameObject.Find("STN_BEACON_CONTROL");if(beacon){beacon.transform.position=new Vector3(1f,9.9f,2.4f);beacon.transform.rotation=Quaternion.Euler(0,202.62f,0);}
+            var beacon=GameObject.Find("STN_BEACON_CONTROL");if(beacon){beacon.transform.position=new Vector3(-4.02f,9.9f,0);beacon.transform.rotation=Quaternion.Euler(0,90f,0);}
             foreach(string part in new[]{"F2","F3","F4"}){
                 string path="Assets/Prefabs/Environment/PF_Shell_"+part+".prefab";var prefab=PrefabUtility.LoadPrefabContents(path);
                 try{Apply(prefab);PrefabUtility.SaveAsPrefabAsset(prefab,path);}finally{PrefabUtility.UnloadPrefabContents(prefab);}}

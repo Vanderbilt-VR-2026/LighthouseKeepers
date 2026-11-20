@@ -17,6 +17,10 @@ namespace LighthouseKeepers.Net
         [SerializeField, Range(.12f,.5f)] float stepSeconds=.22f;
         [SerializeField, Range(.02f,.2f)] float stepHeight=.08f;
         [SerializeField, Tooltip("Additional controller-to-glove rotation correction in degrees.")] Vector3 leftWristCorrection,rightWristCorrection;
+        [SerializeField, Tooltip("Plant boot orientation and step around turns; cosmetic only.")] bool plantedFootRotation;
+        [SerializeField, Range(1,1.4f)] float maximumLegStretch=1.4f;
+        [SerializeField, Range(0,.2f)] float bodyBehindEyes;
+        Quaternion leftPlant,rightPlant,leftFrom,rightFrom,leftTo,rightTo;
         CrewHumanoidRig rig;
         Mesh ownedMesh;
         Transform[] bones;
@@ -32,9 +36,12 @@ namespace LighthouseKeepers.Net
         int head,neck,leftArm,leftElbow,leftWrist,rightArm,rightElbow,rightWrist,leftHip,leftKnee,leftAnkle,rightHip,rightKnee,rightAnkle,leftToes,rightToes;
         Vector3 eyeInHead,lastHead;
         Quaternion leftWristOffset,rightWristOffset;
-        float floorY,lastPoseTime;
+        float floorY,lastPoseTime,statureScale=1;
+        public float Possession {get;set;}
+        public float VisualLift {get;set;}
         bool placed,attempted;
         public SkinnedMeshRenderer Skin {get;private set;}
+        public float ReferenceEyeHeight=>rig==null?1.665f:rig.eyeReference.y-rig.floorHeight;
         public Vector3 EyePosition=>bones==null?transform.position:bones[head].TransformPoint(eyeInHead);
         public Transform Joint(string name)=>rig!=null&&rig.Indices.TryGetValue(name,out int index)?bones[index]:null;
         public bool TryValidate(out string error)
@@ -88,8 +95,10 @@ namespace LighthouseKeepers.Net
         static NVector3 N(Vector3 v)=>new NVector3(v.x,v.y,v.z);
         static Vector3 U(NVector3 v)=>new Vector3(v.X,v.Y,v.Z);
 
-        float Ground(Vector3 point,float expected,float rise=.45f)
+        float Ground(Vector3 point,float expected,float rise=.45f)=>Ground(point,expected,out _,rise);
+        float Ground(Vector3 point,float expected,out Vector3 normal,float rise=.45f)
         {
+            normal=Vector3.up;
             // Ignore local tracking-rig colliders and dynamic props. Scan all hits, not the first wall/prop.
             int count=Physics.RaycastNonAlloc(new Vector3(point.x,point.y+.1f,point.z),Vector3.down,groundHits,3.5f,groundLayers,QueryTriggerInteraction.Ignore);
             float best=float.NegativeInfinity,result=expected;
@@ -100,35 +109,42 @@ namespace LighthouseKeepers.Net
                 // Prefer the upper walkable surface within one step, so a lower floor
                 // underneath stairs does not hold the boots downstairs. Reject tabletops.
                 float height=hit.point.y;
-                if(height<=expected+rise&&height>=expected-1.1f&&height>best){best=height;result=height;}
+                if(height<=expected+rise&&height>=expected-1.1f&&height>best){best=height;result=height;normal=hit.normal;}
             }
             return result;
         }
-        Vector3 FootGoal(int ankle,Vector3 velocity)
+        Vector3 FootGoal(int ankle,Vector3 velocity,out Quaternion orientation)
         {
             var point=transform.TransformPoint(rig.joints[ankle].position)+Vector3.ProjectOnPlane(velocity,Vector3.up)*.10f;
-            point.y=Ground(point+Vector3.up*.65f,floorY)+rig.joints[ankle].position.y-rig.floorHeight;
+            point.y=Ground(point+Vector3.up*.65f,floorY,out var normal)+(rig.joints[ankle].position.y-rig.floorHeight)*statureScale;
+            orientation=Quaternion.LookRotation(Vector3.ProjectOnPlane(transform.forward,normal),normal);
             return point;
         }
-        public void ApplyPose(KeeperPoseFrame pose,float seconds)
+        public void ApplyPose(KeeperPoseFrame pose,float seconds)=>ApplyPose(pose,seconds,null);
+        /// <summary>The local rig supplies its locomotion floor; never infer that floor from transient HMD height.</summary>
+        public void ApplyPose(KeeperPoseFrame pose,float seconds,float? locomotionFloor,float scale=1)
         {
             if(!pose.Valid||!float.IsFinite(seconds)||seconds<0)return;
             if(rig==null&&!TryInitialize(out _))return;
+            statureScale=Mathf.Clamp(float.IsFinite(scale)?scale:1,.55f,1.35f);transform.localScale=Vector3.one*statureScale;
             bool reset=!placed||Time.unscaledTime-lastPoseTime>.5f||(pose.Head-lastHead).sqrMagnitude>2.25f;
             lastPoseTime=Time.unscaledTime;
             if(reset)
             {
                 var origin=FindFirstObjectByType<XROrigin>();ignoredOrigin=origin?origin.transform:null;
-                floorY=pose.Head.y-rig.eyeReference.y+rig.floorHeight;
+                floorY=pose.Head.y-(rig.eyeReference.y-rig.floorHeight)*statureScale;
             }
             var forward=Vector3.ProjectOnPlane(pose.HeadRotation*Vector3.forward,Vector3.up);
             var yaw=forward.sqrMagnitude>.01f?Quaternion.LookRotation(forward,Vector3.up):transform.rotation;
             var rotation=reset?yaw:Quaternion.Slerp(transform.rotation,yaw,1-Mathf.Exp(-6*seconds));
+            // Local recenter/startup can move the HMD by less than the teleport threshold.
+            // Its trusted rig floor must replace the stale estimate on every pose, before ground probing.
+            if(locomotionFloor.HasValue&&float.IsFinite(locomotionFloor.Value))floorY=locomotionFloor.Value;
             floorY=Ground(pose.Head,floorY,reset?.8f:.45f);
-            transform.SetPositionAndRotation(new Vector3(pose.Head.x,floorY-rig.floorHeight,pose.Head.z),rotation);
+            transform.SetPositionAndRotation(new Vector3(pose.Head.x,floorY-rig.floorHeight*statureScale,pose.Head.z)-rotation*Vector3.forward*(bodyBehindEyes*statureScale),rotation);
             var velocity=reset||seconds<=.0001f?Vector3.zero:Vector3.ClampMagnitude((pose.Head-lastHead)/seconds,3);
             lastHead=pose.Head;
-            float squat=Mathf.Clamp(pose.Head.y-floorY-(rig.eyeReference.y-rig.floorHeight),-.58f,.25f);
+            float squat=Mathf.Clamp(pose.Head.y-floorY-(rig.eyeReference.y-rig.floorHeight)*statureScale,-.58f*statureScale,.25f*statureScale);
             var shift=Vector3.up*squat;
             for(int i=0;i<bones.Length;i++)
             {
@@ -136,38 +152,64 @@ namespace LighthouseKeepers.Net
                 rotations[i]=rotation*rig.joints[i].rotation;stretches[i]=1;
             }
             rotations[head]=pose.HeadRotation*rig.joints[head].rotation;
-            positions[head]=pose.Head-rotations[head]*eyeInHead;
+            positions[head]=pose.Head-rotations[head]*(eyeInHead*statureScale);
             Aim(neck,head,1.3f);
-            Limb(leftArm,leftElbow,leftWrist,pose.Left,positions[leftArm]+rotation*new Vector3(-.3f,-.3f,-.25f),maximumArmStretch);
-            Limb(rightArm,rightElbow,rightWrist,pose.Right,positions[rightArm]+rotation*new Vector3(.3f,-.3f,-.25f),maximumArmStretch);
+            Limb(leftArm,leftElbow,leftWrist,pose.Left-Vector3.up*VisualLift,positions[leftArm]+rotation*new Vector3(-.3f,-.3f,-.25f),maximumArmStretch);
+            Limb(rightArm,rightElbow,rightWrist,pose.Right-Vector3.up*VisualLift,positions[rightArm]+rotation*new Vector3(.3f,-.3f,-.25f),maximumArmStretch);
             rotations[leftWrist]=pose.LeftRotation*Quaternion.Euler(leftWristCorrection)*leftWristOffset;
             rotations[rightWrist]=pose.RightRotation*Quaternion.Euler(rightWristCorrection)*rightWristOffset;
-            var leftGoal=FootGoal(leftAnkle,velocity);var rightGoal=FootGoal(rightAnkle,velocity);
-            if(reset){leftStep.Reset(N(leftGoal));rightStep.Reset(N(rightGoal));}
+            var leftGoal=FootGoal(leftAnkle,velocity,out var leftFacing);var rightGoal=FootGoal(rightAnkle,velocity,out var rightFacing);
+            if(reset){leftStep.Reset(N(leftGoal));rightStep.Reset(N(rightGoal));leftPlant=leftFrom=leftTo=leftFacing;rightPlant=rightFrom=rightTo=rightFacing;}
             if(!leftStep.Moving&&!rightStep.Moving)
             {
                 float l=Vector3.Distance(U(leftStep.Position),leftGoal),r=Vector3.Distance(U(rightStep.Position),rightGoal);
+                // Small head looks do not spin boots against the floor. A larger turn earns a step.
+                if(plantedFootRotation)
+                {
+                    l=Mathf.Max(l,Quaternion.Angle(leftPlant,leftFacing)>35?stepDistance+.01f:0);
+                    r=Mathf.Max(r,Quaternion.Angle(rightPlant,rightFacing)>35?stepDistance+.01f:0);
+                }
                 if(Mathf.Max(l,r)>stepDistance)
-                {if(l>=r)leftStep.Begin(N(leftGoal),stepSeconds,stepHeight);else rightStep.Begin(N(rightGoal),stepSeconds,stepHeight);}
+                {
+                    float speed=Vector3.ProjectOnPlane(velocity,Vector3.up).magnitude;
+                    float duration=plantedFootRotation?Mathf.Lerp(stepSeconds,.13f,Mathf.Clamp01(speed/2.5f)):stepSeconds;
+                    float lift=stepHeight+(plantedFootRotation?Mathf.Min(.05f,speed*.02f):0);
+                    if(l>=r){leftFrom=leftPlant;leftTo=leftFacing;leftStep.Begin(N(leftGoal),duration,lift);}
+                    else{rightFrom=rightPlant;rightTo=rightFacing;rightStep.Begin(N(rightGoal),duration,lift);}
+                }
             }
             leftStep.Tick(seconds);rightStep.Tick(seconds);
-            Limb(leftHip,leftKnee,leftAnkle,U(leftStep.Position),positions[leftHip]+rotation*Vector3.forward,1.4f);
-            Limb(rightHip,rightKnee,rightAnkle,U(rightStep.Position),positions[rightHip]+rotation*Vector3.forward,1.4f);
+            leftPlant=Quaternion.Slerp(leftFrom,leftTo,leftStep.Progress);
+            rightPlant=Quaternion.Slerp(rightFrom,rightTo,rightStep.Progress);
+            Limb(leftHip,leftKnee,leftAnkle,U(leftStep.Position),positions[leftHip]+rotation*Vector3.forward,maximumLegStretch);
+            Limb(rightHip,rightKnee,rightAnkle,U(rightStep.Position),positions[rightHip]+rotation*Vector3.forward,maximumLegStretch);
+            if(plantedFootRotation)
+            {
+                rotations[leftAnkle]=leftPlant*rig.joints[leftAnkle].rotation;
+                rotations[rightAnkle]=rightPlant*rig.joints[rightAnkle].rotation;
+            }
             // Apply logical FK only to finger and toe chains; arms/legs above use world-space IK.
             var leftCurls=FingerCurls(pose.LeftPose,pose.LeftGrip,pose.LeftTrigger);
             var rightCurls=FingerCurls(pose.RightPose,pose.RightGrip,pose.RightTrigger);
             for(int i=0;i<bones.Length;i++)
             {
                 var joint=rig.joints[i];int channel=curlChannels[i];bool finger=channel>0;
-                if(finger||i==leftToes||i==rightToes)
+                bool face=joint.name=="EyeL"||joint.name=="EyeR"||joint.name=="Jaw"||joint.name=="TearL"||joint.name=="TearR";
+                if(finger||i==leftToes||i==rightToes||face)
                 {
                     int parent=joint.parent;
-                    positions[i]=positions[parent]+rotations[parent]*localPositions[i];
+                    positions[i]=positions[parent]+rotations[parent]*(localPositions[i]*statureScale);
                     var curls=channel<=3?leftCurls:rightCurls;
                     float curl=finger?curls[(channel-1)%3]:0;
                     rotations[i]=rotations[parent]*localRotations[i]*Quaternion.AngleAxis(curl*75,joint.curlAxis);
                 }
-                bones[i].SetPositionAndRotation(positions[i],rotations[i]);bones[i].localScale=new Vector3(1,stretches[i],1);
+                if(face){
+                    float amount=Mathf.Clamp01(Possession);
+                    if(joint.name=="EyeL"||joint.name=="EyeR")rotations[i]=Quaternion.AngleAxis(-112*amount,rotations[head]*Vector3.right)*rotations[i];
+                    if(joint.name=="Jaw")rotations[i]=Quaternion.AngleAxis(24*amount,rotations[head]*Vector3.right)*rotations[i];
+                }
+                bones[i].SetPositionAndRotation(positions[i]+Vector3.up*Mathf.Max(0,VisualLift),rotations[i]);
+                bones[i].localScale=joint.name.StartsWith("Tear")?Vector3.one*Mathf.Max(.001f,Mathf.Clamp01(Possession)):new Vector3(1,stretches[i],1);
             }
             placed=true;
         }
@@ -180,14 +222,14 @@ namespace LighthouseKeepers.Net
         void Aim(int bone,int end,float maxStretch)
         {
             var delta=positions[end]-positions[bone];var rest=rig.joints[end].position-rig.joints[bone].position;
-            var restWorld=transform.rotation*rest;
+            var restWorld=transform.rotation*(rest*statureScale);
             if(delta.sqrMagnitude>.000001f)rotations[bone]=Quaternion.FromToRotation(restWorld,delta)*transform.rotation*rig.joints[bone].rotation;
-            stretches[bone]=Mathf.Clamp(delta.magnitude/rest.magnitude,1,maxStretch);
+            stretches[bone]=Mathf.Clamp(delta.magnitude/(rest.magnitude*statureScale),1,maxStretch);
         }
         void Limb(int upper,int lower,int end,Vector3 target,Vector3 pole,float maxStretch)
         {
-            float a=Vector3.Distance(rig.joints[upper].position,rig.joints[lower].position);
-            float b=Vector3.Distance(rig.joints[lower].position,rig.joints[end].position);
+            float a=Vector3.Distance(rig.joints[upper].position,rig.joints[lower].position)*statureScale;
+            float b=Vector3.Distance(rig.joints[lower].position,rig.joints[end].position)*statureScale;
             var solution=CrewLimbIK.Solve(N(positions[upper]),N(target),N(pole),a,b,maxStretch);
             positions[lower]=U(solution.Bend);positions[end]=U(solution.End);
             Aim(upper,lower,maxStretch);Aim(lower,end,maxStretch);

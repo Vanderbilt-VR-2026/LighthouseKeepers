@@ -1,0 +1,323 @@
+{
+    "scare": {
+        "scene": 0,
+        "attempt": 0,
+        "participants": 0,
+        "caught": 0,
+        "escaped": 0,
+        "beat": 0,
+        "clock": 0.0,
+        "age": 0.0,
+        "body": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "catchOne": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "catchTwo": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "yaw": 0.0,
+        "doorOne": 0.0,
+        "doorTwo": 0.0,
+        "replay": false,
+        "reposition": false
+    },
+    "authenticity": {
+        "kind": 0,
+        "stage": 0,
+        "serial": 0,
+        "result": 0,
+        "realDone": false,
+        "fakeDone": false,
+        "introDone": false,
+        "age": 48.91342544555664
+    },
+    "recovery": {
+        "humans": 2,
+        "failed": false,
+        "lesson": 0,
+        "lessonVictim": 0,
+        "lessonAge": 5.756657600402832,
+        "lightkeeper": {
+            "down": false,
+            "remaining": 0.0,
+            "progress": 0.0,
+            "grace": 0.0,
+            "serial": 0
+        },
+        "machinist": {
+            "down": false,
+            "remaining": 0.0,
+            "progress": 0.0,
+            "grace": 0.0,
+            "serial": 0
+        }
+    },
+    "lanterns": {
+        "enabled": true,
+        "wick0": 0,
+        "wick1": 0,
+        "refillSlot": -1,
+        "oil0": 1.0,
+        "oil1": 1.0,
+        "canOil": 0.0
+    },
+    "flares": {
+        "enabled": true,
+        "clock": 48.88638091692701,
+        "first": {
+            "fired": false,
+            "stopped": false,
+            "repelled": false,
+            "at": 0.0,
+            "stopAge": 0.0,
+            "origin": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "direction": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "stop": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "second": {
+            "fired": false,
+            "stopped": false,
+            "repelled": false,
+            "at": 0.0,
+            "stopAge": 0.0,
+            "origin": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "direction": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "stop": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
+    "protocol": "LK-Lab-Coop-v53",
+    "world": "",
+    "tension": {
+        "enabled": true,
+        "prepared": false,
+        "huntPlanned": false,
+        "hunting": false,
+        "phase": 0,
+        "storm": 1,
+        "music": 0,
+        "value": 0.0,
+        "quietUntil": 0.0,
+        "nextProblemAt": 15.0,
+        "reliefUntil": 651.206782803189,
+        "lastProblemAt": 0.0
+    },
+    "fear": {
+        "enabled": true,
+        "firstHoldingBreath": false,
+        "secondHoldingBreath": false,
+        "firstActor": 0,
+        "secondActor": 0,
+        "first": 0.439998984336853,
+        "second": 0.0
+    },
+    "ships": {
+        "enabled": true,
+        "cleared": true,
+        "departureWait": 561.2067828031724,
+        "seen": 1,
+        "entered": 1,
+        "passed": 1,
+        "extended": 0,
+        "closeWarned": 1,
+        "wreck": -1,
+        "wreckAt": 0.0,
+        "dark": [
+            0.0
+        ],
+        "delay": [
+            0.0
+        ],
+        "steady": [
+            0.6000000238418579
+        ],
+        "hold": [
+            0.0
+        ]
+    },
+    "sabotage": {
+        "enabled": true,
+        "warning": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "broken": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "fixedAt": [
+            0.0,
+            1.6,
+            561.2067828031724
+        ]
+    },
+    "drowned": {
+        "poseKind": 2,
+        "enabled": true,
+        "phase": 0,
+        "fault": 2,
+        "appearances": 1,
+        "consumed": 7,
+        "since": 514.0719064968182,
+        "nextAt": 572.0582357515125,
+        "anchorAt": 0.0,
+        "anchored": false,
+        "actor": 0,
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "yaw": 0.0
+    },
+    "breathMask": 0,
+    "assistActor": 0,
+    "mode": 0,
+    "briefingHeld": false,
+    "campaignEnabled": true,
+    "nightSawPowerOff": true,
+    "nightFaultMask": 7,
+    "nightReliefUntil": 651.206782803189,
+    "nightNextFaultAt": 15.0,
+    "nightGraceUntil": 60.0,
+    "watchEngaged": true,
+    "watchGateElapsed": 5.72959811380133,
+    "stationGraceUntil": 80.0,
+    "seenStationMask": 2,
+    "nightStartSeenMask": 0,
+    "handheldEnabled": true,
+    "radioActor0": 0,
+    "radioActor1": 0,
+    "scriptedPartner": false,
+    "valveEnabled": true,
+    "valveCrew": false,
+    "valveClamped": false,
+    "valveActor": 0,
+    "sequence": 0,
+    "day": 2,
+    "power": 1,
+    "doneMask": 7,
+    "starterPulls": 3,
+    "bolts": 0,
+    "activeBolt": 0,
+    "turns": 0,
+    "codeProgress": 4,
+    "elapsed": 636.206782803189,
+    "beaconDarkElapsed": 0.0,
+    "highWaterElapsed": 0.0,
+    "highWaterFailed": false,
+    "sea": {
+        "first": {
+            "actor": 0,
+            "serial": 0,
+            "remaining": 0.0,
+            "cooldown": 0.0
+        },
+        "second": {
+            "actor": -1,
+            "serial": 0,
+            "remaining": 0.0,
+            "cooldown": 0.0
+        },
+        "lost": false
+    },
+    "sleepDay": 0,
+    "radioCue": 0,
+    "radioSerial": 0,
+    "bedMask": 0,
+    "radioAge": 0.0,
+    "houseWaterVolume": 0.17869442701339723,
+    "day3Stage": 0,
+    "day3Crew": false,
+    "day3GraceUntil": 0.0,
+    "objectiveIndex": -1,
+    "nightTwoOutage": false,
+    "firstGeneratorGraceUntil": 0.0,
+    "stormStage": 1,
+    "peakDanger": 0.03654682636260986,
+    "previousCloseCall": false,
+    "directorEnabled": true,
+    "stepA": 5,
+    "stepB": 0,
+    "actorA": 0,
+    "actorB": 0,
+    "musicMode": 0,
+    "musicSince": 0.0,
+    "beaconStationEnabled": true,
+    "beaconIgnited": true,
+    "beaconAlignment": 0.32649266719818118,
+    "beaconTarget": 0.5,
+    "beaconSoot": 0.0,
+    "engineEnabled": true,
+    "chokeClosed": false,
+    "engineSettled": true,
+    "fuel": 0.29790374636650088,
+    "chokeRemaining": 0.0,
+    "engineFloodRemaining": 0.0,
+    "engineConsumption": 0.001500000013038516,
+    "primer": 0,
+    "enginePulls": 3,
+    "engineClosedPulls": 0,
+    "coughSerial": 1,
+    "gridEnabled": true,
+    "gridTripped": false,
+    "gridCapacity": 3.25,
+    "gridMask": 15,
+    "water": 0.0,
+    "stroke": 0.0,
+    "seal": 0.0,
+    "frequency": 157.8000030517578,
+    "lockElapsed": 1.0,
+    "transmitElapsed": 0.0,
+    "beaconDarkFailed": false,
+    "needsReturn": false,
+    "radioMain": true,
+    "radioLocked": true,
+    "radioDone": true,
+    "revision": 0,
+    "beds": 0,
+    "keepers": 1,
+    "order0": 0,
+    "order1": 1,
+    "order2": 2,
+    "fade": 0.0,
+    "seat": 0.0,
+    "direction": 0.0,
+    "returned": 0.0,
+    "sleeping": false,
+    "touching": false,
+    "radioHeld": true,
+    "radioTrigger": true,
+    "notice": ""
+}

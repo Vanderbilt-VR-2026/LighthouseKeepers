@@ -61,7 +61,8 @@ namespace LighthouseKeepers.Net.Tests
             yield return null;var mount=GameObject.Find("Keeper wristwatch").transform;
             Assert.AreEqual("wrist",mount.parent.name);Assert.Greater(Vector3.Dot(mount.forward,mount.parent.up),.99f,"LCD must face out from the back of the wrist");
             Assert.AreEqual(4,mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Watch side button"));
-            Assert.Less(mount.Find("Watch resin case").localScale.x,.06f);Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
+            Assert.Less(mount.Find("Watch resin case").GetComponent<MeshFilter>().sharedMesh.bounds.size.x,.06f);
+            var dial=mount.Find("Watch readable dial");Assert.Less(Vector3.Dot(dial.up,mount.up),-.99f,"Reading direction must be flipped180 degrees");Assert.Greater(Vector3.Dot(dial.forward,mount.forward),.99f,"Face must still face out of the wrist");Assert.Greater(mount.GetComponentsInChildren<Transform>().Count(t=>t.name=="Resin wrist strap"),10);
             var p=Find("PressurePresentation");var original=Field<Transform>(p,"head");var fake=new GameObject("Watch gaze test").transform;p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,fake);
             fake.position=mount.position+mount.forward*.30f;yield return null;Assert.True(Value<bool>(p,"WatchBacklight"));
             fake.position=mount.position-mount.forward*.30f;yield return null;Assert.False(Value<bool>(p,"WatchBacklight"));p.GetType().GetField("head",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(p,original);Object.Destroy(fake.gameObject);
@@ -86,61 +87,29 @@ namespace LighthouseKeepers.Net.Tests
             yield return new WaitForSecondsRealtime(5.2f);Assert.AreEqual(0,group.alpha,"Objective became always-on during radio speech");
             var face=GameObject.Find("Wrist current objective").GetComponent<TMPro.TMP_Text>();Assert.IsNotEmpty(face.text);Assert.True(face.gameObject.activeInHierarchy);face.ForceMeshUpdate();Assert.Greater(face.renderedWidth*Mathf.Abs(face.transform.lossyScale.x),.025f,"Watch objective is microscopic");Assert.Greater(Vector3.Dot(face.transform.forward,GameObject.Find("Time to dawn").transform.forward),.99f,"Watch writing faces wrong side");
         }
-        [UnityTest] public IEnumerator PoleRealGripFromEveryFloorReachesGroundWithBothHands()
+        [UnityTest] public IEnumerator RetiredPoleHasNoGeometryOrOpeningsAndAllFloorsAreWalkable()
         {
-            var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();var capsule=origin.GetComponent<CharacterController>();
-            foreach(var b in origin.GetComponents<MonoBehaviour>())if(b.GetType().Name=="DesktopPreview")b.enabled=false;
-            var poles=Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Where(c=>c.GetType().Name=="PoleSlide").OrderBy(c=>Value<float>(c,"Top")).ToArray();Assert.AreEqual(1,poles.Length);
-            var bed=GameObject.Find("Third-floor bed frame").GetComponent<Collider>();
-            foreach(var guard in poles[0].GetComponentsInChildren<BoxCollider>().Where(c=>!c.isTrigger))
-                Assert.False(Physics.ComputePenetration(guard,guard.transform.position,guard.transform.rotation,bed,bed.transform.position,bed.transform.rotation,out _,out _),"Pole railing intersects the bunk");
-            foreach(var hand in hands){hand.enabled=false;var direct=hand.Direct;direct.enabled=true;
-            foreach(var pole in poles)foreach(float top in new[]{3.3f,6.6f,9.9f}){
-                float bottom=Value<float>(pole,"Bottom");var axis=pole.transform.position+Vector3.right*.28f+Vector3.up*top;
-                var approach=Vector3.left;
-                var plate=pole.GetComponentsInChildren<TextMesh>().Single(t=>t.name=="Pole grip instruction"&&Mathf.Abs(t.transform.position.y-top-1.24f)<.05f);
-                Assert.Greater(Vector3.Dot(plate.transform.right,Vector3.Cross(Vector3.up,-approach)),.99f,"Plate reads backwards from the landing");
-                Assert.Greater(Mathf.Abs(plate.transform.position.z-axis.z),.45f,"Sign blocks the reach corridor");
-                var stand=axis+Vector3.left*.72f;origin.MoveCameraToWorldLocation(stand+Vector3.up*1.65f);
-                direct.selectInput.QueueManualState(false,0,false,true);hand.transform.parent.position+=pole.transform.position+Vector3.up*(top+.8f)-direct.transform.position;
-                Physics.SyncTransforms();yield return new WaitForSeconds(.5f);
-                var target=pole.GetComponent<XRSimpleInteractable>();
-                TestContext.WriteLine("direct="+direct.enabled+" active="+direct.gameObject.activeInHierarchy+" at="+direct.transform.position+" shaft="+target.colliders.First(c=>c).bounds+" hovered="+string.Join(",",direct.interactablesHovered.Select(x=>x.transform.name))+" overlap="+string.Join(",",Physics.OverlapSphere(direct.transform.position,.08f).Select(x=>x.name)));
-                Assert.True(direct.interactablesHovered.Contains(target),"Shaft cannot be reached by real direct hover: "+hand.Node+" F"+top);
-                direct.selectInput.QueueManualState(true,1,true,false);yield return new WaitForSeconds(.25f);Assert.True(Value<bool>(pole,"Latched"),"Grip did not latch");
-                var opened=Field<System.Collections.Generic.List<Collider>>(pole,"openedGuards").ToArray();Assert.Greater(opened.Length,0,"No reconciled entrance guard opened");
-                foreach(var g in opened){Assert.True(g.enabled,"Guard removed for everyone");Assert.True(Physics.GetIgnoreCollision(capsule,g));}
-                float pauseDeadline=Time.time+4;while(origin.transform.position.y>top-.85f&&Time.time<pauseDeadline)yield return null;
-                direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.65f);Assert.True(Value<bool>(pole,"Latched"));Assert.Less(Value<float>(pole,"Speed"),.01f);
-                hand.transform.parent.position+=pole.transform.position+Vector3.up*(origin.transform.position.y+.8f)-direct.transform.position;yield return new WaitForSeconds(.1f);
-                direct.selectInput.QueueManualState(true,1,true,false);float end=Time.time+12;while(Value<bool>(pole,"Latched")&&Time.time<end)yield return null;
-                Assert.False(Value<bool>(pole,"Latched"),"Descent blocked");Assert.AreEqual(bottom,origin.transform.position.y,.3f,"Did not reach ground through the circular floor openings");
-                foreach(var g in opened)Assert.False(Physics.GetIgnoreCollision(capsule,g),"Fall protection not restored");
-                direct.selectInput.QueueManualState(false,0,false,true);yield return new WaitForSeconds(.1f);
-            }}
+            Assert.IsFalse(Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Any(x=>x.GetType().Name=="PoleSlide"));
+            Assert.IsNull(GameObject.Find("Pole entrance gate"));Assert.IsNull(GameObject.Find("Pole grip instruction"));
+            Physics.SyncTransforms();
+            foreach(float floor in new[]{3.3f,6.6f,9.9f})foreach(var offset in new[]{Vector3.zero,Vector3.left*.30f,Vector3.forward*.30f}){
+                var point=new Vector3(1.7f,floor,1.1f)+offset;
+                Assert.True(Physics.Raycast(point+Vector3.up*.30f,Vector3.down,out var hit,.6f,~0,QueryTriggerInteraction.Ignore),"Open shaft F"+floor);Assert.That(hit.point.y,Is.EqualTo(floor).Within(.08f));
+            }yield return null;
         }
-        [UnityTest] public IEnumerator PoleReleaseExitsBothIntermediateFloorsAndBedroomHasFlushHatch()
+        [UnityTest] public IEnumerator FuelCanFallsAfterEitherHandReleasesAndReturnsAfterEightSeconds()
         {
-            var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
-            foreach(var b in origin.GetComponents<MonoBehaviour>())if(b.GetType().Name=="DesktopPreview")b.enabled=false;
-            var pole=Find("PoleSlide");var target=pole.GetComponent<XRSimpleInteractable>();
-            var bedroom=GameObject.Find("Circular pole landing F3");Assert.IsNotNull(bedroom);
-            Assert.IsFalse(bedroom.GetComponentsInChildren<Transform>().Any(t=>t.name=="Pole entrance gate"||t.name=="Circular shaft rail"),"Bedroom cage remains");
-            Assert.IsNotNull(GameObject.Find("Bedroom hatch fall protection"));
-            Assert.IsNull(GameObject.Find("Rain on recessed window"),"Floating rain sheet remains");
-            foreach(var hand in hands)foreach(float landing in new[]{6.6f,3.3f}){
-                hand.enabled=false;var direct=hand.Direct;direct.enabled=true;
-                origin.MoveCameraToWorldLocation(new Vector3(.98f,9.9f+1.65f,1.1f));
-                direct.selectInput.QueueManualState(false,0,false,true);
-                hand.transform.parent.position+=pole.transform.position+Vector3.up*10.7f-direct.transform.position;Physics.SyncTransforms();yield return new WaitForSeconds(.3f);
-                direct.selectInput.QueueManualState(true,1,true,false);yield return new WaitForSeconds(.2f);Assert.True(Value<bool>(pole,"Latched"));
-                float releaseHeight=landing+(hand.Node==UnityEngine.XR.XRNode.LeftHand?.25f:-.20f);
-                float deadline=Time.time+12;while(origin.transform.position.y>releaseHeight&&Time.time<deadline)yield return null;
-                direct.selectInput.QueueManualState(false,0,false,true);deadline=Time.time+4;while(Value<bool>(pole,"Latched")&&Time.time<deadline)yield return null;
-                Assert.False(Value<bool>(pole,"Latched"),"Release did not exit floor "+landing+" with "+hand.Node);
-                Assert.That(origin.transform.position.y,Is.EqualTo(landing).Within(.18f));Assert.Less(origin.Camera.transform.position.x,.8f,"Keeper left in shaft");
-                Assert.True(origin.GetComponentInChildren<UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement.ContinuousMoveProvider>().enabled,"Walking not restored");
-                yield return new WaitForSeconds(.3f);Assert.That(origin.transform.position.y,Is.EqualTo(landing).Within(.18f),"Exit fell through floor");
+            var can=Value<Component>(Find("WatchEngineControls"),"FuelCan");var grab=Value<XRGrabInteractable>(can,"Grab");var body=can.GetComponent<Rigidbody>();var origin=Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
+            var home=can.transform.position;
+            foreach(var hand in hands){
+                Call(can,"ResetHome");hand.enabled=false;var control=hand.transform.parent;var direct=hand.Direct;
+                control.position+=can.transform.TransformPoint(new Vector3(0,.30f,0))-direct.transform.position;
+                direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.15f);Assert.True(grab.isSelected);
+                control.position+=new Vector3(0,1.6f,0);yield return new WaitForSeconds(.8f);
+                direct.EndManualInteraction();direct.selectInput.manualPerformed=false;control.position=Vector3.down*10;yield return null;
+                Assert.False(body.isKinematic);Assert.True(body.useGravity);float y=can.transform.position.y;
+                yield return new WaitForSeconds(.25f);Assert.Less(can.transform.position.y,y-.10f,"Release floated instead of falling");
+                yield return new WaitForSeconds(8.1f);Assert.That(Vector3.Distance(home,can.transform.position),Is.LessThan(.01f));Assert.True(body.isKinematic);
             }
         }
         [UnityTest] public IEnumerator NarrationDropsOldInstructionsAndLimitsBackToBackAnnouncements()
@@ -178,6 +147,10 @@ namespace LighthouseKeepers.Net.Tests
                 var controller=hand.transform.parent;controller.SetPositionAndRotation(handle,can.transform.rotation);
                 var direct=hand.Direct;direct.selectInput.manualPerformed=true;direct.StartManualInteraction((IXRSelectInteractable)grab);yield return new WaitForSeconds(.2f);Assert.True(grab.isSelected);
                 var before=can.transform.position;controller.position+=Vector3.right*.25f;yield return new WaitForSeconds(.2f);Assert.Greater(Vector3.Distance(before,can.transform.position),.15f,"Free carry stopped following grip");
+                // Establish an actually distant spout; a fixed world-right displacement
+                // can land beside the filler after the mirrored hand attach rotates the can.
+                controller.position+=filler.position+Vector3.forward*1.5f-tip.position;yield return new WaitForSeconds(.2f);
+                Assert.Greater(Vector3.Distance(tip.position,filler.position),.6f,"Away-pour test setup");
                 Assert.False((bool)Call(controls,"CanPour",true),"Can poured away from filler");
                 controller.rotation=Quaternion.Euler(0,controls.transform.eulerAngles.y,105);yield return new WaitForSeconds(.2f);
                 for(int i=0;i<8;i++){controller.position+=filler.position+Vector3.up*.06f-tip.position;yield return new WaitForSeconds(.05f);}

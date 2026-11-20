@@ -12,7 +12,7 @@ namespace LighthouseKeepers.WatchDemo
   TMP_Text task,label,floor,subtitle,partner,speakerTag,recallTip;float tipUntil;RawImage subtitleBacking;ObjectiveLineIcon icon;AudioSource cueSound;string caption="";float captionAt;int lastFloor=-99,lastTarget=-99,lastLocationStep=-99,typed=-1;Material material,fontMaterial;Texture2D backing,subtitleTexture;float built;bool wakePending,nagging;string note="";float noteUntil;
   ObjectiveInputIcon inputIcon;TMP_Text inputLabel;DirectorPresentation guidance;
   readonly ObjectiveRecallState recall=new();
-  int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
+  int recallHints;float nextRecallHint;int index=int.MinValue,day,cue;float changed,until,completeUntil;bool buttons,glance;string full="",pending;int nextIndex;
 
   public static string WatchGateCaption=>string.Format(PlayerStrings.Get("integrated.watchGate"),Mathf.CeilToInt(MasterPassTuning.Current?MasterPassTuning.Current.watchStartGraceSeconds:45));
   public static string WrenchDownCaption=>PlayerStrings.Get("integrated.wrenchDown");
@@ -21,8 +21,10 @@ namespace LighthouseKeepers.WatchDemo
   public static bool PromptWrenchDown(bool repaired,bool held)=>repaired&&held;
   public static int StationFloor(string station)=>station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
   public static int FloorAt(float y)=>y<3.4f?1:y<6.7f?2:y<10?3:4;
-  public static string FloorDirection(int target,int here,string gap=" ")=>string.Format(PlayerStrings.Get(target>here?"integrated.floorUp":target<here?"integrated.floorDown":"integrated.floorHere"),target);
-  string FloorCaption(int value)=>FloorDirection(watch.State.Director!=null?ObjectiveDirector.Floor((KeeperStep)value):StationFloor(value>=0?watch.State.Definition.tasks[value].stationId:"BED"),FloorAt(head.position.y));
+  public static int KeeperFloor(Vector3 feet)=>feet.z< -4.4f&&feet.y<3.3f?0:FloorAt(feet.y+1.3f);
+  public static string FloorDirection(int target,int here,string gap=" ")=>target==0?KeeperStrings.Get("floor.house"):string.Format(PlayerStrings.Get(target>here?"integrated.floorUp":target<here?"integrated.floorDown":"integrated.floorHere"),target);
+  public static string LocationLine(string where,int target,int here)=>string.IsNullOrEmpty(where)?"":target<0?where:where+" · "+FloorDirection(target,here);
+  string FloorCaption(int value){int target=watch.State.Director!=null?watch.InstructionFloor((KeeperStep)value):StationFloor(value>=0?watch.State.Definition.tasks[value].stationId:"BED");return target<0?ObjectiveDirector.Location((KeeperStep)value):FloorDirection(target,FloorAt(head.position.y));}
   void Place(){var q=ObjectiveHudSettings.Facing(head.rotation);root.SetPositionAndRotation(head.position+q*Vector3.forward*ObjectiveHudSettings.Distance,q);}
   void LateUpdate(){if(!root||!head||group.alpha<=0)return;var q=ObjectiveHudSettings.Facing(head.rotation);float blend=1-Mathf.Exp(-Time.unscaledDeltaTime*5);root.SetPositionAndRotation(Vector3.Lerp(root.position,head.position+q*Vector3.forward*ObjectiveHudSettings.Distance,blend),Quaternion.Slerp(root.rotation,q,blend));}
   void Reveal(float seconds,bool place=false){bool hidden=until<=Time.unscaledTime;until=Mathf.Max(until,Time.unscaledTime+seconds);if(hidden||place)Place();}
@@ -44,7 +46,7 @@ namespace LighthouseKeepers.WatchDemo
    for(int y=0;y<32;y++)for(int x=0;x<64;x++){float edge=Mathf.Sin((y+.5f)/32*Mathf.PI)*Mathf.Sin((x+.5f)/64*Mathf.PI);data[y*64+x]=new Color(.018f,.024f,.029f,.60f*edge);}
    backing.SetPixels(data);backing.Apply();var bg=Rect(root,"Subtle gradient backing",Vector2.zero,root.sizeDelta).gameObject.AddComponent<RawImage>();bg.texture=backing;bg.material=material;bg.raycastTarget=false;
    line=Rule("Brass accent",new Vector2(-265,76),new Vector2(480,1.4f));line.pivot=new Vector2(0,.5f);
-   label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),14,new Color(.74f,.65f,.48f,.72f));label.text=LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.2");
+   label=Text(LighthouseKeepers.Core.PlayerStrings.Get("legacy.ObjectiveHud.1"),new Vector2(-5,53),new Vector2(510,25),20,new Color(.9f,.78f,.55f,.95f));label.text=KeeperStrings.Get("hud.recallHeader");
    icon=Rect(root,"Objective line icon",new Vector2(-240,10),new Vector2(40,42)).gameObject.AddComponent<ObjectiveLineIcon>();icon.color=new Color(.76f,.62f,.36f);icon.material=material;icon.raycastTarget=false;
    cueSound=new GameObject("Soft objective completion").AddComponent<AudioSource>();cueSound.transform.SetParent(transform,false);cueSound.playOnAwake=false;cueSound.volume=.08f;cueSound.clip=Resources.Load<AudioClip>("Hands/clunk");
    task=Text("Objective task",new Vector2(-15,10),new Vector2(450,50),28,new Color(.93f,.91f,.83f));task.transform.localScale=new Vector3(.90f,1,1);task.overflowMode=TextOverflowModes.Ellipsis;task.maxVisibleLines=2;
@@ -67,6 +69,8 @@ namespace LighthouseKeepers.WatchDemo
    built=Time.unscaledTime;Reveal(ObjectiveHudSettings.Duration,true);
   }
   public void Reveal()=>Reveal(ObjectiveHudSettings.Duration,true);
+  public void RevealFor(float seconds)=>Reveal(seconds,true);
+  public void ShowHint(string text,float seconds)=>ShowNote(text,seconds,true);
   void ConfigureSubtitle(bool remembered)
   {
    int size=HarborSubtitleSettings.Large?34:28;
@@ -79,12 +83,15 @@ namespace LighthouseKeepers.WatchDemo
    int current=watch.State.Director!=null?(int)watch.CurrentInstruction:watch.State.ObjectiveIndex;
    Reveal();changed=Time.unscaledTime-1;completeUntil=0;index=current;full=Title(current);typed=full.Length;task.text=full;line.localScale=Vector3.one;
    objectiveGroup.alpha=1;group.alpha=watch.ObjectivePresentationBlocked?0:1;
-   if(radio&&!string.IsNullOrEmpty(radio.LastCaption)){ConfigureSubtitle(true);subtitle.text=radio.LastCaption;subtitle.pageToDisplay=1;subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();speakerTag.text=KeeperStrings.Get("subtitle.speaker");subtitle.alpha=speakerTag.alpha=1;subtitleBacking.gameObject.SetActive(true);}
+   if(radio&&!string.IsNullOrEmpty(radio.LastCaption)){ConfigureSubtitle(true);subtitle.text=radio.LastCaption;subtitle.pageToDisplay=1;subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();speakerTag.text=radio.LastSpeaker;subtitle.alpha=speakerTag.alpha=1;subtitleBacking.gameObject.SetActive(true);}
   }
   public void PreviewCompletion(){pending=full;nextIndex=index;completeUntil=Time.unscaledTime+1.2f;Reveal();}
-  public static bool RecallTeachingDue(int night,int previous,int current)=>night==1&&previous!=int.MinValue&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BTaught",0)==0;
-  void Set(int value,string text){if(RecallTeachingDue(watch.State.Day,index,value)){tipUntil=Time.unscaledTime+5;PlayerPrefs.SetInt("LK.Objective.BTaught",1);PlayerPrefs.Save();}index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
-  string Title(int value)=>watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
+  public static bool RecallTeachingDue(int night,int previous,int current)=>night>=1&&previous!=current&&PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)==0;
+  public static bool IdleRecallReminderDue(float now,float next,float changed,bool blocked)=>!blocked&&float.IsFinite(now)&&float.IsFinite(next)&&float.IsFinite(changed)&&now>=next&&now-changed>=30;
+  public static void AcknowledgeRecallButton(){if(PlayerPrefs.GetInt("LK.Objective.BUsed.v2",0)!=0)return;PlayerPrefs.SetInt("LK.Objective.BUsed.v2",1);PlayerPrefs.Save();}
+  void Set(int value,string text){if(recallHints==0&&RecallTeachingDue(watch.State.Day,index,value)){recallHints++;tipUntil=Time.unscaledTime+5;}nextRecallHint=Time.unscaledTime+60;index=value;full=text;changed=Time.unscaledTime;typed=-1;completeUntil=0;Reveal();}
+  string ActionTitle(int value)=>value==(int)KeeperStep.RadioCode&&watch.State.ScriptedPartner&&GetComponent<CrewCompanion>() is CrewCompanion helper&&!helper.CodeDelivered?KeeperStrings.Get("radio.askOwen"):watch.State.Director!=null?watch.State.Director.Instruction((KeeperStep)value):value== -2?KeeperStrings.Get("hud.complete"):value<0?KeeperStrings.Get("hud.rest"):watch.State.Definition.tasks[value].taskText;
+  string Title(int value){if(watch.State.Scare.Active&&GetComponent<NightmareScene>() is NightmareScene scene)return scene.Instruction;var step=(KeeperStep)value;if(ObjectiveDirector.Job(step)==WatchState.RadioStation&&step!=KeeperStep.ReadCode&&ObjectiveHud.FloorAt(head.position.y)!=4)return KeeperStrings.Get("radio.goF4");return ActionTitle(value);}
   void Update()
   {
    var s=watch.State;if(s==null)return;if(!radio)radio=FindAnyObjectByType<HarborRadio>();
@@ -104,19 +111,20 @@ namespace LighthouseKeepers.WatchDemo
    if(Time.unscaledTime-built<.5f)Place();
    InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.secondaryButton,out bool b);
    int recallPress=recall.Input(b,Time.unscaledTime);
-   if(recallPress>0){RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
+   if(recallPress>0){AcknowledgeRecallButton();tipUntil=0;nextRecallHint=Time.unscaledTime+90;RecallNow();if(recallPress==2&&radio)radio.ReplayLastLocally();}
    bool recalling=recall.Visible(Time.unscaledTime);
    if(recalling){until=Mathf.Max(until,recall.Until);changed=Time.unscaledTime-1;}
+   if(IdleRecallReminderDue(Time.unscaledTime,nextRecallHint,changed,watch.Sleeping||s.Failed||watch.ObjectivePresentationBlocked)){tipUntil=Time.unscaledTime+5;nextRecallHint=Time.unscaledTime+90;RevealFor(5);}
    recallTip.text=Time.unscaledTime<tipUntil?KeeperStrings.Get("hud.recallTeach"):"";partner.gameObject.SetActive(Time.unscaledTime>=tipUntil);
    bool done=completeUntil>0;strike.gameObject.SetActive(done);tick.gameObject.SetActive(done);
    if(done){task.text=full;task.color=new Color(.9f,.75f,.4f);}else{int n=Mathf.Min(full.Length,Mathf.CeilToInt(full.Length*Mathf.Clamp01((Time.unscaledTime-changed)/.4f)));if(typed!=n){typed=n;task.text=full.Substring(0,n);}task.color=new Color(.93f,.91f,.83f);}
    line.localScale=new Vector3(Mathf.Clamp01((Time.unscaledTime-changed)/.4f),1,1);
    string station=s.Director!=null?ObjectiveDirector.Job((KeeperStep)index):index>=0&&index<s.Definition.tasks.Length?s.Definition.tasks[index].stationId:"BED";
-   int target=s.Director!=null?ObjectiveDirector.Floor((KeeperStep)index):station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
+   int target=s.Director!=null?watch.InstructionFloor((KeeperStep)index):station==WatchState.PipeStation?1:station==WatchState.GeneratorStation?2:station=="BED"?3:4;
    int here=FloorAt(head.position.y);
    if(lastFloor!=here||lastTarget!=target||lastLocationStep!=index){
     lastFloor=here;lastTarget=target;lastLocationStep=index;
-    if(s.Director!=null){var where=ObjectiveDirector.Location((KeeperStep)index);floor.text=string.IsNullOrEmpty(where)?"":where+" · "+FloorDirection(target,here);}
+    if(s.Director!=null){var where=ObjectiveDirector.Location((KeeperStep)index);floor.text=LocationLine(where,target,here);}
     else floor.text=FloorDirection(target,here);
    }
    if(!guidance)guidance=GetComponent<DirectorPresentation>();
@@ -125,30 +133,40 @@ namespace LighthouseKeepers.WatchDemo
    inputIcon.gameObject.SetActive(near);inputLabel.gameObject.SetActive(near);
    if(near){inputIcon.Set(button=="TRIGGER");inputLabel.text=KeeperStrings.Get("input."+button);}
 
+   if(s.Scare.Active&&GetComponent<NightmareScene>() is NightmareScene sceneInfo){floor.text=sceneInfo.Location;partner.text="";inputIcon.gameObject.SetActive(false);inputLabel.gameObject.SetActive(false);}
+   label.text=string.Format(KeeperStrings.Get("hud.dutyRecall"),KeeperStrings.Get("duty."+watch.CurrentDuty));
    icon.Set(station);
-   bool showVoice=HarborSubtitleSettings.Enabled&&radio&&radio.SubtitleAlpha>0;
+   var nightmare=GetComponent<NightmareScene>();bool nightmareLine=s.Scare.Active&&nightmare;
+   var lesson=watch.GetComponent<PossessionLesson>();bool sceneLine=s.Recovery.LessonActive&&lesson;
+   var auth=watch.GetComponent<RadioAuthentication>();bool authLine=!sceneLine&&auth&&auth.Visible;
+   var helper=watch.GetComponent<CrewCompanion>();bool helperLine=!sceneLine&&helper&&helper.Active&&helper.ReportActive;
+   bool showVoice=!nightmareLine&&!helperLine&&!sceneLine&&!authLine&&radio&&(HarborSubtitleSettings.Enabled||radio.CaptionsOnly)&&radio.SubtitleAlpha>0;
    bool remembered=recalling&&radio&&!string.IsNullOrEmpty(radio.LastCaption);
    string words=remembered?radio.LastCaption:showVoice?radio.Subtitle:"";
-   string display=remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
+   string display=nightmareLine?nightmare.Caption:s.BriefingHeld?KeeperStrings.Get("briefing.waiting"):sceneLine?lesson.Caption:helperLine?helper.ReportLine:authLine?auth.Caption:remembered||showVoice?words:Time.unscaledTime<noteUntil?note:s.WatchStartHeld&&!radio?WatchGateCaption:"";
    int size=HarborSubtitleSettings.Large?34:28;
-   ConfigureSubtitle(remembered);
+   bool codeCard=helper&&helper.CodeDelivered&&!string.IsNullOrEmpty(helper.LearnedCode)&&display.Contains(helper.LearnedCode);
+   ConfigureSubtitle(remembered||codeCard);
+   if(codeCard){subtitle.enableAutoSizing=true;subtitle.fontSizeMin=22;subtitle.fontSizeMax=size;subtitle.overflowMode=TextOverflowModes.Overflow;subtitle.maxVisibleLines=2;}
    if(subtitle.text!=display||(!remembered&&subtitle.fontSize!=size)){subtitle.text=display;subtitle.fontSize=size;subtitle.rectTransform.sizeDelta=new Vector2(800,size*2.6f);subtitle.maxVisibleCharacters=int.MaxValue;subtitle.ForceMeshUpdate();}
-   int visible=remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
+   int visible=nightmareLine||sceneLine||helperLine||authLine?display.Length:remembered?display.Length:showVoice?radio.SubtitleCharacters:display.Length;
    int page=1;
    // Paginate long recordings into two readable lines rather than shrinking or clipping text.
    var info=subtitle.textInfo;
    for(int i=0;i<info.characterCount&&info.characterInfo[i].index<visible;i++)page=info.characterInfo[i].pageNumber+1;
-   subtitle.pageToDisplay=remembered?1:page;subtitle.maxVisibleCharacters=visible;
+   if(showVoice&&radio.CaptionsOnly&&!remembered)page=radio.SubtitlePage(info.pageCount);
+   if(authLine&&!helperLine)page=Mathf.Clamp(1+Mathf.FloorToInt(s.Authenticity.Age/6),1,Mathf.Max(1,info.pageCount));
+   subtitle.pageToDisplay=remembered||codeCard?1:page;subtitle.maxVisibleCharacters=visible;
    float alpha=remembered?Mathf.Clamp01((recall.Until-Time.unscaledTime)/.8f):showVoice?radio.SubtitleAlpha:1;
    bool urgent=showVoice&&radio.DangerSubtitle;
    subtitle.color=urgent?new Color(1,.78f,.42f,alpha):new Color(.98f,.98f,.94f,alpha);
-   speakerTag.text=remembered||showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
+   speakerTag.text=nightmareLine?nightmare.Speaker:sceneLine?lesson.Speaker:helperLine?KeeperStrings.Get("companion.name"):authLine?auth.Speaker:remembered?radio.LastSpeaker:showVoice?KeeperStrings.Get(urgent?"subtitle.dangerSpeaker":"subtitle.speaker"):"";speakerTag.alpha=alpha;
    subtitleBacking.gameObject.SetActive(display.Length>0);subtitleBacking.color=new Color(.012f,.018f,.023f,.8f*alpha);
 
    bool unsafeNow=s.PressureEnabled&&!s.Complete&&s.Danger>=.5f;
    danger.gameObject.SetActive(unsafeNow);dangerText.gameObject.SetActive(unsafeNow);if(unsafeNow){danger.localScale=new Vector3(s.Danger,1,1);dangerText.text=KeeperStrings.Get(s.DangerKey);}
    objectiveGroup.alpha=Mathf.Clamp01((until-Time.unscaledTime)/.8f);group.alpha=watch.ObjectivePresentationBlocked?0:Mathf.Max(objectiveGroup.alpha,display.Length>0?alpha:0);
-   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=x||y;if(pressed&&!buttons){Reveal();if(s.PressureEnabled&&radio)radio.RequestReplay();}buttons=pressed;
+   var device=InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);device.TryGetFeatureValue(CommonUsages.primaryButton,out bool x);device.TryGetFeatureValue(CommonUsages.secondaryButton,out bool y);bool pressed=y;if(pressed&&!buttons){Reveal();if(s.PressureEnabled&&radio)radio.RequestReplay();}buttons=pressed;
    bool looking=wrist&&Vector3.Distance(head.position,wrist.position)<1.1f&&Vector3.Dot(head.forward,(wrist.position-head.position).normalized)>.94f;if(looking&&!glance)Reveal();glance=looking;
    // Presentation follows lazily; gameplay and tracked transforms remain untouched.
   }

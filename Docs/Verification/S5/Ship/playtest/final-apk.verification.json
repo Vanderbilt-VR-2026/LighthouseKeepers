@@ -1,0 +1,33 @@
+{
+  "package": "com.lighthousekeepers.game",
+  "version_name": "0.1.0",
+  "version_code": "1",
+  "supported_devices": "quest|quest2|cambria|eureka|quest3s",
+  "launch_activities": [
+    "com.unity3d.player.UnityPlayerGameActivity"
+  ],
+  "apk": "/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-Sprint5-Beam-8927fb64.apk",
+  "bytes": 124535954,
+  "sha256": "a964546b879116dc0451b3de092a790a5bbebbbe7f933d33c0635c2703c44fbb",
+  "zip_crc": "passed",
+  "signature": "Verifies\nVerified using v1 scheme (JAR signing): false\nVerified using v2 scheme (APK Signature Scheme v2): true\nVerified using v3 scheme (APK Signature Scheme v3): false\nVerified using v3.1 scheme (APK Signature Scheme v3.1): false\nVerified using v4 scheme (APK Signature Scheme v4): false\nVerified for SourceStamp: false\nNumber of signers: 1\nSigner #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: 48d68a6d999ded1b89fd8a95892162f6daf5475ae1efa223fb250722f8de305d\nSigner #1 certificate SHA-1 digest: 01b85c4b8fade643291045cce8489c706cd15b59\nSigner #1 certificate MD5 digest: 63fffafe59fbb8da83948f786c56db67\nSigner #1 key algorithm: RSA\nSigner #1 key size (bits): 2048\nSigner #1 public key SHA-256 digest: 1e62eb632a551644ea35adf563414e1e6c425c5890526e6717c69d3c7ecd7c22\nSigner #1 public key SHA-1 digest: 0472e6a85787cd046288a9a27eceafd1d586fe23\nSigner #1 public key MD5 digest: 8f627b3134fb50c90531a9eb50482a1c",
+  "headset_execution": "not performed",
+  "unity_build": {
+    "apk": "/Users/aneeshvasamreddy/LighthouseKeepers-M3/Builds/LighthouseKeepers-Sprint5-Beam-8927fb64.apk",
+    "sourceCommit": "8927fb6408fb4664d24d540af0428a04323778f8",
+    "sourceStatus": "",
+    "unityVersion": "6000.3.23f1",
+    "playerVersion": "0.1.0",
+    "startedUtc": "2026-11-14T02:34:57.1172860Z",
+    "finishedUtc": "2026-11-14T02:38:52.4179080Z",
+    "result": "Succeeded",
+    "buildOptions": "ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development, CleanBuildCache, CompressWithLz4",
+    "scenes": [
+      "Assets/_LighthouseKeepers/Scenes/Development/LK_NetworkLobby.unity",
+      "Assets/Scenes/Lab/LK_Lab_Environment.unity"
+    ],
+    "versionCode": 1,
+    "errors": 0,
+    "warnings": 8
+  }
+}

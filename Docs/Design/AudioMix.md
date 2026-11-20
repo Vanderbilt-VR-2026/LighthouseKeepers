@@ -1,3 +1,5 @@
+> Current November 17 score: [continuous supplied soundtrack + five-second overlay](PlayerSoundtrack.md). This supersedes the older three-loop demo replacement and periodic silence for the selected score. Existing speech ducking and buses remain.
+
 # Audio mix
 
 ## Sources
@@ -56,3 +58,11 @@ Crew voice uses Photon native mono capture (48 kHz Opus / 48 kbps / 20 ms), with
 ## Recorded keeper voice pass (PR #85)
 
 94 single takes: −18.34 to −17.74 LUFS, peaks ≤−1.35 dBTP. Offline +2.5 dB at 2.8 kHz with gentle de-essing. PA band-pass widened to 250–4500 Hz; live presence reduced to +1 dB, saturation softened, .22 s short reverb, speech hiss .003 (was .008), noise follows room falloff. Existing voice-first ducking remains. See `Docs/Audio/radio-ab.md`: five-line offline ASR A/B did not establish a consistent word-recognition gain; the lead subsequently confirmed clear, single-take speech on the installed c716030 Quest build. New timing/pole/UI feedback is documented in Docs/Audio/verification.md.
+
+## Sprint 5 foundation — local fear (#93)
+
+KeeperFearPresentation adds original synthesized mono heartbeat/breath and a low hunted undertone; no external recordings. Gains, cadence, source limits and exclusions are in [FearFeedback.md](FearFeedback.md). FearWorldFilter only processes SFX_World/Ambience above fear 0.6, toward 6 kHz; VoiceChat/Radio/SFX_Critical remain clear. The mixer still caps real voices at 24 and retains the master ceiling. All Editor verification stays muted; device audition and CPU cost remain pending. The TensionDirector's reserved pre-scare window ducks Music/Ambience 24 dB for 2.5 s, without muting speech or critical warnings; no scare is spawned by this foundation.
+
+## November16 story speech priority
+
+Approved story direction replaces the previous -3dB radio/music dip: Music ducks7dB during harbor speech or voice chat (never stops); Radio ducks6dB during live voice chat. Existing50ms attack/600ms release, player sliders, mono/echo cancellation and PA processing remain. ANT's proposed -10dB chat duck is **pending its private spatial playback adapter**; no antagonist actor recording is installed. Editors were muted; this is code/transport verification, not a listening or bus-loudness measurement.

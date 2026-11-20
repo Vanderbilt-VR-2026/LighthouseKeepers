@@ -12,7 +12,7 @@ public sealed class PlayerComfort:MonoBehaviour {
  [SerializeField] ControllerInputActionManager[] inputManagers;
  float watchSpeed=1;bool? watchSmooth;
  public void SetWatchComfort(float multiplier,bool? smoothTurning){watchSpeed=Mathf.Clamp(multiplier,.5f,2);watchSmooth=smoothTurning;}
- void Awake(){move.rightHandMoveInput=new XRInputValueReader<Vector2>("Unused right move",XRInputValueReader.InputSourceMode.Unused);snap.leftHandTurnInput=new XRInputValueReader<Vector2>("Unused left snap",XRInputValueReader.InputSourceMode.Unused);smooth.leftHandTurnInput=new XRInputValueReader<Vector2>("Unused left turn",XRInputValueReader.InputSourceMode.Unused);}
+ void Awake(){snap.enableTurnAround=false;smooth.enableTurnAround=false;move.rightHandMoveInput=new XRInputValueReader<Vector2>("Unused right move",XRInputValueReader.InputSourceMode.Unused);snap.leftHandTurnInput=new XRInputValueReader<Vector2>("Unused left snap",XRInputValueReader.InputSourceMode.Unused);smooth.leftHandTurnInput=new XRInputValueReader<Vector2>("Unused left turn",XRInputValueReader.InputSourceMode.Unused);}
  void Update(){if(!settings)return;
  bool smoothTurning=watchSmooth??settings.SmoothTurning;move.moveSpeed=settings.MovementSpeed*watchSpeed;snap.turnAmount=settings.SnapAngle;smooth.turnSpeed=settings.SmoothTurnSpeed;
  foreach(var manager in inputManagers){bool left=manager.gameObject.name.Contains("Left");if(manager.smoothMotionEnabled!=left)manager.smoothMotionEnabled=left;if(manager.smoothTurnEnabled!=smoothTurning)manager.smoothTurnEnabled=smoothTurning;}

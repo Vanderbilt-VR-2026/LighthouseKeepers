@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b81574ef45454cb42e9138d88f4e6b, type: 3}
+  m_Name: Night01
+  m_EditorClassIdentifier: LK.Core.Progression::LighthouseKeepers.Core.Progression.DayDefinition
+  day: 1
+  dayLengthSeconds: 315
+  beaconDarkLimitSeconds: 0
+  powerCapacity: 3.25
+  initialCircuitMask: 15
+  fuelDrainPerSecond: 0
+  beaconInitiallyLit: 0
+  beaconInitialAlignment: 0.5
+  beaconTargetAlignment: 0.5
+  beaconInitialSoot: 0
+  beaconSootPerSecond: 0
+  tasks:
+  - stationId: STN_PIPE_LEAK
+    taskText: Repair the pipe
+  - stationId: STN_GENERATOR
+    taskText: Practise starting the generator
+  - stationId: STN_BEACON_CONTROL
+    taskText: Light and aim the beacon
+  - stationId: STN_RADIO_CONSOLE
+    taskText: Clear the convoy by radio
+  startingFaults:
+  - STN_PIPE_LEAK
+  - STN_RADIO_CONSOLE
+  requiredKeepers: 1
+  briefingHeading: "Day 1 \u2014 The leak"
+  briefingText: Learn the pipe, generator, radio and beacon. Clear the convoy only
+    when ready. Practise aiming before resting on Floor 3.
+  briefingVoice: {fileID: 0}
+  faultObjectivePrefix: 
+  objectives:
+  - text: Take the wrench from the bench
+    predicates: 00000000
+    incidentId: 
+  - text: Find the leaking pipe downstairs
+    predicates: 01000000
+    incidentId: 
+  - text: Repair the pipe with the wrench
+    predicates: 02000000
+    incidentId: leak
+  - text: Clear the water
+    predicates: 03000000
+    incidentId: leak
+  - text: Go to bed
+    predicates: 04000000
+    incidentId: 
+  incidents:
+  - id: leak
+    atSeconds: 15
+    kind: 0
+  successCondition: 0
+  failCondition: 0
+  requiresPartnerIsolation: 0
+  primerStrokes: 3
+  crankCooldownSeconds: 2
+  chokeReleaseSeconds: 10
+  isolationFreshnessSeconds: 0.3
+  initialFuelFraction: 0.05
+  scenario:
+    id: night-1
+    nameKey: m3.night1
+    configured: 1
+    radioClearance: 1
+    demo: 0
+    noFail: 1
+    finaleFaultPileup: 0
+    timingApproved: 0
+    stormBaseStage: 1
+    peakStormAfterFraction: 1
+    soloSeconds: 315
+    crewSeconds: 315
+    soloFloodMultiplier: 1
+    crewFloodMultiplier: 1
+    openingSeconds: 45
+    reliefSeconds: 15
+    startGraceSeconds: 65
+    firstStationGraceSeconds: 80
+    openingCue: 1
+    tonightCue: 0
+    faults:
+    - id: leak
+      stationId: STN_PIPE_LEAK
+      afterStationId: 
+      gate: 0
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    - id: engine-rehearsal
+      stationId: STN_GENERATOR
+      afterStationId: STN_PIPE_LEAK
+      gate: 3
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    - id: lamp-rehearsal
+      stationId: STN_BEACON_CONTROL
+      afterStationId:
+      gate: 2
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    - id: clearance
+      stationId: STN_RADIO_CONSOLE
+      afterStationId: STN_BEACON_CONTROL
+      gate: 3
+      atSeconds: 0
+      graceSeconds: 60
+      repeat: 0
+    stations:
+    - stationId: STN_PIPE_LEAK
+      activeSteps:
+      - tighten
+      crewVariant: 0
+      informationSite: F1
+      soloLocalInformation: 1
+    - stationId: STN_GENERATOR
+      activeSteps:
+      - fuel
+      - timed-pull
+      crewVariant: 0
+      informationSite: F2
+      soloLocalInformation: 1
+    - stationId: STN_BEACON_CONTROL
+      activeSteps:
+      - light
+      - align
+      crewVariant: 0
+      informationSite: F4
+      soloLocalInformation: 1
+    - stationId: STN_RADIO_CONSOLE
+      activeSteps:
+      - power
+      - tune
+      - code
+      - transmit
+      crewVariant: 3
+      informationSite: House
+      soloLocalInformation: 1
+    ships:
+    - id: preview
+      nameKey: m3.ship.maryEllen
+      sightedAtSeconds: 0
+      approachSeconds: 45
+      windowSeconds: 30
+      darkGraceSeconds: 30
+      broadcastExtensionSeconds: 0
+      safePreview: 1
+      aimingTutorial: 1
+      largeFinale: 0
+    cues:
+    - eventId: ship-sighted
+      cue: 96
+    - eventId: ship-close
+      cue: 97
+    - eventId: ship-passed
+      cue: 98
+    - eventId: ship-wrecked
+      cue: 99
+    - eventId: rescue
+      cue: 100

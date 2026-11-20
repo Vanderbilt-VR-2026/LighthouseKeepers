@@ -1,0 +1,33 @@
+using System;using System.IO;using System.Linq;using System.Collections;using UnityEngine;using UnityEditor;using LighthouseKeepers.WatchDemo;using LighthouseKeepers.Core;using LighthouseKeepers.Presentation.Environment;
+public class FlashlightVisuals:MonoBehaviour {
+ WatchDemoController w;Camera cam;string folder;int fail;System.Collections.Generic.List<string> checks=new();
+ public static object Begin(string p){EditorUtility.audioMasterMute=true;var c=new GameObject("Flashlight visual acceptance").AddComponent<FlashlightVisuals>();c.folder=p;c.StartCoroutine(c.Run());return true;}
+ void Check(bool ok,string label){checks.Add((ok?"PASS ":"FAIL ")+label);if(!ok)fail++;}
+ float Capture(string file){var rt=new RenderTexture(1100,850,24);cam.targetTexture=rt;cam.Render();RenderTexture.active=rt;var t=new Texture2D(1100,850,TextureFormat.RGB24,false);t.ReadPixels(new Rect(0,0,1100,850),0,0);t.Apply();float sum=0;var pixels=t.GetPixels();int magenta=pixels.Count(c=>c.r>.7f&&c.b>.7f&&c.g<.2f);Check(magenta<10,file+" has no shader-error magenta (pixels="+magenta+")");for(int y=325;y<525;y++)for(int x=450;x<650;x++)sum+=pixels[y*1100+x].grayscale;File.WriteAllBytes(folder+"/"+file+".png",t.EncodeToPNG());RenderTexture.active=null;cam.targetTexture=null;Destroy(rt);Destroy(t);return sum/40000;}
+ IEnumerator Run(){Directory.CreateDirectory(folder);w=FindAnyObjectByType<WatchDemoController>();w.enabled=false;w.GetComponent<CrewCompanion>().SetCommand(CompanionCommand.Wait);var lesson=w.GetComponent<PossessionLesson>();if(lesson)lesson.enabled=false;
+ cam=new GameObject("Evidence camera").AddComponent<Camera>();cam.enabled=false;cam.fieldOfView=65;cam.nearClipPlane=.02f;cam.clearFlags=CameraClearFlags.SolidColor;cam.backgroundColor=Color.black;
+ var lighting=FindAnyObjectByType<BeaconAndMainsLightingGroup>();w.State.Lanterns.Extinguish(0);w.State.Lanterns.Extinguish(1);w.State.Grid.Reset(20,15,false);lighting.Powered=false;lighting.ApplyNow();
+ Check(w.GetComponentsInChildren<WatchLantern>().Length==2,"Exactly two flashlights, one per keeper");Check(GameObject.Find("LANTERN_OIL_CAN")==null,"No oil refill can");Check(FindObjectsByType<Transform>(FindObjectsSortMode.None).Count(t=>t.name.StartsWith("Single hanging room bulb "))==5,"Exactly one bulb in House and each floor");
+ var torch=w.Lantern(0);torch.GetComponent<Rigidbody>().isKinematic=true;torch.transform.SetPositionAndRotation(new Vector3(0,4.55f,-1.5f),Quaternion.identity);var light=torch.GetComponentInChildren<Light>();
+ cam.transform.position=new Vector3(-.4f,4.9f,-2);cam.transform.LookAt(new Vector3(0,4.665f,3.7f));
+ yield return new WaitForSeconds(.4f);float off=Capture("f2-beam-off");w.State.CycleLantern(0);yield return new WaitForSeconds(.4f);File.WriteAllText(folder+"/lamp.txt",light.transform.position+" forward "+light.transform.forward+" enabled "+light.enabled+" intensity "+light.intensity+" range "+light.range+" fog "+RenderSettings.fogDensity);float on=Capture("f2-beam-on-far");Check(on>off+.01f,"Beam illuminates far wall: off="+off+", on="+on);
+ Check(light.enabled&&light.type==LightType.Spot&&light.spotAngle==28&&light.range==9,"Focused 28 degree 9m spot, no LOW mode");Check(light.shadows==LightShadows.None,"No flashlight shadow map");
+ torch.transform.rotation=Quaternion.Euler(0,-90,0);yield return new WaitForSeconds(.3f);float away=Capture("f2-beam-away");Check(away<on*.8f,"Turning the tool away removes the bright spot: "+away);
+ torch.transform.SetPositionAndRotation(new Vector3(3.0f,4.55f,-.8f),Quaternion.Euler(0,90,0));cam.transform.position=new Vector3(2.6f,4.7f,-1.3f);cam.transform.LookAt(new Vector3(3.71f,4.665f,-.8f));yield return new WaitForSeconds(.3f);Capture("f2-beam-near");w.State.Lanterns.Extinguish(0);
+ cam.transform.position=new Vector3(0,1.6f,0);cam.transform.LookAt(LanternRoomLighting.RoomLights[1]);yield return new WaitForSeconds(.3f);Capture("f1-backup-bulb");cam.transform.position=new Vector3(0,4.6f,0);cam.transform.LookAt(LanternRoomLighting.RoomLights[2]);Capture("f2-bulb-starts-off");
+ w.State.Grid.Reset(20,15,true);lighting.Powered=true;lighting.ApplyNow();yield return new WaitForSeconds(.4f);
+ foreach(int room in new[]{2,3,4}){cam.transform.position=room==4?new Vector3(-2,11.4f,-1.3f):new Vector3(-2,(room-1)*3.3f+1.6f,-1);cam.transform.LookAt(LanternRoomLighting.RoomLights[room]);Capture("f"+room+"-powered-bulb");}
+ Check(Resources.Load<Shader>("RoomFilamentLit")==null,"Broken replacement shader excluded from Resources");
+ int count=0,bad=0;foreach(var r in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None)){
+  if(r.lightmapIndex<0||r.lightmapIndex>=LightmapSettings.lightmaps.Length)continue;
+  foreach(var mat in r.sharedMaterials)if(mat){count++;if(!mat.shader.isSupported||mat.shader.name.Contains("Error")||mat.shader.name.Contains("Room Filament"))bad++;}
+ }
+ Check(count>100&&bad==0,"Lightmapped environment uses supported original shaders: materials="+count+", bad="+bad);
+ var original=FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None).Where(r=>r.lightmapIndex>=0&&r.lightmapIndex<LightmapSettings.lightmaps.Length).ToDictionary(r=>r,r=>r.sharedMaterials);
+ yield return new WaitForSeconds(2);
+ Check(original.All(p=>p.Key&&p.Key.sharedMaterials.SequenceEqual(p.Value)),"Environment material references remain unchanged across bulb updates");
+ cam.transform.position=new Vector3(-2.1f,1.8f,-7.3f);cam.transform.LookAt(LanternRoomLighting.RoomLights[0]);Capture("house-original-materials");
+ w.State.CycleLantern(0);w.State.CycleLantern(1);yield return new WaitForSeconds(2.2f);Check(FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l=>l.enabled&&l.lightmapBakeType==LightmapBakeType.Realtime)==2,"Two realtime lights maximum with both flashlights on");
+ File.WriteAllText(folder+"/checks.txt",string.Join("\n",checks));File.WriteAllText(folder+"/result.json","{\"passed\":"+(fail==0?"true":"false")+",\"failures\":"+fail+"}");Destroy(cam.gameObject);Destroy(gameObject);
+ }
+}

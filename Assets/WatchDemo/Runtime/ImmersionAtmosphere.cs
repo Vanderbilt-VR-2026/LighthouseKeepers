@@ -6,7 +6,7 @@ namespace LighthouseKeepers.WatchDemo
     public sealed class ImmersionAtmosphere : MonoBehaviour
     {
         WatchDemoController watch;Transform head;AudioSource wind,events,heartbeat;Light lightning,dawn;HandRig[] hands;
-        AudioClip thunder,creak,horn,drip;float nextEvent,flashAge=100,nextMasterStrike;int eventNumber,day;bool waking;bool failed;
+        AudioClip thunder,creak,horn,drip,wetSteps;float nextEvent,flashAge=100,nextMasterStrike;int eventNumber,day;bool waking;bool failed;
         public void Initialize(WatchDemoController w,Transform h)
         {
             watch=w;head=h;hands=FindObjectsByType<HandRig>(FindObjectsInactive.Include,FindObjectsSortMode.None);
@@ -18,13 +18,13 @@ namespace LighthouseKeepers.WatchDemo
             var morning=new GameObject("Brief dawn through windows");morning.transform.SetParent(transform,false);
             dawn=morning.AddComponent<Light>();dawn.type=LightType.Directional;dawn.color=new Color(1,.73f,.43f);dawn.transform.rotation=Quaternion.Euler(18,-65,0);dawn.shadows=LightShadows.None;dawn.intensity=0;dawn.enabled=false;
             heartbeat=Source("Keeper low heartbeat",h.position);heartbeat.transform.SetParent(h,false);heartbeat.transform.localPosition=Vector3.zero;heartbeat.volume=.16f;heartbeat.clip=Resources.Load<AudioClip>("ImmersionAudio/heartbeat");heartbeat.loop=true;
-            nextEvent=Time.time+12;
+            wetSteps=Resources.Load<AudioClip>("S5Audio/DrownedHorror/approach");nextEvent=Time.time+12;
         }
         AudioSource Source(string name,Vector3 position)
         {var t=M2StationParts.Root(name,transform,position);var s=t.gameObject.AddComponent<AudioSource>();s.playOnAwake=false;s.spatialBlend=1;s.dopplerLevel=0;s.minDistance=3;s.maxDistance=25;s.rolloffMode=AudioRolloffMode.Linear;t.gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency=1800;return s;}
         void Update()
         {
-            if(watch.State.Failed!=failed){failed=watch.State.Failed;if(failed){heartbeat.Play();if(watch.State.HighWaterFailed){var roar=Resources.Load<AudioClip>("S4Audio/water");if(roar)events.PlayOneShot(roar,1);}}else heartbeat.Stop();}
+            if(watch.State.Failed!=failed){failed=watch.State.Failed;if(failed){if(watch.State.Fear==null)heartbeat.Play();if(watch.State.HighWaterFailed){var roar=Resources.Load<AudioClip>("S4Audio/water");if(roar)events.PlayOneShot(roar,1);}}else heartbeat.Stop();}
             if(day!=watch.State.Day){waking=day>0&&watch.State.Day>day;day=watch.State.Day;flashAge=0;PlayThunder();}
             // Existing host day/time drives both views. A brief recovery wash, never permanent daylight.
             float dawnPhase=(float)(watch.State.Elapsed+watch.State.WatchGateElapsed)/watch.State.Immersion.dawnWashSeconds;
@@ -34,14 +34,20 @@ namespace LighthouseKeepers.WatchDemo
             // One broad 1.4-second envelope, never repeated rapidly. No hard flashes or camera shake.
             lightning.intensity=flashAge<1.4f?.35f*Mathf.Sin(flashAge/1.4f*Mathf.PI):0;
             int stage=watch.State.Storm?.Stage??1;
-            if(watch.State.Storm!=null&&stage>=3&&Time.time>=nextMasterStrike){nextMasterStrike=Time.time+(stage==4?15:22);flashAge=0;PlayThunder();}
-            if(Time.time<nextEvent)return;nextEvent=Time.time+(watch.State.Storm!=null?Mathf.Lerp(24,8,(stage-1)/3f):14)+(eventNumber%3)*4;
+            if(!watch.State.TensionQuiet&&watch.State.Storm!=null&&stage>=3&&Time.time>=nextMasterStrike){nextMasterStrike=Time.time+(stage==4?15:22);flashAge=0;PlayThunder();}
+            if(watch.State.TensionQuiet||Time.time<nextEvent)return;nextEvent=Time.time+(watch.State.Storm!=null?Mathf.Lerp(24,8,(stage-1)/3f):14)+(eventNumber%3)*4;
             var clip=eventNumber%4==0?creak:eventNumber%4==1?horn:eventNumber%4==2?drip:thunder;
-            events.transform.position=head.position+new Vector3(eventNumber%2==0?3:-3,1.5f,2);
-            if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,.5f+.1f*stage);}
+            bool dread=watch.State.Sprint5&&watch.State.Sprint5.groundedHorror&&watch.State.Day>=2&&DrownedAppearance.Sightings;
+            var side=Quaternion.Euler(0,head.eulerAngles.y+(eventNumber%2==0?140:-130),0)*Vector3.forward;
+            var point=head.position+side*2.7f;point.y=Mathf.Floor(head.position.y/3.3f)*3.3f+.12f;
+            if(dread&&eventNumber%5==2&&Physics.Raycast(point+Vector3.up,Vector3.down,out var floor,1.5f,~0,QueryTriggerInteraction.Ignore)){clip=wetSteps;events.transform.position=floor.point+Vector3.up*.1f;}
+            else events.transform.position=head.position+new Vector3(eventNumber%2==0?3:-3,1.5f,2);
+            if(clip){if(clip==thunder){events.clip=clip;events.PlayDelayed(1.2f);}else events.PlayOneShot(clip,clip==wetSteps?.32f:.5f+.1f*stage);}
             if(eventNumber%4==3){flashAge=0;foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
             eventNumber++;
         }
+        // Reuses the comfort-limited storm envelope; no new light or repeated flash burst.
+        public void ShipPassageLightning(){if(flashAge<8||watch.State.TensionQuiet)return;flashAge=0;nextMasterStrike=Mathf.Max(nextMasterStrike,Time.time+15);PlayThunder();}
         void PlayThunder(){if(thunder){events.clip=thunder;events.PlayDelayed(1.2f);}foreach(var hand in hands)if(hand)hand.Pulse(.08f,.12f);}
     }
 }

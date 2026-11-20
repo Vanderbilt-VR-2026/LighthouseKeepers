@@ -16,7 +16,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(age<0)return 0;
             if(age>=duration-.08f)return caption?.Length??0;
-            if(wordStarts==null||characterEnds==null||wordStarts.Length!=characterEnds.Length)
+            if(wordStarts==null||wordStarts.Length==0||characterEnds==null||wordStarts.Length!=characterEnds.Length)
                 return Mathf.CeilToInt((caption?.Length??0)*Mathf.Clamp01(age/Mathf.Max(.1f,duration)));
             int count=0;for(int i=0;i<wordStarts.Length&&wordStarts[i]<=age;i++)count=characterEnds[i];return count;
         }

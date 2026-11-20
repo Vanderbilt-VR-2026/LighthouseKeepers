@@ -1,0 +1,77 @@
+{
+  "clips": [
+    {
+      "file": "Assets/WatchDemo/Resources/S5Audio/DrownedHorror/approach.wav",
+      "seconds": 3.1,
+      "channels": 1,
+      "lufs": -21.99,
+      "truePeakDb": -7.06,
+      "loop": false,
+      "loopBoundaryDelta": 0.0,
+      "source": "Original deterministic synthesis; seed1907"
+    },
+    {
+      "file": "Assets/WatchDemo/Resources/S5Audio/DrownedHorror/reveal_a.wav",
+      "seconds": 3.6,
+      "channels": 1,
+      "lufs": -20.01,
+      "truePeakDb": -6.72,
+      "loop": false,
+      "loopBoundaryDelta": 0.0,
+      "source": "Original deterministic synthesis; seed1907"
+    },
+    {
+      "file": "Assets/WatchDemo/Resources/S5Audio/DrownedHorror/reveal_b.wav",
+      "seconds": 3.9,
+      "channels": 1,
+      "lufs": -20.0,
+      "truePeakDb": -6.4,
+      "loop": false,
+      "loopBoundaryDelta": 0.0,
+      "source": "Original deterministic synthesis; seed1907"
+    },
+    {
+      "file": "Assets/WatchDemo/Resources/S5Audio/DrownedHorror/breathing.wav",
+      "seconds": 12.0,
+      "channels": 1,
+      "lufs": -24.0,
+      "truePeakDb": -8.75,
+      "loop": true,
+      "loopBoundaryDelta": 0.0,
+      "source": "Original deterministic synthesis; seed1907"
+    },
+    {
+      "file": "Assets/WatchDemo/Resources/S5Audio/DrownedHorror/retreat.wav",
+      "seconds": 2.8,
+      "channels": 1,
+      "lufs": -23.0,
+      "truePeakDb": -9.16,
+      "loop": false,
+      "loopBoundaryDelta": 0.0,
+      "source": "Original deterministic synthesis; seed1907"
+    },
+    {
+      "file": "Assets/WatchDemo/Resources/S5Audio/DrownedHorror/score.wav",
+      "seconds": 24.0,
+      "channels": 2,
+      "lufs": -21.99,
+      "truePeakDb": -9.86,
+      "loop": true,
+      "loopBoundaryDelta": 0.001739501953125,
+      "source": "Original deterministic synthesis; seed1907"
+    }
+  ],
+  "preview": {
+    "input_i": "-29.47",
+    "input_tp": "-13.05",
+    "input_lra": "10.30",
+    "input_thresh": "-40.14",
+    "output_i": "-25.49",
+    "output_tp": "-10.31",
+    "output_lra": "8.20",
+    "output_thresh": "-35.66",
+    "normalization_type": "dynamic",
+    "target_offset": "2.49"
+  },
+  "note": "Offline source analysis only; full bus mix and human listening remain device checks."
+}

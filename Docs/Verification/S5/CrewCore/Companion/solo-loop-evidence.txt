@@ -1,0 +1,12 @@
+Deterministic test-only pipe order seed 99; real state and XRI interactions, no authored asset changes.
+Day 1 from PLAY SOLO, power on: elapsed=0.000s realtime=106.799 day=1 repaired=False water=0.02000m
+Focused Night 3 replay; prior Nights 1–2 already passed: elapsed=0.000s realtime=106.799 day=1 repaired=False water=0.02000m
+START focused fast Night3 XRI replay; original paced actions passed before the late fuel exhaustion: elapsed=0.000s realtime=106.799 day=1 repaired=False water=0.02000m
+Solo repair ready without clamp; valve hidden: elapsed=0.000s realtime=106.917 day=1 repaired=False water=0.02004m
+day-three physical bolt 2 complete; inflow=0.6666667: elapsed=8.564s realtime=115.488 day=1 repaired=False water=0.02943m
+Released wrench: position=(3.12, 0.01, 0.74) kinematic=False water=0.0303362: elapsed=9.661s realtime=142.035 day=1 repaired=False water=0.03034m
+day-three physical bolt 0 complete; inflow=0.3333333: elapsed=16.346s realtime=148.398 day=1 repaired=False water=0.03500m
+day-three physical bolt 1 complete; inflow=0: elapsed=22.590s realtime=154.644 day=1 repaired=True water=0.03394m
+PIPE finished: elapsed=22.604s realtime=154.749 day=1 repaired=True water=0.03378m
+Arm swing driver bound to both real hands and locomotion provider; human gesture still pending.
+Solo Night 1 reached Night 2: elapsed=0.000s realtime=160.707 day=2 repaired=False water=0.02583m

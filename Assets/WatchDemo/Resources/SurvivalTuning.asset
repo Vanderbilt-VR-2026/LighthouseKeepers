@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7466da47dd8d4751b2cc80697be36b81, type: 3}
+  m_Name: SurvivalTuning
+  m_EditorClassIdentifier: Assembly-CSharp::LighthouseKeepers.WatchDemo.SurvivalTuning
+  soloFlood: 1
+  crewFlood: 1.1
+  floodIncreasePerDay: 0.08
+  firstBeamDegrees: 14
+  minimumBeamDegrees: 4
+  aimDifficultyPerDay: 0.18
+  watchSeconds: 420
+  startGraceSeconds: 45
+  firstStationGraceSeconds: 45
+  approachSeconds: 45
+  passageSeconds: 30
+  initialFuel: 0.05
+  repairedSeepPerSecond: 0.0006
+  firstDayFloodCushion: 0.4
+  secondDayFloodCushion: 0.9
+  earlyGraceBonusSeconds: 20
+  firstDayPractice: 1
+  practiceWaterCap: 0.22

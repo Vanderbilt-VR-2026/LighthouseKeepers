@@ -1,0 +1,52 @@
+{
+  "Summary": {
+    "Total": 5,
+    "Passed": 5,
+    "Failed": 0,
+    "Skipped": 0,
+    "Inconclusive": 0
+  },
+  "Results": [
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StationGuidanceTests.BeaconAndPanelOnlyExposeCurrentControl",
+      "Status": "Passed",
+      "Duration": 0.0079243,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StationGuidanceTests.NoStationInstructionsWhileFetchingToolsOrResting",
+      "Status": "Passed",
+      "Duration": 0.0009385,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StationGuidanceTests.PipeOnlyShowsActiveBoltOrValvesOwnRole",
+      "Status": "Passed",
+      "Duration": 9.78e-05,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StationGuidanceTests.RadioShowsCurrentVerbAndNeverAnAnswerToReader",
+      "Status": "Passed",
+      "Duration": 0.0002378,
+      "Message": null,
+      "StackTrace": null
+    },
+    {
+      "FullName": "LighthouseKeepers.Net.Tests.StationGuidanceTests.StarterDoesNotExposeFuelOrPartnerAssist",
+      "Status": "Passed",
+      "Duration": 7.9e-05,
+      "Message": null,
+      "StackTrace": null
+    }
+  ],
+  "Duration": 6.52,
+  "StatusPath": null,
+  "Mode": "EditMode",
+  "FilterApplied": "testname: StationGuidanceTests",
+  "success": true,
+  "result": null
+}

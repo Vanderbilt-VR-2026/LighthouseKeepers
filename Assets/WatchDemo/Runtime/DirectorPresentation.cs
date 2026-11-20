@@ -10,8 +10,8 @@ namespace LighthouseKeepers.WatchDemo
     {
         WatchDemoController watch;Transform head;WatchPipeRepair pipe;WatchEngineControls engine;WatchRadioConsole radio;WatchBeaconStation beacon;WatchPowerPanel panel;
         readonly Dictionary<KeeperStep,Transform> targets=new();readonly Dictionary<Transform,Fitting> fittings=new();
-        readonly List<(TextMesh text,string key)> labels=new();AudioSource sound;AudioClip click,positive;float untouched,nextTick;int stamp,lastDay;KeeperStep previous;Material material;MaterialPropertyBlock block;
-        sealed class Fitting { public Transform cap;public Renderer renderer;public bool completed,tool;public Color restColour; }
+        readonly List<(TextMesh text,string key)> labels=new();AudioSource sound;AudioClip click,positive;float untouched,nextTick;int stamp,lastDay;bool wasFirstDay;KeeperStep previous;Material material;MaterialPropertyBlock block;
+        sealed class Fitting { public Transform cap;public Renderer renderer;public bool completed,tool;public Color restColour;public bool code;public Renderer[] surfaces;public Color[] emission; }
         public static void Create(WatchDemoController w,Transform head)
         {if(w.State.Director==null)return;var v=w.gameObject.AddComponent<DirectorPresentation>();v.watch=w;v.head=head;}
         void Start()
@@ -19,13 +19,16 @@ namespace LighthouseKeepers.WatchDemo
             pipe=FindAnyObjectByType<WatchPipeRepair>();engine=FindAnyObjectByType<WatchEngineControls>();radio=FindAnyObjectByType<WatchRadioConsole>();beacon=FindAnyObjectByType<WatchBeaconStation>();panel=FindAnyObjectByType<WatchPowerPanel>();
             material=new Material(pipe.indicators[0].sharedMaterial){name="Director control lamp"};material.EnableKeyword("_EMISSION");block=new MaterialPropertyBlock();
             Add(KeeperStep.GrabWrench,pipe.wrench.transform);
+            foreach(var radio in watch.GetComponentsInChildren<HandheldCrewRadio>())FittingFor(radio.transform);
+            for(int i=0;i<2;i++)if(watch.Lantern(i))FittingFor(watch.Lantern(i).transform);
             var valve=FindAnyObjectByType<WatchPressureValve>();if(valve){Add(KeeperStep.HoldValve,valve.GuidanceRoot);}
             for(int i=0;i<3;i++)Add((KeeperStep)((int)KeeperStep.BoltA+i),pipe.bolts[i]);
+            if(engine.Assist)Add(KeeperStep.HoldStarterAssist,engine.Assist.transform);
             Add(KeeperStep.CheckFuel,engine.Filler);Add(KeeperStep.Fuel,engine.FuelCan.transform);FittingFor(engine.Filler);Add(KeeperStep.Prime,engine.Primer.transform);Add(KeeperStep.CloseChoke,engine.Choke.transform);Add(KeeperStep.OpenChoke,engine.Choke.transform);Add(KeeperStep.Starter,FindAnyObjectByType<WatchGenerator>().Starter.transform);
             for(int i=0;i<4;i++){Add((KeeperStep)((int)KeeperStep.PumpOff+i),panel.Control(i).transform);Add((KeeperStep)((int)KeeperStep.PumpOn+i),panel.Control(i).transform);}
             Add(KeeperStep.ResetBreaker,panel.ResetControl.transform);
             foreach(var control in radio.controls){if(control.mainPower)Add(KeeperStep.RadioPower,control.transform);if(control.frequency)Add(KeeperStep.RadioTune,control.transform);}
-            Add(KeeperStep.RadioTransmit,radio.microphone.transform);Add(KeeperStep.BeaconLight,beacon.Ignition.transform);Add(KeeperStep.BeaconAlign,beacon.Wheel.transform);Add(KeeperStep.BeaconWipe,beacon.Rag.transform);
+            Add(KeeperStep.RadioTransmit,radio.microphone.transform);Add(KeeperStep.BeaconLight,beacon.Ignition.transform);Add(KeeperStep.BeaconAlign,beacon.Wheel.transform);Add(KeeperStep.KeepLight,beacon.Wheel.transform);
             foreach(var control in radio.controls)if(control.codeColour>=0)FittingFor(control.transform);
             foreach(var text in FindObjectsByType<TextMesh>(FindObjectsInactive.Include,FindObjectsSortMode.None))
             {string key="label."+text.name;if(KeeperStrings.Has(key))labels.Add((text,key));}
@@ -42,12 +45,22 @@ namespace LighthouseKeepers.WatchDemo
             }
             var go=GameObject.CreatePrimitive(PrimitiveType.Cylinder);go.name="Riveted control indicator";var c=go.GetComponent<Collider>();c.enabled=false;Destroy(c);go.transform.SetParent(target,false);go.transform.localPosition=new Vector3(0,.07f,.015f);var scale=target.lossyScale;go.transform.localScale=new Vector3(.028f/Mathf.Max(.001f,Mathf.Abs(scale.x)),.008f/Mathf.Max(.001f,Mathf.Abs(scale.y)),.028f/Mathf.Max(.001f,Mathf.Abs(scale.z)));go.transform.position=target.position+target.forward*.018f;
             var r=go.GetComponent<Renderer>();r.sharedMaterial=material;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
-            found=new Fitting{cap=go.transform,renderer=r};fittings.Add(target,found);return found;
+            found=new Fitting{cap=go.transform,renderer=r,code=target.TryGetComponent<RadioControl>(out var radioControl)&&radioControl.codeColour>=0};
+            var surfaces=new List<Renderer>();var emissions=new List<Color>();
+            foreach(var surface in target.GetComponentsInChildren<Renderer>(true))if(surface!=r&&surface is MeshRenderer&&!surface.GetComponent<TextMesh>()&&surface.name!="Mipmapped writing surface"&&surface.sharedMaterial&&surface.sharedMaterial.HasProperty("_EmissionColor")){surfaces.Add(surface);emissions.Add(surface.sharedMaterial.GetColor("_EmissionColor"));}
+            found.surfaces=surfaces.ToArray();found.emission=emissions.ToArray();fittings.Add(target,found);return found;
         }
-        Transform Target(KeeperStep step)
+        public Transform Target(KeeperStep step)
         {
+            if(step==KeeperStep.HelpPartner)return watch.GetComponent<CrewCompanion>()?.ActorTransform;
+            if(step>=KeeperStep.GrabWalkie&&step<=KeeperStep.LanternWick)return watch.GetComponent<ArrivalEquipment>()?.Target;
+            if(step==KeeperStep.RescueF2){var recovery=watch.GetComponent<CrewRecovery>();var hand=recovery?recovery.Target(watch.State.Recovery.LessonVictim):null;if(hand)return hand.transform;}
+            if(step>=KeeperStep.GatherF2&&step<=KeeperStep.AwaitRescueF2)return engine?engine.transform:null;
             if(step==KeeperStep.TightenBolt)return pipe.PipeIndexForGuide();
-            if(step==KeeperStep.RadioCode){int colour=watch.State.Radio.Program.callCode[Mathf.Min(watch.State.Radio.CodeProgress,watch.State.Radio.Program.callCode.Length-1)];foreach(var c in radio.controls)if(c.codeColour==colour)return c.transform;}
+            if(step==KeeperStep.ReadCode)return CodeSource.Active?CodeSource.Active.transform:null;
+            // All four buttons are equally available. Never illuminate the correct answer.
+            if(step==KeeperStep.RadioCode||step==KeeperStep.JudgeCall)return radio.transform;
+            if(step==KeeperStep.ChallengeCall){var auth=watch.GetComponent<RadioAuthentication>();var key=auth?auth.Control(0):null;return key?key.transform:radio.transform;}
             return targets.TryGetValue(step,out var target)?target:null;
         }
         public Vector3 HintPosition(KeeperStep step)=>step==KeeperStep.Sleep?watch.BedPosition:Target(step)?Target(step).position:Vector3.positiveInfinity;
@@ -56,12 +69,12 @@ namespace LighthouseKeepers.WatchDemo
         {
             if(!pipe)return;var state=watch.State;var d=state.Director;
             foreach(var entry in labels){string value=KeeperStrings.Get(entry.key);if(entry.text&&entry.text.text!=value)entry.text.text=value;}
-            var current=watch.CurrentInstruction;var partner=watch.PartnerInstruction;var target=Target(current);var other=Target(partner);
+            var current=state.Scare.Paused?KeeperStep.None:watch.CurrentInstruction;var partner=state.Scare.Paused||state.Day==1?KeeperStep.None:watch.PartnerInstruction;var target=Target(current);var other=Target(partner);
             int now=Progress();if(lastDay!=state.Day){lastDay=state.Day;foreach(var f in fittings.Values)f.completed=false;previous=current;stamp=now;untouched=0;}
             if(now!=stamp||previous!=current){untouched=0;stamp=now;}else if(!watch.WrenchHeld)untouched+=Time.deltaTime;
             if(previous!=current&&ObjectiveDirector.Job(previous)==ObjectiveDirector.Job(current)&&target&&Target(previous) is Transform old&&old!=target)
             {
-                fittings[old].completed=true;sound.transform.position=old.position;if(click)sound.PlayOneShot(click,.5f);if(positive)sound.PlayOneShot(positive,.12f);
+                if(fittings.TryGetValue(old,out var oldFitting))oldFitting.completed=true;sound.transform.position=old.position;if(click)sound.PlayOneShot(click,.5f);if(positive)sound.PlayOneShot(positive,.12f);
                 foreach(var node in new[]{XRNode.LeftHand,XRNode.RightHand}){var device=InputDevices.GetDeviceAtXRNode(node);if(device.isValid)device.SendHapticImpulse(0,.18f,.05f);}
             }
             previous=current;
@@ -69,11 +82,13 @@ namespace LighthouseKeepers.WatchDemo
             float pulse=.45f+.2f*Mathf.Sin(Time.time*Mathf.PI*2/state.Master.guidancePulseSeconds);
             foreach(var pair in fittings)
             {
-                bool active=!state.Failed&&(pair.Key==target||pair.Key==other||pair.Key==engine.Filler&&(current==KeeperStep.Fuel||partner==KeeperStep.Fuel));var f=pair.Value;var colour=active?new Color(.95f,.63f,.22f):f.completed?new Color(.12f,.5f,.2f):new Color(.11f,.10f,.07f);
-                block.Clear();block.SetColor("_BaseColor",f.tool?f.restColour:colour);block.SetColor("_EmissionColor",active?colour*(f.tool?pulse*1.6f:pulse):f.completed&&!f.tool?colour*.12f:Color.black);f.renderer.SetPropertyBlock(block);
+                bool active=!state.Failed&&(pair.Key==target||pair.Key==other||(current==KeeperStep.RadioCode||partner==KeeperStep.RadioCode)&&pair.Key.TryGetComponent<RadioControl>(out var code)&&code.codeColour>=0||pair.Key==engine.Filler&&(current==KeeperStep.Fuel||partner==KeeperStep.Fuel));var f=pair.Value;bool complete=f.completed&&state.Day!=1;var colour=active?new Color(.95f,.63f,.22f):complete?new Color(.12f,.5f,.2f):new Color(.11f,.10f,.07f);
+                block.Clear();block.SetColor("_BaseColor",f.tool?f.restColour:colour);block.SetColor("_EmissionColor",active?colour*(f.tool?pulse*1.6f:pulse):complete&&!f.tool?colour*.12f:Color.black);f.renderer.SetPropertyBlock(block);
+                if((state.Day==1||wasFirstDay)&&f.surfaces!=null)for(int i=0;i<f.surfaces.Length;i++){var surface=f.surfaces[i];if(!surface)continue;surface.GetPropertyBlock(block);block.SetColor("_EmissionColor",state.Day==1?(active?(f.code?surface.sharedMaterial.GetColor("_BaseColor"):new Color(.95f,.63f,.22f))*pulse:Color.black):f.emission[i]);surface.SetPropertyBlock(block);}
                 if(f.cap)f.cap.localRotation=Quaternion.Slerp(f.cap.localRotation,Quaternion.Euler(0,0,f.completed?45:0),1-Mathf.Exp(-10*Time.deltaTime));
             }
-            if(target&&untouched>=state.Master.idleTickSeconds&&Time.time>=nextTick&&!watch.ObjectivePresentationBlocked){nextTick=Time.time+4;sound.transform.position=target.position;if(click)sound.PlayOneShot(click,.14f);}
+            wasFirstDay=state.Day==1;
+            if(current!=KeeperStep.HelpPartner&&target&&untouched>=state.Master.idleTickSeconds&&Time.time>=nextTick&&!watch.ObjectivePresentationBlocked){nextTick=Time.time+4;sound.transform.position=target.position;if(click)sound.PlayOneShot(click,.14f);}
         }
         void OnDestroy(){if(material)Destroy(material);}
     }

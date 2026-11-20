@@ -42,6 +42,7 @@ namespace LighthouseKeepers.Net
         {
             public int id, epoch, owner, sequence, generation;
             public string path;
+            public bool carried;
             public int action; // 0 acquire, 1 held pose/heartbeat, 2 release, 3 authoritative state
             public Vector3 position;
             public Quaternion rotation;
@@ -120,7 +121,7 @@ namespace LighthouseKeepers.Net
             if (!channel.Connected) { binding.Reject(); return; }
             var packet=new Packet { id=binding.Id,path=binding.Path,epoch=binding.Epoch,sequence=sequence,action=action,generation=hostRegistryGeneration,
                 position=binding.transform.position,rotation=binding.transform.rotation,
-                velocity=binding.ReleaseVelocity,angularVelocity=binding.ReleaseAngularVelocity };
+                carried=binding.Carried,velocity=binding.ReleaseVelocity,angularVelocity=binding.ReleaseAngularVelocity };
             if(action==1)channel.SampleToHost(RequestKind,Encode(packet),binding.Id);
             else channel.SendToHost(RequestKind,Encode(packet));
         }
@@ -168,15 +169,21 @@ namespace LighthouseKeepers.Net
                     }
                     return;
                 }
-                if (p.action!=1 || !ValidPose(p) || !poses.NearHand(sender,p.position,1.2f) ||
+                if (p.action!=1 || !ValidPose(p) || !(p.carried?NearBelt(sender,binding,p.position):poses.NearHand(sender,p.position,1.2f)) ||
                     p.sequence<=0 || ownerSequences.TryGetValue(p.id,out var previous) && p.sequence<=previous) return;
                 if (!leases.Touch(p.id,sender,p.epoch,Time.unscaledTimeAsDouble)) return;
-                ownerSequences[p.id]=p.sequence;
+                ownerSequences[p.id]=p.sequence;binding.ObserveCarried(p.carried);
                 if (sender!=LocalActor) binding.ApplyHeld(p.position,p.rotation);
-                Gate.Observe(sender,p.id,true,Time.unscaledTimeAsDouble);
+                Gate.Observe(sender,p.id,!p.carried,Time.unscaledTimeAsDouble);
             }
             else if (registered && p.generation==hostRegistryGeneration && sender==0 && kind==DeniedKind) binding.Reject(p.epoch);
             else if (registered && p.generation==hostRegistryGeneration && sender==0 && kind==StateKind && ValidPose(p)) binding.ApplyState(p);
+        }
+        bool NearBelt(int actor,FusionGrabBinding binding,Vector3 position)
+        {
+            if(!binding.SupportsCarry||!poses.Sample(actor,out var pose))return false;
+            foreach(var other in props.Values)if(other&&other!=binding&&other.SupportsCarry&&other.BeltSlot==binding.BeltSlot&&other.IsCarried&&leases.Find(other.Id)?.Owner==actor)return false;
+            return ToolBeltPose.NearHost(binding.BeltSlot,position,pose.Head,pose.HeadRotation);
         }
         bool AllowRequest(int actor)
         {
@@ -204,7 +211,7 @@ namespace LighthouseKeepers.Net
                 if (obj.InputAuthority!=owner) obj.AssignInputAuthority(owner);
             }
             channel.SampleBroadcast(StateKind,Encode(new Packet { id=id,path=binding.Path,epoch=lease.Epoch,owner=lease.Owner,sequence=++stateSequence,action=3,generation=registryGeneration,
-                position=binding.transform.position,rotation=binding.transform.rotation }),id);
+                carried=binding.IsCarried,position=binding.transform.position,rotation=binding.transform.rotation }),id);
         }
         public bool HasFreshLease(int actor,int station)
         {

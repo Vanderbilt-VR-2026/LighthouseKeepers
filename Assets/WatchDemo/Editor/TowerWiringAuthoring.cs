@@ -33,7 +33,7 @@ namespace LighthouseKeepers.Editor
             if(!EditorApplication.isPlaying||!UnityEngine.Object.FindAnyObjectByType<WatchDemoController>())throw new InvalidOperationException("Run the Lab preview first so final wall mounts and lamp positions are available.");
             Directory.CreateDirectory(Folder);AssetDatabase.Refresh();var data=AssetDatabase.LoadAssetAtPath<TowerWiringAsset>(Folder+"/Layout.asset");if(!data){data=ScriptableObject.CreateInstance<TowerWiringAsset>();AssetDatabase.CreateAsset(data,Folder+"/Layout.asset");}
             var runs=new List<TowerWiringAsset.Run>();var endpoints=new List<TowerWiringAsset.Endpoint>();
-            void Add(string name,int circuit,int floor,float radius,IEnumerable<Vector3> points){var p=points.ToArray();if(p.Length>1)runs.Add(new TowerWiringAsset.Run{name=name,circuit=circuit,floor=floor,radius=radius,points=p});}
+            void Add(string name,int circuit,int floor,float radius,IEnumerable<Vector3> points){var p=points.ToArray();if(name.Contains("riser")&&(floor==3||floor==4)){for(int i=0;i<p.Length;i++)if(p[i].y>9.7f){var post=Quaternion.Euler(0,315,0)*Vector3.forward*2.70f+Quaternion.Euler(0,315,0)*Vector3.right*((circuit-2)*.018f);p[i]=new Vector3(post.x,p[i].y,post.z);}}if(p.Length>1)runs.Add(new TowerWiringAsset.Run{name=name,circuit=circuit,floor=floor,radius=radius,points=p});}
             var gen=GameObject.Find("STN_GENERATOR").transform;var panel=UnityEngine.Object.FindAnyObjectByType<WatchPowerPanel>().transform;
             var generator=gen.TransformPoint(new Vector3(0,1.25f,.18f));var breaker=panel.TransformPoint(new Vector3(0,1.65f,.075f));data.breaker=panel.TransformPoint(new Vector3(0,1.5f,.24f));
             var feed=new List<Vector3>{generator,Wall(Angle(generator),generator.y)};feed.AddRange(Arc(Angle(generator),Angle(breaker),6.15f));feed.Add(Wall(Angle(breaker),breaker.y));feed.Add(breaker);Add("Generator output to F2 breaker",4,2,.025f,feed);
@@ -54,6 +54,7 @@ namespace LighthouseKeepers.Editor
             var transforms=UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsSortMode.None);
             foreach(var t in transforms.OrderBy(t=>t.name).ThenBy(t=>t.position.x).ThenBy(t=>t.position.y))
             {
+                if(!t.gameObject.activeInHierarchy||LanternFixtureCleanup.Unsupported(t.name))continue;
                 bool lamp=t.name=="Caged practical bulb"||t.name=="Frosted service lamp"||t.name.StartsWith("SM_Lamp_")||t.name.StartsWith("SM_EmergencyLamp_")||t.name.StartsWith("SM_Gallery_LampHousing_")||t.name.StartsWith("SM_Gallery_EmergencyLamp_");
                 bool pa=t.name.StartsWith("Brass PA speaker ");if(!lamp&&!pa)continue;
                 var renderer=t.GetComponent<Renderer>();var pos=renderer?renderer.bounds.center:t.position;int floor=Floor(pos);int circuit=lamp?3:2;
@@ -99,6 +100,7 @@ namespace LighthouseKeepers.Editor
         public static string Bake()
         {
             var data=AssetDatabase.LoadAssetAtPath<TowerWiringAsset>(Folder+"/Layout.asset");if(!data)throw new InvalidOperationException("Capture the Lab once before rebuilding.");
+            LanternFixtureCleanup.NormalizeLanternRoutes(data);
             BuildAtlas();
             var material=AssetDatabase.LoadAssetAtPath<Material>(Folder+"/Conduit.mat");if(!material){material=new Material(Shader.Find("LighthouseKeepers/Tower conduit"));AssetDatabase.CreateAsset(material,Folder+"/Conduit.mat");}material.SetTexture("_BaseMap",AssetDatabase.LoadAssetAtPath<Texture2D>(Folder+"/Atlas.png"));EditorUtility.SetDirty(material);material.enableInstancing=true;data.material=material;
             var groups=Enumerable.Range(0,5).Select(_=>new Geometry()).ToArray();
@@ -135,7 +137,7 @@ namespace LighthouseKeepers.Editor
             foreach(var run in data.runs.Where(r=>r.radius>=.009f)){
                 var p=run.points[0];groups[run.floor].Tube(p-Vector3.up*.018f,p+Vector3.up*.018f,.018f,Ceramic,run.circuit,.3f,.3f,4);
             }
-            for(int floor=0;floor<5;floor++)
+            for(int floor=0;floor<4;floor++)
             {
                 var g=groups[floor];var p=data.junctions[floor];var normal=floor==0?Vector3.right:-new Vector3(p.x,0,p.z).normalized;var q=Quaternion.LookRotation(normal);p+=normal*.045f;
                 g.Box(p,new Vector3(.28f,.21f,.065f),q,Steel,3,.5f);g.Box(p+normal*.039f,new Vector3(.25f,.18f,.012f),q,new Color(.25f,.28f,.25f),3,.5f);

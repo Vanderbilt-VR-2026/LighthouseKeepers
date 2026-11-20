@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LighthouseKeepers.Net
 {
     // Shared Lab commands and snapshots use Will's existing authenticated Fusion channel.
-    public sealed class WatchCoopSession : MonoBehaviour, ICoopKeeperLocations, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
+    public sealed class WatchCoopSession : MonoBehaviour, ICoopKeeperDuties, ICoopKeeperLocations, ICoopKeeperViews, ICoopRecoveryHands, ICoopWatchLink, ICoopWrenchClutch, LighthouseKeepers.Interaction.INetworkKeeperProximity
     {
         const int HelloKind=40,SnapshotKind=41,CommandKind=42,ResultKind=43;
         const string Protocol=LighthouseKeepers.Core.CrewNetworkVersion.Snapshot;
@@ -20,6 +20,8 @@ namespace LighthouseKeepers.Net
         {public string world,nonce;public int sequence,revision;public CoopAction action;public float value;public bool pressed;}
         [Serializable] sealed class Result {public string world,nonce;public int sequence,result;public CoopAction action;}
         ICoopWatchView watch;
+        public float PossessionRiseSpeed=>watch is ICoopRecoveryView recovery?recovery.PossessionRiseSpeed:.1f;
+        public bool PossessionView(int actor,out float progress,out float maxLift){progress=maxLift=0;return watch is ICoopRecoveryView recovery&&recovery.PossessionView(actor,out progress,out maxLift);}
         FusionLobbyTransport crew;
         FusionMessageChannel channel;
         CrewPoseStream poses;
@@ -27,6 +29,8 @@ namespace LighthouseKeepers.Net
         readonly Dictionary<int,string> nonces=new();
         readonly HashSet<int> acknowledged=new();
         readonly CoopBedVotes beds=new();
+        readonly CrewArrivalGate arrival=new();
+        IEnumerable<int> ArrivalPlayers=>channel.Runner.ActivePlayers.Select(p=>p.RawEncoded);
         readonly CoopCommandWindow commands=new();
         readonly Dictionary<int,float> lastPull=new(),rateStart=new();
         readonly Dictionary<int,int> rateCount=new();
@@ -63,6 +67,17 @@ namespace LighthouseKeepers.Net
             }
             if(second!=0&&second<first){(first,second)=(second,first);(firstHead,secondHead)=(secondHead,firstHead);}
         }
+        public CrewDuty Duty(int actor)
+        {
+            if(detached||!channel||!channel.Runner||!crew)return CrewDuty.None;
+            foreach(var player in channel.Runner.ActivePlayers)if(player.RawEncoded==actor){
+                string id=player.PlayerId.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                foreach(var entry in crew.Players)if(entry.Id==id)return entry.Duty;
+            }
+            return CrewDuty.None;
+        }
+        public bool HandForDuty(CrewDuty duty,out Vector3 hand){hand=default;if(!channel||!channel.Runner||!poses)return false;foreach(var p in channel.Runner.ActivePlayers)if(Duty(p.RawEncoded)==duty&&poses.Sample(p.RawEncoded,out var pose)){hand=pose.Left;return true;}return false;}
+        public bool View(int actor,out Vector3 forward) {forward=Vector3.forward;if(!poses||!poses.Sample(actor,out var pose))return false;forward=pose.HeadRotation*Vector3.forward;return true;}
         public bool NearKeeper(Vector3 point,float radius)
         {
             if(!channel||!channel.Runner||!poses)return false;
@@ -101,6 +116,7 @@ namespace LighthouseKeepers.Net
             world=crew.IsHost?Guid.NewGuid().ToString("N"):null;nonce=Guid.NewGuid().ToString("N");
             channel.Received+=Receive;channel.ActorLeft+=Left;channel.SessionChanged+=Connection;
             PlaceKeeper(crew.IsHost);
+            if(crew.IsHost&&watch is ICoopBriefingView briefing)briefing.HoldBriefing(true);
             Debug.Log($"COOP_ROLE {(crew.IsHost?"HOST":"GUEST")} world={world}");
         }
         void PlaceKeeper(bool host)
@@ -129,7 +145,7 @@ namespace LighthouseKeepers.Net
         {
             if(detached||!channel||!channel.IsHost||!prop)return false;
             var binding=prop.GetComponent<FusionGrabBinding>();
-            return binding&&binding.IsRemotelyOwned&&props.HasFreshLease(binding.Owner,binding.Id);
+            return binding&&binding.IsRemotelyOwned&&!binding.IsCarried&&props.HasFreshLease(binding.Owner,binding.Id);
         }
         public bool RemoteMicrophone(Component prop,out bool trigger)
         {trigger=micPressed&&Time.unscaledTime-micSeen<=.5f;return RemoteHeld(prop)&&prop.GetComponent<FusionGrabBinding>().Owner==micActor;}
@@ -144,6 +160,7 @@ namespace LighthouseKeepers.Net
         void Update()
         {
             if(detached||!channel||!channel.Connected)return;
+            if(channel.IsHost&&watch is ICoopBriefingView briefing)briefing.HoldBriefing(arrival.Hold(ArrivalPlayers,Ready));
             if(channel.IsHost&&PressureView!=null){var tool=watch.Target(CoopAction.WrenchClutch,0);var lease=tool?tool.GetComponent<FusionGrabBinding>():null;PressureView.PressureWorker(lease&&props.HasFreshLease(lease.Owner,lease.Id)?lease.Owner:0);}
             if(channel.IsHost&&revision!=watch.Revision)
             {revision=watch.Revision;beds.Clear();micActor=wrenchActor=0;micPressed=wrenchPressed=false;UpdateStatus();}
@@ -213,6 +230,17 @@ namespace LighthouseKeepers.Net
         int Apply(int actor,Command c)
         {
             if(!Ready)return -1;
+            if(c.action==CoopAction.BriefingComplete)return c.value==0&&c.pressed&&arrival.Acknowledge(actor,ArrivalPlayers)?1:-1;
+            if(watch is ICoopBriefingView briefing&&briefing.BriefingHeld)return -1;
+            if(watch is ICoopRecoveryView recovery){
+                if(c.action==CoopAction.RecoveryDrill)return c.value==0&&poses.Sample(actor,out _)&&recovery.RescueDrill(actor)?1:-1;
+                if(c.action==CoopAction.RecoveryGrip){
+                    if(c.value!=1&&c.value!=2||!poses.Sample(actor,out var hands))return -1;
+                    return recovery.RecoveryCommand(actor,(int)c.value,c.pressed,hands.Left,hands.Right)?1:-1;
+                }
+                if(recovery.KeeperDown(actor)&&c.action!=CoopAction.Retry&&c.action!=CoopAction.StatusRequest)return -1;
+            }
+            if(c.action==CoopAction.KeeperBreath)return c.value==0&&poses.Sample(actor,out _)&&(watch as ICoopBreathView)?.BreathCommand(actor,c.pressed)==true?1:-1;
             if(c.action==CoopAction.Bed)
             {
                 if(!poses.Sample(actor,out var pose)||Vector3.Distance(pose.Head,watch.BedPosition)>=1.8f)return -1;
@@ -222,11 +250,13 @@ namespace LighthouseKeepers.Net
             if(c.action==CoopAction.StatusRequest){if(c.value!=0||!poses.Sample(actor,out _))return -1;return watch.ApplyCommand(c.action,0,false);}
             if(c.action==CoopAction.Retry||c.action==CoopAction.Replay)return watch.ApplyCommand(c.action,c.value,c.pressed);
             if(c.action==CoopAction.HandheldRadio&&!c.pressed)return c.value==(int)c.value&&ConnectedView?.RadioCommand(actor,(int)c.value,false)==true?1:-1;
+            if(c.action==CoopAction.EngineAssist&&!c.pressed)return (watch as ICoopEngineAssistView)?.EngineAssistCommand(actor,false)==true?1:-1;
             if(c.action==CoopAction.PressureValve&&!c.pressed)return PressureView?.PressureCommand(actor,false)==true?1:-1;
             var target=watch.Target(c.action,c.value);if(!target)return -1;
             if(!poses.NearHand(actor,target.transform.position,c.action==CoopAction.Microphone?1.2f:.85f))return -1;
+            if(c.action==CoopAction.EngineAssist)return c.value==0&&(watch as ICoopEngineAssistView)?.EngineAssistCommand(actor,c.pressed)==true?1:-1;
             if(c.action==CoopAction.PressureValve)return c.value==0&&PressureView?.PressureCommand(actor,c.pressed)==true?1:-1;
-            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch||c.action==CoopAction.HandheldRadio)
+            if(c.action==CoopAction.Starter||c.action==CoopAction.Microphone||c.action==CoopAction.WrenchClutch||c.action==CoopAction.HandheldRadio||c.action==CoopAction.FlareFire||c.action==CoopAction.LanternWick)
             {
                 var binding=target.GetComponent<FusionGrabBinding>();
                 if(!binding||!props.HasFreshLease(actor,binding.Id))return -1;
@@ -236,6 +266,7 @@ namespace LighthouseKeepers.Net
             {
                 if(lastPull.TryGetValue(actor,out var time)&&Time.unscaledTime-time<.25f)return -1;
                 lastPull[actor]=Time.unscaledTime;
+                if(watch is ICoopEngineAssistView assist)return assist.EnginePullCommand(actor);
             }
             if(c.action==CoopAction.Microphone)
             {micActor=actor;micSeen=Time.unscaledTime;micPressed=c.pressed;return 1;}
@@ -260,7 +291,7 @@ namespace LighthouseKeepers.Net
         }
         void Left(int actor)
         {
-            PressureView?.PressureActorLeft(actor);ConnectedView?.RadioActorLeft(actor);
+            (watch as ICoopEngineAssistView)?.EngineActorLeft(actor);PressureView?.PressureActorLeft(actor);ConnectedView?.RadioActorLeft(actor);
             nonces.Remove(actor);acknowledged.Remove(actor);commands.Remove(actor);beds.Remove(actor);lastPull.Remove(actor);rateStart.Remove(actor);rateCount.Remove(actor);
             if(micActor==actor){micActor=0;micPressed=false;}
             if(wrenchActor==actor){wrenchActor=0;wrenchPressed=false;}
@@ -273,6 +304,7 @@ namespace LighthouseKeepers.Net
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if(debugLine)Destroy(debugLine.gameObject);
 #endif
+            if(watch is ICoopBriefingView briefing)briefing.HoldBriefing(false);
             watch.ContinueAlone("Crew disconnected. Continuing this watch alone.");
         }
         void OnDestroy(){

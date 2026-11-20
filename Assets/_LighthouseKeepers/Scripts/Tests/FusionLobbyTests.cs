@@ -105,7 +105,7 @@ namespace LighthouseKeepers.Tests
             Assert.IsFalse(LobbyProtocol.TryDecode(Encoding.UTF8.GetBytes("broken JSON"), out _));
             Assert.IsFalse(LobbyProtocol.TryDecode(new byte[LobbyProtocol.MaxBytes + 1], out _));
             Assert.IsFalse(LobbyProtocol.TryDecode(new byte[] { 255 }, out _));
-            var request = Request(1); request.version = 2;
+            var request = Request(1); request.version = 99;
             Assert.IsFalse(LobbyProtocol.TryDecode(LobbyProtocol.Encode(request), out _));
         }
         [Test] public void NamesAndRoomNamesHaveBoundedInput()

@@ -1,283 +1,286 @@
-# Full remaining plan — active checkpoint
+# Active checkpoint — headlamp and playtest feedback (#147, #123)
 
-Work in the user's latest order: Step 1 PR #85 verification → merge into m3/five-nights → scheduling/ships/doors/mirror → horror slices 1–3 → finale/progression → horror 4–6 → split-information/final verification. No main merge. Editor muted; Quest installs permitted, launches not permitted.
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Current source protocol **LK-S5-BODYBELT1 / LK-Lab-Coop-v57**; both players need this version. APK `c47cd351` was installed on the connected Quest, checksum verified, and not launched. Never launch it automatically.
 
-- **1a DONE:** source audit confirms accepted generator/panel, edges/sea rules, physical inputs and simple lobby already implemented. See [audit](../Verification/RemainingPlan/Step1-Audit.md).
-- **1b AVAILABLE CHECKS DONE:** EditMode 372/372; full PlayMode 52 pass/31 fail, six affected fixtures rerun 6/6, leaving 25 inherited failures. Graphics Nights 1–3 and live two-Mac valve/radio/sleep/rejoin pass. Recessed counter bodies to clear a starter sightline. See [fresh evidence](../Verification/RemainingPlan/Step1/README.md). Device GPU/Wi-Fi/listening remain pending.
-- **1c APK/PR DONE:** Source **d5051f7**, APK `LighthouseKeepers-PR85-d5051f7.apk` (134,389,082 bytes). SHA-256 `74709cc32f6843aab60553c55ed52ee61be311ed31135fe0a90edce7f25da800`. Installed on Quest; installed APK hash matches. App left closed. PR #85 is ready for review. NEXT: merge s4/integrated into m3/five-nights, preserving campaign scheduling and latest physical controls/player-count rules. Steps 2–6 remain pending.
+The installed build includes the belt-lookup cleanup and Owen-guidance changes. The Owen objective now shows his actual floor, and the portable walkie instruction doesn't invent a floor. A staged scene check passed all 11 location/target checks. The latest full EditMode run passed **711/716** with five baseline failures remaining; two outdated objective assertions were reconciled with the clearer wording and non-button actions, and missing companion/walkie locations were added. [Evidence](../Verification/S5/CompanionGuidance/README.md). A final small pole-hint guard changed after that full run; 41 focused objective/voice checks passed afterward.
 
-## DEVICE CHECKS PENDING
+The user confirmed the briefing works and reported floating tool holders, flashlight clipping failure, unclear wrench/partner roles, a dim generator-room lamp, and missing B reminders. They now want the handheld flashlight replaced with an automatically available, 35% brighter headlamp on hard hats for both keepers. [Playtest notes](../Playtests/2026-11-19-headlamp-feedback.md).
 
-Real Quest Wi-Fi OFF lobby/start; wiring ≤0.3 ms GPU at matched views; worn missing-lobby-hands report; physical control/watch comfort. No reliable device-equivalent GPU timer exists on this Mac. Human voice listening is pending because Editor output remains muted. Continue independent work without waiting for a headset reply.
+Done: objective wording explains the wrench/pipe and paired valve roles; the transient objective header identifies B and spaced reminders recur after inactivity. **18 focused Editor checks passed** (5 recall, 5 campaign order, 8 valve). The F2 bulb now has the same minimum filament level as F1 once powered, and stays off without mains. Both keepers wear hard hats with automatic, head-tracked beams at 135% of the old intensity. The old handheld flashlight and pickup steps are absent; the host still checks the Drowned's line of sight. **70 focused EditMode checks**, **2 headlamp PlayMode checks**, **16 avatar EditMode and 3 local-body PlayMode checks** passed. Both beams appeared in a muted two-Editor Photon session, with staged paired engine and pipe instructions. [Evidence](../Verification/S5/Headlamp/README.md).
 
-## Exact next commands
+The radio and wrench holders now follow the animated hip with separate slots; the host checks a bounded waist region while allowing the body's turn lag. **41 focused EditMode checks, 4 local-body PlayMode checks, 20 simulated XR hand/attachment checks and a two-Editor guest carry/regrip/release check** passed. [Evidence](../Verification/S5/BodyBelt/README.md). Neither session was a full night or a worn headset check.
+
+## Next
+
+1. Continue the stair audit before changing the scene: a disposable sweep found a narrow possible F2 liner adjustment, but also one F3 route-edge intersection and five F3 work-position intersections. The latter positions describe an older radio/forecast layout, while the current F3 is the bedroom. Map them against the real bunk, inspect F2 rail/liner contact and baked-light implications, then test the actual route in both directions before choosing any geometry or metadata fix. [Sweep](../Verification/S5/StairClearance/README.md). No scene was saved by the audit.
+2. Continue campaign work in the preceding checkpoint below. The nightmare ceiling-crawl visual fixture now uses the headlamp and its **11 staged checks passed**; [captures](../Verification/S5/NightmareFoundation/CeilingCrawl/Headlamp/README.md) show the child still looks like a stylized prototype. The bedtime nightmare remains disabled pending an unstaged full night, visual improvement and headset acceptance.
+3. Keep worn lighting, holder placement, comfort and GPU on the device checklist. For future builds, install without launching if the Quest is connected and the game isn't currently running; don't interrupt a headset playtest.
+
+## Exact commands
 
 ```sh
 cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
-git status --short
-git merge --no-commit s4/integrated
-# Resolve latest physical controls/sea rules + campaign schedule, bump M3 protocol.
-# Keep EditorUtility.audioMasterMute=true; run M3 runtime + integrated regression checks.
+git status --short --branch
+python3 artifacts/s5/modes/check.py ToolBeltTests RadioBeltTests ObjectiveRecallTests CampaignOrderTests LanternLightingTests M3RuntimeTests SurvivalModeTests
+/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb devices
+/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-CompanionGuide-c47cd351.apk
 ```
 
----
+Use Unity 6000.3.23f1, muting every Editor before Play/tests. For peer sessions, back up the peer worktree to a fresh path before syncing; `artifacts/s5/final-scaring/peer-backup-17` is the last backup. Use fresh build/delivery paths based on `artifacts/s5/tool-belt/build.py` and `deliver.py`.
 
-# Generator, watch and wiring delivered — November 11
-
-Branch `s4/integrated`, PR #85. Latest scope: [GeneratorWatchWiring.md](GeneratorWatchWiring.md). Work in numbered order, focused tests + one muted graphics solo Night 2 replay per item, commit/push each. No full suites or horror work. Preserve unrelated Wood.mat, Quest prefab ray widths and pipe-lever evidence.
-
-1. DONE: actual Night 2 fuel exhaustion, three-second sputter, empty gauge, mains outage and cause-first narration. Existing network fields only; `LK-S5-PLAYTEST1 / v21` unchanged. MasterDirector 12/12, VoicePass 23/23 pass. Final graphics Night 2 replay passed with cue 4 before refuelling, zero logged errors. Evidence: Docs/Verification/GeneratorWatchWiring/step1/.
-2. DONE: mounted numbered generator control layout, fuel can on floor. Focused scene test and solo Night 2 pass; evidence step2/.
-3. DONE: physical choke detents; existing pour, starter and grip-pressure primer preserved. Both-hand focused test + graphics Night 2 pass. Evidence step3/.
-4. DONE: small dorsal left-wrist digital watch, corrected accessory orientation and gaze backlight. Focused recall/watch checks and Night 2 replay pass; inspected images step4/.
-5. DONE: restored/rebaked M3 wiring; no duplicate feed. 13,894 triangles, five meshes, one material, zero unexpected clearance contacts. Four focused cases and Night 2 pass. Wiring was developed only on m3/five-nights, not dropped by a merge. Evidence step5/.
-6. DONE: source **c7b9a99** built successfully. Installed on the connected Quest; installed APK SHA-256 matches. App deliberately left closed.
-
-APK: `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk` (134,388,246 bytes). SHA-256 `757b9d404bb060355e7e9d06fcbd9092eb367bf56c108479859d027ef90dd0c2`. [Delivery/evidence](../Verification/GeneratorWatchWiring/README.md). PR #85 updated; no merge. All five implementation items are done; the listed device checks and separate missing-lobby-hands report remain. Do not resume M3/horror without the next request.
-
-Reinstall without launching:
-```sh
-'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' install -r '/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-GeneratorWatch-c7b9a99.apk'
-```
-
-## DEVICE CHECKS PENDING (current pass)
-
-- Missing lobby hands / board below body: not reproduced or resolved. Preserve tracked hand rotations and Will's avatar; compare worn headset after START. First-frame logs alone do not establish the cause.
-- Night 2 fuel warning, actual blackout, speech timing and reachable controls.
-- Both-hand physical choke/pour/starter feel; watch fit/readability/orientation.
-- Wiring visibility/clearance and GPU cost <=0.3 ms; complete scene target 72 Hz.
-- Two-headset fuel state/presentation, voice/tasks/sleep regression (current pass has replica-focused evidence only).
-
-## Exact current check commands
-
-```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-python3 artifacts/playtest-fixes/lobby-state-tests.py MasterDirectorTests generator-step1.json
-python3 artifacts/playtest-fixes/lobby-state-tests.py VoicePassTests generator-step1-voice.json
-# Stop Play Mode before starting a fresh replay; helpers explicitly mute the Editor.
-python3 artifacts/generator-pass/solo.py step1-final
-```
-
----
-
-# Job 1 delivered — STOP before horror (November 11)
-
-On `s4/integrated` / PR #85. Steps 5–6 and the simplified lobby are committed and pushed. Shipping code: **dff6e4b**. Generator vs POWER PANEL are distinct; island rails/sea recovery and one PLAY flow are implemented. No main merge and no M3/horror work in this turn.
-
-**Verification:** 21 focused cases pass, one actual-XRI graphics solo Night 1–2 replay passes, and one live two-Mac smoke passes (host alone, late join, avatars, guest sea recovery, shared valve task, shared sleep, leave/rejoin). Post-smoke defensive recovery and keypad-clearance changes passed focused tests; the entire smoke was not repeated. No full suites, per the lean request. Both test Editors were muted and are now closed. Evidence: [delivery report](../Verification/PlaytestFixes/final/README.md).
-
-**Delivered:** `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics/Builds/LighthouseKeepers-Playtest-dff6e4b.apk`; 133,792,150 bytes; SHA-256 `28b7df5f9f990c0f0e00b01e89c605968206a5dcd6721b407913819f29f4981d`. Installed and launched on the connected Quest as explicitly requested this turn; process alive after 15 seconds. No human headset acceptance implied. Build audio unchanged.
-
-**Network:** LK-S5-PLAYTEST1 / LK-Lab-Coop-v21. Both players must update. Sea-recovery snapshot added; no READY requirement. One player gets solo puzzles; joins/leaves adapt roles immediately. Current night time is preserved on roster changes; the next night uses the new roster's budget.
-
-## Next job (not started)
-
-Merge verified Job 1 into `m3/five-nights`; re-bake its existing TowerWiring authoring for the moved power panel (do not duplicate the feed). Finish the M3 ship prerequisite, then the queued horror job. Full scope: [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Stop here until asked to continue.
+The installed APK is `Builds/LighthouseKeepers-Sprint5-CompanionGuide-c47cd351.apk`, SHA-256 `b19f61f2327c3d343a3207f71ac0dfb8353f617368ab4589ce232baa6468a24a`. The APK has the normal package ID, ARM64, the Quest VR category and a verified signature; device and local hashes match. Later documentation-only commits do not change the APK contents.
 
 ## DEVICE CHECKS PENDING
 
-- ADB screenshot was black; confirm the rendered lobby while wearing the Quest. Startup activity/OpenXR and live process were confirmed.
-- Human reach/readability: generator vs separate POWER PANEL, grip-only primer, B recall/objective height.
-- Actual Quest Wi-Fi OFF: PLAY → HOST / PLAY ALONE → START on the offline message. Editor forced-unreachable path passed; device acceptance pending.
-- Worn island edge traversal; sea fall comfort and ten-second return with a partner; dropped tools and tracked hands.
-- Two-Quest real voice listening, shared tasks/sleep/rejoin; worn GPU/CPU and frame budgets.
-- Locate the reported separate F3 yellow remnant; the all-floor audit did not reproduce it.
-
-## Exact delivery commands
-
-```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-# Reinstall the matching build without erasing app data:
-'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' install -r 'Builds/LighthouseKeepers-Playtest-dff6e4b.apk'
-# Launch only when requested (authorized for this completed delivery):
-'/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb' shell am start -n 'com.lighthousekeepers.game/com.unity3d.player.UnityPlayerGameActivity'
-```
+Headlamp brightness/direction, glare and 72 Hz GPU cost; hard-hat appearance for self/partner/Owen; radio and wrench holders while looking, turning and crouching; two-player tool ownership and voice; F2 light on/off/flicker; B reminder and objective clarity. Earlier campaign/nightmare acceptance remains below.
 
 ---
 
-## Earlier checkpoints (historical; latest scope above takes precedence)
+# Previous checkpoint — paired pipe work and campaign (#110, #112, #144)
 
-# November 11 playtest fixes — ACTIVE CHECKPOINT
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Source protocol **LK-S5-COOPPIPE1 / LK-Lab-Coop-v55**; both players must update together. No new APK has been built or installed; the Quest still has source `bf86ddd0`, not launched.
 
-Work on `s4/integrated` / PR #85, then merge the verified Job 1 into `m3/five-nights` / PR #87. Do not merge main. Preserve unrelated Wood.mat, TMP fallback atlas, Quest ray-width prefab edits and pipe-lever evidence. Editors must stay muted; do not launch the Quest without a request.
+Fixed a walkie audio-filter initialization error caused by two AudioSources on one object. With the Editor muted, 16 focused tests passed and the existing simulated XR traversal passed from House to F4 after skipping its briefing. The geometric audit still reports **61 authored one-metre route-edge intersections** with the stair liners, though no blocked player capsule was reported. A centre-line Editor pass does not establish full width or worn comfort. [Evidence](../Verification/S5/RadioAudio/README.md).
 
-## Active checkpoint — Steps 5–6 and lobby implemented; final checks/build next
+The shell builder now retains the solid floors and colliders after pole removal instead of restoring pole holes on rebuild. 27 focused tests pass. A full muted EditMode audit went from 703/711 to **705/712**; the shell-rebuild failure was fixed and there are no new failures. Seven existing failures still need investigation, including a stair-route clearance report and two sabotage-timing assertions. They were reproduced at prior source `22af3830`; see [ShellRebuild](../Verification/S5/ShellRebuild/README.md) for the complete list and limits. No shell scenes or lighting were regenerated by this fix.
 
-Steps 1, 3 and 4 are implemented and checked; step 2 was audited but the reported separate yellow remnant was not reproduced. Job 1 is NOT finished. Full job-end suites, solo 1–3/two-Mac smoke, APK and M3 merge have NOT run for this checkpoint. Job 2 has not started. The full remaining scope (including the new lobby and horror additions) is preserved in [PlaytestAndHorrorQueue.md](PlaytestAndHorrorQueue.md). Quest absent from ADB on November 11; no app launched.
+Fixed a second conflicting instruction: after the generator starts, two human keepers are assigned the wrench and valve together even when the beacon is dark, unless a ship actually requires guidance first. **71 focused EditMode tests passed**, including both role orders. A live two-Editor Photon run verified matching starter/assist and wrench/valve instructions, with engine actions staged on the host. The current rules model completes Nights 1–5 for its assumed solo and duo workers, plus the duo demo; the solo demo times out. It models no Owen, physical controls, shared sleep or nightmare. [Evidence](../Verification/S5/CoopPipe/README.md). The modeled six-minute `DemoNight` asset is an older, currently unreachable standalone scenario: the lobby offers Campaign and the newer endless, no-horror Survival tech demo, and `WatchDemoController.Start` loads the campaign nights or Survival rules rather than this asset. Do not present the dormant scenario's result as a failure of the current Survival mode.
 
-## Current work
+## Next, in order
 
-Step 1: solo valve clamp removed from rules, objectives and narration; solo retains the prior post-clamp inflow rate. Two-player hold/release and distinct worker validation remain; disconnect allows immediate solo repair. Valve sits beside the active bolt and moves only when unheld; hidden/non-interactable for one player. Focused pressure 4/4 and director 8/8 pass. Graphics actual-XRI Night 1 → Night 2 passed; live one→two→one valve visibility/placement passed (0.43 m from active bolt). Step 1 complete; evidence in Docs/Verification/PlaytestFixes/step1/. No new replicated fields; network stays LK-S5-VOICE1 / v19 for now. Lobby changes will require a new matchmaking version.
+1. Investigate the actual F2/F3 stair and liner against `ShellGeometryTests.GeometryClearanceAgainstImportedColliders`: reconcile the historical 1 m authored route with the 61 current route-edge intersections and solid liner before changing either. The simulated centre-line House-to-F4 traversal passes; full width remains unverified. Resolve the sabotage-warning/retry failures and the remaining suite failures against the current design, without changing captions to obsolete recorded dialogue. Rerun the full suite.
+2. Finish Day 2 nightmare **#144**: an unstaged full night for both roles, including the existing F2 lesson, bedtime and restoration; inspect child, prints and audio; test shared escape/rescue/retry. `HorrorTuning.nightmareEnabled` remains **OFF** until ready. Build and install without launching once ready; worn acceptance remains pending.
+3. Implement **#145** Day 3 cursed ship, **#148** Day 4 flood/crew chase and **#149** Day 5 finale from the copied briefs, in order, preserving both modes and co-op. Complete full-campaign regression and headset acceptance; final voice recordings come last.
+4. Validate the current Survival tech demo with the actual Owen companion and physical station interactions. The dormant six-minute `DemoNight` is retained as historical work; its one-worker simulation is not a proxy for that mode. Revisit only if a separate six-minute option is wanted.
 
-## Next in order
+## Exact commands
 
-2. Pole audit complete (PlayMode 1/1; inspected F3 screenshot). No obsolete shaft or separate yellow remnant reproduced. Location clarification/device confirmation pending; working pole and safety hatch preserved. Evidence: Docs/Verification/PlaytestFixes/step2/.
-3. DONE: grip-only pressure primer at chest height, larger bulb, release/refill, tally and feedback. Focused 3/3 + engine 6/6; left/right actual-XRI graphics pass, screenshots inspected. See InteractionInputs.md and Docs/Verification/PlaytestFixes/step3/.
-4. Implemented: short action/object + specific place/floor; nearby controller GRIP/TRIGGER cue. Director tests 9/9 and near/far graphics check pass; final rendered icon verified and screenshot inspected. Director tests now 10/10, including actual rendered mesh. See Docs/Verification/PlaytestFixes/step4/.
-5. DONE: separate yellow generator and dark-green wall POWER PANEL, over 4 m apart, one ceiling feed. Focused graphics test 1/1 and inspected screenshot: Docs/Verification/PlaytestFixes/step5/. Previous survey: Current panel is WatchPowerPanel.Create at STN_GENERATOR_PANEL; layout JSON anchor (3.031089,3.3,1.75), yaw 240. Generator mesh is reused by Editor/OneLighthouseM2.cs from the fixture prefab (Diesel crankcase, Alternator cover, Radiator grille). Inspect both world bounds before moving; runtime is generated, so fix the source/anchors and test rebuild. Integrated has ConnectedMachinePresentation legacy riser; M3 replaces it with baked TowerWiring resources, so re-bake that authoring after merge rather than duplicating conduit.
-6. DONE: perimeter rails + 160-direction sweep; solo sea loss/retry + host-owned 10 s per-keeper crew recovery. Focused rules 4/4, graphics edge/sea retry 1/1; Docs/Verification/PlaytestFixes/step6/. Network LK-S5-PLAYTEST1 / v21; live transport check queued.
-Lobby implemented: one PLAY flow, host-alone/START without READY, existing offline loader and keypad, dynamic puzzle roles; docs updated. Focused 13/13 passed. Final graphics Night 1–2 / live two-Mac / build pending.
-7. Latest lean scope: focused tests only, one graphics solo Night 1–2 and one two-Mac smoke; no full suites. Build/install AND launch if Quest visible (explicitly requested this turn); update PR #85. Merge into M3 only after this job is verified.
-Job 2: finish M3 ship first; write TheDrowned.md, then implement the latest horror brief in numbered checkpoints. Do not claim ships/horror/finale/progression done; M3 currently has scheduling and wiring plus B recall.
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+git status --short --branch
+python3 artifacts/s5/modes/check.py CoplanarNudgeTests ShellGeometryTests SabotageTests MasterDirectorTests StoryScopeTests NoNetworkingLeakageTest
+LK_TEST_OUT="$PWD/artifacts/s5/campaign-audit/traversal-repro" python3 Docs/Verification/S5/RadioAudio/fixtures/traversal.py
+LK_M3_TIMING_OUTPUT="$PWD/artifacts/s5/campaign-audit/next.json" LK_SHIP_TIMING=1 /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath "$PWD" -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/s5/campaign-audit/next.log"
+```
+
+The first command needs the muted Unity 6000.3.23f1 Editor and its local Pipeline bridge open; it will stop at the first still-failing class. Close it before the batch command. The model exits nonzero while the old, unreachable solo demo fails and still writes its report. Mute every Editor before each Play/test; for two Editors use a fresh peer backup and `Docs/Verification/S5/CoopPipe/fixtures/two-peer.py`. Latest peer backup: `artifacts/s5/final-scaring/peer-backup-15`. Do not launch the Quest game.
 
 ## DEVICE CHECKS PENDING
 
-- Current job has no APK yet. Verify no-clamp solo repair, two-player valve reach/role split and disconnect.
-- Grip squeeze/release feel, primer visibility; readable objects/locations/button cues.
-- F3 pole remnant removed without losing floor exits/fall protection.
-- Updated lobby with Quest Wi-Fi off and two matching builds online; rejoin/leave.
-- Island edge walk, sea recovery; human voice; worn GPU/CPU/readability.
-
-## Exact commands / evidence
-
-```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-python3 artifacts/playtest-fixes/tests.py PressureValveTests pressure.json
-python3 artifacts/playtest-fixes/tests.py MasterDirectorTests director.json
-python3 artifacts/playtest-fixes/solo.py
-```
-Additional focused commands: `python3 artifacts/playtest-fixes/pole-test.py OnlyCurrentDescentShaftAndThreeLandingsExist pole-test.json`; `python3 artifacts/playtest-fixes/primer-tests.py GripSqueezeTests grip-cycle.json`; `python3 artifacts/playtest-fixes/primer-live.py`; `python3 artifacts/playtest-fixes/objective-tests.py MasterDirectorTests director-locations.json`; `python3 artifacts/playtest-fixes/hud-live.py`. These use saved scene/input fixtures and must not be called human/device evidence. The primer runner injects grip after HandRig updates; old EngineLive/Days12 trigger-based primer harnesses must be updated before step 7 (do not change gameplay back for the harness).
-
-Results/runners: `artifacts/playtest-fixes/`. Do not overwrite completed evidence; choose fresh output paths for reruns. Full suites only at job end. Preserve the earlier baseline below; its solo-clamp requirement is superseded by this playtest.
+Full-night two-human starter/valve/ship progression; grip reach and timing, co-op voice/rejoin/sleep; Day 2 nightmare comfort and presentation when enabled; Quest GPU/CPU at peak storm; previously reported flashlight eye strain and pink-material correction. Day 3–5 set pieces still require implementation, not just device checks.
 
 ---
 
-# Class playtest recall checkpoint — 2026-11-10
+# Previous checkpoint — campaign and Day 2 (#137, #144)
 
-Job 1 on `s4/integrated` / PR #85 is implemented, committed and verified; APK built from **573cf72**. The Quest disappeared from `adb devices` before installation. **Do not launch the Quest app unless the lead asks.** All Editor runs must remain muted with `EditorUtility.audioMasterMute = true`; `EditorPlaytestAudio` handles Editor initialization/Play Mode transitions, and `artifacts/coop/mac_pair.py` also mutes before runs. No player audio settings changed.
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Source protocol **LK-S5-COOPSTART1 / LK-Lab-Coop-v54**; both peers need the same build. No new APK is built or installed; the Quest still has source `bf86ddd0`, not launched.
 
-Done: below-eye 1.5 m lazy-follow objective, five-second presentation, saved -20 to -5 degree height, instant B tap/hold, double-tap local replay, three-line history, wrist objective, existing X/Y/wrist recall, one-time Night 1 B reminder. Network remains **LK-S5-VOICE1 / snapshot v19**; no synchronized fields changed.
+The director now gives two humans complementary START ASSIST / starter instructions even when a pipe or ship job led to the generator. The watch menu also guards a not-yet-created nightmare-skip button. **116 focused EditMode checks passed**; a live two-Editor Photon test verified the paired instructions and replicated running engine with staged actions. See [CoopStart](../Verification/S5/CoopStart/README.md). The updated rules bot completes the Night 4 duo and demo duo model, but **Night 5 duo still floods and demo solo times out** under its assumed travel/action speeds. Investigate the modeled timing and actual mechanics before tuning; neither failure is a human playtest. The model does not simulate Owen, XRI controls, shared sleep, the nightmare or a complete headset run.
 
-Verification: EditMode 355 passing cases after the single FMOD scene-audit rerun; PlayMode 49 passing cases with the same 24 inherited failures and 3 skips after replacing the obsolete world-fixed assertion with the requested lazy-follow test. Original full results and focused reruns stay separate. Physical Night 1 and live two-Mac join/avatar/local replay/shared pipe/shared sleep pass. Mono/AEC setup passes, but no human listening claim while Editors are muted. See `Docs/Verification/ObjectiveRecall/README.md`.
+## Next, in order
+
+1. Resolve the remaining Night 5 duo and demo solo model failures without weakening the intended danger from guesses. Check the simulation against the current physical pipe/start flow and fault/ship schedules, then reproduce any real defect with a focused test and appropriate live Editor input. Re-run earlier nights and the two-Editor path after changes.
+2. Finish Day 2 nightmare **#144**: an unstaged full night for both roles, including the earlier F2 lesson, bedtime and restoration; inspect child, prints and audio; test shared escape/rescue/retry. `HorrorTuning.nightmareEnabled` remains **OFF** until ready. Then build and install without launching; worn safety/performance remains pending.
+3. Implement **#145** Day 3 cursed ship, **#148** Day 4 flood/crew chase and **#149** Day 5 finale from the copied briefs, in that order, preserving both game modes and co-op. Finish full-campaign regression and headset acceptance; final voice recordings come last.
+
+## Exact commands
+
+```sh
+cd /Users/aneeshvasamreddy/LighthouseKeepers-M3
+git status --short --branch
+LK_M3_TIMING_OUTPUT="$PWD/artifacts/s5/campaign-audit/next.json" LK_SHIP_TIMING=1 /Applications/Unity/Hub/Editor/6000.3.23f1/Unity.app/Contents/MacOS/Unity -batchmode --burst-disable-compilation -quit -projectPath "$PWD" -executeMethod LighthouseKeepers.Editor.M3CampaignBot.RunBatch -logFile "$PWD/artifacts/s5/campaign-audit/next.log"
+```
+
+The bot exits nonzero while either simulation fails and still writes its report. Run the focused test filters in `Docs/Verification/S5/CoopStart/tests.json`; mute each Editor (`UnityEditor.EditorUtility.audioMasterMute=true`) before Play/tests. For two Editors use a fresh peer backup and `Docs/Verification/S5/CoopStart/fixtures/two-peer.py`. Latest peer backup: `artifacts/s5/final-scaring/peer-backup-12`. Do not launch the Quest game.
 
 ## DEVICE CHECKS PENDING
 
-- Connect the Quest over USB, install the exact APK below; **do not launch without a new request**.
-- When the lead is ready: press B near the board, pipe and generator; verify same-frame full objective and last line below gaze, hold, tap expiry, double-tap audio replay.
-- Turn the head quickly and slowly: lazy follow must be comfortable and leave the centre clear. Adjust Objective height in Watch Menu settings and restart to check persistence.
-- Read the current job on the left watch, check X/Y and wrist glance, and the one-time Night 1 B reminder.
-- Human two-way voice and Mac+Quest task/sleep smoke; on-device worn-headset CPU/GPU/readability/comfort remain unverified.
-
-## Exact continuation
-
-```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-"/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb" devices -l
-"/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb" install -r Builds/LighthouseKeepers-Recall-573cf72.apk
-# STOP here: do not run am start or monkey without the lead asking.
-```
-
-For M3, merge this branch into `/Users/aneeshvasamreddy/LighthouseKeepers-M3` / `m3/five-nights`, preserving all night/string assets. Continue A2/A3 runtime schedules, then A4 measurement, ships, doors/mirror, and remaining parts in `M3-FiveNights.md`. The A1 campaign is still disabled. No five-night timing, ship payoff, physical-door or mirror acceptance is claimed. Keep PR #87 draft and never merge main.
-
-Raw runners/results: `artifacts/class-recall/`; `tests.py` (EditMode), `play-focused.py`, `play.py` (full PlayMode), `solo.py` (Night 1), `crew.py` (two-Mac smoke), `build.py` (exact-source Android build). Before repeating a run choose a fresh output directory; inspect the script's existing destination. Both Editors were stopped after the smoke test. Preserve the unrelated Quest prefab ray-width edit and `Docs/Verification/Immersion/pipe-lever/`.
+Full-night two-human starter/valve/ship progression; headset grip reach and timing, co-op voice/rejoin/sleep; Day 2 nightmare comfort and presentation when enabled; Quest GPU/CPU at peak storm; previously reported flashlight eye strain and pink-material correction. Day 3–5 set pieces still require implementation, not just device checks.
 
 ---
 
-# Integrated checkpoint — s4/integrated
+# Previous checkpoint — Day 2 nightmare #144 (continued)
 
-This branch reconciles #81–#84. Do not merge or close those PRs. Network **LK-S5-INTEGRATED1 / snapshot 18**; both clients need the same APK. Selected exterior: Eli’s ocean, mountain coast and opt-in sky, per the lead. Our newer interior, narration/PA, pole, connected power and valve puzzle remain. See [Reconcile-PR84.md](Reconcile-PR84.md).
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`, branch `sprint-5`, PR #89. Source protocol **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**. The bedtime nightmare is **OFF** in the asset pending the checks below; the earlier generator-room possession and revive lesson remains enabled, and cannot overlap it. No new APK has been delivered; installed source **bf86ddd0** is still the tool-belt build.
 
-Post-cleanup focused7/7, graphics solo Nights1–3 and live two-Mac valve/radio/sleep/rejoin PASS (artifacts/reconcile/cleanup-graphics and cleanup-crew). Earlier full-suite evidence: 305/305 EditMode; full PlayMode plus focused reruns preserve every pass from both baselines (47 pass, 24 inherited common failures in the aggregate). Graphics Nights1–3 and live two-Mac valve/radios/sleep/rejoin pass. Cleanup APK built successfully fromd3d6f6f (white board/black text, House clutter removed, fixtures clear of rails,2×MSAA). Latest hash/path: Docs/Verification/Integrated/build-result.json. The lead requested installation; adb installedd3d6f6f successfully on Quest2G0YC1ZG32048T and relaunched it. Receipt: Docs/Verification/Integrated/install-d3d6f6f.txt. Human visual checks and2×MSAA profiling remain pending. Draft PR85 supersedes81–84 without closing them.
+This pass: the child now reaches the wall, rotates and crawls along a collision-checked ceiling path; 10 controlled scene checks, a matching two-Editor pose and 59 focused tests passed ([evidence](../Verification/S5/NightmareFoundation/CeilingCrawl/README.md)). Baked the six stair marks so playback no longer cooks tower mesh colliders; the first presentation measured 23.1 ms before and 5.3 ms after in the Mac Editor, with 46 focused tests and a two-Editor mesh/catch/revival check passing ([evidence](../Verification/S5/NightmareFoundation/HandprintBake/README.md)). Fixed stair handprints that were stretching onto other floors; six rail-mesh checks and 40 focused EditMode checks pass ([evidence](../Verification/S5/NightmareFoundation/Handprints/README.md)). A single 16-spark generator-room bulb pop uses the existing URP material with no added realtime light; 8 controlled Play Mode checks and 63 focused EditMode checks passed ([evidence](../Verification/S5/NightmareFoundation/BulbBurst/README.md)). A measured inner-ring drop search now places the child behind the crew while clearing both escape routes; a five-second chase lead (the earlier 2.5-second lead caught a simulated guest at the first door); a brief shared-catch lunge with wall and 0.5 m viewer-clearance checks; a wall/ceiling movement pass and flashlight lighting for the child; keep the blackout through failure; preserve the existing Floor 2 lesson and its rescue. **94 focused EditMode checks passed.** Controlled play checks covered the existing lesson, actual bedtime/gaze, water restoration and transition into Day 3. Two muted Editors passed shared catch, grip/release/regrip rescue, physical-input escape doors, rejoin and retry. Separate natural two-Editor wake-to-return runs passed with virtual input and a retry checkpoint. After the drop change both roles also escaped in staged solo Editor runs; 50 focused checks passed. See [drop evidence](../Verification/S5/NightmareFoundation/Drop/README.md) and [earlier evidence](../Verification/S5/NightmareFoundation/Continuation/README.md).
 
-## DEVICE CHECKS PENDING — integrated
+## Next, in order
 
-- Installed `Builds/LighthouseKeepers-Integrated.apk` fromd3d6f6f. Confirm `LK-S5-INTEGRATED1` in lobby during the human check.
-- Profile House, F1, F2, F4, gallery sea and strongest storm at 72 Hz: GPU ≤11 ms, CPU work ≤9 ms, draws/triangles/voices. Installed cleanup build: scale1.0, MSAA2, fixed foveation0.5. Device samples exceeded11ms, so the authorized2× fallback needs a matching-view check. Keep pacing wait time separate from CPU work.
-- Continuous wall/doorway sweep; no head pop at bench, centre aisle, F1, dropped wrench or disabled Support foot. F3/F4 edges blocked.
-- Solo valve clamp → grip-only wrench snap → visible clockwise turn; drop/recovery; tracker fixed until recall; grace understandable; glass stereo sorting/text clarity.
-- F4 enclosed rooftop rain → exposed gallery louder exterior rain; F1 outside unchanged. Recorded/new placeholder announcements audible.
-- Mac+Quest: join, avatars, both voice directions with headphones, cross-floor falloff, both handheld radio modes, both valve roles, shared task/sleep, disconnect/rejoin. Follow [TwoHeadsetSession.md](TwoHeadsetSession.md).
+1. Finish #144. Complete an unstaged Night 2 for both roles (including the existing lesson and bedtime), review the stylized child model, worn movement and audio; inspect the corrected wet prints and new bulb pop in the headset. The inner-ring drop clears both calculated routes in the tested poses; it deliberately stays at the corner if no safe candidate exists. Check lunge/door reach/audio in both eyes, and a full two-human escape, caught-player rescue and retry. Keep the flag off while behavior/presentation is not ready. When ready enable `Assets/WatchDemo/Resources/HorrorTuning.asset` `nightmareEnabled`, rerun relevant regressions, build IL2CPP ARM64 and install without launching. Keep #144 open for worn device acceptance.
+2. Implement #145 Day 3 cursed ship, then #148 Day 4 flood/crew chase, then #149 Day 5 finale from the two copied scare briefs, preserving Survival and the existing radio/authentication/ship flows. Each is more than a device check. Commit and push each step, update this checkpoint, and bump the network version for any synced data.
+3. Final full-campaign solo/co-op, failure/retry/rejoin, screenshots, headset comfort/performance and PR update. Do not claim headset results from Editor checks.
 
-## Reproduce current checks
+## Exact restart commands
 
-Run from `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics`. Existing raw scripts/results are in `artifacts/reconcile/`: `integrated_graphics.py`, `integrated_crew.py`, `build_integrated.py`. Use new output directories for new runs. Finish Play Mode before rebuilding. Preserve the unrelated user ray-width change saved in `preserved-user-rig.patch` and restore it after exact-source builds.
+Use Unity 6000.3.23f1 on the worktree; set `UnityEditor.EditorUtility.audioMasterMute=true` before **each** Play Mode or test run. Focused EditMode: `python3 artifacts/s5/modes/check.py NightmareIntegrationTests ScareSequenceTests CampaignOrderTests CrewRecoveryTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests StationGuidanceTests HouseFloodTests`. For two muted Editors, freshly back up `/Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer` before syncing; see `Docs/Verification/S5/NightmareFoundation/Coop/README.md` and `Continuation/README.md`. The latest peer overlay backup is `artifacts/s5/final-scaring/peer-backup-11`. Use fresh output and backup paths. Build/delivery templates are `artifacts/s5/tool-belt/build.py` and `deliver.py`; change paths and version, close Editors first, **install but do not launch**.
 
----
+## DEVICE CHECKS PENDING
 
-# Part E checkpoint — s4/connected
-
-Stacked draft [PR #83](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/83), based on s4/visuals / PR #82. E1 dependencies, E2 pressure valve + solo clamp, E3 proximity/handheld voice are committed. E4 device plan is [TwoHeadsetSession.md](TwoHeadsetSession.md). Part D: graphics solo Nights 1–3 and two-Mac valve/radio/sleep/rejoin checks pass. 280 EditMode passes; full PlayMode plus corrected clamp-prerequisite rerun preserves all 40 prior passes, with the same 25 inherited failures. [Final evidence](../Verification/S4Connected/final/README.md).
-
-APK built successfully from `ce3b8f7`: `Builds/LighthouseKeepers-S4-PartE.apk`. SHA-256 `dca2a05ece210708281331ff327d630f694c0eda2f0dc0b559d32e1bb79cb4d3`. Later delivery commits only add documentation/evidence.
-
-Network **LK-S4-CONNECTED2 / v17**. Both clients must update. New replicated fields are valve ownership/clamp and handheld transmitter IDs. Solo microphone remains off. Will's skybox/avatar body and local hand rotation are untouched.
-
-## DEVICE CHECKS PENDING — Part E
-
-- Install `Builds/LighthouseKeepers-S4-PartE.apk` on both Quests; exact source/hash in `Docs/Verification/S4Connected/final/build-result.json`. No install during this offline turn.
-- Execute all ten steps in [TwoHeadsetSession.md](TwoHeadsetSession.md): setup/join, both valve roles, release surge, shared tasks, dependency chain, cross-floor direct/radio speech, mute, shared sleep, disconnect/rejoin.
-- Human intelligibility/echo cancellation in both directions, radio grip/head proximity comfort, wall/floor attenuation, actual device audio CPU and voice count.
-- All existing visual/comfort/performance checks below remain pending; Mac tests cannot certify them.
-
-## Part E local commands
-
-```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-python3 artifacts/s4-connected/after/sync_tests.py
-python3 artifacts/s4-connected/after/exact_full_run.py
-python3 artifacts/s4-connected/after/solo.py
-python3 artifacts/s4-connected/after/crew-fixed.py
-python3 artifacts/s4-connected/build.py
-```
-
-Use fresh output folders, run the crew script only with both Editors ready, and never refresh scripts during Play Mode. Build wrapper preserves the unrelated Quest player prefab ray-width edit. Device session remains the next action; stop after this chunk.
+Full Day 2 comfort, gaze, doors, catch clearance, rescue, audio, child motion and rail-print visibility in both eyes; profile first-scene presentation CPU cost on Quest; both flashlights/shader on Android; two-headset join/escape/rejoin; sustained Quest 72 Hz and GPU ≤11 ms in the worst scene. Prior tool-belt, pink-material and eye-comfort checks remain pending below. Do not describe the unbuilt Day 3–5 scenes as device-only gaps.
 
 ---
 
-# Previous Part C checkpoint
+# Current checkpoint — Day 2 nightmare #144 in progress
 
-Worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics`. Branch **s4/visuals**, draft [PR #82](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/82), stacked on `s4/master` / draft [PR #81](https://github.com/Vanderbilt-VR-2026/LighthouseKeepers/pull/81). Never merge main. Will's skybox and avatar body are unchanged.
+Branch **sprint-5**, PR **#89**. Read/copied the Day 4–5 brief and created **#148** and **#149**. Continue **#144 → #145 → #148 → #149**. Day 3–5 set pieces are not implemented. The older Day 2 possession lesson is separate from the new nightmare.
 
-Network version **LK-S4-VISUALS-C0**, snapshot v15. Both crew clients must update. The bump covers the composite spoken-status cue vocabulary (IDs 44–75); C0–C5 rendering/audio additions consume existing authoritative state and add no replicated fields.
+Source network: **LK-S5-NIGHTMARE1 / LK-Lab-Coop-v53**. `HorrorTuning.nightmareEnabled` remains **OFF**. The child starts on the F3 stair landing, waits for gaze before the first line, and follows the authored route. Retry points are separate and clear of the F3 stair liner; late-joining replicas no longer reposition on an old retry. The flashlight now illuminates the Drowned shader. During return/relief, flood visuals are hidden without losing the actual water state. The chase uses a safe-side drop away from each known exit route, a 2.5 s reaction window and 2.15/2.30 m/s pursuit; tune further from real players.
 
-## Completed this chunk
+**92 focused EditMode checks passed.** Both solo roles and a live two-Editor crew escaped in automation using XRI movement, stamina and grip/pull doors; button and hand poses were injected. Bed/gaze/dry-return/restoration checks passed; screenshots were inspected with the Quest URP asset in the Editor. [Evidence and exact limitations](../Verification/S5/NightmareFoundation/RouteAndWake/README.md). The two-Editor gaze/wait, pursuit catch, release/regrip revive, shared escape, leave/rejoin and explicit retry checks are [here](../Verification/S5/NightmareFoundation/Coop/README.md). Scene beats and poses were staged. None is a complete human/two-headset run. No new APK built or installed; **bf86ddd0** remains on Quest, not launched.
 
-- Part B follow-up (`37a0447`): one-sentence spoken time/water/beacon status, central legacy menu/readout strings, sampled walkable-boundary audit and five F3/F4 guard repairs. Actual House→gallery route and two pole descents pass. Evidence in `Docs/Verification/S4Master/part-c/b-leftovers.md`.
-- C0 (`132bfef`): Android's active QuestPipeline uses MSAA4x, render scale1.25 and fixed foveation0.5. TMP SDF HUD/subtitles; fixed mipmapped world writing. All 36 authored scenes scanned; detected coplanar pairs 1509→0 without moving colliders. Realtime light inventory retained.
-- C1 (`62a6d85`): opaque double-sided shell walls, .04 m near clip, wall LOD fade/culling fixes, occlusion off. 72 rendered views across House/floors/stairs/gallery reviewed; not a headset continuous-motion certification.
-- C2 (`77909e5`): CC0 limewashed stone, weathered wood, rusty metal/brass, wet stone; metre UVs, packed masks, ASTC and mipmaps. Sources/derivations in `AssetSources.md`.
-- C3 (`fef69ae`): actual CPU light bake, 2 lightmaps, 99 probes and 5 room reflections; one enabled realtime beacon point light, no realtime shadows. Practical housings, window haze, interior/exterior fog and dawn tint. Existing blackout/restore still drives presentation.
-- C4 (`3366396`): dual-normal flood, contact ripples/debris, four-wave ocean and rocky inlet, small soft droplets/scrolling active jet, nightly rain/seep/runoff and wave impacts. Host flood rules and damage are untouched.
-- C5 (`c0e67dc`): transparent lantern/Fresnel glass, amber core, window streaks, station wear and nonblocking keeper props. Original sound-gap cues. Local hand illumination now uses baked probes plus a small tan visibility floor; pose/rotation/grip unchanged. Clean Night 1 replay passes.
-- C6: `M2-Plan.md` records remaining per-floor art, safe exterior-route work, model-source options and budget allocations. `WorldAudioGaps.md` records additions/reuse/licences.
+## Next — finish #144 before proceeding
 
-## Evidence and limits
+1. Run a natural full Day 2 through bedtime, follow, pursuit, both exits and a caught-player rescue without staging scene beats or positions. The two-Editor fixtures now exercise gaze/wait, AI catch, both physical movement routes, release/regrip, leave/rejoin and explicit retry with controlled setup. Keep the feature OFF until the complete flow and presentation are safe.
+2. Finish and inspect wall→ceiling→safe drop and shared catch-lunge, with flashlight and wet handprints; check audio audibility and light bursts. Run the complete Day 2 and verify the ordinary Day 3 transition. No camera movement or face intersection.
+3. After those checks, enable the asset, rerun impacted checks, build IL2CPP ARM64 and install on the Quest **without launch**. Keep #144 open for worn acceptance. Then implement #145 cursed ship, #148 flood/crew chase, and #149 finale, reusing the kit. Flashlights/unlimited power supersede old lantern/oil language. Deliver the eight-step Day 4–5 headset test with the final build.
 
-Per-step evidence is in `Docs/Verification/S4Master/part-c/`; raw runs in `artifacts/s4-master/part-c/`. C4/C5 each pass 31 focused checks and physical Night 1 repair/drop/recovery/sleep. Final evidence is saved in `part-c/final/`: 272/272 EditMode pass; full PlayMode 39/65, then an ordered test-cleanup rerun restores the avatar pass (40 passing cases, the same 25 inherited failures). Solo Nights 1–3, two-Mac guest repair/shared sleep/rejoin, and the 72-view wall sweep pass. See the regression notes for the full-run versus rerun distinction.
+## Exact commands / state
 
-Known visual limits: first-pass low-poly props; analytic flood boundary foam does not trace every arbitrary prop; conventional bounded Unity droplets rather than compute-particle simulation; no new walkable coastline without support/guards. Render scale1.25 is provisional, not performance-approved. Composition-layer HUD fallback remains conditional on observed headset shimmer. See `MasterPassRemaining.md` for acceptance work.
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3` on sprint-5; do not change the main folder's coop/two-headsets branch. Open Unity 6000.3.23f1 on that worktree. Before **every** test/Play Mode instance: `UnityEditor.EditorUtility.audioMasterMute=true`.
 
-## Built APK
+Focused EditMode: `python3 artifacts/s5/modes/check.py NightmareIntegrationTests ScareSequenceTests CampaignOrderTests CrewRecoveryTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests StationGuidanceTests HouseFloodTests`.
 
-`Builds/LighthouseKeepers-S4-PartC.apk`, runtime source **a8688d4**, 125,947,726 bytes. SHA-256: `543d5acc763f2c474c88eebf0c837389f92efacd184aafed06da06918bb2c2d2`.
-Later commits only change test teardown/evidence; the runtime source is unchanged. Android IL2CPP build and both Vulkan/GLES shader compilation succeeded. Installation was skipped as requested. [Final report](../Verification/S4Master/part-c/final/README.md).
+Play: `python3 artifacts/s5/scare-scenes/start.py`, wait for Campaign Day 2. Pipeline `run_script` accepts `Docs/Verification/S5/NightmareFoundation/RouteAndWake/fixtures/GeneratorProbe.cs` / `GeneratorStartProbe.Begin`, `WakeDryProbe.cs` / `WakeDryProbe.Begin`, `SpawnProbe.cs` / `SpawnProbe.Run`, or `FlashlightChildProbe.cs` / `FlashlightChildProbe.Begin`; pass one fresh absolute output path. Stop Play between fixtures. The button and head/hand poses are simulated as noted in the evidence. For the earlier child-route fixture use `Docs/Verification/S5/NightmareFoundation/fixtures/NightmareProbe.cs` / `NightmareProbe.Begin`.
 
-## Exact local commands
+Peer worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer`. Sync template `artifacts/s5/final-scaring/sync-peer.py`; use a **new backup path**, since `peer-backup`, `peer-backup-2`, `peer-backup-3` already contain prior work. Current co-op fixtures and ordered commands are in `Docs/Verification/S5/NightmareFoundation/Coop/README.md`; use fresh output paths and mute both Editors.
 
-Use fresh output directories on reruns; wrappers intentionally preserve old evidence.
+After the feature is ready and committed, copy `artifacts/s5/tool-belt/build.py` and `deliver.py` into a fresh folder and update all output/backup paths, APK name and v53 receipt. Close both Editors. Delivery installs with adb and verifies hash; **do not launch**.
 
-```sh
-cd /Users/aneeshvasamreddy/LighthouseKeepers-Coop-Basics
-python3 artifacts/s4-master/part-c/sync_tests.py
-python3 artifacts/s4-master/part-c/exact_full_run.py
-python3 artifacts/s4-master/part-c/solo_after.py
-python3 artifacts/s4-master/part-c/launch_coop.py
-python3 artifacts/s4-master/part-c/build.py
-```
+## DEVICE CHECKS PENDING
 
-Unity6000.3.23f1. Run batch graphics with `--burst-disable-compilation` for this Mac's test environment; no `-nographics` for captures. Never edit/refresh scripts while playing. Build method `LighthouseKeepers.Net.Editor.MultiplayerBuild.BuildQuest`, env `LK_APK_OUTPUT`. Close the primary Editor before building. Preserve the unrelated `LK_QuestPlayer.prefab` ray-width delta and `Docs/Verification/Immersion/pipe-lever/`; the build wrapper saves/restores that delta. Secondary worktree has source overlaid for tests, with its previous patch saved; do not reset it.
+Quest was connected. New nightmare worn comfort/readability, door reach, audio, full two-headset escape/revival, Android shader correctness and sustained 72 Hz / GPU ≤11 ms are **NOT VERIFIED**. Day 3–5 still have implementation work, not merely device checks. Keep prior tool-belt and pink-rendering acceptance below.
 
-## DEVICE CHECKS PENDING — NOT VERIFIED
+---
 
-The current instruction says build but skip installs. No device results are inferred from Editor tests.
+# Current delivery — tool belt and Day 1 guidance (#147)
 
-- Install `Builds/LighthouseKeepers-S4-PartC.apk`; source/hash in `Docs/Verification/S4Master/part-c/final/build-result.json` (built successfully).
-- Profile House, F1–F4, outside and peak storm: sustained72fps; GPU≤11ms, CPU main≤9ms; ~150draws/eye, ≤300k visible triangles, audio≤24 voices; water≤2ms. Capture the same workload with visual switches off/on to isolate cost.
-- Compare scale1.0/1.25/1.4 at MSAA4x; select within budget. Fall back to2x only if needed. Verify fixed foveation and both-eye SDF/physical text shimmer.
-- Check glass lens/rain/foam transparency in both eyes, ocean silhouette against Will's skybox, practical powered/blackout readability, tan-hand brightness, strong/weak pipe spray.
-- Grip-only wrench, clockwise turn/sink, both hands, water drop/recovery; no pose regression.
-- First-time Nights1–3: current-control guidance, one-sentence status, PA audible on stairs, wake/slate guidance, reasonable Night3 timing, cause-specific fail/retry.
-- Pole reach/comfort/release/landing, smooth stairs and bunk clearance; continuous doorway/wall sweep and ledge safety on every walk route.
-- Mac+Quest join, avatars, two-way audible voice/echo processing, guest task, split objective, remote pole movement, shared sleep/rejoin. Two-Mac transport tests do not certify human speech or headset tracking.
+Branch sprint-5, PR #89. Implemented dedicated waist clips (walkie right, flashlight left front, wrench left side), host carry validation and Day 1 local-objective-only writing/control glow in both modes. Lighting and hand poses unchanged. Network **LK-S5-TOOLBELT1 / LK-Lab-Coop-v52**.
 
-Then stop and await the user's next chunk. No main merge is authorized.
+12 final focused tests + 28 earlier voice/version checks passed; two unchanged legacy director wording assertions remain (10/12 director checks pass). 19 actual XRI belt checks, 34 rendered guidance checks, and live two-Editor grab/clip/regrip/drop for all three tools passed. Screenshots inspected. [Evidence and five-step headset test](../Verification/S5/ToolBelt/README.md).
+
+APK **bf86ddd0** built (IL2CPP ARM64, normal package), installed on Quest 3 with matching device SHA-256, **not launched**. SHA-256 `9d60ac9a9a53e59adc8a607a95f0806e0529d7c0c68a8c729bed52a114daeeb9`. [Receipt](../Verification/S5/ToolBelt/delivery.json).
+
+APK: `Builds/LighthouseKeepers-Sprint5-ToolBelt-bf86ddd0.apk`. Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-ToolBelt-bf86ddd0.apk`. Editors closed; build settings and importer churn restored. Next: headset acceptance for #147; then resume #144 Day 2 nightmare and #145 Day 3 cursed ship. Neither new scripted scene is implemented. Build scripts in `artifacts/s5/tool-belt/`; use fresh backup directories for another build.
+
+## DEVICE CHECKS PENDING
+
+#147: worn clip reach and body clearance while moving/crouching; all three tools together; both-eye local Day 1 text; partner carry appearance; disconnect/rejoin; full-night and sustained device performance checks. Keep #147 open. Prior pink-material correction and reported eye discomfort still need headset acceptance; no lighting change in this task.
+
+---
+
+# Current correction — pink Quest environment (#146)
+
+**Do not use APK 335a1ff0:** the user reported an all-pink environment. Removed the runtime room-material replacement and its custom shader. Original URP materials restored; bulb Morse remains, baked pools stay steady. Flashlights/grips/gameplay unchanged. Seven focused tests and 21 rendered checks passed; House/F2 captures inspected. [Correction evidence](../Verification/S5/Flashlights/PinkFix/README.md).
+
+APK **592673ef** built, installed on Quest 3; installed SHA-256 matched, **not launched**. SHA-256 `97b7ea2d2a5c11fc897e75cc648d8024279e58a3bfeae3d5205d928a49a1224e`. [Receipt](../Verification/S5/Flashlights/PinkFix/delivery.json).
+
+APK: `Builds/LighthouseKeepers-Sprint5-FlashlightFix-592673ef.apk`. Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-FlashlightFix-592673ef.apk`. Build asset report excludes the removed shader. Completed scripts: `artifacts/s5/pink-fix/{build.py,deliver.py}`; choose fresh backup directories for future builds. Network remains **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51**. Editors closed and build settings restored.
+
+## DEVICE CHECKS PENDING
+
+Reopen manually and verify House walls/floor, F2 generator and flashlight illumination render normally in both eyes. Quest rendering/performance is not established by Editor captures. Keep #146 open. Resume #144 then #145 only after this corrective delivery is complete.
+
+---
+
+# Current checkpoint — focused flashlights and Morse bulbs (#146)
+
+Branch `sprint-5`, PR #89. Network **LK-S5-FLASHLIGHT1 / LK-Lab-Coop-v51**; both players must update. The user's flashlight request supersedes LOW/HIGH lantern operation: two metal flashlights, GRIP carry, TRIGGER ON/OFF, unlimited power every night in both modes. No new payload fields. Hand contacts are measured for both hands; no global avatar or wrench changes.
+
+Implemented and checked: focused 28°/9 m beam; no oil can/gauge or fuel prompts; one supported bulb in House and each floor, different softened Morse patterns; House/F1 backup on, upper bulbs require LIGHTS; powered/emergency lightmaps rebaked. **78 focused tests, 12 actual XRI grip checks and 11 rendered checks passed.** Screenshots inspected. Full nights, worn comfort/performance and a new live co-op check are NOT VERIFIED. [Evidence and six-step test](../Verification/S5/Flashlights/README.md).
+
+APK source **335a1ff0**, IL2CPP ARM64 / normal package, installed on Quest 3 with matching device SHA-256; **not launched**. SHA-256 `f5a72ba43be465fd3eff8a20d1fd458ee37510f90607da06588e499ce69ff532`. [Delivery receipt](../Verification/S5/Flashlights/delivery.json).
+
+APK: `Builds/LighthouseKeepers-Sprint5-Flashlights-335a1ff0.apk`. Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Flashlights-335a1ff0.apk`.
+
+Completed build/delivery scripts: `artifacts/s5/lantern-beams/{build.py,deliver.py}`; use a fresh backup/output directory for a future build. Editor closed; build settings restored; no Quest launch.
+
+## Next
+
+1. #146 implementation, build and delivery are complete. Headset acceptance remains open with needs-headset-check; run the six-step checklist and fix concrete failures.
+2. Resume **#144 Day 2 nightmare**, then **#145 Day 3 cursed ship**, exactly as the detailed Part 0 checkpoint below. Re-read the complete `Docs/Design/S5-Day2-Day3-Scares.md`; replace lantern terminology with the new flashlight where needed. Neither new scripted scene has been implemented yet.
+
+## DEVICE CHECKS PENDING
+
+#146: both-hand grip during motion/crouching, close glare/far reach and both-eye readability, regrip/hooks, five Morse bulbs and comfort, two-player tool ownership/light appearance, sustained peak-storm 72 Hz / GPU ≤11 ms with both beams. No device profiling claimed. Existing #142/#143 acceptance and #144/#145 implementation remain outstanding below.
+
+---
+
+# Current checkpoint — Part 0 controls and lantern (#143)
+
+Branch `sprint-5`, PR #89. Network **LK-S5-SCARES1 / LK-Lab-Coop-v51**. Both players must update. Part 0 implementation and focused Editor checks are complete. APK source **83883309** built and installed on Quest 3; installed hash verified; **not launched**. Stopped cleanly before #144; both scripted scenes remain unimplemented.
+
+Done: A run (4.5 s / 3 s released refill), X breath, removed arm-swing; forward lantern and oil teaching (Day 1 unlimited); visible swept flare, moving-target hits, independent replicated flare clock during grace, shared impact and burning miss. 76 focused EditMode tests; 18 Play Mode collision cases; guest firing and breath lease in two muted Photon Editors; inspected screenshots. [Evidence and six-step test](../Verification/S5/ScareControls/README.md).
+
+
+APK: `Builds/LighthouseKeepers-Sprint5-ScareControls-83883309.apk` (IL2CPP ARM64, normal package). SHA-256 `66e679f6706c88c6074892bd87bb268da90df9bfcbf4bf74185a3269c9bc4454`. Receipt: `Docs/Verification/S5/ScareControls/delivery.json`.
+
+Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-ScareControls-83883309.apk`.
+
+Completed build scripts: `python3 artifacts/s5/scare-scenes/build.py` then `python3 artifacts/s5/scare-scenes/deliver.py`; **choose fresh backup/output directories before another build**, since build-final is a completed receipt. Both test Editors and their crash reporters are closed. Build audio was not changed and the Quest app was not launched.
+
+## Next, in order — not yet implemented
+
+1. **#144 Part 1, Day 2 nightmare.** Read `Docs/Design/S5-Day2-Day3-Scares.md` fully again. Replace the old mid-Day-2 possession lesson with the end-Day-2 sleep interception, 3 AM wake-up, child follow/wait/gaze, wall/ceiling turn, warned escape, caught-in-place possession, outside-then-return revival and wake-up retry. Reuse CrewRecoveryState/CrewRecovery presentation and HunterNavigation. Preserve Survival. Add host-owned scene clock/state, position/phase in WatchSnapshot with strict validation; bump both versions. Do not reuse the paused watch clock for scene animation. Solo escape/fail as brief; two-human victim remains at catch point. No camera movement. Reusable scare kit and dev buttons. New scene TTS only as specifically requested in this brief, catalogue exact text; routine narration remains disabled.
+2. **#145 Part 2, Day 3 cursed ship.** After #144 is verified and pushed: challenge-word/password + real/fake audio tell and real cost; six non-repeating visible deck points; gaze blood rain; scripted wreck excluded from failure accounting; warned safe near-beacon reveal; relentless navigable chase; flare hit/one-shot miss outcomes, caught/revive; after-scene normal watch progression. Add dev buttons, branch/path/network tests and inspected captures. Preserve the existing radio code relay and unaffected ship outcomes.
+3. Build/install each completed slice, never launch. Verify headset comfort/performance separately; keep issues open with needs-headset-check until accepted.
+
+## Exact restart commands and tooling
+
+Worktree `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. `git switch sprint-5`; `git status --short`; read this file and `Docs/Design/S5-Day2-Day3-Scares.md`. Use the existing Unity 6000.3.23f1 project and Pipeline bridge. Always set `UnityEditor.EditorUtility.audioMasterMute=true` before tests/Play Mode. Peer worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-S5-Peer`; previous peer changes preserved in `artifacts/s5/scare-scenes/peer-backup`.
+
+Focused checks: `python3 artifacts/s5/modes/check.py DreadPlaytestTests FlareTests LanternTests SurvivalModeTests VoicePassTests StoryImportTests CoopCommandWindowTests CrewRecoveryTests QualityBaselineTests`. Play fixture: `python3 artifacts/s5/scare-scenes/start.py`, then Pipeline `run_script` entries `RunFlareTests.Begin` and `VisualProbe.Begin` from the files in `artifacts/s5/scare-scenes`; output paths must be fresh. Two-Editor fixture: `python3 artifacts/s5/scare-scenes/crew.py` with both Editors open and peer synced. Physical test platform is test-only, never serialized. Do not run a second fixture concurrently. A CoreAudio crash happened once on peer restart; preserve recovery backups and close only that test Editor's reporter.
+
+Build scripts use fresh backup directories; never reuse a previous build-backup over newer source. Part 0 scripts/receipts: `artifacts/s5/scare-scenes/{build.py,deliver.py,build-final/}`. Completed build source must be clean before starting. Do not launch the Quest.
+
+## DEVICE CHECKS PENDING
+
+Part 0: six steps in ScareControls report; sustained GPU/CPU at peak storm with two HIGH lanterns and flare; both-eye beam/flare readability, grasp direction, run/breath comfort, co-op worn acceptance. Parts 1/2 all scene acceptance is pending implementation, not a device-only gap. Keep previous equipment/radio/lighting acceptance below pending too.
+
+# Current checkpoint — House light and Survival practice day (#142)
+
+Branch `sprint-5`, PR #89. APK source **cec81c8e** built and installed on Quest 3, **not launched**. Network **LK-S5-PRACTICE1 / LK-Lab-Coop-v50**; both players must update. No new snapshot fields.
+
+## Current follow-up
+
+Held walkies rotated 180° with preserved hand wrap. House instruction lamp always on, larger baked pool in both powered/blackout states; slow per-room flicker. Survival Day 1 is a practice watch: slow water capped at 0.22 m, no flood loss or oil drain; still requires all jobs and ship guidance. Day 2 restores pressure. 58 focused tests and 32 actual XRI checks pass; blackout and controller water-cap checks pass. Inspected images and limits: [HousePractice](../Verification/S5/HousePractice/README.md).
+
+Build/install complete; device APK hash matched. PR #89 and issue #142 updated. Next action is headset acceptance of the five checks in HousePractice; keep #142 open until verified.
+
+## Grip/darkness follow-up delivered (#142)
+
+Implemented: wrap-around walkie contacts; quarter-turn lantern bail grip; beacon wheel contacts at any rim point; true blackout lightmaps and weak baked room bulbs; LOW/HIGH lantern range 0.8/1.5 m; Owen repair/tool gestures and narrower collar-covered neck; cooperative opening wording; early-night grace/flood cushion. 73 focused tests, 30 XRI grip checks, map switching and six live helper work checks pass. Images inspected. No new snapshot fields; network now **LK-S5-GRIPDARK1 / LK-Lab-Coop-v50** because grace validation uses matching tuning.
+
+Build/install complete. Installed APK hash matches source build `823c5781`; app **not launched**. PR #89 and issue #142 updated; headset acceptance remains pending. [Evidence and checklist](../Verification/S5/GripDarkness/README.md).
+
+## Previous paired-station pass
+
+- Full ordered radio code, role-specific House clue, daily frequency stable on retry/rejoin, explicit F4 lever/mic instructions, transmit progress and limited B reminders.
+- Fixed compact pipe bypass; top-bail lantern grip; persistent dropped lanterns/walkies; host-owned underwater extinguishing; visible right-hip walkie clip.
+- Paired generator START ASSIST hold, preserving three timed pulls and Owen's complementary duty. Live transport exposed and fixed a missing command whitelist entry.
+- Removed cloth/lens-wipe progression in both modes. 76 solid stair backing panels; 20/20 navigation/collision routes. Darker powered/emergency bakes. Owen's duplicate beard shell removed; fine facial shading remains a polish check.
+- 40 combined focused EditMode checks, then 9 related checks after the transport fix (overlapping groups); 16 actual XR input-path Play Mode checks. Owen physically navigated to assist and fetched the whole code. Two live muted Editors passed host/join, physical guest assist/valve inputs, role clue, lantern/radio sync, rejoin, ship passage, shared sleep into Day 2 and retry. Full suites and worn acceptance were not performed.
+
+[Evidence, inspected images and headset checklist](../Verification/S5/EquipmentRelay/README.md). [Playtest report](../Playtests/2026-11-18-equipment-and-radio.md).
+
+## Next, in order
+
+1. Headset acceptance of #142 and existing modes #141. Keep both open with needs-headset-check until verified. Apply concrete failures from the checklist before expanding scope.
+2. Remaining Campaign gaps: older six-minute Demo timing, Northern Star watcher and the warned Night 3 bunk/hiding lesson. Preserve the no-horror Survival mode.
+3. Final voice recording is #122, last. No new AI narration.
+
+## DEVICE CHECKS PENDING
+
+New: flipped walkie orientation, always-on House light and slow flicker, Survival practice Day 1 → real flood pressure on Day 2. Both-hand walkie/lantern grip, rim grabbing, much darker room navigation and LOW/HIGH usefulness, Owen work gestures/collar, Days 1–2 balance; full-code readability/entry, role-specific clues and Owen walkie reply, mic grip/hold trigger; valve reach and fixed position; lantern bail pose/set-down/submersion; belt carry; generator paired hold; F3 wall/Owen route; face seam; lantern darkness/comfort and sustained Quest CPU/GPU. Audible two-headset voice, full solo nights and human co-op runs remain unverified.
+
+## Build and exact commands
+
+Worktree: `/Users/aneeshvasamreddy/LighthouseKeepers-M3`. Keep `EditorUtility.audioMasterMute=true`. Do not launch the Quest app without a request.
+
+APK: `Builds/LighthouseKeepers-Sprint5-Practice-cec81c8e.apk` (IL2CPP ARM64, `com.lighthousekeepers.game`). SHA-256: `2c2f4e236326c657caab13feeb3591f479ac40acd6cc8382691c8a43f30490c9`. Installed copy hash verified; game not launched.
+
+Focused bridge checks: `python3 artifacts/s5/modes/check.py SurvivalModeTests RadioRelayTests TimedStarterTests QualityBaselineTests LanternTests VoicePassTests StoryImportTests`. Play Mode and XRI checks: `python3 artifacts/s5/interaction-fixes/start.py` then `python3 artifacts/s5/house-practice/play.py` with the muted Editor open. Completed build/delivery scripts and receipts: `artifacts/s5/house-practice/{build.py,deliver.py,build/delivery.json}`. Use fresh backup/output paths for any subsequent build; do not reuse the completed backup over new source changes.
+
+Reinstall only: `/Applications/Unity/Hub/Editor/6000.3.23f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb install -r Builds/LighthouseKeepers-Sprint5-Practice-cec81c8e.apk`.
+
+Workstation: no interactive Editor or crash reporter left running; batch build finished. Other user applications were left alone.

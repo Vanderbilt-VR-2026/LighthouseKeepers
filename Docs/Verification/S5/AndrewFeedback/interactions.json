@@ -1,0 +1,18 @@
+{
+    "passed": true,
+    "checks": [
+        "PASS Briefing opens even with saved read receipt",
+        "PASS Briefing follows tracked head at reading distance",
+        "PASS Two usable lanterns in Night 1",
+        "PASS Right-stick diagonals cannot request 180-degree turn",
+        "PASS Walkie is acquired by actual physics hover, not manual selection",
+        "PASS Walkie hand collider not ignored",
+        "PASS Grip input alone selects walkie",
+        "PASS Grip release drops walkie",
+        "PASS Radio lever reachable at visible tip",
+        "PASS Grip selects red radio lever",
+        "PASS Lifting held lever powers radio without trigger",
+        "PASS Grip selects beacon rim",
+        "PASS 60-degree hand arc turns beam without wrist twist start=0.5 end=0.7395011 pending=False working=0.7395011"
+    ]
+}

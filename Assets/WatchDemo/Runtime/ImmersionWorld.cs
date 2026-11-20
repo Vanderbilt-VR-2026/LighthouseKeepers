@@ -9,7 +9,7 @@ namespace LighthouseKeepers.WatchDemo
         WatchDemoController watch;M2StationParts parts;Transform bed;
         Light[] bunk=new Light[2];readonly List<Light> stair=new();readonly List<Light> station=new();
         readonly List<AudioSource> faultAudio=new();
-        readonly List<(Light light,Renderer lens)> lenses=new();MaterialPropertyBlock lensBlock;
+        readonly List<(Light light,Renderer lens,float baseline,bool driven)> lenses=new();MaterialPropertyBlock lensBlock;
         readonly TextMesh[] bunkLabels=new TextMesh[2];int shownBedState=-1;
         Font chalk;Material boardEnamel;int bedMask;HarborRadio narrator;
         public HarborRadio Narrator=>narrator;
@@ -19,7 +19,7 @@ namespace LighthouseKeepers.WatchDemo
             p.chalk=Resources.Load<Font>("Fonts/Kalam-Regular");
             if(watch.State.Immersion.physicalGuidance)p.Build(head,board,wrench,pipe,generator,radio,beacon);
             var cabinet=p.HouseRadio(board);
-            foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>()));}
+            foreach(var l in p.GetComponentsInChildren<Light>()){var face=l.transform.parent.Find("Frosted service lamp");if(face)p.lenses.Add((l,face.GetComponent<Renderer>(),l.intensity,p.stair.Contains(l)||p.station.Contains(l)||System.Array.IndexOf(p.bunk,l)>=0));}
             if(watch.State.Immersion.radioNarration)p.narrator=HarborRadio.Create(watch,head,wrench,pipe,cabinet);
             if(watch.State.Immersion.faultMist)FaultVapour.Create(watch,pipe,generator);
             if(watch.State.Immersion.atmosphere)p.gameObject.AddComponent<ImmersionAtmosphere>().Initialize(watch,head);
@@ -59,27 +59,24 @@ namespace LighthouseKeepers.WatchDemo
             for(int i=0;i<4;i++)
             {
                 var t=M2StationParts.Root("Stair fault lamp F"+(i+1),transform,Vector3.zero);
-                WallFixtureMount.Place(t,i*3.3f+2.15f,i==3?315:320,false);
+                if(!WallFixtureMount.Place(t,i*3.3f+2.15f,i==3?315:320,false)){Destroy(t.gameObject);continue;}
                 parts.Part("Stair lamp wall bracket",t,new Vector3(0,0,-.012f),new Vector3(.17f,.23f,.025f),parts.Metal);
                 stair.Add(Fixture(parts,t,Vector3.zero,"Shielded stair lamp"));
             }
             station.Add(Fixture(parts,generator.transform,new Vector3(0,1.9f,.55f),"Generator fault service lamp"));
-            station.Add(Fixture(parts,radio.transform,new Vector3(0,2.55f,.20f),"Radio service lamp"));
-            station.Add(Fixture(parts,beacon.transform,new Vector3(.65f,.85f,0),"Beacon motor service lamp"));
+            station.Add(Fixture(parts,radio.transform,new Vector3(0,2.14f,.20f),"Radio service lamp"));
+            station.Add(null); // The detached motor lamp floated beside the lens.
             faultAudio.Add(Sound(generator.transform,"Generator fault cough","S4Audio/cough",false,.16f));
             faultAudio.Add(Sound(radio.transform,"Unsent broadcast static","S4Audio/hiss",true,.035f));
             faultAudio.Add(Sound(beacon.transform,"Misaligned beacon motor whine","ImmersionAudio/motor",true,.055f));
             // The accepted radio/breaker labels already have physical cabinet faces.
             // The lens hint did not, so replace it with an engraved cleaning tag on the frame.
             var lens=beacon.transform.Find("Lens wipe label");if(lens)lens.gameObject.SetActive(false);
-            var tag=M2StationParts.Root("Engraved lens cleaning tag",beacon.transform,new Vector3(.38f,.68f,.40f));
-            parts.Part("Lens tag brass",tag,Vector3.zero,new Vector3(.28f,.10f,.015f),parts.Brass);
-            parts.Text("Lens tag engraving",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.8"),tag,new Vector3(0,0,.009f),.0023f).color=new Color(.1f,.07f,.03f);
             var controls=FindAnyObjectByType<WatchBeaconStation>();
             if(controls)
             {
                 var t=controls.transform;
-                parts.Part("Beacon instruction plate",t,new Vector3(0,1.53f,.179f),new Vector3(.73f,.10f,.016f),parts.Metal);
+                // The gallery pedestal carries its own compact instrument plate.
                 var ring=M2StationParts.Root("Engraved wheel alignment legend",t,new Vector3(-.14f,.91f,.215f));
                 parts.Part("Wheel brass legend plate",ring,Vector3.zero,new Vector3(.39f,.09f,.015f),parts.Brass);
                 parts.Text("Wheel alignment engraving",LighthouseKeepers.Core.PlayerStrings.Get("legacy.ImmersionWorld.9"),ring,new Vector3(0,0,.01f),.0027f).color=new Color(.1f,.07f,.03f);
@@ -101,7 +98,7 @@ namespace LighthouseKeepers.WatchDemo
         {
             // The board has its back to the wall; its text's -Z points into the House.
             var t=M2StationParts.Root("House harbor radio",transform,Vector3.zero);
-            t.SetPositionAndRotation(board.transform.position+board.transform.right*1.95f+board.transform.up*-.35f+board.transform.forward*.065f,board.transform.rotation*Quaternion.Euler(0,180,0));
+            t.SetPositionAndRotation(board.transform.position+board.transform.right*2.18f+board.transform.up*-.35f+board.transform.forward*.065f,board.transform.rotation*Quaternion.Euler(0,180,0));
             parts.Part("Harbor radio walnut cabinet",t,Vector3.zero,new Vector3(.46f,.27f,.14f),parts.Dark);
             for(int i=0;i<9;i++)parts.Part("Radio speaker grille",t,new Vector3(-.11f+i*.021f,0,.075f),new Vector3(.006f,.17f,.006f),parts.Metal);
             parts.Part("Radio frequency glass",t,new Vector3(.135f,.055f,.075f),new Vector3(.14f,.045f,.01f),parts.Brass);
@@ -134,17 +131,17 @@ namespace LighthouseKeepers.WatchDemo
             }
             shownBedState=bedState;
             for(int i=0;i<stair.Count;i++)
-            {bool fault=i==0?!s.Repaired:i==1?s.Power==PowerState.Off:i==3?!s.BeaconShining||!s.IsDone(WatchState.RadioStation):false;if(s.Director!=null)fault=ObjectiveDirector.Floor(watch.CurrentInstruction)==i+1||watch.PartnerInstruction!=KeeperStep.None&&ObjectiveDirector.Floor(watch.PartnerInstruction)==i+1;stair[i].intensity=fault?pulse:.18f;}
+            {bool fault=i==0?!s.Repaired:i==1?s.Power==PowerState.Off:i==3?!s.BeaconShining||!s.IsDone(WatchState.RadioStation):false;if(s.Director!=null)fault=watch.InstructionFloor(watch.CurrentInstruction)==i+1||watch.PartnerInstruction!=KeeperStep.None&&watch.InstructionFloor(watch.PartnerInstruction)==i+1;stair[i].intensity=fault?pulse:.18f;}
             for(int i=0;i<station.Count;i++)
             {
                 bool fault=i==0?s.Power==PowerState.Off:i==1?!s.IsDone(WatchState.RadioStation):!s.BeaconShining;
-                if(s.Director!=null){string job=i==0?WatchState.GeneratorStation:i==1?WatchState.RadioStation:WatchState.BeaconStation;station[i].intensity=ObjectiveDirector.Job(watch.CurrentInstruction)==job||ObjectiveDirector.Job(watch.PartnerInstruction)==job?pulse:0;}else station[i].intensity=fault?pulse:.25f;
+                if(station[i]&&s.Director!=null){string job=i==0?WatchState.GeneratorStation:i==1?WatchState.RadioStation:WatchState.BeaconStation;station[i].intensity=ObjectiveDirector.Job(watch.CurrentInstruction)==job||ObjectiveDirector.Job(watch.PartnerInstruction)==job?pulse:0;}else if(station[i])station[i].intensity=fault?pulse:.25f;
                 var a=faultAudio[i];if(!a.clip)continue;
                 if(i==0){if(fault&&!s.Failed&&Time.time>=nextCough){a.Play();nextCough=Time.time+9;}continue;}
                 if(fault&&!s.Failed){if(!a.isPlaying)a.Play();}else if(a.isPlaying)a.Stop();
             }
             foreach(var fitting in lenses)
-            {lensBlock.Clear();lensBlock.SetColor("_BaseColor",new Color(.7f,.42f,.15f));lensBlock.SetColor("_EmissionColor",fitting.light.color*fitting.light.intensity*2);fitting.lens.SetPropertyBlock(lensBlock);}
+            {if(!fitting.driven)fitting.light.intensity=fitting.baseline;if(s.Sprint5&&s.Sprint5.groundedHorror)fitting.light.intensity*=DrownedMotion.LampDip(s.Elapsed,s.Day,Mathf.FloorToInt(fitting.light.transform.position.y/3.3f)+1);lensBlock.Clear();lensBlock.SetColor("_BaseColor",new Color(.7f,.42f,.15f));lensBlock.SetColor("_EmissionColor",fitting.light.color*fitting.light.intensity*2);fitting.lens.SetPropertyBlock(lensBlock);}
         }
     }
 }

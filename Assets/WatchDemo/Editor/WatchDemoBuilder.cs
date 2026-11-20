@@ -47,7 +47,7 @@ namespace LighthouseKeepers.WatchDemo.Editor
                 float a=startAngle+direction*(i+.5f)*Mathf.Abs(endAngle-startAngle)/count;
                 float span=Mathf.Abs(endAngle-startAngle)/count*Mathf.Deg2Rad;
                 float length=2f*innerRadius*Mathf.Sin(span*.5f)+.02f;
-                var panel=Part("Stairwell liner "+id+" "+i,PrimitiveType.Cube,LighthouseBuilder.Polar(a,innerRadius,floorY+1.63f),new Vector3(length,3.26f,.07f),wood,false);
+                var panel=Part("Stairwell liner "+id+" "+i,PrimitiveType.Cube,LighthouseBuilder.Polar(a,innerRadius,floorY+1.63f),new Vector3(length,3.26f,.07f),wood,true);
                 panel.transform.localRotation=Quaternion.Euler(0,a,0);
             }
         }
