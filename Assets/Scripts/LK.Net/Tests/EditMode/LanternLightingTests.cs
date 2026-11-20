@@ -29,7 +29,7 @@ namespace LighthouseKeepers.Net.Tests
    for(int room=0;room<5;room++){
     Assert.AreEqual(room<=1,power.Invoke(null,new object[]{room,false}));Assert.True((bool)power.Invoke(null,new object[]{room,true}));
     float previous=(float)pulse.Invoke(null,new object[]{0f,room});
-    for(int i=1;i<6000;i++){float v=(float)pulse.Invoke(null,new object[]{i*.01f,room});Assert.That(v,Is.InRange(room==0?.6f:room==1?.28f:.06f,1));Assert.Less(Mathf.Abs(v-previous),.15f,"Soft edges, no square flashes");previous=v;}
+    for(int i=1;i<6000;i++){float v=(float)pulse.Invoke(null,new object[]{i*.01f,room});Assert.That(v,Is.InRange(room==0?.6f:room<=2?.28f:.06f,1));Assert.Less(Mathf.Abs(v-previous),.15f,"Soft edges, no square flashes");previous=v;}
    }
   }
   [Test]public void BeamModesHaveDifferentReachAndWidthWithoutShadows(){

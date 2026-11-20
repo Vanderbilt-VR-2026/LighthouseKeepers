@@ -21,7 +21,9 @@ namespace LighthouseKeepers.WatchDemo
         public static readonly string[] Messages={"HELP ME","HELP ME","666","YOULL DIE HERE","DEATH"};
         static readonly MorseFilament[] Patterns={new(Messages[0],.48f),new(Messages[1],.40f),new(Messages[2],.43f),new(Messages[3],.46f),new(Messages[4],.38f)};
         public static bool Powered(int room,bool mains)=>room<=1||mains;
-        public static float Filament(float time,int room)=>Patterns[Mathf.Clamp(room,0,4)].Sample(time+room*2.17f,room==0?.60f:room==1?.28f:.06f);
+        // Floor 2 shares Floor 1's readable minimum once the lights circuit is powered.
+        // The separate patterns retain their own timing and soft transitions.
+        public static float Filament(float time,int room)=>Patterns[Mathf.Clamp(room,0,4)].Sample(time+room*2.17f,room==0?.60f:room<=2?.28f:.06f);
         void Start(){
             oldReflection=RenderSettings.reflectionIntensity;RenderSettings.reflectionIntensity=.025f;
             RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientIntensity=0;RenderSettings.ambientLight=new Color(.0002f,.00025f,.0003f);
